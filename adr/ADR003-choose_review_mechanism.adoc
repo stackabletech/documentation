@@ -1,0 +1,70 @@
+= Use RTC as Review Mechanism for Changes
+Sönke Liebau <soenke.liebau@stackable.de>
+v1.0, 19.08.2020
+:status: accepted
+
+* Status: {status}
+* Deciders:
+** Florian Waibel
+** Lars Francke
+** Lukas Menzel
+** Oliver Hessel
+** Sönke Liebau
+* Date: 19.08.2020
+
+== Context and Problem Statement
+
+We need a review process in place to ensure that any change that is committed into any of this projects repositories is properly reviewed.
+In order to do this there are two main principles that have been coined by the Apache Software Foundation:
+
+* Commit the change and then ensure that someone reviews it and commits necessary changes
+* Create a pull request that is reviewed and changed before it gets merged into the main branch
+
+== Decision Drivers
+
+* Keep the commit history clean
+* Ensure only reviewed code ever gets released
+
+== Considered Options
+
+* Review then commit
+* Commit then review
+
+
+== Decision Outcome
+
+Chosen option: "Review then commit", because it meets both decision drivers.
+
+=== Positive Consequences
+
+* It is easy to ensure that no unreviewed code gets into a release
+* No need to track which code still needs to be reviewed
+* The commit history can be kept much cleaner as all commits can be squashed when merging a pull request
+
+=== Negative Consequences
+
+* Quick fixes may become harder, as reviewers need to be found before a fix can be merged
+* Pull requests may go stale and cause a little effort to rebase before they can be merged
+
+== Pros and Cons of the Options
+
+=== Review then commit
+
+This option requires a full review and approval of all changes before they are commited to the development branch.
+Who and how many people need to approve a change will need to be defined in the contribution guidelines at a later time.
+
+* Good, because there is no need to keep track of unreviewed commits
+* Good, because it is much easier to keep the commit history clean
+* Good, because discussions during review are kept in the PR which keeps the repository clean
+* Bad, because _quick fixes_ can become harder
+* Bad, because pull requests may go stale
+* Bad, because a large number of old and inactive pull requests may accumulate
+
+=== Commit then Review
+
+With this process any committer is allowed to commit changes straight to the
+
+* Good, because committing a change quickly is much easier
+* Bad, because unreviewed commits could make it into a release or would need to be excluded
+* Bad, because we need to keep track of whether or not a commit has been reviewed yet
+* Bad, because changes during review would create additional commits that clutter up the commit history

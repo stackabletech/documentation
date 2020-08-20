@@ -1,0 +1,27 @@
+= Stackable Documentation
+== Introduction
+
+tbd
+
+== Architectural Design Decisions
+All relevant decisions concerning the architecture are documented as Architectural Design Records in the subfolder _adr_.
+
+Unfinished or not yet approved decisions are stored in the _adr/drafts_ subfolder.
+This folder also contains a template that can be used for creating new decision records.
+
+*Naming Convention* +
+When creating a new record, please use the following guidelines for file naming:
+
+ ADR[number]-[name].adoc
+
+During the draft stage please substitute x for the number.
+For the name, please use only lower case letters, number and the underscore.
+Ideally start the name with the imperative form of a verb and avoid fillers like _of/the/for/..._
+
+Some examples:
+
+* choose_project_language
+* choose_repository_structure
+* choose_review_mechanism
+
+When choosing the next free number after an ADR has been approved, make sure to left pad the number with 0 to reach a length of three digits.

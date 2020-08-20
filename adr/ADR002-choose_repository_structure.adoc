@@ -1,0 +1,80 @@
+= Use Multiple Repositories instead of one Large Repository
+Sönke Liebau <soenke.liebau@stackable.de>
+v1.0, 19.08.2020
+:status: accepted
+
+* Status: {status}
+* Deciders:
+** Florian Waibel
+** Lars Francke
+** Lukas Menzel
+** Oliver Hessel
+** Sönke Liebau
+* Date: 19.08.2020
+
+== Context and Problem Statement
+
+Should we use one large repository for all components of the project or structure this into multiple smaller repositories?
+
+== Decision Drivers
+
+* Useability of repository structure
+* Impact on related infrastructure like CI / Testing / ...
+* Impact on release strategy
+
+== Considered Options
+
+* Single Repository
+* Multiple Repositories
+
+== Decision Outcome
+
+Chosen option: "Multiple Repositories", because it comes out best (see below)].
+
+How to split the components into repositories will be decided throughout the runtime of the project.
+
+Initially the following repositories were identified:
+
+* Orchestrator
+* Agent
+* ADR / Documentation
+* Operators (most probably one repository per operator)
+* Stackbit Sources (most probably one repository per product)
+
+=== Positive Consequences
+
+* The ability to separate changes to different modules
+* Better organization of individual modules
+* Better separation of releases between modules
+
+=== Negative Consequences
+
+* No single place to search for things, a little familiarity with the repository structure might be needed
+* Potentially more effort when setting up CI and testing infrastructure
+
+== Pros and Cons of the Options
+
+=== Single Repository
+
+* Good, because it makes implementing dependencies between modules easier
+* Good, because it provides a single place to search for _things_
+* Bad, because it can become large and difficult to manage
+* Bad, because it keeps things that should be loosely coupled in the same place which might promote tighter coupling
+* Bad, because tagging a release of a component will unnecessarily include the rest of the repository
+* Bad, because changes to a component may accidentally impact other components
+* Bad, because the commit history is mixed for all components
+* Bad, because a single commit may change multiple components making tracking these changes harder
+* Bad, because the CI pipeline would need to identify the changed components to avoid triggering tests for all other components
+* Bad, because clone times might be much higher
+
+=== Multiple Repositories
+
+* Good, because it keeps the individual repositories simpler
+* Good, because it allows proper separation of modules
+* Good, because it allows proper tagging of releases
+* Bad, because implementing dependent changes in separate components becomes harder
+* Bad, because it makes finding individual pieces of code potentially harder if the repository is unknown
+
+== Links
+
+* https://medium.com/@johnclarke_82232/mono-or-multi-repo-6c3674142dfc[Mono- or Multi-repo?]

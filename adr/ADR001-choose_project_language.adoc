@@ -1,0 +1,54 @@
+= Use English as Documentation Language
+Sönke Liebau <soenke.liebau@stackable.de>
+v1.0, 19.08.2020
+:status: accepted
+
+* Status: {status}
+* Deciders:
+** Florian Waibel
+** Lars Francke
+** Lukas Menzel
+** Oliver Hessel
+** Sönke Liebau
+* Date: 19.08.2020
+
+== Context and Problem Statement
+
+For all documentation, presentations, inline comments etc. we need to agree on which language to use.
+As currently all participants are German, the first choice would be German, however as this is intended to grow an active, international community the choice of German would exclude many people or lead to fragmentation of the community.
+
+== Decision Drivers
+
+* Familiarity of existing team members
+* Potential to grow an open community
+
+== Considered Options
+
+* German
+* English
+
+== Decision Outcome
+
+Chosen option: "English", because the desire to create an active community with participants from all over the world is much more important than the minor barrier that this decision might create initally.
+
+=== Positive Consequences
+
+* The barrier for particiption for international members is much lower in later community work
+* The risk of the community fragmenting into a german community and an international community is much lower
+* Higher pool of candidates to help out during the initial project phase
+
+=== Negative Consequences
+
+* Initially the team would need to document in a language that is not a first language for anybody
+
+== Pros and Cons of the Options
+
+=== German
+
+* Good, because first language for most current team members
+* Bad, because excludes a lot of people from the later community or would create a split in the community
+
+=== English
+
+* Good, because it allows growing an international community
+* Bad, would initially add a small language barrier that is not strictly speaking necessary
