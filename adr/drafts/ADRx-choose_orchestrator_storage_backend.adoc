@@ -1,0 +1,84 @@
+= Use xxx as storage backend for the orchestartor
+Sönke Liebau <soenke.liebau@stackable.de>
+v0.1, 19.08.2020
+:status: draft
+
+* Status: {status}
+* Deciders:
+** Florian Waibel
+** Lars Francke
+** Lukas Menzel
+** Bernd Fondermann
+** Oliver Hessel
+** Sönke Liebau
+* Date:
+
+Technical Story: [description | ticket/issue URL] <!-- optional -->
+
+== Context and Problem Statement
+
+The orchestrator will need some form of persistent storage backend, for which a decision on the technology to be used has to be taken.
+Our usage of this storage will most probably be extremely simple, even if a SQL database is chosen, the expectation is that it will be used fairly similar to a key value storage.
+
+== Decision Drivers
+
+* Availability of libraries for chosen programming language for the orchestrator
+* How established is the backend at potential customers, will we need to deploy it?
+
+
+== Considered Options
+
+* etcd
+* Zookeeper
+* SQL Database
+
+== Decision Outcome
+
+
+
+=== Positive Consequences
+
+*
+
+=== Negative Consequences
+
+*
+== Pros and Cons of the Options
+
+=== etcd
+
+https://etcd.io/
+
+* Good, because etcd is used by Kubernetes
+** Likelyhood that it is already deployed
+** Expertise with etcd by Kubernetes admins can be reused
+* Good, because it offers watch functionality
+* Good, because it offers consensus mechanisms
+* Bad, because it has a hard size limit
+* Bad, because it does not work well with large numbers of requests
+
+=== Zookeeper
+
+https://zookeeper.apache.org/
+
+* Good, because it is well established and unterstood
+* Good, because it offers watch functionality
+* Good, because it offers consensus mechanisms
+* Bad, because it offers no real benefit over etcd
+* Bad, because it is known to have trouble with high volume of changes
+
+=== SQL Database
+
+* Good, because expertise and processes for some form of database will be present at pretty much any customer
+** Backup
+** HA
+* Good, because deploying in integrated test/dev environment is easy with sqlite
+* Bad, because we would need to potentially support multiple database vendors
+** Postgres
+** MS Sql
+** Oracle
+** …
+
+
+
+== Links

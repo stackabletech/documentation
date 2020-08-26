@@ -1,0 +1,84 @@
+= Use xxx as programming language for the agent
+Sönke Liebau <soenke.liebau@stackable.de>
+v1.0, 19.08.2020
+:status: draft
+
+* Status: {status}
+* Deciders:
+** Florian Waibel
+** Lars Francke
+** Lukas Menzel
+** Bernd Fondermann
+** Oliver Hessel
+** Sönke Liebau
+* Date: 
+
+Technical Story: https://hosting-jira.1and1.org/browse/DFBAICC-520
+
+== Context and Problem Statement
+
+Which programming language should be used in the implementation of the agent that will manage tool installations on servers?
+
+== Decision Drivers
+
+* The ability to deploy the agent as one binary with no external dependencies
+* Availability of well supported libraries for necessary operations
+** File IO
+** Network IO
+** RPC depends on link:./ADRx-Protocol-to-use-for-communication-between-agent-and-orchestrator.html[ADRx-Protocol to use for communication between agent and orchestrator]
+** SystemD
+* IDE support
+* Debugging options
+
+== Considered Options
+
+* Java
+* Go
+* Rust
+
+== Decision Outcome
+
+Chosen option: "[option 1]", because [justification. e.g., only option, which meets k.o. criterion decision driver | which resolves force force | … | comes out best (see below)].
+
+=== Positive Consequences <!-- optional -->
+
+* [e.g., improvement of quality attribute satisfaction, follow-up decisions required, …]
+* …
+
+=== Negative Consequences <!-- optional -->
+
+* [e.g., compromising quality attribute, follow-up decisions required, …]
+* …
+
+== Pros and Cons of the Options <!-- optional -->
+
+=== Java
+
+* Good, because easy to find developers
+* Good, because team is very familiar with it
+* Bad, because it needs a jvm as dependency and is not deployable as single binary
+** GraalVM has many drawbacks and licensing doubts as it is an Oracle product
+
+=== Go
+
+* Good, because it compiles to a single binary on many platforms
+* Good, because Kubernetes also uses it
+* Good, because there is proper IDE support with debugging
+* Bad, because a new language to learn for many team members
+* Bad, because missing generics may be an issue and create less than readable code
+* Bad, because it is still a garbage collected language
+* Todo: check library availability
+
+=== Rust
+
+* Good, because it compiles to a single binary on many platforms
+* Good, because no garbage collection
+* Good, because it enforces a high level of security
+* Bad, because a new language to learn for many team members
+* Bad, because potentially very touch to find developers - arguably not a real drawback as people will need to be willing to learn something new anyway
+* Todo: check library availability
+
+== Links <!-- optional -->
+
+* [Link type] [Link to ADR] <!-- example: Refined by [ADR-0005](0005-example.md) -->
+* … <!-- numbers of links can vary -->
