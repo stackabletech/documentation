@@ -17,7 +17,7 @@ v0.1, 27.08.2020
 The Stackable project will need at least two components in order to orchestrate the software that gets deployed.
 These components are the orchestrator and the agents that manage bare-metal (or virtual) servers.
 
-During previous design discussions it became quite clear that a lot of the issues that we need to for these components are very similar to issues that Kubernetes faced an the past - and solved already.
+During previous design discussions it became quite clear that a lot of the issues that we need to for these components are very similar to issues that Kubernetes faced in the past - and solved already.
 Some examples of this are:
 
 * Agents need to register with the orchestrator in a secure way
