@@ -75,7 +75,8 @@ It offers existing integrations with a variety of tools and is used by the Cloud
 === Open Policy Agent
 
 https://www.openpolicyagent.org/[Open Policy Agent] is a universal authorization engine that has become popular in the Kubernetes (but not exclusively) environment lately.
-OPA defines ACLs in an abstract language called https://www.openpolicyagent.org/docs/latest/policy-language/[Rego] which allows keeping
+OPA defines ACLs in an abstract language called https://www.openpolicyagent.org/docs/latest/policy-language/[Rego] which allows keeping authorization logic in the ACL definition, instead of source code.
+This gives a much higher degree of abstraction and thus flexibility than having to hard-code the logic for every application.
 
 
 
