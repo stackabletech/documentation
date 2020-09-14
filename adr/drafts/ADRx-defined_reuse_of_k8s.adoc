@@ -61,7 +61,7 @@ Potential scenarios could for example be:
 
 === Positive Consequences
 
-* Increased flexibility during design, there is no need to
+* Increased flexibility during design, there is no need to fit our interface requirements into Kubernetes' apis which may have been created for different purposes and not match
 * No need to deploy Kubernetes in addition to our stack for customers without existing Kubernetes installation
 
 === Negative Consequences
