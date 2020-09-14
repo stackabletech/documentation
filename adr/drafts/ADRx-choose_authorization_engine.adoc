@@ -1,0 +1,103 @@
+= Choose Authorization Engine
+Doc Writer <doc.writer@asciidoctor.org>
+v0.1, dd.mm.yyyy
+:status: draft
+
+* Status: {status}
+* Deciders:
+** Florian Waibel
+** Lars Francke
+** Lukas Menzel
+** Bernd Fondermann
+** Oliver Hessel
+** Sönke Liebau
+* Date: xxx
+
+== Context and Problem Statement
+
+We need some form of authorization engine both for the products that are deployed via our stack as well as for our internal apis.
+This engine should have the ability to express universal access controls, as it will need to be adapted to many different end products:
+
+* Stackable
+* Hadoop
+* Kafka
+* Airflow
+* Elasticsearch
+* ...
+
+Depending on which option is chosen, there is a second, implicit, decision that is taken as part of this record: whether or not to include an identity provider.
+Keycloak and Ranger both offer user management on top of authoriztion, whereas Open Policy Agent is purely an authorization engine.
+
+I'm not sure if we need to split this decision out into a separate ADR, but I suspect that it may make sense.
+If Open Policy Agent is chosen as part of this ADR, at some point we need to decide whether we also need an identity provider and if so, which one we should pick.
+
+
+== Decision Drivers <!-- optional -->
+
+* Availability of plugins for initial components or expected effort for implementation
+* Flexibility of rule engine
+
+== Considered Options
+
+* Ranger
+* Open Policy Agent
+* Keycloak
+
+
+== Decision Outcome
+
+Chosen option: "[option 1]", because [justification. e.g., only option, which meets k.o. criterion decision driver | which resolves force force | … | comes out best (see below)].
+
+=== Positive Consequences
+
+* [e.g., improvement of quality attribute satisfaction, follow-up decisions required, …]
+* …
+
+=== Negative Consequences
+
+* [e.g., compromising quality attribute, follow-up decisions required, …]
+* …
+
+== Pros and Cons of the Options
+
+=== Ranger
+
+https://ranger.apache.org/[Ranger] is the de facto default authorization tool in the big data ecosystem.
+It offers existing integrations with a variety of tools and is used by the Cloudera offer as central access management component.
+
+* Good, because most necessary integrations already exist
+* Good, existing know how applies
+* Good, because it offers id provider functionality
+* Bad, because adding new tools is complex
+* Bad, because objects to authorize on need to be defined in code (see Open Policy Agent for comparison)
+* Bad, because user synchronization mechanisms are fairly limited
+
+=== Open Policy Agent
+
+https://www.openpolicyagent.org/[Open Policy Agent] is a universal authorization engine that has become popular in the Kubernetes (but not exclusively) environment lately.
+OPA defines ACLs in an abstract language called https://www.openpolicyagent.org/docs/latest/policy-language/[Rego] which allows keeping authorization logic in the ACL definition, instead of source code.
+This gives a much higher degree of abstraction and thus flexibility than having to hard-code the logic for every application.
+
+
+
+* Good, because relatively small effort to implement new tools
+* Good, because very flexible system to define ACLs
+* Bad, because no real HA concept
+* Bad, because only one authorizer (Kafka) already implemented
+* Bad, because would require additional identity provider
+
+=== Keycloak
+
+https://www.keycloak.org/[Keycloak] is based on a Wildfly application server and probably the most fully featured alternative of the ones discussed.
+It allows integration with LDAP and AD, offers authorization, a clustered mode for high availability and much more.
+
+* Good, because gives a high degree of flexibility in adapting customers id solutions
+* Good, because well established and widely used (GAIA-X, SCS)
+* Bad, because no existing authorization plugins
+* Bad, because objects to authorize on need to be defined in code (see Open Policy Agent for comparison)
+
+
+== Links
+
+* [Link type] [Link to ADR] <!-- example: Refined by [ADR-0005](0005-example.md) -->
+* … <!-- numbers of links can vary -->

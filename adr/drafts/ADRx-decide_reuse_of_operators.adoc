@@ -1,0 +1,70 @@
+= Allow Reuse of Existing Kubernetes Operators
+Sönke Liebau <soenke.liebau@stackable.de>
+v0.1, 19.08.2020
+:status: draft
+
+* Status: {status}
+* Deciders:
+** Florian Waibel
+** Lars Francke
+** Lukas Menzel
+** Bernd Fondermann
+** Oliver Hessel
+** Sönke Liebau
+* Date:
+
+
+== Context and Problem Statement
+
+For some of the tools we plan to integrate there are existing operators that deploy these tools on Kubernetes.
+Most notably these tools are:
+
+* Spark
+* Kafka
+
+Some implementation effort may be avoided by reusing these operators instead of recreating the tool-specific functionality that is already implemented.
+Since these operators are designed to work with Kubernetes and thus exclusively focused on containers some translation of data structures and processes would be necessary.
+
+== Decision Drivers <!-- optional -->
+
+* Keeping the implementation effort as low as realistically possible
+* Keeping compatibility with Kubernetes as far as possible to ease a later move towards Kubernetes deployments
+* Avoid hard dependencies on external projects that may force us to fork in case they break compatibility with us
+
+== Considered Options
+
+* Allow reuse of Kubernetes operators (would need to be decided individually for every tool)
+* Don't reuse operators
+
+== Decision Outcome
+
+Chosen option: "[option 1]", because [justification. e.g., only option, which meets k.o. criterion decision driver | which resolves force force | … | comes out best (see below)].
+
+=== Positive Consequences
+
+* [e.g., improvement of quality attribute satisfaction, follow-up decisions required, …]
+* …
+
+=== Negative Consequences
+
+* [e.g., compromising quality attribute, follow-up decisions required, …]
+* …
+
+== Pros and Cons of the Options
+
+=== Allow reuse of Kubernetes operators
+
+* Good, because it saves implementation effort
+* Good, because this forces us to consider Kubernetes compatibility repeatedly
+* Bad, because we create a dependency on another project that may at some point break compatibility
+* Bad, because we need to adapt to interfaces that have been designed specifically with containers in mind
+
+=== Don't reuse operators
+
+* Good, because it allows us to build our operators the way that works best for us
+* Good, because we do not depend on the quality of external projects that may have implemented partial functionality (i.e. security)
+* Bad, because we repeat work that has already been done
+
+== Links
+
+* https://kubernetes.io/docs/concepts/extend-kubernetes/operator/[Operator pattern description]
