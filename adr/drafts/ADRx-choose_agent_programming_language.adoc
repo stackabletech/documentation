@@ -26,7 +26,7 @@ Which programming language should be used in the implementation of the agent tha
 ** File IO
 ** Network IO
 ** RPC depends on link:./ADRx-Protocol-to-use-for-communication-between-agent-and-orchestrator.html[ADRx-Protocol to use for communication between agent and orchestrator]
-** SystemD
+** systemd
 * IDE support
 * Debugging options
 
