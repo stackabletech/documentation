@@ -1,6 +1,6 @@
-= Use English as Documentation Language
+= Decide on handling and location of systemd unit files
 Sönke Liebau <soenke.liebau@stackable.de>
-v1.0, 19.08.2020
+v1.0, 07.01.2021
 :status: accepted
 
 * Status: {status}
@@ -42,12 +42,12 @@ _/etc/systemd/system_ is a directory with higher priority for user created units
 === Positive Consequences
 
 * Admins will find the unit files where they are used to finding them
-* The risk of the community fragmenting into a german community and an international community is much lower
-* Higher pool of candidates to help out during the initial project phase
+* Implementation effort is low
+* Least invasive and no risk of outdated files still being linked as current
 
 === Negative Consequences
 
-* No versioning of unit files, as the current one will always be overwritten (this can be mitigated by keeping)
+* No versioning of unit files, as the current one will always be overwritten (this can be mitigated by keeping a copy of all unit files in our config dir)
 
 == Pros and Cons of the Options
 
@@ -62,7 +62,7 @@ _/etc/systemd/system_ is a directory with higher priority for user created units
 
 * Good, because it would allow us to keep unit files in a central location
 * Bad, because it adds a level of indirection that sysadmins are probably not used to
-* Bad, becausa it create the possibility of symlinks pointing at wrong unit files (if we version unit files)
+* Bad, because it creates the possibility of symlinks pointing at wrong unit files (if we version unit files)
 
 === Create unit files in default location
 
