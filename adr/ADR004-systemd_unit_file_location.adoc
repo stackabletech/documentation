@@ -5,9 +5,7 @@ v1.0, 07.01.2021
 
 * Status: {status}
 * Deciders:
-** Florian Waibel
 ** Lars Francke
-** Oliver Hessel
 ** Sönke Liebau
 * Date: 07.01.2021
 
