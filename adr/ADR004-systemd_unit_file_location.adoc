@@ -1,0 +1,69 @@
+= Decide on handling and location of systemd unit files
+Sönke Liebau <soenke.liebau@stackable.de>
+v1.0, 07.01.2021
+:status: accepted
+
+* Status: {status}
+* Deciders:
+** Lars Francke
+** Sönke Liebau
+* Date: 07.01.2021
+
+== Context and Problem Statement
+
+The agent will need to create systemd unit files for every service that it wants to be run.
+Systemd has a couple of directories where these files can be placed and offers ways of adding non-standard directories to that list.
+We need to decide where to put these files.
+
+== Decision Drivers
+
+* Familiarity of admins with solution
+* Added complexity
+* Implementation effort
+* Making cleanup of a server as easy as possible if Stackable stack is removed
+
+== Considered Options
+
+* Use $SYSTEMD_UNIT_PATH to globally add a new directory
+* Symlink unit files to default location
+* Create unit files in default location
+
+== Decision Outcome
+
+Chosen option: "Create unit files in default location"
+
+We loose no functionality over any of the other options, but it is far easier to implement and has less added complexity for the sysadmins.
+
+We will put unit files in _/lib/systemd/system_ which is the proper directory for unit files provided by installed packages.
+_/etc/systemd/system_ is a directory with higher priority for user created units, not using this directory gives admins the option of creating a temporary override unit file here for testing/debugging/... purposes.
+
+=== Positive Consequences
+
+* Admins will find the unit files where they are used to finding them
+* Implementation effort is low
+* Least invasive and no risk of outdated files still being linked as current
+
+=== Negative Consequences
+
+* No versioning of unit files, as the current one will always be overwritten (this can be mitigated by keeping a copy of all unit files in our config dir)
+
+== Pros and Cons of the Options
+
+=== Use $SYSTEMD_UNIT_PATH to globally add a new directory
+
+* Good, because this would completely isolate our unit files from the rest of the system
+* Bad, because this appears to be functionality used only for testing
+* Bad, because setting this environment variable would need to be done very early during system startup, necessitating potentially dangerous changes to the server
+* Bad, because this would create an unusual place to look for unit files that sysadmins are not aware of
+
+=== Symlink unit files to default location
+
+* Good, because it would allow us to keep unit files in a central location
+* Bad, because it adds a level of indirection that sysadmins are probably not used to
+* Bad, because it creates the possibility of symlinks pointing at wrong unit files (if we version unit files)
+
+=== Create unit files in default location
+
+* Good, because it is known and expected behavior
+* Good, because it is the quickest solution to implement
+* Bad, because it is a little bit more invasive than alternatives
