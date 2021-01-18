@@ -46,7 +46,7 @@ Even just looking at the two potential Kafka operators: Strimzi and Banzai, they
 * All components deployed by us will adhere to a common standard, behavior and config set
 * We can reuse core components for all operators
 ** Operator framework
-** Config managmeent framework
+** Config management framework
 
 === Negative Consequences
 

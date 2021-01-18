@@ -1,7 +1,7 @@
 = Choose Authorization Engine
 Doc Writer <doc.writer@asciidoctor.org>
 v0.1, dd.mm.yyyy
-:status: draft
+:status:
 
 * Status: {status}
 * Deciders:
