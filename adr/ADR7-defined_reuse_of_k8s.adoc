@@ -56,7 +56,7 @@ The Kubernetes api is very complex and reimplementing the pieces of the api-serv
 In the interest of reaching a MVP as early as possible we decided to push the final decision down the road a bit.
 
 This option is no decision _for_ Kubernetes for good, but rather a decision for the first iteration of the product.
-By taking this step we are forceing ourselves to remain compatible with Kubernetes and keep the option open of implementing a limited version of the api-server later.
+By taking this step we are forcing ourselves to remain compatible with Kubernetes and keep the option open of implementing a limited version of the api-server later.
 
 === Positive Consequences
 

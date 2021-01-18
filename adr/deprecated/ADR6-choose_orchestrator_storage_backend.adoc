@@ -7,7 +7,7 @@ v0.1, 19.08.2020
 * Deciders:
 * Date:
 
-Technical Story: [description | ticket/issue URL] <!-- optional -->
+Technical Story:
 == Deprecation Notice
 This ADR has been superseded by ADR7, which decided to stop development on the orchestrator for now and use the kube-apiserver instead.
 As the kube-apiserver exclusively supports etcd as backend provider there is no decision to document at this time.
