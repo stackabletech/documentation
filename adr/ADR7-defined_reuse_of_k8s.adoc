@@ -26,7 +26,7 @@ Some examples of this are:
 In theory, Kubernetes components are extensible enough that it should allow us to implement our components in a way that we can deploy them on top of an existing Kubernetes.
 This would save us some work, as we'd for example not have to reimplement the registration process for agents.
 
-image::images/adrx-architecture.png[Architecture options]
+image::images/adr7-architecture.png[Architecture options]
 
 The image shows the two main options that we have identified during deliberations so far:
 
@@ -37,41 +37,40 @@ The image shows the two main options that we have identified during deliberation
 
 * Avoiding too tight coupling with Kubernetes development & community
 * Deployment effort for potential customers
+* Development effort
 
 == Considered Options
 
-* Reuse Kubernetes Components
+* Reuse kube-apiserver & kubelet
+* Reuse kube-apiserver
 * Start from Scratch
 
 == Decision Outcome
 
-Chosen option: "Start from scratch", because the amount of work that would need to be duplicated seems to be minor, when compared to the flexibility and independence that we can gain by not creating a tight dependence on Kubernetes.
+Chosen option: "Reuse only kube-apiserver", because the amount of work to get a sufficient version of our orchestrator up and running is currently holding us back from achieving results that provide actual benefits to potential customers.
 
-Most prominently, we would need to offer an option to deploy Kubernetes to potential users who do not currently have a Kubernetes cluster.
-This in itself is a very large task for which there are numerous companies that tackle it and we have no intention of becoming a Kubernetes distribution.
+While this increases our dependency on the Kubernetes project and potentially increases the deployment effort for customers a bit it has significant upsides as well.
+The main benefit is the fact that this will give as a battle-tested orchestrator right now, which we can use for our development.
+The Kubernetes api is very complex and reimplementing the pieces of the api-server that we need turned out to be more effort than expected.
 
-This option is no decision _against_ Kubernetes for good, but rather a decision for the first iteration of the product.
-Integration with Kubernetes can be added later on in incremental steps and provide additional deployment options for customers.
+In the interest of reaching a MVP as early as possible we decided to push the final decision down the road a bit.
 
-Potential scenarios could for example be:
-
-* Deploy the orchestrator as pod on Kubernetes and keep agents unchanged
-* Deploy agents as pods via Kubernetes as well
-* Implement CRI to use Kubelet instead of agent for communication
+This option is no decision _for_ Kubernetes for good, but rather a decision for the first iteration of the product.
+By taking this step we are forcing ourselves to remain compatible with Kubernetes and keep the option open of implementing a limited version of the api-server later.
 
 === Positive Consequences
 
-* Increased flexibility during design, there is no need to fit our interface requirements into Kubernetes' apis which may have been created for different purposes and not match
-* No need to deploy Kubernetes in addition to our stack for customers without existing Kubernetes installation
+* Much less effort implementing the orchestrator at this time
+* No need to deploy a full Kubernetes stack, we can easily just package an api-server as part of our deployment
 
 === Negative Consequences
 
-* Duplication of effort that Kubernetes already implemented
+* Relatively tight coupling with the kubernetes project
 
 == Pros and Cons of the Options
 
 [[reuse-k8s]]
-=== Reuse Kubernetes
+=== Reuse kube-apiserver and kubelet
 
 Stackable needs to deploy a server-client architecture where the decentralized agent receives commands from the central server to execute these.
 In order to create an infrastructure like this, there are some functions that need to be in place.
@@ -99,6 +98,18 @@ Thinking the concept a bit further we might even get away without an orchestrato
 * Bad, because for some customers Kubernetes is not a technology that they want to invest in
 * Bad, because we have to keep a very close eye on Kubernetes development to ensure we remain compatible with everything they do
 
+=== Reuse only kube-apiserver
+
+Since we aim to be api compatible with Kubernetes, we could use the api-server from Kubernetes as our central communications hub instead of a custom built orchestrator.
+As all components we plan to develop need to interface with this central server anyway this is an easy way of ensuring that we stay api-compatible every step of the way.
+
+Additionally this does not need a final decision, depending on how many Kubernetes features we end up using, it might still be an option at a later point in time to create our own apiserver in Rust und roll that out to customers who are not using Kubernetes.
+
+* Good, because ops and dev-persons could keep using their existing Kubernetes tools and know-how
+* Good, because we save the initial effort of implementing a api-compatible apiserver
+* Good, because it is a reversible decision that allows us to gather speed at this time
+* Bad, because it may tempt us to end up using more and more kube-apiserver functionality which would make it harder and harder to write our own implementation later
+* Bad, because this forces us to use etcd as storage backend, we were originally planning to rather go with a sql database
 
 [[from-scratch]]
 === Start from Scratch

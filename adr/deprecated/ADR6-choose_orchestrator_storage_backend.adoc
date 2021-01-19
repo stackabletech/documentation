@@ -1,19 +1,18 @@
 = Use xxx as storage backend for the orchestrator
 Sönke Liebau <soenke.liebau@stackable.de>
 v0.1, 19.08.2020
-:status: draft
+:status: superseded by ADR7
 
 * Status: {status}
 * Deciders:
-** Florian Waibel
-** Lars Francke
-** Lukas Menzel
-** Bernd Fondermann
-** Oliver Hessel
-** Sönke Liebau
 * Date:
 
-Technical Story: [description | ticket/issue URL] <!-- optional -->
+Technical Story:
+== Deprecation Notice
+This ADR has been superseded by ADR7, which decided to stop development on the orchestrator for now and use the kube-apiserver instead.
+As the kube-apiserver exclusively supports etcd as backend provider there is no decision to document at this time.
+
+This ADR reflects the current state of dicussion at the time of approving ADR7 and should not be considered complete!
 
 == Context and Problem Statement
 
@@ -77,8 +76,7 @@ https://zookeeper.apache.org/
 ** Postgres
 ** MS Sql
 ** Oracle
-** …
-
+** ...
 
 
 == Links
