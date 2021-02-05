@@ -1,7 +1,6 @@
 // Header of this document:
 
-Stackable Documentation
-=======================
+= Stackable Documentation
 :toc:
 :toc-placement: preamble
 :toclevels: 1
@@ -15,12 +14,12 @@ Stackable Documentation
 
 == Introduction
 
-With stackable-tech we aim to create an orchestration system that allows end users to deploy, scale and manage Big Data infrastructure on any environment, no matter if it's VM or bare metal both in cloud and on-premise.
+With our Stackable technology we aim to create an orchestration system that allows end users to deploy, scale and manage Big Data infrastructure on any environment, no matter if it's a VM or bare metal both in cloud and on-premise.
 
 == Goal of the project
-The goal is to be able to declare full Data Platforms using this concept and go beyond pure low-level applications. This means that we want to be able to deploy a Kafka cluster for example. In future we would also like to be able to declaratively roll out data, provide proper security configuration out of the box, Kafka topics, HDFS directories, Replication policies, maybe even Spark jobs.
+The goal is to be able to declare full Data Platforms using this concept and go beyond pure low-level applications. This means that we want to be able to deploy a Kafka cluster for example. In the future we would also like to be able to declaratively roll out data, provide proper security configuration out of the box, Kafka topics, HDFS directories, Replication policies, maybe even Spark jobs.
 
-We want to build a distribution that includes the “best of breed” of existing Open Source tools (e.g. reuse existing Operators), but bundles them in a way so it is easy to deploy a fully working stack of software. Most of the existing tools are “single purpose” tools which often do not play nicely together.
+We want to build a distribution that includes the “best of breed” of existing Open Source tools, but bundles them in a way so it is easy to deploy a fully working stack of software. Most of the existing tools are “single purpose” tools which often do not play nicely together out-of-the-box.
 
 == Architecture
 Stackable deploys a server-client architecture where decentralized agents receive commands from the central server to execute. 
@@ -35,18 +34,20 @@ The infrastructure (like a VM server) should be already available and contains a
 === Components
 The following components will set up our orchestration system:
 
-* Kubernetes API-Server (in future: Orchestrator)
+* Kubernetes API-Server
 * Agent(s): one per VM
 * Operators: one per application/Big Data Product
 
 == Components and their functionality
 === API-Server (Orchestrator)
-At the moment we use the standard Kubernetes API-Server and stay API-compatible with Kubernetes. In future we might implement our own Orchestrator component if needed.
-The API-Server acts as a centralized storage for configuration files. It has the function to distribute the updated files and configurations or inform the other components about the current changes.
+At the moment we use the standard Kubernetes API-Server and stay API-compatible with Kubernetes. In the future we might implement our own Orchestrator component if needed.
+The API-Server acts as a centralized frontend for the clusters shared storage. It is the component through which all other components (i.e. Agents, Kubelet, Operators, ...) communicate.
 
 === Operator(s)
-For each application/Big Data Product there is exactly one special Operator defined. They must be registered to the API-Server for getting notified about upcoming configuration changes.
-This Operator is the expert of the application logic, how to roll out and update the Big Data Product (e.g. Kafka with the {base-repo}/kafka-operator[kafka-operator] and {base-repo}/zookeeper-operator[zookeeper-operator]). It can be compared like the Operator knows everything about the construction manual.
+For each application/Big Data Product there is exactly one special Operator defined.
+They watch for changes in their managed resources in the API-Server.
+This Operator is the expert of the application logic, how to roll out and update the Big Data Product (e.g. Kafka with the {base-repo}/kafka-operator[kafka-operator] and {base-repo}/zookeeper-operator[zookeeper-operator]).
+An Operator should implement and encompass all the knowledge a human operator would need when operating the service in question.
 To ease up operator development we created an {base-repo}/operator-rs[operator-framework] to base new operators on.
 
 
@@ -60,7 +61,8 @@ image::interaction-diagram.svg[]
 
 
 === 1. Client -> API-Server (Orchestrator)
-The client creates a YAML file for the API-Server, which defines the configuration for the Big Data Product (e.g. Kafka). There will be more possibilities to upload the file to the API-Server in future, because it is compatible to K8s and therefore every Kubernetes Tool can be used. Usually it is the command line tool ‘kubectl’ 
+The client creates a YAML file for the API-Server, which defines the configuration for the Big Data Product (e.g. Kafka). The client then uses the usual Kubernetes tools (e.g. `kubectl` or any other Kubernetes client).
+This means that the whole infrastructure will be described in code (Infrastructure-as-Code) and can be version controlled.
 
 === 2. API-Server (Orchestrator) -> Operator(s)
 The API-Server receives the YAML file from the Client, identifies the appropriate Operator(s) (e.g. Kafka Operator) and notifies about the file changes.
@@ -72,7 +74,7 @@ The appropriate Operator(s) (e.g. Kafka Operator) will translate the abstract de
 In the meantime each Agent, running on its own VM, is listening for updates, which belongs to its VM. If there is an update for the appropriate VM, then the Agent of this VM is going to obtain the configuration and act accordingly. (e.g. download an artifact, update a configuration or start a process locally.
 
 === 5. Agent(s) -> Big Data Product (Kafka)
-Finally the Agent(s) will provision the Big Data Product (e.g. setting up a Kafka) onto the node of its VM.
+Finally, the Agent(s) will provision the Big Data Product (e.g. setting up a Kafka) onto the node of its VM.
 
 
 == Technical base
@@ -81,15 +83,15 @@ The https://kubernetes.io/docs/reference/command-line-tools-reference/kube-apise
 
 
 === Operator(s)
-The Operator(s), which are can run on the API-Server or on their own server, can be written in **Java** or in every other language you want. In the current implementation **Rust** is used for the Zookeeper and Kafka Operator and **Java** for the Spark Operator.
+The Operator(s), which can run on the same server as the API-Server or on their own server, can be written in any programming language. We are using **Rust** to implement our Operators.
 
 === Agent(s)
 We have chosen **Rust** as a programming language for the implementation of the Agent. This tool will manage the installation on the VM.
-Rust is a Programming language, which is focused on safety. It provides memory safety without a garbage collector, however the learning curve is steep.
+Rust is a Programming language, which is focused on safety. It provides memory safety without a garbage collector.
 
 **Decision Drivers:**
   - The ability to deploy the agent as one binary with no external dependencies
-  - Availability of well supported libraries for necessary operations
+  - Availability of well-supported libraries for necessary operations
 	- File IO
 	- Network IO
 	- systemd
