@@ -90,13 +90,14 @@ We have chosen **Rust** as a programming language for the implementation of the 
 Rust is a Programming language, which is focused on safety. It provides memory safety without a garbage collector.
 
 **Decision Drivers:**
-  - The ability to deploy the agent as one binary with no external dependencies
-  - Availability of well-supported libraries for necessary operations
-	- File IO
-	- Network IO
-	- systemd
-	- IDE support
-	- Debugging options
+
+* The ability to deploy the agent as one binary with no external dependencies
+* Availability of well-supported libraries for necessary operations
+* File IO
+* Network IO
+* systemd
+* IDE support
+* Debugging options
 
 == Architectural Design Decisions
 All relevant decisions concerning the architecture are documented as Architectural Design Records in the subfolder _adr_.
