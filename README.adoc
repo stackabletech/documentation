@@ -48,13 +48,10 @@ For each application/Big Data Product there is exactly one special Operator defi
 They watch for changes in their managed resources in the API-Server.
 This Operator is the expert of the application logic, how to roll out and update the Big Data Product (e.g. Kafka with the {base-repo}/kafka-operator[kafka-operator] and {base-repo}/zookeeper-operator[zookeeper-operator]).
 An Operator should implement and encompass all the knowledge a human operator would need when operating the service in question.
-To ease up operator development we created an {base-repo}/operator-rs[operator-framework] to base new operators on.
-
+To ease up operator development we created an {base-repo}/operator-rs[operator-framework] to base new operators on, other than implementing the whole workflow/api by oneself.
 
 === Agent(s)
-Despite the Operator(s) the {base-repo}/agent[Agent(s)] are clones. But each Agent is running on its own VM. They must also be registered to the central API-Server, to get informed about updates.
-The Agent(s) do not know anything about the Big Data product. They execute only their work instructions, which they receive from the Operator(s).
-
+The {base-repo}/agent[Agent(s)] do not know anything about concrete Big Data products, they only execute work instructions, provided by the Operator(s). Every system dedicated in the Big Data cluster runs a copy of the Agent, registered to the central API-Server, to get informed about updates.
 
 == Communication and interaction
 image::interaction-diagram.svg[]
