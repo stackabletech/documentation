@@ -28,10 +28,10 @@ We will alert you if something needs to be done differently when running everyth
 image::images/quickstart_architecture.png[]
 
 
-==== Prepare Nodes
+=== Prepare Nodes
 Perform the following steps on both the orchestrator and worker nodes.
 
-===== Install Stackable Repository
+==== Install Stackable Repository
 
 ===== Debian/Ubuntu
 In order to be able to verify that the releases have not been tampered with, you'll need to verify and install the PGP key we use to sign these releases.
@@ -73,14 +73,130 @@ Run the following command on your _orchestrator_ server:
 This will download and install K3S, and configure systemd services to run at startup.
 Client tools like `kubectl` will also be installed and configured correctly to connect to Kubernetes.
 
-The installer will also put a client configuration in `
-
-=== Add Nodes to Kubernetes
-==== Create KubeConfig
+==== Distribute KubeConfig
 Since our agent registers in Kubernetes very similarly to a regular Kubelet it will need a Kubeconfig to know how and where to connect to Kubernetes.
 When we installed K3S, it generated a configuration that clients can use in `/etc/rancher/k3s/server/k3s.yaml` on the orchestrator server.
 
-This file needs to be put on every node of the cluster
+This file needs to be put on every node of the cluster - ideally you'd copy this file to `/root/.kube/config` which will make all components that run as the root user use this configuration.
+
+If you need to be able to connect to other Kubernetes clusters, or do not want to make this the global config (for the root user) for other reasons, then you can choose a different location for this file.
+
+Please see below for extra steps that need to be taken to enable this config.
+
+=== Specify a Repository
+Stackable downloads packages from repositories, which the agents need to know about.
+To avoid having to configure these repositories on every agent they are instead specified in Kubernetes and retrieved from there by the agent.
+
+In order to allow creating a repository, you'll have to create the CRD for repositories in your freshly installed Kubernetes cluster.
+The CRD looks like this:
+
+----
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: repositories.stable.stackable.de
+spec:
+  group: stable.stackable.de
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                repo_type:
+                  type: string
+                properties:
+                  type: object
+                  additionalProperties:
+                    type: string
+  scope: Namespaced
+  names:
+    plural: repositories
+    singular: repository
+    kind: Repository
+    shortNames:
+    - repo
+----
+
+You can choose whatever way is most convenient for you to apply this CRD to your cluster, one possible way is using `kubectl` from the command line:
+
+----
+cat <<EOF | kubectl apply -f -
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: repositories.stable.stackable.de
+spec:
+  group: stable.stackable.de
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                repo_type:
+                  type: string
+                properties:
+                  type: object
+                  additionalProperties:
+                    type: string
+  scope: Namespaced
+  names:
+    plural: repositories
+    singular: repository
+    kind: Repository
+    shortNames:
+    - repo
+EOF
+----
+
+You can either host your own repository, if you so choose, or specify our public repository for convenience.
+The specification for our repository is shown below and can be applied with `kubectl` just like the definition above:
+
+----
+cat <<EOF | kubectl apply -f -
+apiVersion: "stable.stackable.de/v1"
+kind: Repository
+metadata:
+  name: stackablepublic
+spec:
+  repo_type: StackableRepo
+  properties:
+    url: https://repo.stackable.tech/repository/packages/
+EOF
+----
+
+=== Install Operators
+Depending on which products you want to manage with the Stackable platform you will want to install at least one of our operators.
+They are made available as OS packages as well, the currently available operators are:
+
+
+|===
+|Product |Package Name
+
+|Apache Kafka
+|stackable-kafka-operator
+
+|Apache Spark
+|stackable-spark-operator
+
+|Apache Zookeeper
+|stackable-zookeeper-operator
+|===
+
+
+
+=== Add Nodes to Kubernetes
 
 ==== Install Agent
 The distributed component of the Stackable Platform is the agent, which needs to be installed on all managed servers and configured to have access to Kubernetes.
@@ -96,15 +212,40 @@ The packages also install a systemd service to run the agent, this is not enable
 
     apt-get install stackable-agent
 
-==== Configuring the agent
+==== Configuring the Agent
 When installing from packages the agent config file is created in '/etc/stackable-agent/agent.conf'.
 
 The Agent takes a few configuration options, please refer to https://github.com/stackabletech/agent#command-line-parameters[the agent documentation] for more details.
 
+If you have provided a KUBECONFIG for the root user in `/root/.kube/config` then the agent will use this, if you decided against a _global_ KUBECONFIG, you will need to specify where the config should be read from.
 
+This can be done by adding a systemd drop-in file that is merged with the package provided unit file.
+Put the following content in `/usr/lib/systemd/system/stackable-agent.service.d/kubeconfig.conf`:
 
+----
+Environment="KUBECONFIG=/path/to/kubeconfig"
+----
 
+==== Starting the Agent
+The agent can be started like any regular systemd service by running
 
+` systemctl start stackable-agent`
+
+To enable it to be started at every boot:
+` systemctl enable stackable-agent`
+
+During the first start of the agent, it will perform some bootstrapping tasks, most notably it will generate a keypair and request a signed certificate from Kubernetes.
+
+If your Kubernetes is not configured to auto-approve these CSRs, you will need to manually approve that request before the agent can start.
+
+You can do this by running `kubectl certificate approve <agent-hostname>-tls` on the orchestrator server after starting the agent.
+
+If your Kubernetes does not offer certificate signing services, you can alternatively also manually generate a keypair and sign a certificate with a proper authority.
+These files will then need to be configured in the agent config file.
+
+=== Health Check
+After performing the steps outlined above you should have an empty Stackable Platform up and running.
+When you run `kubectl nodes get` on the orchestrator, you should see the objects that all your agents added to indicate their readiness.
 
 == Architectural Design Decisions
 All relevant decisions concerning the architecture are documented as Architectural Design Records in the subfolder _adr_.
