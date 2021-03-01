@@ -35,6 +35,10 @@ Perform the following steps on both the orchestrator and worker nodes.
 
 ===== Debian/Ubuntu
 In order to be able to verify that the releases have not been tampered with, you'll need to verify and install the PGP key we use to sign these releases.
+A prerequisite for these operations is, that an implementation of PGP needs to be installed, if this is not yet the case you can do so by running:
+
+    apt-get install gnupg
+
 The key is available on the Ubuntu keyserver under the id _16dd12f5c7a6d76a_ and can be added to your apt keychain with the following command:
 
     apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 16dd12f5c7a6d76a
@@ -45,13 +49,7 @@ To enable the actual repository, put the following content into `/etc/apt/source
 
 ===== Centos/RHEL
 
-Create the following file in `/etc/yum.repos.d/stackable.repo` :
-
-    [stackable-nightly]
-    name=Nighly builds of Stackable components
-    baseurl=https://repo.stackable.tech/repository/rpm-nightly/el8
-    enabled=1
-    gpgcheck=0
+*coming soon*
 
 === Install Kubernetes
 Usually the installation and configuration of Kubernetes is a full-blown project all of its own, so it might seem a bit weird to find this tucked away in a little section of the quickstart guide like this.
@@ -61,7 +59,6 @@ This makes the deployment a lot simpler.
 That being said, Stackable will work with any Kubernetes, please feel free to skip this chapter if you already have a working Kubernetes cluster, or want to use a managed Kubernetes offering like the ones provided by https://www.ionos.com/enterprise-cloud/managed-kubernetes[IONOS], https://cloud.google.com/kubernetes-engine[Google] or https://docs.microsoft.com/en-us/azure/aks/[Azure].
 
 If you choose to follow one of the options mentioned above, feel free to skip ahead to https://xxx[xxx], as you won't need the information in the rest of this chapter.
-
 
 Since you are still reading this we'll assume that you don't have easy access to an existing Kubernetes and instead install one.
 There are numerous possibilities to go about this, but we will focus on https://k3s.io/[K3S], a lightweight Kubernetes distribution that is provided by https://rancher.com/[Rancher].
@@ -73,11 +70,28 @@ Run the following command on your _orchestrator_ server:
 This will download and install K3S, and configure systemd services to run at startup.
 Client tools like `kubectl` will also be installed and configured correctly to connect to Kubernetes.
 
+To check if everything worked as expected you can use kubctl to retrieve the cluster information:
+
+    kubectl cluster-info
+
+See below for an example of an expected result:
+
+----
+Kubernetes control plane is running at https://127.0.0.1:6443
+CoreDNS is running at https://127.0.0.1:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+Metrics-server is running at https://127.0.0.1:6443/api/v1/namespaces/kube-system/services/https:metrics-server:/proxy
+
+To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+----
+
 ==== Distribute KubeConfig
 Since our agent registers in Kubernetes very similarly to a regular Kubelet it will need a Kubeconfig to know how and where to connect to Kubernetes.
-When we installed K3S, it generated a configuration that clients can use in `/etc/rancher/k3s/server/k3s.yaml` on the orchestrator server.
+When we installed K3S, it generated a configuration that clients can use in `/etc/rancher/k3s/k3s.yaml` on the orchestrator server.
+
+NOTE: Currently the KubeConfig will contain 127.0.0.1 as the api-server IP, you will need to change this to the ip address of your orchestrator server
 
 This file needs to be put on every node of the cluster - ideally you'd copy this file to `/root/.kube/config` which will make all components that run as the root user use this configuration.
+Perform this step for the orchestrator also, as the operators will expect to finde a KubeConfig in that place.
 
 If you need to be able to connect to other Kubernetes clusters, or do not want to make this the global config (for the root user) for other reasons, then you can choose a different location for this file.
 
@@ -185,16 +199,39 @@ They are made available as OS packages as well, the currently available operator
 |Product |Package Name
 
 |Apache Kafka
-|stackable-kafka-operator
+|stackable-kafka-operator-server
 
 |Apache Spark
-|stackable-spark-operator
+|stackable-spark-operator-server
 
 |Apache Zookeeper
-|stackable-zookeeper-operator
+|stackable-zookeeper-operator-server
 |===
 
+To start and enable the services please run the following commands:
 
+----
+# Kafka
+systemctl start stackable-kafka-operator-server
+systemctl enable stackable-kafka-operator-server
+
+# Spark
+systemctl start stackable-spark-operator-server
+systemctl enable stackable-spark-operator-server
+
+# Zookeeper
+systemctl start stackable-zookeeper-operator-server
+systemctl enable stackable-zookeeper-operator-server
+----
+
+
+To check if the services started succesfully you can run (example for Zookeeper):
+
+----
+systemctl status stackable-zookeeper-operator-server
+----
+
+This should report the service as being loaded and enabled.
 
 === Add Nodes to Kubernetes
 
@@ -206,7 +243,7 @@ The packages also install a systemd service to run the agent, this is not enable
 
 ===== RHEL
 
-    sudo yum install stackable-agent
+    *coming soon*
 
 ===== Ubuntu
 
