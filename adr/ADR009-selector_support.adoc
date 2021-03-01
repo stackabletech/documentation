@@ -1,0 +1,89 @@
+= ADR009: Placement of services on nodes
+Lars Francke <lars.francke@stackable.de>
+v0.1, 1.3.2021
+:status: draft
+
+* Status: accepted
+* Deciders:
+** Lars Francke
+* Date: 1.3.2021
+
+
+== Context and Problem Statement
+
+We need to decide on a syntax and feature set on how to place services on nodes.
+
+In the Kubernetes world this is a bit easier as there are fewer shared resources, and the underlying node does not matter as much.
+The nodes are also often interchangable, and the identity of the nodes do not matter.
+For us it's often the case that users have dedicated hardware for this use-case and all machines should be used and at the same time there are often special nodes reserved for special tasks (e.g. more resilient machines for leader roles).
+There is also often a need to target specific processes directly either for actions (e.g. restart) or to alter its configuration.
+This is rarely the case in Kubernetes as all Pods are usually the same, no matter which hardware they run on.
+We also want to support multiple instances of a service on a single node.
+
+Our competition currently requires users to manually select all machines that software should be deployed to.
+Our goal is to be at least as good if not better.
+
+== Considered Options
+
+* Have users specify a list of nodeNames in their resources
+** This would basically be a 1:1 mapping from the current situation.
+* Reuse the https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/["Label and Selector" syntax] from Kubernetes
+
+== Decision
+
+We decided to go with the Kubernetes way of using label selectors.
+
+.Example:
+[source,yaml]
+----
+ leader:
+    selectors:
+      default:
+        selector:
+          matchLabels:
+            component: spark
+          matchExpressions:
+            - { key: tier, operator: In, values: [ cache ] }
+            - { key: environment, operator: NotIn, values: [ dev ] }
+        config:
+          cores: 1
+          memory: "1g"
+        instances: 3
+        instancesPerNode: 1
+      20core:
+        selector:
+          matchLabels:
+            component: spark
+            cores: 20
+          matchExpressions:
+            - { key: tier, operator: In, values: [ cache ] }
+            - { key: environment, operator: NotIn, values: [ dev ] }
+          config:
+            cores: 10
+            memory: "1g"
+          instances: 3
+          instancesPerNode: 2
+    config:
+----
+
+Here we see that for a node _type_ called `leader` we have an object with two top-level properties, one of them being `selectors`.
+`selectors` is again a map of names to objects.
+The names are chosen by the user and should describe the role group, often this will be just `default` or something similar but it allows to override configuration per role group while inheriting parent-level config.
+
+This method also allows for auto-scaling should new nodes be added that match the selector.
+
+=== Positive Consequences
+
+* We have a consistent behavior across all Operators
+* It is better than what customers have today
+* People already familiar with Kubernetes should feel right at home
+
+=== Negative Consequences
+
+* It is more effort to implement than the alternatives
+* It is harder to use for everyone who's not used to the Kubernetes style of selecting nodes
+** The old way of listing hosts can be relatively easily emulated (but should be explained in the docs)
+
+== Links
+
+* https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/["Label and Selector" syntax]
