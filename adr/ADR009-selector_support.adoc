@@ -1,4 +1,4 @@
-= ADR009: Placement of services on nodes
+= ADR009: Assigning Services to Nodes
 Lars Francke <lars.francke@stackable.de>
 v0.1, 1.3.2021
 :status: accepted
@@ -13,7 +13,7 @@ v0.1, 1.3.2021
 
 == Context and Problem Statement
 
-We need to decide on a syntax and feature set on how to place services on nodes.
+We need to decide on a syntax and feature set on how to assign services on nodes.
 
 In the Kubernetes world this is a bit easier as there are fewer shared resources, and the underlying node does not matter as much.
 The nodes are also often interchangeable, and the identity of the nodes do not matter.
