@@ -1,6 +1,100 @@
+// Header of this document:
+
 = Stackable Documentation
+:toc:
+:toc-placement: preamble
+:toclevels: 1
+:showtitle:
+:base-repo: https://github.com/stackabletech
+:imagesdir: diagrams
+
+// Need some preamble to get TOC:
+{empty}
+
+
 == Introduction
 
+With our Stackable technology we aim to create an orchestration system that allows end users to deploy, scale and manage Big Data infrastructure on any environment, no matter if it's a VM or bare metal both in cloud and on-premise.
+
+== Goal of the project
+The goal is to be able to declare full Data Platforms using this concept and go beyond pure low-level applications. This means that we want to be able to deploy a Kafka cluster for example. In the future we would also like to be able to declaratively roll out data, provide proper security configuration out of the box, Kafka topics, HDFS directories, Replication policies, maybe even Spark jobs.
+
+We want to build a distribution that includes the “best of breed” of existing Open Source tools, but bundles them in a way so it is easy to deploy a fully working stack of software. Most of the existing tools are “single purpose” tools which often do not play nicely together out-of-the-box.
+
+== Architecture
+Stackable deploys a server-client architecture where decentralized agents receive commands from the central server to execute.
+Generally speaking we make use of the https://en.wikipedia.org/wiki/Whiteboard_Pattern[whiteboard pattern] as communication paradigm.
+
+With Kubernetes as a prominent implementation of that architecture, we considered and decided on {base-repo}/documentation/adr/ADR7-defined_reuse_of_k8s.adoc[reusing Kubernetes components].
+
+
+=== Assumption
+The infrastructure (like a VM server) should be already available and contains a SSH Login runing on a Linux OS.
+
+=== Components
+The following components will set up our orchestration system:
+
+* Kubernetes API-Server
+* Agent(s): one per VM
+* Operators: one per application/Big Data Product
+
+== Components and their functionality
+=== API-Server (Orchestrator)
+At the moment we use the standard Kubernetes API-Server and stay API-compatible with Kubernetes. In the future we might implement our own Orchestrator component if needed.
+The API-Server acts as a centralized frontend for the clusters shared storage. It is the component through which all other components (i.e. Agents, Kubelet, Operators, ...) communicate.
+
+=== Operator(s)
+For each application/Big Data Product there is exactly one special Operator defined.
+They watch for changes in their managed resources in the API-Server.
+This Operator is the expert of the application logic, how to roll out and update the Big Data Product (e.g. Kafka with the {base-repo}/kafka-operator[kafka-operator] and {base-repo}/zookeeper-operator[zookeeper-operator]).
+An Operator should implement and encompass all the knowledge a human operator would need when operating the service in question.
+To ease up operator development we created an {base-repo}/operator-rs[operator-framework] to base new operators on, other than implementing the whole workflow/api by oneself.
+
+=== Agent(s)
+The {base-repo}/agent[Agent(s)] do not know anything about concrete Big Data products, they only execute work instructions, provided by the Operator(s). Every system dedicated in the Big Data cluster runs a copy of the Agent, registered to the central API-Server, to get informed about updates.
+
+== Communication and interaction
+image::interaction-diagram.svg[]
+
+
+=== 1. Client -> API-Server (Orchestrator)
+The client creates a YAML file for the API-Server, which defines the configuration for the Big Data Product (e.g. Kafka). The client then uses the usual Kubernetes tools (e.g. `kubectl` or any other Kubernetes client).
+This means that the whole infrastructure will be described in code (Infrastructure-as-Code) and can be version controlled.
+
+=== 2. API-Server (Orchestrator) -> Operator(s)
+The API-Server receives the YAML file from the Client, identifies the appropriate Operator(s) (e.g. Kafka Operator) and notifies about the file changes.
+
+=== 3. Operator(s) -> API-Server (Orchestrator)
+The appropriate Operator(s) (e.g. Kafka Operator) will translate the abstract description into detailed actions for the Agent(s).
+
+=== 4. Agent(s) -> API-Server (Orchestrator)
+In the meantime each Agent, running on its own VM, is listening for updates, which belongs to its VM. If there is an update for the appropriate VM, then the Agent of this VM is going to obtain the configuration and act accordingly. (e.g. download an artifact, update a configuration or start a process locally.
+
+=== 5. Agent(s) -> Big Data Product (Kafka)
+Finally, the Agent(s) will provision the Big Data Product (e.g. setting up a Kafka) onto the node of its VM.
+
+
+== Technical base
+=== API-Server (Orchestrator)
+The https://kubernetes.io/docs/reference/command-line-tools-reference/kube-apiserver/[Kubernetes API-Server] validates and configures data for the api objects which include pods, services, replicationcontrollers, and others. The API-Server services **REST** operations and provides the frontend to the cluster's shared state through which all other components interact.
+
+
+=== Operator(s)
+The Operator(s), which can run on the same server as the API-Server or on their own server, can be written in any programming language. We are using **Rust** to implement our Operators.
+
+=== Agent(s)
+We have chosen **Rust** as a programming language for the implementation of the Agent. This tool will manage the installation on the VM.
+Rust is a Programming language, which is focused on safety. It provides memory safety without a garbage collector.
+
+**Decision Drivers:**
+
+* The ability to deploy the agent as one binary with no external dependencies
+* Availability of well-supported libraries for necessary operations
+* File IO
+* Network IO
+* systemd
+* IDE support
+* Debugging options
 == Getting Started
 Intrigued?
 Want to try it out?
