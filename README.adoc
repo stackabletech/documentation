@@ -57,7 +57,7 @@ Usually the installation and configuration of Kubernetes is a full-blown project
 However, the Stackable Platform only uses a very limited subset of the full Kubernetes features, so for our purposes we could actually get away with just running a https://kubernetes.io/docs/reference/command-line-tools-reference/kube-apiserver/[kube-apiserver] and leaving out the entire rest of the https://kubernetes.io/docs/concepts/overview/components/[control-plane].
 This makes the deployment a lot simpler.
 
-NODE: We have tested our stack with Kubernetes 1.18 and above
+NOTE: We have tested our stack with Kubernetes 1.18 and above
 
 That being said, Stackable will work with any Kubernetes, please feel free to skip this chapter if you already have a working Kubernetes cluster, or want to use a managed Kubernetes offering like the ones provided by https://www.ionos.com/enterprise-cloud/managed-kubernetes[IONOS], https://cloud.google.com/kubernetes-engine[Google] or https://docs.microsoft.com/en-us/azure/aks/[Azure].
 
@@ -104,7 +104,7 @@ Metrics-server is running at https://127.0.0.1:6443/api/v1/namespaces/kube-syste
 To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
 ----
 
-==== Distribute KubeConfig
+==== Distribute kubeconfig
 Since our agent registers in Kubernetes very similarly to a regular Kubelet it will need a kubeconfig to know how and where to connect to Kubernetes.
 When we installed K3S, it generated a configuration that clients can use in `/etc/rancher/k3s/k3s.yaml` on the orchestrator server.
 
@@ -284,7 +284,7 @@ When installing from packages the agent config file is created in '/etc/stackabl
 
 The Agent takes a few configuration options, please refer to https://github.com/stackabletech/agent#command-line-parameters[the agent documentation] for more details.
 
-If you have provided a kubeconfig for the root user in `/root/.kube/config` then the agent will use this, if you decided against a _global_ `KUBECONFIG` enwironment variable, you will need to specify where the config should be read from.
+If you have provided a kubeconfig for the root user in `/root/.kube/config` then the agent will use this, if you decided against a _global_ `KUBECONFIG` environment variable, you will need to specify where the config should be read from.
 
 This can be done by adding a systemd drop-in file that is merged with the package provided unit file.
 Put the following content in `/usr/lib/systemd/system/stackable-agent.service.d/kubeconfig.conf`:
