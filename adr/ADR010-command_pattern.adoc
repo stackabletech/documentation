@@ -1,0 +1,67 @@
+= ADR010: Expressing one-shot commands in a Kubernetes-native way
+Lars Francke <lars.francke@stackable.de>
+v0.1, 1.3.2021
+:status: accepted
+
+* Status: accepted
+* Deciders:
+** Lars Francke
+* Date: 1.3.2021
+
+== Context and Problem Statement
+
+Kubernetes follows a declarative model where a user describes the desired state of the world.
+There are some things that cannot be easily or naturally modeled in a declarative way.
+Some examples being: `restart`, `start`, `stop`, `repair`, `finalize upgrade`, etc.
+
+We still need to support those actions.
+This ADR is about finding a way to do so.
+As can be seen in the https://github.com/kubernetes/kubernetes/issues/72637[linked issue] others are facing the same issue and various workarounds are in-use.
+Kubernetes offers no native way to achieve our goal.
+
+
+== Considered Options
+
+* Have the Operators start a Web server that accepts requests for these actions
+* Add CRDs for these kinds of actions
+** Have a single CRD: FooCommand which takes a string with the command (e.g. "restart")
+** Have a CRD per command (e.g. FooRestart, FooStart)
+
+== Decision
+
+We decided to go with a single CRD per command.
+We decided against a web server (for now) because it'd mean we'd need to reimplement authentication and authorization from scratch and this'd need to be consistent with the way Kubernetes works.
+
+Unfortunately, Kubernetes doesn't support arbitrary subresources for CRDs yet (only `scale` and `status` are supported)
+
+.Our implementation idea is as follows:
+* Create a CRD
+** It needs to have a reference to the parent resource (i.e. a name and a namespace)
+* Write an operator (_command operator_) which should be made generic and reusable
+* This operator watches this new custom resource
+** For each command object it tries to find the referenced resource and sets the ownerReference of the command-CR to the one of the parent
+** In theory users could do this themselves but it's harder to use (i.e. having to find the uid)
+* The parent controller will be notified and during its reconcile it can get a list of all commands sorted by creationTimestamp
+* It can then work on the command - tracking progress in the status - and also potentially update the command-CR
+
+.Open questions:
+* Should the command CR be deleted immediately after it has been completed?
+* Should the command CR be used to track progress in addition to or instead of the parent resource?
+
+
+=== Positive Consequences
+
+* We do not change the spec of the main objects so we can keep imperative actions out of it
+** This allows users to keep the spec in version control
+
+=== Negative Consequences
+
+* Implementation effort because each CRD needs a new controller
+** Can be mitigated somehow because the controllers should be pretty uniform
+* Can be harder to use
+** Instead of being able to issue a simple command like `spark restart` users first have to construct a proper YAML file and then use kubectl to apply it
+** Can be mitigated with custom CLIs
+
+== Links
+
+* https://github.com/kubernetes/kubernetes/issues/72637
