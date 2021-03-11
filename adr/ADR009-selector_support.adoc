@@ -28,8 +28,8 @@ Our goal is to be at least as good if not better.
 == Considered Options
 
 * Have users specify a list of nodeNames in their resources
-** This would basically be a 1:1 mapping from the current situation.
 * Reuse the https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/["Label and Selector" syntax] from Kubernetes
+** See also https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/[Assigning Pods to Nodes]
 
 == Decision
 
@@ -89,3 +89,4 @@ This method also allows for auto-scaling should new nodes be added that match th
 == Links
 
 * https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/["Label and Selector" syntax]
+* https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/[Assigning Pods to Nodes]
