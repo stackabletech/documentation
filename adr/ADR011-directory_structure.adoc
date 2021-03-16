@@ -6,41 +6,66 @@ v0.1, 12.03.2021
 * Status: accepted
 * Deciders:
 ** Sönke Liebau
-* Date:  12.03.2021
+** Lars Francke
+* Date:  17.03.2021
 
 == Context and Problem Statement
 
 To run the Stackable platforms some components will need to be installed on the managed servers.
-We will offer OS packages for some distributions, currently deb and RPM packages are available.
-To make the components behave the same we would like to agree on some default directories and what content we will put there.
+We will offer OS packages for a specified set of distributions, currently deb and RPM packages are available.
+To make the components behave the same regardless of the target platform, we would like to agree on some default directories and what content we will put there.
 
 This ADR is less to document alternative solutions, but rather to document the directory structure we agreed on, hence there are no alternative options discussed.
 Instead I have added excerpts from the https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html[Filesystem Hierarchy Standard] to illustrate why I think the chosen paths are the correct ones.
 
+== Considered Options
+
+* Follow the https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html[Filesystem Hierarchy Standard] and keep files under `/etc/opt` and `/var/opt`
+* Deviate from the Standard and remove the extra `opt` subdirectory
+
+== Decision Drivers
+* Predictability for users
+* Adherence to standards & best-practices
+
 == Decision
+We decided to deviate from what the https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html[Filesystem Hierarchy Standard] specifies a little bit, in order to make the file location more familiar to our users.
+Please refer to the listing below for final locations.
+
+While the standard calls for variable data and config files to be located in `opt` subdirectories under `/var` and `/etc` we have never seen this actually being done in practice and would expect our users to be confused if they had to look for the files here.
+
+=== Benefits:
+
+* Config files should be easily located for the largest part of our users
+
+=== Drawbacks:
+
+* Strictly speaking we break the official requirements of where our config files should be - but we seem to be in good company, as no one really follows this recommendation anyway
 
 ----
 /
 ├── etc
-│   └── opt
-│       └── stackable
-│           ├── agent
-│           │   └── secure
-│           ├── serviceconfig
-│           └── zookeeper-operator
+│   └── stackable
+│       ├── agent
+│       │   └── secure
+│       ├── serviceconfig
+│       └── zookeeper-operator
 ├── opt
 │   └── stackable
 │       ├── agent
 │       ├── packages
 │       └── zookeeper-operator
 └── var
-    ├── log
+    ├── lib
     │   └── stackable
-    │       └── servicelogs
-    └── opt
+    │       └── agent
+    └── log
         └── stackable
-            └── agent
+            └── servicelogs
+                ├── namespace-product-name
+                └── namespace-product-name
 ----
+
+== Discussion of Options
 
 === Binaries for Stackable Components
 
@@ -51,7 +76,7 @@ In the example above there are subdirectories for the agent and the ZooKeeper op
 === Packages
 
 For worker servers which are under management by our agent, we will need to install packages that contain the upstream software that is being rolled out by the agent.
-As this is is also third party software but being used by Stackable we will install these under `/opt/stackable/' as well, but put them under a subdirectory `packages`
+As this is is also third party software but being used by Stackable we will install these under `/opt/stackable/' as well, but put them under a subdirectory `packages` to keep them separate from the Stackable software.
 
 This only refers to the default setting the agent is configured with though, this path can be freely chosen by the user.
 
@@ -59,18 +84,27 @@ This only refers to the default setting the agent is configured with though, thi
 
 According to https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#etcoptConfigurationFilesForOpt[3.7.4], if our binaries are kept under `/opt` we should keep the associated config files in `/etc/opt` and replicate the same folder structure here that can be found in `/opt`.
 
+This default location seems like it is different from the industry standard, as we could not find any software that actually uses this path.
+Instead it is accepted best-practice to put configuration either directly under `/etc` or create a vendor subdirectory under `/etc` and keep configs there.
+
 Out of the current components, only the agent requires a config file that will be kept here.
 The agent also requires TLS keys, these will by default be kept in a `/etc/opt/stackable/agent/secret` - but this setting can be overridden in the agent config.
 
 === Service Configuration
-Following the logic from above, config files that are written for the actual services that are managed by Stackable (Apache Kafka, Apache Hadoop, ...) should also reside in `/etc/opt/stackable`
-It doesn't make sense to call the containing directory `packages`, like the parent directory for the binaries, so instead I have renamed it to `serviceconfig` to better express what it actually contains.
+Following the logic from above, config files that are written for the actual services that are managed by Stackable (Apache Kafka, Apache Hadoop, ...) should also reside in `/etc/opt/stackable`.
+
+Following the logic stated above, we will remove the `opt` from this path as well.
+
+It doesn't make sense to call the containing directory `packages`, like the parent directory for the binaries, so instead we have renamed it to `serviceconfig` to better express what it actually contains.
 
 This only refers to the default setting the agent is configured with though, this path can be freely chosen by the user.
 
 === Agent Working Directory
 The agent keeps a working directory on disk, in which it can sometimes place state, depending on configuration and used features.
 This directory can be configured in the agent, and will default to `/var/opt/stackable/agent` following https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#varoptVariableDataForOpt[5.12.1]
+
+Again, like for config files, this path is not what users would expect, as common practice seems to have deviated from the Standard.
+Instead of adhering to the standard, `/var/lib/stackable` would be the more common option to choose for variable data.
 
 === Log File
 
@@ -79,3 +113,6 @@ These need not have a log directory on disk by default.
 
 For the services that are managed by Stackable, log directories will be kept in per-service subdirectories under `/var/log/stackable/servicelogs`.
 This can be configured in the agent and is just the default value.
+
+The actual log directory for services that are rolled out on nodes managed by Stackable can be controlled by the user.
+If users prefer to keep their logs in `/var/log/hadoop` for example then this can easily be overridden when creating the cluster.
