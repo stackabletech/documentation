@@ -22,7 +22,7 @@ Our goal is to be at least as good if not better.
 * We want to support multiple instances of a service (or role) on a single node.
 * We have to be able to target single instances with one-shot commands (e.g. restart this process)
 * We need to be able to place instances in a very flexible way but also in a very strict way
-** Sometimes there is a agreed upon fixed placement of services to nodes that must be adhered to
+** Sometimes there is an agreed upon fixed placement of services to nodes that must be adhered to
 
 == Considered Options
 
@@ -70,9 +70,10 @@ We decided to go with the Kubernetes way of using label selectors.
 
 * Here we see that for a node _type_ called `leader` we have an object with two top-level properties, one of them being `selectors`.
 `selectors` is again a map of names to objects.
-* The names are chosen by the user and should describe the role group, often this will be just `default` or something similar but it allows to override configuration per role group while inheriting parent-level config.
+* The names are chosen by the user and should describe the role group, often this will be just `default` or something similar but it allows overriding configuration per role group while inheriting parent-level config.
 
-In summary we decided that all our CRDs should follow a consistent pattern:
+In summary, we decided that all our CRDs should follow a consistent pattern:
+
 * At the top level there is one property per role
 * Under each role there can be one or more role groups (in a `selectors` property)
 * Each role group has a single `selector` which is a Kubernetes `LabelSelector`
