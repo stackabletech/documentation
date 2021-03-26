@@ -87,24 +87,18 @@ According to https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#etcoptCon
 This default location seems like it is different from the industry standard, as we could not find any software that actually uses this path.
 Instead it is accepted best-practice to put configuration either directly under `/etc` or create a vendor subdirectory under `/etc` and keep configs there.
 
-Out of the current components, only the agent requires a config file that will be kept here.
-The agent also requires TLS keys, these will by default be kept in a `/etc/opt/stackable/agent/secret` - but this setting can be overridden in the agent config.
-
 === Service Configuration
 According to the standard, config files that are written for the actual services that are managed by Stackable (Apache Kafka, Apache Hadoop, ...) should also reside in `/etc/opt/stackable`.
 
-Following the logic stated above, we will divert remove the `opt` from this path as well.
+Following the logic stated above, we will divert from the standard and remove the `opt` from this path as well.
 
 It doesn't make sense to call the containing directory `packages`, like the parent directory for the binaries, so instead we have renamed it to `serviceconfig` to better express what it actually contains.
 
-This only refers to the default setting the agent is configured with though, this path can be freely chosen by the user.
+=== Working Directories
+For components that need working directories for variable / changing data on disk, the https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#varoptVariableDataForOpt[standard] specifies that these should reside under `/var/opt/` and then again replicate the folder structure that exists under `/opt/`.
 
-=== Agent Working Directory
-The agent keeps a working directory on disk, in which it can sometimes place state, depending on configuration and used features.
-This directory can be configured in the agent, and will default to `/var/opt/stackable/agent` following https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html#varoptVariableDataForOpt[Filesystem Hierarchy Standard # 5.12.1]
-
-Again, like for config files, this path is not what users would expect, as common practice seems to have deviated from the Standard.
-Instead of adhering to the standard, `/var/lib/stackable` would be the more common option to choose for variable data.
+Like for config files we will deviate from the standard here and follow common practice instead.
+Any component that needs a working directory should keep this in a subdirectory under `/var/lib/stackable/`.
 
 === Log File
 
