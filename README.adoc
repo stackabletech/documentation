@@ -121,7 +121,7 @@ We will alert you if something needs to be done differently when running everyth
 
 
 .By the end of this guide, the environment that you have set up will look like this
-image::images/quickstart_architecture.png[]
+image::quickstart_architecture.png[]
 
 
 === Prepare Nodes
