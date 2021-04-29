@@ -16,7 +16,7 @@ WARNING: Due to a https://gitlab.com/antora/antora/-/issues/745[bug] this will _
 
 == Development
 
-During development it can be helpful to change the playbook:
+During development, it can be helpful to change the playbook so that the source does point at the local directory instead of the remote git repository:
 
 [source,yaml]
 ----

@@ -6,7 +6,7 @@ site:
 
 content:
   sources: 
-  - url: ./
+  - url: https://github.com/stackabletech/documentation.git
     branches: main
 
 ui:
