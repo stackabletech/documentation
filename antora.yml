@@ -1,0 +1,5 @@
+name: home
+version: master
+title: Stackable Documentation
+nav:
+  - modules/adr/nav.adoc
