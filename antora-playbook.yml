@@ -1,0 +1,13 @@
+site:
+  title: Stackable Documentation
+  url: https://docs.stackable.tech
+  start_page: documentation::index.adoc
+  robots: allow
+content:
+  sources: 
+  - url: https://github.com/stackabletech/documentation.git
+    branches: antora
+ui:
+  bundle:
+    url: https://repo.stackable.tech/repository/misc/ui-bundle.zip
+    snapshot: true

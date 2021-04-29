@@ -1,0 +1,432 @@
+= Stackable Documentation
+:toc:
+:toc-placement: preamble
+:toclevels: 1
+:showtitle:
+:base-repo: https://github.com/stackabletech
+:imagesdir: diagrams
+
+// Need some preamble to get TOC:
+{empty}
+
+
+== Introduction
+
+With our Stackable technology we aim to create an orchestration system that allows end users to deploy, scale and manage Big Data infrastructure on any environment, no matter if it's a VM or bare metal both in cloud and on-premise.
+
+== Goal of the project
+The goal is to be able to declare full Data Platforms using this concept and go beyond pure low-level applications. This means that we want to be able to deploy a Kafka cluster for example. In the future we would also like to be able to declaratively roll out data, provide proper security configuration out of the box, Kafka topics, HDFS directories, Replication policies, maybe even Spark jobs.
+
+We want to build a distribution that includes the “best of breed” of existing Open Source tools, but bundles them in a way so it is easy to deploy a fully working stack of software. Most of the existing tools are “single purpose” tools which often do not play nicely together out-of-the-box.
+
+== Architecture
+Stackable deploys a server-client architecture where decentralized agents receive commands from the central server to execute.
+Generally speaking we make use of the https://en.wikipedia.org/wiki/Whiteboard_Pattern[whiteboard pattern] as communication paradigm.
+
+With Kubernetes as a prominent implementation of that architecture, we considered and decided on {base-repo}/documentation/adr/ADR7-defined_reuse_of_k8s.adoc[reusing Kubernetes components].
+
+
+=== Assumption
+The infrastructure (like a VM server) should be already available and contains a SSH Login runing on a Linux OS.
+
+=== Components
+The following components will set up our orchestration system:
+
+* Kubernetes API-Server
+* Agent(s): one per VM
+* Operators: one per application/Big Data Product
+
+== Components and their functionality
+=== API-Server (Orchestrator)
+At the moment we use the standard Kubernetes API-Server and stay API-compatible with Kubernetes. In the future we might implement our own Orchestrator component if needed.
+The API-Server acts as a centralized frontend for the clusters shared storage. It is the component through which all other components (i.e. Agents, Kubelet, Operators, ...) communicate.
+
+=== Operator(s)
+For each application/Big Data Product there is exactly one special Operator defined.
+They watch for changes in their managed resources in the API-Server.
+This Operator is the expert of the application logic, how to roll out and update the Big Data Product (e.g. Kafka with the {base-repo}/kafka-operator[kafka-operator] and {base-repo}/zookeeper-operator[zookeeper-operator]).
+An Operator should implement and encompass all the knowledge a human operator would need when operating the service in question.
+To ease up operator development we created an {base-repo}/operator-rs[operator-framework] to base new operators on, other than implementing the whole workflow/api by oneself.
+
+=== Agent(s)
+The {base-repo}/agent[Agent(s)] do not know anything about concrete Big Data products, they only execute work instructions, provided by the Operator(s). Every system dedicated in the Big Data cluster runs a copy of the Agent, registered to the central API-Server, to get informed about updates.
+
+== Communication and interaction
+image::interaction-diagram.svg[]
+
+
+=== 1. Client -> API-Server (Orchestrator)
+The client creates a YAML file for the API-Server, which defines the configuration for the Big Data Product (e.g. Kafka). The client then uses the usual Kubernetes tools (e.g. `kubectl` or any other Kubernetes client).
+This means that the whole infrastructure will be described in code (Infrastructure-as-Code) and can be version controlled.
+
+=== 2. API-Server (Orchestrator) -> Operator(s)
+The API-Server receives the YAML file from the Client, identifies the appropriate Operator(s) (e.g. Kafka Operator) and notifies about the file changes.
+
+=== 3. Operator(s) -> API-Server (Orchestrator)
+The appropriate Operator(s) (e.g. Kafka Operator) will translate the abstract description into detailed actions for the Agent(s).
+
+=== 4. Agent(s) -> API-Server (Orchestrator)
+In the meantime each Agent, running on its own VM, is listening for updates, which belongs to its VM. If there is an update for the appropriate VM, then the Agent of this VM is going to obtain the configuration and act accordingly. (e.g. download an artifact, update a configuration or start a process locally.
+
+=== 5. Agent(s) -> Big Data Product (Kafka)
+Finally, the Agent(s) will provision the Big Data Product (e.g. setting up a Kafka) onto the node of its VM.
+
+
+== Technical base
+=== API-Server (Orchestrator)
+The https://kubernetes.io/docs/reference/command-line-tools-reference/kube-apiserver/[Kubernetes API-Server] validates and configures data for the api objects which include pods, services, replicationcontrollers, and others. The API-Server services **REST** operations and provides the frontend to the cluster's shared state through which all other components interact.
+
+
+=== Operator(s)
+The Operator(s), which can run on the same server as the API-Server or on their own server, can be written in any programming language. We are using **Rust** to implement our Operators.
+
+=== Agent(s)
+We have chosen **Rust** as a programming language for the implementation of the Agent. This tool will manage the installation on the VM.
+Rust is a Programming language, which is focused on safety. It provides memory safety without a garbage collector.
+
+**Decision Drivers:**
+
+* The ability to deploy the agent as one binary with no external dependencies
+* Availability of well-supported libraries for necessary operations
+* File IO
+* Network IO
+* systemd
+* IDE support
+* Debugging options
+
+== Getting Started
+Intrigued?
+Want to try it out?
+
+The following paragraphs will guide you through setting up all necessary components to create a working Stackable Platform which you can then use to deploy services.
+
+=== Overview
+
+In order to provide a working platform, we will perform the following steps:
+
+. Install Kubernetes
+. Add Nodes to Kubernetes
+. Install operators for products
+
+You can run the entire platform on your laptop or a single virtual machine, but it is highly recommended to use several machines for the following steps.
+The following terms will be used throughout the remainder of this guide:
+
+* *Orchestrator*: A single server which is used to run components that are needed only once
+* *Worker*: One or more servers that are intended to run the actual workloads (Apache Hadoop, Apache Kafka, ...) later on
+
+NOTE: Going forward, we will assume that you are installing this on several machines, but most commands should work the same in a single-machine scenario.
+We will alert you if something needs to be done differently when running everything on the same machine.
+
+
+.By the end of this guide, the environment that you have set up will look like this
+image::quickstart_architecture.png[]
+
+
+=== Prepare Nodes
+Perform the following steps on both the orchestrator and worker nodes.
+
+==== Install Stackable Repository
+
+===== Debian/Ubuntu
+In order to be able to verify that the releases have not been tampered with, you'll need to verify and install the PGP key we use to sign these releases.
+A prerequisite for these operations is, that an implementation of PGP needs to be installed, if this is not yet the case you can do so by running:
+
+    apt-get install gnupg
+
+The key is available on the Ubuntu keyserver under the id _16dd12f5c7a6d76a_ and can be added to your apt keychain with the following command:
+
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 16dd12f5c7a6d76a
+
+To enable the actual repository, put the following content into `/etc/apt/sources.list.d/stackable.list`:
+
+    deb https://repo.stackable.tech/repository/deb-nightly buster main
+
+===== Centos/RHEL
+
+*coming soon*
+
+=== Install Kubernetes
+Usually the installation and configuration of Kubernetes is a full-blown project all of its own, so it might seem a bit weird to find this tucked away in a little section of the quickstart guide like this.
+However, the Stackable Platform only uses a very limited subset of the full Kubernetes features, so for our purposes we could actually get away with just running a https://kubernetes.io/docs/reference/command-line-tools-reference/kube-apiserver/[kube-apiserver] and leaving out the entire rest of the https://kubernetes.io/docs/concepts/overview/components/[control-plane].
+This makes the deployment a lot simpler.
+
+NOTE: We have tested our stack with Kubernetes 1.18 and above
+
+That being said, Stackable will work with any Kubernetes, please feel free to skip this chapter if you already have a working Kubernetes cluster, or want to use a managed Kubernetes offering like the ones provided by https://www.ionos.com/enterprise-cloud/managed-kubernetes[IONOS], https://cloud.google.com/kubernetes-engine[Google] or https://docs.microsoft.com/en-us/azure/aks/[Azure].
+
+So far we have only tested the Stackable Agent with the IONOS managed Kubernetes service, we will update the compatibility matrix here as we perform further tests.
+
+
+|===
+|Kubernetes Service |Compatibility
+
+|https://www.ionos.com/enterprise-cloud/managed-kubernetes[IONOS Managed Kubernetes]
+|Compatible
+
+|https://cloud.google.com/kubernetes-engine[Google Kubernetes Engine]
+|Untested
+
+|https://docs.microsoft.com/en-us/azure/aks/[Azure Kubernetes Service]
+|Untested
+
+|https://aws.amazon.com/eks[Amazon Elastic Kubernetes Service]
+|Untested
+
+|===
+
+There are numerous possibilities to go about this, but we will focus on https://k3s.io/[K3S], a lightweight Kubernetes distribution that is provided by https://rancher.com/[Rancher].
+
+Run the following command on your _orchestrator_ node:
+
+    curl -sfL https://get.k3s.io | sh -
+
+This will download and install K3S, and configure systemd services to run at startup.
+Client tools like `kubectl` will also be installed and configured correctly to connect to Kubernetes.
+
+To check if everything worked as expected you can use kubctl to retrieve the cluster information:
+
+    kubectl cluster-info
+
+See below for an example of an expected result:
+
+----
+Kubernetes control plane is running at https://127.0.0.1:6443
+CoreDNS is running at https://127.0.0.1:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+Metrics-server is running at https://127.0.0.1:6443/api/v1/namespaces/kube-system/services/https:metrics-server:/proxy
+
+To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+----
+
+==== Distribute kubeconfig
+Since our agent registers in Kubernetes very similarly to a regular Kubelet it will need a kubeconfig to know how and where to connect to Kubernetes.
+When we installed K3S, it generated a configuration that clients can use in `/etc/rancher/k3s/k3s.yaml` on the orchestrator server.
+
+NOTE: Currently the kubeconfig will contain 127.0.0.1 as the api-server IP, you will need to change this to the ip address of your orchestrator server
+
+This file needs to be put on every node of the cluster - ideally you'd copy this file to `/root/.kube/config` which will make all components that run as the root user use this configuration.
+Perform this step for the orchestrator also, as the operators will expect to finde a kubeconfig in that place.
+
+If you need to be able to connect to other Kubernetes clusters, or do not want to make this the global config (for the root user) for other reasons, then you can choose a different location for this file.
+
+Please see below for extra steps that need to be taken to enable this config.
+
+=== Specify a Repository
+Stackable downloads packages from repositories, which the agents need to know about.
+To avoid having to configure these repositories on every agent they are instead specified in Kubernetes and retrieved from there by the agent.
+
+In order to allow creating a repository, you'll have to create the CRD for repositories in your freshly installed Kubernetes cluster.
+The CRD looks like this:
+
+[source,yaml]
+----
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: repositories.stable.stackable.de
+spec:
+  group: stable.stackable.de
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                repo_type:
+                  type: string
+                properties:
+                  type: object
+                  additionalProperties:
+                    type: string
+  scope: Namespaced
+  names:
+    plural: repositories
+    singular: repository
+    kind: Repository
+    shortNames:
+    - repo
+----
+
+You can choose whatever way is most convenient for you to apply this CRD to your cluster, one possible way is using `kubectl` from the command line:
+
+[source,bash]
+----
+cat <<EOF | kubectl apply -f -
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: repositories.stable.stackable.de
+spec:
+  group: stable.stackable.de
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                repo_type:
+                  type: string
+                properties:
+                  type: object
+                  additionalProperties:
+                    type: string
+  scope: Namespaced
+  names:
+    plural: repositories
+    singular: repository
+    kind: Repository
+    shortNames:
+    - repo
+EOF
+----
+
+You can either host your own repository or specify our public repository for convenience.
+The specification for our repository is shown below and can be applied with `kubectl` just like the definition above:
+
+[source,bash]
+----
+cat <<EOF | kubectl apply -f -
+apiVersion: "stable.stackable.de/v1"
+kind: Repository
+metadata:
+  name: stackablepublic
+spec:
+  repo_type: StackableRepo
+  properties:
+    url: https://repo.stackable.tech/repository/packages/
+EOF
+----
+
+=== Install Operators
+Depending on the products you want to manage with the Stackable platform, you need to install our corresponding operators.
+They are made available as OS packages as well, the currently available operators are:
+
+
+|===
+|Product |Package Name
+
+|Apache Kafka
+|stackable-kafka-operator-server
+
+|Apache Spark
+|stackable-spark-operator-server
+
+|Apache Zookeeper
+|stackable-zookeeper-operator-server
+|===
+
+==== RHEL
+*coming soon*
+
+==== Ubuntu
+    apt-get install stackable-spark-operator-server
+
+
+To start and enable the services please run the following commands:
+
+----
+# Kafka
+systemctl start stackable-kafka-operator-server
+systemctl enable stackable-kafka-operator-server
+
+# Spark
+systemctl start stackable-spark-operator-server
+systemctl enable stackable-spark-operator-server
+
+# Zookeeper
+systemctl start stackable-zookeeper-operator-server
+systemctl enable stackable-zookeeper-operator-server
+----
+
+
+To check if the services started succesfully you can run (example for Zookeeper):
+
+----
+systemctl status stackable-zookeeper-operator-server
+----
+
+This should report the service as being loaded and enabled.
+
+=== Add Nodes to Kubernetes
+
+==== Install Agent
+The agent needs to be installed on all servers that should run services and they need to be configured to have access to Kubernetes.
+
+Installing the agent can be done from our RPM and deb package repositories, which we enabled when preparing the nodes above.
+The packages also install a systemd service to run the agent, this is not enabled or started by default though
+
+===== RHEL
+
+    *coming soon*
+
+===== Ubuntu
+
+    apt-get install stackable-agent
+
+==== Configuring the Agent
+When installing from packages the agent config file is created in '/etc/stackable-agent/agent.conf'.
+
+The Agent takes a few configuration options, please refer to https://github.com/stackabletech/agent#command-line-parameters[the agent documentation] for more details.
+
+If you have provided a kubeconfig for the root user in `/root/.kube/config` then the agent will use this, if you decided against a _global_ `KUBECONFIG` environment variable, you will need to specify where the config should be read from.
+
+This can be done by adding a systemd drop-in file that is merged with the package provided unit file.
+Put the following content in `/usr/lib/systemd/system/stackable-agent.service.d/kubeconfig.conf`:
+
+----
+Environment="KUBECONFIG=/path/to/kubeconfig"
+----
+
+==== Starting the Agent
+The agent can be started like any regular systemd service by running
+
+    systemctl start stackable-agent
+
+To enable it to be started at every boot:
+
+    systemctl enable stackable-agent
+
+During the first start of the agent, it will perform some bootstrapping tasks, most notably it will generate a keypair and request a signed certificate from Kubernetes.
+
+If your Kubernetes is not configured to auto-approve these CSRs, you will need to manually approve that request before the agent can start.
+
+You can do this by running `kubectl certificate approve <agent-hostname>-tls` on the orchestrator server after starting the agent.
+
+If your Kubernetes does not offer certificate signing services, you can alternatively also manually generate a keypair and sign a certificate with a proper authority.
+These files will then need to be configured in the agent config file.
+
+=== Health Check
+After performing the steps outlined above you should have an empty Stackable Platform up and running.
+When you run `kubectl get nodes` on the orchestrator, you should see the objects that all your agents added to indicate their readiness.
+
+== Architectural Design Decisions
+All relevant decisions concerning the architecture are documented as Architectural Design Records in the subfolder _adr_.
+
+Unfinished or not yet approved decisions are stored in the _adr/drafts_ subfolder.
+This folder also contains a template that can be used for creating new decision records.
+
+*Naming Convention* +
+When creating a new record, please use the following guidelines for file naming:
+
+ ADR[number]-[name].adoc
+
+During the draft stage please substitute x for the number.
+For the name, please use only lower case letters, number and the underscore.
+Ideally start the name with the imperative form of a verb and avoid fillers like _of/the/for/..._
+
+Some examples:
+
+* choose_project_language
+* choose_repository_structure
+* choose_review_mechanism
+
+When choosing the next free number after an ADR has been approved, make sure to left pad the number with 0 to reach a length of three digits.
