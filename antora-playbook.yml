@@ -1,7 +1,7 @@
 site:
   title: Stackable Documentation
   url: https://docs.stackable.tech
-  start_page: documentation::index.adoc
+  start_page: home::index.adoc
   robots: allow
 content:
   sources: 
