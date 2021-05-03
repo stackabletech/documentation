@@ -26,4 +26,6 @@ content:
     branches: HEAD
 ----
 
+NOTE: Antora does not recognize git submodules as git repositories
+
 The design & layout comes from our https://github.com/stackabletech/documentation-ui[UI repository].
