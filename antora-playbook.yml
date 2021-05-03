@@ -21,3 +21,7 @@ ui:
      contents: |
        static_files: [ .nojekyll ]
    - path: .nojekyll
+
+asciidoc:
+  attributes:
+    base-repo: https://github.com/stackabletech

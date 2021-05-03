@@ -12,4 +12,20 @@ To build the site install Antora and run:
 
     antora antora-playbook.yml
 
+WARNING: Due to a https://gitlab.com/antora/antora/-/issues/745[bug] this will _not_ currently work in Node 16. I recommend using the latest LTS release (14) until the issue is resolved.
+
+== Development
+
+During development, it can be helpful to change the playbook so that the source does point at the local directory instead of the remote git repository:
+
+[source,yaml]
+----
+content:
+  sources:
+  - url: ./
+    branches: HEAD
+----
+
+NOTE: Antora does not recognize git submodules as git repositories
+
 The design & layout comes from our https://github.com/stackabletech/documentation-ui[UI repository].

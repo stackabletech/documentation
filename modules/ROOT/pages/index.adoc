@@ -1,14 +1,4 @@
 = Stackable Documentation
-:toc:
-:toc-placement: preamble
-:toclevels: 1
-:showtitle:
-:base-repo: https://github.com/stackabletech
-:imagesdir: diagrams
-
-// Need some preamble to get TOC:
-{empty}
-
 
 == Introduction
 

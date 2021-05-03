@@ -18,7 +18,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: "Generate site using Antora site action"
-        uses: kameshsampath/antora-site-action@v0.2.0
+        uses: kameshsampath/antora-site-action@v0.2.4
         with:
           antora_playbook: antora-playbook.yml
       - name: Deploy to GitHub Pages
