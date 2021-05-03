@@ -23,7 +23,7 @@ During development, it can be helpful to change the playbook so that the source 
 content:
   sources:
   - url: ./
-    branches: main
+    branches: HEAD
 ----
 
 The design & layout comes from our https://github.com/stackabletech/documentation-ui[UI repository].
