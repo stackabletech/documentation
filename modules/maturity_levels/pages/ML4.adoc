@@ -1,0 +1,30 @@
+= Maturity Level 4
+Jim Halfpenny <jim@source321.com>
+v1.0, 04.05.2021
+:status: draft
+:toc:
+:icons: font
+
+*Status*: {status}
+
+== Objective
+Maturity level 4 will build upon the GA release to include improvements to the product. More advanced features will be added incorporating and codifying expertise and best practices into the product as well as the addition of more operators. The aim is to make Stackable easier, more efficient and more effective than installing and running the components separately.
+
+== Services
+The core stack of available services should be well-defined by this stage, and the rate of addition of new services will slow. Introduction of new services will now be relatively straightforward based on the range of existing operators.
+
+=== Proposed list of services to be added
+TBC
+
+
+== Installation and Upgrades
+Automated in-situ migration from Hadoop clusters to Stackable.
+
+
+== Automated Provisioning
+
+== Configuration management
+
+== Security and Governance
+
+== Demo Applications

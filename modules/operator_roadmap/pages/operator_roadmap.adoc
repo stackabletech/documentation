@@ -1,0 +1,195 @@
+= Operator Roadmap and Dependencies
+Jim Halfpenny <jim@source321.com>
+v1.0, 04.05.2021
+:status: draft
+:toc:
+:icons: font
+:table-caption!:
+
+*Status*: {status}
+
+Outline the proposed operators/components and prioritise their development.
+
+
+[cols=5,10]
+.Operators
+|===
+| Component
+| Dependencies
+| Priority
+| Category
+| Link
+
+| Apache Zookeeper
+|
+| 1
+| Distributed Configuration Management
+| https://zookeeper.apache.org/
+
+| Apache Kafka
+| Apache Zookeeper
+| 1
+| Streaming
+| https://kafka.apache.org/
+
+| Apache Spark
+|
+| 1
+| Data Processing
+| https://spark.apache.org/
+
+| Apache Nifi
+|
+| 1
+| Data Processing
+| https://nifi.apache.org/
+
+| Presto/Trino
+|
+| 2
+| SQL Engine
+| https://trino.io/
+
+
+| Apache Superset
+|
+| 2
+| Data Visualisation
+| https://superset.apache.org/
+
+| Apache Airflow
+|
+| 2
+| Workflow Management
+| https://airflow.apache.org/
+
+| Apache Hadoop HDFS
+| Apache Zookeeper
+| 2
+| Storage
+| https://hadoop.apache.org/
+
+| Apache Hadoop YARN/MapReduce
+| Apache Zookeeper
+| 2
+| Data Processing
+| https://hadoop.apache.org/
+
+
+| Apache Druid
+|
+| 2
+| Streams Processing
+| https://druid.apache.org/
+
+
+| Apache IoTDB
+|
+| 2
+| Operational Database
+| https://iotdb.apache.org/
+
+| Apache Zeppelin
+|
+|
+| Data Visualisation
+| https://zeppelin.apache.org/
+
+| Hue
+|
+|
+| Data Visualisation
+| https://gethue.com/
+
+| Apache Flink
+| Apache Hadoop YARN, Kubernetes
+| 2
+| Stream Processing
+| https://flink.apache.org/
+
+| ElasticSearch
+|
+|
+| Search
+| https://www.elastic.co/
+
+| Apache Solr
+|
+|
+| Search
+| https://solr.apache.org/
+
+| OpenSearch
+|
+|
+| Search
+| https://www.opensearch.org/
+
+| Apache Hive
+|
+|
+| SQL Engine
+| https://hive.apache.org/
+
+| Apache Impala
+|
+|
+| SQL Engine
+| https://impala.apache.org/
+
+| Apache Tez
+|
+|
+| Data Processing
+| https://tez.apache.org/
+
+| Apache HBase
+|
+|
+| Operational Database
+| https://hbase.apache.org/
+
+| Apache Phoenix
+|
+|
+| SQL Engine
+| https://phoenix.apache.org/
+
+| Apache Livy
+|
+|
+| Data Processing
+| https://livy.apache.org/
+
+| Apache Knox
+|
+|
+| Security
+| https://knox.apache.org/
+
+| Apache Atlas
+|
+|
+| Metadata and Lineage
+| https://atlas.apache.org/
+
+| Apache Kudu
+|
+|
+| Storage
+| https://kudu.apache.org/
+
+| Apache Ozone
+|
+|
+| Storage
+| https://ozone.apache.org/
+
+| Apache Oozie
+|
+|
+| Workload Management
+| https://oozie.apache.org/
+
+|===
+

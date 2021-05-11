@@ -1,0 +1,83 @@
+= Maturity Level 1
+Jim Halfpenny <jim@source321.com>
+v1.0, 04.05.2021
+:status: draft
+:toc:
+:icons: font
+
+*Status*: {status}
+
+== Objective
+The aim for maturity level 1 is to provide an MVP of Stackable, including delivery of the essential components needed to deploy the initial service offerings. This will serve to deliver the essential components that form the foundation of Stackable, including the agent and operators.
+
+== Features
+=== Services
+A list of initially supported services for which we have written Stackable operators. The service configuration provided will be enough to get the services deployed, running and working with the other components.
+
+A completed service operator for must implement start, stop, restart and status for its respective service. This is the baseline for acceptance of new operators into the stack.
+
+The initially supported components will have the supported versions documented i.e. those that have been tested individually and as part of the wider stack. Compatible versions may be listed as either a specific version, or a range of versions.
+
+==== Initial list of services that will be supported
+* https://zookeeper.apache.org/[Apache Zookeeper]
+* https://kafka.apache.org/[Apache Kafka]
+* https://spark.apache.org/[Apache Spark]
+* https://nifi.apache.org/[Apache NiFi]
+
+
+=== Installation and Upgrades
+Stackable will be provided as a software package and installation of Stackable will via be a documented manual process to begin with that can be automated using DevOps tools. This may involve the installation of OS software packages and manual configuration. Some prerequisites may be added using the OS package manager, but some dependencies will need to be satisfied manually. There will be support for minor version upgrades for components with a full cluster/service stop.
+
+
+
+
+
+
+=== Automated Provisioning
+Be able to deploy and configure a service for a given specification.
+Be able to link a service with its dependencies. Deploy Zookeeper service and then deploy Kafka with this as a dependency. Initially we may need to
+Add the ID for the dependencies to the deployment descriptor
+Automatically provision service dependencies
+Provide a mixture of the two
+
+How do we define a service?
+How do we define and satisfy the dependent services?
+
+Destroying running services.
+Resizing of services out of scope
+Take a given configuration and deploy the requested services
+Specify desired deployment target e.g. bare metal, kubernetes, cloud
+The supported services must be able to be deployed in an automated fashion. A user must be able to choose which services to deploy, provide their own configuration or use a supplied template with sensible default values and be rewarded with a running service.
+Details of running service
+Feedback on errors
+Teardown of services
+
+
+=== Configuration management
+Before the event when configuring the service.
+Basic validation of configuration:
+Is the file well formed?
+Are the mandatory fields included?
+
+How will we store configuration? Eventually this will be in a database with tooling to create configuration. Do we generate a JSON document as an intermediate format? We must make the format extensible as we will be adding more properties plus future requirements.
+
+=== Security and  Governance
+Include the basics i.e. whatever we can configure in the service configuration.
+
+* Authentication
+* Authorization
+
+What will we do regarding wire encryption? We can take configuration for pre-deployed TLS certificates, truststores etc. We should try to use as few types of certificate formats as possible. JKS + PEM? What Kubernetes libraries exist to manage this?
+Integration of some services with OPA is a stretch goal. OPA operator - is there any way to integrate this with the planned services for ML1?
+
+
+
+== Demo Applications
+At least one tutorial showing how to install Stackable, deploy services and run a demo application.
+It can be something simple like a Spark job, but it should show services being deployed and working together.
+
+==== Success Criteria
+A technologically able user should be able to follow the documentation to deploy Stackable and to run
+an example application on the Stack.
+
+

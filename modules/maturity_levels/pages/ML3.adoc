@@ -1,0 +1,31 @@
+= Maturity Level 3
+Jim Halfpenny <jim@source321.com>
+v1.0, 04.05.2021
+:status: draft
+:toc:
+:icons: font
+
+*Status*: {status}
+
+== Objective
+The aim for maturity level 3 is to provide a fit for production release. This means having a comprehensive set of operators, a robust deployment and management framework and comprehensive product documentation. Installation at this stage will be relatively straightforward and require nothing more than following the installation guide. Documentation will include how to use Stackable as well as how to develop for it e.g. writing custom operators. User feedback in the form of bug reports and feature requests will be a firm part of Stackable’s life cycle.
+
+
+== Services
+New operators will be added to Stackable based on priority, maturity and user feedback. Integration of these services with 3rd party tools and services should also be possible at this stage, allowing Stackable to integrate better with other tools used by customers.
+
+=== Proposed list of services to be added
+TBC
+
+== Installation and Upgrades
+Installation of Stackable should be mature and well automated at this stage. A migration path away from other big data platforms to Stackable should be set out, which will ideally include in-situ migration.
+
+
+=== Automated Provisioning
+
+=== Configuration management
+
+== Security and Governance
+* Metadata and Lineage
+
+=== Demo Applications
