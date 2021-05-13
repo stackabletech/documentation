@@ -10,14 +10,22 @@ v1.0, 04.05.2021
 == Objective
 Maturity level 4 will build upon the GA release to include improvements to the product. More advanced features will be added incorporating and codifying expertise and best practices into the product as well as the addition of more operators. The aim is to make Stackable easier, more efficient and more effective than installing and running the components separately.
 
+Documentation will include how to use Stackable as well as how to develop for it e.g. writing custom operators. User feedback in the form of bug reports and feature requests will be a firm part of Stackable’s life cycle.
+
 == Services
 The core stack of available services should be well-defined by this stage, and the rate of addition of new services will slow. Introduction of new services will now be relatively straightforward based on the range of existing operators.
 
 === Proposed list of services to be added
-TBC
+* https://atlas.apache.org/[Apache Atlas]
+* https://knox.apache.org/[Apache Knox]
+* https://kudu.apache.org/[Apache Kudu]
+* https://ozone.apache.org/[Apache Ozone]
+* https://elastic.co/[ElasticSearch]
+
 
 
 == Installation and Upgrades
+Fully automated deployment of Stackable.
 Automated in-situ migration from Hadoop clusters to Stackable.
 
 

@@ -13,15 +13,10 @@ Maturity level 5 will deliver a fully-managed best of breed platform. Continuing
 
 == Features
 === Services
-The list of services
-
-=== Proposed list of services to be added
-Few new services will be added at this stage as the collection of available services should be completed. The process of adding new operators to the platform should be mature enough that new services can be easily adopted.
-
-User applications as operators
+Few new services will be added at this stage as the collection of available services should be complete. Where there is demand for new operators the process of adding additional ones to the platform should be mature enough that new services can be easily adopted.
 
 
-=== Upgrades
+=== Installation and Upgrades
 Upgrade dependencies - Manage all the knock on effects.
 Upgrade individual components as seamlessly as possible.
 Make upgrades easy.

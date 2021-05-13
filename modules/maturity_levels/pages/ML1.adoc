@@ -10,74 +10,51 @@ v1.0, 04.05.2021
 == Objective
 The aim for maturity level 1 is to provide an MVP of Stackable, including delivery of the essential components needed to deploy the initial service offerings. This will serve to deliver the essential components that form the foundation of Stackable, including the agent and operators.
 
+A strong part of this foundation is the principle of infrastructure as code to define services and their relationships. By working with code from the ground up Stackable will provide a means to manage, revise and control service configuration. This will allow for repeatable deployments, easier integration with devops tools and better control over the platform lifecycle in comparison to other products.
+
 == Features
 === Services
-A list of initially supported services for which we have written Stackable operators. The service configuration provided will be enough to get the services deployed, running and working with the other components.
+A core list of initially supported services for which Stackable operators have been written will be available. The service configuration provided will be enough to get the services deployed, running and working with the other components. A completed service operator for must implement start, stop and restart for its respective service. This is the baseline for acceptance of new operators into the stack.
 
-A completed service operator for must implement start, stop, restart and status for its respective service. This is the baseline for acceptance of new operators into the stack.
+The initially supported components will have the supported versions documented i.e. those that have been tested individually and as part of the wider stack. Compatible versions may be listed as either a specific version, or a range of versions. The initial list of core services are expected to include:
 
-The initially supported components will have the supported versions documented i.e. those that have been tested individually and as part of the wider stack. Compatible versions may be listed as either a specific version, or a range of versions.
-
-==== Initial list of services that will be supported
-* https://zookeeper.apache.org/[Apache Zookeeper]
+* https://hadoop.apache.org/[Apache Hadoop HDFS]
+* https://hadoop.apache.org/[Apache Hadoop YARN]
 * https://kafka.apache.org/[Apache Kafka]
-* https://spark.apache.org/[Apache Spark]
 * https://nifi.apache.org/[Apache NiFi]
-
+* https://spark.apache.org/[Apache Spark]
+* https://zookeeper.apache.org/[Apache Zookeeper]
 
 === Installation and Upgrades
-Stackable will be provided as a software package and installation of Stackable will via be a documented manual process to begin with that can be automated using DevOps tools. This may involve the installation of OS software packages and manual configuration. Some prerequisites may be added using the OS package manager, but some dependencies will need to be satisfied manually. There will be support for minor version upgrades for components with a full cluster/service stop.
+Stackable will be provided as a software package and installation of Stackable will via be a documented manual process. This may involve the installation of OS software packages and manual configuration. Some prerequisites may be added using the OS package manager, but some dependencies will need to be satisfied manually.
 
-
-
-
-
+Support for minor version upgrades for components requiring a full cluster stop will be available.
 
 === Automated Provisioning
-Be able to deploy and configure a service for a given specification.
-Be able to link a service with its dependencies. Deploy Zookeeper service and then deploy Kafka with this as a dependency. Initially we may need to
-Add the ID for the dependencies to the deployment descriptor
-Automatically provision service dependencies
-Provide a mixture of the two
-
-How do we define a service?
-How do we define and satisfy the dependent services?
-
-Destroying running services.
-Resizing of services out of scope
-Take a given configuration and deploy the requested services
-Specify desired deployment target e.g. bare metal, kubernetes, cloud
-The supported services must be able to be deployed in an automated fashion. A user must be able to choose which services to deploy, provide their own configuration or use a supplied template with sensible default values and be rewarded with a running service.
-Details of running service
-Feedback on errors
-Teardown of services
-
+Stackable will be able to deploy and configure a service for a given specification presented as a YAML file. It will be able to link a service with its dependencies e.g. associating a Kafka deployment with its Zookeeper service. Services once deployed can also be shut down and destroyed.
 
 === Configuration management
-Before the event when configuring the service.
-Basic validation of configuration:
-Is the file well formed?
-Are the mandatory fields included?
+Configuration of Stackable components will be via a manually-created YAML file. Examples of valid service files will be made available by Stackable to serve as templates for customer deployments. Basic configuration validation such as ensuring that mandatory configuration values are included and type checking of values will be performed.
 
-How will we store configuration? Eventually this will be in a database with tooling to create configuration. Do we generate a JSON document as an intermediate format? We must make the format extensible as we will be adding more properties plus future requirements.
+Once a service is deployed changes can be made to its configuration and then pushed out to the cluster, restarting the services as required. No support for rolling restarts at this stage.
 
 === Security and  Governance
-Include the basics i.e. whatever we can configure in the service configuration.
+Authentication for many data platforms uses Kerberos. MIT Kerberos operator.
 
-* Authentication
-* Authorization
+Stackable introduces at this maturity level a managed security framework using https://www.openpolicyagent.org/[Open Policy Agent (OPA)]. The aim is to use OPA as the authorisation framework for all the Stackable operators and promote the security as code model for access control. Integration for OPA already exists for Kafka, which will serve as a demonstration for OPA for managed authorisation. Securing other services that don't currently have OPA integration will be limited to what can be placed into the operator service configuration. Where supported, security policy and ACLs can be applied manually.
 
-What will we do regarding wire encryption? We can take configuration for pre-deployed TLS certificates, truststores etc. We should try to use as few types of certificate formats as possible. JKS + PEM? What Kubernetes libraries exist to manage this?
-Integration of some services with OPA is a stretch goal. OPA operator - is there any way to integrate this with the planned services for ML1?
+Wire encryption can be enabled manually with the end user being responsible for distribution of cryptographic keys and certificates.
 
+== Use Cases
+=== Demo Application
 
+Stackable will ship with at least one example application. This will provide a walkthrough tutorial demonstrating how to install Stackable, deploy services and run the demo application. The goal is to provide a hands-on way to  A technologically able user should be able to follow the documentation to deploy Stackable and to run an example application on the Stack.
 
-== Demo Applications
-At least one tutorial showing how to install Stackable, deploy services and run a demo application.
-It can be something simple like a Spark job, but it should show services being deployed and working together.
+=== User Stories
+Stackable will deliver the ability to deploy a data platform with sufficient breadth to allow data storage, movement and processing.
 
-==== Success Criteria
-A technologically able user should be able to follow the documentation to deploy Stackable and to run
-an example application on the Stack.
+* "As a data custodian I'd like to create a Stackable data lake to store and process our high-volume business data."
+* "As a Data Scientist I'd like to calculate a Page Rank with SparklyR from RStudio on a stackable powered Spark cluster."
+* "As a specialist field / department I’d like to securely ingest a data stream into a stackable powered Kafka cluster"
 
 

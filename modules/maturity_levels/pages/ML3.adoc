@@ -8,24 +8,42 @@ v1.0, 04.05.2021
 *Status*: {status}
 
 == Objective
-The aim for maturity level 3 is to provide a fit for production release. This means having a comprehensive set of operators, a robust deployment and management framework and comprehensive product documentation. Installation at this stage will be relatively straightforward and require nothing more than following the installation guide. Documentation will include how to use Stackable as well as how to develop for it e.g. writing custom operators. User feedback in the form of bug reports and feature requests will be a firm part of Stackable’s life cycle.
+The aim for maturity level 3 is to provide a platform fit for GA release. This means having a comprehensive set of operators, a robust deployment and management framework and comprehensive product documentation. Installation at this stage will be largely automated, and a comprehensive installation guide will be provided.
+
+This milestone will see the introduction and release of a functional user interface for deployment and management of Stackable.
 
 
 == Services
-New operators will be added to Stackable based on priority, maturity and user feedback. Integration of these services with 3rd party tools and services should also be possible at this stage, allowing Stackable to integrate better with other tools used by customers.
+The core operators will have already been delivered and effort will instead be made into ensuring their robustness. A library of service templates will be provided to make deployment of common use cases straightforward and act as the bases for bespoke deployments.
 
-=== Proposed list of services to be added
-TBC
+New operators added to Stackable based on priority, maturity and user feedback. Integration of these services with 3rd party partner tools and services weill also be documented at this stage, allowing Stackable to integrate better with other data-centric tooling used by customers.
+
 
 == Installation and Upgrades
-Installation of Stackable should be mature and well automated at this stage. A migration path away from other big data platforms to Stackable should be set out, which will ideally include in-situ migration.
+Installation of Stackable itself will be mature and well automated at this stage. Stackable will also have a documented migration path away from other big data platforms, allowing in-situ migration and adoption of existing deployments. This will suit self supporters, customer looking to unify disparate products and those wishing to migrate away from proprietary alternatives.
 
 
 === Automated Provisioning
+Greater control over where and onto what platforms Stackable can be deployed.
+
 
 === Configuration management
+The user interface will provide an interactive way to view and change service configuration and to push these changes out to the running services. Broad range of configuration options will be made available and documented for each service. The experitise of Stackable will allow for richer health checks/sanity checks/configuration validation.
 
 == Security and Governance
-* Metadata and Lineage
+Enable all security features
+Security posture evaluation with suggestions on how to improve the security of deployed services.
+Patches and security bulletins pushed into the UI via a feed. Warning of new security issues and remediation steps.
+
+More advanced data governance features including management of metadata and data lineage.
 
 === Demo Applications
+Fully fledged sales demos of:
+
+* Platform deployment
+* Demo applications and use cases
+** Streaming
+** Machine Learning
+** Data visualisation
+** Big data analysis
+** Bug data query
