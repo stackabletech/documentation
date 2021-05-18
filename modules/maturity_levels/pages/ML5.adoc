@@ -22,6 +22,7 @@ Upgrade individual components as seamlessly as possible.
 Make upgrades easy.
 Checkpoints and rollbacks.
 
+Migration of pods to allow for continuous running even when there is hardware maintenance?
 
 === Automated Provisioning
 
