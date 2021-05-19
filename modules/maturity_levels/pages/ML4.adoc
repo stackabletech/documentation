@@ -13,13 +13,19 @@ Maturity level 4 will build upon the GA release to include improvements to the p
 Documentation will include how to use Stackable as well as how to develop for it e.g. writing custom operators. User feedback in the form of bug reports and feature requests will be a firm part of Stackable’s life cycle at this point.
 
 == Services
-The core stack of available services should be well-defined by this stage, and the rate of addition of new services will slow. Introduction of new services will now be relatively straightforward based on the examples given by the range of existing operators.
+The core stack of available services should be well-defined by this stage, and the rate of addition of new services will decrease. Introduction of new services will now be relatively straightforward, based on the example given by the range of existing operators. The control plane will provide additional features to control the service, such as relocation of service instances and failover of active instances to a standby.
 
+There will be more focus on integration of services with other platforms and products outside the Stackable ecosystem.
 
 == Installation and Upgrades
-The Stackable UI will be improved to ensure fully automated deployment.
+The Stackable installation process will continue to improve and follow customer feedback.
+
+The Stackable control plane will be improved to ensure fully automated deployment.
+
 Automated in-situ migration from Hadoop clusters to Stackable.
 
+
+ allowing in-situ migration and adoption of existing deployments as well as
 
 == Automated Provisioning
 

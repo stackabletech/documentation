@@ -10,7 +10,7 @@ v1.0, 04.05.2021
 == Objective
 The aim for maturity level 3 is to provide a platform fit for GA release. This means having a comprehensive set of operators, a robust deployment and management framework and comprehensive product documentation. Installation at this stage will be largely automated with a comprehensive installation guide.
 
-This milestone will see the introduction and release of a functional user interface for deployment and management of Stackable.
+This milestone will see the introduction and release of a functional control plane user interface for deployment and management of Stackable.
 
 
 == Services
@@ -20,31 +20,28 @@ New operators added to Stackable based on priority, maturity and user feedback. 
 
 
 == Installation and Upgrades
-Installation of Stackable itself will be mature and well automated at this stage. Stackable will also have a documented migration path away from other big data platforms, allowing in-situ migration and adoption of existing deployments as well as a roadmap for moving to Stackable. This will suit self supporters, customer looking to unify disparate products and those wishing to migrate away from proprietary alternatives.
+Installation of Stackable itself will be mature and well automated at this stage. Stackable will also have a documented migration path away from other big data platforms, providing a roadmap for customers wishing to move to Stackable. This will suit self supporters, customer looking to unify disparate products and those wishing to migrate away from proprietary alternatives.
 
+Upgrade between major versions. Including updates to schemas and file formats where needed. Rollback based on point in time snapshot of pre-upgrade environment.
 
 === Automated Provisioning
-Greater control over the platforms Stackable can be deployed to. Cloud vendors, Kubernetes, bare metal, hybrid.
+Stackable will have greater control over the platforms it can be deployed to, with support public cloud vendors, Kubernetes, bare metal and hybrid deployments. There will be an API for publishing service templates to create a fully working cluster. Validation will be improved so that configuration errors are picked up early and fixed prior to deployment.
 
-API for pushing templates to create a fully working cluster. Validation so that configuration errors, missing or incompatible dependencies are picked up early.
-
-Wizard based deployment.
+The control plane will offer a wizard based deployment, allowing customer to choose the services they would like to deploy, where they will be deployed and highlight any missing service dependencies.
 
 === Configuration management
-The user interface will provide an interactive way to view and change service configuration and to push these changes out to the running services. Broad range of configuration options will be made available and documented for each service. The expertise of Stackable will allow for richer health checks/sanity checks/configuration validation.
+The control plane will provide an interactive way to view and change service configuration and to push these changes out to the running services. Broad range of configuration options will be made available and documented for each service. The expertise of Stackable will allow for richer health checks/sanity checks/configuration validation.
 
 == Security and Governance
-Stackable will be able to provide guided installation of secured services with the minimum of manual intervention.
+Stackable will be able to provide guided installation of services that can be secured with the minimum of manual intervention and adherence to best practice. All the available security features can be enabled when services are deployed.
 
-Enable all security features
-
-Security posture evaluation with suggestions on how to improve the security of deployed services.
+The control plane will evaluate the security posture of deployed services and offer suggestions on how to improve security. Missing or unconfigured security features will be highlighted with a remedy offered to address the issue.
 
 Stackable will provide bulletins warning of new security issues and remediation steps including patches. These bulletins will be published on the web, delivered by email and published to a feed that can be read into the UI to provide operators with the information directly.
 
 == Use Cases
 === Demo Applications
-A library of fully working demos to show off the capabilities of Stackable. These will cover a number of use cases in different verticals.
+A library of fully working demos to show off the capabilities of Stackable. These will cover a number of use cases in different verticals and act as demonstrations of Stackable capabilities.
 
 * Platform deployment demo for operators
 * Demo applications and use cases
