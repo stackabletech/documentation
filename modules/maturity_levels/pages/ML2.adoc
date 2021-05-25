@@ -32,11 +32,9 @@ There will be improvements to configuration validation with the introduction of 
 
 === Security and Governance
 ==== Authentication
-Kerberos will be available for all components that support it to allow deployment of securely authenticated clusters. Tooling will be added to manage Kerberos keytab lifecycle for services i.e. creation, storage, retrieval and destruction of service principles.
+Kerberos will be available for all components that support it to allow deployment of securely authenticated clusters. Tooling will be added to manage Kerberos keytab lifecycle for services i.e. creation, storage, retrieval and termination of service principles.
 
-Other methods of authentication (LDAP, TLS) will be enabled by applying the relevant configuration to the relevant services.
-
-// Is there a way to unify the authentication protocols? One protocol ideally?
+Other methods of authentication (LDAP, TLS) will be supported by manually applying the relevant configuration to the Stackable services.
 
 ==== Authorisation
 A managed security framework will be introduced, extending the use of https://www.openpolicyagent.org/[(OPA)] to other Stackable services. Management of OPA policy will be through manually written OPA policy files to define the security rules for data access.

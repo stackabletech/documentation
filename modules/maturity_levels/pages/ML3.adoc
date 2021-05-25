@@ -32,10 +32,10 @@ The control plane will offer a wizard based deployment, allowing customer to cho
 === Configuration management
 The control plane will provide an interactive way to view and change service configuration and to push these changes out to the running services. Broad range of configuration options will be made available and documented for each service. The expertise of Stackable will allow for richer health checks/sanity checks/configuration validation.
 
-== Security and Governance
-Stackable will be able to provide guided installation of services that can be secured with the minimum of manual intervention and adherence to best practice. All the available security features can be enabled when services are deployed.
+=== Security and Governance
+Stackable will be able to provide guided installation of services that can be secured with the minimum of manual intervention and adherence to best practice. The most commonly available security features can be enabled when services are deployed.
 
-The control plane will evaluate the security posture of deployed services and offer suggestions on how to improve security. Missing or unconfigured security features will be highlighted with a remedy offered to address the issue.
+The control plane will evaluate and report on the security posture of deployed services and offer suggestions on how to improve security. Missing or unconfigured security features will be highlighted with a remedy offered to address the issue.
 
 Stackable will provide bulletins warning of new security issues and remediation steps including patches. These bulletins will be published on the web, delivered by email and published to a feed that can be read into the UI to provide operators with the information directly.
 
