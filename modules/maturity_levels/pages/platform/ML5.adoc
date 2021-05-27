@@ -17,21 +17,19 @@ Few new services will be added at this stage as the collection of available serv
 
 
 === Installation and Upgrades
-Upgrade dependencies - Manage all the knock on effects.
-Upgrade individual components as seamlessly as possible.
-Make upgrades easy.
-Checkpoints and rollbacks.
+Installation will be polished and well documented, including options for automation using widely deployed DevOps tools. Upgrade individual components will be as seamless as possible, with automatic upgrade of dependencies to ensure the platform stays at a supported level. Checkpoints or snapshots of clusters will allow for automated rollback.
 
-Migration of pods to allow for continuous running even when there is hardware maintenance?
+Support for migration of pods to allow for continuous running even when during maintenance.
 
 === Automated Provisioning
 
 === Configuration management
+Mature configuration management with
 
 * Feedback loop, identify tuning and scaling opportunities.
 * Fully fledged control plane. Deployment should be as easy as cloud native from the control plane.
 
 == Security and Governance
 
-=== Demo Applications
+== Demo Applications
 

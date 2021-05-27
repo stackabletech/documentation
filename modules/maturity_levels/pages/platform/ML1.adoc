@@ -1,4 +1,4 @@
-= Maturity Level 1
+= Platform Maturity Level 1
 Jim Halfpenny <jim@source321.com>
 v1.0, 04.05.2021
 :status: draft

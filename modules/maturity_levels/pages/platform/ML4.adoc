@@ -36,6 +36,8 @@ This release will see improvements to configuration validation and reporting, wi
 === Security and Governance
 Stackable will provide more advanced data governance features including management of metadata. The supplied components will offer the ability to manage a metadata dictionary with tagging, data lineage and managed schemas.
 
+Management of credentials and PKI keys/certificates will be better integrated, meaning less maintenance effort and reduced deployment times.
+
 Addition of an application gateway to simplify authentication and make services easier to access. This will provide better identity management, with support for enterprise authentication schemes (SSO, SAML, OAuth).
 
 Value added features such as bulletins notifying of new security issues and remediation steps, including patches to stackable Components. These bulletins will be published on the web, delivered by email and published to a feed that can be read into a UI to provide operators with up to date security information.
