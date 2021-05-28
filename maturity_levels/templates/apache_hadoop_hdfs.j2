@@ -5,7 +5,8 @@
 :toc:
 :icons: font
 
-Apache NiFi supports powerful and scalable directed graphs of data routing, transformation, and system mediation logic.
+
+Apache Hadoop HDFS is a distributed file system that provides high-throughput access to application data.
 
 == Operator Status
 * *Category:* {{ Category }}
@@ -16,8 +17,7 @@ Apache NiFi supports powerful and scalable directed graphs of data routing, tran
 * *Website:* {{ Link }}
 
 == Operator Dependencies
-{% set Dependencies = Dependencies|string %}
-{% if Dependencies != "nan" %}
+{% if Dependencies is not number %}
 {% set deps = Dependencies.split(",") %}
 {% for dep in deps %}
 * {{ dep }}
@@ -27,4 +27,7 @@ None
 {% endif %}
 
 == Operator Features
-* Deploy Apache Nifi, either standalone or as a cluster
+* Deploy and manage HDFS roles
+** NameNode
+** DataNode
+** JournalNode

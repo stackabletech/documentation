@@ -24,4 +24,4 @@ None
 
 == Operator Features
 * Deploy an Apache ZooKeeper ensemble
-* Minor version upgrades
+* Minor version upgrades supported

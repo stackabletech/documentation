@@ -1,0 +1,28 @@
+= Apache Hadoop HDFS
+Jim Halfpenny <jim@source321.com>
+0.0, 26.05.2021
+:latest_version: 0.0
+:toc:
+:icons: font
+
+
+Apache Hadoop HDFS is a distributed file system that provides high-throughput access to application data.
+
+== Operator Status
+* *Category:* Storage
+* *Maturity level:* 0
+* *Version:* 0.0
+* *Development status:* Roadmap
+* *Stackable repo:*  nan
+* *Website:* https://hadoop.apache.org/
+
+== Operator Dependencies
+
+None
+
+
+== Operator Features
+* Deploy and manage HDFS roles
+** NameNode
+** DataNode
+** JournalNode

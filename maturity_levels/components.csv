@@ -4,9 +4,11 @@ apache_nifi,Apache Nifi,Jim Halfpenny <jim@source321.com>,0.1,26.05.2021,1,1,In 
 apache_nifi_registry,Apache Nifi Registry,Jim Halfpenny <jim@source321.com>,0.1,26.05.2021,1,1,Roadmap,Data In Motion,,,,,https://github.com/stackabletech/nifi-registry-operator,https://nifi.apache.org/registry.html
 apache_spark,Apache Spark,Jim Halfpenny <jim@source321.com>,0.1,26.05.2021,1,1,In development,Data Processing,,IONOS,,,https://github.com/stackabletech/spark-operator,https://spark.apache.org/
 apache_zookeeper,Apache ZooKeeper,Jim Halfpenny <jim@source321.com>,0.1,26.05.2021,1,1,In development,Configuration Management,Apache ZooKeeper is an effort to develop and maintain an open-source server which enables highly reliable distributed coordination.,IONOS,"",,https://github.com/stackabletech/zookeeper-operator,https://zookeeper.apache.org/
-opa,Open Policy Agent,Jim Halfpenny <jim@source321.com>,0.1,26.05.2021,1,1,In development,Security Policy,,,,,https://github.com/stackabletech/opa-operator,https://www.openpolicyagent.org/
+opa,Open Policy Agent (OPA),Jim Halfpenny <jim@source321.com>,0.1,26.05.2021,1,1,In development,Security Policy,,,,,https://github.com/stackabletech/opa-operator,https://www.openpolicyagent.org/
+rego,OPA Rego Rule,Jim Halfpenny <jim@source321.com>,0.1,26.05.2021,1,1,In development,Security Policy,,,,,https://github.com/stackabletech/rego-operator,https://www.openpolicyagent.org/docs/latest/#rego
 apache_druid,Apache Druid,Jim Halfpenny <jim@source321.com>,0,26.05.2021,2,0,Roadmap,Streams Processing,,IONOS,,,,https://druid.apache.org/
-apache_hadoop,Apache Hadoop (HDFS and YARN),Jim Halfpenny <jim@source321.com>,0,26.05.2021,1,0,Roadmap,Storage,,IONOS,"Apache ZooKeeper",,,https://hadoop.apache.org/
+apache_hadoop_hdfs,Apache Hadoop HDFS,Jim Halfpenny <jim@source321.com>,0,26.05.2021,1,0,Roadmap,Storage,,IONOS,,,,https://hadoop.apache.org/
+apache_hadoop_yarn,Apache Hadoop YARN,Jim Halfpenny <jim@source321.com>,0,26.05.2021,1,0,Roadmap,Storage,,IONOS,,,,https://hadoop.apache.org/
 apache_hbase,Apache HBase,Jim Halfpenny <jim@source321.com>,0,26.05.2021,2,0,Roadmap,Operational Database,,,,,,https://hbase.apache.org/
 apache_hive,Apache Hive,Jim Halfpenny <jim@source321.com>,0,26.05.2021,1,0,Roadmap,SQL Engine,,,"RDBMS",,,https://hive.apache.org/
 apache_impala,Apache Impala,Jim Halfpenny <jim@source321.com>,0,26.05.2021,1,0,Roadmap,SQL Engine,,,,,,https://impala.apache.org/

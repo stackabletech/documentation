@@ -1,0 +1,25 @@
+= Open Policy Agent (OPA)
+Jim Halfpenny <jim@source321.com>
+0.1, 26.05.2021
+:latest_version: 0.1
+:toc:
+:icons: font
+
+
+The Open Policy Agent (OPA, pronounced “oh-pa”) is an open source, general-purpose policy engine that unifies policy enforcement across the stack. OPA provides a high-level declarative language that lets you specify policy as code and simple APIs to offload policy decision-making from your software.
+
+== Operator Status
+* *Category:* Security Policy
+* *Maturity level:* 1
+* *Version:* 0.1
+* *Development status:* In development
+* *Stackable repo:*  https://github.com/stackabletech/opa-operator
+* *Website:* https://www.openpolicyagent.org/
+
+== Operator Dependencies
+
+None
+
+
+== Operator Features
+* Deploy and manage the OPA agent

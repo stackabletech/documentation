@@ -25,4 +25,4 @@ Apache NiFi supports powerful and scalable directed graphs of data routing, tran
 
 
 == Operator Features
-* Deploy Apache Nifi standalone or as a cluster
+* Deploy Apache Nifi, either standalone or as a cluster

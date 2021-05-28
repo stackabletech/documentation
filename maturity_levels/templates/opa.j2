@@ -5,7 +5,8 @@
 :toc:
 :icons: font
 
-Apache NiFi supports powerful and scalable directed graphs of data routing, transformation, and system mediation logic.
+
+The Open Policy Agent (OPA, pronounced “oh-pa”) is an open source, general-purpose policy engine that unifies policy enforcement across the stack. OPA provides a high-level declarative language that lets you specify policy as code and simple APIs to offload policy decision-making from your software.
 
 == Operator Status
 * *Category:* {{ Category }}
@@ -16,8 +17,7 @@ Apache NiFi supports powerful and scalable directed graphs of data routing, tran
 * *Website:* {{ Link }}
 
 == Operator Dependencies
-{% set Dependencies = Dependencies|string %}
-{% if Dependencies != "nan" %}
+{% if Dependencies is not number %}
 {% set deps = Dependencies.split(",") %}
 {% for dep in deps %}
 * {{ dep }}
@@ -27,4 +27,4 @@ None
 {% endif %}
 
 == Operator Features
-* Deploy Apache Nifi, either standalone or as a cluster
+* Deploy and manage the OPA agent
