@@ -1,5 +1,5 @@
 Component,DisplayName,Author,Version,Date,Priority,Maturity,Status,Category,Description,Customers,Dependencies,OPA Integration,StackableRepo,Link
-apache_kafka,Apache Kafka,Jim Halfpenny <jim@source321.com>,0.1,26.05.2021,1,1,In development,Streaming,,IONOS,"Apache ZooKeeper,Foo",,https://github.com/stackabletech/kafka-operator,https://kafka.apache.org/
+apache_kafka,Apache Kafka,Jim Halfpenny <jim@source321.com>,0.1,26.05.2021,1,1,In development,Streaming,,IONOS,"Apache ZooKeeper",,https://github.com/stackabletech/kafka-operator,https://kafka.apache.org/
 apache_nifi,Apache Nifi,Jim Halfpenny <jim@source321.com>,0.1,26.05.2021,1,1,In development,Data In Motion,,,"Apache ZooKeeper",,https://github.com/stackabletech/nifi-operator,https://nifi.apache.org/
 apache_nifi_registry,Apache Nifi Registry,Jim Halfpenny <jim@source321.com>,0.1,26.05.2021,1,1,Roadmap,Data In Motion,,,,,https://github.com/stackabletech/nifi-registry-operator,https://nifi.apache.org/registry.html
 apache_spark,Apache Spark,Jim Halfpenny <jim@source321.com>,0.1,26.05.2021,1,1,In development,Data Processing,,IONOS,,,https://github.com/stackabletech/spark-operator,https://spark.apache.org/

@@ -17,8 +17,7 @@ Apache Kafka is an open-source distributed event streaming platform.
 * *Website:* {{ Link }}
 
 == Operator Dependencies
-{% set Dependencies = Dependencies|string %}
-{% if Dependencies != "nan" %}
+{% if Dependencies is not number %}
 {% set deps = Dependencies.split(",") %}
 {% for dep in deps %}
 * {{ dep }}
@@ -28,4 +27,5 @@ None
 {% endif %}
 
 == Operator Features
-* Deploy one or more Kafka brokers
+* Deployment of Kafka brokers
+* Support for authorisation using OPA
