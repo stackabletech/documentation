@@ -48,14 +48,3 @@ OPA decision logs will provide auditing of policy decisions. Stackable OPA opera
 == Use Cases
 === Demo Applications
 Provide a tutorial/demo that uses as much of the stack as possible. It should mimic some sort of real world application and possible serve as a template.
-
-//
-//* What should this be?
-//** IoT
-//** Data warehouse
-//
-
-// Start to build a collection of example use cases.
-
-// Can we showcase a customer example?
-// Blog post with reproducible demo that potential customers can follow

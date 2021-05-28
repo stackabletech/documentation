@@ -310,7 +310,7 @@ They are made available as OS packages as well, the currently available operator
 |Apache Spark
 |stackable-spark-operator-server
 
-|Apache Zookeeper
+|Apache ZooKeeper
 |stackable-zookeeper-operator-server
 |===
 
@@ -332,13 +332,13 @@ systemctl enable stackable-kafka-operator-server
 systemctl start stackable-spark-operator-server
 systemctl enable stackable-spark-operator-server
 
-# Zookeeper
+# ZooKeeper
 systemctl start stackable-zookeeper-operator-server
 systemctl enable stackable-zookeeper-operator-server
 ----
 
 
-To check if the services started succesfully you can run (example for Zookeeper):
+To check if the services started successfully you can run (example for ZooKeeper):
 
 ----
 systemctl status stackable-zookeeper-operator-server

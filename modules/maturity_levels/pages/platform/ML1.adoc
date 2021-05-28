@@ -29,17 +29,17 @@ The core list of supported Stackable operators for services will be available, a
 * https://kafka.apache.org/[Apache Kafka]
 * https://nifi.apache.org/[Apache NiFi]
 * https://spark.apache.org/[Apache Spark]
-* https://zookeeper.apache.org/[Apache Zookeeper]
+* https://zookeeper.apache.org/[Apache ZooKeeper]
 
 A completed service operator will implement start, stop and restart operations for its respective service. This is the baseline for acceptance of new operators into the stack.
 
 === Installation and Upgrades
-Stackable will be provided as a software package and installation of Stackable will via be a documented manual process. This will involve the installation of OS software packages (available as both RPM and DEB packages) for the Stackable agent, with operators made available as OS packages and docker images. Manual configuration will be required during installation. Prerequisites may be added using the OS package manager when available, with some dependencies needing to be satisfied manually.
+Stackable will be provided as a software package and installation of Stackable will be via a documented manual process. This will involve the installation of OS software packages (available as both RPM and DEB packages) for the Stackable agent, with operators made available as OS packages and docker images. Manual configuration will be required during installation. Prerequisites may be added using the OS package manager when available, with some dependencies needing to be satisfied manually.
 
 Upgrade support for minor versions of components will be available requiring a full cluster stop.
 
 === Automated Provisioning
-Stackable will be able to deploy and configure a service for a given specification presented as a YAML file. It will be able to link a service with its dependencies e.g. associating a Kafka deployment with its Zookeeper service. Services once deployed can also be shut down and destroyed.
+Stackable will be able to deploy and configure a service for a given specification presented as a YAML file. It will be able to link a service with its dependencies e.g. associating a Kafka deployment with its ZooKeeper service. Services once deployed can also be shut down and destroyed.
 
 Once a service has been deployed the service information will be stored in a service object containing all the data relevant to managing and connecting to the service. It will include details of the hosts or containers onto which it has been deployed and the client endpoints and connection strings. This will allow for discovery of the correct locations for communication from clients and other services in the stack.
 
@@ -54,7 +54,7 @@ Once a service is deployed changes can be made to its configuration and then rol
 The primary means of authentication for many data platforms is Kerberos. Stackable will not provide the Kerberos infrastructure itself, since most customers will use their existing infrastructure, typically Microsoft Active Directory. Kerberos service keytabs will be created manually and stored and retrieved by the services using Kubernetes Secrets.
 
 ==== Authorisation
-Stackable introduces at this maturity level a managed security framework using https://www.openpolicyagent.org/[Open Policy Agent (OPA)]. The aim is to use OPA as the authorisation framework for all the Stackable operators and promote the security as code model for access control. Integration for OPA already exists for Kafka, which will serve as a demonstration for OPA for managed authorisation. Securing other services that don't currently have OPA integration will be limited to what can be placed into the operator service configuration or applied manually at runtime e.g. Zookeeper ACLs.
+Stackable introduces at this maturity level a managed security framework using https://www.openpolicyagent.org/[Open Policy Agent (OPA)]. The aim is to use OPA as the authorisation framework for all the Stackable operators and promote the security as code model for access control. Integration for OPA already exists for Kafka, which will serve as a demonstration for OPA for managed authorisation. Securing other services that don't currently have OPA integration will be limited to what can be placed into the operator service configuration or applied manually at runtime e.g. ZooKeeper ACLs.
 
 ==== Encryption
 Wire encryption can be enabled manually through individual service configuration, with the end user being responsible for distribution of cryptographic keys and certificates.

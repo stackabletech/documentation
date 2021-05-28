@@ -21,7 +21,7 @@ Apache Kafka is an open-source distributed event streaming platform.
 
 
 
-* Apache Zookeeper
+* Apache ZooKeeper
 
 * Foo
 

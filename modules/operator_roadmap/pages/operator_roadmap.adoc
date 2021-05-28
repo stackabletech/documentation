@@ -46,7 +46,7 @@ Outline the proposed operators/components and prioritise their development.
 |
 | https://spark.apache.org/
 
-| Apache Zookeeper
+| Apache ZooKeeper
 | 1
 | In development
 |
@@ -67,7 +67,7 @@ Outline the proposed operators/components and prioritise their development.
 |
 |
 | Storage
-| Apache Zookeeper
+| Apache ZooKeeper
 | https://hadoop.apache.org/
 
 | Apache HBase
