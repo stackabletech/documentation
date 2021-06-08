@@ -25,8 +25,6 @@ An upgrade path from previous versions of Stackable will be available, including
 === Automated Provisioning
 Template based deployment of Stackable will allow the definition of a selection of associated services, the capacity requirements and custom configuration. You will be able to define the services required by a use case and have them deployed, with mutual configuration carried out to link the services done automatically. A collection of example configuration templates will serve to enable customer deployments and to serve as documented example deployments.
 
-A service registry will allow for registration of deployed services and contain the configuration required for services to interact. This will include service endpoints and client configuration and allows services and 3rd party clients to perform service discovery. Client configuration can also be downloaded from the registry in order to facilitate clients that cannot perform service discovery themselves.
-
 === Configuration management
 There will be improvements to configuration validation with the introduction of validity checks e.g. is a configuration parameter within reasonable bounds. This will bring the experience and best practice from the open source Big Data community into Stackable and aim to reduce the incidence of common service misconfigurations.
 
