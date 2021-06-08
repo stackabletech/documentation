@@ -30,7 +30,7 @@ Outline the proposed operators/components and prioritise their development.
 |
 | https://kafka.apache.org/
 
-| Apache Nifi
+| Apache NiFi
 | 1
 | In development
 |

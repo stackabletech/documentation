@@ -1,4 +1,4 @@
-= Apache Nifi
+= Apache NiFi
 Jim Halfpenny <jim@source321.com>
 0.1, 26.05.2021
 :latest_version: 0.1
@@ -25,4 +25,4 @@ Apache NiFi supports powerful and scalable directed graphs of data routing, tran
 
 
 == Operator Features
-* Deploy Apache Nifi, either standalone or as a cluster
+* Deploy Apache NiFi, either standalone or as a cluster

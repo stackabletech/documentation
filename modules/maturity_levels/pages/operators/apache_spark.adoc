@@ -7,7 +7,7 @@ Jim Halfpenny <jim@source321.com>
 
 Apache Spark is a unified analytics engine for large-scale data processing.
 
-=== Operator Status
+== Operator Status
 * *Category:* Data Processing
 * *Maturity level:* 1
 * *Version:* 0.1
@@ -18,7 +18,10 @@ Apache Spark is a unified analytics engine for large-scale data processing.
 == Operator Dependencies
 
 
-None
+
+
+* Apache ZooKeeper
+
 
 
 == Operator Features

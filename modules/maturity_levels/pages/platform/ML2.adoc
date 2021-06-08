@@ -37,7 +37,9 @@ Kerberos will be available for all components that support it to allow deploymen
 Other methods of authentication (LDAP, TLS) will be supported by manually applying the relevant configuration to the Stackable services.
 
 ==== Authorisation
-A managed security framework will be introduced, extending the use of https://www.openpolicyagent.org/[(OPA)] to other Stackable services. Management of OPA policy will be through manually written OPA policy files to define the security rules for data access.
+A managed security framework will be introduced using https://www.openpolicyagent.org/[Open Policy Agent (OPA)]. The aim is to use OPA as the authorisation framework for all the Stackable operators and promote the security as code model for access control. Integration for OPA already exists for Kafka, which will serve as a demonstration for OPA for managed authorisation. Securing other services that don't currently have OPA integration will be limited to what can be placed into the operator service configuration or applied manually at runtime e.g. ZooKeeper ACLs.
+
+Management of OPA policy will be through manually written OPA policy files to define the security rules for data access. These policies will be distributed to compatible operators using the Stackable Rego Rule operator.
 
 ==== Encryption
 Support for storage and deployment of pre-created TLS certificates and keys using Kubernetes Secrets.

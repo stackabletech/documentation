@@ -6,19 +6,22 @@ Jim Halfpenny <jim@source321.com>
 :icons: font
 
 
-Apache Hadoop YARN is a framework for job scheduling and cluster resource management.r
+Apache Hadoop YARN is a framework for job scheduling and cluster resource management.
 
 == Operator Status
 * *Category:* Storage
 * *Maturity level:* 0
 * *Version:* 0.0
 * *Development status:* Roadmap
-* *Stackable repo:*  nan
+* *Stackable repo:*  https://github.com/stackabletech/yarn-operator
 * *Website:* https://hadoop.apache.org/
 
 == Operator Dependencies
 
-None
+
+
+* Apache ZooKeeper
+
 
 
 == Operator Features

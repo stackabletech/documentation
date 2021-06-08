@@ -13,7 +13,7 @@ Apache Hadoop HDFS is a distributed file system that provides high-throughput ac
 * *Maturity level:* 0
 * *Version:* 0.0
 * *Development status:* Roadmap
-* *Stackable repo:*  nan
+* *Stackable repo:*  https://github.com/stackabletech/hdfs-operator
 * *Website:* https://hadoop.apache.org/
 
 == Operator Dependencies

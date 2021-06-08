@@ -1,4 +1,4 @@
-= Platform Maturity Level 1
+= Maturity Level 1
 Jim Halfpenny <jim@source321.com>
 v1.0, 04.05.2021
 :status: draft
@@ -54,7 +54,7 @@ Once a service is deployed changes can be made to its configuration and then rol
 The primary means of authentication for many data platforms is Kerberos. Stackable will not provide the Kerberos infrastructure itself, since most customers will use their existing infrastructure, typically Microsoft Active Directory. Kerberos service keytabs will be created manually and stored and retrieved by the services using Kubernetes Secrets.
 
 ==== Authorisation
-Stackable introduces at this maturity level a managed security framework using https://www.openpolicyagent.org/[Open Policy Agent (OPA)]. The aim is to use OPA as the authorisation framework for all the Stackable operators and promote the security as code model for access control. Integration for OPA already exists for Kafka, which will serve as a demonstration for OPA for managed authorisation. Securing other services that don't currently have OPA integration will be limited to what can be placed into the operator service configuration or applied manually at runtime e.g. ZooKeeper ACLs.
+Authorisation policy will need to be manually applied, typically using any in-built facility for defining authorisation rules and ACL.
 
 ==== Encryption
 Wire encryption can be enabled manually through individual service configuration, with the end user being responsible for distribution of cryptographic keys and certificates.
