@@ -35,6 +35,7 @@ Level 2 operators add additional functionality, including the ability to perform
 * Storage of keytabs and PKI material in a managed repository
 * Rolling restarts (where supported by the operand)
 * Minor version upgrades of the operand
+* Configuration validation and best practice
 
 == Level 3 - Mature Operator
 At level 3 operators will be integrated with the Stackable Control Panel for easier and simpler service and configuration management.
@@ -53,8 +54,6 @@ Level 4 operators are ready for the big time, with advanced monitoring and manag
 * Generation of events with alerting and action triggers
 * Improved log management with support for enterprise monitoring platforms
 * Automatic capacity scaling
-* Configuration validation and best practice
-
 
 == Level 5 - Top of the Stack Operator
 Top level operators are able to effectively manage itself. Metrics are used to monitor workload efficiency and to automatically tune service configuration and capacity and to provide recommendations to maintain the health of the service.
