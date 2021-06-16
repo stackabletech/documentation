@@ -25,6 +25,7 @@ This represents the minimum requirements for acceptance of an operator into Stac
 * Manual operator configuration
 * Manual operand security configuration
 * Fetch operand logs using kubectl
+* Open Policy Agent integration for authorisation and audit
 
 == Level 2 - Improving Operator
 Level 2 operators add additional functionality, including the ability to perform minor version upgrades of operands.
@@ -32,7 +33,6 @@ Level 2 operators add additional functionality, including the ability to perform
 === Features
 * Improved security configuration management
 * Storage of keytabs and PKI material in a managed repository
-* Open Policy Agent integration for authorisation and audit
 * Rolling restarts (where supported by the operand)
 * Minor version upgrades of the operand
 
@@ -40,7 +40,7 @@ Level 2 operators add additional functionality, including the ability to perform
 At level 3 operators will be integrated with the Stackable Control Panel for easier and simpler service and configuration management.
 
 === Features
-* Configuration via Stackable Control Panel
+* Operand metric collection
 * Operand backups and snapshots
 * Support for operand major version upgrades and rollback of minor upgrades
 * High availability and failover
@@ -50,7 +50,6 @@ At level 3 operators will be integrated with the Stackable Control Panel for eas
 Level 4 operators are ready for the big time, with advanced monitoring and management features.
 
 === Features
-* Operand metric collection
 * Generation of events with alerting and action triggers
 * Improved log management with support for enterprise monitoring platforms
 * Automatic capacity scaling
@@ -61,6 +60,7 @@ Level 4 operators are ready for the big time, with advanced monitoring and manag
 Top level operators are able to effectively manage itself. Metrics are used to monitor workload efficiency and to automatically tune service configuration and capacity and to provide recommendations to maintain the health of the service.
 
 === Features
+* Configuration via Stackable Control Panel
 * Workload analysis and tuning
 * Automatic operand scaling
 * Operand self healing

@@ -5,8 +5,14 @@ Jim Halfpenny <jim@source321.com>
 :toc:
 :icons: font
 
-
 Apache Hadoop HDFS is a distributed file system that provides high-throughput access to application data.
+
+== Overview
+This operator deploys and managed all of the HDFS roles including;
+
+* NameNode
+* DataNode
+* JournalNode
 
 == Operator Status
 * *Category:* Storage
@@ -22,7 +28,28 @@ None
 
 
 == Operator Features
-* Deploy and manage HDFS roles
-** NameNode
-** DataNode
-** JournalNode
+* Automated deployment
+* Starting and stopping services
+* Wire encryption
+* OPA authorisation
+* Seamless upgrades
+* Advanced monitoring
+
+== Configuration
+Lists of the configuration options
+
+
+== Deployment
+How to deploy the HDFS operator
+
+
+*List below taken from Charmhub*
+
+* Detailed documentation
+* Guaranteed getting started
+* Secrets management
+* Implements sidecar pattern
+* Seamless upgrades
+* Unit testing
+* High availability
+
