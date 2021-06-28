@@ -1,0 +1,67 @@
+= Operator Maturity Levels
+Jim Halfpenny <jim@source321.com>
+v1.0, 06.05.2021
+:status: draft
+:toc:
+:icons: font
+
+*Status*: {status}
+
+== Intro
+Stackable aims to provide a comprehensive selection of operators from across the open source data management ecosystem. As each new operator is added to Stackable it will mature in functionality and integration with the rest of the stack. Maturity levels are a means of communicating how far along this journey an operator has traveled and what level of features and support can be expected.
+
+This gives a clear indication of the maturity of each operator and allows decisions on which components to adopt in your data management environment and enables rapid adoption of new operators. When new projects are released they can be added quickly, allowing for evaluation and prototyping.
+
+
+== Level 0 - Candidate Operator
+Level 0 indicates that interest has been shown in adopting the operators into the Stackable ecosystem and that it is on the roadmap. There is no GA release of this operator at this point, instead level 0 indicates that the operator is being considered for inclusion. This level is for new and proposed operators that have yet to fulfil the criteria for promotion to level 1.
+
+== Level 1 - Fundamental Operator
+This represents the minimum requirements for acceptance of an operator into Stackable and provides basic installation and management of the operand. Operators can deploy the operand and each will have been integration tested with other Stackable operators.
+
+=== Features
+* Automated deployment
+* Basic status reporting
+* Manual operator configuration
+* Manual operand security configuration
+* Fetch operand logs using kubectl
+* Open Policy Agent integration for authorisation and audit
+
+== Level 2 - Improving Operator
+Level 2 operators add additional functionality, including the ability to perform minor version upgrades of operands.
+
+=== Features
+* Improved security configuration management
+* Storage of keytabs and PKI material in a managed repository
+* Rolling restarts (where supported by the operand)
+* Minor version upgrades of the operand
+* Configuration validation and best practice
+
+== Level 3 - Mature Operator
+At level 3 operators will be integrated with the Stackable Control Panel for easier and simpler service and configuration management.
+
+=== Features
+* Operand metric collection
+* Operand backups and snapshots
+* Support for operand major version upgrades and rollback of minor upgrades
+* High availability and failover
+* Capacity scaling
+
+== Level 4 - Smooth Operator
+Level 4 operators are ready for the big time, with advanced monitoring and management features.
+
+=== Features
+* Generation of events with alerting and action triggers
+* Improved log management with support for enterprise monitoring platforms
+* Automatic capacity scaling
+
+== Level 5 - Top of the Stack Operator
+Top level operators are able to effectively manage itself. Metrics are used to monitor workload efficiency and to automatically tune service configuration and capacity and to provide recommendations to maintain the health of the service.
+
+=== Features
+* Configuration via Stackable Control Panel
+* Workload analysis and tuning
+* Automatic operand scaling
+* Operand self healing
+* Automatic tuning
+* Operand performance baseline and anomaly detection

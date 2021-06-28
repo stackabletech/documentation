@@ -1,0 +1,28 @@
+= Apache NiFi
+Jim Halfpenny <jim@source321.com>
+0.1, 26.05.2021
+:latest_version: 0.1
+:toc:
+:icons: font
+
+Apache NiFi supports powerful and scalable directed graphs of data routing, transformation, and system mediation logic.
+
+== Operator Status
+* *Category:* Data In Motion
+* *Maturity level:* 1
+* *Version:* 0.1
+* *Development status:* In development
+* *Stackable repo:*  https://github.com/stackabletech/nifi-operator
+* *Website:* https://nifi.apache.org/
+
+== Operator Dependencies
+
+
+
+
+* Apache ZooKeeper
+
+
+
+== Operator Features
+* Deploy Apache NiFi, either standalone or as a cluster

@@ -1,0 +1,31 @@
+= {{ DisplayName }}
+{{ Author }}
+{{ Version }}, {{ Date }}
+:latest_version: {{ Version }}
+:toc:
+:icons: font
+
+
+Rego the the declarative language used to define Open Policy Agent authorisation rules.
+
+== Operator Status
+* *Category:* {{ Category }}
+* *Maturity level:* {{ Maturity }}
+* *Version:* {{ Version }}
+* *Development status:* {{ Status }}
+* *Stackable repo:*  {{ StackableRepo }}
+* *Website:* {{ Link }}
+
+== Operator Dependencies
+{% if Dependencies is not number %}
+{% set deps = Dependencies.split(",") %}
+{% for dep in deps %}
+* {{ dep }}
+{% endfor %}
+{% else %}
+None
+{% endif %}
+
+== Operator Features
+* Watch for new rules and creates a bundle of all rules in the watched namespace
+* Make the bundle available via HTTP

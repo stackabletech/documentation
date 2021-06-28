@@ -28,7 +28,7 @@ Our usage of this storage will most probably be extremely simple, even if a SQL 
 == Considered Options
 
 * etcd
-* Zookeeper
+* ZooKeeper
 * SQL Database
 
 == Decision Outcome
@@ -56,7 +56,7 @@ https://etcd.io/
 * Bad, because it has a hard size limit
 * Bad, because it does not work well with large numbers of requests
 
-=== Zookeeper
+=== ZooKeeper
 
 https://zookeeper.apache.org/
 

@@ -1,0 +1,30 @@
+= {{ DisplayName }}
+{{ Author }}
+{{ Version }}, {{ Date }}
+:latest_version: {{ Version }}
+:toc:
+:icons: font
+
+Apache NiFi supports powerful and scalable directed graphs of data routing, transformation, and system mediation logic.
+
+== Operator Status
+* *Category:* {{ Category }}
+* *Maturity level:* {{ Maturity }}
+* *Version:* {{ Version }}
+* *Development status:* {{ Status }}
+* *Stackable repo:*  {{ StackableRepo }}
+* *Website:* {{ Link }}
+
+== Operator Dependencies
+{% set Dependencies = Dependencies|string %}
+{% if Dependencies != "nan" %}
+{% set deps = Dependencies.split(",") %}
+{% for dep in deps %}
+* {{ dep }}
+{% endfor %}
+{% else %}
+None
+{% endif %}
+
+== Operator Features
+* Deploy Apache NiFi, either standalone or as a cluster

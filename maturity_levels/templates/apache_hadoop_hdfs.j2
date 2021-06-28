@@ -1,0 +1,54 @@
+= {{ DisplayName }}
+{{ Author }}
+{{ Version }}, {{ Date }}
+:latest_version: {{ Version }}
+:toc:
+:icons: font
+
+Apache Hadoop HDFS is a distributed file system that provides high-throughput access to application data.
+
+== Overview
+This operator deploys and managed all of the HDFS roles including;
+* NameNode
+* DataNode
+* JournalNode
+
+== Operator Status
+* *Category:* {{ Category }}
+* *Maturity level:* {{ Maturity }}
+* *Version:* {{ Version }}
+* *Development status:* {{ Status }}
+* *Stackable repo:*  {{ StackableRepo }}
+* *Website:* {{ Link }}
+
+== Operator Dependencies
+{% if Dependencies is not number %}
+{% set deps = Dependencies.split(",") %}
+{% for dep in deps %}
+* {{ dep }}
+{% endfor %}
+{% else %}
+None
+{% endif %}
+
+== Operator Features
+Automated deployment
+Starting and stopping services
+Wire encryption
+OPA authorisation
+Seamless upgrades
+Advanced monitoring
+
+
+From Charmhum
+Detailed documentation
+Guaranteed getting started
+Secrets management
+Implements sidecar pattern
+Seamless upgrades
+Unit testing
+High availability
+
+
+
+

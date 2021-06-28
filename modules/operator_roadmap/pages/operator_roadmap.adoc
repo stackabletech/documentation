@@ -1,0 +1,259 @@
+= Operator Roadmap and Dependencies
+Jim Halfpenny <jim@source321.com>
+v1.0, 04.05.2021
+:status: draft
+:toc:
+:icons: font
+:table-caption!:
+
+*Status*: {status}
+
+Outline the proposed operators/components and prioritise their development.
+
+
+[cols=7]
+.Operators
+|===
+| Component
+| Priority
+| Status
+| Maturity
+| Category
+| Dependencies
+| Link
+
+| Apache Kafka
+| 1
+| In development
+|
+| Streaming
+|
+| https://kafka.apache.org/
+
+| Apache NiFi
+| 1
+| In development
+|
+| Data In Motion
+|
+| https://nifi.apache.org/
+
+| Apache Spark
+| 1
+| In development
+|
+| Data Processing
+|
+| https://spark.apache.org/
+
+| Apache ZooKeeper
+| 1
+| In development
+|
+| Distributed Configuration Management
+|
+| https://zookeeper.apache.org/
+
+| Apache Druid
+| 2
+|
+|
+| Streams Processing
+|
+| https://druid.apache.org/
+
+| Apache Hadoop (HDFS and YARN)
+| 1
+|
+|
+| Storage
+| Apache ZooKeeper
+| https://hadoop.apache.org/
+
+| Apache HBase
+| 2
+|
+|
+| Operational Database
+|
+| https://hbase.apache.org/
+
+| Apache Hive
+| 1
+|
+|
+| SQL Engine
+|
+| https://hive.apache.org/
+
+| Apache Impala
+| 1
+|
+|
+| SQL Engine
+|
+| https://impala.apache.org/
+
+| Apache Oozie
+| 1
+|
+|
+| Workload Management
+|
+| https://oozie.apache.org/
+
+| Apache Sqoop
+| 2
+|
+|
+| Data In Motion
+|
+| https://sqoop.apache.org/
+
+| Apache Superset
+| 2
+|
+|
+| Data Visualisation
+|
+| https://superset.apache.org/
+
+| Apache Tez
+| 2
+|
+|
+| Data Processing
+|
+| https://tez.apache.org/
+
+| Hue
+| 2
+|
+|
+| Data Visualisation
+|
+| https://gethue.com/
+
+| Apache Airflow
+| 3
+|
+|
+| Workflow Management
+|
+| https://airflow.apache.org/
+
+| Apache Flink
+| 3
+|
+|
+| Stream Processing
+| Apache Hadoop YARN
+| https://flink.apache.org/
+
+| Apache Flume
+| 3
+|
+|
+| Data In Motion
+|
+| https://flume.apache.org/
+
+| Apache IoTDB
+| 3
+|
+|
+| Operational Database
+|
+| https://iotdb.apache.org/
+
+| Apache Livy
+| 3
+|
+|
+| Data Processing
+|
+| https://livy.apache.org/
+
+| Apache Solr
+| 3
+|
+|
+| Search
+|
+| https://solr.apache.org/
+
+| Apache Phoenix
+| 3
+|
+|
+| SQL Engine
+|
+| https://phoenix.apache.org/
+
+| Apache Zeppelin
+| 3
+|
+|
+| Data Visualisation
+|
+| https://zeppelin.apache.org/
+
+| OpenSearch
+| 3
+|
+|
+| Search
+|
+| https://www.opensearch.org/
+
+| Presto/Trino
+| 3
+|
+|
+| SQL Engine
+|
+| https://trino.io/
+
+
+| Apache Atlas
+| 4
+|
+| Metadata and Lineage
+|
+|
+| https://atlas.apache.org/
+
+| Apache Knox
+| 4
+|
+|
+| Security
+|
+| https://knox.apache.org/
+
+| Apache Kudu
+| 4
+|
+|
+| Storage
+|
+| https://kudu.apache.org/
+
+| Apache Ozone
+| 4
+|
+|
+| Storage
+|
+| https://ozone.apache.org/
+
+| ElasticSearch
+| 4
+|
+|
+| Search
+|
+| https://www.elastic.co/
+
+|===
+

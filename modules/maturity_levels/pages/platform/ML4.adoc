@@ -1,0 +1,49 @@
+= Maturity Level 4
+Jim Halfpenny <jim@source321.com>
+v1.0, 04.05.2021
+:status: draft
+:toc:
+:icons: font
+
+*Status*: {status}
+
+== Objective
+Maturity level 4 will build upon the GA release to include improvements to the product. More advanced features will be added incorporating and codifying expertise and best practices into the product as well as the addition of more operators. The aim is to make Stackable easier, more efficient and more effective than installing and running the components separately.
+
+Documentation will include how to use Stackable as well as how to develop for it e.g. writing custom operators. User feedback in the form of bug reports and feature requests will be a firm part of Stackable’s life cycle at this point.
+
+Wider adoption among infrastructure provides e.g. Cloud Vendors.
+
+== Services
+The core stack of available services should be well-defined by this stage, and the rate of addition of new services will decrease. Introduction of new services will now be relatively straightforward, based on the example given by the range of existing operators. The control plane will provide additional features to control the service, such as relocation of service instances and failover of active instances to a standby.
+
+There will be more focus on integration of services with other platforms and products outside the Stackable ecosystem.
+
+=== Installation and Upgrades
+The Stackable installation process will continue to improve and follow customer feedback. The Stackable control plane will be improved to ensure fully automated deployment to the point that automated, in-situ migration from Hadoop clusters to Stackable is possible.
+
+There will be further integration with managed infrastructure providers to deploy Stackable services on a wider range of platforms. Cloud vendors will be enabled to deploy Stackable as a native service or to integrate with their app store style of deployment.
+
+=== Automated Provisioning
+There will be further integration with managed infrastructure providers to deploy Stackable services on a wider range of platforms. Cloud vendors will be enabled to deploy Stackable as a native service or to integrate with their app store style of deployment.
+
+A persistent metadata store can be deployed to allow for service and workload lifecycles to be better managed. Data and metadata can be stored while compute resource remains dormant, reducing the operating cost of the platform.
+
+=== Configuration management
+This release will see improvements to configuration validation and reporting, with further implementation of best practice guidance into the product. Configuration will be presented in a user interface using the existing APIs to allow a more visual management style. Feedback on configuration recommendations can be given in the UI to allow for simple validation and sense checking of configuration properties.
+
+
+=== Security and Governance
+Stackable will provide more advanced data governance features including management of metadata. The supplied components will offer the ability to manage a metadata dictionary with tagging, data lineage and managed schemas.
+
+Management of credentials and PKI keys/certificates will be better integrated, meaning less maintenance effort and reduced deployment times.
+
+Addition of an application gateway to simplify authentication and make services easier to access. This will provide better identity management, with support for enterprise authentication schemes (SSO, SAML, OAuth).
+
+Value added features such as bulletins notifying of new security issues and remediation steps, including patches to stackable Components. These bulletins will be published on the web, delivered by email and published to a feed that can be read into a UI to provide operators with up to date security information.
+
+
+== Demo Applications
+Building on the existing demo library, this will be extended to demonstrate the growing capabilities of the platform. New components added to the stack will appear in the demos as well as new use cases.
+
+There will be more focus on delivering the as application templates for customer to adapt to their needs. As well as helping to drive adoption it will act as repository of blueprints for given deployments. Using shared blueprints means there can be more community effort in supporting customers and reduce the cost of support and professional services.

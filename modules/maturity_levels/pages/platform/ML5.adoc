@@ -1,0 +1,35 @@
+= Maturity Level 5
+Jim Halfpenny <jim@source321.com>
+v1.0, 04.05.2021
+:status: draft
+:toc:
+:icons: font
+
+*Status*: {status}
+
+== Objective
+Maturity level 5 will deliver a fully-managed best of breed platform. Continuing to build on the existing platform new enhancements such as predictive maintenance, workload analysis, cost management and secure multi-tenancy. An ecosystem of components from Stackable and the wider community will make this the premier open source data processing platform.
+
+
+== Features
+=== Services
+Few new services will be added at this stage as the collection of available services should be complete. Where there is demand for new operators the process of adding additional ones to the platform should be mature enough that new services can be easily adopted.
+
+
+=== Installation and Upgrades
+Installation will be polished and well documented, including options for automation using widely deployed DevOps tools. Upgrade individual components will be as seamless as possible, with automatic upgrade of dependencies to ensure the platform stays at a supported level. Checkpoints or snapshots of clusters will allow for automated rollback.
+
+Support for migration of pods to allow for continuous running even when during maintenance.
+
+=== Automated Provisioning
+
+=== Configuration management
+Mature configuration management with
+
+* Feedback loop, identify tuning and scaling opportunities.
+* Fully fledged control plane. Deployment should be as easy as cloud native from the control plane.
+
+== Security and Governance
+
+== Demo Applications
+

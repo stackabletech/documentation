@@ -1,0 +1,16 @@
+* Maturity Levels
+
+** Components
+*** xref:operators/operator_maturity_levels.adoc[]
+*** xref:operators/apache_kafka.adoc[]
+*** xref:operators/apache_nifi.adoc[]
+*** xref:operators/apache_spark.adoc[]
+*** xref:operators/apache_zookeeper.adoc[]
+
+** Platform
+*** xref:platform/platform_maturity_levels.adoc[]
+*** xref:platform/ML1.adoc[]
+*** xref:platform/ML2.adoc[]
+*** xref:platform/ML3.adoc[]
+*** xref:platform/ML4.adoc[]
+*** xref:platform/ML5.adoc[]

@@ -1,0 +1,27 @@
+= Apache ZooKeeper
+Jim Halfpenny <jim@source321.com>
+0.1, 26.05.2021
+:latest_version: 0.1
+:toc:
+:icons: font
+
+
+Apache ZooKeeper is an open-source server which enables highly reliable distributed coordination. It provides configuration and state distribution and coordination for many other projects, including Apache Kafka.
+
+== Operator Status
+* *Category:* Configuration Management
+* *Maturity level:* 1
+* *Version:* 0.1
+* *Development status:* In development
+* *Stackable repo:*  https://github.com/stackabletech/zookeeper-operator
+* *Website:* https://zookeeper.apache.org/
+
+== Operator Dependencies
+
+
+None
+
+
+== Operator Features
+* Deploy an Apache ZooKeeper ensemble
+* Minor version upgrades supported

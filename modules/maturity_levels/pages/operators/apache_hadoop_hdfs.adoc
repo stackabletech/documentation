@@ -1,0 +1,55 @@
+= Apache Hadoop HDFS
+Jim Halfpenny <jim@source321.com>
+0.0, 26.05.2021
+:latest_version: 0.0
+:toc:
+:icons: font
+
+Apache Hadoop HDFS is a distributed file system that provides high-throughput access to application data.
+
+== Overview
+This operator deploys and managed all of the HDFS roles including;
+
+* NameNode
+* DataNode
+* JournalNode
+
+== Operator Status
+* *Category:* Storage
+* *Maturity level:* 0
+* *Version:* 0.0
+* *Development status:* Roadmap
+* *Stackable repo:*  https://github.com/stackabletech/hdfs-operator
+* *Website:* https://hadoop.apache.org/
+
+== Operator Dependencies
+
+None
+
+
+== Operator Features
+* Automated deployment
+* Starting and stopping services
+* Wire encryption
+* OPA authorisation
+* Seamless upgrades
+* Advanced monitoring
+
+== Configuration
+Lists of the configuration options
+
+
+== Deployment
+How to deploy the HDFS operator
+
+
+*List below taken from Charmhub*
+
+* Detailed documentation
+* Guaranteed getting started
+* Secrets management
+* Implements sidecar pattern
+* Seamless upgrades
+* Unit testing
+* High availability
+

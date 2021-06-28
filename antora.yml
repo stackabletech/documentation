@@ -3,3 +3,4 @@ version: master
 title: Stackable Documentation
 nav:
   - modules/adr/nav.adoc
+  - modules/maturity_levels/nav.adoc

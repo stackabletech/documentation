@@ -1,0 +1,32 @@
+= Apache ZooKeeper
+{{ Author }}
+{{ Version }}, {{ Date }}
+:latest_version: {{ Version }}
+:toc:
+:icons: font
+
+
+Apache ZooKeeper is an open-source server which enables highly reliable distributed coordination. It provides configuration and state distribution and coordination for many other projects, including Apache Kafka.
+
+== Operator Status
+* *Category:* {{ Category }}
+* *Maturity level:* {{ Maturity }}
+* *Version:* {{ Version }}
+* *Development status:* {{ Status }}
+* *Stackable repo:*  {{ StackableRepo }}
+* *Website:* {{ Link }}
+
+== Operator Dependencies
+{% set Dependencies = Dependencies|string %}
+{% if Dependencies != "nan" %}
+{% set deps = Dependencies.split(",") %}
+{% for dep in deps %}
+* {{ dep }}
+{% endfor %}
+{% else %}
+None
+{% endif %}
+
+== Operator Features
+* Deploy an Apache ZooKeeper ensemble
+* Minor version upgrades supported
