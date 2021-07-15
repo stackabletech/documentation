@@ -129,7 +129,7 @@ The key is available on the Ubuntu keyserver under the id _16dd12f5c7a6d76a_ and
 
 To enable the actual repository, put the following content into `/etc/apt/sources.list.d/stackable.list`:
 
-    deb https://repo.stackable.tech/repository/deb-nightly buster main
+    deb https://repo.stackable.tech/repository/deb-dev buster main
 
 ===== Centos/RHEL
 
