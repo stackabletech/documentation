@@ -373,6 +373,7 @@ This can be done by adding a systemd drop-in file that is merged with the packag
 Put the following content in `/usr/lib/systemd/system/stackable-agent.service.d/kubeconfig.conf`:
 
 ----
+[Service]
 Environment="KUBECONFIG=/path/to/kubeconfig"
 ----
 
