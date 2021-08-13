@@ -20,21 +20,21 @@ image:/getting_started_arch.png[High-level deployment architecture for Stackable
 
 Since this is a walkthrough on how to install Stackable and we’re not building a production cluster, we can be fairly frugal with our resources. We’ll be using Ubuntu 20.04 running in VirtualBox in this walkthrough and recommend that you do the same as this will help you follow the instructions in this guide. It is assumed that you will know how to perform systems administration tasks such as configuring virtual machines, setting the hostnames and configuring name resolution. The virtual machines will require internet access to download the software.
 
-Below is a table for recommended sizing for this tutorial. Bear in mind that these sizings are not intended for operational clusters, but for the purporse of this tutorial. If you run any significant load through this cluster then you will almost certainly need to assign more memory and disk space.
+Below is a table for recommended sizing for this tutorial. Bear in mind that these sizings are not intended for operational clusters, but for the purpose of this tutorial. If you run any significant load through this cluster then you will almost certainly need to assign more memory and disk space.
 
 |===
 | Type | Hostname | Minimum RAM | Minimum Disk Space
 
-| Orchestrator node | kubernetes.stackable | 2 GB | 10 GB
+| Controller node | kubernetes.stackable | 2 GB | 10 GB
 | Worker node 1 | node1.stackable | 4 GB | 20 GB
-| Worker node 2 | node1.stackable | 4 GB | 20 GB
-| Worker node 3 | node1.stackable | 4 GB | 20 GB
+| Worker node 2 | node2.stackable | 4 GB | 20 GB
+| Worker node 3 | node3.stackable | 4 GB | 20 GB
 
 |===
 
 == Installing Kubernetes
 
-Stackable’s control plane is built around Kubernetes. We’ll be deploying services not as containers but as regular services controlled by systemd. Stackable Agent is a custom kubelet and bridges the worlds between Kubernetes and native deployment. For this walkthrough we’ll be using K3s, which offers a very quick and easy way to bootstrap your Kubernetes infrastructure. On your orchestration node run the following command as root to install K3s:
+Stackable’s control plane is built around Kubernetes. We’ll be deploying services not as containers but as regular services controlled by systemd. Stackable Agent is a custom kubelet and bridges the worlds between Kubernetes and native deployment. For this walkthrough we’ll be using K3s, which offers a very quick and easy way to bootstrap your Kubernetes infrastructure. On your controller node run the following command as root to install K3s:
 
 `curl -sfL https://get.k3s.io | sh -`
 
@@ -65,7 +65,7 @@ To check if everything worked as expected you can use `kubectl cluster-info` to 
     CoreDNS is running at https://127.0.0.1:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
     Metrics-server is running at https://127.0.0.1:6443/api/v1/namespaces/kube-system/services/https:metrics-server:/proxy
 
-Now that we have Kubernetes running on the orchestrator node we need to distribute the configuration to the worker nodes. You’ll find a configuration file on your orchestration server in `/etc/rancher/k3s/k3s.yaml`. Edit this file and set the property named clusters->server to the address of your Kubernetes orchestrator (by default this is set to 127.0.0.1). Once you’ve done this you can distribute the file out to the cluster. Copy this file to `/root/.kube/config` on each of the worker nodes. This is the default location for the Kubernetes configuration file for the root user and Stackable will check here by default.
+Now that we have Kubernetes running on the controller node we need to distribute the configuration to the worker nodes. You’ll find a configuration file on your controller node in `/etc/rancher/k3s/k3s.yaml`. Edit this file and set the property named clusters->server to the address of your controller node (by default this is set to 127.0.0.1). Once you’ve done this you can distribute the file out to the cluster. Copy this file to `/root/.kube/config` on each of the worker nodes. This is the default location for the Kubernetes configuration file for the root user and Stackable will check here by default.
 
 == Installing Stackable
 
@@ -186,10 +186,44 @@ There are two main repositories for Stackable software, one of the OS packages i
     gpgcheck=0" > /etc/yum.repos.d/stackable.repo
     /usr/bin/yum clean all
 
+=== Installing Stackable Operators
+The Stackable operator servers are components that translate the service definitions deployed via Kubernetes into deploy services on the worker nodes. These can be installed on any node that has access to the Kubernetes control plane. In this example we will install them on the controller node.
+
+==== Debian and Ubuntu
+    apt-get install stackable-zookeeper-operator-server \
+    stackable-kafka-operator-server \
+    stackable-nifi-operator-server
+
+==== Red Hat and CentOS
+    yum install stackable-zookeeper-operator-server \
+    stackable-kafka-operator-server \
+    stackable-nifi-operator-server
+
+You can then enable the services using systemctl:
+
+==== Apache ZooKeeper
+    systemctl start stackable-zookeeper-operator-server
+    systemctl enable stackable-zookeeper-operator-server
+
+==== Apache Kafka
+    systemctl start stackable-kafka-operator-server
+    systemctl enable stackable-kafka-operator-server
+
+
+==== Apache NiFi
+
+NOTE: There’s an issue with the nifi operator not looking in the correct place for its configuration properties file. Workaround using `sudo ln -s /etc/stackable/nifi-operator /deploy` prior to starting the Apache NiFi operator.
+
+    systemctl start stackable-nifi-operator-server
+    systemctl enable stackable-nifi-operator-server
+
+You can use `systemctl status <service-name>` to check whether the services have started correctly. If they do not start then look in /var/log/syslog for any clues as to why.
+
+
 === Installing Stackable Agent
 On each of the worker nodes you’ll need to install Stackable Agent, which runs a custom kubelet that can be used to launch non-containerised applications using systemd. If this doesn’t make a lot of sense to you, don’t worry. What this means is that you can run regular Linux services using the Kubernetes control plane. This makes sense for example if you wish to run a hybrid deployment with a mix of bare metal and containerised services and manage them all with one framework.
 
-NOTE: Don’t install this on the Kubernetes orchestrator, since this already has a kublet running and there would be a clash.
+NOTE: Don’t install the agent onto the controller node as it is already has the K3s kubelet running and this would cause a clash. Stackable Agent should only be deployed on the worker nodes.
 
 ==== Debian and Ubuntu
     apt-get install stackable-agent
@@ -215,7 +249,7 @@ During the first start of the agent, it will perform some bootstrapping tasks, m
 
     Aug 10 12:53:48 node1 stackable-agent[5208]: [2021-08-10T12:53:48Z INFO  stackable_agent] Successfully bootstrapped TLS certificate: TLS certificate requires manual approval. Run kubectl certificate approve node1.stackable-tls
 
-If your Kubernetes is *not configured* to auto-approve these CSRs, which will be the case if you are using K3s as described in this guide, you will need to manually approve that request before the agent can start. You can do this by running `kubectl certificate approve <agent-fqdn>-tls` on the orchestrator server after starting the agent.
+If your Kubernetes is *not configured* to auto-approve these CSRs, which will be the case if you are using K3s as described in this guide, you will need to manually approve that request before the agent can start. You can do this by running `kubectl certificate approve <agent-fqdn>-tls` on the controller node after starting the agent.
 
     root@kubernetes:~# kubectl certificate approve node1.stackable-tls
     certificatesigningrequest.certificates.k8s.io/node1.stackable-tls approved
@@ -229,37 +263,6 @@ Once all of the nodes have been registered and had their certificates signed the
     node3.stackable    	Ready	<none>             	5s  	0.7.0
     node1.stackable    	Ready	<none>             	3m43s	0.7.0
 
-
-=== Installing Stackable Operators
-The Stackable operator servers are components that translate the service definitions deployed via Kubernetes into deploy services on the worker nodes.
-
-==== Debian and Ubuntu
-    apt-get install stackable-zookeeper-operator-server \
-    stackable-kafka-operator-server \
-    stackable-nifi-operator-server
-
-==== Red Hat and CentOS
-    yum install stackable-zookeeper-operator-server \
-    stackable-kafka-operator-server \
-    stackable-nifi-operator-server
-
-You can then enable the services using systemctl:
-
-==== Apache ZooKeeper
-    systemctl start stackable-zookeeper-operator-server
-    systemctl enable stackable-zookeeper-operator-server
-
-==== Apache Kafka
-    systemctl start stackable-kafka-operator-server
-    systemctl enable stackable-kafka-operator-server
-
-NOTE: There’s an issue with the nifi operator not looking in the correct place for its configuration properties file. Workaround using `sudo ln -s /etc/stackable/nifi-operator /deploy` prior to starting the Apache NiFi operator.
-
-==== Apache NiFi
-    systemctl start stackable-nifi-operator-server
-    systemctl enable stackable-nifi-operator-server
-
-You can use `systemctl status <service-name>` to check whether the services have started correctly. If they do not start then look in /var/log/syslog for any clues as to why.
 
 == Deploying Stackable Services
 At this point you’ve successfully deployed the Stackable node infrastructure we’re ready to deploy services to the cluster. To do this we provide service descriptions to Kubernetes for each of the services we wish to deploy.
