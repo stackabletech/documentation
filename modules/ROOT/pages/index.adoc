@@ -90,6 +90,9 @@ Want to try it out?
 
 The following paragraphs will guide you through setting up all necessary components to create a working Stackable Platform which you can then use to deploy services.
 
+=== Quickstart
+If you're really impatient you can use the Stackable Quickstart script to rapidly deploy a single node Stackable cluster. We recommend that you read through the Getting Started guide first to get an understanding about what the script does. You'll find thing in the https://github.com/stackabletech/stackable-utils[stackable-utils] repository on GitHub.
+
 === Overview
 
 In order to provide a working platform, we will perform the following steps:
