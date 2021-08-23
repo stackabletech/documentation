@@ -1,0 +1,33 @@
+= {{ DisplayName }}
+{{ Author }}
+{{ Version }}, {{ Date }}
+:latest_version: {{ Version }}
+:toc:
+:icons: font
+
+
+Apache Hadoop YARN is a framework for job scheduling and cluster resource management.
+
+== Operator Status
+* *Category:* {{ Category }}
+* *Maturity level:* {{ Maturity }}
+* *Version:* {{ Version }}
+* *Development status:* {{ Status }}
+* *Stackable repo:*  {{ StackableRepo }}
+* *Website:* {{ Link }}
+
+== Operator Dependencies
+{% if Dependencies is not number %}
+{% set deps = Dependencies.split(",") %}
+{% for dep in deps %}
+* {{ dep }}
+{% endfor %}
+{% else %}
+None
+{% endif %}
+
+== Operator Features
+* Deploy and manage HDFS roles
+** ResourceManager
+** NodeManager
+** YARN History Server

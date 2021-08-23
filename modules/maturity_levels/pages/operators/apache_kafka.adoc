@@ -1,0 +1,29 @@
+= Apache Kafka
+Jim Halfpenny <jim@source321.com>
+0.1, 26.05.2021
+:latest_version: 0.1
+:toc:
+:icons: font
+
+
+Apache Kafka is an open-source distributed event streaming platform.
+
+== Operator Status
+* *Category:* Streaming
+* *Maturity level:* 1
+* *Version:* 0.1
+* *Development status:* In development
+* *Stackable repo:*  https://github.com/stackabletech/kafka-operator
+* *Website:* https://kafka.apache.org/
+
+== Operator Dependencies
+
+
+
+* Apache ZooKeeper
+
+
+
+== Operator Features
+* Deployment of Kafka brokers
+* Support for authorisation using OPA

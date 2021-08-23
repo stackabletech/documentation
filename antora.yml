@@ -2,4 +2,6 @@ name: home
 version: master
 title: Stackable Documentation
 nav:
+  - modules/ROOT/nav.adoc
   - modules/adr/nav.adoc
+  - modules/maturity_levels/nav.adoc

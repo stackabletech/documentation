@@ -1,0 +1,35 @@
+Component,DisplayName,Author,Version,Date,Priority,Maturity,Status,Category,Description,Customers,Dependencies,OPAIntegration,StackableRepo,Link
+apache_kafka,Apache Kafka,Jim Halfpenny <jim@source321.com>,0.1,26.05.2021,1,1,In development,Streaming,,IONOS,"Apache ZooKeeper",,https://github.com/stackabletech/kafka-operator,https://kafka.apache.org/
+apache_nifi,Apache NiFi,Jim Halfpenny <jim@source321.com>,0.1,26.05.2021,1,1,In development,Data In Motion,,,"Apache ZooKeeper",,https://github.com/stackabletech/nifi-operator,https://nifi.apache.org/
+apache_nifi_registry,Apache NiFi Registry,Jim Halfpenny <jim@source321.com>,0.1,26.05.2021,1,1,Roadmap,Data In Motion,,,,,https://github.com/stackabletech/nifi-registry-operator,https://nifi.apache.org/registry.html
+apache_spark,Apache Spark,Jim Halfpenny <jim@source321.com>,0.1,26.05.2021,1,1,In development,Data Processing,,IONOS,"Apache ZooKeeper",,https://github.com/stackabletech/spark-operator,https://spark.apache.org/
+apache_zookeeper,Apache ZooKeeper,Jim Halfpenny <jim@source321.com>,0.1,26.05.2021,1,1,In development,Configuration Management,Apache ZooKeeper is an effort to develop and maintain an open-source server which enables highly reliable distributed coordination.,IONOS,"",,https://github.com/stackabletech/zookeeper-operator,https://zookeeper.apache.org/
+opa,Open Policy Agent (OPA),Jim Halfpenny <jim@source321.com>,0.1,26.05.2021,1,1,In development,Security Policy,,,,,https://github.com/stackabletech/opa-operator,https://www.openpolicyagent.org/
+rego,OPA Rego Rule,Jim Halfpenny <jim@source321.com>,0.1,26.05.2021,1,1,In development,Security Policy,,,,,https://github.com/stackabletech/rego-operator,https://www.openpolicyagent.org/docs/latest/#rego
+apache_druid,Apache Druid,Jim Halfpenny <jim@source321.com>,0,26.05.2021,2,0,Roadmap,Streams Processing,,IONOS,,,,https://druid.apache.org/
+apache_hadoop_hdfs,Apache Hadoop HDFS,Jim Halfpenny <jim@source321.com>,0,26.05.2021,1,0,Roadmap,Storage,,IONOS,,,https://github.com/stackabletech/hdfs-operator,https://hadoop.apache.org/
+apache_hadoop_yarn,Apache Hadoop YARN,Jim Halfpenny <jim@source321.com>,0,26.05.2021,1,0,Roadmap,Storage,,IONOS,"Apache ZooKeeper",,https://github.com/stackabletech/yarn-operator,https://hadoop.apache.org/
+apache_hbase,Apache HBase,Jim Halfpenny <jim@source321.com>,0,26.05.2021,2,0,Roadmap,Operational Database,,,,,,https://hbase.apache.org/
+apache_hive,Apache Hive,Jim Halfpenny <jim@source321.com>,0,26.05.2021,1,0,Roadmap,SQL Engine,,,"RDBMS",,,https://hive.apache.org/
+apache_impala,Apache Impala,Jim Halfpenny <jim@source321.com>,0,26.05.2021,1,0,Roadmap,SQL Engine,,,,,,https://impala.apache.org/
+apache_oozie,Apache Oozie,Jim Halfpenny <jim@source321.com>,0,26.05.2021,1,0,Roadmap,Workload Management,,,"RDBMS",,,https://oozie.apache.org/
+apache_sqoop,Apache Sqoop,Jim Halfpenny <jim@source321.com>,0,26.05.2021,2,0,Roadmap,Data In Motion,,,,,,https://sqoop.apache.org/
+apache_superset,Apache Superset,Jim Halfpenny <jim@source321.com>,0,26.05.2021,2,0,Roadmap,Data Visualisation,,IONOS,,,,https://superset.apache.org/
+apache_tez,Apache Tez,Jim Halfpenny <jim@source321.com>,0,26.05.2021,2,0,Roadmap,Data Processing,,,,,,https://tez.apache.org/
+hue,Hue,Jim Halfpenny <jim@source321.com>,0,26.05.2021,2,0,Roadmap,Data Visualisation,,,,,,https://gethue.com/
+apache_airflow,Apache Airflow,Jim Halfpenny <jim@source321.com>,0,26.05.2021,2,0,Roadmap,Workflow Management,,IONOS,,,,https://airflow.apache.org/
+apache_flink,Apache Flink,Jim Halfpenny <jim@source321.com>,0,26.05.2021,3,0,Roadmap,Stream Processing,,,"Apache Hadoop",,,https://flink.apache.org/
+apache_flume,Apache Flume,Jim Halfpenny <jim@source321.com>,0,26.05.2021,3,0,Roadmap,Data In Motion,,,,,,https://flume.apache.org/
+apache_iotdb,Apache IoTDB,Jim Halfpenny <jim@source321.com>,0,26.05.2021,3,0,Roadmap,NoSQL Database,,,,,,https://iotdb.apache.org/
+apache_livy,Apache Livy,Jim Halfpenny <jim@source321.com>,0,26.05.2021,3,0,Roadmap,Data Processing,,,,,,https://livy.apache.org/
+apache_solr,Apache Solr,Jim Halfpenny <jim@source321.com>,0,26.05.2021,3,0,Roadmap,Search,,,,,,https://solr.apache.org/
+apache_phoenix,Apache Phoenix,Jim Halfpenny <jim@source321.com>,0,26.05.2021,3,0,Roadmap,SQL Engine,,,"Apache HBase",,,https://phoenix.apache.org/
+apache_zeppelin,Apache Zeppelin,Jim Halfpenny <jim@source321.com>,0,26.05.2021,3,0,Roadmap,Data Visualisation,,,,,,https://zeppelin.apache.org/
+opensearch,OpenSearch,Jim Halfpenny <jim@source321.com>,0,26.05.2021,3,0,Roadmap,Search,,,,,,https://www.opensearch.org/
+trino,Presto/Trino,Jim Halfpenny <jim@source321.com>,0,26.05.2021,3,0,Roadmap,SQL Engine,,IONOS,,,,https://trino.io/
+apache_atlas,Apache Atlas,Jim Halfpenny <jim@source321.com>,0,26.05.2021,4,0,Roadmap,Data Governance,,,,,,https://atlas.apache.org/
+apache_knox,Apache Knox,Jim Halfpenny <jim@source321.com>,0,26.05.2021,4,0,Roadmap,Security,,,,,,https://knox.apache.org/
+apache_kudu,Apache Kudu,Jim Halfpenny <jim@source321.com>,0,26.05.2021,4,0,Roadmap,Storage,,,,,,https://kudu.apache.org/
+apache_ozone,Apache Ozone,Jim Halfpenny <jim@source321.com>,0,26.05.2021,4,0,Roadmap,Storage,,,,,,https://ozone.apache.org/
+elasticsearch,ElasticSearch,Jim Halfpenny <jim@source321.com>,0,26.05.2021,4,0,Roadmap,Search,,,,,,https://www.elastic.co/
+mongodb,MongoDB,Jim Halfpenny <jim@source321.com>,0,26.05.2021,4,0,Roadmap,NoSQL Database,,,,,,https://www.mongodb.com/

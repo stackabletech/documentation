@@ -1,0 +1,33 @@
+= Apache Spark
+{{ Author }}
+{{ Version }}, {{ Date }}
+:latest_version: {{ Version }}
+:toc:
+:icons: font
+
+Apache Spark is a unified analytics engine for large-scale data processing.
+
+== Operator Status
+* *Category:* {{ Category }}
+* *Maturity level:* {{ Maturity }}
+* *Version:* {{ Version }}
+* *Development status:* {{ Status }}
+* *Stackable repo:*  {{ StackableRepo }}
+* *Website:* {{ Link }}
+
+== Operator Dependencies
+{% set Dependencies = Dependencies|string %}
+{% if Dependencies != "nan" %}
+{% set deps = Dependencies.split(",") %}
+{% for dep in deps %}
+* {{ dep }}
+{% endfor %}
+{% else %}
+None
+{% endif %}
+
+== Operator Features
+* Deploy Apache Spark in standalone mode with support for deploying the following operand roles:
+** Spark Master
+** Spark Worker
+** Spark History Server

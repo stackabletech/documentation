@@ -1,0 +1,31 @@
+= Apache Spark
+Jim Halfpenny <jim@source321.com>
+0.1, 26.05.2021
+:latest_version: 0.1
+:toc:
+:icons: font
+
+Apache Spark is a unified analytics engine for large-scale data processing.
+
+== Operator Status
+* *Category:* Data Processing
+* *Maturity level:* 1
+* *Version:* 0.1
+* *Development status:* In development
+* *Stackable repo:*  https://github.com/stackabletech/spark-operator
+* *Website:* https://spark.apache.org/
+
+== Operator Dependencies
+
+
+
+
+* Apache ZooKeeper
+
+
+
+== Operator Features
+* Deploy Apache Spark in standalone mode with support for deploying the following operand roles:
+** Spark Master
+** Spark Worker
+** Spark History Server

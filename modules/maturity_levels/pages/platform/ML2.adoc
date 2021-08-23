@@ -1,0 +1,50 @@
+= Maturity Level 2
+Jim Halfpenny <jim@source321.com>
+v1.0, 04.05.2021
+:status: draft
+:toc:
+:icons: font
+
+*Status*: {status}
+
+== Objective
+The aim for maturity level 2 is to build on the core foundation of the Stackable platform and ready it for GA release. This will include the introduction of new components to Stackable as well as improving the installation process and overall usability. Priority will be given to new components that round out the capabilities of the platform and ensure a broad range of functionality encompassing the most common customer use cases.
+
+== Features
+=== Services
+New operators will be added to the stack, with priority given to those that complete the stack. The aim is to provide a comprehensive range of components to cover as wide a range of use cases as possible including storage, data processing, query engines and visualisation.
+
+Services associations will be defined to satisfy dependencies and to provide client configuration for services that require them. For example a Spark service can be associated with a HDFS service to provide the configuration to allow file access e.g. hdfs-site.xml.
+
+=== Installation and Upgrades
+A more polished installation experience will be introduced, making it easier to install with the majority of software dependencies being met automatically.
+
+An upgrade path from previous versions of Stackable will be available, including upgrading of Stackable operators with the option to rollback to the previous version.
+
+
+=== Automated Provisioning
+Template based deployment of Stackable will allow the definition of a selection of associated services, the capacity requirements and custom configuration. You will be able to define the services required by a use case and have them deployed, with mutual configuration carried out to link the services done automatically. A collection of example configuration templates will serve to enable customer deployments and to serve as documented example deployments.
+
+=== Configuration management
+There will be improvements to configuration validation with the introduction of validity checks e.g. is a configuration parameter within reasonable bounds. This will bring the experience and best practice from the open source Big Data community into Stackable and aim to reduce the incidence of common service misconfigurations.
+
+=== Security and Governance
+==== Authentication
+Kerberos will be available for all components that support it to allow deployment of securely authenticated clusters. Tooling will be added to manage Kerberos keytab lifecycle for services i.e. creation, storage, retrieval and termination of service principles.
+
+Other methods of authentication (LDAP, TLS) will be supported by manually applying the relevant configuration to the Stackable services.
+
+==== Authorisation
+A managed security framework will be introduced using https://www.openpolicyagent.org/[Open Policy Agent (OPA)]. The aim is to use OPA as the authorisation framework for all the Stackable operators and promote the security as code model for access control. Integration for OPA already exists for Kafka, which will serve as a demonstration for OPA for managed authorisation. Securing other services that don't currently have OPA integration will be limited to what can be placed into the operator service configuration or applied manually at runtime e.g. ZooKeeper ACLs.
+
+Management of OPA policy will be through manually written OPA policy files to define the security rules for data access. These policies will be distributed to compatible operators using the Stackable Rego Rule operator.
+
+==== Encryption
+Support for storage and deployment of pre-created TLS certificates and keys using Kubernetes Secrets.
+
+==== Accounting/Audit
+OPA decision logs will provide auditing of policy decisions. Stackable OPA operator can be configured to send these decision logs to a remote web server for collection and archival, enabling the creation of a central audit collection point.
+
+== Use Cases
+=== Demo Applications
+Provide a tutorial/demo that uses as much of the stack as possible. It should mimic some sort of real world application and possible serve as a template.
