@@ -1,0 +1,75 @@
+= [short title of solved problem and solution]
+The Stackable Engineers
+v0.1, 25.08.2021
+:status: [draft | rejected | accepted | deprecated | … | superseded by link:0005-example.md[ADR-0005]]
+
+* Status: {status}
+* Deciders: [list everyone involved in the decision] <!-- optional -->
+* Date: [YYYY-MM-DD when the decision was last updated] <!-- optional -->
+
+Technical Story: [Document supported Kubernetes versions| https://github.com/stackabletech/documentation/issues/83]
+Related Documentation: https://docs.stackable.tech/agent/limitations.html
+
+== Context and Problem Statement
+
+Multiple new versions of Kubernetes are released every year. Different Kubernetes components (including kubectl) will only support a limited number of versions, as mandated by the https://kubernetes.io/releases/version-skew-policy/[Version Skew Policy]. We need to define the supported Kubernetes versions. 
+
+== Decision Drivers
+
+* customers might be slowly adopting new Kubernetes releases: customers might be lagging behind in their Kubernetes clusters
+* tech is fast moving: major Kubernetes improvements are released multiple times a year
+* How can we upgrade the Kubernetes we run without customer intervention?
+
+== Considered Options
+
+* follow Kubernetes Version Skew Policy 
+* support any Kubernetes Version for n months
+* identify Stackable's long-term-support versions of Kubernetes
+
+== Decision Outcome
+
+Chosen option: "[option 1]", because [justification. e.g., only option, which meets k.o. criterion decision driver | which resolves force force | … | comes out best (see below)].
+
+=== Positive Consequences <!-- optional -->
+
+* [e.g., improvement of quality attribute satisfaction, follow-up decisions required, …]
+* …
+
+=== Negative Consequences <!-- optional -->
+
+* [e.g., compromising quality attribute, follow-up decisions required, …]
+* …
+
+== Pros and Cons of the Options <!-- optional -->
+
+=== [option 1]
+
+[example | description | pointer to more information | …] <!-- optional -->
+
+* Good, because [argument a]
+* Good, because [argument b]
+* Bad, because [argument c]
+* … <!-- numbers of pros and cons can vary -->
+
+=== [option 2]
+
+[example | description | pointer to more information | …] <!-- optional -->
+
+* Good, because [argument a]
+* Good, because [argument b]
+* Bad, because [argument c]
+* … <!-- numbers of pros and cons can vary -->
+
+=== [option 3]
+
+[example | description | pointer to more information | …] <!-- optional -->
+
+* Good, because [argument a]
+* Good, because [argument b]
+* Bad, because [argument c]
+* … <!-- numbers of pros and cons can vary -->
+
+== Links <!-- optional -->
+
+* [Link type] [Link to ADR] <!-- example: Refined by [ADR-0005](0005-example.md) -->
+* … <!-- numbers of links can vary -->
