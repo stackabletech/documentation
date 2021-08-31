@@ -1,4 +1,4 @@
-= [short title of solved problem and solution]
+= [Worker Node Directories]
 The Stackable Engineers
 v0.1, 25.08.2021
 :status: [draft | rejected | accepted | deprecated | … | superseded by link:0005-example.md[ADR-0005]]
@@ -11,22 +11,24 @@ Technical Story: [description | ticket/issue URL] <!-- optional -->
 
 == Context and Problem Statement
 
-A number of directories are needed and used by different components of the Stackable solution. These directories for example are used for logs, secrets, configuration and user data. 
-The question is who show create, own, access and use which directories and when, in order to create a secure solution and accommodate the requirements of our (enterprise) users. 
+A number of directories are needed and used by different components of the Stackable solution. These directories are used for logs, secrets, configuration, user data and other stuff. 
+The question manifold, touching topics like coordination, identity and authentorization: Who should create, own, access and use which directories and when, in order to create a secure solution and accommodate the requirements of (enterprise) users. 
 
 == Decision Drivers <!-- optional -->
 
-* security: the "need-to-know" principle restricts the accessibility of information to the minimum 
-* users: they might restrict acceptable directories, creating the need to flexibly configure directories 
-* shared access: some 
-* sequentiality: some component might want to access a directory own and created by another component
+* coordination: which process should when be allowed to create directories
+* identity: 
+* authorization: the "need-to-know" principle restricts the accessibility of information to the minimum 
+* users/customers: they might restrict acceptable directories, creating the need to flexibly configure directories 
+* shared access: two or more components might need to share a directory. one case is that multiple components share a common parent directory.  
+* sequentiality: some component might want to access a directory owned and created by another component. some component might needs to create a directory ahead of time which will be primarily used or owned by another component
 
 == Considered Options
 
-* [option 1]
-* [option 2]
-* [option 3]
-* … <!-- numbers of options can vary -->
+* components can create and use whatever directories they want
+* components have private directories and sharing is the exception, however will be allowed on a per case basis 
+* a centralized component is responsible to provide directories and access to 
+* container-approach: every component will find symlinked directories in a dedicated directory structure and thus accesses shared directories
 
 == Decision Outcome
 
