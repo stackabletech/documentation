@@ -1,4 +1,4 @@
-= [short title of solved problem and solution]
+= [Supported Kubernetes versions]
 The Stackable Engineers
 v0.1, 25.08.2021
 :status: [draft | rejected | accepted | deprecated | … | superseded by link:0005-example.md[ADR-0005]]
@@ -12,19 +12,21 @@ Related Documentation: https://docs.stackable.tech/agent/limitations.html
 
 == Context and Problem Statement
 
-Multiple new versions of Kubernetes are released every year. Different Kubernetes components (including kubectl) will only support a limited number of versions, as mandated by the https://kubernetes.io/releases/version-skew-policy/[Version Skew Policy]. We need to define the supported Kubernetes versions. 
+Multiple new versions of Kubernetes are released every year (currently 3). Security fixes might come in between. Different Kubernetes components (including kubectl) will only support a limited number of versions, as mandated by the https://kubernetes.io/releases/version-skew-policy/[Version Skew Policy]. Therefore, we need to define the supported Kubernetes versions. 
 
 == Decision Drivers
 
-* customers might be slowly adopting new Kubernetes releases: customers might be lagging behind in their Kubernetes clusters
+* some customers told us they have troubles keeping the pace at which Kubernetes moves. They are only slowly adopting new Kubernetes releases, or even refrain completely from using Kubernetes. Customers might be lagging behind in their Kubernetes clusters.
 * tech is fast moving: major Kubernetes improvements are released multiple times a year
+* managed Kubernetes offerings (GKE & Co.) typically only support   
 * How can we upgrade the Kubernetes we run without customer intervention?
 
 == Considered Options
 
 * follow Kubernetes Version Skew Policy 
 * support any Kubernetes Version for n months
-* identify Stackable's long-term-support versions of Kubernetes
+* identify Stackable's own long-term-support version of Kubernetes
+* abandon Kubernetes
 
 == Decision Outcome
 
