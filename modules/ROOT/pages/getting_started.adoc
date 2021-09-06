@@ -65,7 +65,7 @@ To check if everything worked as expected you can use `kubectl cluster-info` to 
     CoreDNS is running at https://127.0.0.1:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
     Metrics-server is running at https://127.0.0.1:6443/api/v1/namespaces/kube-system/services/https:metrics-server:/proxy
 
-Now that we have Kubernetes running on the controller node we need to distribute the configuration to the worker nodes. You’ll find a configuration file on your controller node in `/etc/rancher/k3s/k3s.yaml`. Edit this file and set the property named clusters->server to the address of your controller node (by default this is set to 127.0.0.1). Once you’ve done this you can distribute the file out to the cluster. Copy this file to `/root/.kube/config` on each of the worker nodes. One og the default locations for the Kubernetes configuration file is in the user's home directory and the Stackable Agent will check here by default when running as root as required.
+Now that we have Kubernetes running on the controller node we need to distribute the configuration to the worker nodes. You’ll find a configuration file on your controller node in `/etc/rancher/k3s/k3s.yaml`. Edit this file and set the property named clusters->server to the address of your controller node (by default this is set to 127.0.0.1). Once you’ve done this you can distribute the file out to the cluster. Copy this file to `/root/.kube/config` on each of the worker nodes. One of the default locations for the Kubernetes configuration file is in the user's home directory and the Stackable Agent will check here by default when running as root as required.
 
 == Installing Stackable
 
