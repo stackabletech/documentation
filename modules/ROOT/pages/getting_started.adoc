@@ -1,0 +1,411 @@
+= Getting Started
+
+One of the best ways of getting started with a new platform is to try it out. Any big data platform has a lot of moving parts and getting some hands on keyboard time with it helps reinforce learning.
+
+== About this guide
+
+Firstly, let’s cover whether this Getting started guide is right for you. This is intended as a learning tool to discover more about Stackable, its deployment and architecture.
+
+* If you just want to get up and running quickly there is a quickstart script that will install services on a single node available in the https://github.com/stackabletech/stackable-utils[stackable-utils] repository on GitHub.
+* If you want to build a production cluster then this is not for you. This tutorial is to familiarise you with the Stackable architecture and is not a guide for building robust clusters.
+* This is intended for use in a private network or lab; it doesn’t enable any security features such as authentication or encryption and should not be directly connected to the Internet. Be careful if you're deploying in the cloud as your instances may default to using public IPs.
+
+== Overview
+
+We’re going to build a small cluster in this tutorial, so the first thing we need is some machines to build the cluster on. Maybe you have some spare servers sitting around you can use but for most people running virtual machines makes more sense. If you’ve sufficient resources on your workstation you can run them on there, or launch cloud instances if you prefer. However you choose to deploy, we recommend running your cluster across multiple hosts since this is much closer to a typical deployment.
+
+Stackable requires a Kubernetes control plane to manage the cluster and one or more worker nodes to run the services themselves. We’ll build a simple cluster with 3 services; Apache ZooKeeper, Apache Kafka and Apache NiFi. For simplicity, we will deploy an instance of each of these services onto 3 separate nodes.
+
+image:/getting_started_arch.png[High-level deployment architecture for Stackable,600]
+
+Since this is a walkthrough on how to install Stackable and we’re not building a production cluster, we can be fairly frugal with our resources. We’ll be using Ubuntu 20.04 running in VirtualBox in this walkthrough and recommend that you do the same as this will help you follow the instructions in this guide. It is assumed that you will know how to perform systems administration tasks such as configuring virtual machines, setting the hostnames and configuring name resolution. The virtual machines will require internet access to download the software.
+
+Below is a table for recommended sizing for this tutorial. Bear in mind that these sizings are not intended for operational clusters, but for the purpose of this tutorial. If you run any significant load through this cluster then you will almost certainly need to assign more memory and disk space.
+
+|===
+| Type | Hostname | Minimum RAM | Minimum Disk Space
+
+| Controller node | kubernetes.stackable | 2 GB | 10 GB
+| Worker node 1 | node1.stackable | 4 GB | 20 GB
+| Worker node 2 | node2.stackable | 4 GB | 20 GB
+| Worker node 3 | node3.stackable | 4 GB | 20 GB
+
+|===
+
+== Installing Kubernetes
+
+Stackable’s control plane is built around Kubernetes. We’ll be deploying services not as containers but as regular services controlled by systemd. Stackable Agent is a custom kubelet and bridges the worlds between Kubernetes and native deployment. For this walkthrough we’ll be using K3s, which offers a very quick and easy way to bootstrap your Kubernetes infrastructure. On your controller node run the following command as root to install K3s:
+
+`curl -sfL https://get.k3s.io | sh -`
+
+So long as your VM has an Internet connection it will download and automatically configure a simple Kubernetes environment.
+
+    root@kubernetes:~# curl -sfL https://get.k3s.io | sh -
+    [INFO]  Finding release for channel stable
+    [INFO]  Using v1.21.3+k3s1 as release
+    [INFO]  Downloading hash https://github.com/k3s-io/k3s/releases/download/v1.21.3+k3s1/sha256sum-amd64.txt
+    [INFO]  Downloading binary https://github.com/k3s-io/k3s/releases/download/v1.21.3+k3s1/k3s
+    [INFO]  Verifying binary download
+    [INFO]  Installing k3s to /usr/local/bin/k3s
+    [INFO]  Creating /usr/local/bin/kubectl symlink to k3s
+    [INFO]  Creating /usr/local/bin/crictl symlink to k3s
+    [INFO]  Creating /usr/local/bin/ctr symlink to k3s
+    [INFO]  Creating killall script /usr/local/bin/k3s-killall.sh
+    [INFO]  Creating uninstall script /usr/local/bin/k3s-uninstall.sh
+    [INFO]  env: Creating environment file /etc/systemd/system/k3s.service.env
+    [INFO]  systemd: Creating service file /etc/systemd/system/k3s.service
+    [INFO]  systemd: Enabling k3s unit
+    Created symlink /etc/systemd/system/multi-user.target.wants/k3s.service → /etc/systemd/system/k3s.service.
+    [INFO]  systemd: Starting k3s
+
+To check if everything worked as expected you can use `kubectl cluster-info` to retrieve the cluster information.
+
+    root@kubernetes:~# kubectl cluster-info
+    Kubernetes control plane is running at https://127.0.0.1:6443
+    CoreDNS is running at https://127.0.0.1:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+    Metrics-server is running at https://127.0.0.1:6443/api/v1/namespaces/kube-system/services/https:metrics-server:/proxy
+
+Now that we have Kubernetes running on the controller node we need to distribute the configuration to the worker nodes. You’ll find a configuration file on your controller node in `/etc/rancher/k3s/k3s.yaml`. Edit this file and set the property named clusters->server to the address of your controller node (by default this is set to 127.0.0.1). Once you’ve done this you can distribute the file out to the cluster. Copy this file to `/root/.kube/config` on each of the worker nodes. One of the default locations for the Kubernetes configuration file is in the user's home directory and the Stackable Agent will check here by default when running as root as required.
+
+== Installing Stackable
+
+=== Specify a Stackable Repository in Kubernetes
+Stackable downloads packages from repositories, which the agents need to know about. To avoid having to configure these repositories on every agent they are instead specified in Kubernetes and retrieved from there by the agent.
+
+In order to allow creating a repository, you’ll have to create the CRD for repositories in your freshly installed Kubernetes cluster. The CRD looks like this:
+
+    ---
+    apiVersion: apiextensions.k8s.io/v1
+    kind: CustomResourceDefinition
+    metadata:
+      name: repositories.stable.stackable.de
+    spec:
+      group: stable.stackable.de
+      versions:
+        - name: v1
+          served: true
+          storage: true
+          schema:
+            openAPIV3Schema:
+              type: object
+              properties:
+                spec:
+                  type: object
+                  properties:
+                    repo_type:
+                      type: string
+                    properties:
+                      type: object
+                      additionalProperties:
+                        type: string
+      scope: Namespaced
+      names:
+        plural: repositories
+        singular: repository
+        kind: Repository
+        shortNames:
+        - repo
+
+You can choose whatever way is most convenient for you to apply this CRD to your cluster. You can use `kubectl apply -f` to read the CRD from a file or from stdin as in this example:
+
+    cat <<EOF | kubectl apply -f -
+    apiVersion: apiextensions.k8s.io/v1
+    kind: CustomResourceDefinition
+    metadata:
+      name: repositories.stable.stackable.de
+    spec:
+      group: stable.stackable.de
+      versions:
+        - name: v1
+          served: true
+          storage: true
+          schema:
+            openAPIV3Schema:
+              type: object
+              properties:
+                spec:
+                  type: object
+                  properties:
+                    repo_type:
+                      type: string
+                    properties:
+                      type: object
+                      additionalProperties:
+                        type: string
+      scope: Namespaced
+      names:
+        plural: repositories
+        singular: repository
+        kind: Repository
+        shortNames:
+        - repo
+    EOF
+
+You can either host your own repository or specify the Stackable public repository for convenience. The specification for our repository is shown below and can be applied with `kubectl` just like the definition above:
+
+    cat <<EOF | kubectl apply -f -
+    apiVersion: "stable.stackable.de/v1"
+    kind: Repository
+    metadata:
+      name: stackablepublic
+    spec:
+      repo_type: StackableRepo
+      properties:
+        url: https://repo.stackable.tech/repository/packages/
+    EOF
+
+=== Installing Stackable CRDs
+
+Kubernetes uses custom resource descriptors or CRDs to define the resources that will be under its control. We firstly need to load the CRDs for the Stackable services before it will be able to deploy them to the cluster. We can do this using kubectl again, just as we did to install the CRD for the Stackable repository. Kubectl can read from stdin, so we’ll use cURL to download the CRDs we need and pipe them to kubectl.
+
+    curl -s -S https://raw.githubusercontent.com/stackabletech/zookeeper-operator/main/deploy/crd/zookeepercluster.crd.yaml | kubectl apply -f -
+    curl -s -S https://raw.githubusercontent.com/stackabletech/kafka-operator/main/deploy/crd/kafkacluster.crd.yaml | kubectl apply -f -
+    curl -s -S https://raw.githubusercontent.com/stackabletech/agent/main/deploy/crd/repository.crd.yaml | kubectl apply -f -
+    curl -s -S https://raw.githubusercontent.com/stackabletech/nifi-operator/main/deploy/crd/nificluster.crd.yaml | kubectl apply -f -
+
+Check the output for each command. You should see a message that the CRD was successfully created.
+
+    root@kubernetes:~# curl -s -S https://raw.githubusercontent.com/stackabletech/zookeeper-operator/main/deploy/crd/zookeepercluster.crd.yaml | kubectl apply -f -
+    customresourcedefinition.apiextensions.k8s.io/zookeeperclusters.zookeeper.stackable.tech created
+
+=== Configuring the Stackable OS package repository
+
+You will need to configure the Stackable OS package repository on the worker nodes. We’ll also take the opportunity to install OpenJDK Java 11 as well as this will be required by the Stackable services we will be running.
+
+==== Debian and Ubuntu
+    apt-get install gnupg openjdk-11-jdk curl
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 16dd12f5c7a6d76a
+    echo "deb https://repo.stackable.tech/repository/deb-dev buster main" > /etc/apt/sources.list.d/stackable.list
+
+==== Red Hat and CentOS
+    /usr/bin/yum -y install gnupg2 java-11-openjdk curl
+    /usr/bin/curl -s "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xce45c7a0a3e41385acd4358916dd12f5c7a6d76a" > /etc/pki/rpm-gpg/RPM-GPG-KEY-stackable
+    /usr/bin/rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-stackable
+    echo "[stackable]
+    name=Stackable ${REPO_TYPE} repo
+    baseurl=${REPO_URL}
+    enabled=1
+    gpgcheck=0" > /etc/yum.repos.d/stackable.repo
+    /usr/bin/yum clean all
+
+=== Installing Stackable Operators
+The Stackable operators are components that translate the service definitions deployed via Kubernetes into deploy services on the worker nodes. These can be installed on any node that has access to the Kubernetes control plane. In this example we will install them on the controller node. Remember to install the Stackable OS package repo before installing the operators as described above.
+
+==== Debian and Ubuntu
+    apt-get install stackable-zookeeper-operator-server \
+    stackable-kafka-operator-server \
+    stackable-nifi-operator-server
+
+==== Red Hat and CentOS
+    yum install stackable-zookeeper-operator-server \
+    stackable-kafka-operator-server \
+    stackable-nifi-operator-server
+
+You can then enable the services using systemctl:
+
+==== Apache ZooKeeper
+    systemctl start stackable-zookeeper-operator-server
+    systemctl enable stackable-zookeeper-operator-server
+
+==== Apache Kafka
+    systemctl start stackable-kafka-operator-server
+    systemctl enable stackable-kafka-operator-server
+
+
+==== Apache NiFi
+
+NOTE: There’s an issue with the NiFi operator not looking in the correct place for its configuration properties file. Workaround using `sudo ln -s /etc/stackable/nifi-operator /deploy` prior to starting the Apache NiFi operator.
+
+    systemctl start stackable-nifi-operator-server
+    systemctl enable stackable-nifi-operator-server
+
+You can use `systemctl status <service-name>` to check whether the services have started correctly. If they do not start then look in /var/log/syslog for any clues as to why.
+
+
+=== Installing Stackable Agent
+On each of the worker nodes you’ll need to install Stackable Agent, which runs a custom kubelet that can be used to launch non-containerised applications using systemd. If this doesn’t make a lot of sense to you, don’t worry. What this means is that you can run regular Linux services using the Kubernetes control plane. This makes sense for example if you wish to run a hybrid deployment with a mix of bare metal and containerised services and manage them all with one framework.
+
+NOTE: Don’t install the agent onto the controller node as it is already has the K3s kubelet running and this would cause a clash. Stackable Agent should only be deployed on the worker nodes.
+
+==== Debian and Ubuntu
+    apt-get install stackable-agent
+
+==== Red Hat and CentOS
+    yum install stackable-agent
+
+Once installed, the agent configuration file is created in '/etc/stackable-agent/agent.conf'. If you have provided a kubeconfig for the root user in /root/.kube/config then the agent will use this, or you may specify where the config should be read from This can be done by adding a systemd drop-in file.. Put the following content in /usr/lib/systemd/system/stackable-agent.service.d/kubeconfig.conf:
+
+    [Service]
+    Environment="KUBECONFIG=/path/to/kubeconfig"
+
+In most circumstances the Stackable Agent configuration file will be mostly empty. You can rely on the default settings in most cases.
+
+=== Starting the Agent
+The agent can be started like any regular systemd service
+
+    systemctl start stackable-agent
+
+To enable it to be started at every boot:
+
+    systemctl enable stackable-agent
+
+During the first start of the agent, it will perform some bootstrapping tasks, most notably it will generate a keypair and request a signed certificate from Kubernetes. You’ll see a message similar to this in /var/log/syslog.
+
+    Aug 10 12:53:48 node1 stackable-agent[5208]: [2021-08-10T12:53:48Z INFO  stackable_agent] Successfully bootstrapped TLS certificate: TLS certificate requires manual approval. Run kubectl certificate approve node1.stackable-tls
+
+You will need to manually approve that certificate requests created by the agents before the agent can start. You can do this by running `kubectl certificate approve <agent-fqdn>-tls` on the controller node after starting the agent.
+
+    root@kubernetes:~# kubectl certificate approve node1.stackable-tls
+    certificatesigningrequest.certificates.k8s.io/node1.stackable-tls approved
+
+Once the nodes have been registered and had their certificates signed they will appear in your Kubernetes environment. You can run `kubectl get nodes` to retrieve the state of all the nodes in your cluster. You should see all of the worker nodes reporting their state as Ready.
+
+    root@kubernetes:~# kubectl get nodes
+    NAME               	STATUS   ROLES              	AGE 	VERSION
+    kubernetes.stackable   Ready	control-plane,master	27h 	v1.21.3+k3s1
+    node2.stackable    	Ready	<none>             	7s  	0.7.0
+    node3.stackable    	Ready	<none>             	5s  	0.7.0
+    node1.stackable    	Ready	<none>             	3m43s	0.7.0
+
+
+== Deploying Stackable Services
+At this point you’ve successfully deployed the Stackable node infrastructure and are ready to deploy services to the cluster. To do this we provide service descriptions to Kubernetes for each of the services we wish to deploy.
+
+=== Apache ZooKeeper
+We will deploy 3 Apache ZooKeeper instances to our cluster. This is a fairly typical deployment to provide resilience against the failure of a single ZooKeeper node.
+
+    kubectl apply -f - <<EOF
+    ---
+    apiVersion: zookeeper.stackable.tech/v1alpha1
+    kind: ZookeeperCluster
+    metadata:
+      name: simple
+    spec:
+      version: 3.5.8
+      servers:
+        roleGroups:
+        default:
+            selector:
+            matchLabels:
+                kubernetes.io/arch: stackable-linux
+            replicas: 3
+            config:
+            adminPort: 12000
+            metricsPort: 9505
+    EOF
+
+
+=== Apache Kafka
+We will deploy 3 Apache Kafka brokers, another typical deployment pattern for Kafka clusters. Note that Kafka depends on the ZooKeeper service and the zookeeperReference property below points to the namespace and name we gave to the ZooKeeper service deployed previously.
+
+    kubectl apply -f - <<EOF
+    ---
+    apiVersion: kafka.stackable.tech/v1alpha1
+    kind: KafkaCluster
+    metadata:
+      name: simple
+    spec:
+      version:
+        kafka_version: 2.8.0
+      zookeeperReference:
+        namespace: default
+        name: simple
+      brokers:
+        roleGroups:
+          default:
+            selector:
+              matchLabels:
+                kubernetes.io/arch: stackable-linux
+            replicas: 3
+            config:
+              logDirs: "/tmp/kafka-logs"
+              metricsPort: 96
+
+
+=== Apache NiFi
+We will deploy 3 Apache servers NiFi. This might seem over the top for a tutorial cluster, but it's worth pointing out that the operator will cluster the 3 NiFi servers for us automatically.
+
+    kubectl apply -f - <<EOF
+    ---
+    apiVersion: nifi.stackable.tech/v1alpha1
+    kind: NifiCluster
+    metadata:
+      name: simple
+    spec:
+      metricsPort: 8428
+      version: "1.13.2"
+      zookeeperReference:
+        name: simple
+        namespace: default
+        chroot: /nifi
+      nodes:
+        roleGroups:
+          default:
+            selector:
+              matchLabels:
+                kubernetes.io/arch: stackable-linux
+            replicas: 3
+            config:
+              nifiWebHttpPort: 10000
+              nifiClusterNodeProtocolPort: 10443
+              nifiClusterLoadBalancePort: 6342
+    EOF
+
+
+You can check the status of the services using `kubectl get pods`. This will retrieve the status of all pods running in the default namespace.
+
+    root@kubernetes:~# kubectl get pods
+    NAME                                    READY   STATUS       RESTARTS   AGE
+    zookeeper-simple-default-server-node3   1/1     Running      0          6m32s
+    nifi-simple-default-node-node3          1/1     Running      0          6m32s
+    kafka-simple-default-broker-node3       1/1     Running      0          6m32s
+    zookeeper-simple-default-server-node2   1/1     Running      0          6m32s
+    kafka-simple-default-broker-node2       1/1     Running      0          6m32s
+    nifi-simple-default-node-node2          1/1     Running      0          6m32s
+    kafka-simple-default-broker-node1       1/1     Running      0          6m32s
+    nifi-simple-default-node-node1          1/1     Running      0          6m32s
+    zookeeper-simple-default-server-node1   1/1     Running      0          6m32s
+
+Since this is the first time that each of these services has been deployed to these nodes the Stackable Agent needs to download the software from the Stackable repository. It may take a few minutes to complete the download and deploy the services.
+
+== Testing your cluster
+If all has gone well then you will have successfully deployed a Stackable cluster and used it to start three services that should now be ready for you.
+
+=== Apache ZooKeeper
+
+Log onto one of your worker nodes and run the ZooKeeper CLI shell. Stackable stores the service software in /opt/stackable/packages, so you may wish to add this to your PATH environment variable.
+
+    PATH=$PATH:/opt/stackable/packages/zookeeper-3.5.8/apache-zookeeper-3.5.8-bin/bin
+    zkCli.sh
+
+The shell should connect automatically to the ZooKeeper server running on localhost. You can run the `ls /` command to see the list of znodes in the root path, which should include those created by Apache Kafka and Apache NiFi.
+
+    [zk: localhost:2181(CONNECTED) 0] ls /
+    [admin, brokers, cluster, config, consumers, controller, controller_epoch, feature, isr_change_notification, latest_producer_id_block, log_dir_event_notification, nifi, zookeeper]
+
+=== Apache Kafka
+To test Kafka we'll use the tool `kafkacat`.
+
+    sudo apt install kafkacat
+
+With `kafkacat` installed we can log into one of the worker nodes query the metadata on the broker running on localhost.
+
+   user@node1:~$ kafkacat -b localhost -L
+    Metadata for all topics (from broker -1: localhost:9092/bootstrap):
+     3 brokers:
+      broker 1001 at node2.stackable:9092 (controller)
+      broker 1003 at node1.stackable:9092
+      broker 1002 at node3.stackable:9092
+     0 topics:
+
+We should see 3 brokers listed, showing that Stackable has successfully deployed the brokers as a cluster.
+
+=== Apache NiFi
+Apache NiFi provides a web interface and the easiest way to test it is to view this in a web browser. Browse to the address of one of your worker nodes on port 8080 e.f. http://node1.stackable:8080/nifi and you should see the NiFi Canvas.
+
+image:/nifi_menu.png[The Apache NiFi web interface]
+
+Click on the menu and select Cluster as illustrated in the screenshot above and you'll see that the 3 NiFi servers have been deployed as a cluster.
+
+image:/nifi_cluster.png[The Apache NiFi Cluster status screen]
+
