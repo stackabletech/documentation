@@ -85,7 +85,7 @@ Rust is a Programming language, which is focused on safety. It provides memory s
 * Debugging options
 
 == Getting Started
-Stackable provides a tutorial link:getting_started.adoc[quickstart guide], which outlines how to deploy a Stackable cluster and the supported infrastructure. There is also a quickstart shell script in the https://github.com/stackabletech/stackable-utils[stackable-utils] GitHub repository that will quickly bootstrap an example cluster.
+Stackable provides a tutorial xref:getting_started.adoc[], which outlines how to deploy a Stackable cluster and the supported infrastructure. There is also a quickstart shell script in the https://github.com/stackabletech/stackable-utils[stackable-utils] GitHub repository that will quickly bootstrap an example cluster.
 
 == Architectural Design Decisions
 All relevant decisions concerning the architecture are documented as Architectural Design Records in the subfolder _adr_.
