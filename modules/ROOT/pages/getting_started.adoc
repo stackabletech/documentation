@@ -158,14 +158,14 @@ You can either host your own repository or specify the Stackable public reposito
 
 Kubernetes uses custom resource descriptors or CRDs to define the resources that will be under its control. We firstly need to load the CRDs for the Stackable services before it will be able to deploy them to the cluster. We can do this using kubectl again, just as we did to install the CRD for the Stackable repository. Kubectl can read from stdin, so we’ll use cURL to download the CRDs we need and pipe them to kubectl.
 
-    curl -s -S https://raw.githubusercontent.com/stackabletech/zookeeper-operator/main/deploy/crd/zookeepercluster.crd.yaml | kubectl apply -f -
-    curl -s -S https://raw.githubusercontent.com/stackabletech/kafka-operator/main/deploy/crd/kafkacluster.crd.yaml | kubectl apply -f -
-    curl -s -S https://raw.githubusercontent.com/stackabletech/agent/main/deploy/crd/repository.crd.yaml | kubectl apply -f -
-    curl -s -S https://raw.githubusercontent.com/stackabletech/nifi-operator/main/deploy/crd/nificluster.crd.yaml | kubectl apply -f -
+    kubectl apply -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/main/deploy/crd/zookeepercluster.crd.yaml
+    kubectl apply -f https://raw.githubusercontent.com/stackabletech/kafka-operator/main/deploy/crd/kafkacluster.crd.yaml
+    kubectl apply -f https://raw.githubusercontent.com/stackabletech/agent/main/deploy/crd/repository.crd.yaml
+    kubectl apply -f https://raw.githubusercontent.com/stackabletech/nifi-operator/main/deploy/crd/nificluster.crd.yaml
 
 Check the output for each command. You should see a message that the CRD was successfully created.
 
-    root@kubernetes:~# curl -s -S https://raw.githubusercontent.com/stackabletech/zookeeper-operator/main/deploy/crd/zookeepercluster.crd.yaml | kubectl apply -f -
+    root@kubernetes:~# kubectl apply -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/main/deploy/crd/zookeepercluster.crd.yaml
     customresourcedefinition.apiextensions.k8s.io/zookeeperclusters.zookeeper.stackable.tech created
 
 === Configuring the Stackable OS package repository
