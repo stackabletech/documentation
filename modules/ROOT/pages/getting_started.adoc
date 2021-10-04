@@ -286,14 +286,14 @@ We will deploy 3 Apache ZooKeeper instances to our cluster. This is a fairly typ
       version: 3.5.8
       servers:
         roleGroups:
-        default:
+          default:
             selector:
-            matchLabels:
+              matchLabels:
                 kubernetes.io/arch: stackable-linux
             replicas: 3
             config:
-            adminPort: 12000
-            metricsPort: 9505
+              adminPort: 12000
+              metricsPort: 9505
     EOF
 
 NOTE: Debian will automatically bind the computer's hostname to 127.0.1.1, which causes ZooKeeper to only listen on the localhost interface. To prevent this, comment out the corresponding entry from /etc/hosts on each worker node.
