@@ -184,8 +184,8 @@ Stackable supports running agents on Debian 10 "Buster", CentOS 7, and CentOS 8.
     /usr/bin/curl -s "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xce45c7a0a3e41385acd4358916dd12f5c7a6d76a" > /etc/pki/rpm-gpg/RPM-GPG-KEY-stackable
     /usr/bin/rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-stackable
     echo "[stackable]
-    name=Stackable ${REPO_TYPE} repo
-    baseurl=${REPO_URL}
+    name=Stackable dev repo
+    baseurl=https://repo.stackable.tech/repository/rpm-dev/el$releasever/
     enabled=1
     gpgcheck=0" > /etc/yum.repos.d/stackable.repo
     /usr/bin/yum clean all
