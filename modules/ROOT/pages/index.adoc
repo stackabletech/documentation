@@ -305,43 +305,43 @@ They are made available as OS packages as well, the currently available operator
 |Product |Package Name
 
 |Apache Kafka
-|stackable-kafka-operator-server
+|stackable-kafka-operator
 
 |Apache Spark
-|stackable-spark-operator-server
+|stackable-spark-operator
 
 |Apache ZooKeeper
-|stackable-zookeeper-operator-server
+|stackable-zookeeper-operator
 |===
 
 ==== RHEL
 *coming soon*
 
 ==== Ubuntu
-    apt-get install stackable-spark-operator-server
+    apt-get install stackable-spark-operator
 
 
 To start and enable the services please run the following commands:
 
 ----
 # Kafka
-systemctl start stackable-kafka-operator-server
-systemctl enable stackable-kafka-operator-server
+systemctl start stackable-kafka-operator
+systemctl enable stackable-kafka-operator
 
 # Spark
-systemctl start stackable-spark-operator-server
-systemctl enable stackable-spark-operator-server
+systemctl start stackable-spark-operator
+systemctl enable stackable-spark-operator
 
 # ZooKeeper
-systemctl start stackable-zookeeper-operator-server
-systemctl enable stackable-zookeeper-operator-server
+systemctl start stackable-zookeeper-operator
+systemctl enable stackable-zookeeper-operator
 ----
 
 
 To check if the services started successfully you can run (example for ZooKeeper):
 
 ----
-systemctl status stackable-zookeeper-operator-server
+systemctl status stackable-zookeeper-operator
 ----
 
 This should report the service as being loaded and enabled.
