@@ -221,7 +221,7 @@ NOTE: There’s an issue with the NiFi operator not looking in the correct place
     systemctl start stackable-nifi-operator
     systemctl enable stackable-nifi-operator
 
-You can use `systemctl status <service-name>` to check whether the services have started correctly. If they do not start then look in /var/log/syslog for any clues as to why.
+You can use `systemctl status <service-name>` to check whether the services have started correctly. If they do not start then look in `journalctl -fu <service-name>` for any clues as to why.
 
 
 === Installing Stackable Agent
@@ -251,7 +251,7 @@ To enable it to be started at every boot:
 
     systemctl enable stackable-agent
 
-During the first start of the agent, it will perform some bootstrapping tasks, most notably it will generate a keypair and request a signed certificate from Kubernetes. You’ll see a message similar to this in /var/log/syslog.
+During the first start of the agent, it will perform some bootstrapping tasks, most notably it will generate a keypair and request a signed certificate from Kubernetes. You’ll see a message similar to this in `journalctl -fu stackable-agent`.
 
     Aug 10 12:53:48 node1 stackable-agent[5208]: [2021-08-10T12:53:48Z INFO  stackable_agent] Successfully bootstrapped TLS certificate: TLS certificate requires manual approval. Run kubectl certificate approve node1.stackable-tls
 
