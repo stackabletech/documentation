@@ -194,32 +194,32 @@ Stackable supports running agents on Debian 10 "Buster", CentOS 7, and CentOS 8.
 The Stackable operators are components that translate the service definitions deployed via Kubernetes into deploy services on the worker nodes. These can be installed on any node that has access to the Kubernetes control plane. In this example we will install them on the controller node. Remember to install the Stackable OS package repo before installing the operators as described above.
 
 ==== Debian and Ubuntu
-    apt-get install stackable-zookeeper-operator-server \
-    stackable-kafka-operator-server \
-    stackable-nifi-operator-server
+    apt-get install stackable-zookeeper-operator \
+    stackable-kafka-operator \
+    stackable-nifi-operator
 
 ==== Red Hat and CentOS
-    yum install stackable-zookeeper-operator-server \
-    stackable-kafka-operator-server \
-    stackable-nifi-operator-server
+    yum install stackable-zookeeper \
+    stackable-kafka-operator \
+    stackable-nifi-operator
 
 You can then enable the services using systemctl:
 
 ==== Apache ZooKeeper
-    systemctl start stackable-zookeeper-operator-server
-    systemctl enable stackable-zookeeper-operator-server
+    systemctl start stackable-zookeeper-operator
+    systemctl enable stackable-zookeeper-operator
 
 ==== Apache Kafka
-    systemctl start stackable-kafka-operator-server
-    systemctl enable stackable-kafka-operator-server
+    systemctl start stackable-kafka-operator
+    systemctl enable stackable-kafka-operator
 
 
 ==== Apache NiFi
 
 NOTE: There’s an issue with the NiFi operator not looking in the correct place for its configuration properties file. Workaround using `sudo ln -s /etc/stackable/nifi-operator /deploy` prior to starting the Apache NiFi operator.
 
-    systemctl start stackable-nifi-operator-server
-    systemctl enable stackable-nifi-operator-server
+    systemctl start stackable-nifi-operator
+    systemctl enable stackable-nifi-operator
 
 You can use `systemctl status <service-name>` to check whether the services have started correctly. If they do not start then look in /var/log/syslog for any clues as to why.
 
