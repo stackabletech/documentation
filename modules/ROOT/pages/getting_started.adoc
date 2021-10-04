@@ -296,6 +296,7 @@ We will deploy 3 Apache ZooKeeper instances to our cluster. This is a fairly typ
             metricsPort: 9505
     EOF
 
+NOTE: Debian will automatically bind the computer's hostname to 127.0.1.1, which causes ZooKeeper to only listen on the localhost interface. To prevent this, comment out the corresponding entry from /etc/hosts on each worker node.
 
 === Apache Kafka
 We will deploy 3 Apache Kafka brokers, another typical deployment pattern for Kafka clusters. Note that Kafka depends on the ZooKeeper service and the zookeeperReference property below points to the namespace and name we gave to the ZooKeeper service deployed previously.
