@@ -172,6 +172,8 @@ Check the output for each command. You should see a message that the CRD was suc
 
 You will need to configure the Stackable OS package repository on the worker nodes. We’ll also take the opportunity to install OpenJDK Java 11 as well as this will be required by the Stackable services we will be running.
 
+Stackable supports running agents on Debian 10 "Buster", CentOS 7, and CentOS 8.
+
 ==== Debian and Ubuntu
     apt-get install gnupg openjdk-11-jdk curl
     apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 16dd12f5c7a6d76a
