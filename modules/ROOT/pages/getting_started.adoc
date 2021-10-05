@@ -176,6 +176,7 @@ You will need to configure the Stackable OS package repository on the worker nod
     apt-get install gnupg openjdk-11-jdk curl
     apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 16dd12f5c7a6d76a
     echo "deb https://repo.stackable.tech/repository/deb-dev buster main" > /etc/apt/sources.list.d/stackable.list
+    apt-get update
 
 ==== Red Hat and CentOS
     /usr/bin/yum -y install gnupg2 java-11-openjdk curl
@@ -192,9 +193,9 @@ You will need to configure the Stackable OS package repository on the worker nod
 The Stackable operators are components that translate the service definitions deployed via Kubernetes into deploy services on the worker nodes. These can be installed on any node that has access to the Kubernetes control plane. In this example we will install them on the controller node. Remember to install the Stackable OS package repo before installing the operators as described above.
 
 ==== Debian and Ubuntu
-    apt-get install stackable-zookeeper-operator-server \
-    stackable-kafka-operator-server \
-    stackable-nifi-operator-server
+    apt-get install stackable-zookeeper-operator \
+    stackable-kafka-operator \
+    stackable-nifi-operator
 
 ==== Red Hat and CentOS
     yum install stackable-zookeeper-operator-server \
@@ -284,14 +285,14 @@ We will deploy 3 Apache ZooKeeper instances to our cluster. This is a fairly typ
       version: 3.5.8
       servers:
         roleGroups:
-        default:
+          default:
             selector:
-            matchLabels:
+              matchLabels:
                 kubernetes.io/arch: stackable-linux
             replicas: 3
             config:
-            adminPort: 12000
-            metricsPort: 9505
+              adminPort: 12000
+              metricsPort: 9505
     EOF
 
 
@@ -408,4 +409,3 @@ image:/nifi_menu.png[The Apache NiFi web interface]
 Click on the menu and select Cluster as illustrated in the screenshot above and you'll see that the 3 NiFi servers have been deployed as a cluster.
 
 image:/nifi_cluster.png[The Apache NiFi Cluster status screen]
-
