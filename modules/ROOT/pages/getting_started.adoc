@@ -16,7 +16,7 @@ We’re going to build a small cluster in this tutorial, so the first thing we n
 
 Stackable requires a Kubernetes control plane to manage the cluster and one or more worker nodes to run the services themselves. We’ll build a simple cluster with 3 services; Apache ZooKeeper, Apache Kafka and Apache NiFi. For simplicity, we will deploy an instance of each of these services onto 3 separate nodes.
 
-image:/getting_started_arch.png[High-level deployment architecture for Stackable,600]
+image:getting_started_arch.png[High-level deployment architecture for Stackable,600]
 
 Since this is a walkthrough on how to install Stackable and we’re not building a production cluster, we can be fairly frugal with our resources. We’ll be using Ubuntu 20.04 running in VirtualBox in this walkthrough and recommend that you do the same as this will help you follow the instructions in this guide. It is assumed that you will know how to perform systems administration tasks such as configuring virtual machines, setting the hostnames and configuring name resolution. The virtual machines will require internet access to download the software.
 
@@ -403,9 +403,9 @@ We should see 3 brokers listed, showing that Stackable has successfully deployed
 === Apache NiFi
 Apache NiFi provides a web interface and the easiest way to test it is to view this in a web browser. Browse to the address of one of your worker nodes on port 8080 e.f. http://node1.stackable:8080/nifi and you should see the NiFi Canvas.
 
-image:/nifi_menu.png[The Apache NiFi web interface]
+image:nifi_menu.png[The Apache NiFi web interface]
 
 Click on the menu and select Cluster as illustrated in the screenshot above and you'll see that the 3 NiFi servers have been deployed as a cluster.
 
-image:/nifi_cluster.png[The Apache NiFi Cluster status screen]
+image:nifi_cluster.png[The Apache NiFi Cluster status screen]
 
