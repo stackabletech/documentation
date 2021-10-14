@@ -12,6 +12,8 @@ To build the site install Antora and run:
 
     antora antora-playbook.yml
 
+NOTE: Antora caches all resources it downloads in the user's cache directory (e.g. `~/.cache/antora` directory on Linux). It will _not_ automatically update those. Use the `--fetch` parameter to update all sources.
+
 == Development
 
 During development, it can be helpful to change the playbook so that the source does point at the local directory instead of the remote git repository:
