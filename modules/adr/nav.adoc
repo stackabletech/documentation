@@ -1,4 +1,4 @@
-* ADRs
+* Architectural Design Records
 ** Current
 *** xref:ADR001-choose_project_language.adoc[]
 *** xref:ADR002-choose_repository_structure.adoc[]
