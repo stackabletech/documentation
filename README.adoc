@@ -18,7 +18,7 @@ NOTE: Antora caches all resources it downloads in the user's cache directory (e.
 
 === Generating the documentation
 
-During development, it can be helpful to use a playbook `antora-playbook-local.yml` which uses content from the local directory instead of the remote git repository.
+During development, it can be helpful to use a playbook `local-antora-playbook.yml` which uses content from the local directory instead of the remote git repository.
 
 [source,yaml]
 ----

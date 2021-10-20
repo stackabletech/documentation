@@ -8,7 +8,7 @@ const { reload: livereload } = process.env.LIVERELOAD === 'true' ? require('gulp
 const { series, src, watch } = require('gulp')
 const yaml = require('js-yaml')
 
-const playbookFilename = 'antora-playbook-gitpod.yml'
+const playbookFilename = 'gitpod-antora-playbook.yml'
 const playbook = yaml.safeLoad(fs.readFileSync(playbookFilename, 'utf8'))
 const outputDir = (playbook.output || {}).dir || './build/site'
 const serverConfig = { name: 'Preview Site', livereload, port: 5000, root: outputDir }
