@@ -25,7 +25,7 @@ Network control::
     Do they use network-level firewalls that our traffic needs to be allowed through?
   Linux Security Modules?;;
     Do they require all machines to use SELinux, AppArmor, or something similar?
-Kubernetess cluster::
+Kubernetes cluster::
   Dedicated cluster;;
     Can we expect to get a dedicated Stackable Kubernetes cluster, or will be be colocated with internal stuff?
   Premises;;
