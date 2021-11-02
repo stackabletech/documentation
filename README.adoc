@@ -16,7 +16,9 @@ NOTE: Antora caches all resources it downloads in the user's cache directory (e.
 
 == Development
 
-During development, it can be helpful to change the playbook so that the source does point at the local directory instead of the remote git repository:
+=== Generating the documentation
+
+During development, it can be helpful to use a playbook `local-antora-playbook.yml` which uses content from the local directory instead of the remote git repository.
 
 [source,yaml]
 ----
@@ -29,3 +31,10 @@ content:
 NOTE: Antora does not recognize git submodules as git repositories
 
 The design & layout comes from our https://github.com/stackabletech/documentation-ui[UI repository].
+
+`LIVERELOAD=true gulp` may be used to recreate the built documentation after each edit. The 'live reload' feature does not work over gitpod currently due to https://github.com/schickling/gulp-webserver/pull/126
+
+=== Remote IDE
+
+A remote vscode instance can be used via https://gitpod.io/#/github.com/stackabletech/documentation
+

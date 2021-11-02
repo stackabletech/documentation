@@ -1,0 +1,25 @@
+image:
+  file: .gitpod.Dockerfile
+
+vscode:
+  extensions:
+    - hediet.vscode-drawio
+    - asciidoctor.asciidoctor-vscode
+    - mechatroner.rainbow-csv
+
+ports:
+- port: 5000
+  onOpen: open-preview
+  # https://github.com/swapagarwal/swag-for-dev/pull/573
+  # live-reload: Broken because of bad automatic configuration of live-reload plugin
+  # See: https://github.com/schickling/gulp-webserver/pull/126
+  # Once it's released, we will be able to set livereload config with custom `src` target
+  # to the right URL (found with `gp url <port>`)
+- port: 35729
+  onOpen: ignore
+
+tasks:
+- init: >
+    npm install @antora/site-generator-default gulp-cli gulp gulp-connect
+  command: >
+    LIVERELOAD=true gulp
