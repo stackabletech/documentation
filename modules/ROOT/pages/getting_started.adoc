@@ -177,7 +177,7 @@ Stackable supports running agents on Debian 10 "Buster", CentOS 7, and CentOS 8.
 ==== Debian and Ubuntu
     apt-get install gnupg openjdk-11-jdk curl
     apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 16dd12f5c7a6d76a
-    echo "deb https://repo.stackable.tech/repository/deb-dev buster main" > /etc/apt/sources.list.d/stackable.list
+    echo "deb [arch=amd64] https://repo.stackable.tech/repository/deb-dev buster main" > /etc/apt/sources.list.d/stackable.list
     apt-get update
 
 ==== Red Hat and CentOS
