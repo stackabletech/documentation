@@ -63,7 +63,7 @@ Network control::
   Network-level firewalls;;
     Port-based, manually configured 
   Linux Security Modules? (SELinux/AppArmor);;
-    ??? 
+    No
 Kubernetess cluster::
   Dedicated cluster;;
     Yes
