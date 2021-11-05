@@ -34,6 +34,8 @@ Kubernetes cluster::
     Is it managed by an external service provider (IONOS, GKE, EKS, AKS, etc), by us, or is it managed by the customer themselves?
   Node lifetime;;
     How long can a single node identity be expected to last for? (Years, weeks, days, hours)
+    A "node identity" in this context refers to a node having the same hostname, IP address,
+    OS installation, local disks (allowing for some failure of individual disks), and so on.
 Storage::
   Stickiness;;
     Can we move disks between nodes dynamically? +
