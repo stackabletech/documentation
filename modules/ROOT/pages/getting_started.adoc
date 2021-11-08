@@ -296,7 +296,7 @@ We will deploy 3 Apache ZooKeeper instances to our cluster. This is a fairly typ
           default:
             selector:
               matchLabels:
-                kubernetes.io/arch: stackable-linux
+                kubernetes.io/os: stackable-linux
             replicas: 3
             config:
               adminPort: 12000
@@ -329,7 +329,7 @@ We will deploy 3 Apache Kafka brokers, another typical deployment pattern for Ka
           default:
             selector:
               matchLabels:
-                kubernetes.io/arch: stackable-linux
+                kubernetes.io/os: stackable-linux
             replicas: 3
             config:
               logDirs: "/tmp/kafka-logs"
@@ -357,7 +357,7 @@ We will deploy 3 Apache servers NiFi. This might seem over the top for a tutoria
           default:
             selector:
               matchLabels:
-                kubernetes.io/arch: stackable-linux
+                kubernetes.io/os: stackable-linux
             replicas: 3
             config:
               nifiWebHttpPort: 10000
