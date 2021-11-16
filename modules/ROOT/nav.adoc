@@ -1,1 +1,1 @@
-* xref:paths.adoc[]
+* xref:getting_started.adoc[]
