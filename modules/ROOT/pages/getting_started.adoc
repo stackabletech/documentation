@@ -247,7 +247,7 @@ NOTE: Don’t install the agent onto the *controller* node as it is already has 
 ==== Red Hat and CentOS
     yum install stackable-agent
 
-Once installed, the agent configuration file is created in '/etc/stackable-agent/agent.conf'. If you have provided a kubeconfig for the root user in /root/.kube/config then the agent will use this, or you may specify where the config should be read from This can be done by adding a systemd drop-in file.. Put the following content in /usr/lib/systemd/system/stackable-agent.service.d/kubeconfig.conf:
+Once installed, the agent configuration file is created in '/etc/stackable/stackable-agent/agent.conf'. If you have provided a kubeconfig for the root user in /root/.kube/config then the agent will use this, or you may specify where the config should be read from This can be done by adding a systemd drop-in file.. Put the following content in /usr/lib/systemd/system/stackable-agent.service.d/kubeconfig.conf:
 
     [Service]
     Environment="KUBECONFIG=/path/to/kubeconfig"
