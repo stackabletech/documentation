@@ -35,6 +35,9 @@ content:
   - url: https://github.com/stackabletech/zookeeper-operator.git
     branches: main
     start_path: docs
+  - url: https://github.com/stackabletech/druid-operator.git
+    branches: main
+    start_path: docs
 
 ui:
   bundle:
