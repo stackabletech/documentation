@@ -11,6 +11,9 @@ content:
     start_path: docs
   - url: ./
     branches: HEAD
+  - url: https://github.com/stackabletech/druid-operator.git
+    branches: main
+    start_path: docs
   - url: https://github.com/stackabletech/kafka-operator.git
     branches: main
     start_path: docs
@@ -33,9 +36,6 @@ content:
     branches: main
     start_path: docs
   - url: https://github.com/stackabletech/zookeeper-operator.git
-    branches: main
-    start_path: docs
-  - url: https://github.com/stackabletech/druid-operator.git
     branches: main
     start_path: docs
 
