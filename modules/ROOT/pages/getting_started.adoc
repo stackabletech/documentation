@@ -4,7 +4,7 @@ One of the best ways of getting started with a new platform is to try it out. An
 
 == About this guide
 
-Firstly, let’s cover whether this Getting started guide is right for you. This is intended as a learning tool to discover more about Stackable, its deployment and architecture.
+Firstly, let’s cover whether this *Getting Started* guide is right for you. This is intended as a learning tool to discover more about Stackable, its deployment and architecture.
 
 * If you just want to get up and running quickly there is a quickstart script that will install services on a single node available in the https://github.com/stackabletech/stackable-utils[stackable-utils] repository on GitHub.
 * If you want to build a production cluster then this is not for you. This tutorial is to familiarise you with the Stackable architecture and is not a guide for building robust clusters.
@@ -34,9 +34,12 @@ Below is a table for recommended sizing for this tutorial. Bear in mind that the
 
 == Installing Kubernetes
 
-Stackable’s control plane is built around Kubernetes. We’ll be deploying services not as containers but as regular services controlled by systemd. Stackable Agent is a custom kubelet and bridges the worlds between Kubernetes and native deployment. For this walkthrough we’ll be using K3s, which offers a very quick and easy way to bootstrap your Kubernetes infrastructure. On your controller node run the following command as root to install K3s:
+Stackable’s control plane is built around Kubernetes. We’ll be deploying services not as containers but as regular services controlled by systemd. Stackable Agent is a custom kubelet and bridges the worlds between Kubernetes and native deployment. For this walkthrough we’ll be using K3s, which offers a very quick and easy way to bootstrap your Kubernetes infrastructure.
 
-`curl -sfL https://get.k3s.io | sh -`
+On your *controller* node run the following commands as root to install K3s:
+
+    apt-get install curl
+    curl -sfL https://get.k3s.io | sh -
 
 So long as your VM has an Internet connection it will download and automatically configure a simple Kubernetes environment.
 
@@ -207,7 +210,7 @@ If all has gone well then you will have successfully deployed a Stackable cluste
 
 === Apache ZooKeeper
 
-Log onto one of your worker nodes and run the ZooKeeper CLI shell. Stackable stores the service software in /opt/stackable/packages, so you may wish to add this to your PATH environment variable.
+Log onto one of your *worker* nodes and run the ZooKeeper CLI shell. Stackable stores the service software in /opt/stackable/packages, so you may wish to add this to your PATH environment variable.
 
     PATH=$PATH:/opt/stackable/packages/zookeeper-3.5.8/apache-zookeeper-3.5.8-bin/bin
     zkCli.sh
@@ -222,7 +225,7 @@ To test Kafka we'll use the tool `kafkacat`.
 
     sudo apt install kafkacat
 
-With `kafkacat` installed we can log into one of the worker nodes query the metadata on the broker running on localhost.
+With `kafkacat` installed we can log into one of the *worker* nodes query the metadata on the broker running on localhost.
 
    user@node1:~$ kafkacat -b localhost -L
     Metadata for all topics (from broker -1: localhost:9092/bootstrap):
@@ -235,7 +238,7 @@ With `kafkacat` installed we can log into one of the worker nodes query the meta
 We should see 3 brokers listed, showing that Stackable has successfully deployed the brokers as a cluster.
 
 === Apache NiFi
-Apache NiFi provides a web interface and the easiest way to test it is to view this in a web browser. Browse to the address of one of your worker nodes on port 8080 e.f. http://node1.stackable:8080/nifi and you should see the NiFi Canvas.
+Apache NiFi provides a web interface and the easiest way to test it is to view this in a web browser. Browse to the address of one of your *worker* nodes on port 8080 e.f. http://node1.stackable:8080/nifi and you should see the NiFi Canvas.
 
 image:nifi_menu.png[The Apache NiFi web interface]
 
