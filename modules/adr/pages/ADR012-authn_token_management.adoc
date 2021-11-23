@@ -1,17 +1,18 @@
-= Authentication token management
+= ADR012: Authentication token management
 Teo Klestrup Röijezon <teo.roijezon@stackable.de>
-v0.1, dd.mm.yyyy
-:status: draft
+v0.1, 2021-11-23
+:status: accepted
 
 * Status: {status}
-* Deciders: [list everyone involved in the decision] <!-- optional -->
-* Date: [YYYY-MM-DD when the decision was last updated] <!-- optional -->
+* Deciders:
+** Teo Klestrup Röijezon
+** Lars Francke
+** Sönke Liebau
+* Date: 2021-11-23
 
-Technical Story: [description | ticket/issue URL] <!-- optional -->
+Technical Story: https://github.com/stackabletech/issues/issues/4
 
 == Context and Problem Statement
-
-[Describe the context and problem statement, e.g., in free form using two to three sentences. You may want to articulate the problem in form of a question.]
 
 Services need a way to authenticate each other when communicating. This is typically done by issuing each service some form of secret token that the counterparty can validate. Depending on the service in question, this may be a token unique to the counterparty (such as a password or API key) or a token accepted by a whole trust domain (such as a Kerberos keytab or a TLS certificate). This ADR primarily concerns itself with the latter case.
 
