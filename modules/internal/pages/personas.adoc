@@ -16,7 +16,7 @@ Network control::
   TLS;;
     Does the customer want us to integrate into their existing TLS PKI? If so, is it automated? What are their issuing policies?
   Kerberos;;
-    Does the customer want us to integrate into their existing Kerberos realm?
+    Does the customer want us to integrate into their existing Kerberos realm, if so is it an option to run our own kdc and integrate via trusts? 
   Overlay peering/BGP;;
     Is the Kubernetes overlay network peered into their regular network environment?
   NIC bonding & multihoming;;
