@@ -156,11 +156,11 @@ We will deploy 3 Apache Kafka brokers, another typical deployment pattern for Ka
             replicas: 3
             config:
               logDirs: "/tmp/kafka-logs"
-              metricsPort: 96
+              metricsPort: 9605
 
 
 === Apache NiFi
-We will deploy 3 Apache servers NiFi. This might seem over the top for a tutorial cluster, but it's worth pointing out that the operator will cluster the 3 NiFi servers for us automatically.
+We will deploy 3 Apache NiFi servers. This might seem over the top for a tutorial cluster, but it's worth pointing out that the operator will cluster the 3 NiFi servers for us automatically.
 
     kubectl apply -f - <<EOF
     ---
@@ -238,7 +238,7 @@ With `kafkacat` installed we can log into one of the *worker* nodes query the me
 We should see 3 brokers listed, showing that Stackable has successfully deployed the brokers as a cluster.
 
 === Apache NiFi
-Apache NiFi provides a web interface and the easiest way to test it is to view this in a web browser. Browse to the address of one of your *worker* nodes on port 8080 e.f. http://node1.stackable:8080/nifi and you should see the NiFi Canvas.
+Apache NiFi provides a web interface and the easiest way to test it is to view this in a web browser. Browse to the address of one of your *worker* nodes on port 10000 e.f. http://node1.stackable:10000/nifi and you should see the NiFi Canvas.
 
 image:nifi_menu.png[The Apache NiFi web interface]
 
