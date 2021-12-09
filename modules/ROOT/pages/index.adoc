@@ -1,111 +1,50 @@
 = Stackable Documentation
 
+Welcome to Stackable!
+This documentation gives you an overview of our platform, how to install and manage it as well as some tutorials.
+
+If you have any feedback regarding the documentation please either open an https://github.com/stackabletech/documentation/issues[issue], ask a https://github.com/stackabletech/documentation/discussions[question] or look at the source for this documentation in its https://github.com/stackabletech/documentation[repository].
+
 == Introduction
 
-With our Stackable technology we aim to create an orchestration system that allows end users to deploy, scale and manage Big Data infrastructure on any environment, no matter if it's a VM or bare metal both in cloud and on-premise.
+Our Stackable platform allows you to deploy, scale and manage Big Data infrastructure in any environment as long as it can run https://kubernetes.io/[Kubernetes].
+
+IMPORTANT: Our platform used to be based on a different architecture (until November 2021) where we built an alternative Kubelet. We abandoned that effort for now and are moving towards a Kubernetes-native experience using the normal `kubelet`.
+This is an ongoing effort and the documentation might not reflect reality everywhere.
+We aim to update our platform as well as the documentation by the end of 2021 and will remove this note when the migration has completed.
 
 == Goal of the project
-The goal is to be able to declare full Data Platforms using this concept and go beyond pure low-level applications. This means that we want to be able to deploy a Kafka cluster for example. In the future we would also like to be able to declaratively roll out data, provide proper security configuration out of the box, Kafka topics, HDFS directories, Replication policies, maybe even Spark jobs.
 
-We want to build a distribution that includes the “best of breed” of existing Open Source tools, but bundles them in a way so it is easy to deploy a fully working stack of software. Most of the existing tools are “single purpose” tools which often do not play nicely together out-of-the-box.
+We are building a distribution of existing Open Source tools that together comprise the components of a modern data platform.
 
-== Architecture
-Stackable deploys a server-client architecture where decentralized agents receive commands from the central server to execute.
-Generally speaking we make use of the https://en.wikipedia.org/wiki/Whiteboard_Pattern[whiteboard pattern] as communication paradigm.
+There are components to ingest data, to store data, to process and visualize and much more.
+While the platform got started in the _Big Data_ ecosystem we are in no way limited to big data workloads.
 
-With Kubernetes as a prominent implementation of that architecture, we considered and decided on {base-repo}/documentation/adr/ADR7-defined_reuse_of_k8s.adoc[reusing Kubernetes components].
+You can declaratively build these environments, and we don't stop at the tool level as we also provide ways for the users to interact with the platform in the "as Code"-approach.
 
+We are leveraging the https://www.openpolicyagent.org/[OpenPolicyAgent] to provide Authorization-as-Code.
 
-=== Assumption
-The infrastructure (like a VM server) should be already available and contains a SSH Login runing on a Linux OS.
+We are building a distribution that includes the “best of breed” of existing Open Source tools, but bundles them in a way, so it is easy to deploy a fully working stack of software. Most of the existing tools are “single purpose” tools, which often do not play nicely together out-of-the-box.
 
-=== Components
-The following components will set up our orchestration system:
+== Components
 
-* Kubernetes API-Server
-* Agent(s): one per VM
-* Operators: one per application/Big Data Product
+We are using Kubernetes as our deployment platform.
+And we're building https://kubernetes.io/docs/concepts/extend-kubernetes/operator/[Operators] for each of the products we support.
 
-== Components and their functionality
-=== API-Server (Orchestrator)
-At the moment we use the standard Kubernetes API-Server and stay API-compatible with Kubernetes. In the future we might implement our own Orchestrator component if needed.
-The API-Server acts as a centralized frontend for the clusters shared storage. It is the component through which all other components (i.e. Agents, Kubelet, Operators, ...) communicate.
+At the moment we support the following products (i.e. we have operators for each of those):
 
-=== Operator(s)
-For each application/Big Data Product there is exactly one special Operator defined.
-They watch for changes in their managed resources in the API-Server.
-This Operator is the expert of the application logic, how to roll out and update the Big Data Product (e.g. Kafka with the {base-repo}/kafka-operator[kafka-operator] and {base-repo}/zookeeper-operator[zookeeper-operator]).
-An Operator should implement and encompass all the knowledge a human operator would need when operating the service in question.
-To ease up operator development we created an {base-repo}/operator-rs[operator-framework] to base new operators on, other than implementing the whole workflow/api by oneself.
+- https://druid.apache.org[Apache Druid]
+- https://hbase.apache.org[Apache HBase]
+- https://hadoop.apache.org[Apache Hadoop HDFS]
+- https://hive.apache.org[Apache Hive Metastore]
+- https://kafka.apache.org[Apache Kafka]
+- https://nifi.apache.org[Apache NiFi]
+- https://spark.apache.org[Apache Spark]
+- https://superset.apache.org[Apache Superset]
+- https://trino.io[Trino]
+- https://zookeeper.apache.org[Apache ZooKeeper]
 
-=== Agent(s)
-The {base-repo}/agent[Agent(s)] do not know anything about concrete Big Data products, they only execute work instructions, provided by the Operator(s). Every system dedicated in the Big Data cluster runs a copy of the Agent, registered to the central API-Server, to get informed about updates.
-
-== Communication and interaction
-image::interaction-diagram.svg[]
-
-
-=== 1. Client -> API-Server (Orchestrator)
-The client creates a YAML file for the API-Server, which defines the configuration for the Big Data Product (e.g. Kafka). The client then uses the usual Kubernetes tools (e.g. `kubectl` or any other Kubernetes client).
-This means that the whole infrastructure will be described in code (Infrastructure-as-Code) and can be version controlled.
-
-=== 2. API-Server (Orchestrator) -> Operator(s)
-The API-Server receives the YAML file from the Client, identifies the appropriate Operator(s) (e.g. Kafka Operator) and notifies about the file changes.
-
-=== 3. Operator(s) -> API-Server (Orchestrator)
-The appropriate Operator(s) (e.g. Kafka Operator) will translate the abstract description into detailed actions for the Agent(s).
-
-=== 4. Agent(s) -> API-Server (Orchestrator)
-In the meantime each Agent, running on its own VM, is listening for updates, which belongs to its VM. If there is an update for the appropriate VM, then the Agent of this VM is going to obtain the configuration and act accordingly. (e.g. download an artifact, update a configuration or start a process locally.
-
-=== 5. Agent(s) -> Big Data Product (Kafka)
-Finally, the Agent(s) will provision the Big Data Product (e.g. setting up a Kafka) onto the node of its VM.
-
-
-== Technical base
-=== API-Server (Orchestrator)
-The https://kubernetes.io/docs/reference/command-line-tools-reference/kube-apiserver/[Kubernetes API-Server] validates and configures data for the api objects which include pods, services, replicationcontrollers, and others. The API-Server services **REST** operations and provides the frontend to the cluster's shared state through which all other components interact.
-
-
-=== Operator(s)
-The Operator(s), which can run on the same server as the API-Server or on their own server, can be written in any programming language. We are using **Rust** to implement our Operators.
-
-=== Agent(s)
-We have chosen **Rust** as a programming language for the implementation of the Agent. This tool will manage the installation on the VM.
-Rust is a Programming language, which is focused on safety. It provides memory safety without a garbage collector.
-
-**Decision Drivers:**
-
-* The ability to deploy the agent as one binary with no external dependencies
-* Availability of well-supported libraries for necessary operations
-* File IO
-* Network IO
-* systemd
-* IDE support
-* Debugging options
+We are working on a feature matrix, so you can see which features we support for each of these products.
 
 == Getting Started
 Stackable provides a tutorial xref:getting_started.adoc[], which outlines how to deploy a Stackable cluster and the supported infrastructure. There is also a quickstart shell script in the https://github.com/stackabletech/stackable-utils[stackable-utils] GitHub repository that will quickly bootstrap an example cluster.
-
-== Architectural Design Decisions
-All relevant decisions concerning the architecture are documented as Architectural Design Records in the subfolder _adr_.
-
-Unfinished or not yet approved decisions are stored in the _adr/drafts_ subfolder.
-This folder also contains a template that can be used for creating new decision records.
-
-*Naming Convention* +
-When creating a new record, please use the following guidelines for file naming:
-
- ADR[number]-[name].adoc
-
-During the draft stage please substitute x for the number.
-For the name, please use only lower case letters, number and the underscore.
-Ideally start the name with the imperative form of a verb and avoid fillers like _of/the/for/..._
-
-Some examples:
-
-* choose_project_language
-* choose_repository_structure
-* choose_review_mechanism
-
-When choosing the next free number after an ADR has been approved, make sure to left pad the number with 0 to reach a length of three digits.
