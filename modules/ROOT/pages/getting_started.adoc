@@ -77,9 +77,13 @@ Stackable uses Helm as the package manager for Kubernetes operators. This greatl
 
 `/usr/bin/curl -sfL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | /bin/bash -`
 
-Once Helm has been installed you can add the Stackable operator repo.
+Once Helm has been installed you can add the Stackable operator repo. There is a development and a stable repository available.
 
-`/usr/local/bin/helm repo add stackable-operators https://repo.stackable.tech/repository/helm-dev/`
+==== Stackable Development Repository
+`/usr/local/bin/helm repo add stackable-devel https://repo.stackable.tech/repository/helm-dev/`
+
+==== Stackable Stable Repository
+`/usr/local/bin/helm repo add stackable https://repo.stackable.tech/repository/helm-stable/`
 
 
 == Installing Stackable
@@ -87,13 +91,21 @@ Once Helm has been installed you can add the Stackable operator repo.
 === Installing Stackable Operators
 The Stackable operators are components that translate the service definitions deployed via Kubernetes into deploy services on the worker nodes. These can be installed on any node that has access to the Kubernetes control plane. In this example we will install them on the controller node.
 
-Stackable operators are installed using Helm charts. Run the following commands to install the operators for ZooKeeper, Kafka and NiFi:
+Stackable operators are installed using Helm charts. Run the following commands to install the operators for ZooKeeper, Kafka and NiFi using the repo configured earlier. The --devel flag will choose the latest available version; alternatively the --version flag can be used to deploy a specific version.
 
-`/usr/local/bin/helm install zookeeper-operator stackable-operators/zookeeper-operator`
+==== Stackable Development Repository
+`/usr/local/bin/helm install zookeeper-operator stackable-devel/zookeeper-operator --devel`
 
-`/usr/local/bin/helm install kafka-operator stackable-operators/kafka-operator`
+`/usr/local/bin/helm install kafka-operator stackable-devel/kafka-operator --devel`
 
-`/usr/local/bin/helm install nifi-operator stackable-operators/nifi-operator`
+`/usr/local/bin/helm install nifi-operator stackable-devel/nifi-operator --devel`
+
+==== Stackable Stable Repository
+`/usr/local/bin/helm install zookeeper-operator stackable/zookeeper-operator --devel`
+
+`/usr/local/bin/helm install kafka-operator stackable/kafka-operator --devel`
+
+`/usr/local/bin/helm install nifi-operator stackable/nifi-operator --devel`
 
 You can check which operators are installed using `helm list`:
 
