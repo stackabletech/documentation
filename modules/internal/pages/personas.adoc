@@ -1,0 +1,160 @@
+= Customer Personas
+
+This document is an attempt to formalize different example customer environments that we want the Stackable Platform
+to be able to accomodate.
+
+== Template
+
+Human authentication::
+  Does the customer have an opinion on how human clients authenticate to services running inside the cluster?
+Robot authentication::
+  Does the customer have an opinion on how servers authenticate each other? +
+  (For example: Kafka servers need to connect to ZooKeeper to maintain quorum, even if there are no Kafka clients at the time.)
+Network control::
+  DNS;;
+    Is the customer willing to delegate us a DNS zone, or are we "stuck" adapting to whatever they provision for us?
+  TLS;;
+    Does the customer want us to integrate into their existing TLS PKI? If so, is it automated? What are their issuing policies?
+  Kerberos;;
+    Does the customer want us to integrate into their existing Kerberos realm, if so is it an option to run our own kdc and integrate via trusts? 
+  Overlay peering/BGP;;
+    Is the Kubernetes overlay network peered into their regular network environment?
+  NIC bonding & multihoming;;
+    Do they use bonded NICs that we need to take into account?
+  Network-level firewalls;;
+    Do they use network-level firewalls that our traffic needs to be allowed through?
+  Linux Security Modules?;;
+    Do they require all machines to use SELinux, AppArmor, or something similar?
+Kubernetes cluster::
+  Dedicated cluster;;
+    Can we expect to get a dedicated Stackable Kubernetes cluster, or will be be colocated with internal stuff?
+  Premises;;
+    Is it hosted in the cloud or on-premise?
+  Managed;;
+    Is it managed by an external service provider (IONOS, GKE, EKS, AKS, etc), by us, or is it managed by the customer themselves?
+  Node lifetime;;
+    How long can a single node identity be expected to last for? (Years, weeks, days, hours)
+    A "node identity" in this context refers to a node having the same hostname, IP address,
+    OS installation, local disks (allowing for some failure of individual disks), and so on.
+Storage::
+  Stickiness;;
+    Can we move disks between nodes dynamically? +
+    (For example: Physical drives are sticky, EBS is generally not sticky, SAN depends on customer policies)
+  Pickiness;;
+    How much control does the customer expect to have over which drives get used by which services?
+Hybrid usage::
+  (For example: Stackable ZooKeeper with manually managed Kafka, or vice versa)
+
+== Conservative on Prem Corp
+
+Human authentication::
+  Kerberos (backed by on-prem AD)
+Robot authentication::
+  Kerberos (backed by on-prem AD)
+Network control::
+  DNS;;
+    Issued manually by customer
+  TLS;;
+    Issued manually by customer
+  Kerberos usage;;
+    Issued manually by customer
+  Overlay peering/BGP;;
+    None
+  NIC bonding & multihoming;;
+    Yes
+  Network-level firewalls;;
+    Port-based, manually configured 
+  Linux Security Modules? (SELinux/AppArmor);;
+    No
+Kubernetess cluster::
+  Dedicated cluster;;
+    Yes
+  Premises;;
+    On-prem
+  Managed;;
+    Managed by customer
+  Node lifetime;;
+    Years
+Storage::
+  Stickiness;;
+    Sticky, local
+  Pickiness;;
+    Wants to map storage pools to specific services
+Hybrid usage::
+  ??? 
+
+== Hybrid Corp
+
+Human authentication::
+  OpenID Connect (backed by alternative local directory)
+Robot authentication::
+  No strong opinion or standard
+Network control::
+  DNS;;
+    Delegated zone
+  TLS;;
+    Issued manually by customer
+  Kerberos usage;;
+    Issued manually by customer
+  Overlay peering/BGP;;
+    None
+  NIC bonding & multihoming;;
+    No
+  Network-level firewalls;;
+    Port-based, manually configured 
+  Linux Security Modules? (SELinux/AppArmor);;
+    No 
+Kubernetess cluster::
+  Dedicated cluster;;
+    Shared
+  Premises;;
+    Cloud
+  Managed;;
+    Managed by customer
+  Node lifetime;;
+    Years
+Storage::
+  Stickiness;;
+    Not sticky, uses SAN
+  Pickiness;;
+    Storage classes managed by SAN
+Hybrid usage::
+  Yes 
+
+== Web 3.0 - Full Cloud Managed Everything
+
+Human authentication::
+  OpenID Connect (cloud provider)
+Robot authentication::
+  No strong opinion or standard
+Network control::
+  DNS;;
+    Delegated zone
+  TLS;;
+    Managed by us
+  Kerberos usage;;
+    Managed by us
+  Overlay peering/BGP;;
+    Yes, but they don't know about it
+  NIC bonding & multihoming;;
+    Not that they're aware of
+  Network-level firewalls;;
+    May be managed by cloud provider
+  Linux Security Modules? (SELinux/AppArmor);;
+    No 
+Kubernetess cluster::
+  Dedicated cluster;;
+    Dedicated
+  Premises;;
+    Cloud
+  Managed;;
+    Managed by cloud provider
+  Node lifetime;;
+    Hours or days
+Storage::
+  Stickiness;;
+    Not sticky, uses cloud service (EBS or similar)
+  Pickiness;;
+    Storage classes managed by cloud provider
+Hybrid usage::
+  Yes
