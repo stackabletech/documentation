@@ -22,7 +22,7 @@ jobs:
         with:
           antora_playbook: antora-playbook.yml
       - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@4.1.8
+        uses: JamesIves/github-pages-deploy-action@v4.2.2
         with:
           branch: 'docs'
           folder: 'build/site'
