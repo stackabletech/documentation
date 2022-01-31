@@ -6,6 +6,9 @@ site:
 
 content:
   sources: 
+  - url: https://github.com/stackabletech/airflow-operator.git
+    branches: main
+    start_path: docs
   - url: https://github.com/stackabletech/agent.git
     branches: main
     start_path: docs
@@ -33,9 +36,6 @@ content:
     branches: main
     start_path: docs
   - url: https://github.com/stackabletech/superset-operator.git
-    branches: main
-    start_path: docs
-  - url: https://github.com/stackabletech/airflow-operator.git
     branches: main
     start_path: docs
   - url: https://github.com/stackabletech/zookeeper-operator.git
