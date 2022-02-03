@@ -7,7 +7,7 @@ metadata:
 spec:
   endpoints:
   - port: metrics
-  jobLabel: app.kubernetes.io/name
+  jobLabel: app.kubernetes.io/instance
   selector:
     matchLabels:
       prometheus.io/scrape: "true"
