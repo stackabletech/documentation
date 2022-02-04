@@ -105,4 +105,4 @@ This speed might be too fast for some users.
 
 - https://kubernetes.io/releases/version-skew-policy/[Kubernetes Version Skew Policy]
 - https://kubernetes.io/blog/2021/07/20/new-kubernetes-release-cadence/[Kubernetes Release Cadence]
-- https://kubernetes.io/docs/reference/using-api/deprecation-policy/[Kubernetes Deprecation Poliy]
+- https://kubernetes.io/docs/reference/using-api/deprecation-policy/[Kubernetes Deprecation Policy]
