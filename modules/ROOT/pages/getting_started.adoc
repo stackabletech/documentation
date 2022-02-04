@@ -13,9 +13,6 @@ Firstly, let’s cover whether this *Getting Started* guide is right for you. Th
 == Overview
 Stackable is based on Kubernetes and uses this as the control plane to manage clusters. In this guide we will build a simple cluster with 3 services; Apache ZooKeeper, Apache Kafka and Apache NiFi.
 
-
-image:getting_started_arch.png[High-level deployment architecture for Stackable,600]
-
 == Installing Kubernetes
 Stackable’s control plane is built around Kubernetes, and we'll give some brief examples of how to install Kubernetes on your machine.
 
