@@ -11,7 +11,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2.3.4
+      - uses: actions/checkout@v2.4.0
       - name: "Generate site using Antora site action"
         uses: kameshsampath/antora-site-action@v0.2.4
         with:

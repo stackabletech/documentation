@@ -1,0 +1,78 @@
+= ADR012: Authentication token management
+Teo Klestrup Röijezon <teo.roijezon@stackable.de>
+v0.1, 2021-11-23
+:status: accepted
+
+* Status: {status}
+* Deciders:
+** Teo Klestrup Röijezon
+** Lars Francke
+** Sönke Liebau
+* Date: 2021-11-23
+
+Technical Story: https://github.com/stackabletech/issues/issues/4
+
+== Context and Problem Statement
+
+Services need a way to authenticate each other when communicating. This is typically done by issuing each service some form of secret token that the counterparty can validate. Depending on the service in question, this may be a token unique to the counterparty (such as a password or API key) or a token accepted by a whole trust domain (such as a Kerberos keytab or a TLS certificate). This ADR primarily concerns itself with the latter case.
+
+Depending on the specifics of the service being communicated with, this token may need to identify the replica (Pod in Kubernetes terms), the set of replicas (RoleGroup, StatefulSet, or Pod), or the server that the replica is running on (Node).
+
+== Decision Drivers
+
+* Depending on the specific service being communicated with, the token may need to identify the the replica (Pod in Kubernetes terms), the set of replicas (RoleGroup, StatefulSet, or Pod), or the server that the replica is running on (Node)
+* Some customers have an existing trust domain where they provision us static tokens that we must use
+* Many customers do not have an existing trust domain, nor do they want to take on the operational burden of managing it manually
+* Ideally, automatically provisioned tokens should be as short-lived as is practical
+
+== Considered Options
+
+1. Kubernetes secrets (+ Cert Manager etc)
+2. Hashicorp Vault
+3. Custom secret service
+
+== Decision Outcome
+
+**Option 3: Custom Secret Service**
+
+== Pros and Cons of the Options
+
+=== Kubernetes secrets
+
+Secrets are managed in Kubernetes Secret objects, which are mounted into the Pods.
+
+Depending on the customer's configuration, these secrets may be provisioned by operators such as Cert-Manager, or managed manually by an administrator.
+
+* Good, because it exists already
+* Good, because people are already used to them
+* Bad, because secret mounting is static for the whole StatefulSet or Deployment (and so cannot depend on the replica or node identity)
+* Bad, because secrets must be provisioned in advance and stored in K8s
+* Bad, because Kubernetes Secrets are typically not encrypted at rest
+* Bad, because cluster and app administrators often have overly broad access to Secrets
+* Bad, because Cert-Manager does not perform any policy check on certificates being issued
+* Bad, because there is no Krb-Keytab-Manager (yet)
+
+=== Hashicorp Vault
+
+Secrets are stored or provisioned on demand by Hashicorp Vault, and injected into the pods using Vault-CSI.
+
+* Good, because it exists already
+* Good, because it can issue TLS certificates on demand
+* Good, because secrets are encrypted at rest
+* Bad, because it cannot issue Kerberos keytabs
+* Bad, because the APIs for issuing dynamic secrets and retrieving existing secrets are incompatible
+* Bad, because policy controls are limited enough to be nearly useless for managing identities
+* Bad, because it is a heavy operational burden for customers that do not already use it
+* Bad, because Vault Enterprise pricing is unclear (but has a reputation for being very expensive)
+
+=== Custom secret service
+
+Secrets are stored or provisioned by a custom service (which may delegate to Vault, Kubernetes, etc as needed). Secrets
+are injected into pods using a custom CSI provider or init container.
+
+* Good, because it can enforce policy for generated identities (for example: tying TLS certificate to Pod or Node identity)
+* Good, because it can pick pregenerated tokens based on Pod/Node identity
+* Good, because it can have a cluster-global policy for picking between backends
+* Good, because it can accomodate to whatever authn methods we end up supporting
+* Bad, because it's another bespoke thing to maintain and develop
+* Bad, because none of us are experienced with writing CSI providers
