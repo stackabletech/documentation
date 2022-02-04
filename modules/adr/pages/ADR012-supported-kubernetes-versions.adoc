@@ -1,0 +1,108 @@
+= ADR012: Supported Kubernetes versions
+The Stackable Engineers
+v0.1, 04.02.2021
+:status: draft
+
+* Status: {status}
+* Deciders: [list everyone involved in the decision] <!-- optional -->
+* Date: 2022-02-04
+
+Technical Story: [Document supported Kubernetes versions| https://github.com/stackabletech/documentation/issues/83]
+Related Documentation: https://docs.stackable.tech/agent/limitations.html
+
+== Context and Problem Statement
+
+=== Kubernetes Version Policy
+
+Multiple new versions of Kubernetes are released every year (currently 3). Security fixes might come in between. Different Kubernetes components (including kubectl) will only support a limited number of versions, as mandated by kubernetes' https://kubernetes.io/releases/version-skew-policy/[Version Skew Policy]. Therefore, we need to define the supported Kubernetes versions. 
+
+=== Deprecation and Removal of older resource variants
+
+The API overview provides an overview of the https://kubernetes.io/docs/reference/using-api/deprecation-policy/#deprecating-a-feature-or-behavior[Kubernetes Deprecation Policy]. In there, we find rules that can guide our decisions.
+
+* "Rule #4a: minimum API lifetime is determined by the API stability level"
+** "Alpha API versions may be removed in any release without prior deprecation notice"
+** "Beta API versions must be supported for 9 months or 3 releases (whichever is longer) after deprecation"
+** "GA API versions may be marked as deprecated, but must not be removed within a major version of Kubernetes"
+* "Rule #7: Deprecated behaviors must function for no less than 1 year after their announced deprecation."
+
+This means that a codebase relying on alpha features can only reliably be developed against a single kubernetes version. For beta features, 3 kubernetes versions can be covered with the same codebase. The linked document also shows the overlapping of versions. When a feature matures from beta into stable, the beta version can still be used for 3 releases. After that, the stable version has to be used.
+
+For actually deprecated features (not just moved from beta to stable), the grace period is also more than three releases; as specified a deprecated feature has to be supported for at least a year.
+
+=== Stackables behavior
+
+The Stackable services (agent and operators) support only a small subset of Kubernetes versions. The reason is that, as pointed out already, the kubernetes API and tools restrict support of backward compatibility. Our software is compiled against a specific Kubernetes version but run on all other versions if no breaking change is actually used.
+
+Since with kubernetes 1.22, a backward compatibility breaking change was introduced, our software (like some others in the kubernetes ecosystem) broke for the removed stuff. Such a breaking change was hit in the agent when the endpoint certificates.k8s.io/v1beta1 was moved to certificates.k8s.io/v1 in Kubernetes v1.22 (see https://github.com/stackabletech/agent/pull/267[agent issue 267]). With this change, Kubernetes v1.18 and lower were not supported anymore.
+
+It would be possible to provide several artifacts of the agent for different Kubernetes versions, e.g. agent-1.0.0-k1_18 and agent-1.0.0-k1_22, but it was decided that the effort is not necessary for now. Furthermore the services must be tested against all supported Kubernetes versions which creates additional effort (see https://github.com/stackabletech/t2/issues/126[issue "k8s version as an attribute in the cluster definition"]).
+
+== What others support (September 2021)
+
+=== Kubernetes
+
+> The Kubernetes project maintains release branches for the most recent three minor releases (1.22, 1.21, 1.20). Kubernetes 1.19 and newer receive approximately 1 year of patch support. Kubernetes 1.18 and older received approximately 9 months of patch support.
+
+see https://kubernetes.io/releases/ and https://kubernetes.io/releases/version-skew-policy/
+
+=== Amazon EKS
+
+> Each minor version is supported for approximately twelve months after it's first released.
+
+> The following Kubernetes versions are currently available for new Amazon EKS clusters:
+> * 1.21.2
+> * 1.20.7
+> * 1.19.8
+> * 1.18.16
+> * 1.17.17
+> * 1.16.15
+
+see https://docs.aws.amazon.com/eks/latest/userguide/kubernetes-versions.html
+
+=== OpenShift
+
+The supported OpenShift Container Platforms are 4.6, 4.7, and 4.8 which in turn use Kubernetes v1.19, v1.20, and v1.21.
+
+see https://docs.openshift.com/container-platform/4.6/release_notes/ocp-4-6-release-notes.html#ocp-4-6-about-this-release
+see https://docs.openshift.com/container-platform/4.7/release_notes/ocp-4-7-release-notes.html#ocp-4-7-about-this-release
+see https://docs.openshift.com/container-platform/4.8/release_notes/ocp-4-8-release-notes.html#ocp-4-8-about-this-release
+
+
+== Decision Drivers
+
+* some customers told us they have troubles keeping the pace at which Kubernetes moves. They are only slowly adopting new Kubernetes releases, or even refrain completely from using Kubernetes. Customers might even be lagging behind in their Kubernetes clusters.
+* tech is fast moving: major Kubernetes improvements are released multiple times a year
+* managed Kubernetes offerings (GKE & Co.) typically only support fairly recent k8s releases   
+* How can we upgrade the Kubernetes we run without customer intervention?
+
+== Considered Options
+
+* follow Kubernetes Version Skew Policy
+    - needs an outline of migration strategy, announcements, communications and paths 
+* support any Kubernetes Version for n months
+    - needs an outline of migration strategy
+* identify Stackable's own long-term-support version of Kubernetes
+    - outline additional effort, like handling of security patches, and how to deal with missing new mainstream features 
+* abandon Kubernetes
+    - still needs some migration strategy nonetheless
+
+== Decision Outcome
+
+It was decided that we will support the latest three kubernetes versions. Kubernetes release cycle is approximately 15 months, which means we support each version for 45 weeks or a little over 10 months.
+
+=== Positive Consequences
+
+According to the deprecation policy this means that we will have a single API version for every object across all 3 versions available, so we will be able to compile a single binary that works with all 3 versions of kubernetes.
+
+In general, having to support less means we can focus more on building new features instead of maintaining compatibility over a large range of kubernetes versions.
+
+=== Negative Consequences
+
+This speed might be too fast for some users.
+
+== Links
+
+- https://kubernetes.io/releases/version-skew-policy/[Kubernetes Version Skew Policy]
+- https://kubernetes.io/blog/2021/07/20/new-kubernetes-release-cadence/[Kubernetes Release Cadence]
+- https://kubernetes.io/docs/reference/using-api/deprecation-policy/[Kubernetes Deprecation Poliy]
