@@ -4,7 +4,7 @@ v0.1, 04.02.2021
 :status: draft
 
 * Status: {status}
-* Deciders: [list everyone involved in the decision] <!-- optional -->
+* Deciders: Lars Franke
 * Date: 2022-02-04
 
 Technical Story: [Document supported Kubernetes versions| https://github.com/stackabletech/documentation/issues/83]
@@ -89,7 +89,7 @@ see https://docs.openshift.com/container-platform/4.8/release_notes/ocp-4-8-rele
 
 == Decision Outcome
 
-It was decided that we will support the latest three kubernetes versions. Kubernetes release cycle is approximately 15 months, which means we support each version for 45 weeks or a little over 10 months.
+It was decided that we will support the latest three kubernetes versions. Kubernetes release cycle is approximately 15 weeks, which means we support each version for 45 weeks or a little over 10 months.
 
 === Positive Consequences
 
