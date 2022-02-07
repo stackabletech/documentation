@@ -7,7 +7,7 @@ v0.1, 04.02.2021
 * Deciders: Lars Francke
 * Date: 2022-02-04
 
-Technical Story: [Document supported Kubernetes versions| https://github.com/stackabletech/documentation/issues/83]
+Technical Story: https://github.com/stackabletech/documentation/issues/83[Document supported Kubernetes versions]
 
 == Context and Problem Statement
 
