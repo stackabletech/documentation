@@ -8,7 +8,6 @@ v0.1, 04.02.2021
 * Date: 2022-02-04
 
 Technical Story: [Document supported Kubernetes versions| https://github.com/stackabletech/documentation/issues/83]
-Related Documentation: https://docs.stackable.tech/agent/limitations.html
 
 == Context and Problem Statement
 
@@ -32,37 +31,41 @@ For actually deprecated features (not just moved from beta to stable), the grace
 
 === Stackables behavior
 
-The Stackable services (agent and operators) support only a small subset of Kubernetes versions. The reason is that, as pointed out already, the kubernetes API and tools restrict support of backward compatibility. Our software is compiled against a specific Kubernetes version but run on all other versions if no breaking change is actually used.
+The stackable operators depend on a specific kubernetes version through the https://github.com/stackabletech/operator-rs[operator framework]. At the moment we do not have an explicit version compatibility, and the software will work with different versions of the objects we use are the same in different kubernetes versions (i.e. an operator uses 1.21 but all resource definitions we rely on are identical in 1.20 so the operator works in 1.20 too).
 
-Since with kubernetes 1.22, a backward compatibility breaking change was introduced, our software (like some others in the kubernetes ecosystem) broke for the removed stuff. Such a breaking change was hit in the agent when the endpoint certificates.k8s.io/v1beta1 was moved to certificates.k8s.io/v1 in Kubernetes v1.22 (see https://github.com/stackabletech/agent/pull/267[agent issue 267]). With this change, Kubernetes v1.18 and lower were not supported anymore.
-
-It would be possible to provide several artifacts of the agent for different Kubernetes versions, e.g. agent-1.0.0-k1_18 and agent-1.0.0-k1_22, but it was decided that the effort is not necessary for now. Furthermore the services must be tested against all supported Kubernetes versions which creates additional effort (see https://github.com/stackabletech/t2/issues/126[issue "k8s version as an attribute in the cluster definition"]).
-
-== What others support (September 2021)
+== Support Policies of Kubernetes and Managed Cluster Providers
 
 === Kubernetes
 
-> The Kubernetes project maintains release branches for the most recent three minor releases (1.22, 1.21, 1.20). Kubernetes 1.19 and newer receive approximately 1 year of patch support. Kubernetes 1.18 and older received approximately 9 months of patch support.
+Kubernetes maintains release branches for the most recent three minor releases. Any minor version for 1.19 onwards receives one year of patch support. Most providers of managed kubernetes refer to this schedule when defining their own support windows.
 
-see https://kubernetes.io/releases/ and https://kubernetes.io/releases/version-skew-policy/
+See https://kubernetes.io/releases/ and https://kubernetes.io/releases/version-skew-policy/
+
+=== Azure Kubernetes Service (AKS)
+
+AKS supports three kubernetes versions, where they seem to try to make these the three latest versions.
+
+See https://docs.microsoft.com/en-us/azure/aks/supported-kubernetes-versions?tabs=azure-cli#kubernetes-version-support-policy
 
 === Amazon EKS
 
 > Each minor version is supported for approximately twelve months after it's first released.
 
-> The following Kubernetes versions are currently available for new Amazon EKS clusters:
-> * 1.21.2
-> * 1.20.7
-> * 1.19.8
-> * 1.18.16
-> * 1.17.17
-> * 1.16.15
+See https://docs.aws.amazon.com/eks/latest/userguide/kubernetes-versions.html
 
-see https://docs.aws.amazon.com/eks/latest/userguide/kubernetes-versions.html
+=== Google GKE
+
+> Google provides a total of 14 months of support for each GKE minor version once the version has been made available in the Regular channel. [...] After 12 months, a supported version will enter a 2-month maintenance period before reaching end of life.
+
+See https://cloud.google.com/kubernetes-engine/versioning
+
+=== IONOS
+
+IONOS seems to support the latest three versions; as of January 2022 the supported versions are 1.20, 1.21 and 1.22.
 
 === OpenShift
 
-The supported OpenShift Container Platforms are 4.6, 4.7, and 4.8 which in turn use Kubernetes v1.19, v1.20, and v1.21.
+As of September 2021, the supported OpenShift Container Platforms are 4.6, 4.7, and 4.8 which in turn use Kubernetes v1.19, v1.20, and v1.21.
 
 see https://docs.openshift.com/container-platform/4.6/release_notes/ocp-4-6-release-notes.html#ocp-4-6-about-this-release
 see https://docs.openshift.com/container-platform/4.7/release_notes/ocp-4-7-release-notes.html#ocp-4-7-about-this-release
@@ -71,21 +74,19 @@ see https://docs.openshift.com/container-platform/4.8/release_notes/ocp-4-8-rele
 
 == Decision Drivers
 
-* some customers told us they have troubles keeping the pace at which Kubernetes moves. They are only slowly adopting new Kubernetes releases, or even refrain completely from using Kubernetes. Customers might even be lagging behind in their Kubernetes clusters.
-* tech is fast moving: major Kubernetes improvements are released multiple times a year
-* managed Kubernetes offerings (GKE & Co.) typically only support fairly recent k8s releases   
+* Some customers told us they have troubles keeping the pace at which Kubernetes moves. They are only slowly adopting new Kubernetes releases, or even refrain completely from using Kubernetes. Customers might even be lagging behind in their Kubernetes clusters. This means that too fast a pace is not good for customers.
+* Tech is fast moving: major Kubernetes improvements are released multiple times a year. This means that we need to stay up to date, supporting versions that are not supported by the kubernetes project is potentially difficult.
+* Managed Kubernetes offerings (GKE & Co.) typically only support fairly recent k8s releases. We should be able to run on all large managed kubernetes services.
 * How can we upgrade the Kubernetes we run without customer intervention?
 
 == Considered Options
 
-* follow Kubernetes Version Skew Policy
+* follow Kubernetes support timeline/version skew policy
     - needs an outline of migration strategy, announcements, communications and paths 
 * support any Kubernetes Version for n months
     - needs an outline of migration strategy
 * identify Stackable's own long-term-support version of Kubernetes
-    - outline additional effort, like handling of security patches, and how to deal with missing new mainstream features 
-* abandon Kubernetes
-    - still needs some migration strategy nonetheless
+    - outline additional effort, like handling of security patches, and how to deal with missing new mainstream features
 
 == Decision Outcome
 
