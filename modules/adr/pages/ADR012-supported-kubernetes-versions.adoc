@@ -4,7 +4,7 @@ v0.1, 04.02.2021
 :status: draft
 
 * Status: {status}
-* Deciders: Lars Franke
+* Deciders: Lars Francke
 * Date: 2022-02-04
 
 Technical Story: [Document supported Kubernetes versions| https://github.com/stackabletech/documentation/issues/83]
