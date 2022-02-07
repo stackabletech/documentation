@@ -46,5 +46,11 @@ At the moment we support the following products (i.e. we have operators for each
 
 We are working on a feature matrix, so you can see which features we support for each of these products.
 
+== Supported Kubernetes Versions
+
+The Kubernetes project maintains release branches for the latest three versions, we follow this approach and also support the latest three kubernetes versions which are, at the moment:
+
+include::partial$supported-kubernetes-versions.adoc[]
+
 == Getting Started
 Stackable provides a tutorial xref:getting_started.adoc[], which outlines how to deploy a Stackable cluster and the supported infrastructure. There is also a quickstart shell script in the https://github.com/stackabletech/stackable-utils[stackable-utils] GitHub repository that will quickly bootstrap an example cluster.
