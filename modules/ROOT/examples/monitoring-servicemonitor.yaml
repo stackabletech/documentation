@@ -1,0 +1,13 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: scrape-label
+  labels:
+    release: prometheus
+spec:
+  endpoints:
+  - port: metrics
+  jobLabel: app.kubernetes.io/instance
+  selector:
+    matchLabels:
+      prometheus.io/scrape: "true"

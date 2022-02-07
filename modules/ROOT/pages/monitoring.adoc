@@ -1,0 +1,42 @@
+= Monitoring
+
+Services managed by Stackable support monitoring via https://prometheus.io/[Prometheus].
+
+== Prometheus Operator
+
+Stackable does not currently provide Prometheus, instead we suggest using
+https://prometheus-operator.dev/[Prometheus Operator].
+
+=== Installing Prometheus
+
+Prometheus Operator can be installed via the Helm chart `kube-prometheus-stack`, which includes
+both the Operator, and a basic Prometheus configuration that should be sufficient for basic use.
+
+[source,bash]
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm upgrade prometheus prometheus-community/kube-prometheus-stack --install --version 31.0.0
+
+When using the `kube-prometheus-stack` Helm chart (as above), an additional `ServiceMonitor` must be applied to
+the Kubernetes cluster, which discovers services registered to the Kubernetes cluster:
+
+[source,yaml]
+----
+include::example$monitoring-servicemonitor.yaml[]
+----
+
+=== Querying Prometheus
+
+Prometheus should now be accessible inside of the Kubernetes cluster, and can be access can be forwarded using `kubectl`:
+
+[source,bash]
+kubectl port-forward svc/prometheus-kube-prometheus-prometheus 9090
+
+Afterwards, we can go to http://localhost:9090/ to access the query UI.
+
+== Existing Prometheus
+
+An existing Prometheus installation can also be used to monitor Stackable services.
+
+In this case, it should be configured to scrape Kubernetes `Service` objects with the label `prometheus.io/scrape: "true"`.
+For more details, see their official documentation for
+https://prometheus.io/docs/prometheus/latest/configuration/configuration/#kubernetes_sd_config[`<kubernetes_sd_config>`].
