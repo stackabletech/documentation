@@ -17,6 +17,9 @@ content:
   - url: https://github.com/stackabletech/druid-operator.git
     branches: main
     start_path: docs
+  - url: https://github.com/stackabletech/hbase-operator.git
+    branches: main
+    start_path: docs
   - url: https://github.com/stackabletech/kafka-operator.git
     branches: main
     start_path: docs
