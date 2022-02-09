@@ -30,6 +30,10 @@ include::kafka::partial$supported-versions.adoc[]
 
 include::nifi::partial$supported-versions.adoc[]
 
+== Open Policy Agent (OPA)
+
+include::opa::partial$supported-versions.adoc[]
+
 == Apache Spark
 
 include::spark::partial$supported-versions.adoc[]
