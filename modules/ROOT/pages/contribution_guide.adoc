@@ -1,0 +1,92 @@
+= Contributors guide
+
+== Introduction
+
+Welcome to Stackable!
+
+This document will show you the steps needed to contribute to the Stackable platform. Contributions can come in many shapes and forms but in this document we'll focus on code and documentation improvements. We'll assume you already know what the Stackable platform is and have a specific issue that you want solved.
+
+This document should get you up and running with your development environment quickly.
+
+== Contribution Workflow
+
+The development of the Stackable platform takes place on https://github.com/stackabletech[GitHub]. On GitHub, each repository has it's own Issue-Tracker and since Stackable is a platform, there are several repositories where issues and pull-requests can be made. If you already have a good ideea where the issue or pull-request belongs, then you can skip reading to the contribution steps below. Otherwise you might want to a have a look at the <<Repo Walkthrough>> section below for hints.
+
+
+Contribution steps:
+
+1. Lookup if an existing issue already covers your problem
+2. Submit a new issue and/or pull-request
+3. Respond to questions or feedback
+4. Improve your submission if necessary
+5. Closing your contribution
+
+Before submitting a new Issue or Pull-Request, it's always a good idea to check if the issue has already been discussed in the passt and if there is a resolution for it. If that is the case, consider contributing to the existing issue by either adding new feedback or code.
+
+When creating a new Issue please provide as much information as you consider relevant. Issues can be Bug-Reports, Feature-Requests and so on. The Stackable repositories provide templates to make it easyer to submit high-quality Issues.  
+
+When submitting a Pull-Request, you might be interested in knowing about the necessary <<Development Environment>> and <<Pull-Request Best Practices>>.
+
+== Repo Walkthrough
+
+This is quick walk through the most important git repositories:
+
+=== Repository: https://github.com/stackabletech/issues[issues]
+
+This repository exists solely for the purpose of tracking Issues related to the Stackable Platform in general. Large topics that impact many or even all of the plattform components are discussed here. There is no code in this repository.
+
+=== Repository: https://github.com/stackabletech/documentation[documentation]
+
+Platform wide documentation, such as this page, are hosted here. Also this repository has references to documentation that is hosted in individual <<Operator Repositories>>. It is the main source from which the public https://docs.stackable.tech/[Documentation] page is generated.
+
+=== Repository: https://github.com/stackabletech/docker-images[docker-images]
+
+The Stackable Platform can be used to install and run up several open-source products such as https://kafka.apache.org[Apache Kafka] or https://trino.io[Trino]. Container images of these products hosted on the https://repo.stackable.tech/[Stackable Repository Manager] and the sources hosted in this repository.
+
+NOTE: Operators host their `Dockerfile` in their own repository. 
+
+=== Repository: https://github.com/stackabletech/integration-tests[integration-tests]
+
+The Stackable Operators are tested in many environments and across cloud providers. Integration tests are currently driven by `Kuttl` and are hosted here.
+
+=== Operator Repositories
+
+== Pull-Request Best Practices
+
+TODO
+
+== Development Environment
+
+Hardware/OS
+
+Linux
+
+Tools
+
+docker
+
+kind
+
+helm
+
+kuttl
+
+rust
+
+python
+
+IDEs
+
+IntelliJ with the Rust plugin
+
+VisualStudio Code
+
+rust-analyzer (don’t use the “official” Rust extension)
+
+Better Toml
+
+CodeLLDB
+
+Error Lens
+
+
