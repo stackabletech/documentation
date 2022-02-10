@@ -25,7 +25,7 @@ Before submitting a new Issue or Pull-Request, it's always a good idea to check 
 
 When creating a new Issue please provide as much information as you consider relevant. Issues can be Bug-Reports, Feature-Requests and so on. The Stackable repositories provide templates to make it easyer to submit high-quality Issues.  
 
-When submitting a Pull-Request, you might be interested in knowing about the necessary <<Development Environment>> and <<Pull-Request Best Practices>>.
+When submitting a Pull-Request, you might be interested in knowing about the necessary <<Development Environment>>.
 
 == Repo Walkthrough
 
@@ -43,50 +43,54 @@ Platform wide documentation, such as this page, are hosted here. Also this repos
 
 The Stackable Platform can be used to install and run up several open-source products such as https://kafka.apache.org[Apache Kafka] or https://trino.io[Trino]. Container images of these products hosted on the https://repo.stackable.tech/[Stackable Repository Manager] and the sources hosted in this repository.
 
-NOTE: Operators host their `Dockerfile` in their own repository. 
+NOTE: Operators host their `Dockerfile`s in their own repository. 
 
 === Repository: https://github.com/stackabletech/integration-tests[integration-tests]
 
 The Stackable Operators are tested in many environments and across cloud providers. Integration tests are currently driven by `Kuttl` and are hosted here.
 
+=== Repository: https://github.com/stackabletech/t2[t2]
+
+Integration testing across different versions and cloud providers is being developed here.
+
 === Operator Repositories
 
-== Pull-Request Best Practices
+At the core of the Stackable Platform are Kubernetes operators used to install and manage various data products. Each operator has it's own repository and therefore it's own Issue Tracker and build pipeline. Every operator repository contains:
 
-TODO
+* The operator's source code
+* One or more Custom Resource Definitions owned by the operator
+* `Helm` chart
+* Documentation
+* `Dockerfile` and related artifacts to generate the operator image
 
 == Development Environment
 
-Hardware/OS
+In order to contribute source code, you need an environment that is capable of running the following tools:
 
-Linux
+* Docker
+* Kind
+* Helm
+* Kuttl
+* Rust
+* Python
 
-Tools
+The documentation is written in https://asciidoctor.org[AsciiDoc] format and processed with https://antora.org[Antora]
 
-docker
+=== IDEs and Editors
 
-kind
+Of course you are free to use whatever works for you best. No editor is perfect but we have positive experience with:
 
-helm
+* `IntelliJ Idea` with the `Rust` plugin
+* `VisualStudio Code` with the `rust-analyzer` plugin
 
-kuttl
-
-rust
-
-python
-
-IDEs
-
-IntelliJ with the Rust plugin
-
-VisualStudio Code
-
-rust-analyzer (don’t use the “official” Rust extension)
-
-Better Toml
-
-CodeLLDB
-
-Error Lens
+For `VisualStudio Code` we also recommend the following plug-ins:
+* Better Toml
+* CodeLLDB (for debugging)
+* Error Lens (inline error messages)
+* AsciiDoc
+* GitHub Pull requests and Issues
+* GitLens
+* Python
+* Docker
 
 
