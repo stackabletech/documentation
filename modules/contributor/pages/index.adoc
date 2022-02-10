@@ -1,0 +1,6 @@
+= Contributors Guide
+
+Welcome to the Stackable contributing guide and thank you for your contribution.
+
+In this guide you will get an overview on how to get started developing in our platform.
+It contains information for new contributors as well as checklists and information for existing ones.

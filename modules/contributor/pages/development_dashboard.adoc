@@ -1,0 +1,116 @@
+= Development Dashboard
+
+This page contains information about our products and relevant links you might need during development.
+
+|===
+|Product |Homepage |Upstream Git |Operator Git| Our Dockerfile |Jenkins |Documentation |Misc
+
+|Apache Airflow
+|https://airflow.apache.org/
+|https://github.com/apache/airflow
+|https://github.com/stackabletech/airflow-operator
+|https://github.com/stackabletech/docker-images/tree/main/airflow
+|https://ci.stackable.tech/job/Airflow%20Operator%20Integration%20Tests/
+|https://docs.stackable.tech/airflow/index.html
+|
+
+|Apache Druid
+|https://druid.apache.org/
+|https://github.com/apache/druid
+|https://github.com/stackabletech/druid-operator
+|https://github.com/stackabletech/docker-images/tree/main/druid
+|https://ci.stackable.tech/job/Druid%20Operator%20Integration%20Tests/
+|https://docs.stackable.tech/druid/index.html
+|
+
+|Apache HBase
+|https://hbase.apache.org/
+|https://github.com/apache/hbase
+|https://github.com/stackabletech/hbase-operator
+|https://github.com/stackabletech/docker-images/tree/main/hbase
+|https://ci.stackable.tech/job/HBase%20Operator%20Integration%20Tests/
+|https://docs.stackable.tech/hbase/index.html
+|
+
+|Apache Hadoop (HDFS)
+|https://hadoop.apache.org/
+|https://github.com/apache/hadoop
+|https://github.com/stackabletech/hdfs-operator
+|https://github.com/stackabletech/docker-images/tree/main/hadoop
+|https://ci.stackable.tech/job/HDFS%20Operator%20Integration%20Tests/
+|https://docs.stackable.tech/hdfs/index.html
+|
+
+|Apache Hive (Metastore)
+|https://hive.apache.org/
+|https://github.com/apache/hive
+|https://github.com/stackabletech/hive-operator
+|https://github.com/stackabletech/docker-images/tree/main/hive
+|https://ci.stackable.tech/job/Hive%20Operator%20Integration%20Tests/
+|https://docs.stackable.tech/hive/index.html
+|
+
+|Apache Kafka
+|https://kafka.apache.org/
+|https://github.com/apache/kafka
+|https://github.com/stackabletech/kafka-operator
+|https://github.com/stackabletech/docker-images/tree/main/kafka
+|https://ci.stackable.tech/job/Kafka%20Operator%20Integration%20Tests/
+|https://docs.stackable.tech/kafka/index.html
+|
+
+|Apache NiFi
+|https://nifi.apache.org/
+|https://github.com/apache/nifi
+|https://github.com/stackabletech/nifi-operator
+|https://github.com/stackabletech/docker-images/tree/main/nifi
+|https://ci.stackable.tech/job/NiFi%20Operator%20Integration%20Tests/
+|https://docs.stackable.tech/nifi/index.html
+|
+
+|Apache Spark
+|https://spark.apache.org/
+|https://github.com/apache/spark
+|https://github.com/stackabletech/spark-operator
+|https://github.com/stackabletech/docker-images/tree/main/spark
+|https://ci.stackable.tech/job/Spark%20Operator%20Integration%20Tests/
+|https://docs.stackable.tech/spark/index.html
+|
+
+|Apache Superset
+|https://superset.apache.org/
+|https://github.com/apache/superset
+|https://github.com/stackabletech/superset-operator
+|https://github.com/stackabletech/docker-images/tree/main/superset
+|https://ci.stackable.tech/job/Superset%20Operator%20Integration%20Tests/
+|https://docs.stackable.tech/superset/index.html
+|
+
+|Apache ZooKeeper
+|https://zookeeper.apache.org/
+|https://github.com/apache/zookeeper
+|https://github.com/stackabletech/zookeeper-operator
+|https://github.com/stackabletech/docker-images/tree/main/zookeeper
+|https://ci.stackable.tech/job/Zookeeper%20Operator%20Integration%20Tests/
+|https://docs.stackable.tech/zookeeper/index.html
+|
+
+|OpenPolicyAgent
+|https://www.openpolicyagent.org/
+|https://github.com/open-policy-agent/opa
+|https://github.com/stackabletech/opa-operator
+|https://github.com/stackabletech/docker-images/tree/main/opa
+|https://ci.stackable.tech/job/OPA%20Operator%20Integration%20Tests/
+|https://docs.stackable.tech/opa/index.html
+|
+
+|Trino
+|https://trino.io/
+|https://github.com/trinodb/trino
+|https://github.com/stackabletech/trino-operator
+|https://github.com/stackabletech/docker-images/tree/main/trino
+|https://ci.stackable.tech/job/Trino%20Operator%20Integration%20Tests/
+|https://docs.stackable.tech/trino/index.html
+|
+
+|===
