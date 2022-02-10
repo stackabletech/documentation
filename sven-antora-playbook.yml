@@ -1,6 +1,7 @@
 site:
   title: Stackable Documentation
-  url: https://docs.stackable.tech
+  url: https://stackackable.svenpetersen.net
+  #url: http://localhost:5000
   start_page: home::index.adoc
   robots: allow
 
@@ -37,11 +38,11 @@ ui:
   bundle:
     url: ../stackable-documentation-ui/build/ui-bundle.zip
     snapshot: true
-  supplemental_files:
-   - path: ui.yml
-     contents: |
-       static_files: [ .nojekyll ]
-   - path: .nojekyll
+  supplemental_files: ./supplemental_ui
+#   - path: ui.yml
+#     contents: |
+#       static_files: [ .nojekyll ]
+#   - path: .nojekyll
 
 asciidoc:
   attributes:
