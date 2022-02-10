@@ -4,13 +4,13 @@
 
 Welcome to Stackable!
 
-This document will show you the steps needed to contribute to the Stackable platform. Contributions can come in many shapes and forms but in this document we'll focus on code and documentation improvements. We'll assume you already know what the Stackable platform is and have a specific issue that you want solved.
+This document will show you the steps needed to contribute to the Stackable Platform. Contributions can come in many shapes and forms but in this document we'll focus on code and documentation improvements. We'll assume you already know what the Stackable Platform is and have a specific issue that you want solved.
 
-This document should get you up and running with your development environment quickly.
+This document aims at getting your contribution posted as soon as possible.
 
 == Contribution Workflow
 
-The development of the Stackable platform takes place on https://github.com/stackabletech[GitHub]. On GitHub, each repository has it's own Issue-Tracker and since Stackable is a platform, there are several repositories where issues and pull-requests can be made. If you already have a good ideea where the issue or pull-request belongs, then you can skip reading to the contribution steps below. Otherwise you might want to a have a look at the <<Repo Walkthrough>> section below for hints.
+The development of the Stackable Platform takes place on https://github.com/stackabletech[GitHub]. On GitHub, each repository has it's own Issue-Tracker and since Stackable is a platform, there are several repositories where issues and pull-requests can be made. If you already have a good ideea where the issue or pull-request belongs, then you can skip reading to the contribution steps below. Otherwise you might want to a have a look at the <<Repo Walkthrough>> section below for hints.
 
 
 Contribution steps:
@@ -21,19 +21,19 @@ Contribution steps:
 4. Improve your submission if necessary
 5. Closing your contribution
 
-Before submitting a new Issue or Pull-Request, it's always a good idea to check if the issue has already been discussed in the passt and if there is a resolution for it. If that is the case, consider contributing to the existing issue by either adding new feedback or code.
+Before submitting a new issue or pull-request, it's always a good idea to check if the issue has already been discussed in the passt and if there is a resolution for it. If that is the case, consider contributing to the existing issue by either adding new feedback or code.
 
-When creating a new Issue please provide as much information as you consider relevant. Issues can be Bug-Reports, Feature-Requests and so on. The Stackable repositories provide templates to make it easyer to submit high-quality Issues.  
+When creating a new issue please provide as much information as you consider relevant. Issues can be bug reports, feature requests and so on. The Stackable repositories provide templates to make it easyer to submit high-quality issues.  
 
-When submitting a Pull-Request, you might be interested in knowing about the necessary <<Development Environment>>.
+When submitting a pull-request, you might be interested in knowing about the necessary <<Development Environment>>.
 
 == Repo Walkthrough
 
-This is quick walk through the most important git repositories:
+This is quick walk through the most important repositories:
 
 === Repository: https://github.com/stackabletech/issues[issues]
 
-This repository exists solely for the purpose of tracking Issues related to the Stackable Platform in general. Large topics that impact many or even all of the plattform components are discussed here. There is no code in this repository.
+This repository exists solely for the purpose of tracking issues related to the Stackable Platform in general. Large topics that impact many or even all of the plattform components are discussed here. There is no code in this repository.
 
 === Repository: https://github.com/stackabletech/documentation[documentation]
 
@@ -59,7 +59,7 @@ At the core of the Stackable Platform are Kubernetes operators used to install a
 
 * The operator's source code
 * One or more Custom Resource Definitions owned by the operator
-* `Helm` chart
+* `Helm` chart to easily install the operator
 * Documentation
 * `Dockerfile` and related artifacts to generate the operator image
 
@@ -67,23 +67,25 @@ At the core of the Stackable Platform are Kubernetes operators used to install a
 
 In order to contribute source code, you need an environment that is capable of running the following tools:
 
-* Docker
-* Kind
-* Helm
-* Kuttl
-* Rust
-* Python
+* https://www.docker.com/[Docker]
+* https://kind.sigs.k8s.io/[Kind]
+* https://helm.sh/[Helm]
+* https://kuttl.dev/[Kuttl]
+* https://www.rust-lang.org/[Rust]
+* https://www.python.org/[Python]
 
 The documentation is written in https://asciidoctor.org[AsciiDoc] format and processed with https://antora.org[Antora]
+
+Almost all build scripts assume a Unix based environment (preferably Linux).
 
 === IDEs and Editors
 
 Of course you are free to use whatever works for you best. No editor is perfect but we have positive experience with:
 
-* `IntelliJ Idea` with the `Rust` plugin
-* `VisualStudio Code` with the `rust-analyzer` plugin
+* https://www.jetbrains.com/idea/[IntelliJ Idea] with the `Rust` plug-in
+* https://code.visualstudio.com/[VisualStudio Code] with the `rust-analyzer` extension
 
-For `VisualStudio Code` we also recommend the following plug-ins:
+For `VisualStudio Code` we also recommend the following extensions:
 * Better Toml
 * CodeLLDB (for debugging)
 * Error Lens (inline error messages)
@@ -92,5 +94,3 @@ For `VisualStudio Code` we also recommend the following plug-ins:
 * GitLens
 * Python
 * Docker
-
-
