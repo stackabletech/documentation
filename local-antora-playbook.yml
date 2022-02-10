@@ -6,12 +6,18 @@ site:
 
 content:
   sources: 
+  - url: https://github.com/stackabletech/airflow-operator.git
+    branches: main
+    start_path: docs
   - url: https://github.com/stackabletech/agent.git
     branches: main
     start_path: docs
   - url: ./
     branches: HEAD
   - url: https://github.com/stackabletech/druid-operator.git
+    branches: main
+    start_path: docs
+  - url: https://github.com/stackabletech/hbase-operator.git
     branches: main
     start_path: docs
   - url: https://github.com/stackabletech/kafka-operator.git
