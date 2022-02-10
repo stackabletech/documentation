@@ -1,3 +1,5 @@
+= New Product Version
+
 == Checklist: adding a new supported product version
 
 This page contains information on the steps that need to be taken when adding a new supported product version to our platform.
