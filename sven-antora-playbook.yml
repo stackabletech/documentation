@@ -1,8 +1,8 @@
 site:
   title: Stackable Documentation
-  url: https://stackackable.svenpetersen.net
-  #url: http://localhost:5000
-  start_page: home::index.adoc
+  #url: https://stackackable.svenpetersen.net
+  url: http://localhost:5000
+  #start_page: home::index.adoc
   robots: allow
 
 content:
