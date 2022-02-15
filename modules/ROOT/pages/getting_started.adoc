@@ -5,7 +5,7 @@ One of the best ways of getting started with a new platform is to try it out. An
 == About this guide
 
 Firstly, let’s cover whether this *Getting Started* guide is right for you. This is intended as a learning tool to discover more about Stackable, its deployment and architecture.
-##
+
 * If you just want to get up and running quickly there is a quickstart script that will install services on a single node available in the https://github.com/stackabletech/stackable-utils[stackable-utils] repository on GitHub.
 * If you want to build a production cluster then this is not for you. This tutorial is to familiarise you with the Stackable architecture and is not a guide for building robust clusters.
 * This is intended for use in a private network or lab; it doesn't enable many security features such as authentication or encryption and should not be directly connected to the Internet. Be careful if you're deploying in the cloud as your instances may default to using public IPs.
@@ -104,11 +104,11 @@ curl -sfL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | 
 
 == Installing Stackable
 === Install Stackable Helm Repositories
-With Helm installed you can add the Stackable operator repo, where the helm charts to install Stackable operators can be found. There are development, test and a stable repositories available, we'll be using the test repo in this guide.
+With Helm installed you can add the Stackable operator repo, where the helm charts to install Stackable operators can be found. There are development, test and a stable repositories available, we'll be using the stable repo in this guide.
 
 [source]
 ----
-helm repo add stackable-test https://repo.stackable.tech/repository/helm-test/
+helm repo add stackable-stable https://repo.stackable.tech/repository/helm-stable/
 ----
 
 === Installing Stackable Operators
@@ -120,10 +120,10 @@ Stackable operators are installed using Helm charts. Run the following commands 
 
 [source]
 ----
-helm install zookeeper-operator stackable-test/zookeeper-operator --devel
-helm install kafka-operator stackable-test/kafka-operator --devel
-helm install secret-operator stackable-test/secret-operator --devel
-helm install nifi-operator stackable-test/nifi-operator --version=0.5.0-pr160 --devel
+helm install zookeeper-operator stackable-stable/zookeeper-operator --version=0.9.0
+helm install kafka-operator stackable-stable/kafka-operator --version=0.5.0
+helm install secret-operator stackable-stable/secret-operator --version=0.2.0
+helm install nifi-operator stackable-stable/nifi-operator --version=0.5.0
 ----
 
 You can check which operators are installed using `helm list`:
@@ -131,10 +131,11 @@ You can check which operators are installed using `helm list`:
 [source]
 ----
 user@quickstart:~/stackable-utils/quickstart$ helm list
-NAME              	NAMESPACE	REVISION	UPDATED                                	STATUS  	CHART                           	APP VERSION
-kafka-operator    	default  	1       	2022-01-31 14:50:46.149185802 +0000 UTC	deployed	kafka-operator-0.5.0-nightly    	0.5.0-nightly
-nifi-operator     	default  	1       	2022-01-31 14:50:55.176389053 +0000 UTC	deployed	nifi-operator-0.5.0-mr160       	0.5.0-mr160
-zookeeper-operator	default  	1       	2022-01-31 14:38:21.205103234 +0000 UTC	deployed	zookeeper-operator-0.9.0-nightly	0.9.0-nightly
+NAME              	NAMESPACE	REVISION	UPDATED                                	STATUS  	CHART                   	APP VERSION
+kafka-operator    	default  	1       	2022-02-15 08:17:26.84659409 +0000 UTC 	deployed	kafka-operator-0.5.0    	0.5.0
+nifi-operator     	default  	1       	2022-02-15 08:17:37.93720808 +0000 UTC 	deployed	nifi-operator-0.5.0     	0.5.0
+secret-operator   	default  	1       	2022-02-15 08:17:32.700301793 +0000 UTC	deployed	secret-operator-0.2.0   	0.2.0
+zookeeper-operator	default  	1       	2022-02-15 08:17:17.893844595 +0000 UTC	deployed	zookeeper-operator-0.9.0	0.9.0
 
 ----
 
@@ -142,7 +143,7 @@ zookeeper-operator	default  	1       	2022-01-31 14:38:21.205103234 +0000 UTC	de
 At this point you’ve successfully deployed Kubernetes and the Stackable operators we need and are ready to deploy services to the cluster. To do this we provide service descriptions to Kubernetes for each of the services we wish to deploy.
 
 === Apache ZooKeeper
-We will deploy 3 Apache ZooKeeper instances to our cluster. This is a fairly typical deployment to provide resilience against the failure of a single ZooKeeper node.
+We will deploy an Apache ZooKeeper instance to our cluster.
 
 [source]
 ----
@@ -165,7 +166,7 @@ EOF
 ----
 
 === Apache Kafka
-We will deploy 3 Apache Kafka brokers, another typical deployment pattern for Kafka clusters. Note that Kafka depends on the ZooKeeper service and the zookeeperReference property below points to the namespace and name we gave to the ZooKeeper service deployed previously.
+We will deploy an Apache Kafka broker that depends on the ZooKeeper service we just deployed. The zookeeperReference property below points to the namespace and name we gave to the ZooKeeper service deployed previously.
 
 [source]
 ----
@@ -195,25 +196,27 @@ EOF
 ----
 
 === Apache NiFi
-We will deploy 3 Apache NiFi servers. This might seem over the top for a tutorial cluster, but it's worth pointing out that the operator will cluster the 3 NiFi servers for us automatically.
+We will next deploy an Apache NiFi server.
 
 [source]
 ----
 kubectl apply -f - <<EOF
 ---
-apiVersion: v1
-kind: Service
+apiVersion: zookeeper.stackable.tech/v1alpha1
+kind: ZookeeperZnode
 metadata:
-  name: nifi-service
+  name: simple-nifi-znode
 spec:
-  type: NodePort
-  selector:
-    app.kubernetes.io/name: nifi
-  ports:
-    - protocol: TCP
-      port: 10000
-      targetPort: 10000
-      nodePort: 31000
+  clusterRef:
+    name: simple-zk
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: nifi-admin-credentials-simple
+stringData:
+  username: admin
+  password: AdminPassword
 ---
 apiVersion: nifi.stackable.tech/v1alpha1
 kind: NifiCluster
@@ -221,10 +224,7 @@ metadata:
   name: simple-nifi
 spec:
   version: "1.15.0"
-  zookeeperReference:
-    name: simple-zk
-    namespace: default
-    chroot: /nifi
+  zookeeperConfigMapName: simple-nifi-znode
   authenticationConfig:
     method:
       SingleUser:
@@ -263,7 +263,7 @@ simple-kafka-broker-brokers-0                    2/2     Running   0          21
 simple-nifi-node-default-0                       1/1     Running   0          22m
 ----
 
-Since this is the first time that each of these services has been deployed to these nodes the Stackable Agent needs to download the software from the Stackable repository. It may take a few minutes to complete the download and deploy the services. Once all of the pods are ing the running state your cluster should be ready to use.
+Since this is the first time that each of these services has been deployed to these nodes the Stackable Agent needs to download the software from the Stackable repository. It may take a few minutes to complete the download and deploy the services. Once all of the pods are in the running state your cluster should be ready to use.
 
 == Testing your cluster
 If all has gone well then you will have successfully deployed a Stackable cluster and used it to start three services that should now be ready for you.
@@ -319,11 +319,11 @@ NAME          TYPE       CLUSTER-IP    EXTERNAL-IP   PORT(S)          AGE
 simple-nifi   NodePort   10.43.75.25   <none>        8443:30247/TCP   49m
 ----
 
-Browse to the address of one of your node on port 30247 e.g. https://quickstart.local:30247/nifi and you should see the NiFi login screen.
+Browse to the address of your Kubernetes node on port 30247 e.g. https://quickstart.local:30247/nifi and you should see the NiFi login screen.
 
 image:nifi_login_screen.png[The Apache NiFi web interface login screen]
 
-The Apache NiFi operator will automatically generate the admin user credentials with a random password and stored it as a Kubernetes secret in order to provide some security out of the box. You can retrieve this password for the admin user with the following kubectl command.
+The Apache NiFi operator will automatically generate the admin user credentials with a random password and store it as a Kubernetes secret in order to provide some security out of the box. You can retrieve this password for the admin user with the following kubectl command.
 
 [source]
 ----
