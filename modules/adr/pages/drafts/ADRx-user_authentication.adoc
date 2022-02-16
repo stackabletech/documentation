@@ -1,0 +1,143 @@
+= User Authentication for Products
+Teo Klestrup Röijezon <teo.roijezon@stackable.de>
+v0.1, dd.mm.yyyy
+:status: draft
+
+* Status: {status}
+* Deciders: [list everyone involved in the decision] <!-- optional -->
+* Date: [YYYY-MM-DD when the decision was last updated] <!-- optional -->
+
+Technical Story: https://github.com/stackabletech/issues/issues/170
+
+== Context and Problem Statement
+
+Customers will generally want to configure all user-facing products to authenticate the user against a common user directory.
+
+== Decision Drivers
+
+* Multiple authentication systems and protocols exist, and not all products support all protocols
+* The cluster administrator will typically want to use the same underlying authentication system for all services
+
+== Considered Options
+
+1. Manage authentication configuration inline in the `ProductCluster` CRD
+2. Introduce a new `ProductAuthentication` CRD per product that the `ProductCluster` CRD refers to
+3. Introduce a new `AuthenticationClass` CRD that the product CRDs reference
+
+== Decision Outcome
+
+Chosen option: TBD.
+
+=== Positive Consequences <!-- optional -->
+
+* [e.g., improvement of quality attribute satisfaction, follow-up decisions required, …]
+* …
+
+=== Negative Consequences <!-- optional -->
+
+* [e.g., compromising quality attribute, follow-up decisions required, …]
+* …
+
+== Pros and Cons of the Options <!-- optional -->
+
+=== Authn in `ProductCluster`
+
+We embed a the authentication settings directly into the product's primary CRD. This would look something like:
+
+[source,yaml]
+----
+apiVersion: nifi.stackable.tech/v1alpha1
+kind: NifiCluster
+metadata:
+  name: nifi
+spec:
+  authenticationConfig:
+    methods:
+    - ldap:
+        hostname: ldap.server
+        port: 389
+        domain: domain.local
+        bindCredentialsSecret: nifi-ldap-bind-credentials
+----
+
+* Good, because we can expose exactly the options that each product supports
+* Good, because it is (relatively) simple to implement and requires no new components
+* Bad, because it will be difficult to keep the option schema consistent between Stackable operators
+* Bad, because it will be difficult for customers to keep their configuration synchronized across their Stackable Data Platform installation
+* Bad, because it forces application administrators to know about authentication directory details
+
+=== `ProductAuthentication` CRD per product
+
+Every product defines its own CRD that contains exactly the authn options that that product supports. For example:
+
+[source,yaml]
+----
+apiVersion: nifi.stackable.tech/v1alpha1
+kind: NifiCluster
+metadata:
+  name: nifi
+spec:
+  authenticationConfig:
+    methods:
+    - nifi-ldap-authn
+---
+apiVersion: nifi.stackable.tech/v1alpha1
+kind: NifiAuthenticationMethod
+metadata:
+  name: nifi-ldap-authn
+spec:
+  ldap:
+    hostname: ldap.server
+    port: 389
+    domain: domain.local
+    bindCredentials:
+      secretClass: nifi-ldap-bind-credentials
+      scope: Service
+----
+
+* Good, because we can expose exactly the options that each product supports
+* Good, because it allows separation of ownership between products and authentication system
+* Bad, because it will be difficult to keep the option schema consistent between Stackable operators
+* Bad, because it will be difficult for customers to keep their configuration synchronized across their Stackable Data Platform products
+* Bad, because it forces authentication administrators to know about each product
+
+=== Global `AuthenticationClass`
+
+We define a common `AuthenticationClass` CRD that we try to share between all operators. For example:
+
+[source,yaml]
+----
+apiVersion: nifi.stackable.tech/v1alpha1
+kind: NifiCluster
+metadata:
+  name: nifi
+spec:
+  authenticationConfig:
+    methods:
+    - authenticationClass: nifi-ldap-authn
+---
+apiVersion: auth.stackable.tech/v1alpha1
+kind: AuthenticationClass
+metadata:
+  name: ldap-authn
+spec:
+  ldap:
+    hostname: ldap.server
+    port: 389
+    domain: domain.local
+    bindCredentials:
+      secretClass: ldap-bind-credentials
+      scope: Service
+----
+
+* Good, because it allows complete separation between product and authentication ownership
+* Good, because it allows a single interface for authentication owners to integrate with
+* Good, because it enforces a consistent interface between Stackable operators
+* Bad, because it requires us to manage a common CRD object that isn't clearly owned by a single operator
+* Bad, because it requires introducing a new dependency for all Stackable operators
+* Bad, because not all options (either whole authn providers or individual config fields) are supported by all products
+
+== Links <!-- optional -->
+
+* [Link type] [Link to ADR] <!-- example: Refined by [ADR-0005](0005-example.md) -->
+* … <!-- numbers of links can vary -->
