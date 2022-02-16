@@ -1,4 +1,5 @@
-* Contributors Guide
-** xref:index.adoc[Welcome]
+* Contributor's Guide
+
+** xref:contribution_guide.adoc[]
 ** xref:development_dashboard.adoc[]
-** xref:new_version.adoc[]
+** xref:new_product_version.adoc[]
