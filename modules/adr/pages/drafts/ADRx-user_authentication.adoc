@@ -130,6 +130,10 @@ spec:
       scope: Service
 ----
 
+Here, `bindCredentials` is specified as a `SecretClass`, which allows secret-operator to bind in separate
+credentials for each cluster (or even `Pod`, depending on how things are set up) that uses the `AuthenticationClass`,
+while letting a cluster administrator centralize the management of the `AuthenticationClass`.
+
 * Good, because it allows complete separation between product and authentication ownership
 * Good, because it allows a single interface for authentication owners to integrate with
 * Good, because it enforces a consistent interface between Stackable operators
