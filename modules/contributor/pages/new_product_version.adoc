@@ -6,7 +6,7 @@ This page contains information on the steps that need to be taken when adding a 
 
 One or more new issues need to be created for each new version we want to support.
 
-NOTE: _Support_ is meant in the _technical_ term here.
+NOTE: _Support_ is used in the _technical_ meaning here.
 This does not necessarily mean that we're going to provide enterprise support for this version to our customers.
 
 In general these are the steps that need to be taken even though some of them are optional depending on what exactly needs to be done:

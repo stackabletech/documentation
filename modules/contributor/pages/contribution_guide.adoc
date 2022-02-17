@@ -10,7 +10,7 @@ This document aims at getting your contribution posted as soon as possible.
 
 == Contribution Workflow
 
-The development of the Stackable Platform takes place on https://github.com/stackabletech[GitHub]. On GitHub, each repository has it's own Issue-Tracker and since Stackable is a platform, there are several repositories where issues and pull-requests can be made. If you already have a good ideea where the issue or pull-request belongs, then you can skip reading to the contribution steps below. Otherwise you might want to a have a look at the <<Repo Walkthrough>> section below for hints.
+The development of the Stackable Platform takes place on https://github.com/stackabletech[GitHub]. On GitHub, each repository has its own issue tracker and since Stackable is a platform, there are several repositories where issues and pull-requests can be created. If you already have a good idea where the issue or pull-request belongs, then you can skip reading to the contribution steps below. Otherwise, you might want to a have a look at the xref:development_dashboard.adoc[] for hints.
 
 
 Contribution steps:
@@ -21,47 +21,29 @@ Contribution steps:
 4. Improve your submission if necessary
 5. Closing your contribution
 
-Before submitting a new issue or pull-request, it's always a good idea to check if the issue has already been discussed in the passt and if there is a resolution for it. If that is the case, consider contributing to the existing issue by either adding new feedback or code.
+Before submitting a new issue or pull-request, it's always a good idea to check if the issue has already been discussed in the past and if there is a resolution for it. If that is the case, consider contributing to the existing issue by either adding new feedback or code.
 
-When creating a new issue please provide as much information as you consider relevant. Issues can be bug reports, feature requests and so on. The Stackable repositories provide templates to make it easyer to submit high-quality issues.  
+When creating a new issue please provide as much information as you consider relevant. Issues can be bug reports, feature requests and so on. The Stackable repositories provide templates to make it easier to submit high-quality issues.
 
 When submitting a pull-request, you might be interested in knowing about the necessary <<Development Environment>>.
 
 == Repo Walkthrough
 
-This is quick walk through the most important repositories:
-
-=== Repository: https://github.com/stackabletech/issues[issues]
-
-This repository exists solely for the purpose of tracking issues related to the Stackable Platform in general. Large topics that impact many or even all of the plattform components are discussed here. There is no code in this repository.
-
-=== Repository: https://github.com/stackabletech/documentation[documentation]
-
-Platform wide documentation, such as this page, are hosted here. Also this repository has references to documentation that is hosted in individual <<Operator Repositories>>. It is the main source from which the public https://docs.stackable.tech/[Documentation] page is generated.
-
-=== Repository: https://github.com/stackabletech/docker-images[docker-images]
-
-The Stackable Platform can be used to install and run up several open-source products such as https://kafka.apache.org[Apache Kafka] or https://trino.io[Trino]. Container images of these products hosted on the https://repo.stackable.tech/[Stackable Repository Manager] and the sources hosted in this repository.
-
-NOTE: Operators host their `Dockerfile`s in their own repository. 
-
-=== Repository: https://github.com/stackabletech/integration-tests[integration-tests]
-
-The Stackable Operators are tested in many environments and across cloud providers. Integration tests are currently driven by `Kuttl` and are hosted here.
-
-=== Repository: https://github.com/stackabletech/t2[t2]
-
-Integration testing across different versions and cloud providers is being developed here.
+Please see the xref:development_dashboard.adoc[] page to get an overview of the most important Git repositories used by us.
 
 === Operator Repositories
 
-At the core of the Stackable Platform are Kubernetes operators used to install and manage various data products. Each operator has it's own repository and therefore it's own Issue Tracker and build pipeline. Every operator repository contains:
+At the core of the Stackable Platform are Kubernetes operators used to install and manage various data products.
+Each operator has its own repository, and therefore its own issue tracker and build pipeline.
+Every operator repository contains:
 
 * The operator's source code
 * One or more Custom Resource Definitions owned by the operator
 * `Helm` chart to easily install the operator
 * Documentation
 * `Dockerfile` and related artifacts to generate the operator image
+
+See the xref:development_dashboard.adoc[] for a detailed overview.
 
 == Development Environment
 
@@ -86,6 +68,7 @@ Of course you are free to use whatever works for you best. No editor is perfect 
 * https://code.visualstudio.com/[VisualStudio Code] with the `rust-analyzer` extension
 
 For `VisualStudio Code` we also recommend the following extensions:
+
 * Better Toml
 * CodeLLDB (for debugging)
 * Error Lens (inline error messages)
