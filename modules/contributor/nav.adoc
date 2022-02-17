@@ -3,3 +3,5 @@
 ** xref:contribution_guide.adoc[]
 ** xref:development_dashboard.adoc[]
 ** xref:new_product_version.adoc[]
+
+include::partial$adr-nav.adoc[]
