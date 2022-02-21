@@ -1,19 +1,46 @@
 = Stackable Documentation
+:page-layout: landing
+
 
 Welcome to Stackable!
 This documentation gives you an overview of our platform, how to install and manage it as well as some tutorials.
 
+++++
+<br>
+++++
+
+++++
+<div class="boxes two-column">
+++++
+
+++++
+<div class="box">
+++++
+
+++++
+<h3>Introduction</h3>
+++++
+
 If you have any feedback regarding the documentation please either open an https://github.com/stackabletech/documentation/issues[issue], ask a https://github.com/stackabletech/documentation/discussions[question] or look at the source for this documentation in its https://github.com/stackabletech/documentation[repository].
 
-== Introduction
-
 Our Stackable platform allows you to deploy, scale and manage Big Data infrastructure in any environment as long as it can run https://kubernetes.io/[Kubernetes].
+
 
 IMPORTANT: Our platform used to be based on a different architecture (until November 2021) where we built an alternative Kubelet. We abandoned that effort for now and are moving towards a Kubernetes-native experience using the normal `kubelet`.
 This is an ongoing effort and the documentation might not reflect reality everywhere.
 We aim to update our platform as well as the documentation by the end of 2021 and will remove this note when the migration has completed.
 
-== Goal of the project
+++++
+</div>
+++++
+
+++++
+<div class="box">
+++++
+
+++++
+<h3>Goal of the project</h3>
+++++
 
 We are building a distribution of existing Open Source tools that together comprise the components of a modern data platform.
 
@@ -26,31 +53,124 @@ We are leveraging the https://www.openpolicyagent.org/[OpenPolicyAgent] to provi
 
 We are building a distribution that includes the “best of breed” of existing Open Source tools, but bundles them in a way, so it is easy to deploy a fully working stack of software. Most of the existing tools are “single purpose” tools, which often do not play nicely together out-of-the-box.
 
+++++
+</div>
+++++
+
+++++
+</div>
+++++
+
 == Components
 
 We are using Kubernetes as our deployment platform.
 And we're building https://kubernetes.io/docs/concepts/extend-kubernetes/operator/[Operators] for each of the products we support.
-
 At the moment we support the following products (i.e. we have operators for each of those):
 
-- https://druid.apache.org[Apache Druid]
-- https://hbase.apache.org[Apache HBase]
-- https://hadoop.apache.org[Apache Hadoop HDFS]
-- https://hive.apache.org[Apache Hive Metastore]
-- https://kafka.apache.org[Apache Kafka]
-- https://nifi.apache.org[Apache NiFi]
-- https://spark.apache.org[Apache Spark]
-- https://superset.apache.org[Apache Superset]
-- https://trino.io[Trino]
-- https://zookeeper.apache.org[Apache ZooKeeper]
+++++
+<br>
+++++
 
-We are working on a feature matrix, so you can see which features we support for each of these products.
+++++
+<div class="boxes">
+++++
 
-== Supported Kubernetes Versions
+++++
+<div class="box">
+++++
 
-The Kubernetes project maintains release branches for the latest three versions, we follow this approach and also support the latest three kubernetes versions which are, at the moment:
+++++
+<h3>Kafka Operator</h3>
+++++
 
-include::partial$supported-kubernetes-versions.adoc[]
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
 
-== Getting Started
-Stackable provides a tutorial xref:getting_started.adoc[], which outlines how to deploy a Stackable cluster and the supported infrastructure. There is also a quickstart shell script in the https://github.com/stackabletech/stackable-utils[stackable-utils] GitHub repository that will quickly bootstrap an example cluster.
+link:/kafka/index.html[Read more]
+
+++++
+</div>
+++++
+
+++++
+<div class="box">
+++++
+
+++++
+<h3>Spark Operator</h3>
+++++
+
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+
+link:/spark/index.html[Read more]
+
+++++
+</div>
+++++
+
+++++
+<div class="box">
+++++
+
+++++
+<h3>Trino Operator</h3>
+++++
+
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+
+link:/trino/index.html[Read more]
+
+++++
+</div>
+++++
+
+++++
+<div class="box">
+++++
+
+++++
+<h3>Zookeeper Operator</h3>
+++++
+
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+
+link:/zookeeper/index.html[Read more]
+
+++++
+</div>
+++++
+
+++++
+<div class="box">
+++++
+
+++++
+<h3>NiFi Operator</h3>
+++++
+
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+
+link:/nifi/index.html[Read more]
+
+++++
+</div>
+++++
+
+++++
+<div class="box">
+++++
+
+++++
+<h3>Superset Operator</h3>
+++++
+
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+
+link:/superset/index.html[Read more]
+
+++++
+</div>
+++++
+
+++++
+</div>
+++++

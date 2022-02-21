@@ -10,8 +10,8 @@ content:
   - url: https://github.com/stackabletech/agent.git
     branches: main
     start_path: docs
-  - url: https://github.com/stackabletech/documentation.git
-    branches: main
+  - url: ./
+    branches: HEAD
   - url: https://github.com/stackabletech/kafka-operator.git
     branches: main
     start_path: docs
