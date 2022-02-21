@@ -1,0 +1,36 @@
+
+
+(this is work in progress that is why it's not explicitely linked in nav.doc)
+
+Prerequisites:
+
+- no branch refs in Cargo.toml
+- (integration) tests are successful
+- the changelog has useful entries
+
+Release:
+
+(from main)
+
+    git sw -c release-0.6.0
+    vi CHANGELOG.md
+    cargo-version.py --release
+    cargo update --workspace
+    make regenerate-charts
+    git commit -am "Release 0.6.0"
+    git tag -a 0.6.0 -m "Release 0.6.0" HEAD
+
+    git push -u --all origin release-0.6.0
+
+Bump dev version:
+
+(from main immediately after a release)
+
+    git sw -c bump-version
+    cargo-version.py --next minor
+    cargo update --workspace
+    make regenerate-charts
+    git commit -am 'Bump next development version'
+
+    git push -u origin bump-version
+

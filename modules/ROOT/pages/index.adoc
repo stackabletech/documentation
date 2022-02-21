@@ -3,7 +3,7 @@
 
 
 Welcome to Stackable!
-This documentation gives you an overview of our platform, how to install and manage it as well as some tutorials.
+This documentation gives you an overview of the Stackable Data Platform, how to install and manage it as well as some tutorials.
 
 ++++
 <br>
@@ -23,7 +23,7 @@ This documentation gives you an overview of our platform, how to install and man
 
 If you have any feedback regarding the documentation please either open an https://github.com/stackabletech/documentation/issues[issue], ask a https://github.com/stackabletech/documentation/discussions[question] or look at the source for this documentation in its https://github.com/stackabletech/documentation[repository].
 
-Our Stackable platform allows you to deploy, scale and manage Big Data infrastructure in any environment as long as it can run https://kubernetes.io/[Kubernetes].
+The Stackable Data Platform allows you to deploy, scale and manage Data infrastructure in any environment running https://kubernetes.io/[Kubernetes].
 
 
 IMPORTANT: Our platform used to be based on a different architecture (until November 2021) where we built an alternative Kubelet. We abandoned that effort for now and are moving towards a Kubernetes-native experience using the normal `kubelet`.
@@ -49,7 +49,7 @@ While the platform got started in the _Big Data_ ecosystem we are in no way limi
 
 You can declaratively build these environments, and we don't stop at the tool level as we also provide ways for the users to interact with the platform in the "as Code"-approach.
 
-We are leveraging the https://www.openpolicyagent.org/[OpenPolicyAgent] to provide Authorization-as-Code.
+We are leveraging the https://www.openpolicyagent.org/[Open Policy Agent] to provide Security-as-Code.
 
 We are building a distribution that includes the “best of breed” of existing Open Source tools, but bundles them in a way, so it is easy to deploy a fully working stack of software. Most of the existing tools are “single purpose” tools, which often do not play nicely together out-of-the-box.
 
