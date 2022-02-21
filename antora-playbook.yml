@@ -1,7 +1,7 @@
 site:
   title: Stackable Documentation
   url: https://docs.stackable.tech
-  start_page: home::index.adoc
+  #start_page: home::index.adoc
   robots: allow
 
 content:
@@ -50,11 +50,11 @@ ui:
   bundle:
     url: https://repo.stackable.tech/repository/misc/ui-bundle.zip
     snapshot: true
-  supplemental_files:
-   - path: ui.yml
-     contents: |
-       static_files: [ .nojekyll ]
-   - path: .nojekyll
+  supplemental_files: ./supplemental_ui
+#   - path: ui.yml
+#     contents: |
+#       static_files: [ .nojekyll ]
+#   - path: .nojekyll
 
 asciidoc:
   attributes:
