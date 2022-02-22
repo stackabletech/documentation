@@ -261,6 +261,7 @@
 .doc .olist,
 .doc .ulist,
 .doc .exampleblock,
+.doc .videoblock,
 .doc .imageblock,
 .doc .listingblock,
 .doc .literalblock,
@@ -691,11 +692,11 @@
 
 .doc .admonitionblock .title,
 .doc .exampleblock .title,
+.doc .videoblock .title,
 .doc .imageblock .title,
 .doc .literalblock .title,
 .doc .listingblock .title,
 .doc .openblock .title,
-.doc .videoblock .title,
 .doc .tableblock caption {
   color: var(--caption-font-color);
   font-size: calc(16 / var(--rem-base) * 1rem);
@@ -707,6 +708,7 @@
   text-align: left;
 }
 
+.doc .videoblock .title,
 .doc .imageblock .title {
   margin-top: 0.5rem;
   padding-bottom: 0;
