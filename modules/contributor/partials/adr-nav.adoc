@@ -17,3 +17,4 @@
 *
 *** Drafts
 **** xref:drafts/ADRx-choose_authorization_engine.adoc[]
+**** xref:drafts/ADRx-product_image_versioning.adoc[]

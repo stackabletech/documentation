@@ -1,0 +1,89 @@
+= Versioning of product images
+Siegfried Weber <mail@siegfriedweber.net>
+v1.0, 23.02.2022
+:status: draft
+
+* Status: {status}
+* Deciders: –
+* Date: –
+
+== Context and Problem Statement
+
+The Docker images of the products are tagged with the following versioning scheme: `<product-version>-<dependency-versions>-stackable<stackable-image-version>`
+The Stackable image version follows semantic versioning. Additionally to the semantic version, the image is also tagged with only the major version. The operators use the image taggd with the major version. The idea is that always the latest compatible version is used.
+
+When enabling the statsd logging in Superset, we encountered some problems with the current approach. For implementation details, see the according pull requests:
+
+* https://github.com/stackabletech/superset-operator/pull/128
+* https://github.com/stackabletech/docker-images/pull/50
+
+The mentioned issue is hopefully representative enough to serve as a basis for this discussion. Using a concrete example could help to focus the discussion on real world problems.
+
+The Docker image created for the statsd logging was tagged with the Stackable image version 0.2.0. Semantic versioning behaves differently at major version 0 than in higher major versions. In the long run, our product images will not stay in major version 0 and therefore only solutions for the higher versions will be discussed here in hope that the chosen solution can also be adapted to major version 0. Therefore in the following the assumption is made that the issue updated the Stackable image version from 1.1.0 to 1.2.0.
+
+=== Problem 1 – no minimum version requirement defined by the operators
+
+To enable statsd logging, the statsd Python library was added to the image. The product version stayed the same. As only a new feature was added, the minor version was increased from 1.1.0 to 1.2.0. Older operators still work when using the new image, so it is not a breaking change.
+
+The problem is that the new operator with statsd logging requires at least version 1.2.0 of the product image. This is not reflected in the code of the operator which just sets the required version to 1.
+
+=== Problem 2 – the latest image version is not always used
+
+If an operator is updated in a cluster and the operator requires a newer version of the product image but with the same major version then the image is not pulled if already an image with the same major version is present on the node.
+
+This can cause the situation that different images tagged with the same version are installed on the nodes.
+
+Using the image pull policy "Always" would solve the problem but this requires a reliably accessible Docker repository which we cannot count on according to Christoph Petrausch.
+
+Instead of using a tag which points to the latest version within a major version, the image's digest should be used.
+
+See the relevant parts of the https://kubernetes.io/docs/concepts/containers/images/#image-pull-policy[Kubernetes documentation]:
+
+[quote]
+____
+*Always*
+
+every time the kubelet launches a container, the kubelet queries the container image registry to resolve the name to an image digest. If the kubelet has a container image with that exact digest cached locally, the kubelet uses its cached image; otherwise, the kubelet pulls the image with the resolved digest, and uses that image to launch the container.
+
+…
+
+The caching semantics of the underlying image provider make even `imagePullPolicy: Always` efficient, as long as the registry is reliably accessible. Your container runtime can notice that the image layers already exist on the node so that they don't need to be downloaded again.
+
+…
+
+To make sure the Pod always uses the same version of a container image, you can specify the image's digest; replace `<image-name>:<tag>` with `<image-name>@<digest>` (for example, `image@sha256:45b23dee08af5e43a7fea6c4cf9c25ccf269ee113168c19722f87876677c5cb2`).
+____
+
+== Considered Options
+
+* Image pull policy "Always" is used
+* The operator chooses a specific product image version
+* Product images are tied to the operator versions
+
+== Decision Outcome
+
+Chosen option: –
+
+== Pros and Cons of the Options
+
+=== Image pull policy "Always" is used
+
+Despite all warnings, the image pull policy "Always" is used.
+
+* Good because it requires only a small change in our operators.
+* Bad if the Docker registry is not accessible.
+
+=== The operator chooses a specific product image version
+
+The range of supported images is hard-coded into the operator. The operator retrieves the image list from the Docker repository and chooses the most suitable one. The image's digest is used.
+
+* Good because it provides maximum flexibility.
+* Bad because it increases the complexity in the operators or the operator framework.
+
+=== Product images are tied to the operator versions
+
+The product images are released together with the operators. The Stackable image version equals the operator version. Tags can reference the same image. For nightly builds the image pull policy "Always" is used.
+
+* Good because it is the most comprehensible solution.
+* Bad because the operator must be released even if just the product image must be changed, e.g. due to a security update of the base image.
+* Bad because nightly builds behave different to releases.
