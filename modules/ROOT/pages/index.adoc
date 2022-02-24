@@ -139,10 +139,42 @@ link:/hdfs/index.html[Read more]
 ++++
 
 ++++
-<h3>NiFi Operator</h3>
+<h3>Apache Hive</h3>
 ++++
 
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+The Apache Hive data warehouse software facilitates reading, writing, and managing large datasets residing in distributed storage using SQL. We support the Hive Metastore.
+
+link:/hive/index.html[Read more]
+
+++++
+</div>
+++++
+
+++++
+<div class="box">
+++++
+
+++++
+<h3>Apache Kafka</h3>
+++++
+
+Apache Kafka is an open-source distributed event streaming platform used by thousands of companies for high-performance data pipelines, streaming analytics, data integration, and mission-critical applications.
+
+link:/kafka/index.html[Read more]
+
+++++
+</div>
+++++
+
+++++
+<div class="box">
+++++
+
+++++
+<h3>Apache NiFi</h3>
+++++
+
+An easy to use, powerful, and reliable system to process and distribute data.
 
 link:/nifi/index.html[Read more]
 
@@ -155,16 +187,65 @@ link:/nifi/index.html[Read more]
 ++++
 
 ++++
-<h3>Superset Operator</h3>
+<h3>Apache Spark</h3>
 ++++
 
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+Apache Spark is a multi-language engine for executing data engineering, data science, and machine learning on single-node machines or clusters.
+
+link:/spark/index.html[Read more]
+
+++++
+</div>
+++++
+
+++++
+<div class="box">
+++++
+
+++++
+<h3>Apache Superset</h3>
+++++
+
+Apache Superset is a modern data exploration and visualization platform
 
 link:/superset/index.html[Read more]
 
 ++++
 </div>
 ++++
+
+++++
+<div class="box">
+++++
+
+++++
+<h3>Trino</h3>
+++++
+
+Fast distributed SQL query engine for big data analytics that helps you explore your data universe.
+
+link:/trino/index.html[Read more]
+
+++++
+</div>
+++++
+
+++++
+<div class="box">
+++++
+
+++++
+<h3>Apache ZooKeeper</h3>
+++++
+
+ZooKeeper is a centralized service for maintaining configuration information, naming, providing distributed synchronization, and providing group services.
+
+link:/zookeeper/index.html[Read more]
+
+++++
+</div>
+++++
+
 
 ++++
 </div>
