@@ -1,7 +1,6 @@
 = Stackable Documentation
 :page-layout: landing
 
-
 Welcome to Stackable!
 This documentation gives you an overview of the Stackable Data Platform, how to install and manage it as well as some tutorials.
 
@@ -24,11 +23,6 @@ This documentation gives you an overview of the Stackable Data Platform, how to 
 If you have any feedback regarding the documentation please either open an https://github.com/stackabletech/documentation/issues[issue], ask a https://github.com/stackabletech/documentation/discussions[question] or look at the source for this documentation in its https://github.com/stackabletech/documentation[repository].
 
 The Stackable Data Platform allows you to deploy, scale and manage Data infrastructure in any environment running https://kubernetes.io/[Kubernetes].
-
-
-IMPORTANT: Our platform used to be based on a different architecture (until November 2021) where we built an alternative Kubelet. We abandoned that effort for now and are moving towards a Kubernetes-native experience using the normal `kubelet`.
-This is an ongoing effort and the documentation might not reflect reality everywhere.
-We aim to update our platform as well as the documentation by the end of 2021 and will remove this note when the migration has completed.
 
 ++++
 </div>
@@ -65,7 +59,8 @@ We are building a distribution that includes the “best of breed” of existing
 
 We are using Kubernetes as our deployment platform.
 And we're building https://kubernetes.io/docs/concepts/extend-kubernetes/operator/[Operators] for each of the products we support.
-At the moment we support the following products (i.e. we have operators for each of those):
+
+The Stackable Data Platform supports the following products:
 
 ++++
 <br>
@@ -80,28 +75,12 @@ At the moment we support the following products (i.e. we have operators for each
 ++++
 
 ++++
-<h3>Kafka Operator</h3>
+<h3>Apache Airflow</h3>
 ++++
 
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+Airflow is a workflow engine and your replacement should you be using Apache Oozie.
 
-link:/kafka/index.html[Read more]
-
-++++
-</div>
-++++
-
-++++
-<div class="box">
-++++
-
-++++
-<h3>Spark Operator</h3>
-++++
-
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-
-link:/spark/index.html[Read more]
+link:/airflow/index.html[Read more]
 
 ++++
 </div>
@@ -112,12 +91,12 @@ link:/spark/index.html[Read more]
 ++++
 
 ++++
-<h3>Trino Operator</h3>
+<h3>Apache Druid</h3>
 ++++
 
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+Apache Druid is a real-time database to power modern analytics applications.
 
-link:/trino/index.html[Read more]
+link:/druid/index.html[Read more]
 
 ++++
 </div>
@@ -128,12 +107,28 @@ link:/trino/index.html[Read more]
 ++++
 
 ++++
-<h3>Zookeeper Operator</h3>
+<h3>Apache HBase</h3>
 ++++
 
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+HBase is a distributed, scalable, big data store
 
-link:/zookeeper/index.html[Read more]
+link:/hbase/index.html[Read more]
+
+++++
+</div>
+++++
+
+++++
+<div class="box">
+++++
+
+++++
+<h3>Apache Hadoop HDFS</h3>
+++++
+
+HDFS is a distributed file system that provides high-throughput access to application data.
+
+link:/hdfs/index.html[Read more]
 
 ++++
 </div>

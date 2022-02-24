@@ -2,6 +2,7 @@
 site:
   title: Stackable Documentation
   url: https://docs.stackable.tech
+  start_page: home::index.adoc
   robots: allow
 
 content:
