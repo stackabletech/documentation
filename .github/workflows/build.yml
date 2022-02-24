@@ -17,4 +17,4 @@ jobs:
           node-version: '16'
           cache: 'npm'
       - run: npm install
-      - run: npx antora --fetch antora-playbook.yml
+      - run: npx antora --fetch local-antora-playbook.yml
