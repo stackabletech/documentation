@@ -21,8 +21,8 @@ expands to `>=1.3.0 <2.0.0`).
 In practice however, Docker tags are opaque, which prevents us from actually specifying this anywhere. Instead, we can only
 express the range `^N.0.0` (`>=N.0.0 <N+1.0.0`), depending on the `-stackable$IMAGE_SEMVER_MAJOR` tag. This works
 OK for spinning up new clusters, but means that existing clusters may keep running old image versions even after upgrading to new
-(incompatible) Operator versions. The cluster may also end up in a mixed environment if new nodes are added after a new image
-version is released.
+(incompatible) Operator versions. The cluster may also end up in a mixed environment if a replica gets deployed to a new node after
+a new image version has been released.
 
 == Decision Drivers
 
