@@ -9,6 +9,10 @@ content:
     - url: ./
       branches: HEAD
 
+    - url: https://github.com/stackabletech/secret-operator.git
+      branches: main
+      start_path: docs
+
     - url: https://github.com/stackabletech/airflow-operator.git
       branches: main
       start_path: docs
