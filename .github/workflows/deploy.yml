@@ -8,11 +8,7 @@ on:
     - cron: '15 2 * * *'
   workflow_dispatch:
 
-env:
-  SITE_DIR: 'site'
-
 jobs:
-
   build:
     runs-on: ubuntu-latest
     steps:

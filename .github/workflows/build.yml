@@ -3,9 +3,6 @@ name: Build site
 on:
   pull_request:
 
-env:
-  SITE_DIR: 'site'
-
 jobs:
 
   build:
