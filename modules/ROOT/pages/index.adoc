@@ -1,16 +1,40 @@
 = Stackable Documentation
+:page-layout: landing
 
 Welcome to Stackable!
 This documentation gives you an overview of the Stackable Data Platform, how to install and manage it as well as some tutorials.
 
-If you have any feedback regarding the documentation please either open an https://github.com/stackabletech/documentation/issues[issue], ask a https://github.com/stackabletech/documentation/discussions[question] or look at the source for this documentation in its https://github.com/stackabletech/documentation[repository].
+++++
+<br>
+++++
 
-== Introduction
+++++
+<div class="boxes two-column">
+++++
+
+++++
+<div class="box">
+++++
+
+++++
+<h3>Introduction</h3>
+++++
+
+If you have any feedback regarding the documentation please either open an https://github.com/stackabletech/documentation/issues[issue], ask a https://github.com/stackabletech/documentation/discussions[question] or look at the source for this documentation in its https://github.com/stackabletech/documentation[repository].
 
 The Stackable Data Platform allows you to deploy, scale and manage Data infrastructure in any environment running https://kubernetes.io/[Kubernetes].
 
+++++
+</div>
+++++
 
-== Goal of the project
+++++
+<div class="box">
+++++
+
+++++
+<h3>Goal of the project</h3>
+++++
 
 We are building a distribution of existing Open Source tools that together comprise the components of a modern data platform.
 
@@ -23,6 +47,13 @@ We are leveraging the https://www.openpolicyagent.org/[Open Policy Agent] to pro
 
 We are building a distribution that includes the “best of breed” of existing Open Source tools, but bundles them in a way, so it is easy to deploy a fully working stack of software. Most of the existing tools are “single purpose” tools, which often do not play nicely together out-of-the-box.
 
+++++
+</div>
+++++
+
+++++
+</div>
+++++
 
 == Components
 
@@ -31,24 +62,191 @@ And we're building https://kubernetes.io/docs/concepts/extend-kubernetes/operato
 
 The Stackable Data Platform supports the following products:
 
-- https://airflow.apache.org[Apache Airflow]
-- https://druid.apache.org[Apache Druid]
-- https://hbase.apache.org[Apache HBase]
-- https://hadoop.apache.org[Apache Hadoop HDFS]
-- https://hive.apache.org[Apache Hive Metastore]
-- https://kafka.apache.org[Apache Kafka]
-- https://nifi.apache.org[Apache NiFi]
-- https://spark.apache.org[Apache Spark]
-- https://superset.apache.org[Apache Superset]
-- https://trino.io[Trino]
-- https://zookeeper.apache.org[Apache ZooKeeper]
+++++
+<br>
+++++
+
+++++
+<div class="boxes">
+++++
+
+++++
+<div class="box">
+++++
+
+++++
+<h3>Apache Airflow</h3>
+++++
+
+Airflow is a workflow engine and your replacement should you be using Apache Oozie.
+
+link:/airflow/index.html[Read more]
+
+++++
+</div>
+++++
+
+++++
+<div class="box">
+++++
+
+++++
+<h3>Apache Druid</h3>
+++++
+
+Apache Druid is a real-time database to power modern analytics applications.
+
+link:/druid/index.html[Read more]
+
+++++
+</div>
+++++
+
+++++
+<div class="box">
+++++
+
+++++
+<h3>Apache HBase</h3>
+++++
+
+HBase is a distributed, scalable, big data store
+
+link:/hbase/index.html[Read more]
+
+++++
+</div>
+++++
+
+++++
+<div class="box">
+++++
+
+++++
+<h3>Apache Hadoop HDFS</h3>
+++++
+
+HDFS is a distributed file system that provides high-throughput access to application data.
+
+link:/hdfs/index.html[Read more]
+
+++++
+</div>
+++++
+
+++++
+<div class="box">
+++++
+
+++++
+<h3>Apache Hive</h3>
+++++
+
+The Apache Hive data warehouse software facilitates reading, writing, and managing large datasets residing in distributed storage using SQL. We support the Hive Metastore.
+
+link:/hive/index.html[Read more]
+
+++++
+</div>
+++++
+
+++++
+<div class="box">
+++++
+
+++++
+<h3>Apache Kafka</h3>
+++++
+
+Apache Kafka is an open-source distributed event streaming platform used by thousands of companies for high-performance data pipelines, streaming analytics, data integration, and mission-critical applications.
+
+link:/kafka/index.html[Read more]
+
+++++
+</div>
+++++
+
+++++
+<div class="box">
+++++
+
+++++
+<h3>Apache NiFi</h3>
+++++
+
+An easy to use, powerful, and reliable system to process and distribute data.
+
+link:/nifi/index.html[Read more]
+
+++++
+</div>
+++++
+
+++++
+<div class="box">
+++++
+
+++++
+<h3>Apache Spark</h3>
+++++
+
+Apache Spark is a multi-language engine for executing data engineering, data science, and machine learning on single-node machines or clusters.
+
+link:/spark/index.html[Read more]
+
+++++
+</div>
+++++
+
+++++
+<div class="box">
+++++
+
+++++
+<h3>Apache Superset</h3>
+++++
+
+Apache Superset is a modern data exploration and visualization platform
+
+link:/superset/index.html[Read more]
+
+++++
+</div>
+++++
+
+++++
+<div class="box">
+++++
+
+++++
+<h3>Trino</h3>
+++++
+
+Fast distributed SQL query engine for big data analytics that helps you explore your data universe.
+
+link:/trino/index.html[Read more]
+
+++++
+</div>
+++++
+
+++++
+<div class="box">
+++++
+
+++++
+<h3>Apache ZooKeeper</h3>
+++++
+
+ZooKeeper is a centralized service for maintaining configuration information, naming, providing distributed synchronization, and providing group services.
+
+link:/zookeeper/index.html[Read more]
+
+++++
+</div>
+++++
 
 
-== Supported Kubernetes Versions
-
-The Kubernetes project maintains release branches for the latest three versions, we follow this approach and also support the latest three kubernetes versions which are, at the moment:
-
-include::partial$supported-kubernetes-versions.adoc[]
-
-== Getting Started
-Stackable provides a tutorial xref:getting_started.adoc[], which outlines how to deploy a Stackable cluster and the supported infrastructure. There is also a quickstart shell script in the https://github.com/stackabletech/stackable-utils[stackable-utils] GitHub repository that will quickly bootstrap an example cluster.
+++++
+</div>
+++++

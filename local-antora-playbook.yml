@@ -1,3 +1,4 @@
+---
 site:
   title: Stackable Documentation
   url: https://docs.stackable.tech
@@ -48,13 +49,13 @@ content:
 
 ui:
   bundle:
-    url: https://repo.stackable.tech/repository/misc/ui-bundle.zip
+    url: https://repo.stackable.tech/repository/misc/antora-ui-bundle.zip
     snapshot: true
-  supplemental_files:
-   - path: ui.yml
-     contents: |
-       static_files: [ .nojekyll ]
-   - path: .nojekyll
+  supplemental_files: ./node_modules/@antora/lunr-extension/supplemental_ui
+
+antora:
+  extensions:
+    - '@antora/lunr-extension'
 
 asciidoc:
   attributes:

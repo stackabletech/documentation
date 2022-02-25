@@ -17,12 +17,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2.4.0
-      - name: "Generate site using Antora site action"
-        uses: kameshsampath/antora-site-action@v0.2.4
+      - uses: actions/setup-node@v2
         with:
-          antora_playbook: antora-playbook.yml
-      - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4.2.5
+          node-version: '16'
+          cache: 'npm'
+      - run: npm install
+      - run: npx antora --fetch local-antora-playbook.yml
+      - name: Publish to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          branch: 'docs'
-          folder: 'build/site'
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: build/site
+          publish_branch: docs
