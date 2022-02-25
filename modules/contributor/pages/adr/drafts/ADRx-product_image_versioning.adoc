@@ -24,6 +24,11 @@ OK for spinning up new clusters, but means that existing clusters may keep runni
 (incompatible) Operator versions. The cluster may also end up in a mixed environment if a replica gets deployed to a new node after
 a new image version has been released.
 
+One case where this matters is when adding new features (such as preinstalling new libraries) to a product image that the operator then depends on.
+This isn't a breaking change for the product image, since it still works for old operator versions, which can simply ignore the new feature.
+There is an argument that It could be considered a breaking change for the operator (though internal dependency upgrades are typically not
+considered breaking), but this would not help selecting the correct product image anyway.
+
 == Decision Drivers
 
 * The cluster's stable state should ensure that all members of a given `ProductCluster` are running the same image version
