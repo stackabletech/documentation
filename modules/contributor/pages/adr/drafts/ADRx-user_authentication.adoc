@@ -114,7 +114,7 @@ metadata:
 spec:
   authenticationConfig:
     methods:
-    - authenticationClass: nifi-ldap-authn
+    - authenticationClass: ldap-authn
 ---
 apiVersion: auth.stackable.tech/v1alpha1
 kind: AuthenticationClass
