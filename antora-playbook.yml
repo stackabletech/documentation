@@ -48,8 +48,7 @@ content:
 
 ui:
   bundle:
-    url: https://repo.stackable.tech/repository/misc/antora-ui-bundle.zip
-    snapshot: true
+    url: ./ui/build/ui-bundle.zip
   supplemental_files: ./node_modules/@antora/lunr-extension/supplemental_ui
 
 antora:
