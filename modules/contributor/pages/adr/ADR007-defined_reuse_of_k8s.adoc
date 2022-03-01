@@ -26,7 +26,7 @@ Some examples of this are:
 In theory, Kubernetes components are extensible enough that it should allow us to implement our components in a way that we can deploy them on top of an existing Kubernetes.
 This would save us some work, as we'd for example not have to reimplement the registration process for agents.
 
-image::images/adr7-architecture.png[Architecture options]
+image::adr7-architecture.png[Architecture options]
 
 The image shows the two main options that we have identified during deliberations so far:
 
