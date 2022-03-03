@@ -1,0 +1,158 @@
+= ADR013: User Authentication for Products
+Teo Klestrup Röijezon <teo.roijezon@stackable.de> and Sebastian Bernauer <sebastian.bernauer@stackable.de>
+v0.1, 2022-03-03
+:status: accepted
+
+* Status: {status}
+* Deciders:
+** Teo Klestrup Röijezon
+** Sönke Liebau
+** Jim Halfpenny
+** Sebastian Bernauer
+* Date: 2022-03-03
+
+Technical Story: https://github.com/stackabletech/issues/issues/170
+
+== Context and Problem Statement
+
+Customers will generally want to configure all user-facing products to authenticate the user against a common user directory.
+We're aiming for a unified user experience when authenticating users in different products.
+
+== Decision Drivers
+
+* Multiple authentication systems and protocols exist, and not all products support all protocols
+* The cluster administrator will typically want to use the same underlying authentication system for all services
+
+== Considered Options
+
+1. Manage authentication configuration inline in the `ProductCluster` CRD
+2. Introduce a new `ProductAuthentication` CRD per product that the `ProductCluster` CRD refers to
+3. Introduce a new `AuthenticationClass` CRD that the product CRDs reference
+
+== Decision Outcome
+
+**Option 3: Introduce a new `AuthenticationClass` CRD that the product CRDs reference**
+
+== Pros and Cons of the Options
+
+=== Authentication in `ProductCluster`
+
+We embed a the authentication settings directly into the product's primary CRD. This would look something like:
+
+[source,yaml]
+----
+apiVersion: nifi.stackable.tech/v1alpha1
+kind: NifiCluster
+metadata:
+  name: nifi
+spec:
+  authenticationConfig:
+    methods:
+    - ldap:
+        hostname: ldap.server
+        port: 389
+        domain: domain.local
+        bindCredentialsSecret: nifi-ldap-bind-credentials
+----
+
+* Good, because we can expose exactly the options that each product supports
+* Good, because it is (relatively) simple to implement and requires no new components
+* Bad, because it will be difficult to keep the option schema consistent between Stackable operators
+* Bad, because it will be difficult for customers to keep their configuration synchronized across their Stackable Data Platform installation
+* Bad, because it forces application administrators to know about authentication directory details
+
+=== `ProductAuthentication` CRD per product
+
+Every product defines its own CRD that contains exactly the authentication options that that product supports. For example:
+
+[source,yaml]
+----
+apiVersion: nifi.stackable.tech/v1alpha1
+kind: NifiCluster
+metadata:
+  name: nifi
+spec:
+  authenticationConfig:
+    methods:
+    - nifi-ldap-authn
+---
+apiVersion: nifi.stackable.tech/v1alpha1
+kind: NifiAuthenticationMethod
+metadata:
+  name: nifi-ldap-authn
+spec:
+  ldap:
+    hostname: ldap.server
+    port: 389
+    domain: domain.local
+    bindCredentials:
+      secretClass: nifi-ldap-bind-credentials
+      scope: Service
+----
+
+* Good, because we can expose exactly the options that each product supports
+* Good, because it allows separation of ownership between products and authentication system
+* Bad, because it will be difficult to keep the option schema consistent between Stackable operators
+* Bad, because it will be difficult for customers to keep their configuration synchronized across their Stackable Data Platform products
+* Bad, because it forces authentication administrators to know about each product
+
+=== Global `AuthenticationClass`
+
+We define a common `AuthenticationClass` CRD that we try to share between all operators.
+It's cluster-scoped so that a LDAP bind can be shared between multiple namespaces.
+For example:
+
+[source,yaml]
+----
+apiVersion: nifi.stackable.tech/v1alpha1
+kind: NifiCluster
+metadata:
+  name: nifi
+spec:
+  authenticationConfig:
+    methods:
+    - authenticationClass: ldap-1
+    - authenticationClass: ldap-2
+      ldapOverwrite: # optional
+        ignoreCase: true
+    - authenticationClass: kerberos # We check for the correct AuthenticationClass type => Otherwise we throw a warning
+      kerberosOverwrite: # optional. we have to check for the correct overwrite type => Warning otherwise. Is we try ldapOverwrite to kerberos AuthenticationClass they will be ignored
+        udp: true
+---
+apiVersion: auth.stackable.tech/v1alpha1
+kind: AuthenticationClass
+metadata:
+  name: ldap-1
+spec:
+  ldap: # Enum(ldap, kerberos, etc.)
+    hostname: ldap.server
+    port: 389
+    domain: domain.local
+    bindCredentials:
+      secretClass: ldap-bind-credentials
+      scope: Service
+---
+apiVersion: auth.stackable.tech/v1alpha1
+kind: AuthenticationClass
+metadata:
+  name: kerberos
+spec:
+  kerberos:
+    ticketServer: my.kerberos.server
+    realm: myrealm
+----
+
+Here, `bindCredentials` is specified as a reference to a `SecretClass`, which allows secret-operator to bind in separate
+credentials for each cluster (or even `Pod`, depending on how things are set up) that uses the `AuthenticationClass`,
+while letting a cluster administrator centralize the management of the `AuthenticationClass`.
+
+* Good, because it allows complete separation between product and authentication ownership
+* Good, because it allows a single interface for authentication owners to integrate with
+* Good, because it enforces a consistent interface between Stackable operators
+* Bad, because it requires us to set up a new commons operator with the `AuthenticationClass` CRD
+* Bad, because it requires introducing a new dependency on the commons operator for all Stackable operators
+* Bad, because not all options (either whole authentication providers or individual config fields) are supported by all products.
+Additional options can be specified in the `ProductCluster` `authenticationConfig` section.
+
+Initially we will start to implement the `AuthenticationClass` in a concrete operator as a spike.
+Before releasing the new CRD it will be moved into a new separate operator that contains common CRDs that are shared between all operators (there will be some other shared CRDs in the future)
