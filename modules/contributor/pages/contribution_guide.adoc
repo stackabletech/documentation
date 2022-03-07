@@ -16,10 +16,11 @@ The development of the Stackable Platform takes place on https://github.com/stac
 Contribution steps:
 
 1. Lookup if an existing issue already covers your problem
-2. Submit a new issue and/or pull-request
-3. Respond to questions or feedback
-4. Improve your submission if necessary
-5. Closing your contribution
+2. Submit a new issue. If it is only a trivial change like fixing a typo then an issue is not necessary and a pull-request can be created directly.
+3. Submit a pull-request if you want. The necessary steps to successfully create an approvable pull-request are detailed in xref:steps.adoc[].
+4. Respond to questions or feedback
+5. Improve your submission if necessary
+6. Closing your contribution
 
 Before submitting a new issue or pull-request, it's always a good idea to check if the issue has already been discussed in the past and if there is a resolution for it. If that is the case, consider contributing to the existing issue by either adding new feedback or code.
 
