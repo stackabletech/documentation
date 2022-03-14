@@ -38,3 +38,12 @@ The design & layout comes from our https://github.com/stackabletech/documentatio
 
 A remote vscode instance can be used via https://gitpod.io/#/github.com/stackabletech/documentation
 
+=== Generate the documentation with a Docker utility container
+
+This method has the advantage that you don't need a local installation of Antora. The image `docker.stackable.tech/stackable/antora:3.0.1-stackable0` comes bundled with the required https://gitlab.com/antora/antora-lunr-extension[lunr] extension.
+
+[source,bash]
+----
+docker run -u $(id -u) -v $PWD:/antora:Z -w /antora --rm -t docker.stackable.tech/stackable/antora:3.0.1-stackable0 docker-antora-playbook.yml
+----
+

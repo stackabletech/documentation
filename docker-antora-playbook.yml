@@ -1,0 +1,66 @@
+---
+site:
+  title: Stackable Documentation
+  url: https://docs.stackable.tech
+  start_page: home::index.adoc
+  robots: allow
+
+content:
+  sources: 
+    - url: ./
+      branches: HEAD
+
+    - url: https://github.com/stackabletech/secret-operator.git
+      branches: main
+      start_path: docs
+
+    - url: https://github.com/stackabletech/airflow-operator.git
+      branches: main
+      start_path: docs
+    - url: https://github.com/stackabletech/druid-operator.git
+      branches: main
+      start_path: docs
+    - url: https://github.com/stackabletech/hbase-operator.git
+      branches: main
+      start_path: docs
+    - url: https://github.com/stackabletech/hdfs-operator.git
+      branches: main
+      start_path: docs
+    - url: https://github.com/stackabletech/hive-operator.git
+      branches: main
+      start_path: docs
+    - url: https://github.com/stackabletech/kafka-operator.git
+      branches: main
+      start_path: docs
+    - url: https://github.com/stackabletech/nifi-operator.git
+      branches: main
+      start_path: docs
+    - url: https://github.com/stackabletech/opa-operator.git
+      branches: main
+      start_path: docs
+    - url: https://github.com/stackabletech/spark-operator.git
+      branches: main
+      start_path: docs
+    - url: https://github.com/stackabletech/superset-operator.git
+      branches: main
+      start_path: docs
+    - url: https://github.com/stackabletech/trino-operator.git
+      branches: main
+      start_path: docs
+    - url: https://github.com/stackabletech/zookeeper-operator.git
+      branches: main
+      start_path: docs
+
+ui:
+  bundle:
+    url: https://repo.stackable.tech/repository/misc/antora-ui-bundle.zip
+    snapshot: true
+  supplemental_files: /usr/local/share/.config/yarn/global/node_modules/@antora/lunr-extension/supplemental_ui
+
+antora:
+  extensions:
+    - '@antora/lunr-extension'
+
+asciidoc:
+  attributes:
+    base-repo: https://github.com/stackabletech
