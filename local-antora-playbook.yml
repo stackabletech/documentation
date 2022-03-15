@@ -54,7 +54,7 @@ content:
 ui:
   bundle:
     url: ./ui/build/ui-bundle.zip
-  supplemental_files: ./node_modules/@antora/lunr-extension/supplemental_ui
+  supplemental_files: ./supplemental-ui
 
 antora:
   extensions:
