@@ -2,12 +2,13 @@
 site:
   title: Stackable Documentation
   url: https://docs.stackable.tech
+  start_page: home::index.adoc
   robots: allow
 
 content:
   sources: 
-    - url: https://github.com/stackabletech/documentation.git
-      branches: main
+    - url: ./
+      branches: HEAD
 
     - url: https://github.com/stackabletech/secret-operator.git
       branches: main
@@ -52,8 +53,9 @@ content:
 
 ui:
   bundle:
-    url: ./ui/build/ui-bundle.zip
-  supplemental_files: ./node_modules/@antora/lunr-extension/supplemental_ui
+    url: https://repo.stackable.tech/repository/misc/antora-ui-bundle.zip
+    snapshot: true
+  supplemental_files: /usr/local/share/.config/yarn/global/node_modules/@antora/lunr-extension/supplemental_ui
 
 antora:
   extensions:
