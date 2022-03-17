@@ -1,0 +1,1 @@
+../../node_modules/@antora/lunr-extension/supplemental_ui/js/search-ui.js
