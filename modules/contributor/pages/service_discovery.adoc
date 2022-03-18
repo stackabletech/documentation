@@ -1,0 +1,139 @@
+:source-highlighter: highlight.js
+:highlightjs-languages: rust
+
+= Service Discovery
+
+== Introduction
+
+Several products deployed by the Stackable platform depend on other (Stackable) products to function correctly. This could be a product that requires an external database, high availability support or synchronization.
+
+In order to programmatically resolve this dependency, the Stackable platform uses `Servive Discovery`. A Stackable operator is aware of interfaces and connections that have to be exposed and may be consumed buy other operators to configure their products. These interfaces or connections are usually referred to as `connection string`.
+
+As a real world example, the Stackable Operator for Apache Kafka has to configure Kafka with an Apache ZooKeeper `connection string` in order to store and share information about e.g. Kafka topics. This `connection string` is provided by the Stackable Operator for Apache ZooKeeper, which is aware of all the pods and services related to ZooKeeper.
+
+== Examples
+
+- `JDBC` SQL connection strings: `jdbc:postgresql://localhost:12345`
+- `thrift` protocol: `thrift://localhost:12345`
+- `spark` protocol: `spark://master:7077`
+- `REST` API: `http://localhost:8080`
+- `HDFS`: `hdfs://localhost:12345`
+- `ZooKeeper` ZNode: `host1:2181,host2:2181/my-chroot`
+
+== Concepts of Service Discovery
+
+=== Architecture
+
+The Operator that provides Service Discovery writes a `ConfigMap` with all necessary information about its exposed services. Each service has its own entry in the `ConfigMap` as can be seen with the `ZOOKEEPER` entry below:
+
+image::service_discovery_arch.png[Service Discovery]
+
+=== Best practices
+
+The operator that discovers a service has two options for retrieving the information and providing it into the `Pods`:
+
+1. `Mount` the discovery `ConfigMap` into the `Pod` directly as an environment variable. This can be used for products supporting setting values via CLI or can work with environment variables in their respective configuration files.
+2. `Read` the discovery `ConfigMap` and provide its content via the usual product configuration `ConfigMaps`. This is in general a cleaner way if the product does not support setting values via CLI or environment variables in the configuration files because it avoids writing shell scripts to override the values manually.
+
+== Implementation details
+
+The following section offers some Rust code snippets to get an idea on how to create or retrieve the information in the discovery `ConfigMap`. As a convention the name of that discovery `ConfigMap` is the name of the cluster. A deployed Stackable ZooKeeper cluster named `simple-zk` in namespace `production` will deploy a discovery `ConfigMap` `production/simple-zk`.
+
+=== Create a discovery ConfigMap
+
+Remember, per convention the discovery `ConfigMap` name of a cluster must be equal to the cluster name. The following code demonstrates how to create a discovery `ConfigMap` using the `ConfigMapBuilder` of the https://github.com/stackabletech/operator-rs[`operator-rs`] framework:
+
+[source,rust]
+----
+ConfigMapBuilder::new()
+    .metadata(
+        ObjectMetaBuilder::new()
+            .name_and_namespace(my_cluster)
+            .ownerreference_from_resource(my_cluster, None, Some(true))?
+            .build()?,
+    )
+    .add_data("CONNECT_STRING", "http://localhost:12345")
+    .build()
+----
+
+=== Consume a discovery ConfigMap
+
+Given a `ConfigMap`:
+[source,rust]
+----
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: my-config-map-name
+  namespace: production
+data:
+  CONNECT_STRING: "http://localhost:12345"
+----
+
+==== Mounting the discovery ConfigMap
+
+This is a method to retrieve an `EnvVar` from a `ConfigMap`:
+
+[source,rust]
+----
+fn env_var_from_cm(name: &str, configmap_name: &str) -> EnvVar {
+    EnvVar {
+        name: name.to_string(),
+        value_from: Some(EnvVarSource {
+            config_map_key_ref: Some(ConfigMapKeySelector {
+                name: Some(configmap_name.to_string()),
+                key: name.to_string(),
+                ..ConfigMapKeySelector::default()
+            }),
+            ..EnvVarSource::default()
+        }),
+        ..EnvVar::default()
+    }
+}
+----
+
+The returned `EnvVar` then can be added to a `Pod` container and used in the `command` or `args` field using the https://github.com/stackabletech/operator-rs[`operator-rs`] framework container builder:
+
+[source,rust]
+----
+let container = ContainerBuilder::new("my-container")
+    .command(vec!["/bin/bash".to_string(), "-c".to_string()])
+    .args(vec![["./do_magic", "--with-env-var", "${CONNECT_STRING}"].join(" && ")])
+    .add_env_var(env_var_from_cm("CONNECT_STRING", "my-config-map-name"))
+    .build();
+----
+
+==== Reading the discovery ConfigMap
+
+This is a method to read one entry of a discovery `ConfigMap` from an operator:
+
+[source,rust]
+----
+async fn entry_from_cm(
+    client: &Client,
+    name: &str,
+    namespace: Option<&str>,
+    entry: &str,
+) -> OperatorResult<String> {
+    Ok(client
+        .get::<ConfigMap>(name, namespace)
+        .await?
+        .data
+        .and_then(|mut data| data.remove(entry))
+        .ok_or(error::Error::MissingConfigMapEntry)?)
+}
+
+let connection_string = entry_from_cm(client, "my-config-map-name", Some("production"), "CONNECT_STRING").await?;
+----
+
+This retrieved `connection string` can be used to configure the product via the https://github.com/stackabletech/product-config[`product-config`] by creating `ConfigMaps` for the product configuration files.
+
+== Existing code
+
+Currently, there is not much support from the https://github.com/stackabletech/operator-rs[`operator-rs`] framework to assist with service discovery. The related code is mostly contained in each operator and similar to the examples above.
+
+The following list should indicate support for certain products or helper methods:
+
+- `ConfigMapBuilder` in combination with `ObjectMetaBuilder` assists with building discovery `ConfigMaps`
+- `OPA`: The framework has an module `opa.rs` that supports with creating the data API connect string
+

@@ -3,5 +3,6 @@
 ** xref:contribution_guide.adoc[]
 ** xref:steps.adoc[]
 ** xref:development_dashboard.adoc[]
+** xref:service_discovery.adoc[]
 
 include::partial$adr-nav.adoc[]
