@@ -9,8 +9,26 @@ v0.1, dd.mm.yyyy
 
 Technical Story: [description | ticket/issue URL] <!-- optional -->
 
+== Glossary
+
+
+[cols="20%,80%"]
+|===
+|Term|Definition
+
+|*Product Version*
+|The version of the product contained in the docker image (like for example Apache Kafka or Trino) - the thing we operate
+
+|*Operator Version*
+|The version of the Stackable Operator
+
+|*Stackable Image Version*
+|The version of the docker image which contains the product
+|===
+
 == Context and Problem Statement
 
+=== Context
 Currently, we publish all products as Docker images following the template
 `docker.stackable.tech/stackable/$PRODUCT:$PRODUCT_VERSION-stackable$IMAGE_VERSION`, as well as
 `docker.stackable.tech/stackable/$PRODUCT:$PRODUCT_VERSION-stackable$IMAGE_SEMVER_MAJOR`.
@@ -29,21 +47,131 @@ This isn't a breaking change for the product image, since it still works for old
 There is an argument that It could be considered a breaking change for the operator (though internal dependency upgrades are typically not
 considered breaking), but this would not help selecting the correct product image anyway.
 
+=== Decisions
+Based on the above, there are actually two decisions to take around this problem:
+
+. How are stackable image versions created?
+. How does the operator decide which image to use?
+
+While these two questions are related to each other they can be decided fairly independently of each other.
+The decision process for _2._ will be influenced by the decision that is taken on _1._, so we will get this done first.
+
+This ADR will be limited to the question of how stackable image versions are created, with the question of how the operator derives the correct image to use deferred to xref:adr/drafts/ADRx-operator_image_version_selection.adoc[]
+
 == Decision Drivers
 
-* The cluster's stable state should ensure that all members of a given `ProductCluster` are running the same image version
-* The cluster should always be (approaching) running an image version that is compatible with the running operator
+* Old versions of operators must keep working and deploying images that they are compatible with
 * We should try to limit the number of maintained image version "tracks" for each product
-* Customers may want to lock down the image version that they are running
-* Old versions of operators should keep working and deploying images that they are compatible with
+* It should not be necessary to update the used operator version in order to be able to deploy a new product version
+* The chosen option should make life as easy as possible for the end-user, it doesn't need to be the simplest one to implement
 
 == Considered Options
+There are two main options that were considered, both of which can be implemented in two variants:
 
-* Synchronize image versions in lockstep with operator versions
-* Bump major image version for every change that operators depend on
-* Resolve Docker tags to image hashes in operator
-* Resolve SemVer ranges to Docker tags in operator
-* Configure `imagePullPolicy: Always` in deployed pods
+=== Option Variants
+==== Variant 1 - Git tags contains only the Stackable image version
+For these variants it is assumed that tags which mark a release in the docker images repository (regardless of whether this is a shared repo or a dedicated repo) will contain only the stackable image version.
+
+This means that the definitions of packaged product versions are included in this tag.
+
+For example, if a stackable image version 0.1.0 is released at a time when the latest product version is 3.1.0 then there will never be an image version 0.1.0 for product version 3.1.1.
+The tag _0.1.0_ will point at a specific commit in the repository and this commit will also include all Dockerfiles used to build the product images, so up to product version 3.1.0.
+If a Dockerfile for product version 3.1.1 is later created it would not be included in this tag, and could only be released by creating a tag _0.1.1_.
+
+The tags for this variant would look like this:
+
+- 0.1.0
+- 0.1.1
+- 0.2.0
+
+
+==== Variant 2 - Git tags contain product version and stackable image version
+For these variants the release tag will also contain the product version in addition to the image version, so for the combination mentioned above (stackable image version 0.1.0 and product version 3.1.0) the following tag would be created: _3.1.0-stackable0.1.0_
+
+This would allow us to release later versions of the product without having to change to stackable image version - i.e. without needlessly releasing practically unchanged images.
+
+
+
+=== Options
+The main options that are to be considered in this ADR are:
+
+==== Synchronize image versions in lockstep with operator versions
+Each operator version hard-codes exactly one image version that it supports, and we release new product images for each operator images.
+
+==== Use SemVer for docker images, independently of operator version
+The operator version will be kept separate from the stackable image version, for the image version we use semver.
+
+==== Final List of Options to be Considered
+With these two dimensions described, we end up with the following list of options to be considered for this ADR:
+
+. Synchronize image versions in lockstep with operator versions - Variant 1
+. Synchronize image versions in lockstep with operator versions - Variant 2
+. Use SemVer for docker images, independently of operator version - Variant 1
+. Use SemVer for docker images, independently of operator version - Variant 2
+
+===== Scenarios
+
+The following table shows the image versions resulting for all four options based on the following scenario:
+
+
+|===
+|Product Versions Available |Operator Versions Available
+
+a|
+
+- 2.8.0
+- 2.9.0
+
+a|
+
+- 0.1.0
+- 0.1.1
+- 0.2.0
+
+|===
+
+Please note, that this refers to the operator versions that were needed based on semver rules.
+Some of the options in the table below may contain operator versions not listed here, because it was necessary to release the operator itself in a new version in order to make a new product version available.
+
+For this scenario, no change to the image itself was assumed to be needed.
+|===
+|Option |Image Version
+
+|*1* - Synchronize image versions in lockstep with operator versions - Variant 1
+a|
+
+- 2.8.0-stackable0.1.0
+- 2.8.0-stackable0.2.0
+- 2.8.0-stackable0.1.1
+- 2.8.0-stackable0.1.2
+- 2.9.0-stackable0.1.2
+- 2.8.0-stackable0.2.1
+- 2.9.0-stackable0.2.1
+
+|*2* - Synchronize image versions in lockstep with operator versions - Variant 1
+a|
+
+- 2.8.0-stackable0.1.0
+- 2.8.0-stackable0.2.0
+- 2.8.0-stackable0.1.1
+- 2.9.0-stackable0.1.0
+- 2.9.0-stackable0.2.0
+- 2.9.0-stackable0.1.1
+
+|*3* - Use SemVer for docker images, independently of operator version - Variant 1
+a|
+
+- 2.8.0-stackable0.1.0
+- 2.8.0-stackable0.1.1
+- 2.9.0-stackable0.1.1
+
+|*4* - Use SemVer for docker images, independently of operator version - Variant 1
+a|
+
+- 2.8.0-stackable0.1.0
+- 2.9.0-stackable0.1.0
+
+|===
 
 == Decision Outcome
 
@@ -61,66 +189,35 @@ Chosen option: "[option 1]", because [justification. e.g., only option, which me
 
 == Pros and Cons of the Options
 
-=== Synchronize image and operator versions
-
-Each operator version hard-codes exactly one image version that it supports, and we release new product images for each operator images.
-
-This would likely mean moving the product Dockerfiles into their corresponding operators' repositories.
-
+=== Synchronize image versions in lockstep with operator versions - Variant 1
 * Good, because it centralizes the information about which versions are supported into each operator's repository
 * Good, because upgrades are predictable for the user, "upgrading the operator upgrades the cluster" is easy to explain and teach
 * Good, because image tags are stable and immutable once released
 * Bad, because we end up storing a lot of duplicate Docker images
-  * We could share the Docker layers to lessen this impact dramatically, but that would require rearchitecting our CI
+* We could share the Docker layers to lessen this impact dramatically, but that would require rearchitecting our CI
 * Bad, because it increases the overhead of doing operator or image releases
 * Bad, because old operator versions will keep deploying older image versions than they may technically be compatible with
 
-=== Bump major image version for every change that operators depend on
 
-Keep the current system as-is, but essentially merge major and minor versions in SemVer.
-
-* Good, because it changes as little as possible about the infrastructure
-* Bad, because it allows patch versions to drift apart drift in a running cluster
-* Bad, because it forces us to maintain many more image version "tracks"
+=== Synchronize image versions in lockstep with operator versions - Variant 2
+* Good, because it centralizes the information about which versions are supported into each operator's repository
+* Good, because upgrades are predictable for the user, "upgrading the operator upgrades the cluster" is easy to explain and teach
+* Good, because image tags are stable and immutable once released
+* Bad, because we end up storing a lot of duplicate Docker images
+* We could share the Docker layers to lessen this impact dramatically, but that would require rearchitecting our CI
+* Bad, because it increases the overhead of doing operator or image releases
 * Bad, because old operator versions will keep deploying older image versions than they may technically be compatible with
-* Bad, because existing operators will invisibly switch which (patch-level) image version they deploy without user action
 
-=== Resolve Docker tags to image hashes in operator
-
-The operator resolves the SemVer-major Docker tag into a concrete image hash during reconciliation.
-
+=== Use SemVer for docker images, independently of operator version - Variant 1
 * Good, because we preserve SemVer for image versions
-* Good, because we prevent version drift between cluster replicas
 * Good, because existing operators will upgrade as far as they are compatible
-* Bad, because it increases the complexity of the operators
-* Bad, because it slows down reconciliation
-* Bad, because existing operators will switch which (minor-level) image version they deploy without user action
+* Bad, because existing operators may switch which (minor-level) image version they deploy without user action (this can be mitigated in the follow up ADR on version selection though)
 * Bad, because we don't have a good trigger for when new image versions are released
 * Bad, because on-prem registry mirrors may be outdated and serve incompatible versions
 
-=== Resolve SemVer ranges in operator
-
-The operator resolves a hard-coded SemVer range into a Docker tag and concrete image hash during reconciliation.
-
+=== Use SemVer for docker images, independently of operator version - Variant 2
 * Good, because we preserve SemVer for image versions
-* Good, because we prevent version drift between cluster replicas
 * Good, because existing operators will upgrade as far as they are compatible
-* Good, because we can fail with a reasonable error message if no compatible image is available
-* Bad, because it increases the complexity of the operators even further
-* Bad, because it slows down reconciliation
-* Bad, because existing operators will switch which (minor-level) image version they deploy without user action
+* Bad, because existing operators may switch which (minor-level) image version they deploy without user action (this can be mitigated in the follow up ADR on version selection though)
 * Bad, because we don't have a good trigger for when new image versions are released
-* Bad, because on-prem registry mirrors may not have whatever API or metadata we need to perform this resolution
-
-=== Configure `imagePullPolicy: Always` in deployed pods
-
-The operator always sets the `imagePullPolicy: Always` field in pods, forcing the Kubelets to always re-pull
-the image every time the Pod is started.
-
-* Good, because it's a minimal change
-* Bad, because it doesn't restart running pods, even if they are incompatible
-  * This means that it doesn't solve the original problem at all
-* Bad, because it allows minor versions to drift apart drift in a running cluster
-* Bad, because it prevents any restarts while the Docker registry is unavailable
-* Bad, because existing operators will invisibly switch which (minor-level) image version they deploy without user action
 * Bad, because on-prem registry mirrors may be outdated and serve incompatible versions
