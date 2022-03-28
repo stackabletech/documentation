@@ -61,6 +61,10 @@
   }
 }
 
+.nav a {
+  color: inherit;
+}
+
 .nav .panels {
   display: flex;
   flex-direction: column;
@@ -110,10 +114,6 @@ html.is-clipped--nav {
   font-weight: var(--body-font-weight-bold);
   margin: 0;
   padding: 0.25em 0 0.125em;
-}
-
-.nav-menu a {
-  color: inherit;
 }
 
 .nav-list {
@@ -240,7 +240,6 @@ html.is-clipped--nav {
 
 .nav-panel-explore .component .title {
   font-weight: var(--body-font-weight-bold);
-  color: inherit;
 }
 
 .nav-panel-explore .versions {
@@ -260,7 +259,6 @@ html.is-clipped--nav {
 .nav-panel-explore .component .version a {
   border: 1px solid var(--nav-border-color);
   border-radius: 0.25rem;
-  color: inherit;
   opacity: 0.75;
   white-space: nowrap;
   padding: 0.125em 0.25em;
