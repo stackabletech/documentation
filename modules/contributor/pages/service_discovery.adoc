@@ -7,39 +7,39 @@
 
 Several products deployed by the Stackable platform depend on other (Stackable) products. This could be a product that requires an external database, high availability support or synchronization.
 
-In order to programmatically resolve this dependency, the Stackable platform uses `Servive Discovery`. A Stackable operator is aware of interfaces and connections that have to be exposed and may be consumed by other operators to configure their products. These interfaces or connections are usually referred to as `connection string`.
+In order to programmatically resolve this dependency, the Stackable platform uses _service discovery_. A Stackable operator is aware of interfaces and connections that have to be exposed and may be consumed by other operators to configure their products. These interfaces or connections are usually referred to as _connection string_.
 
-As a real world example, the Stackable Operator for Apache Kafka has to configure Kafka brokers with an Apache ZooKeeper `connection string` in order to store and share information about e.g. Kafka topics. This `connection string` is provided by the Stackable Operator for Apache ZooKeeper, which is aware of all the pods and services related to ZooKeeper.
+As a real world example, the Stackable Operator for Apache Kafka has to configure Kafka brokers with an Apache ZooKeeper connection string in order to store and share information about e.g. Kafka topics. This connection string is provided by the Stackable Operator for Apache ZooKeeper, which is aware of all the pods and services related to ZooKeeper.
 
-== Examples
+== Examples for connection strings
 
-- `JDBC` SQL connection strings: `jdbc:postgresql://localhost:12345`
-- `thrift` protocol: `thrift://localhost:12345`
-- `spark` protocol: `spark://master:7077`
-- `REST` API: `http://localhost:8080`
-- `HDFS`: `hdfs://localhost:12345`
-- `ZooKeeper` ZNode: `host1:2181,host2:2181/my-chroot`
+- JDBC SQL connection strings: `jdbc:postgresql://localhost:12345`
+- thrift protocol: `thrift://localhost:12345`
+- spark protocol: `spark://master:7077`
+- REST API: `\http://localhost:8080`
+- HDFS: `hdfs://localhost:12345`
+- ZooKeeper ZNode: `host1:2181,host2:2181/my-chroot`
 
 == Concepts of Service Discovery
 
 === Architecture
 
-The Operator that provides Service Discovery writes a `ConfigMap` with all necessary information about its exposed services. Each service has its own entry in the `ConfigMap` as can be seen with the `ZOOKEEPER` entry below:
+The Operator that provides service discovery writes a `ConfigMap` with all necessary information about its exposed services. Each service has its own entry in the `ConfigMap` as can be seen with the `ZOOKEEPER` entry below:
 
 image::service_discovery_arch.png[Service Discovery]
 
 === Best practices
 
-==== Exposing service discovery
+==== Exposing config maps for service discovery
 
-The question about which interfaces to expose varies from product to product and must be decided on an individual basis. However, as far as possible the exposed services should be reachable via `Kubernetes` services like `ClusterIP` or `NodePort`.
+The question about which interfaces to expose varies from product to product and must be decided on an individual basis. However, as far as possible the exposed services should be reachable via Kubernetes services like `ClusterIP` or `NodePort`.
 
-==== Consuming service discovery
+==== Consuming config maps for service discovery
 
-The operator that discovers a service has two options for retrieving the information and providing it into the `Pods`:
+The operator that discovers a service has two options for retrieving the information and providing it into the pods:
 
-1. `Mount` the discovery `ConfigMap` into the `Pod` directly as an environment variable. This can be used for products supporting setting values via CLI or can work with environment variables in their respective configuration files.
-2. `Read` the discovery `ConfigMap` and provide its content via the usual product configuration `ConfigMaps`. This is in general a cleaner way if the product does not support setting values via CLI or environment variables in the configuration files because it avoids writing shell scripts to override the values manually.
+1. Mount the discovery `ConfigMap` into the `Pod` directly as an environment variable. This can be used for products supporting setting values via CLI or can work with environment variables in their respective configuration files.
+2. Read the discovery `ConfigMap` and provide its content via the usual product configuration `ConfigMap`. This is in general a cleaner way if the product does not support setting values via CLI or environment variables in the configuration files because it avoids writing shell scripts to override the values manually.
 
 == Implementation details
 
@@ -51,6 +51,8 @@ Remember, per convention the discovery `ConfigMap` name of a cluster must be equ
 
 [source,rust]
 ----
+use stackable_operator::builder::{ConfigMapBuilder, ObjectMetaBuilder};
+
 let cm = ConfigMapBuilder::new()
     .metadata(
         ObjectMetaBuilder::new()
@@ -65,7 +67,7 @@ let cm = ConfigMapBuilder::new()
 === Consume a discovery ConfigMap
 
 Given a discovery `ConfigMap`:
-[source,rust]
+[source,yaml]
 ----
 apiVersion: v1
 kind: ConfigMap
@@ -82,6 +84,12 @@ This is a method to retrieve an `EnvVar` from a `ConfigMap`:
 
 [source,rust]
 ----
+use stackable_operator::k8s_openapi::api::{
+    core::v1::{
+       ConfigMapKeySelector, EnvVar, EnvVarSource,
+    },
+};
+
 fn env_var_from_cm(name: &str, configmap_name: &str) -> EnvVar {
     EnvVar {
         name: name.to_string(),
@@ -102,9 +110,11 @@ The returned `EnvVar` then can be added to a `Pod` container and used in the `co
 
 [source,rust]
 ----
+use stackable_operator::builder::ContainerBuilder;
+
 let container = ContainerBuilder::new("my-container")
     .command(vec!["/bin/bash".to_string(), "-c".to_string()])
-    .args(vec![["./do_magic", "--with-env-var", "${CONNECT_STRING}"].join(" && ")])
+    .args(vec!["./do_magic", "--with-env-var", "${CONNECT_STRING}"])
     .add_env_var(env_var_from_cm("CONNECT_STRING", "my-config-map-name"))
     .build();
 ----
@@ -115,6 +125,12 @@ This is a method to read one entry of a discovery `ConfigMap` from an operator:
 
 [source,rust]
 ----
+use stackable_operator::{
+    client::Client,
+    error::OperatorResult,
+    k8s_openapi::api::core::v1::ConfigMap,
+};
+
 async fn entry_from_cm(
     client: &Client,
     name: &str,
@@ -126,13 +142,13 @@ async fn entry_from_cm(
         .await?
         .data
         .and_then(|mut data| data.remove(entry))
-        .ok_or(error::Error::MissingConfigMapEntry)?)
+        .unwrap())
 }
 
 let connection_string = entry_from_cm(client, "my-config-map-name", Some("production"), "CONNECT_STRING").await?;
 ----
 
-The retrieved `connection_string` can be used to configure the product via the https://github.com/stackabletech/product-config[`product-config`] by creating `ConfigMaps` for the product configuration files.
+The retrieved connection string can be used to configure the product to connect to the discovered service.
 
 == Existing libraries
 
@@ -141,4 +157,4 @@ Currently, there is not much support from the https://github.com/stackabletech/o
 The following list should indicate support for certain products or helper methods:
 
 - `ConfigMapBuilder` in combination with `ObjectMetaBuilder` assists with building the discovery `ConfigMap`
-- `OPA`: The framework has a module called `opa.rs` that supports the creation of the data API `connection string`
+- `OPA`: The https://github.com/stackabletech/operator-rs[`operator-rs`] framework has a module called `opa.rs` that supports the creation of the data API connection string
