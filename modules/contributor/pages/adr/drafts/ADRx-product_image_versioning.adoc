@@ -148,7 +148,7 @@ a|
 - 2.8.0-stackable0.2.1
 - 2.9.0-stackable0.2.1
 
-|*2* - Synchronize image versions in lockstep with operator versions - Variant 1
+|*2* - Synchronize image versions in lockstep with operator versions - Variant 2
 a|
 
 - 2.8.0-stackable0.1.0
@@ -165,7 +165,7 @@ a|
 - 2.8.0-stackable0.1.1
 - 2.9.0-stackable0.1.1
 
-|*4* - Use SemVer for docker images, independently of operator version - Variant 1
+|*4* - Use SemVer for docker images, independently of operator version - Variant 2
 a|
 
 - 2.8.0-stackable0.1.0
