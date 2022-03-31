@@ -6,6 +6,7 @@
   var navContainer = document.querySelector('.nav-container')
   if (!navContainer) return
   var navToggle = document.querySelector('.nav-toggle')
+  var nav = navContainer.querySelector('.nav')
 
   navToggle.addEventListener('click', showNav)
   navContainer.addEventListener('click', trapEvent)
@@ -13,7 +14,6 @@
   var menuPanel = navContainer.querySelector('[data-panel=menu]')
   if (!menuPanel) return
   var explorePanel = navContainer.querySelector('[data-panel=explore]')
-  var nav = navContainer.querySelector('.nav')
 
   var currentPageItem = menuPanel.querySelector('.is-current-page')
   var originalPageItem = currentPageItem
