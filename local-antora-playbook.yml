@@ -6,7 +6,7 @@ site:
   robots: allow
 
 content:
-  sources: 
+  sources:
     - url: ./
       branches: HEAD
 
@@ -36,6 +36,9 @@ content:
       branches: main
       start_path: docs
     - url: https://github.com/stackabletech/opa-operator.git
+      branches: main
+      start_path: docs
+    - url: https://github.com/stackabletech/spark-k8s-operator.git
       branches: main
       start_path: docs
     - url: https://github.com/stackabletech/spark-operator.git
