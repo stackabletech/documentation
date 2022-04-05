@@ -1,0 +1,86 @@
+= Overview
+
+To analyze the data we now have in Druid, we will connect Superset to our Druid instance, and read and visualize the data in Superset.
+
+== Deploy the Stackable Superset operator
+
+As before, we need to install the operator:
+
+[source, bash]
+$ kind create cluster
+$ helm repo add stackable-stable https://repo.stackable.tech/repository/helm-stable
+$ helm install superset-operator stackable-stable/superset-operator
+
+== Deploy Postgresql (for Superset metadata)
+
+Superset requires an SQL database to run. We will install a dedicated database for Superset: as before, we will use the Bitnami PostgreSQL helm chart to deploy a PostgreSQL instance.
+
+[source]
+helm install superset-postgresql postgresql \
+    --repo https://charts.bitnami.com/bitnami \
+    --set auth.username=superset \
+    --set auth.password=superset \
+    --set auth.database=superset \
+    --version 11.0.0
+
+Next we create a secret with the database credentials in it, in the key `connections.sqlalchemyDatabaseUri`. The secret also contains the information of the initial admin user:
+
+[source]
+cat <<EOF | kubectl apply -f -
+apiVersion: v1
+kind: Secret
+metadata:
+  name: simple-superset-credentials
+type: Opaque
+stringData:
+  adminUser.username: admin
+  adminUser.firstname: Superset
+  adminUser.lastname: Admin
+  adminUser.email: admin@superset.com
+  adminUser.password: admin
+  connections.secretKey: thisISaSECRET_1234
+  connections.sqlalchemyDatabaseUri: postgresql://superset:superset@superset-postgresql.default.svc.cluster.local/superset
+EOF
+
+== Deploy the Superset cluster
+
+Now we can deploy Superset:
+
+[source]
+cat <<EOF | kubectl apply -f -
+apiVersion: superset.stackable.tech/v1alpha1
+kind: SupersetCluster
+metadata:
+  name: simple-superset
+spec:
+  version: 1.4.1  # <1>
+  statsdExporterVersion: v0.22.4
+  credentialsSecret: simple-superset-credentials  # <2>
+  nodes:
+    roleGroups:
+      default:
+        config:
+EOF
+
+<1> This is the version of Superset we want to use. You can find our supported Superset version in the https://docs.stackable.tech/superset/index.html#_supported_versions[Superset documentation].
+<2> Here we reference our secret we created earlier.
+
+On the first deployment of the Superset cluster, the operator will also initialize the database. Once the database is initialized, you can connect to the cluster.
+
+You can verify that the Cluster is up and running with this command:
+
+[source]
+kubectl get statefulset superset-postgresql -o \
+jsonpath='{.status.readyReplicas}'
+
+It should return `1`.
+
+==== Setup port-forwarding for the Superset UI
+
+You can also connect to the Superset UI:
+
+[source]
+kubectl port-forward service/simple-superset-external 8088
+
+And now point your browser to `http://localhost:8088/` and you will see the login screen of Superset:
+

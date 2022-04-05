@@ -14,8 +14,15 @@ N.B.
 
 == Deploy Postgresql (for Druid metadata)
 
+Druid requires a database to store metadata: for this guide we will use the Bitnami PostgreSQL helm chart to deploy a PostgreSQL instance:
+
 [source]
-helm install postgresql-druid --version 11.0.0 --set auth.username=druid --set auth.password=druid --set auth.database=druid --repo https://charts.bitnami.com/bitnami postgresql
+helm install postgresql-druid \
+    --repo https://charts.bitnami.com/bitnami postgresql \
+    --set auth.username=druid \
+    --set auth.password=druid \
+    --set auth.database=druid \
+    --version 11.0.0
 
 N.B. the credentials will also be used in the Druid custom resource.
 
@@ -34,10 +41,10 @@ cat <<EOF | kubectl apply -f -
 apiVersion: v1
 kind: Secret
 metadata:
- name: druid-s3-credentials # <1>
+  name: druid-s3-credentials # <1>
 stringData:
- accessKeyId: minioAccessKey
- secretAccessKey: minioSecretKey
+  accessKeyId: minioAccessKey
+  secretAccessKey: minioSecretKey
 EOF
 
 == Deploy the Druid ZNode
@@ -49,10 +56,10 @@ cat <<EOF | kubectl apply -f -
 apiVersion: zookeeper.stackable.tech/v1alpha1
 kind: ZookeeperZnode
 metadata:
- name: simple-druid-znode # <2>
+  name: simple-druid-znode # <2>
 spec:
- clusterRef:
-   name: simple-zk
+  clusterRef:
+    name: simple-zk
 EOF
 
 == Deploy the Druid cluster
@@ -146,7 +153,7 @@ There are different ways to get data into Druid, all of which will use a `POST` 
 
 === Using the Druid UI
 
-==== Setup port-forwarding for Druid UI
+==== Setup port-forwarding for the Druid UI
 
 Run this from the command line to open up access to the Druid router (keep this command line tab open):
 
