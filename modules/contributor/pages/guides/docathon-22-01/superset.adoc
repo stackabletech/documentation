@@ -138,14 +138,34 @@ As an example, we create a simple line chart. Applying these settings, we can se
 
 **(TODO make sure this matches the period imported by Nifi)**
 
-- Time column: `__time`
-- Time range: `2021-01-01 ≤ col < 2021-02-01`
-- Metrics: `AVG(tip_amount)`
-- X axis title: `January 2021`
-- X axis title bottom margin: `30`
-- Y axis title: `USD`
-- Y axis title margin: `30`
-- X axis time format: `%a`
+|===
+|Chart Setting |Value
+
+|Time column
+|`__time`
+
+|Time range
+|`2021-01-01 ≤ col < 2021-02-01`
+
+|Metrics
+|`AVG(tip_amount)`
+
+|X axis title
+|`January 2021`
+
+|X axis title bottom margin
+|`30`
+
+|Y axis title
+|`USD`
+
+|Y axis title margin
+|`30`
+
+|X axis time format
+|`%a`
+|===
+
 
 image::superset-chart2.png[Chart2]
 
