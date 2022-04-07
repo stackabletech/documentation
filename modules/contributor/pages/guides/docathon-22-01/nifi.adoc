@@ -13,7 +13,8 @@ The secret operator is needed by the Stackable Operator for Apache NiFi, as NiFi
 The necessary certificates and keys for this are provided by the Secret Operator to the NiFi pods.
 
 [source,bash]
-helm install secret-operator stackable/secret-operator
+helm repo add stackable-stable https://repo.stackable.tech/repository/helm-stable/
+helm install secret-operator stackable-stable/secret-operator
 
 === ZooKeeper Operator
 
@@ -21,14 +22,14 @@ Apache NiFi and Apache Kafka both use Apache ZooKeeper as backing config storage
 There is no need to install multiple ZooKeeper clusters, as NiFi, Kafka and Druid can share the same cluster via provisioning a zNode per backed service.
 
 [source,bash]
-helm install zookeeper-operator stackable/zookeeper-operator
+helm install zookeeper-operator stackable-stable/zookeeper-operator
 
 === Kafka Operator
 
 Kafka will be used by NiFi to publish the individual records from the S3 data into.
 
 [source,bash]
-helm install kafka-operator stackable/kafka-operator
+helm install kafka-operator stackable-stable/kafka-operator
 
 === NiFi Operator
 
@@ -46,11 +47,11 @@ Apply the Kafka custom resource (https://github.com/stackabletech/kafka-operator
 For the purposes of this use case, no special config is required, so we can simply deploy the examples straight from the operator repositories.
 These files are designed to be self-contained, so for example the NiFi example also contains the necessary ZooKeeper cluster definition.
 
-
 [source,bash]
 kubectl apply -f https://raw.githubusercontent.com/stackabletech/kafka-operator/main/examples/simple-kafka-cluster.yaml
-kubectl apply -f https://raw.githubusercontent.com/stackabletech/kafka-operator/main/examples/simple-nifi-cluster.yaml
+kubectl apply -f https://raw.githubusercontent.com/stackabletech/nifi-operator/main/examples/simple-nifi-cluster.yaml
 
+The Nifi installation will take several minutes due to the size of the images.
 
 == Connecting to NiFi and Deploying the Flow
 
@@ -69,14 +70,14 @@ Unless you changed these before deploying the cluster you will be able to log in
 
 
 Once you have successfully logged in you should be presented with the NiFi UI showing an empty canvas.
-This canvas is the main way you will interact with NiFi through. You can drag processors on here, configure them as needed and connect these processors to create a flow that offers the processing that you need.
+This canvas is the main place where you will interact with NiFi. You can drag processors on here, configure them as needed and connect these processors to create a flow that offers the processing that you need.
 
 NOTE: As this guide is not intended to be a NiFi guide most of NiFi's features will be glossed over and only very brief instructions provided on what needs to be done to get the flow up and running.
 
 Some keywords will be linked to the NiFi documentation if you are interested in doing some more reading on the topic.
 
 For the purpose of this guide we have prepared a flow which you can simply upload to NiFi as a template.
-You can download this template modules/contributor/downloads/s3_to_kafka.xml.tar.gz[here]
+You can download this template modules/contributor/downloads/s3_to_kafka.xml.tar.gz[here]. Make sure to unzip the contents so that you can upload the template as an .xml file.
 
 To then upload this you need to click on the _upload template_ button in the UI and specify the appropriate file.
 
