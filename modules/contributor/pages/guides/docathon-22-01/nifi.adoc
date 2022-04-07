@@ -76,7 +76,7 @@ NOTE: As this guide is not intended to be a NiFi guide most of NiFi's features w
 Some keywords will be linked to the NiFi documentation if you are interested in doing some more reading on the topic.
 
 For the purpose of this guide we have prepared a flow which you can simply upload to NiFi as a template.
-You can download this template modules/contributor/downloads/s3_to_kafka.xml.tar.gz[here]
+You can download this template modules/contributor/downloads/s3-kafka.xml[here]
 
 To then upload this you need to click on the _upload template_ button in the UI and specify the appropriate file.
 
@@ -102,7 +102,15 @@ Once this is done return to the main canvas and you are ready to start your flow
 To start the entire flow make sure that you don't have any processors selected by simply clicking on the emtpy canvas anywhere.
 If you click the start button now, NiFi will start all processors and data should start flowing through and end up in the pre-configured Kafka topic.
 
+NOTE: The flow in its packaged form has been restricted to only download a small subset of the yellow cab dataset, as the full size data is fairly large.
+If you have the capacity to process all data you can remove this restriction in the _prefix_ property of the https://nifi.apache.org/docs.html[ListS3] processor, as shown in the screenshot below.
+
+image::docathon-2022-01/nifi-prefix.png[Download filter]
+
+If you change the highlighted value to `trip data/yellow_tripdata_` all data for yellow cabs will be downloaded.
+
 You can now head over to the link:druid.adoc#_overview[Druid] section of this guide and continue with setup there.
+
 
 
 
