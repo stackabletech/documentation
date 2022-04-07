@@ -7,9 +7,7 @@ To analyze the data we now have in Druid, we will connect Superset to our Druid 
 As before, we need to install the operator:
 
 [source, bash]
-$ kind create cluster
-$ helm repo add stackable-stable https://repo.stackable.tech/repository/helm-stable
-$ helm install superset-operator stackable-stable/superset-operator
+helm install superset-operator stackable-stable/superset-operator
 
 == Deploy Postgresql (for Superset metadata)
 
@@ -84,7 +82,7 @@ kubectl port-forward service/simple-superset-external 8088
 
 And now point your browser to `http://localhost:8088/` and you will see the login screen of Superset:
 
-image::superset-login.png[Login]
+image::docathon-2022-01/superset-login.png[Login]
 
 Here you can login with your admin user; if you haven’t chosen different credentials, the ones used above are username `admin` and password `admin`.
 
@@ -112,7 +110,7 @@ The operator will create a job that adds this connection to the Superset cluster
 
 We can now find our Druid cluster as a data source in Superset. In the menu, under `Data` > `Databases` you should see the Druid cluster:
 
-image::superset-databases.png[Databases]
+image::docathon-2022-01/superset-databases.png[Databases]
 
 **N.B. Troubleshooting**: If you do not see your Druid instance, check the status on the `DruidConnection` you deployed (`superset-druid-connection`), it should be `Ready`.
 
@@ -120,23 +118,23 @@ image::superset-databases.png[Databases]
 
 Now, to read the data from our Druid dataset, we need to create a dataset in Superset too, this is done under “Data” > “Datasets”:
 
-image::superset-dataset.png[Dataset]
+image::docathon-2022-01/superset-dataset.png[Dataset]
 
 The data can be queried in `SQL Lab` -> `SQL Editor`:
 
-image::superset-query.png[SQL Editor]
+image::docathon-2022-01/superset-query.png[SQL Editor]
 
 == Data analysis and Dashboards
 
 Once the dataset has been defined, it can be used to create a chart:
 
-image::superset-chart.png[Chart]
+image::docathon-2022-01/superset-chart.png[Chart]
 
-As an example, we create a simple line chart. Applying these settings, we can see from the chart (and the average tip amount) that passengers are more generous at the weekends:
+As an example, we create a simple line chart. Applying these settings, we can see from the chart (and the average tip amount) that passengers are more generous towards the end of the month:
 
 ==== Settings
 
-**(TODO make sure this matches the period imported by Nifi)**
+NOTE: the range has been set so that it matches the filter originally applied in the Nifi template.
 
 |===
 |Chart Setting |Value
@@ -145,13 +143,13 @@ As an example, we create a simple line chart. Applying these settings, we can se
 |`__time`
 
 |Time range
-|`2021-01-01 ≤ col < 2021-02-01`
+|`2020-05-01 ≤ col < 2020-06-01`
 
 |Metrics
 |`AVG(tip_amount)`
 
 |X axis title
-|`January 2021`
+|`May 2020`
 
 |X axis title bottom margin
 |`30`
@@ -167,8 +165,8 @@ As an example, we create a simple line chart. Applying these settings, we can se
 |===
 
 
-image::superset-chart2.png[Chart2]
+image::docathon-2022-01/superset-chart2.png[Chart2]
 
 Finally, you can create a dashboard with this chart:
 
-image::superset-dashboard.png[Dashboard]
+image::docathon-2022-01/superset-dashboard.png[Dashboard]

@@ -29,7 +29,6 @@ N.B. the credentials will also be used in the Druid custom resource.
 == Deploy the Stackable Druid operator
 
 [source]
-helm repo add stackable-stable https://repo.stackable.tech/repository/helm-stable/
 helm install druid-operator stackable-stable/druid-operator
 
 N.B. make sure this is not executed in a location that contains a folder called "druid-operator" as the helm installation will not complete successfully!
@@ -164,7 +163,7 @@ kubectl port-forward svc/druid-nytaxidata-router 8888
 
 The UI should now be reachable at http://localhost:8888 and should look like the screenshot below. We will start with the “Load Data” option:
 
-image::druid-main.png[Main Screen]
+image::docathon-2022-01/druid-main.png[Main Screen]
 
 Select "Apache Kafka" and then "Connect Data" at the right of the screen, entering the following in the two available fields:
 
@@ -173,7 +172,7 @@ Select "Apache Kafka" and then "Connect Data" at the right of the screen, enteri
 
 Then select "Start of stream" and then "Apply":
 
-image::druid-connect.png[Connect to Kafka]
+image::docathon-2022-01/druid-connect.png[Connect to Kafka]
 
 At the bottom right of the screen click through
 
@@ -181,33 +180,33 @@ At the bottom right of the screen click through
 
 without changing anything. At the next step - “Partition” - select `day` for the granularity:
 
-image::druid-partition.png[Partition]
+image::docathon-2022-01/druid-partition.png[Partition]
 
 Then click on “Tune”. At this point we tell Druid how to manage the Kafka offsets. As this is the initial read action we have to choose “True” so that Kafka starts at the earliest possible offset (subsequent reads will pick up from the last offset that Druid has cached internally):
 
-image::druid-tuning.png[Offsets]
+image::docathon-2022-01/druid-tuning.png[Offsets]
 
 Click through “Publish” to show “Edit spec”. At this point we have a complete ingestion job specification in JSON format:
 
-image::druid-jobspec.png[Ingestion-spec]
+image::docathon-2022-01/druid-jobspec.png[Ingestion-spec]
 
 At this point we can just click on the final step on the bottom (“Submit”) and the job will start running - since the job is a streaming job it will wait for fresh Kafka data in the specified topic and ingest it into Druid. However, before we do that, save the JSON specification in a separate file (e.g. `/tmp/kafka-ingestion-spec.json`) as we will also show how to start this job from the command line per `curl`.
 
 Back at the screen, click on “Submit” - the ingestion job will be started, which will take a few moments. As mentioned already, we are starting a streaming job, so it will continue to run in the background (i.e. the status remains `RUNNING`):
 
-image::druid-task.png[Task]
+image::docathon-2022-01/druid-task.png[Task]
 
 The magnifying glass icon shows metadata such as logs, spec-definition etc:
 
-image::druid-running.png[Running job]
+image::docathon-2022-01/druid-running.png[Running job]
 
 Once the ingestion job has been started, Druid monitors the relevant Kafka topic for changes and ingest new data, persisting it in its deep storage. It can take a few moments for the first segments to be ready (and a bit longer until they are published as immutable segments in deep storage). The streaming job will stay at RUNNING until such time as it is stopped. The datasource is visible under the “Datasources” tab, where the individual segments - partitioned by time slice - can also be examined:
 
-image::druid-datasources.png[Datasources]
+image::docathon-2022-01/druid-datasources.png[Datasources]
 
 We can also display data by issuing queries against our datasource from within the SQL designer under the “Query” tab:
 
-image::druid-query.png[Query screen]
+image::docathon-2022-01/druid-query.png[Query screen]
 
 === Using `curl`
 
