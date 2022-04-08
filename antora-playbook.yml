@@ -9,6 +9,9 @@ content:
     - url: https://github.com/stackabletech/documentation.git
       branches: main
 
+    - url: https://github.com/stackabletech/commons-operator.git
+      branches: main
+      start_path: docs
     - url: https://github.com/stackabletech/secret-operator.git
       branches: main
       start_path: docs
