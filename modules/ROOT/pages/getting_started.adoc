@@ -242,7 +242,7 @@ spec:
       default:
         selector:
           matchLabels:
-            kubernetes.io/os: linux
+            node: quickstart-1
         config:
           log:
             rootLogLevel: INFO
@@ -333,7 +333,8 @@ NAME          TYPE       CLUSTER-IP    EXTERNAL-IP   PORT(S)          AGE
 simple-nifi   NodePort   10.43.75.25   <none>        8443:30247/TCP   49m
 ----
 
-Browse to the address of your Kubernetes node on port 30247 e.g. https://quickstart.local:30247/nifi and you should see the NiFi login screen.
+Since our Nifi service is running on the same Kubernetes node as the Kafka broker, we can reuse the IP address to open the Nifi interface in the browser.
+Browse to the address of your Kubernetes node on port `30247` e.g. https://172.18.0.2:30247/nifi and you should see the NiFi login screen.
 
 image:nifi_login_screen.png[The Apache NiFi web interface login screen]
 
@@ -342,9 +343,9 @@ The Apache NiFi operator will automatically generate the admin user credentials 
 [source]
 ----
 kubectl get secrets nifi-admin-credentials-simple -o jsonpath="{.data.password}" | base64 -d && echo
-4tkInc6UyBuWvbc
+AdminPassword
 ----
 
-Your password will be different to the one above and will be different every time you install a new cluster. Once you have these credentials you can login and you should see a blank NiFi canvas.
+Once you have these credentials you can login and you should see a blank NiFi canvas.
 
 image:nifi_menu.png[The Apache NiFi web interface canvas]
