@@ -61,7 +61,7 @@ To retrieve the appropriate URL you can run the following command:
 [source,bash]
 kubectl get svc simple-nifi -o json | jq -r --argfile endpoints <(kubectl get endpoints simple-nifi -o json) --argfile nodes <(kubectl get nodes -o json) '($nodes.items[] | select(.metadata.name == $endpoints.subsets[].addresses[].nodeName) | .status.addresses | map(select(.type == "ExternalIP" or .type == "InternalIP")) | min_by(.type) | .address | tostring) + ":" + (.spec.ports[] | select(.name == "https") | .nodePort | tostring)'
 
-This will output all UI endpoints for the NiFi cluster, the only thing you need to do is prepend 'https://' when accessing the UI in your browser.
+This will output all UI endpoints for the NiFi cluster, the only thing you need to do is prepend 'https://' when accessing the UI in your browser. If your browser warns you that the connection is not secure (because of a self-signed certificate) you must continue to the unsafe variant.
 
 image::docathon-2022-01/nifi-login.png[NiFi Login Screen]
 

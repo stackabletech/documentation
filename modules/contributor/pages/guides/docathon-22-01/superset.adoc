@@ -65,7 +65,7 @@ EOF
 
 On the first deployment of the Superset cluster, the operator will also initialize the database. Once the database is initialized, you can connect to the cluster.
 
-You can verify that the Cluster is up and running with this command:
+You can verify that the database is up and running with this command:
 
 [source]
 kubectl get statefulset superset-postgresql -o \
