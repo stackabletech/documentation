@@ -143,7 +143,7 @@ spec:
         replicas: 1
 EOF
 
-<1> s3 secret
+<1> S3 secret
 <2> Druid ZNode
 
 == Data Ingestion
