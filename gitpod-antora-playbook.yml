@@ -65,3 +65,6 @@ antora:
 asciidoc:
   attributes:
     base-repo: https://github.com/stackabletech
+    plantuml-server-url: http://www.plantuml.com/plantuml
+  extensions:
+    - asciidoctor-kroki
