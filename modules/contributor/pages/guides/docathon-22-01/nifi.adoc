@@ -33,7 +33,7 @@ helm install kafka-operator stackable-stable/kafka-operator
 
 === NiFi Operator
 
-NiFi is a ETL tool which will be used to model the dataflow of downloading and splitting files from S3.
+NiFi is an ETL tool which will be used to model the dataflow of downloading and splitting files from S3.
 It will also be used to convert the file content from CSV to JSON.
 
 [source,bash]
