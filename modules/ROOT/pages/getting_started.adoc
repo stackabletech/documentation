@@ -183,6 +183,9 @@ spec:
     roleGroups:
       brokers:
         replicas: 1
+        selector:
+          matchLabels:
+            node: quickstart-1
 ---
 apiVersion: zookeeper.stackable.tech/v1alpha1
 kind: ZookeeperZnode
@@ -263,7 +266,7 @@ simple-kafka-broker-brokers-0                    2/2     Running   0          21
 simple-nifi-node-default-0                       1/1     Running   0          22m
 ----
 
-Since this is the first time that each of these services has been deployed to these nodes the Stackable Agent needs to download the software from the Stackable repository. It may take a few minutes to complete the download and deploy the services. Once all of the pods are in the running state your cluster should be ready to use.
+Since this is the first time that each of these services has been deployed to these nodes, it will take some time to download the software from the Stackable repository and deploy the services. Once all of the pods are in the running state your cluster is ready to use.
 
 == Testing your cluster
 If all has gone well then you will have successfully deployed a Stackable cluster and used it to start three services that should now be ready for you.
@@ -289,8 +292,19 @@ To test Kafka we'll use the tool `kafkacat`.
 
     sudo apt install kafkacat
 
-With `kafkacat` installed we can connect to Kafka and query the metadata on the broker running on localhost. To do this we first need to find which port Kafka is listening on.
+With `kafkacat` installed, we can connect to Kafka broker running on Kubernetes and query it's metadata. To do this, we first need the IP address and the port Kafka is listening on.
 
+To find the IP address we need to connect to, run the following command:
+[source]
+----
+$ kubectl get node quickstart-worker -o wide
+NAME                STATUS   ROLES    AGE   VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE       KERNEL-VERSION      CONTAINER-RUNTIME
+quickstart-worker   Ready    <none>   45m   v1.21.1   172.18.0.2    <none>        Ubuntu 21.04   5.15.0-25-generic   containerd://1.5.2
+----
+
+The column `INTERNAL_IP` lists the IP address of the Kubernetes node named `quickstart-node`. This is where the Kafka broker is running.
+
+For the port, run:
 [source]
 ----
 $ kubectl get svc simple-kafka
@@ -298,11 +312,11 @@ NAME           TYPE       CLUSTER-IP   EXTERNAL-IP   PORT(S)          AGE
 simple-kafka   NodePort   10.43.20.5   <none>        9092:31909/TCP   44m
 ----
 
-Here we can the see default Kafka port 9092 has been mapped to port 31909. We can use this to configure kafkacat to connect to the broker.
+Here we can the see default Kafka port `9092` has been mapped to port `31909`. We can use this to configure `kafkacat` to connect to the broker.
 
 [source]
 ----
-$ kafkacat -b localhost:31909 -L
+$ kafkacat -b 172.18.0.2:31909 -L
 Metadata for all topics (from broker -1: localhost:31909/bootstrap):
 1 brokers:
 broker 1001 at 192.168.40.120:31976 (controller)
