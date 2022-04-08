@@ -104,7 +104,7 @@ The Stackable operators are components that translate the service definitions de
 
 Stackable operators are installed using Helm charts. Run the following commands to install the operators for ZooKeeper, Kafka and NiFi using the repo configured earlier. The --devel flag will choose the latest available version; alternatively the --version flag can be used to deploy a specific version.
 
-==== Installing from the Stackable test repository
+==== Install operators from the Stackable repository
 
 [source,bash]
 ----
@@ -268,16 +268,29 @@ The shell should connect automatically to the ZooKeeper server running on the po
 ----
 
 === Apache Kafka
-To test Kafka we'll use the tool `kafkacat`.
+To test Kafka we'll create a topic, and verify that it was created.
+First create the topic with the following command:
 
 [source,bash]
 ----
-sudo apt install kafkacat
+kubectl exec -i -t simple-kafka-broker-brokers-0 -c kafka -- \
+  bin/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic demo
+Created topic demo.
 ----
 
-With `kafkacat` installed, we can connect to Kafka broker running on Kubernetes and query it's metadata. To do this, we first need the IP address and the port Kafka is listening on.
+Now let's check if it was actually created:
 
-To find the IP address we need to connect to, run:
+[source,bash]
+----
+kubectl exec -i -t simple-kafka-broker-brokers-0 -c kafka -- \
+  bin/kafka-topics.sh --bootstrap-server localhost:9092 --list
+demo
+----
+
+=== Apache NiFi
+Apache NiFi provides a web interface and the easiest way to test it is to view this in a web browser.
+To access the web interface we first need to get the ip address and port Nifi is listening on.
+To get the IP address we need to connect to (in this case `172.18.0.2`), run:
 
 [source,bash]
 ----
@@ -288,37 +301,8 @@ NAME                STATUS   ROLES    AGE   VERSION   INTERNAL-IP   EXTERNAL-IP 
 quickstart-worker   Ready    <none>   45m   v1.21.1   172.18.0.2    <none>        Ubuntu 21.04   5.15.0-25-generic   containerd://1.5.2
 ----
 
-The column `INTERNAL_IP` lists the IP address of the Kubernetes node labeled `quickstart-1`. This is where the Kafka broker is running.
 
-For the port, run
-
-[source,bash]
-----
-kubectl get svc simple-kafka
-----
-----
-NAME           TYPE       CLUSTER-IP   EXTERNAL-IP   PORT(S)          AGE
-simple-kafka   NodePort   10.43.20.5   <none>        9092:31909/TCP   44m
-----
-
-Here we can the see default Kafka port `9092` has been mapped to port `31909`. We can use this to configure `kafkacat` to connect to the broker.
-
-[source,bash]
-----
-kafkacat -b 172.18.0.2:31909 -L
-----
-
-If you see output like the one below your Kafka connection was successful.
-
-----
-Metadata for all topics (from broker -1: localhost:31909/bootstrap):
-1 brokers:
-broker 1001 at 192.168.40.120:31976 (controller)
-0 topics:
-----
-
-=== Apache NiFi
-Apache NiFi provides a web interface and the easiest way to test it is to view this in a web browser. As with the Kafka example above we need to find which port NiFi is listening on.
+With the following command we get the port (in this case `30247`):
 
 [source,bash]
 ----
@@ -330,18 +314,18 @@ NAME          TYPE       CLUSTER-IP    EXTERNAL-IP   PORT(S)          AGE
 simple-nifi   NodePort   10.43.75.25   <none>        8443:30247/TCP   49m
 ----
 
-Since our Nifi service is running on the same Kubernetes node as the Kafka broker, we can reuse the IP address to open the Nifi interface in the browser.
 Browse to the address of your Kubernetes node on port `30247` e.g. https://172.18.0.2:30247/nifi and you should see the NiFi login screen.
 
 image:nifi_login_screen.png[The Apache NiFi web interface login screen]
 
-The Apache NiFi operator will automatically generate the admin user credentials with a random password and store it as a Kubernetes secret in order to provide some security out of the box. You can retrieve this password for the admin user with the following kubectl command.
+The Apache NiFi operator will automatically generate the admin user credentials with a random password and store it as a Kubernetes secret in order to provide some security out of the box. You can retrieve this password for the `admin` user with the following kubectl command.
 
 [source,bash]
 ----
-kubectl get secrets nifi-admin-credentials-simple -o jsonpath="{.data.password}" | base64 -d && echo
+kubectl get secrets nifi-admin-credentials-simple \
+-o jsonpath="{.data.password}" | base64 -d && echo
 ----
 
-Once you have these credentials you can login and you should see a blank NiFi canvas.
+Once you have these credentials you can log in and you should see a blank NiFi canvas.
 
 image:nifi_menu.png[The Apache NiFi web interface canvas]
