@@ -46,7 +46,7 @@ K3s provides a quick way of installing Kubernetes. On your control node run the 
 
 [source,bash]
 ----
-curl -sfL https://get.k3s.io | sh -s - --write-kubeconfig-mode 644
+curl -sfL https://get.k3s.io | sh -s - --node-label 'node=quickstart-1' --write-kubeconfig-mode 644
 ----
 
 So long as you have an Internet connection K3s will download and automatically configure a simple Kubernetes environment.
@@ -297,12 +297,12 @@ With `kafkacat` installed, we can connect to Kafka broker running on Kubernetes 
 To find the IP address we need to connect to, run the following command:
 [source]
 ----
-$ kubectl get node quickstart-worker -o wide
+$ kubectl get nodes --selector=node=quickstart-1 -o wide
 NAME                STATUS   ROLES    AGE   VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE       KERNEL-VERSION      CONTAINER-RUNTIME
 quickstart-worker   Ready    <none>   45m   v1.21.1   172.18.0.2    <none>        Ubuntu 21.04   5.15.0-25-generic   containerd://1.5.2
 ----
 
-The column `INTERNAL_IP` lists the IP address of the Kubernetes node named `quickstart-node`. This is where the Kafka broker is running.
+The column `INTERNAL_IP` lists the IP address of the Kubernetes node labeled `quickstart-1`. This is where the Kafka broker is running.
 
 For the port, run:
 [source]
