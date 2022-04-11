@@ -82,7 +82,7 @@ This page contains information about our products and relevant links you might n
 |https://github.com/apache/spark
 |https://github.com/stackabletech/spark-k8s-operator
 |https://github.com/stackabletech/docker-images/tree/main/spark-k8s
-|https://ci.stackable.tech/job/Spark%20Operator%20Integration%20Tests/
+|https://ci.stackable.tech/job/Spark%20On%20K8S%20Operator%20Integration%20Tests/
 |https://docs.stackable.tech/spark-k8s/index.html
 |
 
