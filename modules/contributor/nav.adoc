@@ -4,5 +4,6 @@
 ** xref:steps.adoc[]
 ** xref:development_dashboard.adoc[]
 ** xref:service_discovery.adoc[]
+** xref:opa_configuration.adoc[]
 
 include::partial$adr-nav.adoc[]
