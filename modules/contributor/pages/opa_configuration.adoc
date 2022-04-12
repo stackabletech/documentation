@@ -5,7 +5,7 @@
 
 == Introduction
 
-The Stackable Platform offers an https://www.openpolicyagent.org[OpenPolicyAgent] (OPA) operator for policy-based access control. This document will show how to configure another operator and its managed product to query OPA to enforce policy-based access control.
+The Stackable Platform offers an https://www.openpolicyagent.org[OpenPolicyAgent] (OPA) operator for policy-based access control. This document will show how to configure a Stackable operator and its managed product to query OPA to enforce policy-based access control.
 
 == What is OPA?
 
