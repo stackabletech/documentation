@@ -5,11 +5,11 @@
 
 == Introduction
 
-The Stackable Platform offers an https://www.openpolicyagent.org[OpenPolicyAgent] (OPA) operator for policy-based access control. This document will show how to configure a Stackable operator and its managed product to query OPA to enforce policy-based access control.
+The Stackable Platform offers an https://www.openpolicyagent.org[OpenPolicyAgent] (OPA) operator for policy-based access control. This document shows how to configure a Stackable operator and its managed product to query OPA to enforce policy-based access control.
 
 == What is OPA?
 
-OPA is an open source, general purpose policy engine. It supports a high-level declarative language called `https://www.openpolicyagent.org/docs/latest/policy-language/[Rego]`. Rego enables you to specify complex policies as code and transfer the decision-making processes from your software to OPA. We refer to policies written in Rego as Rego rules.
+OPA is an open source, general purpose policy engine. It supports a high-level declarative language called `https://www.openpolicyagent.org/docs/latest/policy-language/[Rego]`. Rego enables you to specify complex policies as code and transfer the decision-making processes from your software to OPA. We refer to policies written in Rego as _Rego rules_.
 
 The provided OPA REST API allows you to enforce policies within microservices, Kubernetes, CI/CD pipelines and more.
 
@@ -17,20 +17,20 @@ OPA accepts arbitrary structured input data (e.g. JSON) when running queries aga
 
 == Examples for OPA policies
 
-The combination of arbitrary input data and the Rego rules enable you to specify almost any kind of policies.
+The combination of arbitrary input data and the Rego rules enable you to specify and enforce almost any kind of policies.
 You can define powerful policies for e.g. user access for database tables, schemas, columns etc. You can enforce local network traffic, access time periods and many more.
 
 See the https://www.openpolicyagent.org/docs/latest/#overview[OPA documentation] for further examples.
 
 == Stackable Operator for OPA
 
-The https://github.com/stackabletech/opa-operator[Stackable Operator for OPA] deploys OPA as a `https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/[DaemonSet]` in Kubernetes. This ensures that every registered `https://kubernetes.io/de/docs/concepts/architecture/nodes/[Node]` runs exactly one OPA instance. In order to reduce traffic and latency, deployed products querying OPA should use the local OPA provided on their respective Node.
+The https://github.com/stackabletech/opa-operator[Stackable Operator for OPA] deploys OPA as a `https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/[DaemonSet]` in Kubernetes. This ensures that every registered `https://kubernetes.io/de/docs/concepts/architecture/nodes/[Node]` runs exactly one OPA instance. In order to reduce traffic and latency, deployed products querying OPA must use the local OPA provided on their respective Node.
 
 === Service Discovery
 
-Furthermore, the Stackable Operator for OPA deploys a _service discovery_ `ConfigMap` (see xref:service_discovery.adoc[]) to expose its service URL to other operators. These operators then are configured to use the service discovery ConfigMap to extract the required URL and configure their products and authorizers. Authorizers are plugins for products that allow authorization and access control.
+Furthermore, the Stackable Operator for OPA deploys a _service discovery_ `ConfigMap` (see xref:service_discovery.adoc[]) to expose its service URL to other Stackable operators. These operators then are configured to use the service discovery ConfigMap to extract the required URL and configure their products and authorizers. Authorizers are plugins for products that allow authorization and access control.
 
-The ConfigMap has one data entry that points to the `ClusterIP` service:
+The ConfigMap has one data entry that points to the OPA `ClusterIP` service:
 
 [source,yaml]
 ----
@@ -62,7 +62,7 @@ data:
     }
 ----
 
-The OPA bundle controller will create a `bundle.tar.gz` file locally, containing the content of every `ConfigMap` labeled with `opa.stackable.tech/bundle` (the label value can be arbitrary). This bundle then will be read and activated by OPA.
+The OPA bundle controller creates a `bundle.tar.gz` file locally, bundling the content of every `ConfigMap` labeled with `opa.stackable.tech/bundle` (the label value can be arbitrary). This bundle is read and activated by OPA.
 
 You can query the `allow` rule provided in the example above via:
 
@@ -91,7 +91,7 @@ pub struct OpaConfig {
 }
 ----
 
-You can use that struct in the CRD of your operator to configure the OPA service discovery ConfigMap as well as the desired package name. The method `full_document_url_from_config_map` will read the service discovery ConfigMap provided by the Stackable operator for OPA and construct the URL that can be used to configure the product or its authorizers (the plugins that talk to OPA).
+You can use that struct in the CRD of your operator to configure the OPA service discovery ConfigMap as well as the desired package name. The method `full_document_url_from_config_map` reads the service discovery ConfigMap provided by the Stackable operator for OPA and constructs the URL to configure the product or its authorizers (the plugins that talk to OPA).
 
 Usually OPA authorizers are configured with the URL to the OPA REST API, authentication / security and other properties like caching. This differs from authorizer to authorizer.
 
