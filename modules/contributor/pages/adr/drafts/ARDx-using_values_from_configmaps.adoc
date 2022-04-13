@@ -1,0 +1,89 @@
+= How Should Operators Use Values from ConfigMaps & Secrets
+Doc Writer <doc.writer@asciidoctor.org>
+v0.1, 13.04.2022
+:status: draft
+
+* Status: {status}
+* Deciders:
+** Felix Hennig
+** Razvan Mihai
+** Sebastian Bernauer
+** Sönke Liebau
+** Teo Klestrup Röijezon
+* Date: 13.04.2022
+
+Technical Story: https://github.com/stackabletech/issues/issues/208[#208]
+
+== Context and Problem Statement
+
+One of the main focus areas of Stackable is making components of the stack work together well.
+This requires a high degree of composability where one component refers to another compenent in its definition.
+While this is a simple concept in principle it requires that operators obtain information about the object that is referred to and inject this information into the configuration of the object that refers to it.
+An example for this is a NiFi cluster definition referring to a ZooKeeper cluster definition via a znode name:
+
+[,yaml]
+----
+apiVersion: nifi.stackable.tech/v1alpha1
+kind: NifiCluster
+metadata:
+  name: simple-nifi
+spec:
+  zookeeperConfigMapName: simple-nifi-znode
+----
+
+For this example the NiFi operator needs to somehow insert the content of this config map into specific NiFi config files.
+
+This ADR is about the preferred way of implementing dependencies like described above.
+
+== Considered Options
+
+* <<option1,Option 1:>> Inserting ConfigMap/Secret content into target config in the operator
+* <<option2,Option 2:>> Mounting ConfigMap/Secret into the pods
+
+== Decision Outcome
+
+Chosen option: "<<option2,Option 2>>", because it makes better use of Kubernetes features to model dependencies between definitions which in turn will make restart implementations and general debugging easier and more predictable.
+
+This decision will not hold true for all possible scenarios, but should be understood more as a implementation guideline:
+
+[sidebar]
+If a pod needs to access the content of a ConfigMap or Secret it should do this by mounting the ConfigMap/Secret unless there is a good reason to access the ConfigMap directly in the operator instead.
+
+=== Positive Consequences
+
+* Dependencies will be clearly modelled in Kubernetes by mounts, which makes behavior of the entire architecture more predictable
+* Operators need to implement a much simpler logic around watches, as triggering reconciliations is handled via k8s dependencies (mounts)
+
+=== Negative Consequences
+
+* Complexity is moved from the operator code into init containers that need to perform insertion of the ConfigMap/Secret content into actual config files
+* Debugging a running configuration becomes harder in cases where users have no access to a shell in the pods, as this would be the only way to actually see the running configuration (https://github.com/stackabletech/issues/issues/210)[#210] has been created to investigate mitigating this)
+
+== Pros and Cons of the Options
+
+[[option1]]
+=== Option 1 - Inserting ConfigMap/Secret content into target config in the operator
+
+The operator can retrieve the content from ConfigMaps/Secrets during reconciliation and insert the values directly into the target config.
+The target config would then be written either to a ConfigMap or a Secret, depending on whether sensitive input data is contained in it.
+
+
+* Good, because it isolates most of the complexity in the operator
+* Good, because it would allow referencing ConfigMaps and Secrets in different namespaces which would potentially allow for less duplication
+* Good, because it gives an almost complete manifestation of a running config in k8s objects that can be used for debugging
+* Bad, because it would allow referencing ConfigMaps and Secrets in different namespaces, which would dilute namespace separation
+* Bad, because it makes debugging startup issues of products much harder, as pods will simply not appear if required ConfigMaps are missing, effectively bypassing well established k8s patterns (like a pod missing a mount not starting and writing events about why it is not starting)
+* Bad, because the dependencies between pods and configmaps / secrets become very complex and hard to debug as they are not modelled in any way as k8s dependencies (mounts)
+* Bad, because setting up the correct watches in the operator becomes very complex, with a likelyhood of inadvertently forgetting to add a new watch that becomes necessary as CRDs evolve
+* Bad, because it potentially propagates sensitive values to multiple places by copying secret content to additional places
+
+[[option2]]
+=== Option 2 - Mounting ConfigMap/Secret into the pods
+
+Instead of accessing the content of ConfigMaps/Secrets in the operator the operator would simply mount these object into the generated pods.
+Accessing the content of these mounted objects would then need to be done in an init container, currently this is done with shell commands, but this would be replaced with a more suitable tool in a follow-up ADR.
+
+* Good, because [argument a]
+* Good, because [argument b]
+* Bad, because [argument c]
+* … <!-- numbers of pros and cons can vary -->
