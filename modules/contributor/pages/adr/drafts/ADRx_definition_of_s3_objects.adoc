@@ -1,4 +1,4 @@
-= [short title of solved problem and solution]
+= Representation of S3 Buckets in CRDs
 Sönke Liebau <soenke.liebau@stackable.tech>
 v0.1, 13.04.2022
 :status: [draft]
