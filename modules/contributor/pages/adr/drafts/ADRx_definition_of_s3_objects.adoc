@@ -14,13 +14,13 @@ v0.1, 13.04.2022
 == Context and Problem Statement
 
 Currently we do not have a common schema of how we refer to S3 buckets that are used by the managed product.
-For example Trino, Druid and Hive all require/support specifying one or more S3 buckets to access, for some of the tools these buckets can reside on separate S3 endpoints (Aws, minio, ceph, ...).
+For example Trino, Druid and Hive all require/support specifying one or more S3 buckets to access, for some of the tools these buckets can reside on separate S3 endpoints (AWS, MinIO, Ceph, ...).
 
 We want to define a shared set of CRDs which can be used to specify these connections in an easy and composable fashion and works the same for all products across the Stackable Data Platform.
 
 == Decision Drivers
 
-* Must allow using different S3 endpoints in the same environment
+* Must allow using multiple S3 endpoints in the same environment
 * Must support buckets with generated names that are not known up front (like with Rook's https://rook.io/docs/rook/v1.8/ceph-object-bucket-claim.html[object bucket claim] pattern)
 * Must allow specifying just an S3 backend without a bucket (for example Trino and Druid need this)
 * Should be easy to use for the end-user and not require scripting or similar things to take care of repetitive
@@ -166,7 +166,6 @@ image::adr/s3_option2.png[]
 * Good, because simpler for the operator to use
 * Bad, because puts the burden of repetition on the user (probably tooling will need to be created around this)
 * Bad, because sacrifices flexibility while not completely eliminating the need for custom watches in the controller
-* … <!-- numbers of pros and cons can vary -->
 
 [[option3]]
 === Option 3: Inlining bucket name and credentials in the product configuration
@@ -260,7 +259,7 @@ By making the S3 backend configuration a complex enum in the S3Bucket object it 
 * Directly specify the needed value in the S3Bucket object
 * Refer to an S3Connection object
 
-Additionally both object will provide the option of specifying credentials to use for authentication.
+Additionally both objects will provide the option of specifying credentials to use for authentication.
 The principle for resolving this is that credentials specified on a bucket object would override credentials specified on an S3Connection object.
 If both objects do not provide credentials an anonymous connection would be attempted.
 
@@ -397,6 +396,7 @@ pub fn resolve_s3_bucket(bucket: &S3Bucket) -> Result<Bucket> {
 image::adr/s3_option5.png[]
 
 * Good, because it gives a lot of flexibility in defining S3 buckets, it pretty much has all the benefits of options 1, 3 & 4
+* Good, because we can start implementing only the inline configuration so that the operators only have to watch a single object (similar to option 2). Later on the reference mechanism can be added without a breaking change (as an addition to the complex enum).
 * Bad, because setting up all necessary watches in the operator to ensure objects are reconciled as needed will become extremely complex
 
 [[option6]]
