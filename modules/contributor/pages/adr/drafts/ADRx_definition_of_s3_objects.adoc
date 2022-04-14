@@ -35,6 +35,7 @@ We want to define a shared set of CRDs which can be used to specify these connec
 * <<option4,Option 4>>: Isolating S3 endpoint details and credentials in an S3Connection object
 * <<option5,Option 5>>: Merge of options 1, 3 & 4
 * <<option6,Option 6>>: Generate inlined S3Connection objects from templates with a dedicated controller
+* <<option7,Option 7>>: Use the ConfigMap format that has been defined by Rook for use with its https://rook.io/docs/rook/v1.8/ceph-object-bucket-claim.html[object bucket claim] method
 
 == Decision Outcome
 
@@ -68,6 +69,13 @@ Implementing this gives us a working solution and buys time to evaluate options 
 We will spike the second half of <<option5,option 5> as well as <<option6,option 6>> and see which one has more potential and creates the least amount of implementation issues.
 
 The decision on how to proceed will be documented in a separate ADR later on.
+
+Special mention should be given to <<option7,Option 7>> here, the main reason for deciding against this option was because we felt it wouldn't make sense to use this standard and then extend it with non-standard settings that we need for our purposes - effectively diverting from the standard again.
+
+We decided to instead support object bucket claims by writing a controller that watches for these configmaps and converts them into our chosen notation for referring to buckets.
+The image below shows the control flow at a high level, a more detailed design will be done at a later time and is out of scope for this document.
+
+image::adr/s3-object-bucket-claim.png[]
 
 == Pros and Cons of the Options
 
@@ -410,3 +418,27 @@ image::adr/s3_option6.png[]
 
 * Good, because it makes watches easy-ish to set up in the operators (identical to <<option2,option 2>>)
 * Bad, because it requires creating a _template_ object per set of credentials that are to be used for accessing the S3 endpoint
+
+[[option7]]
+=== Option 7: Use the ConfigMap format that has been defined by Rook for use with its object bucket claim method
+
+There is an existing format for specifying object buckets in ConfigMaps that has been https://access.redhat.com/documentation/en-us/red_hat_openshift_container_storage/4.7/html/managing_hybrid_and_multicloud_resources/object-bucket-claim#creating-an-object-bucket-claim-using-the-command-line-interface_rhocs[defined] by RedHat (or maybe just documented and defined by someone else).
+
+Adhering to this format would have the benefit of automatically being compatible with any external system that uses this standard.
+This option can be considered roughly equivalent to <<option2,Option2>>, as the content of the ConfigMap matches what is specified in the S3Connection object for that option.
+
+* Good, because it is an established standard that would make our operators compatible with this standard
+* Bad, because it does not give us the flexibility of adding content that we need and while staying fully compatible
+
+----
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: my-bucket
+data:
+  BUCKET_HOST: 10.0.171.35
+  BUCKET_NAME: test21obc-933348a6-e267-4f82-82f1-e59bf4fe3bb4
+  BUCKET_PORT: "31242"
+  BUCKET_REGION: ""
+  BUCKET_SUBREGION: ""
+----
