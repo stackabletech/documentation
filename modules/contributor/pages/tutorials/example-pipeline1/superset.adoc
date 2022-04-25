@@ -1,15 +1,15 @@
-= Overview
+== Superset
 
 To analyze the data we now have in Druid, we will connect Superset to our Druid instance, and read and visualize the data in Superset.
 
-== Deploy the Stackable Superset operator
+=== Deploy the Stackable Superset operator
 
 As before, we need to install the operator:
 
 [source, bash]
 helm install superset-operator stackable-stable/superset-operator
 
-== Deploy Postgresql (for Superset metadata)
+=== Deploy Postgresql (for Superset metadata)
 
 Superset requires an SQL database to run. We will install a dedicated database for Superset: as before, we will use the Bitnami PostgreSQL helm chart to deploy a PostgreSQL instance.
 
@@ -40,7 +40,7 @@ stringData:
   connections.sqlalchemyDatabaseUri: postgresql://superset:superset@superset-postgresql.default.svc.cluster.local/superset
 EOF
 
-== Deploy the Superset cluster
+=== Deploy the Superset cluster
 
 Now we can deploy Superset:
 
@@ -73,7 +73,7 @@ jsonpath='{.status.readyReplicas}'
 
 It should return `1`.
 
-==== Setup port-forwarding for the Superset UI
+===== Setup port-forwarding for the Superset UI
 
 You can also connect to the Superset UI:
 
@@ -114,7 +114,7 @@ image::docathon-2022-01/superset-databases.png[Databases]
 
 **N.B. Troubleshooting**: If you do not see your Druid instance, check the status on the `DruidConnection` you deployed (`superset-druid-connection`), it should be `Ready`.
 
-== Querying Druid Data from Superset
+=== Querying Druid Data from Superset
 
 Now, to read the data from our Druid dataset, we need to create a dataset in Superset too, this is done under “Data” > “Datasets”:
 
@@ -124,7 +124,7 @@ The data can be queried in `SQL Lab` -> `SQL Editor`:
 
 image::docathon-2022-01/superset-query.png[SQL Editor]
 
-== Data analysis and Dashboards
+=== Data analysis and Dashboards
 
 Once the dataset has been defined, it can be used to create a chart:
 
@@ -132,7 +132,7 @@ image::docathon-2022-01/superset-chart.png[Chart]
 
 As an example, we create a simple line chart. Applying these settings, we can see from the chart (and the average tip amount) that passengers are more generous towards the end of the month:
 
-==== Settings
+===== Settings
 
 NOTE: the range has been set so that it matches the filter originally applied in the Nifi template.
 

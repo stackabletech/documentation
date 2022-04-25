@@ -1,0 +1,11 @@
+= Setting up an End-to-End Data Pipeline
+:toc: preamble
+
+In this tutorial we will look at setting up a data pipeline, from raw data to visualization. We will read data from S3 using NiFi, send it to Kafka, from there it is ingested into Druid and lastly we will visualize the data using Superset.
+
+
+include::nifi.adoc[]
+
+include::druid.adoc[]
+
+include::superset.adoc[]

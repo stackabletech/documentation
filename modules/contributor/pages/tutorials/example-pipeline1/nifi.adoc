@@ -1,13 +1,13 @@
-= Overview
+== Nifi and Kafka
 
 This section shows how to instantiate the first part of the entire processing chain, which will ingest CSV files from an S3 bucket, split the files into individual records and send these records to a Kafka topic.
 
 
-== Installing Needed Operators
+=== Installing Needed Operators
 
 The definitions rolled out in this section need some operators to be installed in the K8s cluster.
 
-=== Secret Operator
+==== Secret Operator
 
 The secret operator is needed by the Stackable Operator for Apache NiFi, as NiFi requires the UI to be served via HTTPS.
 The necessary certificates and keys for this are provided by the Secret Operator to the NiFi pods.
@@ -16,7 +16,7 @@ The necessary certificates and keys for this are provided by the Secret Operator
 helm repo add stackable-stable https://repo.stackable.tech/repository/helm-stable/
 helm install secret-operator stackable-stable/secret-operator
 
-=== ZooKeeper Operator
+==== ZooKeeper Operator
 
 Apache NiFi and Apache Kafka both use Apache ZooKeeper as backing config storage, so the Stackable Operator for Apache ZooKeeper has to be installed in order to make sure that a ZooKeeper cluster can be rolled out.
 There is no need to install multiple ZooKeeper clusters, as NiFi, Kafka and Druid can share the same cluster via provisioning a zNode per backed service.
@@ -24,14 +24,14 @@ There is no need to install multiple ZooKeeper clusters, as NiFi, Kafka and Drui
 [source,bash]
 helm install zookeeper-operator stackable-stable/zookeeper-operator
 
-=== Kafka Operator
+==== Kafka Operator
 
 Kafka will be used by NiFi to publish the individual records from the S3 data into.
 
 [source,bash]
 helm install kafka-operator stackable-stable/kafka-operator
 
-=== NiFi Operator
+==== NiFi Operator
 
 NiFi is an ETL tool which will be used to model the dataflow of downloading and splitting files from S3.
 It will also be used to convert the file content from CSV to JSON.
@@ -42,7 +42,7 @@ helm install nifi-operator stackable-test/nifi-operator --version=0.6.0-pr251
 NOTE: We need the PR version which has increased PVC sizes and heap memory.
 Apply the Kafka custom resource (https://github.com/stackabletech/kafka-operator/blob/main/examples/simple-kafka-cluster.yaml)
 
-== Installing Tools
+=== Installing Tools
 
 For the purposes of this use case, no special config is required, so we can simply deploy the examples straight from the operator repositories.
 These files are designed to be self-contained, so for example the NiFi example also contains the necessary ZooKeeper cluster definition.
@@ -53,7 +53,7 @@ kubectl apply -f https://raw.githubusercontent.com/stackabletech/nifi-operator/m
 
 The Nifi installation will take several minutes due to the size of the images.
 
-== Connecting to NiFi and Deploying the Flow
+=== Connecting to NiFi and Deploying the Flow
 
 After all pods are succesfully deployed the NiFi UI should be accessible.
 To retrieve the appropriate URL you can run the following command:
@@ -110,7 +110,7 @@ image::docathon-2022-01/nifi-prefix.png[Download filter]
 
 If you change the highlighted value to `trip data/yellow_tripdata_` all data for yellow cabs will be downloaded.
 
-You can now head over to the link:druid.adoc#_overview[Druid] section of this guide and continue with setup there.
+You can now head over to the link:tutorials/example-pipeline1/druid.adoc#_overview[Druid] section of this guide and continue with setup there.
 
 
 
