@@ -7,10 +7,11 @@ This section describes how to set up a streaming job in Druid to ingest data fro
 [source,bash]
 helm install minio --set resources.requests.memory=8Gi --set mode=standalone --set replicas=1  --set persistence.enabled=false  --set "buckets[0].name=nytaxidata,buckets[0].policy=none" --set "users[0].accessKey=minioAccessKey,users[0].secretKey=minioSecretKey,users[0].policy=readwrite" --repo https://charts.min.io/ minio
 
-N.B.
-
-- we are specifying a memory allocation of 8GB as Min-IO will use 16GB by default.
-- the access credentials are given above in the form of a secret, which will be used later in the Druid custom resource.
+[NOTE]
+====
+* we are specifying a memory allocation of 8GB as Min-IO will use 16GB by default.
+* the access credentials are given above in the form of a secret, which will be used later in the Druid custom resource.
+====
 
 === Deploy Postgresql (for Druid metadata)
 
@@ -24,14 +25,14 @@ helm install postgresql-druid \
     --set auth.database=druid \
     --version 11.0.0
 
-N.B. the credentials will also be used in the Druid custom resource.
+NOTE: the credentials will also be used in the Druid custom resource.
 
 === Deploy the Stackable Druid operator
 
 [source,bash]
 helm install druid-operator stackable-stable/druid-operator
 
-N.B. make sure this is not executed in a location that contains a folder called "druid-operator" as the helm installation will not complete successfully!
+NOTE: make sure this is not executed in a location that contains a folder called "druid-operator" as the helm installation will not complete successfully!
 
 === Deploy the Druid secret
 
@@ -228,5 +229,5 @@ curl -X POST -H 'Content-Type: application/json' -d @/tmp/kafka-ingestion-spec.j
 
 This should yield a status code of 200 with a response of `{"id":"nytaxidata"}`.
 
-N.B. We have extracted our ingestion specification from the UI, where the datasource was created as part of the process, but we could also run this job without an existing datasource, as the job will create it if needed.
+NOTE: We have extracted our ingestion specification from the UI, where the datasource was created as part of the process, but we could also run this job without an existing datasource, as the job will create it if needed.
 
