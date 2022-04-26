@@ -137,28 +137,23 @@ If you change the highlighted value to `trip data/yellow_tripdata_` all data for
 
 Now that the cab data has been read from S3, processed in NiFi and written to a Kafka topic, we can read from that Kafka topic to ingest the data into a Druid data set.
 
-Druid requires a backing storage (so called Deep-Storage) where data - partioned by date or time - is persisted as immutable "segments". Druid can use either local storage (only appropriate for stand-alone testing - i.e. all druid components run on the same machine), S3 or HDFS. In this guide we will use S3, specifically MinIO which is an S3-implementation suitable for low-footprint scenarios.
+We will set up the Operator and some Dependencies, provision a Druid cluster and then do the data ingestion from Kafka into Druid - first through the Druid web interface and then from the command line.
 
-We also need to install an SQL database for Druid to store metadata. Then, after we've deployed the Druid Operator and provisioned a cluster, we can set up the ingestion job.
+=== Deploy the Stackable Druid Operator
 
-=== Deploy MinIO
-
-We deploy a MinIO instance to use as our deep storage, using the MinIO helm chart:
+Like the other operators, the Druid operator is easily installed with Helm:
 
 [source,bash]
-helm install minio --set resources.requests.memory=8Gi --set mode=standalone --set replicas=1  --set persistence.enabled=false  --set "buckets[0].name=nytaxidata,buckets[0].policy=none" --set "users[0].accessKey=minioAccessKey,users[0].secretKey=minioSecretKey,users[0].policy=readwrite" --repo https://charts.min.io/ minio
-
-[NOTE]
-====
-* we are specifying a memory allocation of 8GB as Min-IO will use 16GB by default.
-====
+helm install druid-operator stackable-stable/druid-operator
 
 
-The access credentials `minioAccessKey` and `minioSecretKey` given above will be reused further down in a Secret read by Druid to access the MinIO object storage.
+=== Setting up Dependencies
 
-=== Deploy Postgresql (for Druid Metadata)
+While the operator can already run, Druid itself needs an SQL database for metadata and either HDFS or an S3 object storage for deep storage of data segments. It also needs a ZooKeeper instance for the individual processes to communicate with each other.
 
-Druid requires a database to store metadata, here we use the Bitnami PostgreSQL Helm chart to deploy a PostgreSQL instance:
+==== Metadata
+
+For the Metadata we will use a PostgreSQL database installed with the bitnami Helm Chart:
 
 [source,bash]
 helm install postgresql-druid \
@@ -168,35 +163,25 @@ helm install postgresql-druid \
     --set auth.database=druid \
     --version 11.0.0
 
-As with MinIO, the credentials will also be used in the Druid cluster definition.
+The database name, as well as user and password are all `druid`, we will need this later when configuring our cluster to use the database.
 
-=== Deploy the Stackable Druid Operator
+==== Deep Storage
 
-Now we can install the Stackable Druid Operator:
+Druid requires a backing storage (so called Deep-Storage) where data - partitioned by date or time - is persisted as immutable segments. Druid can use either local storage (only appropriate for stand-alone testing - i.e. all druid components run on the same machine), S3 or HDFS. In this guide we will use S3, specifically MinIO which is an S3-implementation suitable for low-footprint scenarios. We deploy a MinIO instance to use as our deep storage, using the MinIO Helm chart:
 
 [source,bash]
-helm install druid-operator stackable-stable/druid-operator
+helm install minio --set resources.requests.memory=8Gi --set mode=standalone --set replicas=1  --set persistence.enabled=false  --set "buckets[0].name=nytaxidata,buckets[0].policy=none" --set "users[0].accessKey=minioAccessKey,users[0].secretKey=minioSecretKey,users[0].policy=readwrite" --repo https://charts.min.io/ minio
 
-WARNING: make sure this is not executed in a location that contains a folder called "druid-operator" as the helm installation will not complete successfully!
+[NOTE]
+====
+* we are specifying a memory allocation of 8GB as Min-IO will use 16GB by default.
+====
 
-=== Deploy the Druid Secret
+The access credentials `minioAccessKey` and `minioSecretKey` given above will be reused further down in a Secret read by Druid to access the MinIO object storage.
 
-The MinIO access credentials are deployed as a Secret, which is later referenced in the cluster definition:
+==== ZooKeeper
 
-[source]
-cat <<EOF | kubectl apply -f -
-apiVersion: v1
-kind: Secret
-metadata:
-  name: druid-s3-credentials # <1>
-stringData:
-  accessKeyId: minioAccessKey
-  secretAccessKey: minioSecretKey
-EOF
-
-=== Deploy the Druid ZNode
-
-Druid also needs a ZooKeeper instance to operate. We already set up a ZooKeeper cluster above because NiFi and Kafka also need ZooKeeper. Now we also deploy a ZNode for Druid to use, to prevent any collisions of properties in ZooKeeper:
+We already installed the ZooKeeper Operator and set up a cluster when we set up NiFi and Kafka. Now all we need to do, is deploying a dedicated ZNode for Druid to use to ensure no Druid properties collide with other properties written to ZooKeeper. We simply deploy a ZNode resource:
 
 [source]
 cat <<EOF | kubectl apply -f -
@@ -209,7 +194,22 @@ spec:
     name: simple-zk
 EOF
 
-=== Deploy the Druid Cluster
+=== Deploying the Druid Cluster
+
+Now that the Operator and Dependencies are set up, we can deploy our cluster. The credentials for the MinIO instance are not written directly into the cluster resource, but in a dedicated Secret which is then referenced in the cluster resource:
+
+[source]
+cat <<EOF | kubectl apply -f -
+apiVersion: v1
+kind: Secret
+metadata:
+  name: druid-s3-credentials
+stringData:
+  accessKeyId: minioAccessKey
+  secretAccessKey: minioSecretKey
+EOF
+
+And now the cluster definition:
 
 [source]
 cat <<EOF | kubectl apply -f -
@@ -219,8 +219,8 @@ metadata:
   name: druid-nytaxidata
 spec:
   version: 0.22.1
-  zookeeperConfigMapName: simple-druid-znode  # <2>
-  metadataStorageDatabase:
+  zookeeperConfigMapName: simple-druid-znode  # <1>
+  metadataStorageDatabase:  # <2>
     dbType: postgresql
     connString: jdbc:postgresql://postgresql-druid/druid
     host: postgresql-druid
@@ -229,7 +229,7 @@ spec:
     password: druid
   s3:
     endpoint: http://minio:9000
-    credentialsSecret: druid-s3-credentials  # <1>
+    credentialsSecret: druid-s3-credentials  # <3>
   deepStorage:
     storageType: s3
     bucket: nytaxidata
@@ -291,8 +291,11 @@ spec:
         replicas: 1
 EOF
 
-<1> S3 secret
-<2> Druid ZNode
+Note that all the dependencies we defined above are referenced in the cluster definition:
+
+<1> ZooKeeper Druid ZNode
+<2> PostgreSQL access
+<3> MinIO credentials secret
 
 === Data Ingestion
 
@@ -385,7 +388,7 @@ As before, we need to install the operator:
 [source, bash]
 helm install superset-operator stackable-stable/superset-operator
 
-=== Deploy Postgresql (for Superset Metadata)
+=== Setting up Dependencies
 
 Like Druid, Superset requires an SQL database to run. We will install a dedicated database for Superset: as before, we will use the Bitnami PostgreSQL Helm chart to deploy a PostgreSQL instance:
 
