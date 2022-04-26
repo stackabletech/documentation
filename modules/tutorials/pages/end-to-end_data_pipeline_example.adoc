@@ -1,0 +1,540 @@
+= Setting up an End-to-End Data Pipeline
+
+In this tutorial we will look at setting up a data pipeline, from raw data to visualization. We will read data from S3 using NiFi, send it to Kafka, from there it is ingested into Druid and lastly we will visualize the data using Superset.
+
+== About this Tutorial
+This is a tutorial intended for learning more about the Stackable platform, it is not a guide to building a robust data pipeline.
+
+This is intended for use in a private network or lab; it doesn’t enable many security features such as authentication or encryption and should not be directly connected to the Internet. Be careful if you’re deploying in the cloud as your instances may default to using public IPs.
+
+== General Setup
+
+Before we get started, you should make sure that you have everything you need:
+
+* A running Kubernetes cluster
+* Kubectl
+* Helm
+* Shell utilities like `cat` and `curl`
+
+Throughout the tutorial we will install Operators from our Stackable Helm repository using Helm. To easily install from the Stackable repository, add a link to it to your Helm repository list:
+
+[source,bash]
+helm repo add stackable-stable https://repo.stackable.tech/repository/helm-stable/
+
+== Nifi and Kafka
+
+This section shows how to instantiate the first part of the entire processing chain, which will ingest CSV files from an S3 bucket, split the files into individual records and send these records to a Kafka topic.
+
+
+=== Installing Needed Operators
+
+The definitions rolled out in this section need some operators to be installed in the K8s cluster.
+
+==== Secret Operator
+
+The secret operator is needed by the Stackable Operator for Apache NiFi, as NiFi requires the UI to be served via HTTPS.
+The necessary certificates and keys for this are provided by the Secret Operator to the NiFi pods.
+
+[source,bash]
+helm install secret-operator stackable-stable/secret-operator
+
+==== ZooKeeper Operator
+
+Apache NiFi and Apache Kafka both use Apache ZooKeeper as backing config storage, so the Stackable Operator for Apache ZooKeeper has to be installed in order to make sure that a ZooKeeper cluster can be rolled out.
+There is no need to install multiple ZooKeeper clusters, as NiFi, Kafka and Druid can share the same cluster via provisioning a zNode per backed service.
+
+[source,bash]
+helm install zookeeper-operator stackable-stable/zookeeper-operator
+
+==== Kafka Operator
+
+Kafka will be used by NiFi to publish the individual records from the S3 data into.
+
+[source,bash]
+helm install kafka-operator stackable-stable/kafka-operator
+
+==== NiFi Operator
+
+NiFi is an ETL tool which will be used to model the dataflow of downloading and splitting files from S3.
+It will also be used to convert the file content from CSV to JSON.
+
+[source,bash]
+helm install nifi-operator stackable-test/nifi-operator --version=0.6.0-pr251
+
+NOTE: We need the PR version which has increased PVC sizes and heap memory.
+Apply the Kafka custom resource (https://github.com/stackabletech/kafka-operator/blob/main/examples/simple-kafka-cluster.yaml)
+
+=== Installing Tools
+
+For the purposes of this use case, no special config is required, so we can simply deploy the examples straight from the operator repositories.
+These files are designed to be self-contained, so for example the NiFi example also contains the necessary ZooKeeper cluster definition.
+
+[source,bash]
+kubectl apply -f https://raw.githubusercontent.com/stackabletech/kafka-operator/main/examples/simple-kafka-cluster.yaml
+kubectl apply -f https://raw.githubusercontent.com/stackabletech/nifi-operator/main/examples/simple-nifi-cluster.yaml
+
+The Nifi installation will take several minutes due to the size of the images.
+
+=== Connecting to NiFi and Deploying the Flow
+
+After all pods are succesfully deployed the NiFi UI should be accessible.
+To retrieve the appropriate URL you can run the following command:
+
+[source,bash]
+kubectl get svc simple-nifi -o json | jq -r --argfile endpoints <(kubectl get endpoints simple-nifi -o json) --argfile nodes <(kubectl get nodes -o json) '($nodes.items[] | select(.metadata.name == $endpoints.subsets[].addresses[].nodeName) | .status.addresses | map(select(.type == "ExternalIP" or .type == "InternalIP")) | min_by(.type) | .address | tostring) + ":" + (.spec.ports[] | select(.name == "https") | .nodePort | tostring)'
+
+This will output all UI endpoints for the NiFi cluster, the only thing you need to do is prepend 'https://' when accessing the UI in your browser. If your browser warns you that the connection is not secure (because of a self-signed certificate) you must continue to the unsafe variant.
+
+image::docathon-2022-01/nifi-login.png[NiFi Login Screen]
+
+The login credentials are defined in the https://github.com/stackabletech/nifi-operator/blob/main/examples/simple-nifi-cluster.yaml#L33[NiFi example].
+Unless you changed these before deploying the cluster you will be able to log in with _admin / supersecretpassword_.
+
+
+Once you have successfully logged in you should be presented with the NiFi UI showing an empty canvas.
+This canvas is the main place where you will interact with NiFi. You can drag processors on here, configure them as needed and connect these processors to create a flow that offers the processing that you need.
+
+NOTE: As this guide is not intended to be a NiFi guide most of NiFi's features will be glossed over and only very brief instructions provided on what needs to be done to get the flow up and running.
+
+Some keywords will be linked to the NiFi documentation if you are interested in doing some more reading on the topic.
+
+For the purpose of this guide we have prepared a flow which you can simply upload to NiFi as a template.
+You can download this template modules/contributor/downloads/s3-kafka.xml[here]
+
+To then upload this you need to click on the _upload template_ button in the UI and specify the appropriate file.
+
+image::docathon-2022-01/nifi-uploadtemplate.png[Upload template to NiFi]
+
+To deploy the template as a flow you need to click on the _template_ button in NiFis main menu.
+
+image::docathon-2022-01/nifi-createtemplate.png[Create flow from template]
+
+After you have done this, you should be presented with a simple flow on your canvas that is almost ready to start processing data.
+The only thing that still needs doing is to enable some https://nifi.apache.org/docs.html[ControllerServices] used by the processors.
+
+To get to these services you can right click on the https://nifi.apache.org/docs.html[SplitRecord] processor, go to the _properties_ tab and click on one of the small arrows next to the _Record Reader_ and _Record Writer_ options.
+
+image::docathon-2022-01/nifi-controllerservices.png[Configure controller services]
+
+On the controller page you then need to enable all three services by clicking on the small lightning symbol next to every service.
+You will be presented with a confirmation dialog but no further action should be needed here.
+
+image::docathon-2022-01/nifi-enablecontroller.png[Enable controller services]
+
+Once this is done return to the main canvas and you are ready to start your flow and get data going.
+To start the entire flow make sure that you don't have any processors selected by simply clicking on the emtpy canvas anywhere.
+If you click the start button now, NiFi will start all processors and data should start flowing through and end up in the pre-configured Kafka topic.
+
+NOTE: The flow in its packaged form has been restricted to only download a small subset of the yellow cab dataset, as the full size data is fairly large.
+If you have the capacity to process all data you can remove this restriction in the _prefix_ property of the https://nifi.apache.org/docs.html[ListS3] processor, as shown in the screenshot below.
+
+image::docathon-2022-01/nifi-prefix.png[Download filter]
+
+If you change the highlighted value to `trip data/yellow_tripdata_` all data for yellow cabs will be downloaded.
+
+
+== Druid
+
+This section describes how to set up a streaming job in Druid to ingest data from the Kafka topic that was used with Nifi. Druid requires a backing storage (so called Deep-Storage) where data - partioned by date or time - is persisted as immutable "segments". Druid can use either local storage (only appropriate for stand-alone testing - i.e. all druid components run on the same machine), S3 or HDFS. In this guide we will use S3, specifically MinIO which is an S3-implementation suitable for low-footprint scenarios.
+
+=== Deploy MinIO
+
+[source,bash]
+helm install minio --set resources.requests.memory=8Gi --set mode=standalone --set replicas=1  --set persistence.enabled=false  --set "buckets[0].name=nytaxidata,buckets[0].policy=none" --set "users[0].accessKey=minioAccessKey,users[0].secretKey=minioSecretKey,users[0].policy=readwrite" --repo https://charts.min.io/ minio
+
+[NOTE]
+====
+* we are specifying a memory allocation of 8GB as Min-IO will use 16GB by default.
+* the access credentials are given above in the form of a secret, which will be used later in the Druid custom resource.
+====
+
+=== Deploy Postgresql (for Druid Metadata)
+
+Druid requires a database to store metadata: for this guide we will use the Bitnami PostgreSQL helm chart to deploy a PostgreSQL instance:
+
+[source,bash]
+helm install postgresql-druid \
+    --repo https://charts.bitnami.com/bitnami postgresql \
+    --set auth.username=druid \
+    --set auth.password=druid \
+    --set auth.database=druid \
+    --version 11.0.0
+
+NOTE: the credentials will also be used in the Druid custom resource.
+
+=== Deploy the Stackable Druid Operator
+
+[source,bash]
+helm install druid-operator stackable-stable/druid-operator
+
+NOTE: make sure this is not executed in a location that contains a folder called "druid-operator" as the helm installation will not complete successfully!
+
+=== Deploy the Druid Secret
+
+[source]
+cat <<EOF | kubectl apply -f -
+apiVersion: v1
+kind: Secret
+metadata:
+  name: druid-s3-credentials # <1>
+stringData:
+  accessKeyId: minioAccessKey
+  secretAccessKey: minioSecretKey
+EOF
+
+=== Deploy the Druid ZNode
+
+This is required to link our Druid installation to the Zookeeper that we installed earlier:
+
+[source]
+cat <<EOF | kubectl apply -f -
+apiVersion: zookeeper.stackable.tech/v1alpha1
+kind: ZookeeperZnode
+metadata:
+  name: simple-druid-znode # <2>
+spec:
+  clusterRef:
+    name: simple-zk
+EOF
+
+=== Deploy the Druid Cluster
+
+[source]
+cat <<EOF | kubectl apply -f -
+apiVersion: druid.stackable.tech/v1alpha1
+kind: DruidCluster
+metadata:
+  name: druid-nytaxidata
+spec:
+  version: 0.22.1
+  zookeeperConfigMapName: simple-druid-znode  # <2>
+  metadataStorageDatabase:
+    dbType: postgresql
+    connString: jdbc:postgresql://postgresql-druid/druid
+    host: postgresql-druid
+    port: 5432
+    user: druid
+    password: druid
+  s3:
+    endpoint: http://minio:9000
+    credentialsSecret: druid-s3-credentials  # <1>
+  deepStorage:
+    storageType: s3
+    bucket: nytaxidata
+    baseKey: storage
+  brokers:
+    configOverrides:
+      runtime.properties:
+        druid.s3.enablePathStyleAccess: "true"
+    roleGroups:
+      default:
+        selector:
+          matchLabels:
+            kubernetes.io/os: linux
+        config: {}
+        replicas: 1
+  coordinators:
+    configOverrides:
+      runtime.properties:
+        druid.s3.enablePathStyleAccess: "true"
+    roleGroups:
+      default:
+        selector:
+          matchLabels:
+            kubernetes.io/os: linux
+        config: {}
+        replicas: 1
+  historicals:
+    configOverrides:
+      runtime.properties:
+        druid.s3.enablePathStyleAccess: "true"
+    roleGroups:
+      default:
+        selector:
+          matchLabels:
+            kubernetes.io/os: linux
+        config: {}
+        replicas: 1
+  middleManagers:
+    configOverrides:
+      runtime.properties:
+        druid.s3.enablePathStyleAccess: "true"
+    roleGroups:
+      default:
+        selector:
+          matchLabels:
+            kubernetes.io/os: linux
+        config: {}
+        replicas: 1
+  routers:
+    configOverrides:
+      runtime.properties:
+        druid.s3.enablePathStyleAccess: "true"
+    roleGroups:
+      default:
+        selector:
+          matchLabels:
+            kubernetes.io/os: linux
+        config: {}
+        replicas: 1
+EOF
+
+<1> S3 secret
+<2> Druid ZNode
+
+=== Data Ingestion
+
+There are different ways to get data into Druid, all of which will use a `POST` of a Druid-compatible ingestion specification. We will document here two ways of doing this, either directly in the Druid UI, or - this is e.g. useful if the job is to be repeated - by extracting the ingestion specification into a JSON file and issuing a curl from the command line (some of what follows is also covered in more depth in the official Druid documentation, but is mentioned here for the sake of completion).
+
+==== Using the Druid UI
+
+===== Setup port-forwarding for the Druid UI
+
+Run this from the command line to open up access to the Druid router (keep this command line tab open):
+
+[source,bash]
+kubectl port-forward svc/druid-nytaxidata-router 8888
+
+===== Druid UI
+
+The UI should now be reachable at http://localhost:8888 and should look like the screenshot below. We will start with the “Load Data” option:
+
+image::docathon-2022-01/druid-main.png[Main Screen]
+
+Select "Apache Kafka" and then "Connect Data" at the right of the screen, entering the following in the two available fields:
+
+- Bootstrap servers: `simple-kafka:9092`
+- Topic: `nytaxidata`
+
+Then select "Start of stream" and then "Apply":
+
+image::docathon-2022-01/druid-connect.png[Connect to Kafka]
+
+At the bottom right of the screen click through
+
+- “Parse Data”, “Parse Time”, “Transform”, “Filter”, “Configure Schema”
+
+without changing anything. At the next step - “Partition” - select `day` for the granularity:
+
+image::docathon-2022-01/druid-partition.png[Partition]
+
+Then click on “Tune”. At this point we tell Druid how to manage the Kafka offsets. As this is the initial read action we have to choose “True” so that Kafka starts at the earliest possible offset (subsequent reads will pick up from the last offset that Druid has cached internally):
+
+image::docathon-2022-01/druid-tuning.png[Offsets]
+
+Click through “Publish” to show “Edit spec”. At this point we have a complete ingestion job specification in JSON format:
+
+image::docathon-2022-01/druid-jobspec.png[Ingestion-spec]
+
+At this point we can just click on the final step on the bottom (“Submit”) and the job will start running - since the job is a streaming job it will wait for fresh Kafka data in the specified topic and ingest it into Druid. However, before we do that, save the JSON specification in a separate file (e.g. `/tmp/kafka-ingestion-spec.json`) as we will also show how to start this job from the command line per `curl`.
+
+Back at the screen, click on “Submit” - the ingestion job will be started, which will take a few moments. As mentioned already, we are starting a streaming job, so it will continue to run in the background (i.e. the status remains `RUNNING`):
+
+image::docathon-2022-01/druid-task.png[Task]
+
+The magnifying glass icon shows metadata such as logs, spec-definition etc:
+
+image::docathon-2022-01/druid-running.png[Running job]
+
+Once the ingestion job has been started, Druid monitors the relevant Kafka topic for changes and ingest new data, persisting it in its deep storage. It can take a few moments for the first segments to be ready (and a bit longer until they are published as immutable segments in deep storage). The streaming job will stay at RUNNING until such time as it is stopped. The datasource is visible under the “Datasources” tab, where the individual segments - partitioned by time slice - can also be examined:
+
+image::docathon-2022-01/druid-datasources.png[Datasources]
+
+We can also display data by issuing queries against our datasource from within the SQL designer under the “Query” tab:
+
+image::docathon-2022-01/druid-query.png[Query screen]
+
+==== Using `curl`
+
+We will now perform the same action using the JSON specification we saved earlier (in this guide: `/tmp/kafka-ingestion-spec.json`).
+
+===== Setup Port-Forwarding for Druid Coordinator
+
+Issue a port-forwarding command so that we can access the Druid coordinator from outside the Kubernetes cluster:
+
+[source]
+kubectl port-forward svc/druid-nytaxidata-coordinator 8081
+
+===== Post Job Specification
+
+Issue a POST via curl, referencing the JSON specification:
+
+[source]
+curl -X POST -H 'Content-Type: application/json' -d @/tmp/kafka-ingestion-spec.json http://localhost:8081/druid/indexer/v1/supervisor
+
+This should yield a status code of 200 with a response of `{"id":"nytaxidata"}`.
+
+NOTE: We have extracted our ingestion specification from the UI, where the datasource was created as part of the process, but we could also run this job without an existing datasource, as the job will create it if needed.
+
+== Superset
+
+To analyze the data we now have in Druid, we will connect Superset to our Druid instance, and read and visualize the data in Superset.
+
+=== Deploy the Stackable Superset Operator
+
+As before, we need to install the operator:
+
+[source, bash]
+helm install superset-operator stackable-stable/superset-operator
+
+=== Deploy Postgresql (for Superset Metadata)
+
+Superset requires an SQL database to run. We will install a dedicated database for Superset: as before, we will use the Bitnami PostgreSQL helm chart to deploy a PostgreSQL instance.
+
+[source]
+helm install superset-postgresql postgresql \
+    --repo https://charts.bitnami.com/bitnami \
+    --set auth.username=superset \
+    --set auth.password=superset \
+    --set auth.database=superset \
+    --version 11.0.0
+
+Next we create a secret with the database credentials in it, in the key `connections.sqlalchemyDatabaseUri`. The secret also contains the information of the initial admin user:
+
+[source]
+cat <<EOF | kubectl apply -f -
+apiVersion: v1
+kind: Secret
+metadata:
+  name: simple-superset-credentials
+type: Opaque
+stringData:
+  adminUser.username: admin
+  adminUser.firstname: Superset
+  adminUser.lastname: Admin
+  adminUser.email: admin@superset.com
+  adminUser.password: admin
+  connections.secretKey: thisISaSECRET_1234
+  connections.sqlalchemyDatabaseUri: postgresql://superset:superset@superset-postgresql.default.svc.cluster.local/superset
+EOF
+
+=== Deploy the Superset Cluster
+
+Now we can deploy Superset:
+
+[source]
+cat <<EOF | kubectl apply -f -
+apiVersion: superset.stackable.tech/v1alpha1
+kind: SupersetCluster
+metadata:
+  name: simple-superset
+spec:
+  version: 1.4.1  # <1>
+  statsdExporterVersion: v0.22.4
+  credentialsSecret: simple-superset-credentials  # <2>
+  nodes:
+    roleGroups:
+      default:
+        config:
+EOF
+
+<1> This is the version of Superset we want to use. You can find our supported Superset version in the https://docs.stackable.tech/superset/index.html#_supported_versions[Superset documentation].
+<2> Here we reference our secret we created earlier.
+
+On the first deployment of the Superset cluster, the operator will also initialize the database. Once the database is initialized, you can connect to the cluster.
+
+You can verify that the database is up and running with this command:
+
+[source]
+kubectl get statefulset superset-postgresql -o \
+jsonpath='{.status.readyReplicas}'
+
+It should return `1`.
+
+===== Setup Port-Forwarding for the Superset UI
+
+You can also connect to the Superset UI:
+
+[source]
+kubectl port-forward service/simple-superset-external 8088
+
+And now point your browser to `http://localhost:8088/` and you will see the login screen of Superset:
+
+image::docathon-2022-01/superset-login.png[Login]
+
+Here you can login with your admin user; if you haven’t chosen different credentials, the ones used above are username `admin` and password `admin`.
+
+Now that we have Druid and Superset running, it is time to connect the two. The Superset operator can take care of that. We deploy a dedicated `DruidConnection` resource:
+
+[source]
+cat <<EOF | kubectl apply -f -
+apiVersion: superset.stackable.tech/v1alpha1
+kind: DruidConnection
+metadata:
+  name: superset-druid-connection
+spec:
+  superset:
+    name: simple-superset  # <1>
+    namespace: default
+  druid:
+    name: druid-nytaxidata  # <2>
+    namespace: default
+EOF
+
+<1> The name of our Superset cluster
+<2> The name of the Druid cluster
+
+The operator will create a job that adds this connection to the Superset cluster.
+
+We can now find our Druid cluster as a data source in Superset. In the menu, under `Data` > `Databases` you should see the Druid cluster:
+
+image::docathon-2022-01/superset-databases.png[Databases]
+
+**N.B. Troubleshooting**: If you do not see your Druid instance, check the status on the `DruidConnection` you deployed (`superset-druid-connection`), it should be `Ready`.
+
+=== Querying Druid Data from Superset
+
+Now, to read the data from our Druid dataset, we need to create a dataset in Superset too, this is done under “Data” > “Datasets”:
+
+image::docathon-2022-01/superset-dataset.png[Dataset]
+
+The data can be queried in `SQL Lab` -> `SQL Editor`:
+
+image::docathon-2022-01/superset-query.png[SQL Editor]
+
+=== Data analysis and Dashboards
+
+Once the dataset has been defined, it can be used to create a chart:
+
+image::docathon-2022-01/superset-chart.png[Chart]
+
+As an example, we create a simple line chart. Applying these settings, we can see from the chart (and the average tip amount) that passengers are more generous towards the end of the month:
+
+===== Settings
+
+NOTE: the range has been set so that it matches the filter originally applied in the Nifi template.
+
+|===
+|Chart Setting |Value
+
+|Time column
+|`__time`
+
+|Time range
+|`2020-05-01 ≤ col < 2020-06-01`
+
+|Metrics
+|`AVG(tip_amount)`
+
+|X axis title
+|`May 2020`
+
+|X axis title bottom margin
+|`30`
+
+|Y axis title
+|`USD`
+
+|Y axis title margin
+|`30`
+
+|X axis time format
+|`%a`
+|===
+
+
+image::docathon-2022-01/superset-chart2.png[Chart2]
+
+Finally, you can create a dashboard with this chart:
+
+image::docathon-2022-01/superset-dashboard.png[Dashboard]

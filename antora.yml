@@ -3,5 +3,5 @@ version: master
 title: Stackable Documentation
 nav:
   - modules/ROOT/nav.adoc
-  - modules/contributor/nav.adoc
   - modules/tutorials/nav.adoc
+  - modules/contributor/nav.adoc
