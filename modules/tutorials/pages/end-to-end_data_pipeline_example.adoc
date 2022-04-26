@@ -7,13 +7,13 @@ This is a tutorial intended for learning more about the Stackable platform, it i
 
 This is intended for use in a private network or lab; it doesn’t enable many security features such as authentication or encryption and should not be directly connected to the Internet. Be careful if you’re deploying in the cloud as your instances may default to using public IPs.
 
-== General Setup
+== Before you begin
 
-Before we get started, you should make sure that you have everything you need:
+You should make sure that you have everything you need:
 
 * A running Kubernetes cluster
-* Kubectl
-* Helm
+* https://kubernetes.io/docs/tasks/tools/#kubectl[Kubectl] to interact with the cluster
+* https://helm.sh/[Helm] to deploy Operators and some dependencies
 * Shell utilities like `cat` and `curl`
 
 Throughout the tutorial we will install Operators from our Stackable Helm repository using Helm. To easily install from the Stackable repository, add a link to it to your Helm repository list:
@@ -64,7 +64,8 @@ helm install --repo https://repo.stackable.tech/repository/helm-test nifi-operat
 NOTE: We need the PR version which has increased PVC sizes and heap memory.
 Apply the Kafka custom resource (https://github.com/stackabletech/kafka-operator/blob/main/examples/simple-kafka-cluster.yaml)
 
-=== Installing Tools
+=== Deploying Kafka and NiFi
+// TODO: the tutorial should be self contained, in the other sections everythin is directly inside of the tutorial
 
 For the purposes of this use case, no special config is required, so we can simply deploy the examples straight from the operator repositories.
 These files are designed to be self-contained, so for example the NiFi example also contains the necessary ZooKeeper cluster definition.
@@ -75,17 +76,18 @@ kubectl apply -f https://raw.githubusercontent.com/stackabletech/nifi-operator/m
 
 The Nifi installation will take several minutes due to the size of the images.
 
-=== Connecting to NiFi and Deploying the Flow
+=== Processing the Data and Writing to Kafka
 
-After all pods are succesfully deployed the NiFi UI should be accessible.
+After all pods are successfully deployed the NiFi web interface should be accessible.
 To retrieve the appropriate URL you can run the following command:
 
+// TODO this is super complicated and not explained at all
 [source,bash]
 kubectl get svc simple-nifi -o json | jq -r --argfile endpoints <(kubectl get endpoints simple-nifi -o json) --argfile nodes <(kubectl get nodes -o json) '($nodes.items[] | select(.metadata.name == $endpoints.subsets[].addresses[].nodeName) | .status.addresses | map(select(.type == "ExternalIP" or .type == "InternalIP")) | min_by(.type) | .address | tostring) + ":" + (.spec.ports[] | select(.name == "https") | .nodePort | tostring)'
 
 This will output all UI endpoints for the NiFi cluster, the only thing you need to do is prepend 'https://' when accessing the UI in your browser. If your browser warns you that the connection is not secure (because of a self-signed certificate) you must continue to the unsafe variant.
 
-image::docathon-2022-01/nifi-login.png[NiFi Login Screen]
+image::end-to-end_data_pipeline_example/nifi-login.png[NiFi Login Screen]
 
 The login credentials are defined in the https://github.com/stackabletech/nifi-operator/blob/main/examples/simple-nifi-cluster.yaml#L33[NiFi example].
 Unless you changed these before deploying the cluster you will be able to log in with `admin` / `supersecretpassword`.
@@ -103,23 +105,23 @@ You can download this template link:{attachmentsdir}/s3-kafka.xml[here].
 
 To then upload this you need to click on the _upload template_ button in the UI and specify the appropriate file.
 
-image::docathon-2022-01/nifi-uploadtemplate.png[Upload template to NiFi]
+image::end-to-end_data_pipeline_example/nifi-uploadtemplate.png[Upload template to NiFi]
 
 To deploy the template as a flow you need to click on the _template_ button in NiFis main menu.
 
-image::docathon-2022-01/nifi-createtemplate.png[Create flow from template]
+image::end-to-end_data_pipeline_example/nifi-createtemplate.png[Create flow from template]
 
 After you have done this, you should be presented with a simple flow on your canvas that is almost ready to start processing data.
 The only thing that still needs doing is to enable some https://nifi.apache.org/docs.html[ControllerServices] used by the processors.
 
 To get to these services you can right click on the https://nifi.apache.org/docs.html[SplitRecord] processor, go to the _properties_ tab and click on one of the small arrows next to the _Record Reader_ and _Record Writer_ options.
 
-image::docathon-2022-01/nifi-controllerservices.png[Configure controller services]
+image::end-to-end_data_pipeline_example/nifi-controllerservices.png[Configure controller services]
 
 On the controller page you then need to enable all three services by clicking on the small lightning symbol next to every service.
 You will be presented with a confirmation dialog but no further action should be needed here.
 
-image::docathon-2022-01/nifi-enablecontroller.png[Enable controller services]
+image::end-to-end_data_pipeline_example/nifi-enablecontroller.png[Enable controller services]
 
 Once this is done return to the main canvas and you are ready to start your flow and get data going.
 To start the entire flow make sure that you don't have any processors selected by simply clicking on the emtpy canvas anywhere.
@@ -128,10 +130,9 @@ If you click the start button now, NiFi will start all processors and data shoul
 NOTE: The flow in its packaged form has been restricted to only download a small subset of the yellow cab dataset, as the full size data is fairly large.
 If you have the capacity to process all data you can remove this restriction in the _prefix_ property of the https://nifi.apache.org/docs.html[ListS3] processor, as shown in the screenshot below.
 
-image::docathon-2022-01/nifi-prefix.png[Download filter]
+image::end-to-end_data_pipeline_example/nifi-prefix.png[Download filter]
 
 If you change the highlighted value to `trip data/yellow_tripdata_` all data for yellow cabs will be downloaded.
-
 
 == Druid
 
@@ -312,7 +313,7 @@ Keep this command running to continue accessing the Router port locally.
 
 The UI should now be reachable at http://localhost:8888 and should look like the screenshot below. We will start with the “Load Data” option:
 
-image::docathon-2022-01/druid-main.png[Main Screen]
+image::end-to-end_data_pipeline_example/druid-main.png[Main Screen]
 
 Select "Apache Kafka" and then "Connect Data" at the right of the screen, entering the following in the two available fields:
 
@@ -321,7 +322,7 @@ Select "Apache Kafka" and then "Connect Data" at the right of the screen, enteri
 
 Then select "Start of stream" and then "Apply":
 
-image::docathon-2022-01/druid-connect.png[Connect to Kafka]
+image::end-to-end_data_pipeline_example/druid-connect.png[Connect to Kafka]
 
 At the bottom right of the screen click through
 
@@ -329,33 +330,33 @@ At the bottom right of the screen click through
 
 without changing anything. At the next step - “Partition” - select `day` for the granularity:
 
-image::docathon-2022-01/druid-partition.png[Partition]
+image::end-to-end_data_pipeline_example/druid-partition.png[Partition]
 
 Then click on “Tune”. At this point we tell Druid how to manage the Kafka offsets. As this is the initial read action we have to choose “True” so that Kafka starts at the earliest possible offset (subsequent reads will pick up from the last offset that Druid has cached internally):
 
-image::docathon-2022-01/druid-tuning.png[Offsets]
+image::end-to-end_data_pipeline_example/druid-tuning.png[Offsets]
 
 Click through “Publish” to show “Edit spec”. At this point we have a complete ingestion job specification in JSON format:
 
-image::docathon-2022-01/druid-jobspec.png[Ingestion-spec]
+image::end-to-end_data_pipeline_example/druid-jobspec.png[Ingestion-spec]
 
 At this point we can just click on the final step on the bottom (“Submit”) and the job will start running - since the job is a streaming job it will wait for fresh Kafka data in the specified topic and ingest it into Druid. However, before we do that, save the JSON specification in a separate file (e.g. `/tmp/kafka-ingestion-spec.json`) as we will also show how to start this job from the command line using `curl`.
 
 Back at the screen, click on “Submit” - the ingestion job will be started, which will take a few moments. As mentioned already, we are starting a streaming job, so it will continue to run in the background (i.e. the status remains `RUNNING`):
 
-image::docathon-2022-01/druid-task.png[Task]
+image::end-to-end_data_pipeline_example/druid-task.png[Task]
 
 The magnifying glass icon shows metadata such as logs, spec-definition etc:
 
-image::docathon-2022-01/druid-running.png[Running job]
+image::end-to-end_data_pipeline_example/druid-running.png[Running job]
 
 Once the ingestion job has been started, Druid monitors the relevant Kafka topic for changes and ingest new data, persisting it in its deep storage. It can take a few moments for the first segments to be ready (and a bit longer until they are published as immutable segments in deep storage). The streaming job will stay at RUNNING until such time as it is stopped. The datasource is visible under the “Datasources” tab, where the individual segments - partitioned by time slice - can also be examined:
 
-image::docathon-2022-01/druid-datasources.png[Datasources]
+image::end-to-end_data_pipeline_example/druid-datasources.png[Datasources]
 
 We can also display data by issuing queries against our datasource from within the SQL editor under the “Query” tab:
 
-image::docathon-2022-01/druid-query.png[Query screen]
+image::end-to-end_data_pipeline_example/druid-query.png[Query screen]
 
 ==== Using `curl`
 
@@ -461,7 +462,7 @@ kubectl port-forward service/simple-superset-external 8088
 
 And now point your browser to `http://localhost:8088/` and you will see the login screen of Superset:
 
-image::docathon-2022-01/superset-login.png[Login]
+image::end-to-end_data_pipeline_example/superset-login.png[Login]
 
 Here you can login with your admin user; if you haven’t chosen different credentials, the ones used above are username `admin` and password `admin`.
 
@@ -491,23 +492,23 @@ The operator will create a job that adds this connection to the Superset cluster
 
 We can now find our Druid cluster as a data source in Superset. In the menu, under `Data` > `Databases` you should see the Druid cluster:
 
-image::docathon-2022-01/superset-databases.png[Databases]
+image::end-to-end_data_pipeline_example/superset-databases.png[Databases]
 
 NOTE: If you do not see your Druid instance, check the status on the `DruidConnection` you deployed (`superset-druid-connection`), it should be `Ready`.
 
 Now, to read the data from our Druid dataset, we need to create a dataset in Superset too, this is done under “Data” > “Datasets”:
 
-image::docathon-2022-01/superset-dataset.png[Dataset]
+image::end-to-end_data_pipeline_example/superset-dataset.png[Dataset]
 
 The data can be queried in `SQL Lab` -> `SQL Editor`:
 
-image::docathon-2022-01/superset-query.png[SQL Editor]
+image::end-to-end_data_pipeline_example/superset-query.png[SQL Editor]
 
 === Data analysis and Dashboards
 
 Once the dataset has been defined, it can be used to create a chart:
 
-image::docathon-2022-01/superset-chart.png[Chart]
+image::end-to-end_data_pipeline_example/superset-chart.png[Chart]
 
 As an example, we create a simple line chart. Applying these settings, we can see from the chart (and the average tip amount) that passengers are more generous towards the end of the month:
 
@@ -544,8 +545,8 @@ NOTE: the range has been set so that it matches the filter originally applied in
 |===
 
 
-image::docathon-2022-01/superset-chart2.png[Chart2]
+image::end-to-end_data_pipeline_example/superset-chart2.png[Chart2]
 
 Finally, you can create a dashboard with this chart:
 
-image::docathon-2022-01/superset-dashboard.png[Dashboard]
+image::end-to-end_data_pipeline_example/superset-dashboard.png[Dashboard]
