@@ -465,6 +465,8 @@ image::docathon-2022-01/superset-login.png[Login]
 
 Here you can login with your admin user; if you haven’t chosen different credentials, the ones used above are username `admin` and password `admin`.
 
+=== Querying Druid from Superset
+
 Now that we have Druid and Superset running, it is time to connect the two. The Superset operator can take care of that. We deploy a dedicated `DruidConnection` resource:
 
 [source]
@@ -492,8 +494,6 @@ We can now find our Druid cluster as a data source in Superset. In the menu, und
 image::docathon-2022-01/superset-databases.png[Databases]
 
 NOTE: If you do not see your Druid instance, check the status on the `DruidConnection` you deployed (`superset-druid-connection`), it should be `Ready`.
-
-=== Querying Druid Data from Superset
 
 Now, to read the data from our Druid dataset, we need to create a dataset in Superset too, this is done under “Data” > “Datasets”:
 
