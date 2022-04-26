@@ -26,7 +26,7 @@ helm repo add stackable-stable https://repo.stackable.tech/repository/helm-stabl
 This section shows how to instantiate the first part of the entire processing chain, which will ingest CSV files from an S3 bucket, split the files into individual records and send these records to a Kafka topic.
 
 
-=== Installing Needed Operators
+=== Deploying the Operators
 
 The definitions rolled out in this section need some operators to be installed in the K8s cluster.
 
