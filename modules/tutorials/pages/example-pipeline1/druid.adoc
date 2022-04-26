@@ -13,7 +13,7 @@ helm install minio --set resources.requests.memory=8Gi --set mode=standalone --s
 * the access credentials are given above in the form of a secret, which will be used later in the Druid custom resource.
 ====
 
-=== Deploy Postgresql (for Druid metadata)
+=== Deploy Postgresql (for Druid Metadata)
 
 Druid requires a database to store metadata: for this guide we will use the Bitnami PostgreSQL helm chart to deploy a PostgreSQL instance:
 
@@ -27,14 +27,14 @@ helm install postgresql-druid \
 
 NOTE: the credentials will also be used in the Druid custom resource.
 
-=== Deploy the Stackable Druid operator
+=== Deploy the Stackable Druid Operator
 
 [source,bash]
 helm install druid-operator stackable-stable/druid-operator
 
 NOTE: make sure this is not executed in a location that contains a folder called "druid-operator" as the helm installation will not complete successfully!
 
-=== Deploy the Druid secret
+=== Deploy the Druid Secret
 
 [source]
 cat <<EOF | kubectl apply -f -
@@ -62,7 +62,7 @@ spec:
     name: simple-zk
 EOF
 
-=== Deploy the Druid cluster
+=== Deploy the Druid Cluster
 
 [source]
 cat <<EOF | kubectl apply -f -
@@ -213,9 +213,9 @@ image::docathon-2022-01/druid-query.png[Query screen]
 
 We will now perform the same action using the JSON specification we saved earlier (in this guide: `/tmp/kafka-ingestion-spec.json`).
 
-===== Setup port-forwarding for Druid Co-ordinator
+===== Setup Port-Forwarding for Druid Coordinator
 
-Issue a port-forwarding command so that we can access the Druid co-ordinator from outside the the Kubernetes cluster:
+Issue a port-forwarding command so that we can access the Druid coordinator from outside the Kubernetes cluster:
 
 [source]
 kubectl port-forward svc/druid-nytaxidata-coordinator 8081

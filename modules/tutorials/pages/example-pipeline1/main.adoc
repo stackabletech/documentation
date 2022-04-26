@@ -1,9 +1,6 @@
 = Setting up an End-to-End Data Pipeline
-:toc: macro
 
 In this tutorial we will look at setting up a data pipeline, from raw data to visualization. We will read data from S3 using NiFi, send it to Kafka, from there it is ingested into Druid and lastly we will visualize the data using Superset.
-
-toc::[]
 
 == About this Tutorial
 This is a tutorial intended for learning more about the Stackable platform, it is not a guide to building a robust data pipeline.

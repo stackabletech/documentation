@@ -2,14 +2,14 @@
 
 To analyze the data we now have in Druid, we will connect Superset to our Druid instance, and read and visualize the data in Superset.
 
-=== Deploy the Stackable Superset operator
+=== Deploy the Stackable Superset Operator
 
 As before, we need to install the operator:
 
 [source, bash]
 helm install superset-operator stackable-stable/superset-operator
 
-=== Deploy Postgresql (for Superset metadata)
+=== Deploy Postgresql (for Superset Metadata)
 
 Superset requires an SQL database to run. We will install a dedicated database for Superset: as before, we will use the Bitnami PostgreSQL helm chart to deploy a PostgreSQL instance.
 
@@ -40,7 +40,7 @@ stringData:
   connections.sqlalchemyDatabaseUri: postgresql://superset:superset@superset-postgresql.default.svc.cluster.local/superset
 EOF
 
-=== Deploy the Superset cluster
+=== Deploy the Superset Cluster
 
 Now we can deploy Superset:
 
@@ -73,7 +73,7 @@ jsonpath='{.status.readyReplicas}'
 
 It should return `1`.
 
-===== Setup port-forwarding for the Superset UI
+===== Setup Port-Forwarding for the Superset UI
 
 You can also connect to the Superset UI:
 
