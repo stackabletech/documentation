@@ -1,8 +1,8 @@
-= Setting up an End-to-End Data Pipeline
+= Setting up an end-to-end data pipeline
 
 In this tutorial we will look at setting up a data pipeline, from raw data to visualization. We will read data from S3 using NiFi, send it to Kafka, from there it is ingested into Druid and lastly we will visualize the data using Superset.
 
-== About this Tutorial
+== About this tutorial
 The purpose of this tutorial is a deeper exploration of the Stackable platform and its features. It is not a guide to building a robust data pipeline.
 
 This tutorial is intended to run in a private network or lab; it does not enable many security features such as authentication or encryption and should not be directly connected to the Internet. Be careful if you’re deploying in the cloud as your instances may default to using public IPs.
@@ -76,7 +76,7 @@ kubectl apply -f https://raw.githubusercontent.com/stackabletech/nifi-operator/m
 
 The Nifi installation will take several minutes due to the size of the images.
 
-=== Processing the Data and Writing to Kafka
+=== Processing the data and writing to Kafka
 
 After all pods are successfully deployed the NiFi web interface should be accessible.
 To retrieve the appropriate URL you can run the following command:
@@ -148,7 +148,7 @@ Like the other operators, the Druid operator is easily installed with Helm:
 helm install druid-operator stackable-stable/druid-operator
 
 
-=== Setting up Dependencies
+=== Setting up dependencies
 
 While the operator can already run, Druid itself needs an SQL database for metadata and either HDFS or an S3 object storage for deep storage of data segments. It also needs a ZooKeeper instance for the individual processes to communicate with each other.
 
@@ -166,7 +166,7 @@ helm install postgresql-druid \
 
 The database name, as well as user and password are all `druid`, we will need this later when configuring our cluster to use the database.
 
-==== Deep Storage
+==== Deep storage
 
 Druid requires a backing storage (so called Deep-Storage) where data - partitioned by date or time - is persisted as immutable segments. Druid can use either local storage (only appropriate for stand-alone testing - i.e. all druid components run on the same machine), S3 or HDFS. In this guide we will use S3, specifically MinIO which is an S3-implementation suitable for low-footprint scenarios. We deploy a MinIO instance to use as our deep storage, using the MinIO Helm chart:
 
@@ -195,7 +195,7 @@ spec:
     name: simple-zk
 EOF
 
-=== Deploying the Druid Cluster
+=== Deploying the Druid cluster
 
 Now that the Operator and Dependencies are set up, we can deploy our cluster. The credentials for the MinIO instance are not written directly into the cluster resource, but in a dedicated Secret which is then referenced in the cluster resource:
 
@@ -298,11 +298,11 @@ Note that all the dependencies we defined above are referenced in the cluster de
 <2> PostgreSQL access
 <3> MinIO credentials secret
 
-=== Data Ingestion
+=== Data ingestion
 
 There are different ways to get data into Druid, all of which will use a `POST` of a Druid-compatible ingestion specification. Here we will document two ways of doing this, either directly in the Druid UI, or - this is e.g. useful if the job is to be repeated - by extracting the ingestion specification into a JSON file and issuing a curl from the command line (some of what follows is also covered in more depth in the official Druid documentation, but is mentioned here for the sake of completeness).
 
-==== Using the Druid UI
+==== Using the Druid web interface
 
 The Druid web interface is accessible on the Router pod of our cluster. The operator created a Service for the Router, from which we can port-forward the Port 8888 where the web interface is served:
 
@@ -389,7 +389,7 @@ As before, we need to install the operator:
 [source, bash]
 helm install superset-operator stackable-stable/superset-operator
 
-=== Setting up Dependencies
+=== Setting up dependencies
 
 Like Druid, Superset requires an SQL database to run. We will install a dedicated database for Superset: as before, we will use the Bitnami PostgreSQL Helm chart to deploy a PostgreSQL instance:
 
@@ -420,7 +420,7 @@ stringData:
   connections.sqlalchemyDatabaseUri: postgresql://superset:superset@superset-postgresql.default.svc.cluster.local/superset
 EOF
 
-=== Deploy the Superset Cluster
+=== Deploy the Superset cluster
 
 Now we can deploy Superset:
 
@@ -453,7 +453,7 @@ jsonpath='{.status.readyReplicas}'
 
 It should return `1`.
 
-==== Setup Port-Forwarding for the Superset UI
+==== Set up port forwarding for the Superset web interface
 
 You can also connect to the Superset UI:
 
@@ -504,7 +504,7 @@ The data can be queried in `SQL Lab` -> `SQL Editor`:
 
 image::end-to-end_data_pipeline_example/superset-query.png[SQL Editor]
 
-=== Data analysis and Dashboards
+=== Data analysis and dashboards
 
 Once the dataset has been defined, it can be used to create a chart:
 
