@@ -41,7 +41,7 @@ helm install secret-operator stackable-stable/secret-operator
 ==== ZooKeeper Operator
 
 Apache NiFi and Apache Kafka both use Apache ZooKeeper as backing config storage, so the xref:zookeeper::index.adoc[Stackable Operator for Apache ZooKeeper] has to be installed in order to make sure that a ZooKeeper cluster can be rolled out.
-There is no need to install multiple ZooKeeper clusters, as NiFi, Kafka and Druid can share the same cluster via provisioning a zNode per backed service.
+There is no need to install multiple ZooKeeper clusters, as NiFi, Kafka and Druid can share the same cluster via provisioning a ZNode per backed service.
 
 [source,bash]
 helm install zookeeper-operator stackable-stable/zookeeper-operator
