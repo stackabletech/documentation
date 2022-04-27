@@ -26,7 +26,7 @@ helm repo add stackable-stable https://repo.stackable.tech/repository/helm-stabl
 This section shows how to instantiate the first part of the entire processing chain, which will ingest CSV files from an S3 bucket, split the files into individual records and send these records to a Kafka topic.
 
 
-=== Deploying the Operators
+=== Deploy the Operators
 
 The resource definitions rolled out in this section need their respective Operators to be installed in the K8s cluster. I.e. to run a Kafka instance, the Kafka Operator needs to be installed.
 
@@ -76,7 +76,7 @@ kubectl apply -f https://raw.githubusercontent.com/stackabletech/nifi-operator/m
 
 The Nifi installation will take several minutes due to the size of the images.
 
-=== Processing the data and writing to Kafka
+=== Process the data and write to Kafka
 
 After all Pods are successfully deployed the NiFi web interface should be accessible.
 To retrieve the appropriate URL you can run the following command:
@@ -145,7 +145,7 @@ Like the other Operators, the Druid Operator is easily installed with Helm:
 helm install druid-operator stackable-stable/druid-operator
 
 
-=== Setting up dependencies
+=== Set up dependencies
 
 While the Operator can already run, Druid itself needs an SQL database for metadata and either HDFS or an S3 object storage for deep storage of data segments. It also needs a ZooKeeper instance for the individual processes to communicate with each other.
 
@@ -192,7 +192,7 @@ spec:
     name: simple-zk
 EOF
 
-=== Deploying the Druid cluster
+=== Deploy the Druid cluster
 
 Now that the Operator and Dependencies are set up, you can deploy the Druid cluster. The credentials for the MinIO instance are not written directly into the cluster resource, but in a dedicated Secret which is then referenced in the cluster resource:
 
@@ -299,7 +299,7 @@ Note that all the dependencies you set up above are referenced in the cluster de
 
 There are different ways to get data into Druid, all of which will use a `POST` of a Druid-compatible ingestion specification. This tutorial guides you through two ways of doing this, either directly in the Druid UI, or - this is e.g. useful if the job is to be repeated - by extracting the ingestion specification into a JSON file and issuing a curl from the command line (some of what follows is also covered in more depth in the official Druid documentation, but is mentioned here for the sake of completeness).
 
-==== Using the Druid web interface
+==== Ingestion with the Druid web interface
 
 The Druid web interface is accessible on the Router Pod of our cluster. The Operator created a Service for the Router, from which you port-forward the Port 8888 where the web interface is served:
 
@@ -355,7 +355,7 @@ To display data from the data source, use the SQL editor under the “Query” t
 
 image::end-to-end_data_pipeline_example/druid-query.png[Query screen]
 
-==== Using `curl`
+==== Ingestion with `curl`
 
 An ingestion job can also be started from the commandline, using a JSON specification and curl to submit it. In this example, the JSON specification file is  `/tmp/kafka-ingestion-spec.json`.
 
@@ -386,7 +386,7 @@ As before, you need to install the Operator:
 [source, bash]
 helm install superset-operator stackable-stable/superset-operator
 
-=== Setting up dependencies
+=== Set up dependencies
 
 Like Druid, Superset requires an SQL database to run. To install a dedicated database for Superset use the Bitnami PostgreSQL Helm chart to deploy a PostgreSQL instance (like you did for Druid):
 
@@ -463,7 +463,7 @@ image::end-to-end_data_pipeline_example/superset-login.png[Login]
 
 Here you can login with your admin user; if you have not chosen different credentials, the ones used above are username `admin` and password `admin`.
 
-=== Querying Druid from Superset
+=== Query Druid from Superset
 
 Now that Druid and Superset are running, it is time to connect the two. The Superset Operator can take care of that. Deploy a `DruidConnection` resource:
 
