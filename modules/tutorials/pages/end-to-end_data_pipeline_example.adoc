@@ -440,7 +440,7 @@ spec:
         config:
 EOF
 
-<1> This is the version of Superset we want to use. You can find our supported Superset version in the xref:superset::index.adoc[Superset Operator documentation].
+<1> This is the version of Superset we want to use. You can find the Superset versions supported by Stackable in the xref:superset::index.adoc[Superset Operator documentation].
 <2> Here we reference our secret we created earlier.
 
 On the first deployment of the Superset cluster, the operator will also initialize the database. Once the database is initialized, you can connect to the cluster.
