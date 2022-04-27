@@ -3,7 +3,7 @@
 In this tutorial we will look at setting up a data pipeline, from raw data to visualization. We will read data from S3 using NiFi, send it to Kafka, from there it is ingested into Druid and lastly we will visualize the data using Superset.
 
 == About this Tutorial
-This is a tutorial intended for learning more about the Stackable platform, it is not a guide to building a robust data pipeline.
+The purpose of this tutorial is a deeper exploration of the Stackable platform and its features. It is not a guide to building a robust data pipeline.
 
 This is intended for use in a private network or lab; it doesn’t enable many security features such as authentication or encryption and should not be directly connected to the Internet. Be careful if you’re deploying in the cloud as your instances may default to using public IPs.
 
