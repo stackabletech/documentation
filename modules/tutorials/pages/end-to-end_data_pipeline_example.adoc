@@ -67,7 +67,7 @@ Apply the Kafka custom resource (https://github.com/stackabletech/kafka-operator
 === Deploying Kafka and NiFi
 // TODO: the tutorial should be self contained, in the other sections everythin is directly inside of the tutorial
 
-For the purposes of this use case, no special config is required, so you can simply deploy the examples straight from the operator repositories.
+For the purposes of this use case, no special config is required, so you can simply deploy the examples straight from the Operator repositories.
 These files are designed to be self-contained, so for example the NiFi example also contains the necessary ZooKeeper cluster definition.
 
 [source,bash]
@@ -139,7 +139,7 @@ You will set up the Operator and some Dependencies, provision a Druid cluster an
 
 === Deploy the Stackable Druid Operator
 
-Like the other operators, the Druid operator is easily installed with Helm:
+Like the other Operators, the Druid Operator is easily installed with Helm:
 
 [source,bash]
 helm install druid-operator stackable-stable/druid-operator
@@ -147,7 +147,7 @@ helm install druid-operator stackable-stable/druid-operator
 
 === Setting up dependencies
 
-While the operator can already run, Druid itself needs an SQL database for metadata and either HDFS or an S3 object storage for deep storage of data segments. It also needs a ZooKeeper instance for the individual processes to communicate with each other.
+While the Operator can already run, Druid itself needs an SQL database for metadata and either HDFS or an S3 object storage for deep storage of data segments. It also needs a ZooKeeper instance for the individual processes to communicate with each other.
 
 ==== Metadata
 
@@ -301,7 +301,7 @@ There are different ways to get data into Druid, all of which will use a `POST` 
 
 ==== Using the Druid web interface
 
-The Druid web interface is accessible on the Router pod of our cluster. The operator created a Service for the Router, from which you port-forward the Port 8888 where the web interface is served:
+The Druid web interface is accessible on the Router Pod of our cluster. The Operator created a Service for the Router, from which you port-forward the Port 8888 where the web interface is served:
 
 [source,bash]
 kubectl port-forward svc/druid-nytaxidata-router 8888
@@ -381,7 +381,7 @@ To analyze the data in Druid, the steps below explain how you can connect a Supe
 
 === Deploy the Stackable Superset Operator
 
-As before, you need to install the operator:
+As before, you need to install the Operator:
 
 [source, bash]
 helm install superset-operator stackable-stable/superset-operator
@@ -440,7 +440,7 @@ EOF
 <1> This is the version of Superset used for this instance. You can find the Superset versions supported by Stackable in the xref:superset::index.adoc[Superset Operator documentation].
 <2> This is the reference to the Secret you created earlier.
 
-On the first deployment of the Superset cluster, the operator will also initialize the database. Once the database is initialized, you can connect to the cluster.
+On the first deployment of the Superset cluster, the Operator will also initialize the database. Once the database is initialized, you can connect to the cluster.
 
 You can verify that the database is up and running with this command:
 
@@ -465,7 +465,7 @@ Here you can login with your admin user; if you have not chosen different creden
 
 === Querying Druid from Superset
 
-Now that Druid and Superset are running, it is time to connect the two. The Superset operator can take care of that. Deploy a `DruidConnection` resource:
+Now that Druid and Superset are running, it is time to connect the two. The Superset Operator can take care of that. Deploy a `DruidConnection` resource:
 
 [source]
 cat <<EOF | kubectl apply -f -
@@ -485,7 +485,7 @@ EOF
 <1> The name of our Superset cluster
 <2> The name of the Druid cluster
 
-The operator will create a job that adds this connection to the Superset cluster.
+The Operator will create a job that adds this connection to the Superset cluster.
 
 You can now find our Druid cluster as a data source in Superset. In the menu, under `Data` > `Databases` you should see the Druid cluster:
 
