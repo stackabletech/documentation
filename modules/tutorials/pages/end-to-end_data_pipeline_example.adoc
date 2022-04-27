@@ -103,7 +103,7 @@ Some keywords will be linked to the NiFi documentation if you are interested in 
 For the purpose of this guide we have prepared a flow which you can simply upload to NiFi as a template.
 You can download this template link:{attachmentsdir}/s3-kafka.xml[here].
 
-To then upload this you need to click on the _upload template_ button in the UI and specify the appropriate file.
+In order to upload the template, click on the _upload template_ button in the UI and specify the appropriate file.
 
 image::end-to-end_data_pipeline_example/nifi-uploadtemplate.png[Upload template to NiFi]
 
