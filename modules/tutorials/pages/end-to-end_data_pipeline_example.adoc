@@ -28,7 +28,7 @@ This section shows how to instantiate the first part of the entire processing ch
 
 === Deploying the Operators
 
-The definitions rolled out in this section need some operators to be installed in the K8s cluster.
+The resource definitions rolled out in this section need their respective operators to be installed in the K8s cluster. I.e. to run a Kafka instance, the Kafka operator needs to be installed.
 
 ==== Secret Operator
 
@@ -350,11 +350,11 @@ The magnifying glass icon shows metadata such as logs, spec-definition etc:
 
 image::end-to-end_data_pipeline_example/druid-running.png[Running job]
 
-Once the ingestion job has been started, Druid monitors the relevant Kafka topic for changes and ingest new data, persisting it in its deep storage. It can take a few moments for the first segments to be ready (and a bit longer until they are published as immutable segments in deep storage). The streaming job will stay at RUNNING until such time as it is stopped. The datasource is visible under the “Datasources” tab, where the individual segments - partitioned by time slice - can also be examined:
+Once the ingestion job has been started, Druid monitors the relevant Kafka topic for changes and ingest new data, persisting it in its deep storage. It can take a few moments for the first segments to be ready (and a bit longer until they are published as immutable segments in deep storage). The streaming job will stay at RUNNING until such time as it is stopped. The data source is visible under the “Datasources” tab, where the individual segments - partitioned by time slice - can also be examined:
 
 image::end-to-end_data_pipeline_example/druid-datasources.png[Datasources]
 
-We can also display data by issuing queries against our datasource from within the SQL editor under the “Query” tab:
+We can also display data by issuing queries against our data source from within the SQL editor under the “Query” tab:
 
 image::end-to-end_data_pipeline_example/druid-query.png[Query screen]
 
@@ -376,7 +376,7 @@ curl -X POST -H 'Content-Type: application/json' -d @/tmp/kafka-ingestion-spec.j
 
 This should yield a status code of 200 with a response of `{"id":"nytaxidata"}`.
 
-NOTE: We have extracted our ingestion specification from the UI, where the datasource was created as part of the process, but we could also run this job without an existing datasource, as the job will create it if needed.
+NOTE: We have extracted our ingestion specification from the UI, where the data source was created as part of the process, but we could also run this job without an existing data source, as the job will create it if needed.
 
 == Superset
 
