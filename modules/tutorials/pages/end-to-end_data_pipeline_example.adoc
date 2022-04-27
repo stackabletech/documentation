@@ -5,7 +5,7 @@ In this tutorial we will look at setting up a data pipeline, from raw data to vi
 == About this Tutorial
 The purpose of this tutorial is a deeper exploration of the Stackable platform and its features. It is not a guide to building a robust data pipeline.
 
-This is intended for use in a private network or lab; it doesn’t enable many security features such as authentication or encryption and should not be directly connected to the Internet. Be careful if you’re deploying in the cloud as your instances may default to using public IPs.
+This tutorial is intended to run in a private network or lab; it does not enable many security features such as authentication or encryption and should not be directly connected to the Internet. Be careful if you’re deploying in the cloud as your instances may default to using public IPs.
 
 == Before you begin
 
