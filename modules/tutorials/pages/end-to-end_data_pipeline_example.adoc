@@ -133,9 +133,9 @@ If you change the highlighted value to `trip data/yellow_tripdata_` all data for
 
 == Druid
 
-Now that the cab data has been read from S3, processed in NiFi and written to a Kafka topic, you can read from that Kafka topic to ingest the data into a Druid data set.
+Now that the taxi data has been read from S3, processed in NiFi and written to a Kafka topic, you can read from that Kafka topic to ingest the data into a Druid data set.
 
-You will set up the Operator and some Dependencies, provision a Druid cluster and then do the data ingestion from Kafka into Druid - first through the Druid web interface and then from the command line.
+You will set up the Operator and some dependencies, provision a Druid cluster and then do the data ingestion from Kafka into Druid - first through the Druid web interface and then from the command line.
 
 === Deploy the Stackable Druid Operator
 
@@ -149,9 +149,9 @@ helm install druid-operator stackable-stable/druid-operator
 
 While the Operator already runs, Druid itself needs an SQL database for metadata and either HDFS or an S3 object storage for deep storage of data segments. It also needs a ZooKeeper instance for the individual processes to communicate with each other.
 
-==== Metadata
+==== Metadata storage
 
-For the Metadata you will use a PostgreSQL database installed with the bitnami Helm Chart:
+For the Metadata storage install  a PostgreSQL database with the bitnami Helm Chart:
 
 [source,bash]
 helm install postgresql-druid \
@@ -301,7 +301,7 @@ There are different ways to get data into Druid, all of which will use a `POST` 
 
 ==== Ingestion with the Druid web interface
 
-The Druid web interface is accessible on the Router Pod of the Druid cluster. The Operator created a Service for the Router, from which you port-forward the Port 8888 where the web interface is served:
+The Druid web interface is accessible on the Router Pod of the Druid cluster. The Operator created a Service for the Router, from which you port-forward the port 8888 where the web interface is served:
 
 [source,bash]
 kubectl port-forward svc/druid-nytaxidata-router 8888
@@ -329,7 +329,7 @@ without changing anything. At the next step - “Partition” - select `day` for
 
 image::end-to-end_data_pipeline_example/druid-partition.png[Partition]
 
-Then click on “Tune”. At this point you tell Druid how to manage the Kafka offsets. As this is the initial read action choose “True” so that Kafka starts at the earliest possible offset (subsequent reads will pick up from the last offset that Druid has cached internally):
+Then click on “Tune”. At this point you instruct Druid on how to manage the Kafka offsets. As this is the initial read action choose “True” so that Kafka starts at the earliest possible offset (subsequent reads will pick up from the last offset that Druid has cached internally):
 
 image::end-to-end_data_pipeline_example/druid-tuning.png[Offsets]
 
@@ -347,7 +347,7 @@ The magnifying glass icon shows metadata such as logs, spec-definition etc.:
 
 image::end-to-end_data_pipeline_example/druid-running.png[Running job]
 
-Once the ingestion job has been started, Druid monitors the relevant Kafka topic for changes and ingest new data, persisting it in its deep storage. It can take a few moments for the first segments to be ready (and a bit longer until they are published as immutable segments in deep storage). The streaming job will stay at RUNNING until such time as it is stopped. The data source is visible under the “Datasources” tab, where the individual segments - partitioned by time slice - can also be examined:
+Once the ingestion job has been started, Druid monitors the relevant Kafka topic for changes and ingest new data, persisting it in its deep storage. It can take a few moments for the first segments to be ready (and a bit longer until they are published as immutable segments in deep storage). The streaming job will stay at RUNNING until it is stopped manually. The data source is visible under the “Datasources” tab, where the individual segments - partitioned by time slice - can also be examined:
 
 image::end-to-end_data_pipeline_example/druid-datasources.png[Datasources]
 
