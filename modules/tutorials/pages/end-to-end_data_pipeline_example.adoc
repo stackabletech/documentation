@@ -124,7 +124,7 @@ Once this is done return to the main canvas and you are ready to start your flow
 To start the entire flow make sure that you do not have any processors selected by simply clicking on the empty canvas anywhere.
 If you click the start button now, NiFi will start all processors and data should start flowing through and end up in the pre-configured Kafka topic.
 
-NOTE: The flow in its packaged form has been restricted to only download a small subset of the yellow cab dataset, as the full size data is fairly large.
+NOTE: The flow in its packaged form has been restricted to only download a small subset of the yellow taxi dataset, as the full size data is fairly large.
 If you have the capacity to process all data you can remove this restriction in the _prefix_ property of the https://nifi.apache.org/docs.html[ListS3] processor to do so, as shown in the screenshot below.
 
 image::end-to-end_data_pipeline_example/nifi-prefix.png[Download filter]
