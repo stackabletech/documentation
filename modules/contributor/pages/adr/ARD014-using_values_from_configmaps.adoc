@@ -1,7 +1,7 @@
-= How Should Operators Use Values from ConfigMaps & Secrets
-Doc Writer <doc.writer@asciidoctor.org>
-v0.1, 13.04.2022
-:status: draft
+= ADR014: How Should Operators Use Values from ConfigMaps & Secrets
+Sönke Liebau <soenke.liebau@stackable.de> and Felix Hennig <felix.hennig@stackable.de>
+v0.1, 2022-04-28
+:status: accepted
 
 * Status: {status}
 * Deciders:
@@ -10,7 +10,7 @@ v0.1, 13.04.2022
 ** Sebastian Bernauer
 ** Sönke Liebau
 ** Teo Klestrup Röijezon
-* Date: 13.04.2022
+* Date: 2022-04-28
 
 Technical Story: https://github.com/stackabletech/issues/issues/208[#208]
 

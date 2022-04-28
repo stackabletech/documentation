@@ -1,4 +1,4 @@
-= Use RTC as Review Mechanism for Changes
+= ADR003: Use RTC as Review Mechanism for Changes
 Sönke Liebau <soenke.liebau@stackable.de>
 v1.0, 19.08.2020
 :status: accepted
