@@ -121,7 +121,7 @@ You will be presented with a confirmation dialog but no further action should be
 image::end-to-end_data_pipeline_example/nifi-enablecontroller.png[Enable controller services]
 
 Once this is done return to the main canvas and you are ready to start your flow and get data going.
-To start the entire flow make sure that you don't have any processors selected by simply clicking on the emtpy canvas anywhere.
+To start the entire flow make sure that you do not have any processors selected by simply clicking on the empty canvas anywhere.
 If you click the start button now, NiFi will start all processors and data should start flowing through and end up in the pre-configured Kafka topic.
 
 NOTE: The flow in its packaged form has been restricted to only download a small subset of the yellow cab dataset, as the full size data is fairly large.
