@@ -373,7 +373,7 @@ curl -X POST -H 'Content-Type: application/json' -d @/tmp/kafka-ingestion-spec.j
 
 This should yield a status code of 200 with a response of `{"id":"nytaxidata"}`.
 
-NOTE: You have extracted our ingestion specification from the UI, where the data source was created as part of the process, but you could also run this job without an existing data source, as the job will create it if needed.
+NOTE: You have extracted the ingestion specification from the UI, where the data source was created as part of the process, but you could also run this job without an existing data source, as the job will create it if needed.
 
 == Superset
 
