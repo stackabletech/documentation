@@ -111,7 +111,7 @@ image::end-to-end_data_pipeline_example/nifi-createtemplate.png[Create flow from
 After you have done this, you should be presented with a simple flow on your canvas that is almost ready to start processing data.
 The only thing that still needs doing is to enable some https://nifi.apache.org/docs.html[ControllerServices] used by the processors.
 
-To get to these services you can right click on the https://nifi.apache.org/docs.html[SplitRecord] processor, go to the _properties_ tab and click on one of the small arrows next to the _Record Reader_ and _Record Writer_ options.
+To get to these services you can right-click on the https://nifi.apache.org/docs.html[SplitRecord] processor, go to the _properties_ tab and click on one of the small arrows next to the _Record Reader_ and _Record Writer_ options.
 
 image::end-to-end_data_pipeline_example/nifi-controllerservices.png[Configure controller services]
 
