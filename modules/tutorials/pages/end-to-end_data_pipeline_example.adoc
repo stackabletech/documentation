@@ -161,7 +161,7 @@ helm install postgresql-druid \
     --set auth.database=druid \
     --version 11.0.0
 
-The database name, as well as user and password are all `druid`, you will need these later when configuring our cluster to use the database.
+The database name, as well as user and password are all `druid`, you will need these later when configuring the Druid cluster to use the database.
 
 ==== Deep storage
 
