@@ -1,5 +1,6 @@
 * xref:index.adoc[]
 ** xref:supported_versions.adoc[]
+** xref:monitoring.adoc[]
 ** xref:airflow::index.adoc[Apache Airflow]
 ** xref:druid::index.adoc[Apache Druid]
 ** xref:hbase::index.adoc[Apache HBase]

@@ -1,2 +1,1 @@
 * xref:getting_started.adoc[]
-* xref:monitoring.adoc[]
