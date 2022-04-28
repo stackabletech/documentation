@@ -125,7 +125,7 @@ To start the entire flow make sure that you don't have any processors selected b
 If you click the start button now, NiFi will start all processors and data should start flowing through and end up in the pre-configured Kafka topic.
 
 NOTE: The flow in its packaged form has been restricted to only download a small subset of the yellow cab dataset, as the full size data is fairly large.
-If you have the capacity to process all data you can remove this restriction in the _prefix_ property of the https://nifi.apache.org/docs.html[ListS3] processor, as shown in the screenshot below.
+If you have the capacity to process all data you can remove this restriction in the _prefix_ property of the https://nifi.apache.org/docs.html[ListS3] processor to do so, as shown in the screenshot below.
 
 image::end-to-end_data_pipeline_example/nifi-prefix.png[Download filter]
 
@@ -147,7 +147,7 @@ helm install druid-operator stackable-stable/druid-operator
 
 === Set up dependencies
 
-While the Operator can already run, Druid itself needs an SQL database for metadata and either HDFS or an S3 object storage for deep storage of data segments. It also needs a ZooKeeper instance for the individual processes to communicate with each other.
+While the Operator already runs, Druid itself needs an SQL database for metadata and either HDFS or an S3 object storage for deep storage of data segments. It also needs a ZooKeeper instance for the individual processes to communicate with each other.
 
 ==== Metadata
 
@@ -461,11 +461,11 @@ And now point your browser to `http://localhost:8088/` and you will see the logi
 
 image::end-to-end_data_pipeline_example/superset-login.png[Login]
 
-Here you can log in with your admin user; if you have not chosen different credentials, the ones used above are username `admin` and password `admin`.
+Log in with your admin user; if you have not chosen different credentials, the ones used above are username `admin` and password `admin`.
 
 === Query Druid from Superset
 
-Now that Druid and Superset are running, it is time to connect the two. The Superset Operator can take care of that. Deploy a `DruidConnection` resource:
+Now that Druid and Superset are running, it is time to connect the two. The Superset Operator takes care of that. Deploy a `DruidConnection` resource:
 
 [source]
 cat <<EOF | kubectl apply -f -
