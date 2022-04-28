@@ -16,7 +16,7 @@ You should make sure that you have everything you need:
 * https://helm.sh/[Helm] to deploy Operators and some dependencies
 * Shell utilities like `cat` and `curl`
 
-Throughout the tutorial you will install Operators from our Stackable Helm repository using Helm. To easily install from the Stackable repository, add a link to it to your Helm repository list:
+Throughout the tutorial you will install Operators from the Stackable Helm repository using Helm. To easily install from the Stackable repository, add a link to it to your Helm repository list:
 
 [source,bash]
 helm repo add stackable-stable https://repo.stackable.tech/repository/helm-stable/
