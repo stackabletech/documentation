@@ -1,4 +1,4 @@
-= Use English as Documentation Language
+= ADR001: Use English as Documentation Language
 Sönke Liebau <soenke.liebau@stackable.de>
 v1.0, 19.08.2020
 :status: accepted
