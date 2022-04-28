@@ -48,7 +48,7 @@ helm install zookeeper-operator stackable-stable/zookeeper-operator
 
 ==== Kafka Operator
 
-Kafka will be used by NiFi to publish the individual records from the S3 data to.
+NiFi publishes the individual records from the S3 data to Kafka.
 
 [source,bash]
 helm install kafka-operator stackable-stable/kafka-operator
