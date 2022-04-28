@@ -115,7 +115,7 @@ To get to these services you can right click on the https://nifi.apache.org/docs
 
 image::end-to-end_data_pipeline_example/nifi-controllerservices.png[Configure controller services]
 
-On the controller page you then need to enable all three services by clicking on the small lightning symbol next to every service.
+On the controller page, enable all three services by clicking on the small lightning symbol next to every service.
 You will be presented with a confirmation dialog but no further action should be needed here.
 
 image::end-to-end_data_pipeline_example/nifi-enablecontroller.png[Enable controller services]
