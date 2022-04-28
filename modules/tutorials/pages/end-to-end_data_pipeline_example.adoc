@@ -461,7 +461,7 @@ And now point your browser to `http://localhost:8088/` and you will see the logi
 
 image::end-to-end_data_pipeline_example/superset-login.png[Login]
 
-Here you can login with your admin user; if you have not chosen different credentials, the ones used above are username `admin` and password `admin`.
+Here you can log in with your admin user; if you have not chosen different credentials, the ones used above are username `admin` and password `admin`.
 
 === Query Druid from Superset
 
