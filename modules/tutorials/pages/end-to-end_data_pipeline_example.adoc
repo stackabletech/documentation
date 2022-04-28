@@ -65,7 +65,6 @@ NOTE: You need the PR version which has increased PVC sizes and heap memory. Thi
 Apply the Kafka custom resource (https://github.com/stackabletech/kafka-operator/blob/main/examples/simple-kafka-cluster.yaml)
 
 === Deploying Kafka and NiFi
-// TODO: the tutorial should be self contained, in the other sections everythin is directly inside of the tutorial
 
 For the purposes of this use case, no special config is required, so you can simply deploy the examples straight from the Operator repositories.
 These files are designed to be self-contained, so for example the NiFi example also contains the necessary ZooKeeper cluster definition.
@@ -81,7 +80,6 @@ The Nifi installation will take several minutes due to the size of the images.
 After all Pods are successfully deployed the NiFi web interface should be accessible.
 To retrieve the appropriate URL you can run the following command:
 
-// TODO this is super complicated and not explained at all
 [source,bash]
 kubectl get svc simple-nifi -o json | jq -r --argfile endpoints <(kubectl get endpoints simple-nifi -o json) --argfile nodes <(kubectl get nodes -o json) '($nodes.items[] | select(.metadata.name == $endpoints.subsets[].addresses[].nodeName) | .status.addresses | map(select(.type == "ExternalIP" or .type == "InternalIP")) | min_by(.type) | .address | tostring) + ":" + (.spec.ports[] | select(.name == "https") | .nodePort | tostring)'
 
