@@ -482,7 +482,7 @@ spec:
     namespace: default
 EOF
 
-<1> The name of our Superset cluster
+<1> The name of the Superset cluster
 <2> The name of the Druid cluster
 
 The Operator will create a job that adds this connection to the Superset cluster.
