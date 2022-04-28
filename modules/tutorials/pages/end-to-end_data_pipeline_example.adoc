@@ -104,7 +104,7 @@ In order to upload the template to NiFi, click on the _upload template_ button i
 
 image::end-to-end_data_pipeline_example/nifi-uploadtemplate.png[Upload template to NiFi]
 
-To deploy the template as a flow you need to click on the _template_ button in NiFis main menu.
+To deploy the template as a flow you need to click on the _template_ button in NiFi's main menu.
 
 image::end-to-end_data_pipeline_example/nifi-createtemplate.png[Create flow from template]
 
