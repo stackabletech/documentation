@@ -76,14 +76,14 @@ The target config would then be written either to a ConfigMap or a Secret, depen
 * Bad, because the dependencies between pods and configmaps / secrets become very complex and hard to debug as they are not modelled in any way as k8s dependencies (mounts)
 * Bad, because setting up the correct watches in the operator becomes very complex, with a likelyhood of inadvertently forgetting to add a new watch that becomes necessary as CRDs evolve
 * Bad, because it potentially propagates sensitive values to multiple places by copying secret content to additional places
+* Bad, because the Operator is seeing the Secrets. This is not a problem _now_, but if we could avoid it that would be better
 
 [[option2]]
 === Option 2 - Mounting ConfigMap/Secret into the pods
 
-Instead of accessing the content of ConfigMaps/Secrets in the operator the operator would simply mount these object into the generated pods.
+Instead of accessing the content of ConfigMaps/Secrets in the operator, the operator would simply mount these object into the generated pods.
 Accessing the content of these mounted objects would then need to be done in an init container, currently this is done with shell commands, but this would be replaced with a more suitable tool in a follow-up ADR.
 
-* Good, because [argument a]
-* Good, because [argument b]
-* Bad, because [argument c]
-* … <!-- numbers of pros and cons can vary -->
+* Good, because mounting the ConfigMap/Secret directly into the pod allows the restart controller to automatically restart a Pod if a mounted object changes. Otherwise, changes would not be propagated or the Operator would have to watch the ConfigMap/Secret for changes itself. The watching/restarting is done once by Kubernetes + the restart controller and makes our Operators simpler
+* Bad, because the mounted properties cannot be validated by the Operator. Although Kubernetes at least verifies that all the properties that should be mounted exist
+* Bad, because it is more difficult to see which config is actually used to run the product, as the actual config is only finally assembled inside of the container
