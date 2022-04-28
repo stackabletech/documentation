@@ -165,7 +165,7 @@ The database name, as well as user and password are all `druid`, you will need t
 
 ==== Deep storage
 
-Druid requires a backing storage (so called Deep-Storage) where data - partitioned by date or time - is persisted as immutable segments. Druid can use either local storage (only appropriate for stand-alone testing - i.e. all druid components run on the same machine), S3 or HDFS. In this guide you will use S3, specifically MinIO which is an S3-implementation suitable for low-footprint scenarios. Deploy a MinIO instance to use as our deep storage, using the MinIO Helm chart:
+Druid requires a backing storage (so called Deep-Storage) where data - partitioned by date or time - is persisted as immutable segments. Druid can use either local storage (only appropriate for stand-alone testing - i.e. all druid components run on the same machine), S3 or HDFS. In this guide you will use S3, specifically MinIO which is an S3-implementation suitable for low-footprint scenarios. Deploy a MinIO instance to use as the Druid deep storage, using the MinIO Helm chart:
 
 [source,bash]
 helm install minio --set resources.requests.memory=8Gi --set mode=standalone --set replicas=1  --set persistence.enabled=false  --set "buckets[0].name=nytaxidata,buckets[0].policy=none" --set "users[0].accessKey=minioAccessKey,users[0].secretKey=minioSecretKey,users[0].policy=readwrite" --repo https://charts.min.io/ minio
