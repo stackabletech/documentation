@@ -175,7 +175,39 @@ a|
 
 == Decision Outcome
 
-Chosen option: "[option 1]", because [justification. e.g., only option, which meets k.o. criterion decision driver | which resolves force force | … | comes out best (see below)].
+* Option 4 was chosen
+** Sönke didn't want to marry operator and image version too much
+* Remaining question: how far do we want to automate this
+** Start with: not at all
+** Investigate how far we can do this later
+*** Load compatibility from configmap
+*** List Tags and select best matching one
+* Docker-images repo remains as is
+** Git tags will look like this:
+*** kafka2.8.0_stackable0.1.0
+*** kafka2.9.0_stackable0.1.0
+*** kafka2.9.0_stackable0.1.1
+** Docker registry tags will look like this:
+*** 2.8.0_stackable0.1.0
+*** 2.9.0_stackable0.1.0
+*** 2.9.0_stackable0.1.1
+* Initially these versions will be referred to directly from the CRDs, which means the user will have to pick a working stackable image version from the compatibility matrix
+* Image versions are only comparable when combined with the product version _0.1.0_ in kafka2.8.0_stackable0.1.0 and kafka2.9.0_stackable0.1.0 are two completely different versions _0.1.0_
+* CI will be changed:
+** Trigger will be changed to react to tags being pushed instead of manually like at the moment
+** Only the exact version specified in the tag will be built, not _all_ product versions (at the moment building Kafka builds all supported Kafka versions, in the future pushing _kafka2.8.0_stackable0.1.0_ will build only kafka 2.8.0)
+* FROM images will be pinned to a hash, so we have a defined start point
+** since we run yum update and pip upgrade etc. images are not 100% reproducible anyway
+** There shouldn't be a need to rebuild a tag anyway though
+
+
+
+
+Special Case: Different upstream Dockerfiles for a product
+For example Superset changed the Dockerfile between Superset version and we need to reflect these changes in our Dockerfile, which means that we effectively have to have different Dockerfiles for different Superset versions.
+
+For these scenarios we will have multiple Dockerfiles and specify the one to use in _conf.py_
+
 
 === Positive Consequences <!-- optional -->
 
