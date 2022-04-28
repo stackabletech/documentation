@@ -1,6 +1,4 @@
-= Overview
-
-== Introduction
+= Contributor's Guide
 
 Welcome to Stackable!
 
@@ -11,7 +9,6 @@ This document aims at getting your contribution posted as soon as possible.
 == Contribution Workflow
 
 The development of the Stackable Platform takes place on https://github.com/stackabletech[GitHub]. On GitHub, each repository has its own issue tracker and since Stackable is a platform, there are several repositories where issues and pull-requests can be created. If you already have a good idea where the issue or pull-request belongs, then you can skip reading to the contribution steps below. Otherwise, you might want to a have a look at the xref:development_dashboard.adoc[] for hints.
-
 
 Contribution steps:
 

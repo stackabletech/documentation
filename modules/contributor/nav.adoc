@@ -1,6 +1,5 @@
-* Contributor's Guide
+* xref:index.adoc[]
 
-** xref:contribution_guide.adoc[]
 ** xref:steps.adoc[]
 ** xref:development_dashboard.adoc[]
 ** xref:service_discovery.adoc[]
