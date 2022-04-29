@@ -1,15 +1,16 @@
 = Representation of S3 Buckets in CRDs
 Sönke Liebau <soenke.liebau@stackable.tech>
-v0.1, 13.04.2022
-:status: [draft]
+v0.1, 29.04.2022
+:status: accepted
 
 * Status: {status}
 * Deciders:
 ** Felix Hennig
 ** Sebastian Bernauer
+** Siegfried Weber
 ** Sönke Liebau
 ** Teo Klestrup Röijezon
-* Date: 13.04.2022
+* Date: 29.04.2022
 
 == Context and Problem Statement
 
@@ -66,7 +67,10 @@ data:
 
 Implementing this gives us a working solution and buys time to evaluate options for implementing more complex functionality.
 
+A required decision that was more or less orthogonal to the main decision documented in this ADR was to make all objects discussed in this ADR namespaced instead of cluster scoped, as this is in line with the overall approach of allowing namespace isolation for Stackable infrastructures.
+
 We will spike the second half of <<option5,option 5> as well as <<option6,option 6>> and see which one has more potential and creates the least amount of implementation issues.
+A big part of this spike will be considering the needed watches on S3 objects which a operator would need to maintain.
 
 The decision on how to proceed will be documented in a separate ADR later on.
 
