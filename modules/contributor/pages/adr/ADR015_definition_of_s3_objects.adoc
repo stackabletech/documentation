@@ -24,7 +24,7 @@ We want to define a shared set of CRDs which can be used to specify these connec
 * Must allow using multiple S3 endpoints in the same environment
 * Must support buckets with generated names that are not known up front (like with Rook's https://rook.io/docs/rook/v1.8/ceph-object-bucket-claim.html[object bucket claim] pattern)
 * Must allow specifying just an S3 backend without a bucket (for example Trino and Druid need this)
-* Should be easy to use for the end-user and not require scripting or similar things to take care of repetitive
+* Should be easy to use for the end-user and not require scripting or similar things to take care of repetitively specifying the same S3 endpoint for multiple buckets (or comparable issues)
 * Should favor native K8s mechanisms like ownership and reconciliation notifications over custom logic
 * Must not put extra effort on the user in order to be easier to implement
 
