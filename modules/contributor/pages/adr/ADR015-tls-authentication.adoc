@@ -12,7 +12,7 @@ Technical Story: https://github.com/stackabletech/zookeeper-operator/issues/466
 
 == Context and Problem Statement
 
-Our products use TLS to encrypt network traffic and/or to authenticate themselves or their clients.
+Our products use TLS to encrypt network traffic and/or to authenticate themselves and their clients.
 We want to define a common way - across all the products - to configure these mechanisms.
 
 == Decision Drivers
