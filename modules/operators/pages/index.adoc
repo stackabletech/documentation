@@ -1,3 +1,8 @@
 # Operators
 
-Here's the docs for the operators
+This section of the Stackable documentation contains information about the individual Operators, as well as related information such as an overview over the xref:supported_versions.adoc[supported product versions] and how to enable xref:monitoring.adoc[monitoring] in all Operators.
+
+
+Find a list of all Operators below:
+
+include::partial$operator_doc_links.adoc[]
