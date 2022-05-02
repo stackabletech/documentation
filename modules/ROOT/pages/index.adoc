@@ -20,9 +20,11 @@ This documentation gives you an overview of the Stackable Data Platform, how to 
 <h3>Introduction</h3>
 ++++
 
-If you have any feedback regarding the documentation please either open an https://github.com/stackabletech/documentation/issues[issue], ask a https://github.com/stackabletech/documentation/discussions[question] or look at the source for this documentation in its https://github.com/stackabletech/documentation[repository].
-
 The Stackable Data Platform allows you to deploy, scale and manage Data infrastructure in any environment running https://kubernetes.io/[Kubernetes].
+
+You can find an overview of the supported components <<Components,below>>, as we as a full list of all supported product versions xref:operators:supported_versions.adoc[here].
+
+If you have any feedback regarding the documentation please either open an https://github.com/stackabletech/documentation/issues[issue], ask a https://github.com/stackabletech/documentation/discussions[question] or look at the source for this documentation in its https://github.com/stackabletech/documentation[repository].
 
 ++++
 </div>
