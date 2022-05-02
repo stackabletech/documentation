@@ -1,0 +1,196 @@
+= TLS authentication
+Sebastian Bernauer <sebastian.bernauer@stackable.de>
+v0.1, 2022-05-02
+:status: draft
+
+* Status: {status}
+* Deciders:
+** TODO
+* Date: 2022-05-04
+
+Technical Story: https://github.com/stackabletech/zookeeper-operator/issues/466
+
+== Context and Problem Statement
+
+Our products use TLS to encrypt network traffic and/or to authenticate themselves or their clients.
+We want to define a common way - across all the products - to configure these mechanisms.
+
+== Decision Drivers
+* Must support using TLS only for encryption but also in combination with authentication
+* Should fit into out existing authentication concept from xref:adr/ADR013-user_authentication_for_products.adoc[]
+* Should be easy to understand and use for the user
+
+== Considered Options
+
+* Handle TLS as special case
+* Extend `AuthenticationClass` to support TLS
+
+== Decision Outcome
+
+Chosen option: "Extend `AuthenticationClass` to support TLS", because [justification. e.g., only option, which meets k.o. criterion decision driver | which resolves force force | … | comes out best (see below)].
+
+== Pros and Cons of the Options
+
+=== Handle TLS as special case
+We don't support TLS inside `AuthenticationClass`.
+We need a new `tlsConfig` attribute on every product CRD.
+An implementation could look something like this:
+
+[source,yaml]
+----
+---
+apiVersion: zookeeper.stackable.tech/v1alpha1
+kind: ZookeeperCluster
+metadata:
+  name: ssl-zk
+spec:
+  config:
+    tlsConfiguration: # optional
+      quorum: # Communication between between different Zookeeper nodes
+        tls: # commons tls config
+          verification:
+              none: {}
+              # OR
+              server:
+                caCert:
+                    webPki: {}
+                    # OR
+                    secretClass: tls # Reference to SecretClass below
+              # OR
+              mutual:
+                certSecretClass: tls # Reference to SecretClass below
+      clients: # Communication between Zookeeper clients and Zookeeper nodes
+        tls: # commons tls config
+          verification:
+              none: {}
+              # OR
+              server:
+                caCert:
+                    webPki: {}
+                    # OR
+                    secretClass: tls # Reference to SecretClass below
+              # OR
+              mutual:
+                certSecretClass: tls # Reference to SecretClass below
+  servers:
+    roleGroups:
+      primary:
+        replicas: 2
+        config:
+          myidOffset: 10
+      secondary:
+        replicas: 1
+        config:
+          myidOffset: 20
+  version: 3.8.0
+  stopped: false
+---
+apiVersion: secrets.stackable.tech/v1alpha1
+kind: SecretClass
+metadata:
+  name: tls
+spec:
+  backend:
+    autoTls:
+      ca:
+        secret:
+          name: secret-provisioner-tls-ca
+          namespace: default
+        autoGenerate: true
+----
+
+* Good, because simple (no indirection through `AuthenticationClass` object)
+* Bad, because TLS is a special case and does not fit in our `AuthenticationClass` mechanism.
+* Bad, because a connecting client has to read the `ZookeeperCluster` object in order to determine if is should use TLS and wether to verify the server.
+
+=== Extend `AuthenticationClass` to support TLS
+
+[source,yaml]
+----
+---
+apiVersion: zookeeper.stackable.tech/v1alpha1
+kind: ZookeeperCluster
+metadata:
+  name: ssl-zk
+spec:
+  config:
+    tlsAuthenticationConfig:
+      quorum:
+        authenticationClass: zookeeper-tls-mutual
+      clients:
+        authenticationClass: zookeeper-tls
+  servers:
+    roleGroups:
+      primary:
+        replicas: 2
+        config:
+          myidOffset: 10
+      secondary:
+        replicas: 1
+        config:
+          myidOffset: 20
+  version: 3.8.0
+  stopped: false
+---
+apiVersion: authentication.stackable.tech/v1alpha1
+kind: AuthenticationClass
+metadata:
+  name: zookeeper-tls-mutual
+spec:
+  provider:
+    tls:
+      verification:
+          none: {}
+          # OR
+          server:
+            caCert:
+                webPki: {}
+                # OR
+                secretClass: tls # Reference to SecretClass below
+          # OR
+          mutual:
+          certSecretClass: tls # Reference to SecretClass below
+      verification:
+        mutual:
+          caCert:
+            secretClass: tls # Reference to SecretClass below
+---
+apiVersion: authentication.stackable.tech/v1alpha1
+kind: AuthenticationClass
+metadata:
+  name: zookeeper-tls
+spec:
+  provider:
+    tls:
+      verification:
+          none: {}
+          # OR
+          server:
+            caCert:
+                webPki: {}
+                # OR
+                secretClass: tls # Reference to SecretClass below
+          # OR
+          mutual:
+          certSecretClass: tls # Reference to SecretClass below
+      verification:
+        mutual:
+          caCert:
+            secretClass: tls # Reference to SecretClass below
+---
+apiVersion: secrets.stackable.tech/v1alpha1
+kind: SecretClass
+metadata:
+  name: tls
+spec:
+  backend:
+    autoTls:
+      ca:
+        secret:
+          name: secret-provisioner-tls-ca
+          namespace: default
+        autoGenerate: true
+----
+
+* Good, because TLS is handled via the generic `AuthenticationClass` mechanism.
+* Bad, because an `AuthenticationClass` can express: Don't do any authentication at all

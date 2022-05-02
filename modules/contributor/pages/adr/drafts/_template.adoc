@@ -1,6 +1,6 @@
 = [short title of solved problem and solution]
 Doc Writer <doc.writer@asciidoctor.org>
-v0.1, dd.mm.yyyy
+v0.1, YYYY-MM-DD
 :status: [draft | rejected | accepted | deprecated | … | superseded by link:0005-example.md[ADR-0005]]
 
 * Status: {status}
