@@ -16,7 +16,7 @@ Our products use TLS to encrypt network traffic and/or to authenticate themselve
 We want to define a common way - across all the products - to configure these mechanisms.
 
 == Decision Drivers
-* Must support using TLS only for encryption but also in combination with authentication
+* Must support using no TLS usage, TLS only for encryption and TLS for encryption and authentication
 * Should fit into out existing authentication concept from xref:adr/ADR013-user_authentication_for_products.adoc[]
 * Should be easy to understand and use for the user
 
