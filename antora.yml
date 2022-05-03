@@ -4,4 +4,5 @@ title: Stackable Documentation
 nav:
   - modules/ROOT/nav.adoc
   - modules/tutorials/nav.adoc
+  - modules/operators/nav.adoc
   - modules/contributor/nav.adoc
