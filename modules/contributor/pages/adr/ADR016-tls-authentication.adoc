@@ -245,6 +245,19 @@ spec:
     # TLS is still used for server authn, but another
     # method is used for client authn
     ldap: ldapStuff{...}
+---
+apiVersion: secrets.stackable.tech/v1alpha1
+kind: SecretClass
+metadata:
+  name: tls
+spec:
+  backend:
+    autoTls:
+      ca:
+        secret:
+          name: secret-provisioner-tls-ca
+          namespace: default
+        autoGenerate: true
 ----
 
 As a recap:
