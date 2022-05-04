@@ -65,6 +65,7 @@ This ADR will be limited to the question of how stackable image versions are cre
 * The chosen option should make life as easy as possible for the end-user, it doesn't need to be the simplest one to implement
 
 == Considered Options
+* Synchronize image and operator versions
 * Bump major image version for every change that operators depend on
 * Resolve Docker tags to image hashes in operator
 * Resolve SemVer ranges to Docker tags in operator
@@ -105,7 +106,7 @@ This would likely mean moving the product Dockerfiles into their corresponding o
 Keep the current system as-is, but essentially merge major and minor versions in SemVer.
 
 * Good, because it changes as little as possible about the infrastructure
-* Bad, because it allows patch versions to drift apart drift in a running cluster
+* Bad, because it allows patch versions to drift apart in a running cluster
 * Bad, because it forces us to maintain many more image version "tracks"
 * Bad, because old operator versions will keep deploying older image versions than they may technically be compatible with
 * Bad, because existing operators will invisibly switch which (patch-level) image version they deploy without user action
@@ -145,7 +146,7 @@ the image every time the Pod is started.
 * Good, because it's a minimal change
 * Bad, because it doesn't restart running pods, even if they are incompatible
   * This means that it doesn't solve the original problem at all
-* Bad, because it allows minor versions to drift apart drift in a running cluster
+* Bad, because it allows minor versions to drift apart in a running cluster
 * Bad, because it prevents any restarts while the Docker registry is unavailable
 * Bad, because existing operators will invisibly switch which (minor-level) image version they deploy without user action
 * Bad, because on-prem registry mirrors may be outdated and serve incompatible versions
