@@ -1,3 +1,4 @@
+---
 site:
   title: Stackable Documentation
   url: https://docs.stackable.tech
@@ -8,6 +9,13 @@ content:
   sources: 
     - url: ./
       branches: HEAD
+
+    - url: https://github.com/stackabletech/commons-operator.git
+      branches: main
+      start_path: docs
+    - url: https://github.com/stackabletech/secret-operator.git
+      branches: main
+      start_path: docs
 
     - url: https://github.com/stackabletech/airflow-operator.git
       branches: main
@@ -36,6 +44,9 @@ content:
     - url: https://github.com/stackabletech/spark-operator.git
       branches: main
       start_path: docs
+    - url: https://github.com/stackabletech/spark-k8s-operator.git
+      branches: main
+      start_path: docs
     - url: https://github.com/stackabletech/superset-operator.git
       branches: main
       start_path: docs
@@ -48,14 +59,16 @@ content:
 
 ui:
   bundle:
-    url: https://repo.stackable.tech/repository/misc/ui-bundle.zip
-    snapshot: true
-  supplemental_files:
-   - path: ui.yml
-     contents: |
-       static_files: [ .nojekyll ]
-   - path: .nojekyll
+    url: ./ui/build/ui-bundle.zip
+  supplemental_files: ./supplemental-ui
+
+antora:
+  extensions:
+    - '@antora/lunr-extension'
 
 asciidoc:
   attributes:
     base-repo: https://github.com/stackabletech
+    plantuml-server-url: http://www.plantuml.com/plantuml
+  extensions:
+    - asciidoctor-kroki

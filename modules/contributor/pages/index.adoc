@@ -1,0 +1,77 @@
+= Contributor's Guide
+
+Welcome to Stackable!
+
+This document will show you the steps needed to contribute to the Stackable Platform. Contributions can come in many shapes and forms but in this document we'll focus on code and documentation improvements. We'll assume you already know what the Stackable Platform is and have a specific issue that you want solved.
+
+This document aims at getting your contribution posted as soon as possible.
+
+== Contribution Workflow
+
+The development of the Stackable Platform takes place on https://github.com/stackabletech[GitHub]. On GitHub, each repository has its own issue tracker and since Stackable is a platform, there are several repositories where issues and pull-requests can be created. If you already have a good idea where the issue or pull-request belongs, then you can skip reading to the contribution steps below. Otherwise, you might want to a have a look at the xref:development_dashboard.adoc[] for hints.
+
+Contribution steps:
+
+1. Lookup if an existing issue already covers your problem
+2. Submit a new issue. If it is only a trivial change like fixing a typo then an issue is not necessary and a pull-request can be created directly.
+3. Submit a pull-request if you want. The necessary steps to successfully create an approvable pull-request are detailed in xref:steps.adoc[].
+4. Respond to questions or feedback
+5. Improve your submission if necessary
+6. Closing your contribution
+
+Before submitting a new issue or pull-request, it's always a good idea to check if the issue has already been discussed in the past and if there is a resolution for it. If that is the case, consider contributing to the existing issue by either adding new feedback or code.
+
+When creating a new issue please provide as much information as you consider relevant. Issues can be bug reports, feature requests and so on. The Stackable repositories provide templates to make it easier to submit high-quality issues.
+
+When submitting a pull-request, you might be interested in knowing about the necessary <<Development Environment>>.
+
+== Repo Walkthrough
+
+Please see the xref:development_dashboard.adoc[] page to get an overview of the most important Git repositories used by us.
+
+=== Operator Repositories
+
+At the core of the Stackable Platform are Kubernetes operators used to install and manage various data products.
+Each operator has its own repository, and therefore its own issue tracker and build pipeline.
+Every operator repository contains:
+
+* The operator's source code
+* One or more Custom Resource Definitions owned by the operator
+* `Helm` chart to easily install the operator
+* Documentation
+* `Dockerfile` and related artifacts to generate the operator image
+
+See the xref:development_dashboard.adoc[] for a detailed overview.
+
+== Development Environment
+
+In order to contribute source code, you need an environment that is capable of running the following tools:
+
+* https://www.docker.com/[Docker]
+* https://kind.sigs.k8s.io/[Kind]
+* https://helm.sh/[Helm]
+* https://kuttl.dev/[Kuttl]
+* https://www.rust-lang.org/[Rust]
+* https://www.python.org/[Python]
+
+The documentation is written in https://asciidoctor.org[AsciiDoc] format and processed with https://antora.org[Antora]
+
+Almost all build scripts assume a Unix based environment (preferably Linux).
+
+=== IDEs and Editors
+
+Of course you are free to use whatever works for you best. No editor is perfect but we have positive experience with:
+
+* https://www.jetbrains.com/idea/[IntelliJ Idea] with the `Rust` plug-in
+* https://code.visualstudio.com/[VisualStudio Code] with the `rust-analyzer` extension
+
+For `VisualStudio Code` we also recommend the following extensions:
+
+* Better Toml
+* CodeLLDB (for debugging)
+* Error Lens (inline error messages)
+* AsciiDoc
+* GitHub Pull requests and Issues
+* GitLens
+* Python
+* Docker

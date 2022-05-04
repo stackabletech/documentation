@@ -3,16 +3,17 @@ name: Build site
 on:
   pull_request:
 
-env:
-  SITE_DIR: 'site'
-
 jobs:
 
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2.4.0
-      - name: "Generate site using Antora site action"
-        uses: kameshsampath/antora-site-action@v0.2.4
         with:
-          antora_playbook: antora-playbook.yml
+          submodules: true
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+          cache: 'npm'
+      - run: npm ci
+      - run: make ANTORAFLAGS=--fetch

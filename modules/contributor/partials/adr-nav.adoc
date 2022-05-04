@@ -1,20 +1,8 @@
-** Architectural Decision Records
+** xref:adr/index.adoc[]
 *** Current
-**** xref:adr/ADR001-choose_project_language.adoc[]
-**** xref:adr/ADR002-choose_repository_structure.adoc[]
-**** xref:adr/ADR003-choose_review_mechanism.adoc[]
-**** xref:adr/ADR004-choose_agent_programming_language.adoc[]
-**** xref:adr/ADR005-systemd_unit_file_location.adoc[]
-**** xref:adr/ADR007-defined_reuse_of_k8s.adoc[]
-**** xref:adr/ADR008-decide_reuse_of_operators.adoc[]
-**** xref:adr/ADR009-selector_support.adoc[]
-**** xref:adr/ADR010-command_pattern.adoc[]
-**** xref:adr/ADR011-directory_structure.adoc[]
-**** xref:adr/ADR012-authn_token_management.adoc[]
-*
+include::partial$current_adrs.adoc[]
 *** Deprecated
 **** xref:adr/deprecated/ADR006-choose_orchestrator_storage_backend.adoc[]
 *
 *** Drafts
 **** xref:adr/drafts/ADRx-choose_authorization_engine.adoc[]
-**** xref:adr/drafts/ADRx-product_image_versioning.adoc[]

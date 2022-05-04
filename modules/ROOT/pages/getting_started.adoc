@@ -16,6 +16,10 @@ Stackable is based on Kubernetes and uses this as the control plane to manage cl
 == Installing Kubernetes
 Stackable’s control plane is built around Kubernetes, and we'll give some brief examples of how to install Kubernetes on your machine.
 
+=== Installing kubectl
+
+Stackable operators and their services are managed by applying manifest files to the Kubernetes cluster. For this purpose, you need to have the `kubectl` tool installed. Follow the instructions https://kubernetes.io/docs/tasks/tools/#kubectl[here] for your platform.
+
 === Installing Kubernetes using Kind
 Kind offers a very quick and easy way to bootstrap your Kubernetes infrastructure in Docker. The big advantage of this is that you can simply remove the Docker containers when you're finished and clean up easily, making it great for testing and development.
 
@@ -23,7 +27,7 @@ If you don't already have Docker then visit https://docs.docker.com/get-docker/[
 
 Once you have both of these installed then you can build a Kubernetes cluster in Docker. We're going to create a 2 node cluster to test out Stackable, one node hosting the Kubernetes control plane and the other hosting the Stackable services.
 
-[source]
+[source, bash]
 ----
 kind create cluster --name quickstart --config - << EOF
 ---
@@ -46,35 +50,14 @@ K3s provides a quick way of installing Kubernetes. On your control node run the 
 
 [source,bash]
 ----
-curl -sfL https://get.k3s.io | sh -s - --write-kubeconfig-mode 644
+curl -sfL https://get.k3s.io | sh -s - --node-label 'node=quickstart-1' --write-kubeconfig-mode 644
 ----
 
 So long as you have an Internet connection K3s will download and automatically configure a simple Kubernetes environment.
 
-[source]
-----
-root@kubernetes:~# curl -sfL https://get.k3s.io | sh -s - --write-kubeconfig-mode 644
-[INFO]  Finding release for channel stable
-[INFO]  Using v1.21.3+k3s1 as release
-[INFO]  Downloading hash https://github.com/k3s-io/k3s/releases/download/v1.21.3+k3s1/sha256sum-amd64.txt
-[INFO]  Downloading binary https://github.com/k3s-io/k3s/releases/download/v1.21.3+k3s1/k3s
-[INFO]  Verifying binary download
-[INFO]  Installing k3s to /usr/local/bin/k3s
-[INFO]  Creating /usr/local/bin/kubectl symlink to k3s
-[INFO]  Creating /usr/local/bin/crictl symlink to k3s
-[INFO]  Creating /usr/local/bin/ctr symlink to k3s
-[INFO]  Creating killall script /usr/local/bin/k3s-killall.sh
-[INFO]  Creating uninstall script /usr/local/bin/k3s-uninstall.sh
-[INFO]  env: Creating environment file /etc/systemd/system/k3s.service.env
-[INFO]  systemd: Creating service file /etc/systemd/system/k3s.service
-[INFO]  systemd: Enabling k3s unit
-Created symlink /etc/systemd/system/multi-user.target.wants/k3s.service → /etc/systemd/system/k3s.service.
-[INFO]  systemd: Starting k3s
-----
-
 Create a symlink to the Kubernetes configuration from your home directory to allow tools like Helm to find the correct configuration.
 
-[source]
+[source,bash]
 ----
 mkdir ~/.kube
 ln -s /etc/rancher/k3s/k3s.yaml ~/.kube/config
@@ -83,11 +66,9 @@ ln -s /etc/rancher/k3s/k3s.yaml ~/.kube/config
 
 === Testing your Kubernetes installation
 
-To check if everything worked as expected you can use `kubectl cluster-info` to retrieve the cluster information.
+To check if everything worked as expected you can use `kubectl cluster-info` to retrieve the cluster information. The output should look similar to:
 
-[source]
 ----
-$ kubectl cluster-info
 Kubernetes control plane is running at https://127.0.0.1:6443
 CoreDNS is running at https://127.0.0.1:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
 Metrics-server is running at https://127.0.0.1:6443/api/v1/namespaces/kube-system/services/https:metrics-server:/proxy
@@ -96,7 +77,7 @@ Metrics-server is running at https://127.0.0.1:6443/api/v1/namespaces/kube-syste
 === Installing Helm
 Stackable uses https://helm.sh/[Helm] as the package manager for its Kubernetes operators. This greatly simplifies the deployment and management of Kubernetes operators and CRDs. The quickest way to install Helm is to run the following command:
 
-[source]
+[source,bash]
 ----
 curl -sfL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | /bin/bash -
 ----
@@ -106,7 +87,7 @@ curl -sfL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | 
 === Install Stackable Helm Repositories
 With Helm installed you can add the Stackable operator repo, where the helm charts to install Stackable operators can be found. There are development, test and a stable repositories available, we'll be using the stable repo in this guide.
 
-[source]
+[source,bash]
 ----
 helm repo add stackable-stable https://repo.stackable.tech/repository/helm-stable/
 ----
@@ -116,9 +97,9 @@ The Stackable operators are components that translate the service definitions de
 
 Stackable operators are installed using Helm charts. Run the following commands to install the operators for ZooKeeper, Kafka and NiFi using the repo configured earlier. The --devel flag will choose the latest available version; alternatively the --version flag can be used to deploy a specific version.
 
-==== Installing from the Stackable test repository
+==== Install operators from the Stackable repository
 
-[source]
+[source,bash]
 ----
 helm install zookeeper-operator stackable-stable/zookeeper-operator --version=0.9.0
 helm install kafka-operator stackable-stable/kafka-operator --version=0.5.0
@@ -128,15 +109,12 @@ helm install nifi-operator stackable-stable/nifi-operator --version=0.5.0
 
 You can check which operators are installed using `helm list`:
 
-[source]
 ----
-user@quickstart:~/stackable-utils/quickstart$ helm list
 NAME              	NAMESPACE	REVISION	UPDATED                                	STATUS  	CHART                   	APP VERSION
 kafka-operator    	default  	1       	2022-02-15 08:17:26.84659409 +0000 UTC 	deployed	kafka-operator-0.5.0    	0.5.0
 nifi-operator     	default  	1       	2022-02-15 08:17:37.93720808 +0000 UTC 	deployed	nifi-operator-0.5.0     	0.5.0
 secret-operator   	default  	1       	2022-02-15 08:17:32.700301793 +0000 UTC	deployed	secret-operator-0.2.0   	0.2.0
 zookeeper-operator	default  	1       	2022-02-15 08:17:17.893844595 +0000 UTC	deployed	zookeeper-operator-0.9.0	0.9.0
-
 ----
 
 == Deploying Stackable Services
@@ -145,7 +123,7 @@ At this point you’ve successfully deployed Kubernetes and the Stackable operat
 === Apache ZooKeeper
 We will deploy an Apache ZooKeeper instance to our cluster.
 
-[source]
+[source,bash]
 ----
 kubectl apply -f - <<EOF
 ---
@@ -161,14 +139,13 @@ spec:
         config:
           myidOffset: 10
   version: 3.5.8
-  stopped: false
 EOF
 ----
 
 === Apache Kafka
 We will deploy an Apache Kafka broker that depends on the ZooKeeper service we just deployed. The zookeeperReference property below points to the namespace and name we gave to the ZooKeeper service deployed previously.
 
-[source]
+[source,bash]
 ----
 kubectl apply -f - <<EOF
 ---
@@ -183,6 +160,9 @@ spec:
     roleGroups:
       brokers:
         replicas: 1
+        selector:
+          matchLabels:
+            node: quickstart-1
 ---
 apiVersion: zookeeper.stackable.tech/v1alpha1
 kind: ZookeeperZnode
@@ -198,7 +178,7 @@ EOF
 === Apache NiFi
 We will next deploy an Apache NiFi server.
 
-[source]
+[source,bash]
 ----
 kubectl apply -f - <<EOF
 ---
@@ -239,7 +219,7 @@ spec:
       default:
         selector:
           matchLabels:
-            kubernetes.io/os: linux
+            node: quickstart-1
         config:
           log:
             rootLogLevel: INFO
@@ -249,10 +229,7 @@ EOF
 
 You can check the status of the services using `kubectl get pods`. This will retrieve the status of all pods running in the default namespace.
 
-[source]
 ----
-root@kubernetes:~# kubectl get pods
-$ kubectl get pods
 NAME                                             READY   STATUS    RESTARTS   AGE
 nifi-operator-deployment-64c98c779c-nw6h8        1/1     Running   0          24m
 kafka-operator-deployment-54df9f86c7-psqgd       1/1     Running   0          24m
@@ -263,7 +240,7 @@ simple-kafka-broker-brokers-0                    2/2     Running   0          21
 simple-nifi-node-default-0                       1/1     Running   0          22m
 ----
 
-Since this is the first time that each of these services has been deployed to these nodes the Stackable Agent needs to download the software from the Stackable repository. It may take a few minutes to complete the download and deploy the services. Once all of the pods are in the running state your cluster should be ready to use.
+Since this is the first time that each of these services has been deployed to these nodes, it will take some time to download the software from the Stackable repository and deploy the services. Once all of the pods are in the running state your cluster is ready to use.
 
 == Testing your cluster
 If all has gone well then you will have successfully deployed a Stackable cluster and used it to start three services that should now be ready for you.
@@ -271,66 +248,77 @@ If all has gone well then you will have successfully deployed a Stackable cluste
 === Apache ZooKeeper
 We can test ZooKeeper by running the ZooKeeper CLI shell. The easiest way to do this is to run the CLI shell on the pod that is running ZooKeeper.
 
-[source]
+[source,bash]
 ----
 kubectl exec -i -t simple-zk-server-primary-0 -- bin/zkCli.sh
 ----
 
 The shell should connect automatically to the ZooKeeper server running on the pod. You can run the `ls /` command to see the list of znodes in the root path, which should include those created by Apache Kafka and Apache NiFi.
 
-[source]
 ----
 [zk: localhost:2181(CONNECTED) 0] ls /
 [nifi, znode-17b28a7e-0d45-450b-8209-871225c6efa1, zookeeper]
 ----
 
 === Apache Kafka
-To test Kafka we'll use the tool `kafkacat`.
+To test Kafka we'll create a topic, and verify that it was created.
+First create the topic with the following command:
 
-    sudo apt install kafkacat
-
-With `kafkacat` installed we can connect to Kafka and query the metadata on the broker running on localhost. To do this we first need to find which port Kafka is listening on.
-
-[source]
+[source,bash]
 ----
-$ kubectl get svc simple-kafka
-NAME           TYPE       CLUSTER-IP   EXTERNAL-IP   PORT(S)          AGE
-simple-kafka   NodePort   10.43.20.5   <none>        9092:31909/TCP   44m
+kubectl exec -i -t simple-kafka-broker-brokers-0 -c kafka -- \
+  bin/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic demo
+Created topic demo.
 ----
 
-Here we can the see default Kafka port 9092 has been mapped to port 31909. We can use this to configure kafkacat to connect to the broker.
+Now let's check if it was actually created:
 
-[source]
+[source,bash]
 ----
-$ kafkacat -b localhost:31909 -L
-Metadata for all topics (from broker -1: localhost:31909/bootstrap):
-1 brokers:
-broker 1001 at 192.168.40.120:31976 (controller)
-0 topics:
+kubectl exec -i -t simple-kafka-broker-brokers-0 -c kafka -- \
+  bin/kafka-topics.sh --bootstrap-server localhost:9092 --list
+demo
 ----
 
 === Apache NiFi
-Apache NiFi provides a web interface and the easiest way to test it is to view this in a web browser. As with the Kafka example above we need to find which port NiFi is listening on.
+Apache NiFi provides a web interface and the easiest way to test it is to view this in a web browser.
+To access the web interface we first need to get the ip address and port Nifi is listening on.
+To get the IP address we need to connect to (in this case `172.18.0.2`), run:
 
-[source]
+[source,bash]
 ----
-$ kubectl get svc simple-nifi
+kubectl get nodes --selector=node=quickstart-1 -o wide
+----
+----
+NAME                STATUS   ROLES    AGE   VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE       KERNEL-VERSION      CONTAINER-RUNTIME
+quickstart-worker   Ready    <none>   45m   v1.21.1   172.18.0.2    <none>        Ubuntu 21.04   5.15.0-25-generic   containerd://1.5.2
+----
+
+
+With the following command we get the port (in this case `30247`):
+
+[source,bash]
+----
+kubectl get svc simple-nifi
+----
+
+----
 NAME          TYPE       CLUSTER-IP    EXTERNAL-IP   PORT(S)          AGE
 simple-nifi   NodePort   10.43.75.25   <none>        8443:30247/TCP   49m
 ----
 
-Browse to the address of your Kubernetes node on port 30247 e.g. https://quickstart.local:30247/nifi and you should see the NiFi login screen.
+Browse to the address of your Kubernetes node on port `30247` e.g. https://172.18.0.2:30247/nifi and you should see the NiFi login screen.
 
 image:nifi_login_screen.png[The Apache NiFi web interface login screen]
 
-The Apache NiFi operator will automatically generate the admin user credentials with a random password and store it as a Kubernetes secret in order to provide some security out of the box. You can retrieve this password for the admin user with the following kubectl command.
+The Apache NiFi operator will automatically generate the admin user credentials with a random password and store it as a Kubernetes secret in order to provide some security out of the box. You can retrieve this password for the `admin` user with the following kubectl command.
 
-[source]
+[source,bash]
 ----
-kubectl get secrets nifi-admin-credentials-simple -o jsonpath="{.data.password}" | base64 -d && echo
-4tkInc6UyBuWvbc
+kubectl get secrets nifi-admin-credentials-simple \
+-o jsonpath="{.data.password}" | base64 -d && echo
 ----
 
-Your password will be different to the one above and will be different every time you install a new cluster. Once you have these credentials you can login and you should see a blank NiFi canvas.
+Once you have these credentials you can log in and you should see a blank NiFi canvas.
 
 image:nifi_menu.png[The Apache NiFi web interface canvas]
