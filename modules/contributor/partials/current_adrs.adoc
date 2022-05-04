@@ -12,3 +12,4 @@
 **** xref:adr/ADR013-user_authentication_for_products.adoc[]
 **** xref:adr/ARD014-using_values_from_configmaps.adoc[]
 **** xref:adr/ADR015_definition_of_s3_objects.adoc[]
+**** xref:adr/ADR016-tls-authentication.adoc[]
