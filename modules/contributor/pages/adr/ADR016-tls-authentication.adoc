@@ -1,7 +1,7 @@
 = TLS authentication
 Sebastian Bernauer <sebastian.bernauer@stackable.de>
 v0.1, 2022-05-02
-:status: draft
+:status: accepted
 
 * Status: {status}
 * Deciders:
