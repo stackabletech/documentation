@@ -232,7 +232,7 @@ spec:
 apiVersion: authentication.stackable.tech/v1alpha1
 kind: AuthenticationClass
 metadata:
-  name: zookeeper-tls-mutual
+  name: zookeeper-tls
 spec:
   provider:
     # triggers TLS config to also be used for client authn
