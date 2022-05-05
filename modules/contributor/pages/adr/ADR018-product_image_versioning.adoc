@@ -60,7 +60,7 @@ Based on the above, there are actually two decisions to take around this problem
 While these two questions are related to each other they can be decided fairly independently of each other.
 The decision process for _2._ will be influenced by the decision that is taken on _1._, so we will get this done first.
 
-This ADR will be limited to the question of how stackable image versions are created, with the question of how the operator derives the correct image to use deferred to xref:adr/drafts/ADRx-operator_image_version_selection.adoc[]
+This ADR will be limited to the question of how stackable image versions are created, with the question of how the operator derives the correct image to use deferred to a subsequent ADR.
 
 == Decision Drivers
 
@@ -73,7 +73,7 @@ This ADR will be limited to the question of how stackable image versions are cre
 There are two main options that were considered, both of which can be implemented in two variants:
 
 === Option Variants
-==== Variant 1 - Git tags contains only the Stackable image version
+==== Variant 1 - Git tags contain only the Stackable image version
 For these variants it is assumed that tags which mark a release in the docker images repository (regardless of whether this is a shared repo or a dedicated repo) will contain only the stackable image version.
 
 This means that the definitions of packaged product versions are included in this tag.
@@ -192,18 +192,20 @@ The difference is due to the fact that docker images already contain the product
 |2.9.0_stackable0.1.0
 
 |kafka2.9.0_stackable0.1.1
-|2.9.0_stackable0.1.2
+|2.9.0_stackable0.1.1
 |===
 
 A subsequent ADR will contain follow up decisions on how much of the selection process for the correct image we want to automate in the operators.
 Initially no automation will be implemented, users need to select a working product version and image version combination and refer to the fully qualified version from the CRD (i.e. docker registry tag from the table above).
 
 The main reasons for picking this option were:
+
 * it allows us to decouple operator version and image version to a high degree
 * there is no need to build _unneeded_ images just to accommodate changes in other components (operator change vs image change)
 * it keeps the option to provide automation around selecting the correct image version later on without the need for breaking changes
 
-NOTE: Image versions are only comparable when combined with the product version _0.1.0_ in kafka2.8.0_stackable0.1.0 and kafka2.9.0_stackable0.1.0 are two completely different versions _0.1.0_
+NOTE: Image versions are only comparable when combined with the product version.
+Image version _0.1.0_ in kafka2.8.0_stackable0.1.0 and kafka2.9.0_stackable0.1.0 are two completely different versions _0.1.0_
 
 This decision triggers a few needed changes to our CI processes:
 
