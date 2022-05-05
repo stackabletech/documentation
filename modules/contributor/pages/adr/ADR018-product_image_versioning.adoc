@@ -1,4 +1,4 @@
-= ADR017: Product Image Versioning
+= ADR018: Product Image Versioning
 Teo Klestrup Röijezon <teo.roijezon@stackable.de>
 v0.1, 04.05.2022
 :status: approved
