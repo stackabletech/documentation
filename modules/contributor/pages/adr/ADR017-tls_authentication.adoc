@@ -217,7 +217,7 @@ spec:
 
     # Only affects client connections
     # This setting controls
-    # - If client need to authenticate themselves against the server via TLS
+    # - If clients need to authenticate themselves against the server via TLS
     # - Which ca.crt to use when validating the provided client certs
     clientAuthentication: # optional. Can only be provided if config.tls is provided
       authenticationClass: zookeeper-tls # provides ca.crt
