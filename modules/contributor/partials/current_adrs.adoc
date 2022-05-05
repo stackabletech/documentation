@@ -14,3 +14,4 @@
 **** xref:adr/ADR015-using_values_from_configmaps.adoc[]
 **** xref:adr/ADR016-definition_of_s3_objects.adoc[]
 **** xref:adr/ADR017-tls_authentication.adoc[]
+**** xref:adr/ADR018-product_image_versioning.adoc[]
