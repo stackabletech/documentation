@@ -198,6 +198,11 @@ The difference is due to the fact that docker images already contain the product
 A subsequent ADR will contain follow up decisions on how much of the selection process for the correct image we want to automate in the operators.
 Initially no automation will be implemented, users need to select a working product version and image version combination and refer to the fully qualified version from the CRD (i.e. docker registry tag from the table above).
 
+There must be a compatibility matrix for the operator and product versions.
+This matrix should probably contain at least the following states: "compatible" (which means tested and supported by Stackable), "unsupported" (which means there is no known technical restriction which prevents you from using it but it is either not tested or contains vulnerabilities), and "incompatible" (which means there were breaking changes and this combination will not work).
+This compatibility matrix should not be hard-coded into the operators because then a new release of an operator is required every time a new product version should be supported by this operator.
+Instead it should be read from a config map.
+
 The main reasons for picking this option were:
 
 * it allows us to decouple operator version and image version to a high degree
