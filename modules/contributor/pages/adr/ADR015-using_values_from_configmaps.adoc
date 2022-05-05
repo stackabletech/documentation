@@ -1,4 +1,4 @@
-= ADR014: How Should Operators Use Values from ConfigMaps & Secrets
+= ADR015: How Should Operators Use Values from ConfigMaps & Secrets
 Sönke Liebau <soenke.liebau@stackable.de> and Felix Hennig <felix.hennig@stackable.de>
 v0.1, 2022-04-28
 :status: accepted

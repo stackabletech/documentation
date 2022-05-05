@@ -1,4 +1,4 @@
-= TLS authentication
+= ADR017: TLS authentication
 Sebastian Bernauer <sebastian.bernauer@stackable.de>
 v0.1, 2022-05-02
 :status: accepted
@@ -20,7 +20,7 @@ We want to define a common way - across all the products - to configure these me
 
 == Decision Drivers
 * Must support using no TLS usage, TLS only for encryption and TLS for encryption and authentication
-* Should fit into out existing authentication concept from xref:adr/ADR013-user_authentication_for_products.adoc[]
+* Should fit into out existing authentication concept from xref:adr/ADR014-user_authentication_for_products.adoc[]
 * Should be easy to understand and use for the user
 
 == Considered Options
@@ -108,7 +108,7 @@ spec:
 
 === Extend `AuthenticationClass` to support TLS
 
-We already have a common `AuthenticationClass` structure discussed in xref:adr/ADR013-user_authentication_for_products.adoc[]
+We already have a common `AuthenticationClass` structure discussed in xref:adr/ADR014-user_authentication_for_products.adoc[]
 This option extends the `AuthenticationClass` so that it also support TLS authentication.
 
 [source,yaml]
