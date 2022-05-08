@@ -1,0 +1,259 @@
+= ADR018: Product Image Versioning
+Teo Klestrup Röijezon <teo.roijezon@stackable.de>
+v0.1, 04.05.2022
+:status: approved
+
+* Status: {status}
+* Deciders:
+** Lars Francke
+** Malte Sander
+** Nikolaus Winter
+** Razvan Mihai
+** Siegfried Weber
+** Sönke Liebau
+** Teo Klestrup-Röjiezon
+* Date: 04.05.2022
+
+== Glossary
+
+[cols="20%,80%"]
+|===
+|Term|Definition
+
+|*Product Version*
+|The version of the product contained in the docker image (like for example Apache Kafka or Trino) - the thing we operate
+
+|*Operator Version*
+|The version of the Stackable Operator
+
+|*Stackable Image Version*
+|The version of the docker image which contains the product
+|===
+
+== Context and Problem Statement
+
+=== Context
+Currently, we publish all products as Docker images following the template
+`docker.stackable.tech/stackable/$PRODUCT:$PRODUCT_VERSION-stackable$IMAGE_VERSION`, as well as
+`docker.stackable.tech/stackable/$PRODUCT:$PRODUCT_VERSION-stackable$IMAGE_SEMVER_MAJOR`.
+
+In theory, a given Operator version depends on some SemVer range of `image_version` (for example `^1.3.0`, which
+expands to `>=1.3.0 <2.0.0`).
+
+In practice however, Docker tags are opaque, which prevents us from actually specifying this anywhere. Instead, we can only
+express the range `^N.0.0` (`>=N.0.0 <N+1.0.0`), depending on the `-stackable$IMAGE_SEMVER_MAJOR` tag. This works
+OK for spinning up new clusters, but means that existing clusters may keep running old image versions even after upgrading to new
+(incompatible) Operator versions. The cluster may also end up in a mixed environment if a replica gets deployed to a new node after
+a new image version has been released.
+
+One case where this matters is when adding new features (such as preinstalling new libraries) to a product image that the operator then depends on.
+This isn't a breaking change for the product image, since it still works for old operator versions, which can simply ignore the new feature.
+There is an argument that It could be considered a breaking change for the operator (though internal dependency upgrades are typically not
+considered breaking), but this would not help selecting the correct product image anyway.
+
+=== Decisions
+Based on the above, there are actually two decisions to take around this problem:
+
+. How are stackable image versions created?
+. How does the operator decide which image to use?
+
+While these two questions are related to each other they can be decided fairly independently of each other.
+The decision process for _2._ will be influenced by the decision that is taken on _1._, so we will get this done first.
+
+This ADR will be limited to the question of how stackable image versions are created, with the question of how the operator derives the correct image to use deferred to a subsequent ADR.
+
+== Decision Drivers
+
+* Old versions of operators must keep working and deploying images that they are compatible with
+* We should try to limit the number of maintained image version "tracks" for each product
+* It should not be necessary to update the used operator version in order to be able to deploy a new product version
+* The chosen option should make life as easy as possible for the end-user, it doesn't need to be the simplest one to implement
+
+== Considered Options
+There are two main options that were considered, both of which can be implemented in two variants:
+
+=== Option Variants
+==== Variant 1 - Git tags contain only the Stackable image version
+For these variants it is assumed that tags which mark a release in the docker images repository (regardless of whether this is a shared repo or a dedicated repo) will contain only the stackable image version.
+
+This means that the definitions of packaged product versions are included in this tag.
+
+For example, if a stackable image version 0.1.0 is released at a time when the latest product version is 3.1.0 then there will never be an image version 0.1.0 for product version 3.1.1.
+The tag _0.1.0_ will point at a specific commit in the repository and this commit will also include all Dockerfiles used to build the product images, so up to product version 3.1.0.
+If a Dockerfile for product version 3.1.1 is later created it would not be included in this tag, and could only be released by creating a tag _0.1.1_.
+
+The tags for this variant would look like this:
+
+- 0.1.0
+- 0.1.1
+- 0.2.0
+
+
+==== Variant 2 - Git tags contain product version and stackable image version
+For these variants the release tag will also contain the product version in addition to the image version, so for the combination mentioned above (stackable image version 0.1.0 and product version 3.1.0) the following tag would be created: _3.1.0-stackable0.1.0_
+
+This would allow us to release later versions of the product without having to change to stackable image version - i.e. without needlessly releasing practically unchanged images.
+
+
+
+=== Options
+The main options that are to be considered in this ADR are:
+
+==== Synchronize image versions in lockstep with operator versions
+Each operator version hard-codes exactly one image version that it supports, and we release new product images for each operator images.
+
+==== Use SemVer for docker images, independently of operator version
+The operator version will be kept separate from the stackable image version, for the image version we use semver.
+
+==== Final List of Options to be Considered
+With these two dimensions described, we end up with the following list of options to be considered for this ADR:
+
+. Synchronize image versions in lockstep with operator versions - Variant 1
+. Synchronize image versions in lockstep with operator versions - Variant 2
+. Use SemVer for docker images, independently of operator version - Variant 1
+. Use SemVer for docker images, independently of operator version - Variant 2
+
+===== Scenarios
+
+The following table shows the image versions resulting for all four options based on the following scenario:
+
+
+|===
+|Product Versions Available |Operator Versions Available
+
+a|
+
+- 2.8.0
+- 2.9.0
+
+a|
+
+- 0.1.0
+- 0.1.1
+- 0.2.0
+
+|===
+
+Please note, that this refers to the operator versions that were needed based on semver rules.
+Some of the options in the table below may contain operator versions not listed here, because it was necessary to release the operator itself in a new version in order to make a new product version available.
+
+For this scenario, no change to the image itself was assumed to be needed.
+|===
+|Option |Image Version
+
+|*1* - Synchronize image versions in lockstep with operator versions - Variant 1
+a|
+
+- 2.8.0-stackable0.1.0
+- 2.8.0-stackable0.2.0
+- 2.8.0-stackable0.1.1
+- 2.8.0-stackable0.1.2
+- 2.9.0-stackable0.1.2
+- 2.8.0-stackable0.2.1
+- 2.9.0-stackable0.2.1
+
+|*2* - Synchronize image versions in lockstep with operator versions - Variant 2
+a|
+
+- 2.8.0-stackable0.1.0
+- 2.8.0-stackable0.2.0
+- 2.8.0-stackable0.1.1
+- 2.9.0-stackable0.1.0
+- 2.9.0-stackable0.2.0
+- 2.9.0-stackable0.1.1
+
+|*3* - Use SemVer for docker images, independently of operator version - Variant 1
+a|
+
+- 2.8.0-stackable0.1.0
+- 2.8.0-stackable0.1.1
+- 2.9.0-stackable0.1.1
+
+|*4* - Use SemVer for docker images, independently of operator version - Variant 2
+a|
+
+- 2.8.0-stackable0.1.0
+- 2.9.0-stackable0.1.0
+
+|===
+
+== Decision Outcome
+
+We chose option 4 (Use SemVer for docker images, independently of operator version - Variant 2), so the resulting tags will look like shown in the table below.
+The difference is due to the fact that docker images already contain the product name and we do not need to repeat this in the tag, whereas the docker images repository contains multiple products.
+
+|===
+|Git Tag |Docker Registry Tag
+
+|kafka2.8.0_stackable0.1.0
+|2.8.0_stackable0.1.0
+
+|kafka2.9.0_stackable0.1.0
+|2.9.0_stackable0.1.0
+
+|kafka2.9.0_stackable0.1.1
+|2.9.0_stackable0.1.1
+|===
+
+A subsequent ADR will contain follow up decisions on how much of the selection process for the correct image we want to automate in the operators.
+Initially no automation will be implemented, users need to select a working product version and image version combination and refer to the fully qualified version from the CRD (i.e. docker registry tag from the table above).
+
+There must be a compatibility matrix for the operator and product versions.
+This matrix should probably contain at least the following states: "compatible" (which means tested and supported by Stackable), "unsupported" (which means there is no known technical restriction which prevents you from using it but it is either not tested or contains vulnerabilities), and "incompatible" (which means there were breaking changes and this combination will not work).
+This compatibility matrix should not be hard-coded into the operators because then a new release of an operator is required every time a new product version should be supported by this operator.
+Instead it should be read from a config map.
+
+The main reasons for picking this option were:
+
+* it allows us to decouple operator version and image version to a high degree
+* there is no need to build _unneeded_ images just to accommodate changes in other components (operator change vs image change)
+* it keeps the option to provide automation around selecting the correct image version later on without the need for breaking changes
+
+NOTE: Image versions are only comparable when combined with the product version.
+Image version _0.1.0_ in kafka2.8.0_stackable0.1.0 and kafka2.9.0_stackable0.1.0 are two completely different versions _0.1.0_
+
+This decision triggers a few needed changes to our CI processes:
+
+* Trigger will be changed to react to tags being pushed instead of manually like at the moment
+* Only the exact version specified in the tag will be built, not _all_ product versions (at the moment building Kafka builds all supported Kafka versions, in the future pushing _kafka2.8.0_stackable0.1.0_ will build only kafka 2.8.0)
+
+**Special Case: Multiple Dockerfiles**
+
+For example Superset changed the Dockerfile between Superset version and we need to reflect these changes in our Dockerfile, which means that we effectively have to have different Dockerfiles for different Superset versions.
+
+For these scenarios we will have multiple Dockerfiles and specify the one to use in _conf.py_
+
+== Pros and Cons of the Options
+
+=== Synchronize image versions in lockstep with operator versions - Variant 1
+* Good, because it centralizes the information about which versions are supported into each operator's repository
+* Good, because upgrades are predictable for the user, "upgrading the operator upgrades the cluster" is easy to explain and teach
+* Good, because image tags are stable and immutable once released
+* Bad, because we end up storing a lot of duplicate Docker images
+* We could share the Docker layers to lessen this impact dramatically, but that would require rearchitecting our CI
+* Bad, because it increases the overhead of doing operator or image releases
+* Bad, because old operator versions will keep deploying older image versions than they may technically be compatible with
+
+
+=== Synchronize image versions in lockstep with operator versions - Variant 2
+* Good, because it centralizes the information about which versions are supported into each operator's repository
+* Good, because upgrades are predictable for the user, "upgrading the operator upgrades the cluster" is easy to explain and teach
+* Good, because image tags are stable and immutable once released
+* Bad, because we end up storing a lot of duplicate Docker images
+* We could share the Docker layers to lessen this impact dramatically, but that would require rearchitecting our CI
+* Bad, because it increases the overhead of doing operator or image releases
+* Bad, because old operator versions will keep deploying older image versions than they may technically be compatible with
+
+=== Use SemVer for docker images, independently of operator version - Variant 1
+* Good, because we preserve SemVer for image versions
+* Good, because existing operators will upgrade as far as they are compatible
+* Bad, because existing operators may switch which (minor-level) image version they deploy without user action (this can be mitigated in the follow up ADR on version selection though)
+* Bad, because we don't have a good trigger for when new image versions are released
+* Bad, because on-prem registry mirrors may be outdated and serve incompatible versions
+
+=== Use SemVer for docker images, independently of operator version - Variant 2
+* Good, because we preserve SemVer for image versions
+* Good, because existing operators will upgrade as far as they are compatible
+* Bad, because existing operators may switch which (minor-level) image version they deploy without user action (this can be mitigated in the follow up ADR on version selection though)
+* Bad, because we don't have a good trigger for when new image versions are released
+* Bad, because on-prem registry mirrors may be outdated and serve incompatible versions
