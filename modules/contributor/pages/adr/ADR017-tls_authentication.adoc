@@ -208,14 +208,26 @@ metadata:
   name: ssl-zk
 spec:
   config:
+    # Only affects client connections
+    # This setting controls
+    # - If TLS encryption is used at all
+    # - Which cert the servers should use to authenticate themselves against the client
     tls: # optional, defaults to "secretClass: tls"
-      secretClass: tls # enables encryption and server verification
-    clientAuthentication: # optional, if we should authn the clients via TLS
-      authenticationClass: zookeeper-tls
-    # would probably just be left as default in the vast majority of clusters
-    # Use mutual verification between Zookeeper Nodes
-    # mandatory
-    quorumTlsSecretClass: tls
+      secretClass: tls # provides tls.crt, tls.key and ca.crt
+
+    # Only affects client connections
+    # This setting controls
+    # - If clients need to authenticate themselves against the server via TLS
+    # - Which ca.crt to use when validating the provided client certs
+    clientAuthentication: # optional. Can only be provided if config.tls is provided
+      authenticationClass: zookeeper-tls # provides ca.crt
+
+    # Only affects quorum communication
+    # Use mutual verification between Zookeeper Nodes (mandatory)
+    # This setting controls
+    # - Which cert the servers should use to authenticate themselves against other servers
+    # - Which ca.crt to use when validating the other server
+    quorumTlsSecretClass: tls # provides tls.crt, tls.key and ca.crt
   servers:
     roleGroups:
       primary:
@@ -235,15 +247,18 @@ metadata:
   name: zookeeper-tls
 spec:
   provider:
-    # triggers TLS config to also be used for client authn
+    # Expresses: Authenticate clients!
+    # For this to work you must have an TLS-enabled endpoint which in turn requires a ca.crt (at least at Stackable ;))
+    # So you already have a ca.crt, use that to validate the client certs!
     tls: {}
     # OR...
     tls:
-      # overrides secretclass used for provisioning client certs
-      clientCertSecretClass: tls-client
+      # Expresses: Authenticate clients using the following ca.crt!
+      # This setting controls
+      # - Which ca.crt to use when validating the provided client certs
+      clientCertSecretClass: tls-client  # provides ca.crt
     # OR...
-    # TLS is still used for server authn, but another
-    # method is used for client authn
+    # All the other authentication mechanisms out there still exist
     ldap: ldapStuff{...}
 ---
 apiVersion: secrets.stackable.tech/v1alpha1
