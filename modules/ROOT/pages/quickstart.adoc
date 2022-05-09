@@ -1,0 +1,23 @@
+= Quickstart
+
+This is the super-short getting started guide that should enable you to get something up and running in less than three minutes (excluding download times).
+
+== Setup
+
+Download the cluster script.
+
+----
+curl -L https://raw.githubusercontent.com/stackabletech/integration-tests/main/create_test_cluster.py > create_test_cluster.py
+
+chmod +x create_test_cluster.py
+----
+
+== Install Example Architecture
+
+Using the following command you will can install the Stackable Operators for Apache NiFi, Druid and Superset and deploy example definitions at the same time.
+
+----
+./create-test-cluster.py -o nifi druid superset --example
+----
+
+After this has finished you will have working installations of the three mentioned tools.
