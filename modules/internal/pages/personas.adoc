@@ -1,4 +1,5 @@
 = Customer Personas
+:noindex:
 
 This document is an attempt to formalize different example customer environments that we want the Stackable Platform
 to be able to accomodate.
