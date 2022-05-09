@@ -1,3 +1,1 @@
 * xref:getting_started.adoc[]
-* xref:supported-versions.adoc[]
-* xref:monitoring.adoc[]

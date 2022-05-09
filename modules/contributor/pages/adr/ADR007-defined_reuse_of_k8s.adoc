@@ -1,4 +1,4 @@
-= Decide if Kubernetes Components Are to be Reused for Stackable
+= ADR007: Decide if Kubernetes Components Are to be Reused for Stackable
 Sönke Liebau <soenke.liebau@stackable.de>
 v0.1, 27.08.2020
 :status: draft

@@ -1,0 +1,4 @@
+* xref:index.adoc[]
+** xref:supported_versions.adoc[]
+** xref:monitoring.adoc[]
+include::partial$operator_doc_links.adoc[]

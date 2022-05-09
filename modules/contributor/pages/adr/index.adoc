@@ -1,0 +1,5 @@
+# Architectural Decision Records
+
+This section contains a decision log on architectural decisions in the form of architectural decision records (ADRs). Find the list of below:
+
+include::partial$current_adrs.adoc[]
