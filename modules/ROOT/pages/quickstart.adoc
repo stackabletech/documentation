@@ -4,12 +4,14 @@ This is the super-short getting started guide that should enable you to get some
 
 == Setup
 
-Download the cluster script.
+Download the cluster script and install the dependencies.
 
 ----
 curl -L https://raw.githubusercontent.com/stackabletech/integration-tests/main/create_test_cluster.py > create_test_cluster.py
 
 chmod +x create_test_cluster.py
+
+pip install requests
 ----
 
 == Install Example Architecture
