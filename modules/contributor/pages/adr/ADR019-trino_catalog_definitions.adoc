@@ -1,7 +1,7 @@
 = ADR019: Trino catalog definitions
 Sebastian Bernauer <sebastian.bernauer@stackable.de>
 v0.1, 16.05.2022
-:status: draft
+:status: accepted
 
 * Status: {status}
 * Deciders:
@@ -9,12 +9,13 @@ v0.1, 16.05.2022
 ** Malte Sander
 ** Sebastian Bernauer
 ** Sönke Liebau
-* Date: 16.05.2022
+** Teo Klestrup Röijezon
+* Date: 17.05.2022
 
 == Context and Problem Statement
 
 https://trino.io[Trino] allows user to specify multiple catalogs to connect to a variety of different data-sources.
-We need to agree on mechanism of
+We need to agree on a mechanism to
 
 1. Specifying Trino catalog definitions (this ADR)
 2. Connect an catalog definition to an Trino cluster (xref:adr/ADR020-trino_catalog_usage.adoc[])
@@ -31,7 +32,9 @@ We need to agree on mechanism of
 
 == Decision Outcome
 
-Chosen option: "TODO".
+Chosen option: "TrinoCatalog CRD with discovery ConfigMaps from same namespace".
+This option lines up with the way we want to handle discovery ConfigMaps:
+The operator of the service connecting to (e.g. hdfs) watches for HdfsDirectory objects and provides us with a discovery ConfigMap in the target namespace.
 We will start only implementing the `Hive` connector and support more connector in the future.
 
 == Pros and Cons of the Options
@@ -61,14 +64,18 @@ spec:
         hdfs: # optional
             configMap: my-hdfs # will provide hdfs-site.xml
             impersonation: true # optional, defaults to false
-            wireEncryption: true # optional, defaults to false
-            # there is no kerberos attribute, as the information about kerberos comes from the discovery configmap
+            # there is no kerberos or wireEncryption attribute, as the information about kerberos comes from the discovery configmap
     # OR
     iceberg: {} # Attributes need to be defined later on when we support iceberg
     # OR
-    oracle: {} # Attributes need to be defined later on when we support oracle
+    postgresql: {} # Attributes need to be defined later on when we support postgresql
     # OR [...]
 ----
+
+Looking at the example of hdfs the hdfs discovery ConfigMap will be created by the hdfs-operator.
+That can be the case because we are running in the same namespace as hdfs or we place a HdfsDirectory object into the Trino namespace.
+The hdfs-operator than detects the HdfsDirectory object and places a discover ConfigMap into the Trino namespace.
+(This is similar to the way ZNodes currently work)
 
 * Good, because it's simple and we don't have to worry about cross-namespace access
 * Bad, because it prohibits the usage of an HDFS in a different namespace than the TrinoCatalog namespace. This can be solved by letting the hdfs-operator put the same discovery configmap into multiple namespaces (including the one with the TrinoCatalog)
@@ -102,14 +109,14 @@ spec:
                 name: my-hdfs
                 namespace: default # optional
             impersonation: true # optional, defaults to false
-            wireEncryption: true # optional, defaults to false
-            # there is no kerberos attribute, as the information about kerberos comes from the discovery configmap
+            # there is no kerberos or wireEncryption attribute, as the information about kerberos comes from the discovery configmap
     # OR
     iceberg: {} # Attributes need to be defined later on when we support iceberg
     # OR
-    oracle: {} # Attributes need to be defined later on when we support oracle
+    postgresql: {} # Attributes need to be defined later on when we support postgresql
     # OR [...]
 ----
 
 * Good, because it allows easy cross-namespace access
 * Bad, because it's more complicated
+* Bad, because we can't simply mount the ConfigMap (e.g. with hdfs-site.xml) but instead somehow need to "transfer" it between different namespaces and watch the original ConfigMap.
