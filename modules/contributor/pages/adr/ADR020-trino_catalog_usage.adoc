@@ -1,0 +1,63 @@
+= ADR020: Trino catalog usage
+Sebastian Bernauer <sebastian.bernauer@stackable.de>
+v0.1, 16.05.2022
+:status: draft
+
+* Status: {status}
+* Deciders:
+** Felix Hennig
+** Malte Sander
+** Sebastian Bernauer
+** Sönke Liebau
+* Date: 16.05.2022
+
+== Context and Problem Statement
+
+https://trino.io[Trino] allows user to specify multiple catalogs to connect to a variety of different data-sources.
+We need to agree on mechanism of
+
+1. Specifying Trino catalog definitions (xref:adr/ADR019-trino_catalog_definitions.adoc[])
+2. Connect an catalog definition to an Trino cluster (this ADR)
+
+== Decision Drivers
+
+* Catalogs must somehow be added to Trino clusters
+* Catalogs should be reusable between multiple Trino clusters - e.g. users have two identical Trino clusters - one for adhoc queries, on for scheduled jobs.
+
+== Considered Options
+
+* Catalog references Clusters
+* Cluster references Catalogs
+* Mapping object between Catalog and Cluster
+* Cluster references Catalog
+
+As with xref:adr/ADR019-trino_catalog_definitions.adoc[] we need to decide if the referenced Trino resources like cluster or catalog must be in the same namespace.
+
+== Decision Outcome
+
+Chosen option: "TODO", because TODO
+
+We did choose to reference other Trino objects TODO with/without support for a different namespace.
+
+== Pros and Cons of the Options
+=== Catalog references Clusters
+image::adr/20_option1.png[]
+
+* Good, because if Trino instances in different stages have different catalogs a Trino Object can be reused over the different stages
+* Bad, because if a Trino Cluster has multiple catalogs and you want a similar Trino Cluster you need to modify all catalogs (and maybe restart your first Trino multiple times), not just simply create a new Trino Cluster copy
+
+=== Cluster references Catalogs
+image::adr/20_option2.png[]
+
+* Good, because it's the normal flow that our Product CRDs point to other objects, not the other direction
+
+=== Mapping object between Catalog and Cluster
+image::adr/20_option3.png[]
+
+* Bad, because more complicated for the users
+* Bad, because more complicated watches needed
+
+=== Cluster references Catalog
+This is the same as <<_catalog_references_clusters>> but instead of a list of Clusters the Catalog only contains a single Cluster.
+
+image::adr/20_option4.png[]

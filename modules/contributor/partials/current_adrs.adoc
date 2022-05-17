@@ -16,3 +16,4 @@
 **** xref:adr/ADR017-tls_authentication.adoc[]
 **** xref:adr/ADR018-product_image_versioning.adoc[]
 **** xref:adr/ADR019-trino_catalog_definitions.adoc[]
+**** xref:adr/ADR020-trino_catalog_usage.adoc[]
