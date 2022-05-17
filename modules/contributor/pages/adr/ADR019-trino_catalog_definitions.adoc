@@ -75,7 +75,7 @@ spec:
 Looking at the example of hdfs the hdfs discovery ConfigMap will be created by the hdfs-operator.
 That can be the case because we are running in the same namespace as hdfs or we place a HdfsDirectory object into the Trino namespace.
 The hdfs-operator than detects the HdfsDirectory object and places a discovery ConfigMap into the Trino namespace.
-(This is similar to the way ZNodes currently work)
+(This is similar to the way ZooKeeper's ZNodes currently work)
 
 * Good, because it's simple and we don't have to worry about cross-namespace access
 * Bad, because it prohibits the usage of an HDFS in a different namespace than the TrinoCatalog namespace. This can be solved by letting the hdfs-operator put the same discovery configmap into multiple namespaces (including the one with the TrinoCatalog)
