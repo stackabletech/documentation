@@ -1,0 +1,115 @@
+= ADR019: Trino catalog definitions
+Sebastian Bernauer <sebastian.bernauer@stackable.de>
+v0.1, 16.05.2022
+:status: draft
+
+* Status: {status}
+* Deciders:
+** Felix Hennig
+** Malte Sander
+** Sebastian Bernauer
+** Sönke Liebau
+* Date: 16.05.2022
+
+== Context and Problem Statement
+
+https://trino.io[Trino] allows user to specify multiple catalogs to connect to a variety of different data-sources.
+We need to agree on mechanism of
+
+1. Specifying Trino catalog definitions (this ADR)
+2. Connect an catalog definition to an Trino cluster (xref:adr/ADR020-trino_catalog_usage.adoc[])
+
+== Decision Drivers
+
+* Multiple different types of connectors must be supported, e.g. `Hive`, `Iceberg`, `Oracle` and `PostgreSQL`.
+* In case of catalogs that use distributed file-systems such as HDFS or S3 the access needs to be configured.
+
+== Considered Options
+
+* TrinoCatalog CRD with discovery ConfigMaps from same namespace
+* TrinoCatalog CRD with discovery ConfigMaps from potentially other namespaces
+
+== Decision Outcome
+
+Chosen option: "TODO".
+We will start only implementing the `Hive` connector and support more connector in the future.
+
+== Pros and Cons of the Options
+A TrinoCatalog has a top-level complex enum to distinguish between the different connector types.
+This way every connector can define it's own set of attributes that it supports.
+
+=== TrinoCatalog CRD with discovery ConfigMaps from same namespace
+Here all references to discovery ConfigMaps such as hdfs or hive only are a string that contains the name of the ConfigMap. The ConfigMap must reside in the same namespace as the TrinoCatalog object
+
+[source,yaml]
+----
+---
+# Pseudo code!
+TrinoCatalog
+metadata:
+    name: trino-catalog
+    namespace: default
+spec:
+    hive:
+        metastore: # mandatory
+            configMap: my-hive-metastore
+        s3: # S3ConnectionDef, optional
+            inline:
+                host: minio
+            # OR
+            reference: my-minio-connection
+        hdfs: # optional
+            configMap: my-hdfs # will provide hdfs-site.xml
+            impersonation: true # optional, defaults to false
+            wireEncryption: true # optional, defaults to false
+            # there is no kerberos attribute, as the information about kerberos comes from the discovery configmap
+    # OR
+    iceberg: {} # Attributes need to be defined later on when we support iceberg
+    # OR
+    oracle: {} # Attributes need to be defined later on when we support iceberg
+    # OR [...]
+----
+
+* Good, because it's simple and we don't have to worry about cross-namespace access
+* Bad, because it prohibits the usage of an HDFS in a different namespace than the TrinoCatalog namespace. This can be solved by letting the hdfs-operator put the same discovery configmap into multiple namespaces (including the one with the TrinoCatalog)
+
+=== TrinoCatalog CRD with discovery ConfigMaps from potentially other namespaces
+Here all references to discovery ConfigMaps such as hdfs or hive are a tuple of the name and the namespace of the ConfigMap. The namespace is optional, if not provided the same namespace from the TrinoCatalog will be used. The ConfigMap can reside in a different namespace as the TrinoCatalog object
+
+[source,yaml]
+----
+---
+# Pseudo code!
+TrinoCatalog
+metadata:
+    name: trino-catalog
+    namespace: default
+spec:
+    hive:
+        metastore: # mandatory
+            configMap:
+                name: my-hive-metastore
+                namespace: default # optional
+        s3: # S3ConnectionDef, optional
+            inline:
+                host: minio
+            # OR
+            reference:
+                name: my-minio-connection
+                namespace: default # optional
+        hdfs: # optional
+            configMap: # will provide hdfs-site.xml
+                name: my-hdfs
+                namespace: default # optional
+            impersonation: true # optional, defaults to false
+            wireEncryption: true # optional, defaults to false
+            # there is no kerberos attribute, as the information about kerberos comes from the discovery configmap
+    # OR
+    iceberg: {} # Attributes need to be defined later on when we support iceberg
+    # OR
+    oracle: {} # Attributes need to be defined later on when we support iceberg
+    # OR [...]
+----
+
+* Good, because it allows easy cross-namespace access
+* Bad, because it's more complicated
