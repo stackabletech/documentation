@@ -35,7 +35,7 @@ We need to agree on a mechanism to
 Chosen option: "TrinoCatalog CRD with discovery ConfigMaps from same namespace".
 This option lines up with the way we want to handle discovery ConfigMaps:
 The operator of the service connecting to (e.g. hdfs) watches for HdfsDirectory objects and provides us with a discovery ConfigMap in the target namespace.
-We will start only implementing the `Hive` connector and support more connector in the future.
+We will start only implementing the `Hive` connector and support more connectors in the future.
 
 == Pros and Cons of the Options
 A TrinoCatalog has a top-level complex enum to distinguish between the different connector types.
