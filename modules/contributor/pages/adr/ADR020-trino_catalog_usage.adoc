@@ -41,7 +41,7 @@ Chosen option: "Mapping via labels and label selectors", because it's the most f
 === Catalog references Clusters
 image::adr/20_option1.png[]
 
-* Good, because if Trino instances in different stages have different catalogs a Trino Object can be reused over the different stages
+* Good, because if Trino instances in different stages have different catalogs, a Trino Object can be reused over the different stages
 * Bad, because if a Trino Cluster has multiple catalogs and you want a similar Trino Cluster you need to modify all catalogs (and maybe restart your first Trino multiple times), not just simply create a new Trino Cluster copy
 
 === Cluster references Catalogs
