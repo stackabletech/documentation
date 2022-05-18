@@ -81,7 +81,7 @@ The hdfs-operator then detects the HdfsDirectory object and places a discovery C
 * Bad, because it prohibits the usage of an HDFS in a different namespace than the TrinoCatalog namespace. This can be solved by letting the hdfs-operator put the same discovery configmap into multiple namespaces (including the one with the TrinoCatalog)
 
 === TrinoCatalog CRD with discovery ConfigMaps from potentially other namespaces
-Here all references to discovery ConfigMaps such as hdfs or hive are a tuple of the name and the namespace of the ConfigMap. The namespace is optional, if not provided the same namespace from the TrinoCatalog will be used. The ConfigMap can reside in a different namespace as the TrinoCatalog object
+Here all references to discovery ConfigMaps such as HDFS or Hive are a tuple of the name and the namespace of the ConfigMap. The namespace is optional, if not provided the same namespace from the TrinoCatalog will be used. The ConfigMap can reside in a different namespace as the TrinoCatalog object
 
 [source,yaml]
 ----
