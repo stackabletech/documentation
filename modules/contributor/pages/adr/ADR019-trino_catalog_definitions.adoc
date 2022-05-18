@@ -42,7 +42,7 @@ A TrinoCatalog has a top-level complex enum to distinguish between the different
 This way every connector can define it's own set of attributes that it supports.
 
 === TrinoCatalog CRD with discovery ConfigMaps from same namespace
-Here all references to discovery ConfigMaps such as hdfs or hive only are a string that contains the name of the ConfigMap. The ConfigMap must reside in the same namespace as the TrinoCatalog object
+Here all references to discovery ConfigMaps such as HDFS or Hive only are a string that contains the name of the ConfigMap. The ConfigMap must reside in the same namespace as the TrinoCatalog object
 
 [source,yaml]
 ----
