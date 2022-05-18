@@ -18,7 +18,7 @@ https://trino.io[Trino] allows user to specify multiple catalogs to connect to a
 We need to agree on a mechanism to
 
 1. Specifying Trino catalog definitions (xref:adr/ADR019-trino_catalog_definitions.adoc[])
-2. Connect an catalog definition to an Trino cluster (this ADR)
+2. Connect a catalog definition to an Trino cluster (this ADR)
 
 == Decision Drivers
 
