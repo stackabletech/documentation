@@ -1,0 +1,80 @@
+= ADR020: Trino catalog usage
+Sebastian Bernauer <sebastian.bernauer@stackable.de>
+v0.1, 16.05.2022
+:status: accepted
+
+* Status: {status}
+* Deciders:
+** Felix Hennig
+** Malte Sander
+** Sebastian Bernauer
+** Sönke Liebau
+** Teo Klestrup Röijezon
+* Date: 17.05.2022
+
+== Context and Problem Statement
+
+https://trino.io[Trino] allows user to specify multiple catalogs to connect to a variety of different data-sources.
+We need to agree on a mechanism to
+
+1. Specifying Trino catalog definitions (xref:adr/ADR019-trino_catalog_definitions.adoc[])
+2. Connect a catalog definition to an Trino cluster (this ADR)
+
+== Decision Drivers
+
+* Catalogs must somehow be added to Trino clusters
+* Catalogs should be reusable between multiple Trino clusters - e.g. users have two identical Trino clusters - one for adhoc queries, on for scheduled jobs.
+
+== Considered Options
+
+* Catalog references Clusters
+* Cluster references Catalogs
+* Mapping object between Catalog and Cluster
+* Catalog references Cluster
+* Mapping via labels and label selectors
+
+== Decision Outcome
+
+Chosen option: "Mapping via labels and label selectors", because it's the most flexible solution and delegates implementation details to kubernetes.
+
+== Pros and Cons of the Options
+=== Catalog references Clusters
+image::adr/20_option1.png[]
+
+* Good, because if Trino instances in different stages have different catalogs, a Trino Object can be reused over the different stages
+* Bad, because if a Trino Cluster has multiple catalogs and you want a similar Trino Cluster you need to modify all catalogs (and maybe restart your first Trino multiple times), not just simply create a new Trino Cluster copy
+
+=== Cluster references Catalogs
+image::adr/20_option2.png[]
+
+* Good, because it's the normal flow that our Product CRDs point to other objects, not the other direction
+* Bad, because people adding new catalogs need to be able to modify the `TrinoCluster` object. There may be companies out there where different people operate Trino and manage the catalogs
+* Bad, because if Trino instances in different stages have different catalogs a Trino Object can not be reused over the different stages
+
+=== Mapping object between Catalog and Cluster
+image::adr/20_option3.png[]
+
+* Bad, because more complicated for the users
+* Bad, because more complicated watches needed
+
+=== Catalog references Cluster
+This is the same as <<_catalog_references_clusters>> but instead of a list of Clusters the Catalog only contains a single Cluster.
+
+image::adr/20_option4.png[]
+
+* Good, because if Trino instances in different stages have different catalogs a Trino Object can be reused over the different stages
+* Good compared to <<_catalog_references_clusters>>, because an `TrinoCatalog` is associated with an `TrinoCluster` and the cluster can add additional information to it like the current deployment status
+* Bad, because catalogs can not be reused between multiple Trino clusters
+
+
+=== Mapping via labels and label selectors
+This is option <<_mapping_object_between_catalog_and_cluster>> the "kubernetes way".
+
+Every `TrinoCatalog` object provides a set of labels.
+The `TrinoCluster` objects provide a LabelSelector which defines which catalogs should be included in the Trino instance.
+
+image::adr/20_option5.png[]
+
+* Good, because flexible (Trino cluster administrators can add new catalogs and teams can add their needed catalogs to an managed Trino instance)
+* Good, because the usage of well-known kubernetes patterns
+* Good, because delegates implementation details to kubernetes (e.g. easier watches)
