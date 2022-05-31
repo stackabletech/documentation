@@ -1,1 +1,136 @@
-# S3 resources
+= S3 resources
+
+Many of the tools on by the Stackable platform integrate with S3 storage in some way; reading data from an S3 data source, as a temporary or long term deep storage.
+
+// TODO: which tools exactly support S3 as of now?
+For example, Druid can ingest data from S3 and also use S3 as a backend for deep storage. Hive ... TODO
+
+In the Stackable platform we deal with _S3Connections_ and _S3Buckets_, which are then referenced in cluster resources such as a DruidCluster. The definitions are very flexible; You can specify an S3Bucket and S3Connection inline inside of your DruidCluster manifest file, but you can also create a dedicated cluster resource for your S3Connection with potentially multiple S3Buckets referencing it. An S3Bucket can also be a dedicated cluster resource, referenced in multiple other resources. The different variants are outlined below. We will use a DruidCluster resource as an example, where we want to configue the deep storage to use an S3 bucket as a backend:
+
+[source,yaml]
+----
+
+apiVersion: druid.stackable.tech/v1alpha1
+kind: DruidCluster
+metadata:
+  name: my-druid-cluster
+spec:
+  deepStorage:
+    # to be defined ...
+  # more spec here ...
+----
+
+To save space, we will only write the `deepStorage` part of the cluster definition in the examples below.
+
+Access credentials for buckets will be explained in their own section in <TODO>.
+
+== Inline definition
+
+When you're just starting out defining your pipelines or you only want to experiment or only need to read from S3 in one place, you can define your S3 bucket inline.
+
+[source,yaml]
+----
+deepStorage:
+  s3:
+    inline:
+      bucketName: my-bucket  # <1>
+      connection:
+        inline:
+          host: test-minio  # <2>
+          port: 9000  # <3>
+----
+
+== Dedicated resources
+
+To easily use the same buckets and connections across many tools or multiple instances of the same tool, S3 connections and buckets are always specified in the same way.
+
+An S3Connection specifies a `host` and `port`, an `accessStyle`, `credentials` and a `tls` specification.
+
+An S3Bucket contains a `connection` and a `bucketName`.
+
+You can
+
+[excalidraw,s3-cluster-bucket-connection-reference,svg]
+----
+include::partial$S3ResourcesByReference.excalidraw[]
+----
+
+[source,yaml]
+----
+---
+apiVersion: s3.stackable.tech/v1alpha1
+kind: S3Bucket
+metadata:
+  name: my-bucket-resource
+spec:
+  bucketName: my-example-bucket
+  connection:
+    inline:
+      host: s3.example.com
+----
+
+You can then use this bucket, for example in Druid, as a deep storage:
+
+[source,yaml]
+----
+# ...
+spec:
+  deepStorage:
+    s3:
+      reference: my-bucket-resource # <1>
+# ...
+----
+<1> Name of the bucket resource with connection details.
+
+// TODO: explain inline vs dedicated connections.
+// use a graphic to do that. Can I do a textual specification for that?
+
+== Credentials
+
+
+No matter if a connection is specified inline or as a separate object, the credentials are always specified in the same way. You will need a `Secret` containing the access key ID and secret access key, a `SecretClass` and then a reference to this `SecretClass` where you want to specify the credentials.
+
+The `Secret`:
+
+[source,yaml]
+----
+apiVersion: v1
+kind: Secret
+metadata:
+  name: s3-credentials
+  labels:
+    secrets.stackable.tech/class: s3-credentials-class  # <1>
+stringData:
+  accessKey: YOUR_VALID_ACCESS_KEY_ID_HERE
+  secretKey: YOUR_SECRET_ACCES_KEY_THATBELONGS_TO_THE_KEY_ID_HERE
+----
+
+<1> This label connects the `Secret` to the `SecretClass`.
+
+The `SecretClass`:
+
+[source,yaml]
+----
+apiVersion: secrets.stackable.tech/v1alpha1
+kind: SecretClass
+metadata:
+  name: s3-credentials-class
+spec:
+  backend:
+    k8sSearch:
+      searchNamespace:
+        pod: {}
+----
+
+Referencing it:
+
+[source,yaml]
+----
+...
+credentials:
+  secretClass: s3-credentials-class
+...
+----
+
+== Summary
+
