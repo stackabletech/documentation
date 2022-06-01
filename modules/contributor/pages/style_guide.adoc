@@ -19,7 +19,7 @@ For formatting text and code, follow the link:https://kubernetes.io/docs/contrib
 
 - link:https://kubernetes.io/docs/contribute/style/style-guide/#use-upper-camel-case-for-api-objects[Use upper camel case for API objects] such as ConfigMap or KafkaCluster
 - link:https://kubernetes.io/docs/contribute/style/style-guide/#use-italics-to-define-or-introduce-new-terms[Use italics to define or introduce new terms]
-- link:https://kubernetes.io/docs/contribute/style/style-guide/#use-code-style-for-filenames-directories-and-paths[Use code style for filenames, directories and paths]
+- link:https://kubernetes.io/docs/contribute/style/style-guide/#use-code-style-for-filenames-directories-and-paths[Use `code style` for filenames, directories and paths]
 - link:https://kubernetes.io/docs/contribute/style/style-guide/#use-code-style-for-object-field-names-and-namespaces[Use `code style` for object field names and namespaces]
 - link:https://kubernetes.io/docs/contribute/style/style-guide/#use-normal-style-for-string-and-integer-field-values[Use normal style for string and integer field values]
 
