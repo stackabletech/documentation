@@ -9,7 +9,7 @@
 // probably not to be done for now (even though it would be nice to have)
 // it sucks a bit to have the style guide a bit in a vacuum, but I think for now it would be fine. I could make a ticket for writing "How to contribute docs"
 
-This page provides guidelines on how to write documentation for the Stackable platform. Style guidelines specify things such as capitalization rules, which format to use for emphasis or how API objects and other components should be styled in the documentation - formatting and "superficial" aspects of text. Grammar, tone and voice guidelines, make the texts across the documentation consistent and as clear as possible; for example using a conversational tone, using second person and active voice.
+This page provides guidelines on how to write documentation for the Stackable platform. Style guidelines specify things such as capitalization rules, which format to use for emphasis or how API objects and other components should be styled in the documentation - formatting and "superficial" aspects of text. Grammar, tone and voice guidelines make the texts across the documentation consistent and as clear as possible; for example using a conversational tone, using second person and active voice.
 
 For specific formatting, follow the link:https://kubernetes.io/docs/contribute/style/style-guide/[Kubernetes documentation style guide]. The Stackable platform is built on Kubernetes and the documentation often refers to Kubernetes API objects, custom resources and snippets of resource specifications, as well as command line snippets to interact with Kubernetes clusters. How to format these in the documentation is covered in the Kubernetes documentation style guide. Some examples:
 
