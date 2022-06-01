@@ -17,7 +17,7 @@ These guidelines include using a conversational tone, using second person and ac
 
 For formatting text and code, follow the link:https://kubernetes.io/docs/contribute/style/style-guide/[Kubernetes documentation style guide]. The Stackable platform is built on Kubernetes and the documentation often refers to Kubernetes API objects, custom resources and snippets of resource specifications, as well as command line snippets to interact with Kubernetes clusters. How to format these in the documentation is covered in the Kubernetes documentation style guide. Some examples:
 
-- link:https://kubernetes.io/docs/contribute/style/style-guide/#use-upper-camel-case-for-api-objects[Use upper camel case for API objects] such as ConfigMap or KafkaCluster
+- link:https://kubernetes.io/docs/contribute/style/style-guide/#use-upper-camel-case-for-api-objects[Use PascalCase for API objects] such as ConfigMap or KafkaCluster
 - link:https://kubernetes.io/docs/contribute/style/style-guide/#use-italics-to-define-or-introduce-new-terms[Use __italics__ to define or introduce new terms]
 - link:https://kubernetes.io/docs/contribute/style/style-guide/#use-code-style-for-filenames-directories-and-paths[Use `code style` for filenames, directories and paths]
 - link:https://kubernetes.io/docs/contribute/style/style-guide/#use-code-style-for-object-field-names-and-namespaces[Use `code style` for object field names and namespaces]
