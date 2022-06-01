@@ -12,49 +12,64 @@ content:
 
     - url: https://github.com/stackabletech/commons-operator.git
       branches: main
+      tags: docs/*
       start_path: docs
     - url: https://github.com/stackabletech/secret-operator.git
       branches: main
+      tags: docs/*
       start_path: docs
 
     - url: https://github.com/stackabletech/airflow-operator.git
       branches: main
+      tags: docs/*
       start_path: docs
     - url: https://github.com/stackabletech/druid-operator.git
       branches: main
+      tags: docs/*
       start_path: docs
     - url: https://github.com/stackabletech/hbase-operator.git
       branches: main
+      tags: docs/*
       start_path: docs
     - url: https://github.com/stackabletech/hdfs-operator.git
       branches: main
+      tags: docs/*
       start_path: docs
     - url: https://github.com/stackabletech/hive-operator.git
       branches: main
+      tags: docs/*
       start_path: docs
     - url: https://github.com/stackabletech/kafka-operator.git
       branches: main
+      tags: docs/*
       start_path: docs
     - url: https://github.com/stackabletech/nifi-operator.git
       branches: main
+      tags: docs/*
       start_path: docs
     - url: https://github.com/stackabletech/opa-operator.git
       branches: main
+      tags: docs/*
       start_path: docs
     - url: https://github.com/stackabletech/spark-operator.git
       branches: main
+      tags: docs/*
       start_path: docs
     - url: https://github.com/stackabletech/spark-k8s-operator.git
       branches: main
+      tags: docs/*
       start_path: docs
     - url: https://github.com/stackabletech/superset-operator.git
       branches: main
+      tags: docs/*
       start_path: docs
     - url: https://github.com/stackabletech/trino-operator.git
       branches: main
+      tags: docs/*
       start_path: docs
     - url: https://github.com/stackabletech/zookeeper-operator.git
       branches: main
+      tags: docs/*
       start_path: docs
 
 ui:
