@@ -1,14 +1,5 @@
 # Documentation style guide
 
-// make this document a whole "How to contribute documentation" (?)
-// just a style guide?
-// should we document also stuff about the structure?
-// what about graphics?
-
-// graphics and a whole "How to contribute docs" is not in the scope
-// probably not to be done for now (even though it would be nice to have)
-// it sucks a bit to have the style guide a bit in a vacuum, but I think for now it would be fine. I could make a ticket for writing "How to contribute docs"
-
 This page provides guidelines on how to write documentation for the Stackable platform.
 
 Style guidelines specify things such as capitalization rules, which format to use for emphasis or how API objects and other components should be styled in the documentation - formatting and "superficial" aspects of text.
