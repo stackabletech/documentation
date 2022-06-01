@@ -56,7 +56,7 @@ helm install <operator> deploy/helm/<operator>/
 
 1. The Stackable Platform documentation can be found at https://docs.stackable.tech/. The documentation is built with Antora from the sources in the  https://github.com/stackabletech/documentation[documentation repository] and the `docs` directories in the operator repositories. Follow the steps in <<Preparation>> to be able to change the documentation.
 2. Make your changes.
-3. Create the documentation locally to ensure that the formatting is fine and all links are specified correctly. See the https://github.com/stackabletech/documentation/blob/main/README.adoc[`README.adoc`] file for further details and the xref:style_guide.adoc[] for style and formatting guidelines.
+3. Build the documentation locally to ensure that the formatting is fine and all links are specified correctly. See the https://github.com/stackabletech/documentation/blob/main/README.adoc[`README.adoc`] file for further details and the xref:style_guide.adoc[] for style and formatting guidelines.
 
 == Changes in the operator-templating
 
