@@ -4,6 +4,11 @@ site:
   url: https://docs.stackable.tech
   robots: allow
 
+urls:
+  # This replaces the component version in the URL of the latest stable version with 'stable'
+  # i.e. /commons-operator/stable/index.html instead of /commons-operator/0.3/index.html
+  latest_version_segment: stable
+
 content:
   sources: 
     - url: https://github.com/stackabletech/documentation.git
@@ -70,6 +75,7 @@ content:
       branches: main
       tags: docs/*
       start_path: docs
+
 ui:
   bundle:
     url: ./ui/build/ui-bundle.zip
