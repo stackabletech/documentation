@@ -6,6 +6,7 @@ This is the super-short getting started guide that should enable you to get some
 
 Download the cluster script and install the dependencies.
 
+The script requires Python 3.7 or newer to run.
 ----
 curl -L https://raw.githubusercontent.com/stackabletech/integration-tests/main/create_test_cluster.py > create_test_cluster.py
 
