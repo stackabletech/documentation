@@ -1,0 +1,97 @@
+= ADR021: Initial Version of Stackable Stacks Functionality
+Sönke Liebau <soenke.liebau@stackable.de>
+v0.1, 2022-06-07
+:status: accepted
+
+* Status: {status}
+* Deciders:
+** Rob Siwicki
+** Sebastian Bernauer
+** Sönke Liebau
+** Teo Klestrup-Röijezon
+* Date: 2022-06-07
+
+== Context and Problem Statement
+
+During the preparations for the first real release we noticed that the _create_test_cluster.py_ script is not really polished at all.
+We would very much like to include _stackablectl_ as the cli tool in the first release as well as demo it on the website in the configurator.
+
+In principle _stackablectl_ is usable, but one main functionality is missing, which is the ability to apply the examples and stand up products.
+While just applying the examples is not a huge problem, some of our tool have external dependencies that we need to supply via helm charts at the moment (for example Trino needs a Postgres database).
+We need to have a way to install helm charts as part of the stacks functionality in _stackablectl_ to make it viable for rolling out example setups.
+
+The scope of this ADR is to define a minimal solution that allows defining stacks and specifying Helm charts with properties as prerequisites before applying yaml files.
+This should be defined in a way that allows us as much flexibility as possible when further defining how _stackablectl stacks_ should behave and how stacks are defined down the road, as this is an ongoing discussion.
+
+All subsequent decisions will be documented in a separate ADR.
+
+== Decision Drivers
+
+* Implementation effort should be small so this can be included in release 1
+* Chosen solution should give flexibility to extend it without breaking changes in the future
+
+== Considered Options
+
+* Do nothing
+* Implement basic definition of stacks
+* Go all in on https://porter.sh/[Porter] / https://cnab.io/[CNAB] and use it to fully define our stacks
+
+== Decision Outcome
+
+Chosen option: "Implement basic definition of stacks", because it is a lightweight solution that can be implemented with limited effort and matches the expected overall direction of _stackablectl_ well.
+There was agreement between all deciders that we do not want to marry our solution too tightly to the, as yet unproven, CNAB standard or Porter as a concrete implementation.
+By defining our own, thin, abstraction layer we can isolate our users from the chosen implementation technologies in the backend (Porter, CNAB, Helm, ...).
+
+=== Positive Consequences <!-- optional -->
+
+* We can use stackablectl as cli tool in the first official release
+* This allows adding CNAB bundles as the preferred implementation in a non-breaking fashion later on
+
+=== Negative Consequences <!-- optional -->
+
+* Depending on the future direction we take with _stackablectl_ we have a risk of needing to break the api surface that we create with this implementation
+
+== Pros and Cons of the Options <!-- optional -->
+
+=== Do nothing
+
+We could do nothing right now and instead use the _create_test_cluster.py_ script as our entry point for the initial release.
+
+* Good, this gives us time to design a fully thought out solution before implementing something
+* Bad, _create_test_cluster.py_ doesn't feel very polished and we do want to introducet _stackablectl_ to the world as our tool of choice
+
+=== Implement basic definition of stacks
+
+In order to generate a minimally invasive way to enable deploying Helm charts as prerequisites for our stacks we will introduce the initial definition of a stack roughly as shown below.
+The implementation details may vary, this snippet is provided more to show the overall structure, most specifically the _manifests_ attribute.
+
+Initial implementations here will be provided for applying a bunch of yaml files and installing Helm charts.
+
+[source,yaml]
+----
+  trino:
+    description: Simply stack only containing Trino
+    stackableRelease: 22.05-sbernauer
+    labels:
+      - trino
+    manifests:
+      - helmChart:
+        name: bitnami/redis
+        properties:
+          - name: value
+      - plainYaml:
+          stacks/trino.yaml
+----
+
+* Good, because it allows us to use _stackablectl_ in release 1 and the marketing campaign
+* Good, because it provides isolation between stackablectl and bundle technologies
+* Bad, because it may require breaking changes down the line to the interface users get now
+
+=== Go all in on Porter/CNAB and use it to fully define our stacks
+
+CNAB in theory provides everything we'd need to install a stack, instead of allowing to define yaml files, helm charts and other things, we could simply bundle an entire stack as a CNAB bundle using Porter and have _stackablectl_ install this.
+
+CNAB bundles can be pushed to OCI compliant registries, so we would not need to provide our own method of listing stacks for _stackablectl_ either.
+
+* Good, because instead of reinventing the wheel we would use an existing technology
+* Bad, because we tighly couple _stackablectl_ to this technology, the adoption of which is yet to be proven
