@@ -14,7 +14,7 @@ v0.1, 2022-06-07
 == Context and Problem Statement
 
 During the preparations for the first real release we noticed that the _create_test_cluster.py_ script is not really polished at all.
-We would very much like to include _stackablectl_ as the cli tool in the first release as well as demo it on the website in the configurator.
+We would very much like to include _stackablectl_ as the CLI tool in the first release as well as demo it on the website in the configurator.
 
 In principle _stackablectl_ is usable, but one main functionality is missing, which is the ability to apply the examples and stand up products.
 While just applying the examples is not a huge problem, some of our tool have external dependencies that we need to supply via helm charts at the moment (for example Trino needs a Postgres database).
@@ -44,7 +44,7 @@ By defining our own, thin, abstraction layer we can isolate our users from the c
 
 === Positive Consequences <!-- optional -->
 
-* We can use stackablectl as cli tool in the first official release
+* We can use _stackablectl_ as CLI tool in the first official release
 * This allows adding CNAB bundles as the preferred implementation in a non-breaking fashion later on
 
 === Negative Consequences <!-- optional -->
@@ -84,7 +84,7 @@ Initial implementations here will be provided for applying a bunch of yaml files
 ----
 
 * Good, because it allows us to use _stackablectl_ in release 1 and the marketing campaign
-* Good, because it provides isolation between stackablectl and bundle technologies
+* Good, because it provides isolation between _stackablectl_ and bundle technologies
 * Bad, because it may require breaking changes down the line to the interface users get now
 
 === Go all in on Porter/CNAB and use it to fully define our stacks
@@ -94,4 +94,4 @@ CNAB in theory provides everything we'd need to install a stack, instead of allo
 CNAB bundles can be pushed to OCI compliant registries, so we would not need to provide our own method of listing stacks for _stackablectl_ either.
 
 * Good, because instead of reinventing the wheel we would use an existing technology
-* Bad, because we tighly couple _stackablectl_ to this technology, the adoption of which is yet to be proven
+* Bad, because we tightly couple _stackablectl_ to this technology, the adoption of which is yet to be proven
