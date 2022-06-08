@@ -39,7 +39,7 @@ All subsequent decisions will be documented in a separate ADR.
 == Decision Outcome
 
 Chosen option: "Implement basic definition of stacks", because it is a lightweight solution that can be implemented with limited effort and matches the expected overall direction of _stackablectl_ well.
-There was agreement between all deciders that we do not want to marry our solution too tightly to the, as yet unproven, CNAB standard or Porter as a concrete implementation.
+There was agreement between all deciders that we do not want to marry our solution too tightly to the as yet unproven CNAB standard or Porter as a concrete implementation.
 By defining our own, thin, abstraction layer we can isolate our users from the chosen implementation technologies in the backend (Porter, CNAB, Helm, ...).
 
 === Positive Consequences <!-- optional -->
@@ -76,12 +76,16 @@ Initial implementations here will be provided for applying a bunch of yaml files
       - trino
     manifests:
       - helmChart:
-        name: bitnami/redis
-        properties:
-          - name: value
-      - plainYaml:
-          stacks/trino.yaml
+          repository: https://charts.bitnami.com/bitnami
+          name: postgresql
+          properties:
+            - auth.username: superset
+            - auth.password: superset
+            - auth.database: superset
+      - plainYaml: stacks/trino.yaml
 ----
+
+helm install --repo https://charts.bitnami.com/bitnami --set auth.username=superset --set auth.password=superset --set auth.database=superset superset-postgresql postgresql
 
 * Good, because it allows us to use _stackablectl_ in release 1 and the marketing campaign
 * Good, because it provides isolation between _stackablectl_ and bundle technologies
