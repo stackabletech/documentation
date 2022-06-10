@@ -977,7 +977,7 @@
                             </entry>
                             <entry>
                                 <key>prefix</key>
-                                <value>trip data/yellow_tripdata_2020-05.csv</value>
+                                <value>csv_backup/yellow_tripdata_2020-05.csv</value>
                             </entry>
                             <entry>
                                 <key>use-versions</key>

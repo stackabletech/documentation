@@ -299,7 +299,7 @@ The access credentials `minioAccessKey` and `minioSecretKey` given above will be
 You already installed the ZooKeeper Operator and set up a cluster when you set up NiFi and Kafka. Now all you need to do, is deploying a dedicated ZNode for Druid to use to ensure no Druid properties collide with other properties written to ZooKeeper. Simply deploy a ZNode resource:
 
 [source]
-cat <<EOF | kubectl apply -f -
+kubectl apply -f - <<EOF
 apiVersion: zookeeper.stackable.tech/v1alpha1
 kind: ZookeeperZnode
 metadata:
@@ -314,7 +314,7 @@ EOF
 Now that the Operator and Dependencies are set up, you can deploy the Druid cluster. The credentials for the MinIO instance are not written directly into the cluster resource, but in a dedicated Secret which is then referenced in the cluster resource:
 
 [source]
-cat <<EOF | kubectl apply -f -
+kubectl apply -f - <<EOF
 apiVersion: v1
 kind: Secret
 metadata:
@@ -327,7 +327,7 @@ EOF
 And now the cluster definition:
 
 [source]
-cat <<EOF | kubectl apply -f -
+kubectl apply -f - <<EOF
 apiVersion: druid.stackable.tech/v1alpha1
 kind: DruidCluster
 metadata:
@@ -518,7 +518,7 @@ helm install superset-postgresql postgresql \
 Superset will read the credentials from a Secret. Create a secret with the database credentials in it, in the key `connections.sqlalchemyDatabaseUri`. The secret also contains the information of the initial admin user:
 
 [source]
-cat <<EOF | kubectl apply -f -
+kubectl apply -f - <<EOF
 apiVersion: v1
 kind: Secret
 metadata:
@@ -539,7 +539,7 @@ EOF
 Now deploy Superset:
 
 [source]
-cat <<EOF | kubectl apply -f -
+kubectl apply -f - <<EOF
 apiVersion: superset.stackable.tech/v1alpha1
 kind: SupersetCluster
 metadata:
@@ -585,7 +585,7 @@ Log in with your admin user; if you have not chosen different credentials, the o
 Now that Druid and Superset are running, it is time to connect the two. The Superset Operator takes care of that. Deploy a `DruidConnection` resource:
 
 [source]
-cat <<EOF | kubectl apply -f -
+kubectl apply -f - <<EOF
 apiVersion: superset.stackable.tech/v1alpha1
 kind: DruidConnection
 metadata:
@@ -624,7 +624,7 @@ After defining the dataset, use it to create a chart for a dashboard:
 
 image::end-to-end_data_pipeline_example/superset-chart.png[Chart]
 
-Create a simple line chart. Applying these settings, you can see from the chart (and the average tip amount) that passengers are more generous towards the end of the month:
+Create a simple time-series line chart. Applying these settings, you can see from the chart (and the average tip amount) that passengers are more generous towards the end of the month:
 
 ==== Settings
 
