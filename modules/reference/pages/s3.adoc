@@ -1,6 +1,6 @@
 = S3 resources
 
-This page contains the reference information for th S3Bucket and S3Connection resources. For guidance on usage, see xref:concepts:s3.adoc[].
+This page contains the reference information for th S3Bucket and S3Connection resources. For guidance on usage, see xref:concepts:s3.adoc[S3 resources concept].
 
 == S3Bucket
 
@@ -29,7 +29,7 @@ spec:
       host: s3.example.com
 ----
 
-Using a connection reference:
+Using a connection reference (referencing the example connection from the next section below):
 
 [source,yaml]
 ----
@@ -41,11 +41,13 @@ metadata:
 spec:
   bucketName: my-example-bucket
   connection:
-    reference: my-s3-connection
+    reference: my-connection-resource
 ----
 
 
 == S3Connection
+
+An S3Connection object specifies how to connect to an S3 provider.
 
 * `host`: `String`, the domain name of the host of the object store, such as `s3.west.provider.com`.
 * `port`: `Integer`, a port such as 80 or 4242.
@@ -90,7 +92,7 @@ kind: Secret
 metadata:
   name: s3-credentials
   labels:
-    secrets.stackable.tech/class: s3-credentials-class  # <1>
+    secrets.stackable.tech/class: s3-credentials-class
 stringData:
   accessKey: YOUR_VALID_ACCESS_KEY_ID_HERE
   secretKey: YOUR_SECRET_ACCES_KEY_THATBELONGS_TO_THE_KEY_ID_HERE
