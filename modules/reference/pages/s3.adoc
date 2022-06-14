@@ -1,5 +1,58 @@
 = S3 resources
 
-== S3Connection
+This page contains the reference information for th S3Bucket and S3Connection resources. For guidance on usage, see xref:concepts:s3.adoc[].
 
 == S3Bucket
+
+A bucket consists of a bucket name and the connection to the object store where the bucket is located.
+
+* `name`: `String`, the name of the Bucket.
+* `connection`: can either be `inline` or `reference`.
+** `inline`: See the properties below for <<S3Connection>>.
+** `reference`: `String`, the name of the referenced S3Connection resource. Must be in the same namespace as the S3Bucket resource.
+
+=== Full Examle
+
+Using an inline connection:
+
+[source,yaml]
+----
+---
+apiVersion: s3.stackable.tech/v1alpha1
+kind: S3Bucket
+metadata:
+  name: my-bucket-resource
+spec:
+  bucketName: my-example-bucket
+  connection:
+    inline:
+      host: s3.example.com
+----
+
+Using a connection reference:
+
+[source,yaml]
+----
+---
+apiVersion: s3.stackable.tech/v1alpha1
+kind: S3Bucket
+metadata:
+  name: my-bucket-resource
+spec:
+  bucketName: my-example-bucket
+  connection:
+    reference: my-s3-connection
+----
+
+
+== S3Connection
+
+* `host`: `String`
+* `port`: `String`
+* `accessStyle`: Can be either "VirtualHosted" (default) or "Path".
+* `credentials`:
+* `tls`:
+
+=== Example
+
+TODO
