@@ -63,7 +63,7 @@ helm install --repo https://repo.stackable.tech/repository/helm-dev nifi-operato
 
 === Deploying Kafka and NiFi
 
-To deploy Kafka and NiFi we can now apply our cluster configuration. We'll also need to deploy ZooKeeper, since both Kafka and NiFi depend on it. Run the following command in the console to deploy and configure all three services.
+To deploy Kafka and NiFi we can now apply our cluster configuration. You'll also need to deploy ZooKeeper, since both Kafka and NiFi depend on it. Run the following command in the console to deploy and configure all three services.
 
 [source,bash]
 kubectl apply -f - <<EOF
