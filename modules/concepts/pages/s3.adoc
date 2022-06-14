@@ -21,14 +21,12 @@ An S3Bucket contains a reference to an S3Connection, the connection to the serve
 S3Buckets reference S3Connections. Both types of objects are referenced in other resources. For example: In a DruidCluster you can specify a bucket for deep storage and an S3Connection to be used for ingestion of data.
 Every object can always be specified as a dedicated object or inlined into the enclosing object.
 
-[#reference-options]
-.Three examples of how to specify objects. 1) Dedicated objects for both S3Bucket and S3Connection. 2) Dedicated object only for the connection, the bucket is specified inline in the cluster resource. 3) Everything is inlined in the cluster resource.
 [excalidraw,s3-cluster-bucket-connection-reference,svg,width=70%]
 ----
 include::partial$diagrams/S3ResourceOverview.excalidraw[]
 ----
 
-xref:reference-options[Figure 1] shows three examples of how the objects can be
+The diagram above shows three examples of how the objects can be
  structured.
 // Option 1
 In option 1 all objects are separate. This gives you maximum flexibility and reusability. If the same connection or bucket should be referenced in a different object, the bucket/connection is already there. You can also have different people in your team manage product cluster, buckets and connection separately.
@@ -60,34 +58,62 @@ Access credentials for buckets will be explained in their own section in <TODO>.
 
 ==== Inline definition
 
-When you're just starting out defining your pipelines or you only want to experiment or only need to read from S3 in one place, you can define your S3 bucket inline.
+The inline definition is variant 3 in the figure above.
+
+[excalidraw,s3-cluster-bucket-connection-reference,svg,width=70%]
+----
+include::partial$diagrams/S3ResourcesInlined.excalidraw[]
+----
+
+The advantage is, that everything is defined in a single file, right where it is going to be used:
 
 [source,yaml]
 ----
-deepStorage:
-  s3:
-    inline:
-      bucketName: my-bucket  # <1>
-      connection:
-        inline:
-          host: test-minio  # <2>
-          port: 9000  # <3>
+
+apiVersion: druid.stackable.tech/v1alpha1
+kind: DruidCluster
+metadata:
+  name: my-druid-cluster
+spec:
+  deepStorage:
+      s3:
+        inline: # <1>
+          bucketName: my-bucket
+          connection:
+            inline: # <2>
+              host: test-minio
+              port: 9000
+  # more spec here ...
 ----
+<1> The inline definition of the bucket. The bucket definition contains `bucketName` and `connection`.
+<2> The inline definition of the connection. It contains the `host` and `port`.
+
 
 ==== Dedicated resources
 
-To easily use the same buckets and connections across many tools or multiple instances of the same tool, S3 connections and buckets are always specified in the same way.
+Often multiple buckets are used across a data pipeline, as well as buckets being used by different applications, so dedicated resource definitions that can be referenced from multiple objects make sense.
 
-An S3Connection specifies a `host` and `port`, an `accessStyle`, `credentials` and a `tls` specification.
-
-An S3Bucket contains a `connection` and a `bucketName`.
-
-You can
-
-[excalidraw,s3-cluster-bucket-connection-reference,svg]
+[excalidraw,s3-cluster-bucket-connection-reference,svg,width=70%]
 ----
-include::partial$S3ResourcesByReference.excalidraw[]
+include::partial$diagrams/S3ResourcesByReference.excalidraw[]
 ----
+
+The DruidCluster references the S3Bucket, which in turn references the S3Connection. First the definition of the S3Connection:
+
+[source,yaml]
+----
+---
+apiVersion: s3.stackable.tech/v1alpha1
+kind: S3Connection
+metadata:
+  name: my-connection-resource
+spec:
+  host: s3.example.com
+  port: 4242
+----
+
+Then the bucket, which references the connection:
+
 
 [source,yaml]
 ----
@@ -99,25 +125,24 @@ metadata:
 spec:
   bucketName: my-example-bucket
   connection:
-    inline:
-      host: s3.example.com
+    reference: my-connection-resource
 ----
 
 You can then use this bucket, for example in Druid, as a deep storage:
 
 [source,yaml]
 ----
-# ...
+
+apiVersion: druid.stackable.tech/v1alpha1
+kind: DruidCluster
+metadata:
+  name: my-druid-cluster
 spec:
   deepStorage:
-    s3:
-      reference: my-bucket-resource # <1>
-# ...
+      s3:
+        reference: my-bucket-resource
+  # more spec here ...
 ----
-<1> Name of the bucket resource with connection details.
-
-// TODO: explain inline vs dedicated connections.
-// use a graphic to do that. Can I do a textual specification for that?
 
 == Credentials
 
