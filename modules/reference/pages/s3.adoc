@@ -47,12 +47,51 @@ spec:
 
 == S3Connection
 
-* `host`: `String`
-* `port`: `String`
-* `accessStyle`: Can be either "VirtualHosted" (default) or "Path".
-* `credentials`:
-* `tls`:
+* `host`: `String`, the domain name of the host of the object store, such as `s3.west.provider.com`.
+* `port`: `Integer`, a port such as 80 or 4242.
+* `accessStyle`: Optional. Can be either "VirtualHosted" (default) or "Path".
+* `credentials`: contains a `secretClass`.
+** `secretClass`: a reference to a SecretClass resource. For more information on specifying credentials, see xref:concepts:s3.adoc#_credentials[Credentials] in the S3 concept pages.
 
 === Example
 
-TODO
+[source,yaml]
+----
+---
+apiVersion: s3.stackable.tech/v1alpha1
+kind: S3Connection
+metadata:
+  name: my-connection-resource
+spec:
+  host: s3.example.com
+  port: 4242
+  accessStyle: Path
+  credentials:
+    secretClass: s3-credentials-class
+----
+
+For completeness, the referenced SecretClass and Secret are given below:
+
+[source,yaml]
+----
+---
+apiVersion: secrets.stackable.tech/v1alpha1
+kind: SecretClass
+metadata:
+  name: s3-credentials-class
+spec:
+  backend:
+    k8sSearch:
+      searchNamespace:
+        pod: {}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: s3-credentials
+  labels:
+    secrets.stackable.tech/class: s3-credentials-class  # <1>
+stringData:
+  accessKey: YOUR_VALID_ACCESS_KEY_ID_HERE
+  secretKey: YOUR_SECRET_ACCES_KEY_THATBELONGS_TO_THE_KEY_ID_HERE
+----
