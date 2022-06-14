@@ -95,5 +95,5 @@ metadata:
     secrets.stackable.tech/class: s3-credentials-class
 stringData:
   accessKey: YOUR_VALID_ACCESS_KEY_ID_HERE
-  secretKey: YOUR_SECRET_ACCES_KEY_THATBELONGS_TO_THE_KEY_ID_HERE
+  secretKey: YOUR_SECRET_ACCESS_KEY_THAT_BELONGS_TO_THE_KEY_ID_HERE
 ----
