@@ -193,7 +193,5 @@ credentials:
 
 == What's next
 
-- Find details about the options of the S3 resource in the _S3 resource reference_.
+- Find details about the options of the S3 resource in the xref:reference:s3.adoc[S3 resources reference].
 - Find usage examples of S3 in _Druid_, _Hive_, ... .
-- Learn more about the _secret-operator_.
-
