@@ -1,11 +1,45 @@
 = S3 resources
 
-Many of the tools on by the Stackable platform integrate with S3 storage in some way; reading data from an S3 data source, as a temporary or long term deep storage.
+// -------------- Intro ----------------
+
+Many of the tools on the Stackable platform integrate with S3 storage in some way. For example reading data from an S3 data source or using S3 as a temporary or long term storage.
 
 // TODO: which tools exactly support S3 as of now?
 For example, Druid can ingest data from S3 and also use S3 as a backend for deep storage. Hive ... TODO
 
-In the Stackable platform we deal with _S3Connections_ and _S3Buckets_, which are then referenced in cluster resources such as a DruidCluster. The definitions are very flexible; You can specify an S3Bucket and S3Connection inline inside of your DruidCluster manifest file, but you can also create a dedicated cluster resource for your S3Connection with potentially multiple S3Buckets referencing it. An S3Bucket can also be a dedicated cluster resource, referenced in multiple other resources. The different variants are outlined below. We will use a DruidCluster resource as an example, where we want to configue the deep storage to use an S3 bucket as a backend:
+// -------------- Introducing the objects ------------
+
+In the Stackable platform we deal with _S3Connections_ and _S3Buckets_.
+// s3 connection
+An S3Connection contains information on how to connect to a server serving an S3 object storage. This includes the host name, port, TLS parameters and also access credentials.
+// s3 bucket
+An S3Bucket contains a reference to an S3Connection, the connection to the server where the bucket is located. An S3Connection can be referenced by multiple buckets. The besides the connection, the bucket object just contains the name of the bucket.
+
+== Object Structure
+// ---------- Referencing -------------
+
+S3Buckets reference S3Connections. Both types of objects are referenced in other resources. For example: In a DruidCluster you can specify a bucket for deep storage and an S3Connection to be used for ingestion of data.
+Every object can always be specified as a dedicated object or inlined into the enclosing object.
+
+[#reference-options]
+.Three examples of how to specify objects. 1) Dedicated objects for both S3Bucket and S3Connection. 2) Dedicated object only for the connection, the bucket is specified inline in the cluster resource. 3) Everything is inlined in the cluster resource.
+[excalidraw,s3-cluster-bucket-connection-reference,svg,width=70%]
+----
+include::partial$diagrams/S3ResourceOverview.excalidraw[]
+----
+
+xref:reference-options[Figure 1] shows three examples of how the objects can be
+ structured.
+// Option 1
+In option 1 all objects are separate. This gives you maximum flexibility and reusability. If the same connection or bucket should be referenced in a different object, the bucket/connection is already there. You can also have different people in your team manage product cluster, buckets and connection separately.
+// Option 2
+In option 2 the bucket is inlined in the cluster definition. This makes sense if you have a dedicated bucket for a specific purpose, if it is only used in this one cluster instance, in this single product.
+// Option 3
+Option 3 shows all objects inlined. This is the most convenient to quickly test something. Everything is in a single manifest. If you quickly want to spin up a DruidCluster, just specify everything inline.
+
+=== Examples
+
+To clarify the concept, a few examples will be given, using a DruidCluster resource as an example.
 
 [source,yaml]
 ----
@@ -24,7 +58,7 @@ To save space, we will only write the `deepStorage` part of the cluster definiti
 
 Access credentials for buckets will be explained in their own section in <TODO>.
 
-== Inline definition
+==== Inline definition
 
 When you're just starting out defining your pipelines or you only want to experiment or only need to read from S3 in one place, you can define your S3 bucket inline.
 
@@ -40,7 +74,7 @@ deepStorage:
           port: 9000  # <3>
 ----
 
-== Dedicated resources
+==== Dedicated resources
 
 To easily use the same buckets and connections across many tools or multiple instances of the same tool, S3 connections and buckets are always specified in the same way.
 
@@ -132,5 +166,9 @@ credentials:
 ...
 ----
 
-== Summary
+== What's next
+
+- Find details about the options of the S3 resource in the _S3 resource reference_.
+- Find usage examples of S3 in _Druid_, _Hive_, ... .
+- Learn more about the _secret-operator_.
 
