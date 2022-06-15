@@ -2,20 +2,42 @@
 
 // -------------- Intro ----------------
 
-Many of the tools on the Stackable platform integrate with S3 storage in some way. For example reading data from an S3 data source or using S3 as a temporary or long term storage.
+Many of the tools on the Stackable platform integrate with S3 storage in some way.
+For example Druid can xref:druid::usage.adoc#_s3_for_ingestion[ingest data from S3] and also xref:druid::usage.adoc##_s3_deep_storage[use S3 as a backend for deep storage], Spark can use an xref:spark-k8s::usage.adoc#_s3_bucket_specification[S3 bucket] to store application files and data.
 
-// TODO: which tools exactly support S3 as of now?
-For example, Druid can ingest data from S3 and also use S3 as a backend for deep storage. Hive ... TODO
-
-// -------------- Introducing the objects ------------
+== S3Connection and S3Bucket
+// introducing the objects
 
 In the Stackable platform we deal with _S3Connections_ and _S3Buckets_.
 // s3 connection
 An S3Connection contains information on how to connect to a server serving an S3 object storage. This includes the host name, port, TLS parameters and also access credentials.
 // s3 bucket
-An S3Bucket contains a reference to an S3Connection, the connection to the server where the bucket is located. An S3Connection can be referenced by multiple buckets. The besides the connection, the bucket object just contains the name of the bucket.
+An S3Bucket contains the name of the bucket and a reference to an S3Connection, the connection to the server where the bucket is located. An S3Connection can be referenced by multiple buckets.
 
-== Object Structure
+Here's an example of a simple S3Connection object and an S3Bucket referencing that connection:
+
+[source,yaml]
+----
+---
+apiVersion: s3.stackable.tech/v1alpha1
+kind: S3Connection
+metadata:
+  name: my-connection-resource
+spec:
+  host: s3.example.com
+  port: 4242
+---
+apiVersion: s3.stackable.tech/v1alpha1
+kind: S3Bucket
+metadata:
+  name: my-bucket-resource
+spec:
+  bucketName: my-example-bucket
+  connection:
+    reference: my-connection-resource
+----
+
+== Object Reference Structure
 // ---------- Referencing -------------
 
 S3Buckets reference S3Connections. Both types of objects are referenced in other resources. For example: In a DruidCluster you can specify a bucket for deep storage and an S3Connection to be used for ingestion of data.
@@ -52,10 +74,6 @@ spec:
   # more spec here ...
 ----
 
-To save space, we will only write the `deepStorage` part of the cluster definition in the examples below.
-
-Access credentials for buckets will be explained in their own section in <TODO>.
-
 ==== Inline definition
 
 The inline definition is variant 3 in the figure above.
@@ -65,7 +83,7 @@ The inline definition is variant 3 in the figure above.
 include::partial$diagrams/S3ResourcesInlined.excalidraw[]
 ----
 
-The advantage is, that everything is defined in a single file, right where it is going to be used:
+This variant as the advantage that everything is defined in a single file, right where it is going to be used:
 
 [source,yaml]
 ----
@@ -194,4 +212,3 @@ credentials:
 == What's next
 
 - Find details about the options of the S3 resource in the xref:reference:s3.adoc[S3 resources reference].
-- Find usage examples of S3 in _Druid_, _Hive_, ... .
