@@ -40,8 +40,8 @@ See the output of `build_product_images.py` to retrieve the image tag for `<imag
 
 == Changes in the integration tests
 
-1. Most code changes should also be tested with integration tests. The tests for every operator can be found in the https://github.com/stackabletech/integration-tests[integration-tests repository]. Follow the steps in <<Preparation>> for the integration tests as well.
-2. Create or adapt the tests. Try to mimic the style of the other tests. They are written with https://kuttl.dev/[KUTTL] and in Python.
+1. Most code changes should also be tested with integration tests. The tests for every operator can be found in the operator repository in the `tests` directory. Follow the steps in <<Preparation>> for the integration tests as well.
+2. Create or adapt the tests. Try to mimic the style of the other tests. They are written with https://kuttl.dev/[KUTTL] and using a jinja2 templating mechanism to test multiple product versions at once.
 3. Start a test cluster with the `create_test_cluster.py` script. Its usage is described in the https://github.com/stackabletech/integration-tests/blob/main/README.md[`README.md`] file.
 4. If changes in an operator are tested then the according version of the operator must be started. If already another version was started by the test cluster script then it must be terminated. The operator can be started outside the cluster with `cargo run -- crd | kubectl apply -f - && cargo run -- run`. This approach allows a fast test develop cycle but has the downside that the RBAC rules are not tested. So a proper Helm installation should be tested before creating a pull request. First a Docker image of the operator must be built locally and uploaded to the kind cluster and then the Helm chart must be installed. This can be achieved in the operator directory with the following commands:
 +
