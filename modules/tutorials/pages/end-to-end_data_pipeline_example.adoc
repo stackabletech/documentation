@@ -59,19 +59,138 @@ NiFi is an ETL tool which will be used to model the dataflow of downloading and 
 It will also be used to convert the file content from CSV to JSON.
 
 [source,bash]
-helm install --repo https://repo.stackable.tech/repository/helm-test nifi-operator nifi-operator --version=0.6.0-pr251
-
-NOTE: You need the PR version which has increased PVC sizes and heap memory. This will be merged soon.
-Apply the Kafka custom resource (https://github.com/stackabletech/kafka-operator/blob/main/examples/simple-kafka-cluster.yaml)
+helm install --repo https://repo.stackable.tech/repository/helm-dev nifi-operator nifi-operator --version=0.6.0-nightly
 
 === Deploying Kafka and NiFi
 
-For the purposes of this use case, no special config is required, so you can simply deploy the examples straight from the Operator repositories.
-These files are designed to be self-contained, so for example the NiFi example also contains the necessary ZooKeeper cluster definition.
+To deploy Kafka and NiFi you can now apply the cluster configuration. You'll also need to deploy ZooKeeper, since both Kafka and NiFi depend on it. Run the following command in the console to deploy and configure all three services.
 
 [source,bash]
-kubectl apply -f https://raw.githubusercontent.com/stackabletech/kafka-operator/main/examples/simple-kafka-cluster.yaml
-kubectl apply -f https://raw.githubusercontent.com/stackabletech/nifi-operator/main/examples/simple-nifi-cluster.yaml
+kubectl apply -f - <<EOF
+---
+apiVersion: zookeeper.stackable.tech/v1alpha1
+kind: ZookeeperCluster
+metadata:
+  name: simple-zk
+spec:
+  version: 3.8.0
+  servers:
+    roleGroups:
+      default:
+        selector:
+          matchLabels:
+            kubernetes.io/os: linux
+        replicas: 1
+        config: {}
+---
+apiVersion: zookeeper.stackable.tech/v1alpha1
+kind: ZookeeperZnode
+metadata:
+  name: simple-kafka-znode
+spec:
+  clusterRef:
+    name: simple-zk
+---
+apiVersion: kafka.stackable.tech/v1alpha1
+kind: KafkaCluster
+metadata:
+  name: simple-kafka
+spec:
+  version: 3.1.0
+  zookeeperConfigMapName: simple-kafka-znode
+  brokers:
+    config:
+      resources:
+        storage:
+          logDirs:
+            capacity: '2Gi'
+        cpu:
+          max: '500m'
+          min: '250m'
+        memory:
+          limit: '1Gi'
+    roleGroups:
+      default:
+        replicas: 1
+---
+apiVersion: zookeeper.stackable.tech/v1alpha1
+kind: ZookeeperZnode
+metadata:
+  name: simple-nifi-znode
+spec:
+  clusterRef:
+    name: simple-zk
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: nifi-admin-credentials-simple
+stringData:
+  username: admin
+  password: supersecretpassword
+---
+apiVersion: nifi.stackable.tech/v1alpha1
+kind: NifiCluster
+metadata:
+  name: simple-nifi
+spec:
+  version: "1.15.0-stackable0.4.0"
+  zookeeperConfigMapName: simple-nifi-znode
+  authenticationConfig:
+    method:
+      SingleUser:
+        adminCredentialsSecret:
+          name: nifi-admin-credentials-simple
+        autoGenerate: true
+  sensitivePropertiesConfig:
+    keySecret: nifi-sensitive-property-key
+    autoGenerate: true
+  nodes:
+    config:
+      resources:
+        memory:
+          limit: "1"  # Option
+        cpu:
+          min: "2"  # Option
+          max: "3" # Option
+        storage:
+          contentRepo:
+            capacity: "10Gi"  # Option
+          databaseRepo:
+            capacity: "20Gi" # Option
+          flowfileRepo:
+            capacity: "20Gi" # Option
+          provenanceRepo:
+            capacity: "20Gi" # Option
+          stateRepo:
+            capacity: "20Gi"
+    roleGroups:
+      default:
+        selector:
+          matchLabels:
+            kubernetes.io/os: linux
+        config:
+          log:
+            rootLogLevel: INFO
+          resources:
+            memory:
+              limit: "1Gi"  # Option
+            cpu:
+              min: "2"  # Option
+              max: "3" # Option
+            storage:
+              contentRepo:
+                capacity: "10Gi"  # Option
+              databaseRepo:
+                capacity: "20Gi" # Option
+              flowfileRepo:
+                capacity: "20Gi" # Option
+              provenanceRepo:
+                capacity: "20Gi" # Option
+              stateRepo:
+                capacity: "20Gi"
+        replicas: 1
+EOF
 
 The Nifi installation will take several minutes due to the size of the images.
 
@@ -102,14 +221,14 @@ In order to upload the template to NiFi, click on the _upload template_ button i
 
 image::end-to-end_data_pipeline_example/nifi-uploadtemplate.png[Upload template to NiFi]
 
-To deploy the template as a flow you need to click on the _template_ button in NiFi's main menu.
+To deploy the template as a flow you need to click on the _template_ button in NiFi's main menu and drag it over the canvas.
 
 image::end-to-end_data_pipeline_example/nifi-createtemplate.png[Create flow from template]
 
-After you have done this, you should be presented with a simple flow on your canvas that is almost ready to start processing data.
+After you have done this, you should be presented with a process group named "S3 Kafka" on your canvas that is *almost* ready to start processing data.
 The only thing that still needs doing is to enable some https://nifi.apache.org/docs.html[ControllerServices] used by the processors.
 
-To get to these services you can right-click on the https://nifi.apache.org/docs.html[SplitRecord] processor, go to the _properties_ tab and click on one of the small arrows next to the _Record Reader_ and _Record Writer_ options.
+To get to these services you can double-click on the process group and then right-click on the https://nifi.apache.org/docs.html[SplitRecord] processor, go to the _properties_ tab and click on one of the small arrows next to the _Record Reader_ and _Record Writer_ options.
 
 image::end-to-end_data_pipeline_example/nifi-controllerservices.png[Configure controller services]
 
@@ -127,7 +246,7 @@ If you have the capacity to process all data you can remove this restriction in 
 
 image::end-to-end_data_pipeline_example/nifi-prefix.png[Download filter]
 
-If you change the highlighted value to `trip data/yellow_tripdata_` all data for yellow cabs will be downloaded.
+If you change the highlighted value to `csv_backup/yellow_tripdata_` all data for yellow cabs will be downloaded.
 
 == Druid
 
@@ -166,7 +285,14 @@ The database name, as well as user and password are all `druid`, you will need t
 Druid requires a backing storage (so called Deep-Storage) where data - partitioned by date or time - is persisted as immutable segments. Druid can use either local storage (only appropriate for stand-alone testing - i.e. all druid components run on the same machine), S3 or HDFS. In this guide you will use S3, specifically MinIO which is an S3-implementation suitable for low-footprint scenarios. Deploy a MinIO instance to use as the Druid deep storage, using the MinIO Helm chart:
 
 [source,bash]
-helm install minio --set resources.requests.memory=8Gi --set mode=standalone --set replicas=1  --set persistence.enabled=false  --set "buckets[0].name=nytaxidata,buckets[0].policy=none" --set "users[0].accessKey=minioAccessKey,users[0].secretKey=minioSecretKey,users[0].policy=readwrite" --repo https://charts.min.io/ minio
+helm install minio \
+  --repo https://charts.min.io/ minio \
+  --set resources.requests.memory=8Gi \
+  --set mode=standalone \
+  --set replicas=1 \
+  --set persistence.enabled=false \
+  --set "buckets[0].name=nytaxidata,buckets[0].policy=none" \
+  --set "users[0].accessKey=minioAccessKey,users[0].secretKey=minioSecretKey,users[0].policy=readwrite"
 
 [NOTE]
 ====
@@ -180,7 +306,7 @@ The access credentials `minioAccessKey` and `minioSecretKey` given above will be
 You already installed the ZooKeeper Operator and set up a cluster when you set up NiFi and Kafka. Now all you need to do, is deploying a dedicated ZNode for Druid to use to ensure no Druid properties collide with other properties written to ZooKeeper. Simply deploy a ZNode resource:
 
 [source]
-cat <<EOF | kubectl apply -f -
+kubectl apply -f - <<EOF
 apiVersion: zookeeper.stackable.tech/v1alpha1
 kind: ZookeeperZnode
 metadata:
@@ -195,7 +321,7 @@ EOF
 Now that the Operator and Dependencies are set up, you can deploy the Druid cluster. The credentials for the MinIO instance are not written directly into the cluster resource, but in a dedicated Secret which is then referenced in the cluster resource:
 
 [source]
-cat <<EOF | kubectl apply -f -
+kubectl apply -f - <<EOF
 apiVersion: v1
 kind: Secret
 metadata:
@@ -208,7 +334,7 @@ EOF
 And now the cluster definition:
 
 [source]
-cat <<EOF | kubectl apply -f -
+kubectl apply -f - <<EOF
 apiVersion: druid.stackable.tech/v1alpha1
 kind: DruidCluster
 metadata:
@@ -399,7 +525,7 @@ helm install superset-postgresql postgresql \
 Superset will read the credentials from a Secret. Create a secret with the database credentials in it, in the key `connections.sqlalchemyDatabaseUri`. The secret also contains the information of the initial admin user:
 
 [source]
-cat <<EOF | kubectl apply -f -
+kubectl apply -f - <<EOF
 apiVersion: v1
 kind: Secret
 metadata:
@@ -420,7 +546,7 @@ EOF
 Now deploy Superset:
 
 [source]
-cat <<EOF | kubectl apply -f -
+kubectl apply -f - <<EOF
 apiVersion: superset.stackable.tech/v1alpha1
 kind: SupersetCluster
 metadata:
@@ -466,7 +592,7 @@ Log in with your admin user; if you have not chosen different credentials, the o
 Now that Druid and Superset are running, it is time to connect the two. The Superset Operator takes care of that. Deploy a `DruidConnection` resource:
 
 [source]
-cat <<EOF | kubectl apply -f -
+kubectl apply -f - <<EOF
 apiVersion: superset.stackable.tech/v1alpha1
 kind: DruidConnection
 metadata:
@@ -505,7 +631,7 @@ After defining the dataset, use it to create a chart for a dashboard:
 
 image::end-to-end_data_pipeline_example/superset-chart.png[Chart]
 
-Create a simple line chart. Applying these settings, you can see from the chart (and the average tip amount) that passengers are more generous towards the end of the month:
+Create a simple time-series line chart. Applying these settings, you can see from the chart (and the average tip amount) that passengers are more generous towards the end of the month:
 
 ==== Settings
 
