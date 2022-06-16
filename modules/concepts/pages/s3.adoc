@@ -41,7 +41,7 @@ spec:
 // ---------- Referencing -------------
 
 S3Buckets reference S3Connections. Both types of objects are referenced in other resources. For example: In a DruidCluster you can specify a bucket for deep storage and an S3Connection to be used for ingestion of data.
-Every object can always be specified as a dedicated object or inlined into the enclosing object.
+S3 connection objects can be defined in a standalone fashion or they can be inlined into an enclosing object.
 
 [excalidraw,s3-cluster-bucket-connection-reference,svg,width=70%]
 ----
