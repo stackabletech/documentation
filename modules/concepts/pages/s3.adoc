@@ -55,7 +55,7 @@ In option 1 all objects are separate. This gives you maximum flexibility and reu
 // Option 2
 In option 2 the bucket is inlined in the cluster definition. This makes sense if you have a dedicated bucket for a specific purpose, if it is only used in this one cluster instance, in this single product.
 // Option 3
-Option 3 shows all objects inlined. This is the most convenient to quickly test something. Everything is in a single manifest. If you quickly want to spin up a DruidCluster, just specify everything inline.
+Option 3 shows all S3 objects inlined in a DruidCluster resource. This is a very convenient way to quickly test something since the entire configuration is encapsulated in a single but potentially large manifest. 
 
 === Examples
 
