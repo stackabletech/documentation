@@ -107,9 +107,9 @@ spec:
 <2> The inline definition of the connection. It contains the `host` and `port`.
 
 
-==== Dedicated resources
+==== Stand-alone resources
 
-Often multiple buckets are used across a data pipeline, as well as buckets being used by different applications, so dedicated resource definitions that can be referenced from multiple objects make sense.
+Often multiple buckets are used across a data pipeline, as well as buckets being used by different applications, so stand-alone resource definitions that can be referenced from multiple objects make sense.
 
 [excalidraw,s3-cluster-bucket-connection-reference,svg,width=70%]
 ----
