@@ -8,9 +8,9 @@ For example Druid can xref:druid::usage.adoc#_s3_for_ingestion[ingest data from 
 == S3Connection and S3Bucket
 // introducing the objects
 
-In the Stackable platform we deal with _S3Connections_ and _S3Buckets_.
+Stackable uses _S3Connection_ and _S3Bucket_ objects to configure access to  S3 storage.
 // s3 connection
-An S3Connection contains information on how to connect to a server serving an S3 object storage. This includes the host name, port, TLS parameters and also access credentials.
+An S3Connection object contains information such as the host name of the S3 server, it's port, TLS parameters and access credentials.
 // s3 bucket
 An S3Bucket contains the name of the bucket and a reference to an S3Connection, the connection to the server where the bucket is located. An S3Connection can be referenced by multiple buckets.
 
