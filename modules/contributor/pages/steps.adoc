@@ -52,6 +52,8 @@ kind load docker-image docker.stackable.tech/stackable/<operator>:<version>-nigh
 helm install <operator> deploy/helm/<operator>/
 ----
 
+5. The tests are run with the `scripts/run_tests.sh` script.
+
 == Changes in the documentation
 
 1. The Stackable Platform documentation can be found at https://docs.stackable.tech/. The documentation is built with Antora from the sources in the  https://github.com/stackabletech/documentation[documentation repository] and the `docs` directories in the operator repositories. Follow the steps in <<Preparation>> to be able to change the documentation.
