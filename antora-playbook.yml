@@ -84,6 +84,7 @@ ui:
 antora:
   extensions:
     - '@antora/lunr-extension'
+    - asciidoctor-kroki
 
 asciidoc:
   attributes:

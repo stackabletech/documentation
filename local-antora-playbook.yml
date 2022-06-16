@@ -85,10 +85,12 @@ ui:
 antora:
   extensions:
     - '@antora/lunr-extension'
+    - asciidoctor-kroki
 
 asciidoc:
   attributes:
     base-repo: https://github.com/stackabletech
     plantuml-server-url: http://www.plantuml.com/plantuml
+    kroki-fetch-diagram: true
   extensions:
     - asciidoctor-kroki
