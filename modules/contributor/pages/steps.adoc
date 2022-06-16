@@ -52,7 +52,7 @@ kind load docker-image docker.stackable.tech/stackable/<operator>:<version>-nigh
 helm install <operator> deploy/helm/<operator>/
 ----
 
-5. The tests are run with the `scripts/run_tests.sh` script.
+5. Run the tests from the repository root with `./scripts/run_tests.sh`.
 
 == Changes in the documentation
 
