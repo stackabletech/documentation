@@ -38,7 +38,7 @@ data:
   ZOOKEEPER: simple-zk-server-default-0.simple-zk-server-default.default.svc.cluster.local:2181,simple-zk-server-default-1.simple-zk-server-default.default.svc.cluster.local:2181
 ----
 
-You would also create a ZNode for Kafka:
+You would also create a xref:zookeeper::znodes.adoc[ZNode] for Kafka:
 
 [source,yaml]
 ----
