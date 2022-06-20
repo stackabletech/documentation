@@ -58,7 +58,7 @@ spec:
     name: simple-zk
 ----
 
-And now the KafkaCluster which references the ZNode:
+Finally you create a  KafkaCluster that references the ZNode object created above:
 
 [source,yaml]
 ----
