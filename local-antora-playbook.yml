@@ -15,6 +15,11 @@ content:
     - url: ./
       branches: HEAD
 
+    - url: https://github.com/stackabletech/stackablectl.git
+      branches: main
+      tags: docs/*
+      start_path: docs
+
     - url: https://github.com/stackabletech/commons-operator.git
       branches: main
       tags: docs/*
