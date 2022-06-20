@@ -1,10 +1,35 @@
 = Service discovery
 
-Several products deployed by the Stackable platform depend on other (Stackable) products. This could be a product that requires an external database, high availability support or synchronization.
+Most products on the Stackable platform and also in general require other software to run or to be made useful -- i.e. an analytics tool will delegate the storing of data to other applications and instead interface with various data storage solutions. The Stackable platform uses _service discovery_ to enable users and operators to easily connect different products together. There are three types of uses for the service discovery mechanism:
 
-In order to programmatically resolve this dependency, the Stackable platform uses _service discovery_. A Stackable operator is aware of interfaces and connections that have to be exposed and may be consumed by other operators to configure their products. These interfaces or connections are usually referred to as _connection string_. The operator publishes these connection strings in a ConfigMap to be mounted by other products.
+* A Stackable operated product instance requires a connection to another product to run. For example: NiFi requires a ZooKeeper to run.
+* You want to connect non-Stackable operated software to a Stackable operated product instance. For example: You wrote your own analytics tool and want to read data from Trino.
+* You want to offer a product instance not operated with a Stackable operator as a dependency to Stackable operated product instances. For example: You already run a Druid cluster and want to connect it to a Superset instance operated with a Stackable operator.
 
-== Architecture
+This page explains the general mechanism of service discovery and then how this mechanism works in the contexts described above.
+
+== The service discovery ConfigMap
+
+In the Stackable platform, every product instance is defined by a resource with a name. The operator reads the resource and creates the necessary pods and services to get the instance running. The operator is aware of the interfaces and connections that may be consumed by other products and it also knows all the details of the actual running processes.
+
+The operator creates a ConfigMap with the same name as the product instance, in the same namespace. Inside of the ConfigMap is information about how to connect to the product instance. For example for a ZooKeeper cluster named simple-zk the Stackable ZooKeeper operator creates a ConfigMap similar to this:
+
+[source,yaml]
+----
+apiVersion: v1
+metadata:
+  name: simple-zk
+data:
+  ZOOKEEPER: simple-zk-server-default-0.simple-zk-server-default.default.svc.cluster.local:2181,simple-zk-server-default-1.simple-zk-server-default.default.svc.cluster.local:2181
+----
+
+Other products can now be configured to connect to the simple-zk ZooKeeper cluster. Just by name the connection information can be looked up.
+
+You can also use this ConfigMap in third-party or your own software to connect to product instances operated by Stackable operators. You can also create a discovery ConfigMap yourself for products that you are already operating. For example if you were already operating a ZooKeeper cluster you could create the ConfigMap for it yourself, give it a name and other Stackable operated tools with a ZooKeeper dependency are able to connect to your ZooKeeper instance.
+
+=== Architecture
+
+// TODO redo this and integrate it into the section above
 
 The Operator that provides service discovery writes a `ConfigMap` with all necessary information about its exposed services. Each service has its own entry in the `ConfigMap` as can be seen with the `ZOOKEEPER` entry below:
 
@@ -12,9 +37,12 @@ image::service_discovery_arch.png[Service Discovery]
 
 == Example
 
+// TODO I would remove this here and put it into the Kafka operator instead maybe?
+
 As a real world example, the Stackable Operator for Apache Kafka has to configure Kafka brokers with an Apache ZooKeeper connection string in order to store and share information about e.g. Kafka topics. This connection string is provided by the Stackable Operator for Apache ZooKeeper, which is aware of all the pods and services related to ZooKeeper.
 
 Using service discovery to configure a Kafka  with an existing Zookeeper cluster requires the following steps:
+
 1. You set up a Zookeeper cluster and a ZNode.
 2. The Zookeeper operator generates the service discovery ConfigMap.
 3. You set up a Kafka cluster that references the ConfigMap generated in the step above,
