@@ -1,0 +1,99 @@
+= S3 resources
+
+This page contains the reference information for the S3Bucket and S3Connection resources. For guidance on usage, see xref:concepts:s3.adoc[S3 resources concept].
+
+== S3Bucket
+
+A bucket consists of a bucket name and the connection to the object store where the bucket is located.
+
+* `name`: `String`, the name of the Bucket.
+* `connection`: can either be `inline` or `reference`.
+** `inline`: See the properties below for <<S3Connection>>.
+** `reference`: `String`, the name of the referenced S3Connection resource, which must be in the same namespace as the S3Bucket resource.
+
+=== Full Example
+
+Using an inline connection:
+
+[source,yaml]
+----
+---
+apiVersion: s3.stackable.tech/v1alpha1
+kind: S3Bucket
+metadata:
+  name: my-bucket-resource
+spec:
+  bucketName: my-example-bucket
+  connection:
+    inline:
+      host: s3.example.com
+----
+
+Using a connection reference (referencing the example connection from the next section below):
+
+[source,yaml]
+----
+---
+apiVersion: s3.stackable.tech/v1alpha1
+kind: S3Bucket
+metadata:
+  name: my-bucket-resource
+spec:
+  bucketName: my-example-bucket
+  connection:
+    reference: my-connection-resource
+----
+
+
+== S3Connection
+
+An S3Connection object specifies how to connect to an S3 provider.
+
+* `host`: `String`, the domain name of the host of the object store, such as `s3.west.provider.com`.
+* `port`: `Integer`, a port such as 80 or 4242.
+* `accessStyle`: Optional. Can be either "VirtualHosted" (default) or "Path".
+* `credentials`: contains a `secretClass`.
+** `secretClass`: a reference to a SecretClass resource. For more information on specifying credentials, see xref:concepts:s3.adoc#_credentials[Credentials] in the S3 concept pages.
+
+=== Example
+
+[source,yaml]
+----
+---
+apiVersion: s3.stackable.tech/v1alpha1
+kind: S3Connection
+metadata:
+  name: my-connection-resource
+spec:
+  host: s3.example.com
+  port: 4242
+  accessStyle: Path
+  credentials:
+    secretClass: s3-credentials-class
+----
+
+For completeness, the referenced SecretClass and Secret are given below:
+
+[source,yaml]
+----
+---
+apiVersion: secrets.stackable.tech/v1alpha1
+kind: SecretClass
+metadata:
+  name: s3-credentials-class
+spec:
+  backend:
+    k8sSearch:
+      searchNamespace:
+        pod: {}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: s3-credentials
+  labels:
+    secrets.stackable.tech/class: s3-credentials-class
+stringData:
+  accessKey: YOUR_VALID_ACCESS_KEY_ID_HERE
+  secretKey: YOUR_SECRET_ACCESS_KEY_THAT_BELONGS_TO_THE_KEY_ID_HERE
+----

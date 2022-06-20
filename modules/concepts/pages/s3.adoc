@@ -1,0 +1,214 @@
+= S3 resources
+
+// -------------- Intro ----------------
+
+Many of the tools on the Stackable platform integrate with S3 storage in some way.
+For example Druid can xref:druid::usage.adoc#_s3_for_ingestion[ingest data from S3] and also xref:druid::usage.adoc##_s3_deep_storage[use S3 as a backend for deep storage], Spark can use an xref:spark-k8s::usage.adoc#_s3_bucket_specification[S3 bucket] to store application files and data.
+
+== S3Connection and S3Bucket
+// introducing the objects
+
+Stackable uses _S3Connection_ and _S3Bucket_ objects to configure access to  S3 storage.
+// s3 connection
+An S3Connection object contains information such as the host name of the S3 server, it's port, TLS parameters and access credentials.
+// s3 bucket
+An S3Bucket contains the name of the bucket and a reference to an S3Connection, the connection to the server where the bucket is located. An S3Connection can be referenced by multiple buckets.
+
+Here's an example of a simple S3Connection object and an S3Bucket referencing that connection:
+
+[source,yaml]
+----
+---
+apiVersion: s3.stackable.tech/v1alpha1
+kind: S3Connection
+metadata:
+  name: my-connection-resource
+spec:
+  host: s3.example.com
+  port: 4242
+---
+apiVersion: s3.stackable.tech/v1alpha1
+kind: S3Bucket
+metadata:
+  name: my-bucket-resource
+spec:
+  bucketName: my-example-bucket
+  connection:
+    reference: my-connection-resource
+----
+
+== Object Reference Structure
+// ---------- Referencing -------------
+
+S3Bucket(s) reference S3Connection(s) objects. Both types of objects can be referenced by other resources. For example in a DruidCluster you can specify a bucket for deep storage and an S3Connection for data ingestion.
+S3 connection objects can be defined in a standalone fashion or they can be inlined into a bucket object. Similarly, a bucket can be defined in a standalone object or inlined into an enclosing object.
+
+[excalidraw,s3-cluster-bucket-connection-reference,svg,width=70%]
+----
+include::partial$diagrams/S3ResourceOverview.excalidraw[]
+----
+
+The diagram above shows three examples of how the objects can be
+ structured.
+// Option 1
+In option 1 all objects are separate from each other. This provides maximum re-usability because the same connection or bucket object can be referenced by multiple resources. It also allows for separation of concerns across team members. Cluster administrators can define S3 connection objects that developers reference in their applications.
+// Option 2
+In option 2 the bucket is inlined in the cluster definition. This makes sense if you have a dedicated bucket for a specific purpose, if it is only used in this one cluster instance, in this single product.
+// Option 3
+Option 3 shows all S3 objects inlined in a DruidCluster resource. This is a very convenient way to quickly test something since the entire configuration is encapsulated in a single but potentially large manifest. 
+
+=== Examples
+
+To clarify the concept, a few examples will be given, using a DruidCluster resource as an example.
+
+[source,yaml]
+----
+
+apiVersion: druid.stackable.tech/v1alpha1
+kind: DruidCluster
+metadata:
+  name: my-druid-cluster
+spec:
+  deepStorage:
+    # to be defined ...
+  # more spec here ...
+----
+
+==== Inline definition
+
+The inline definition is variant 3 in the figure above.
+
+[excalidraw,s3-cluster-bucket-connection-reference,svg,width=70%]
+----
+include::partial$diagrams/S3ResourcesInlined.excalidraw[]
+----
+
+This variant has the advantage that everything is defined in a single file, right where it is going to be used:
+
+[source,yaml]
+----
+
+apiVersion: druid.stackable.tech/v1alpha1
+kind: DruidCluster
+metadata:
+  name: my-druid-cluster
+spec:
+  deepStorage:
+      s3:
+        inline: # <1>
+          bucketName: my-bucket
+          connection:
+            inline: # <2>
+              host: test-minio
+              port: 9000
+  # more spec here ...
+----
+<1> The inline definition of the bucket. The bucket definition contains `bucketName` and `connection`.
+<2> The inline definition of the connection. It contains the `host` and `port`.
+
+
+==== Stand-alone resources
+
+Often multiple buckets are used across a data pipeline, as well as buckets being used by different applications, so stand-alone resource definitions that can be referenced from multiple objects make sense.
+
+[excalidraw,s3-cluster-bucket-connection-reference,svg,width=70%]
+----
+include::partial$diagrams/S3ResourcesByReference.excalidraw[]
+----
+
+The DruidCluster references the S3Bucket, which in turn references the S3Connection. First the definition of the S3Connection:
+
+[source,yaml]
+----
+---
+apiVersion: s3.stackable.tech/v1alpha1
+kind: S3Connection
+metadata:
+  name: my-connection-resource
+spec:
+  host: s3.example.com
+  port: 4242
+----
+
+Then the bucket, which references the connection:
+
+
+[source,yaml]
+----
+---
+apiVersion: s3.stackable.tech/v1alpha1
+kind: S3Bucket
+metadata:
+  name: my-bucket-resource
+spec:
+  bucketName: my-example-bucket
+  connection:
+    reference: my-connection-resource
+----
+
+You can then use this bucket, for example in Druid, as a deep storage:
+
+[source,yaml]
+----
+
+apiVersion: druid.stackable.tech/v1alpha1
+kind: DruidCluster
+metadata:
+  name: my-druid-cluster
+spec:
+  deepStorage:
+      s3:
+        reference: my-bucket-resource
+  # more spec here ...
+----
+
+== Credentials
+
+
+No matter if a connection is specified inline or as a separate object, the credentials are always specified in the same way. You will need a `Secret` containing the access key ID and secret access key, a `SecretClass` and then a reference to this `SecretClass` where you want to specify the credentials.
+
+The `Secret`:
+
+[source,yaml]
+----
+apiVersion: v1
+kind: Secret
+metadata:
+  name: s3-credentials
+  labels:
+    secrets.stackable.tech/class: s3-credentials-class  # <1>
+stringData:
+  accessKey: YOUR_VALID_ACCESS_KEY_ID_HERE
+  secretKey: YOUR_SECRET_ACCESS_KEY_THAT_BELONGS_TO_THE_KEY_ID_HERE
+----
+
+<1> This label connects the `Secret` to the `SecretClass`.
+
+The `SecretClass`:
+
+[source,yaml]
+----
+apiVersion: secrets.stackable.tech/v1alpha1
+kind: SecretClass
+metadata:
+  name: s3-credentials-class
+spec:
+  backend:
+    k8sSearch:
+      searchNamespace:
+        pod: {}
+----
+
+Referencing it:
+
+[source,yaml]
+----
+...
+credentials:
+  secretClass: s3-credentials-class
+...
+----
+
+== What's next
+
+- Find details about the options of the S3 resource in the xref:reference:s3.adoc[S3 resources reference].
