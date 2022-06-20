@@ -14,7 +14,14 @@ image::service_discovery_arch.png[Service Discovery]
 
 As a real world example, the Stackable Operator for Apache Kafka has to configure Kafka brokers with an Apache ZooKeeper connection string in order to store and share information about e.g. Kafka topics. This connection string is provided by the Stackable Operator for Apache ZooKeeper, which is aware of all the pods and services related to ZooKeeper.
 
-This example is shown below with manifest snippets. First you would define a ZooKeeper cluster:
+Using service discovery to configure a Kafka  with an existing Zookeeper cluster requires the following steps:
+1. You set up a Zookeeper cluster and a ZNode.
+2. The Zookeeper operator generates the service discovery ConfigMap.
+3. You set up a Kafka cluster that references the ConfigMap generated in the step above,
+
+The following snippets highlight the relevant sections in the resource definitions .
+
+1. First you define a ZooKeeper cluster:
 
 [source,yaml]
 ----
