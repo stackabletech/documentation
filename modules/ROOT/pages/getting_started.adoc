@@ -74,30 +74,32 @@ CoreDNS is running at https://127.0.0.1:6443/api/v1/namespaces/kube-system/servi
 Metrics-server is running at https://127.0.0.1:6443/api/v1/namespaces/kube-system/services/https:metrics-server:/proxy
 ----
 
-=== Installing Helm
-Stackable uses https://helm.sh/[Helm] as the package manager for its Kubernetes operators. This greatly simplifies the deployment and management of Kubernetes operators and CRDs. The quickest way to install Helm is to run the following command:
+== Installing Stackable
+=== Install stackablectl
+
+Install the Stackable command line utility xref:stackablectl::index.adoc[stackablectl] by following the installation steps for your platform on the xref:stackablectl::installation.adoc[installation] page.
+
+=== Installing Stackable Operators
+The Stackable operators are components that translate the service definitions deployed via Kubernetes into deploy services on the worker nodes. These can be installed on any node that has access to the Kubernetes control plane. In this example we will install them on the controller node.
+
+Stackable operators are installed using stackablectl. Run the following commands to install the latest operator versions of ZooKeeper, Kafka and NiFi.
 
 [source,bash]
 ----
-curl -sfL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | /bin/bash -
+stackablectl operator install zookeeper secret nifi kafka
 ----
 
-
-== Installing Stackable
-=== Install Stackable Helm Repositories
-With Helm installed you can add the Stackable operator repo, where the helm charts to install Stackable operators can be found. There are development, test and a stable repositories available, we'll be using the stable repo in this guide.
+.Using Helm instead
+[%collapsible]
+====
+Add the stackable-stable Helm Chart repository:
 
 [source,bash]
 ----
 helm repo add stackable-stable https://repo.stackable.tech/repository/helm-stable/
 ----
 
-=== Installing Stackable Operators
-The Stackable operators are components that translate the service definitions deployed via Kubernetes into deploy services on the worker nodes. These can be installed on any node that has access to the Kubernetes control plane. In this example we will install them on the controller node.
-
-Stackable operators are installed using Helm charts. Run the following commands to install the operators for ZooKeeper, Kafka and NiFi using the repo configured earlier. The --devel flag will choose the latest available version; alternatively the --version flag can be used to deploy a specific version.
-
-==== Install operators from the Stackable repository
+Install the operators:
 
 [source,bash]
 ----
@@ -106,15 +108,16 @@ helm install kafka-operator stackable-stable/kafka-operator --version=0.5.0
 helm install secret-operator stackable-stable/secret-operator --version=0.2.0
 helm install nifi-operator stackable-stable/nifi-operator --version=0.5.0
 ----
+====
 
-You can check which operators are installed using `helm list`:
+You can check which operators are installed using `stackablectl operator installed`:
 
 ----
-NAME              	NAMESPACE	REVISION	UPDATED                                	STATUS  	CHART                   	APP VERSION
-kafka-operator    	default  	1       	2022-02-15 08:17:26.84659409 +0000 UTC 	deployed	kafka-operator-0.5.0    	0.5.0
-nifi-operator     	default  	1       	2022-02-15 08:17:37.93720808 +0000 UTC 	deployed	nifi-operator-0.5.0     	0.5.0
-secret-operator   	default  	1       	2022-02-15 08:17:32.700301793 +0000 UTC	deployed	secret-operator-0.2.0   	0.2.0
-zookeeper-operator	default  	1       	2022-02-15 08:17:17.893844595 +0000 UTC	deployed	zookeeper-operator-0.9.0	0.9.0
+OPERATOR              VERSION         NAMESPACE      STATUS           LAST UPDATED
+kafka                 0.6.0-nightly   default        deployed         2022-06-16 13:51:05.661282811 +0200 CEST
+nifi                  0.6.0-nightly   default        deployed         2022-06-20 16:22:45.985504689 +0200 CEST
+secret                0.5.0-nightly   default        deployed         2022-06-20 16:07:40.248027167 +0200 CEST
+zookeeper             0.10.0-nightly  default        deployed         2022-06-16 13:50:51.497813301 +0200 CEST
 ----
 
 == Deploying Stackable Services

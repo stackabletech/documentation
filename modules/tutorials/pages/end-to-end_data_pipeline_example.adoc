@@ -13,8 +13,21 @@ You should make sure that you have everything you need:
 
 * A running Kubernetes cluster
 * https://kubernetes.io/docs/tasks/tools/#kubectl[Kubectl] to interact with the cluster
-* xref:stackablectl::installation.adoc[stackablectl] to install and interact with Stackable operators
 * https://helm.sh/[Helm] to deploy third-party dependencies
+* xref:stackablectl::installation.adoc[stackablectl] to install and interact with Stackable operators
++
+[NOTE]
+====
+While we recommend to use stackablectl, you can also install operators from the Helm Chart repository:
+
+[source,bash]
+----
+helm repo add stackable-stable https://repo.stackable.tech/repository/helm-stable/
+----
+
+Instructions for installing via Helm are also provided throughout the tutorial.
+
+====
 * Shell utilities like `cat` and `curl`
 
 == Nifi and Kafka
@@ -34,6 +47,15 @@ The necessary certificates and keys for this are provided by the Secret Operator
 [source,bash]
 stackablectl operator install secret
 
+.Using Helm instead
+[%collapsible]
+====
+[source,bash]
+----
+helm install secret-operator stackable-stable/secret-operator
+----
+====
+
 ==== ZooKeeper Operator
 
 Apache NiFi and Apache Kafka both use Apache ZooKeeper as backing config storage, so the xref:zookeeper::index.adoc[Stackable Operator for Apache ZooKeeper] has to be installed in order to make sure that a ZooKeeper cluster can be rolled out.
@@ -42,12 +64,30 @@ There is no need to install multiple ZooKeeper clusters, as NiFi, Kafka and Drui
 [source,bash]
 stackablectl operator install zookeeper
 
+.Using Helm instead
+[%collapsible]
+====
+[source,bash]
+----
+helm install zookeeper-operator stackable-stable/zookeeper-operator
+----
+====
+
 ==== Kafka Operator
 
 NiFi publishes the individual records from the S3 data to Kafka.
 
 [source,bash]
 stackablectl operator install kafka
+
+.Using Helm instead
+[%collapsible]
+====
+[source,bash]
+----
+helm install zookeeper-operator stackable-stable/kafka-operator
+----
+====
 
 ==== NiFi Operator
 
@@ -56,6 +96,15 @@ It will also be used to convert the file content from CSV to JSON.
 
 [source,bash]
 stackablectl operator install nifi=0.6.0-nightly
+
+.Using Helm instead
+[%collapsible]
+====
+[source,bash]
+----
+helm install --repo https://repo.stackable.tech/repository/helm-dev nifi-operator nifi-operator --version=0.6.0-nightly
+----
+====
 
 === Deploying Kafka and NiFi
 
@@ -257,6 +306,14 @@ Like the other Operators, the Druid Operator is easily installed with Helm:
 [source,bash]
 stackablectl operator install druid
 
+.Using Helm instead
+[%collapsible]
+====
+[source,bash]
+----
+helm install druid-operator stackable-stable/druid-operator
+----
+====
 
 === Set up dependencies
 
@@ -505,6 +562,15 @@ As before, you need to install the Operator:
 
 [source, bash]
 stackablectl operator install superset
+
+.Using Helm instead
+[%collapsible]
+====
+[source,bash]
+----
+helm install druid-operator stackable-stable/superset-operator
+----
+====
 
 === Set up dependencies
 
