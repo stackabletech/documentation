@@ -60,10 +60,6 @@ content:
       branches: main
       tags: docs/*
       start_path: docs
-    - url: https://github.com/stackabletech/spark-operator.git
-      branches: main
-      tags: docs/*
-      start_path: docs
     - url: https://github.com/stackabletech/spark-k8s-operator.git
       branches: main
       tags: docs/*
