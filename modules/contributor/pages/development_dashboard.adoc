@@ -68,15 +68,6 @@ This page contains information about our products and relevant links you might n
 |https://docs.stackable.tech/nifi/index.html
 |
 
-|Apache Spark (standalone)
-|https://spark.apache.org/
-|https://github.com/apache/spark
-|https://github.com/stackabletech/spark-operator
-|https://github.com/stackabletech/docker-images/tree/main/spark
-|https://ci.stackable.tech/job/Spark%20Operator%20Integration%20Tests/
-|https://docs.stackable.tech/spark/index.html
-|
-
 |Apache Spark on Kubernetes
 |https://spark.apache.org/
 |https://github.com/apache/spark
