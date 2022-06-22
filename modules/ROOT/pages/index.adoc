@@ -112,7 +112,7 @@ xref:druid::index.adoc[Read more]
 <h3>Apache HBase</h3>
 ++++
 
-HBase is a distributed, scalable, big data store
+HBase is a distributed, scalable, big data store.
 
 xref:hbase::index.adoc[Read more]
 
@@ -194,11 +194,7 @@ xref:nifi::index.adoc[Read more]
 
 Apache Spark is a multi-language engine for executing data engineering, data science, and machine learning on single-node machines or clusters.
 
-Stackable offers two different operators for managing Apache Spark clusters. One for multi-tenancy or standalone clusters and one for isolated workloads.
-
-xref:spark::index.adoc[Read more] for more information on how to run a multi-tenancy Spark clusters with Stackable.
-
-For more information on how to run isolated Spark workloads with Stackable operators xref:spark-k8s::index.adoc[see here].
+xref:spark-k8s::index.adoc[Read more]
 
 ++++
 </div>
@@ -212,7 +208,7 @@ For more information on how to run isolated Spark workloads with Stackable opera
 <h3>Apache Superset</h3>
 ++++
 
-Apache Superset is a modern data exploration and visualization platform
+Apache Superset is a modern data exploration and visualization platform.
 
 xref:superset::index.adoc[Read more]
 
