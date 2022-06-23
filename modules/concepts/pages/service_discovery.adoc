@@ -22,7 +22,7 @@ spec:
   ...
 ----
 
-The operator reads the resource and creates the necessary pods and services to get the instance running. The operator is aware of the interfaces and connections that may be consumed by other products and it also knows all the details of the actual running processes.
+The Zookeeper operator reads the resource and creates the necessary pods and services to get the instance running. It is aware of the interfaces and connections that may be consumed by other products and it also knows all the details of the actual running processes.
 
 The operator creates a ConfigMap with the same name as the product instance, in the same namespace. Inside of the ConfigMap is information about how to connect to the product instance. For example for a ZooKeeper cluster named simple-zk the Stackable ZooKeeper operator creates a ConfigMap similar to this:
 
