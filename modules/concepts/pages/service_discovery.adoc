@@ -77,7 +77,7 @@ You can connect your own products to Stackable-operated product instances. How e
 
 In general, use the name of the product instance to retrieve the ConfigMap and use the information in there to connect your own service. You can find links to these documentation pages below in the <<whats-next>> section.
 
-=== Use manually operated instances as dependencies to Stackable operated instances
+=== Discovering services outside Stackable
 
 It is not uncommon to already have some core software running in your stack, such as HDFS. If you want to use HBase with the Stackable operator, you can still connect your already existing HDFS instance. You will have to create the discovery ConfigMap for your already existing HDFS yourself. Looking at xref:hdfs::discovery.adoc[the discovery documentation for HDFS], you can see that the discovery ConfigMap for HDFS contains the `core-site.xml` and `hdfs-site.xml` files.
 
