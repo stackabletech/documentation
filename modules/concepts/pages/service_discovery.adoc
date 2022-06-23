@@ -110,7 +110,7 @@ spec:
 ----
 
 [#whats-next]
-== What's next
+== Further reading
 
 Consult discovery ConfigMap documentation for specific products:
 
