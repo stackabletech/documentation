@@ -2,8 +2,16 @@
 
 Software - especially the distributed kind - often consists of multiple different process that work together to achieve their goal, Stackable calls these _roles_. The same kind of process is then often replicated multiple times. These replicas can further be subdivided into _role groups_.
 
-// Motivation
+== Motivation
 The different processes that a software consists of typically need different treatment. Not all configuration applies to all processes and specific processes might have hardware requirements that require them to be scheduled on a specific subset of nodes in the Kubernetes cluster.
+
+Roles provide this distinction at the process type level. You can specify a specific configuration for each role, meaning a specific type of process.
+
+A role has at least one role group. A role group allows even more fine-grained control.
+
+Role groups allow further
+
+== Example
 
 For example, HDFS uses three distinct processes that work together to fulfill its duty: NameNodes, DataNodes and JournalNodes. With roles you can specify different configuration settings for each of these, as well as schedule them on specific machines.
 
