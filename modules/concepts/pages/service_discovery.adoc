@@ -43,7 +43,7 @@ The information needed to connect can be a string like above, for example a JDBC
 
 The ConfigMap is used by Stackable operators to connect products together, but can also be used by the user to retrieve connection information to connect to product instances. The operators consume only the ConfigMap, so it is also possible to create a ConfigMap by hand for a product instance that is not operated by a Stackable operator. These different usage scenarios are explained below.
 
-=== Stackable internal usage
+=== Service discovery within Stackable
 
 Stackable operators use the discovery ConfigMap to automatically connect to service dependencies. Hbase requires HDFS to run. With an HdfsCluster named simple-hdfs defined as such:
 
