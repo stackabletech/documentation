@@ -1,0 +1,71 @@
+= Roles and role groups
+
+Software - especially the distributed kind - often consists of multiple different process that work together to achieve their goal, Stackable calls these _roles_. The same kind of process is then often replicated multiple times. These replicas can further be subdivided into _role groups_.
+
+// Motivation
+The different processes that a software consists of typically need different treatment. Not all configuration applies to all processes and specific processes might have hardware requirements that require them to be scheduled on a specific subset of nodes in the Kubernetes cluster.
+
+For example, HDFS uses three distinct processes that work together to fulfill its duty: NameNodes, DataNodes and JournalNodes. With roles you can specify different configuration settings for each of these, as well as schedule them on specific machines.
+
+[source,yaml]
+----
+apiVersion: hdfs.stackable.tech/v1alpha1
+kind: HdfsCluster
+metadata:
+  name: simple-hdfs
+spec:
+  nameNodes:
+    config:
+      resources:
+        storage:
+          data:
+            capacity: 256Mi
+    roleGroups:
+      default:
+        selector:
+          matchLabels:
+            kubernetes.io/os: linux
+        replicas: 2
+  dataNodes:
+    config:
+      resources:
+        storage:
+          data:
+            capacity: 1Gi
+    roleGroups:
+      default:
+        selector:
+          matchLabels:
+            kubernetes.io/os: linux
+        replicas: 3
+  journalNodes:
+    config:
+      resources:
+        storage:
+          data:
+            capacity: 512Mi
+        memory:
+          limit: '1Gi'
+    roleGroups:
+      default:
+        selector:
+          matchLabels:
+            kubernetes.io/os: linux
+        replicas: 3
+  ...
+----
+
+_Role groups_ are used to further subdivide a role. For every role, at least one role group needs to be specified. Inside of the role group you also specify the number of replicas.
+
+What would you want to do then? The two cases are *configuration* and *scheduling*.
+
+Some products provide specific configuration options for specific roles, ones that only make sense in the context of that role. You can also apply [configuration overrides](LINK TODO) at role and role group level.
+
+The other use is scheduling. You can influence where a role group should run, by specifying a link:https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/[label selector] for a role group.
+
+
+- Rolle ist einfach die verschiedenen prozesse die nötig sind. Druid, HDFS.
+- RoleGroup: du hast verschieden starke knoten z.B., man kann dann mit label selectors die prozesse da onch genauer zuordnen. Für scheduling
+- labelselctors gehen auch an den rollen. Nochmal genauer gucken welche properties da je angegeben werden können
+- replicas. können damit auch verschoben werden
+- im operator-rs in role-utils stehen docs
