@@ -2,7 +2,7 @@
 
 Products on the Stackable platform can, and in some cases must be connected with each other to run correctly. Some products are fundamental to the platform while others depend on them. For example, a NiFi cluster requires a ZooKeeper connection to run in distributed mode. Other products can optionally be connected with each other for better data flow. For example Trino does not store the query data  it's self, instead it interfaces with other applications to get access to it. The Stackable platform uses _service discovery_ to enable users and operators to easily connect different products together. There are three types of uses for the service discovery mechanism:
 
-* A Stackable operated product instance requires a connection to another product to run. For example: NiFi requires a ZooKeeper to run.
+* Interoperability between products on the Stackable platform.
 * You want to connect non-Stackable operated software to a Stackable operated product instance. For example: You wrote your own analytics tool and want to read data from Trino.
 * You want to offer a product instance not operated with a Stackable operator as a dependency to Stackable operated product instances. For example: You already run a Druid cluster and want to connect it to a Superset instance operated with a Stackable operator.
 
