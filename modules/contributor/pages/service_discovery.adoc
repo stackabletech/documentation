@@ -1,7 +1,7 @@
 :source-highlighter: highlight.js
 :highlightjs-languages: rust
 
-= Service Discovery Implementation Guidelines
+= Service discovery implementation guidelines
 
 For a conceptual overview of service discovery, consult the xref:concepts:service_discovery.adoc[service discovery concept page].
 
