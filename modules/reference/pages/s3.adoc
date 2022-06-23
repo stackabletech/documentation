@@ -1,6 +1,6 @@
 = S3 resources
 
-This page contains the reference information for th S3Bucket and S3Connection resources. For guidance on usage, see xref:concepts:s3.adoc[S3 resources concept].
+This page contains the reference information for the S3Bucket and S3Connection resources. For guidance on usage, see xref:concepts:s3.adoc[S3 resources concept].
 
 == S3Bucket
 
@@ -9,9 +9,9 @@ A bucket consists of a bucket name and the connection to the object store where 
 * `name`: `String`, the name of the Bucket.
 * `connection`: can either be `inline` or `reference`.
 ** `inline`: See the properties below for <<S3Connection>>.
-** `reference`: `String`, the name of the referenced S3Connection resource. Must be in the same namespace as the S3Bucket resource.
+** `reference`: `String`, the name of the referenced S3Connection resource, which must be in the same namespace as the S3Bucket resource.
 
-=== Full Examle
+=== Full Example
 
 Using an inline connection:
 

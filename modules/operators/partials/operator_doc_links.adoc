@@ -5,7 +5,6 @@
 ** xref:hive::index.adoc[Apache Hive]
 ** xref:kafka::index.adoc[Apache Kafka]
 ** xref:nifi::index.adoc[Apache NiFi]
-** xref:spark::index.adoc[Apache Spark (standalone)]
 ** xref:spark-k8s::index.adoc[Apache Spark on K8S]
 ** xref:superset::index.adoc[Apache Superset]
 ** xref:trino::index.adoc[Trino]

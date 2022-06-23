@@ -34,10 +34,6 @@ include::nifi::partial$supported-versions.adoc[]
 
 include::opa::partial$supported-versions.adoc[]
 
-== Apache Spark (standalone)
-
-include::spark::partial$supported-versions.adoc[]
-
 == Apache Spark on Kubernetes
 
 include::spark-k8s::partial$supported-versions.adoc[]
