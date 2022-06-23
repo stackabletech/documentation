@@ -1,16 +1,28 @@
 = Service discovery
 
-Most products on the Stackable platform and also in general require other software to run or to be made useful -- i.e. an analytics tool will delegate the storing of data to other applications and instead interface with various data storage solutions. The Stackable platform uses _service discovery_ to enable users and operators to easily connect different products together. There are three types of uses for the service discovery mechanism:
+Most products on the Stackable platform (and possibly other software in your stack) require other software to run or to be made useful -- i.e. an analytics tool will delegate the storing of data to other applications and instead interface with various data storage solutions. The Stackable platform uses _service discovery_ to enable users and operators to easily connect different products together. There are three types of uses for the service discovery mechanism:
 
 * A Stackable operated product instance requires a connection to another product to run. For example: NiFi requires a ZooKeeper to run.
 * You want to connect non-Stackable operated software to a Stackable operated product instance. For example: You wrote your own analytics tool and want to read data from Trino.
 * You want to offer a product instance not operated with a Stackable operator as a dependency to Stackable operated product instances. For example: You already run a Druid cluster and want to connect it to a Superset instance operated with a Stackable operator.
 
-This page explains the general mechanism of service discovery and then how this mechanism works in the contexts described above.
+This page explains the general mechanism of service discovery and how this mechanism works in the contexts described above.
 
 == The service discovery ConfigMap
 
-In the Stackable platform, every product instance is defined by a resource with a name. The operator reads the resource and creates the necessary pods and services to get the instance running. The operator is aware of the interfaces and connections that may be consumed by other products and it also knows all the details of the actual running processes.
+In the Stackable platform, every product instance is defined by a resource with a name, for example a ZooKeeperCluster:
+
+[source,yaml]
+----
+apiVersion: zookeeper.stackable.tech/v1alpha1
+kind: ZookeeperCluster
+metadata:
+  name: simple-zk
+spec:
+  ...
+----
+
+The operator reads the resource and creates the necessary pods and services to get the instance running. The operator is aware of the interfaces and connections that may be consumed by other products and it also knows all the details of the actual running processes.
 
 The operator creates a ConfigMap with the same name as the product instance, in the same namespace. Inside of the ConfigMap is information about how to connect to the product instance. For example for a ZooKeeper cluster named simple-zk the Stackable ZooKeeper operator creates a ConfigMap similar to this:
 
@@ -23,90 +35,51 @@ data:
   ZOOKEEPER: simple-zk-server-default-0.simple-zk-server-default.default.svc.cluster.local:2181,simple-zk-server-default-1.simple-zk-server-default.default.svc.cluster.local:2181
 ----
 
-Other products can now be configured to connect to the simple-zk ZooKeeper cluster. Just by name the connection information can be looked up.
+*The ConfigMap always has the same name as cluster resource.* Which allows Stackable operators as well as users to look up service connection information simply by the name of the product instance.
 
-You can also use this ConfigMap in third-party or your own software to connect to product instances operated by Stackable operators. You can also create a discovery ConfigMap yourself for products that you are already operating. For example if you were already operating a ZooKeeper cluster you could create the ConfigMap for it yourself, give it a name and other Stackable operated tools with a ZooKeeper dependency are able to connect to your ZooKeeper instance.
+== Usage of the service discovery ConfigMap
 
-=== Architecture
+Above three use cases for service discovery ConfigMap were outlined. They are described in more detail below.
 
-// TODO redo this and integrate it into the section above
+=== Stackable internal usage
 
-The Operator that provides service discovery writes a `ConfigMap` with all necessary information about its exposed services. Each service has its own entry in the `ConfigMap` as can be seen with the `ZOOKEEPER` entry below:
-
-image::service_discovery_arch.png[Service Discovery]
-
-== Example
-
-// TODO I would remove this here and put it into the Kafka operator instead maybe?
-
-As a real world example, the Stackable Operator for Apache Kafka has to configure Kafka brokers with an Apache ZooKeeper connection string in order to store and share information about e.g. Kafka topics. This connection string is provided by the Stackable Operator for Apache ZooKeeper, which is aware of all the pods and services related to ZooKeeper.
-
-Using service discovery to configure a Kafka  with an existing Zookeeper cluster requires the following steps:
-
-1. You set up a Zookeeper cluster and a ZNode.
-2. The Zookeeper operator generates the service discovery ConfigMap.
-3. You set up a Kafka cluster that references the ConfigMap generated in the step above,
-
-The following snippets highlight the relevant sections in the resource definitions .
-
-1. First you define a ZooKeeper cluster:
+Stackable operators use the discovery ConfigMap to automatically connect to service dependencies. Hbase requires HDFS to run. With an HdfsCluster defined as such:
 
 [source,yaml]
 ----
-apiVersion: zookeeper.stackable.tech/v1alpha1
-kind: ZookeeperCluster
+apiVersion: hdfs.stackable.tech/v1alpha1
+kind: HdfsCluster
 metadata:
-  name: simple-zk
+  name: simple-hdfs
 spec:
-  servers:
-    ...
+  ...
 ----
-
-The ZooKeeper operator creates a discovery ConfigMap with the same name as the ZooKeeper cluster, containing the connection information:
+The HDFS instance is referenced in HBase like this:
 
 [source,yaml]
 ----
-apiVersion: v1
+apiVersion: hbase.stackable.tech/v1alpha1
+kind: HbaseCluster
 metadata:
-  name: simple-zk
-data:
-  ZOOKEEPER: simple-zk-server-default-0.simple-zk-server-default.default.svc.cluster.local:2181,simple-zk-server-default-1.simple-zk-server-default.default.svc.cluster.local:2181
-----
-
-When the Apache Zookeeper cluster is up and running, you create a xref:zookeeper::znodes.adoc[ZNode] for Kafka:
-
-[source,yaml]
-----
-apiVersion: zookeeper.stackable.tech/v1alpha1
-kind: ZookeeperZnode
-metadata:
-  name: simple-kafka-znode
+  name: simple-hbase
 spec:
-  clusterRef:
-    name: simple-zk
+  hdfsConfigMapName: simple-hdfs
+  ...
 ----
 
-Finally you create a  KafkaCluster that references the ZNode object created above:
+With the HdfsCluster name simple-hdfs, the hbase-operator looks up the discovery ConfigMap for the simple-hdfs HdfsCluster, retrieves the information it needs to configure Hbase and configures the simple-hbase instance.
 
-[source,yaml]
-----
-apiVersion: kafka.stackable.tech/v1alpha1
-kind: KafkaCluster
-metadata:
-  name: simple-kafka
-spec:
-  zookeeperConfigMapName: simple-kafka-znode
-  brokers:
-    ...
-----
+=== Connect third-party products
 
-The Kafka operator reads the referenced ZNode resource and looks up the ZooKeeper cluster discovery ConfigMap from which it reads the `ZOOKEEPER` field to pass the content to the Kafka instance so Kafka can connect to the ZooKeeper instance.
+You can connect your own products to Stackable-operated product instances. Just use the name of the instance to retrieve the ConfigMap and use the information in there to connect your own service. You can find links to these documentation pages below in the <<whats-next>> section.
 
-== More examples of connection strings
+=== Provide custom dependencies
 
-* JDBC SQL connection strings: `jdbc:postgresql://localhost:12345`
-* thrift protocol: `thrift://localhost:12345`
-* spark protocol: `spark://master:7077`
-* REST API: `http://localhost:8080`
-* HDFS: `hdfs://localhost:12345`
-* ZooKeeper ZNode: `host1:2181,host2:2181/my-chroot`
+It is not uncommon to already have some core software running in your stack, such as HDFS. Looking at xref:hdfs::discovery.adoc[the discovery documentation for HDFS], you can see that the discovery ConfigMap for HDFS contains the `core-site.xml` and `hdfs-site-xml` files.
+
+If you are already operating an HDFS instance, you can simply provide a ConfigMap containing these files. You can then use the name of this ConfigMap in the configuration of other products, such as HBase.
+
+[#whats-next]
+== What's next
+
+Consult discovery ConfigMap documentation for specific products: HDFS, Hive, Kafka, OPA, ZooKeeper.
