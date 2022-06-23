@@ -35,7 +35,9 @@ data:
   ZOOKEEPER: simple-zk-server-default-0.simple-zk-server-default.default.svc.cluster.local:2181,simple-zk-server-default-1.simple-zk-server-default.default.svc.cluster.local:2181
 ----
 
-*The ConfigMap always has the same name as cluster resource.* Which allows Stackable operators as well as users to look up service connection information simply by the name of the product instance.
+The information needed to connect can be a string like above, for example a JDBC connect string: `jdbc:postgresql://localhost:12345`. But a ConfigMap can also contain whole configuration files which can then be mounted into a Pod. This is the case for xref:hdfs::discovery.adoc[HDFS], where the `core-site.xml` and `hdfs-site.xml` files are put into the discovery ConfigMap.
+
+*The ConfigMap always has the same name as cluster resource.* Which allows Stackable operators as well as users to look up service connection information simply by the name of the product instance they want to connect to.
 
 == Usage of the service discovery ConfigMap
 
@@ -67,7 +69,7 @@ spec:
   ...
 ----
 
-With the HdfsCluster name simple-hdfs, the hbase-operator looks up the discovery ConfigMap for the simple-hdfs HdfsCluster, retrieves the information it needs to configure Hbase and configures the simple-hbase instance.
+With the HdfsCluster name simple-hdfs, the HBase Operator looks up the discovery ConfigMap for the simple-hdfs HdfsCluster, retrieves the information it needs to configure Hbase and configures the simple-hbase instance.
 
 === Connect third-party products
 
@@ -82,4 +84,10 @@ If you are already operating an HDFS instance, you can simply provide a ConfigMa
 [#whats-next]
 == What's next
 
-Consult discovery ConfigMap documentation for specific products: HDFS, Hive, Kafka, OPA, ZooKeeper.
+Consult discovery ConfigMap documentation for specific products:
+
+* xref:hdfs::discovery.adoc[Apache Hadoop HDFS]
+* xref:hive::discovery.adoc[Apache Hive]
+* xref:kafka::discovery.adoc[Apache Kafka]
+* xref:opa::discovery.adoc[OPA]
+* xref:zookeeper::discovery.adoc[Apache ZooKeeper]
