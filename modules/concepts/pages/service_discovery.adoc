@@ -114,6 +114,7 @@ spec:
 
 Consult discovery ConfigMap documentation for specific products:
 
+* xref:druid::discovery.adoc[Apache Druid]
 * xref:hdfs::discovery.adoc[Apache Hadoop HDFS]
 * xref:hive::discovery.adoc[Apache Hive]
 * xref:kafka::discovery.adoc[Apache Kafka]
