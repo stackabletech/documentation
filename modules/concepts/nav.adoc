@@ -1,2 +1,3 @@
-* Concepts
+* xref:concepts:index.adoc[]
+** xref:service_discovery.adoc[]
 ** xref:s3.adoc[]
