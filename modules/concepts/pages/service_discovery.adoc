@@ -35,7 +35,7 @@ data:
   ZOOKEEPER: simple-zk-server-default-0.simple-zk-server-default.default.svc.cluster.local:2181,simple-zk-server-default-1.simple-zk-server-default.default.svc.cluster.local:2181
 ----
 
-The information needed to connect can be a string like above, for example a JDBC connect string: `jdbc:postgresql://localhost:12345`. But a ConfigMap can also contain whole configuration files which can then be mounted into a Pod. This is the case for xref:hdfs::discovery.adoc[HDFS], where the `core-site.xml` and `hdfs-site.xml` files are put into the discovery ConfigMap.
+The information needed to connect can be a string like above, for example a JDBC connect string: `jdbc:postgresql://localhost:12345`. But a ConfigMap can also contain multiple configuration files which can then be mounted into a client Pod. This is the case for xref:hdfs::discovery.adoc[HDFS], where the `core-site.xml` and `hdfs-site.xml` files are put into the discovery ConfigMap.
 
 *The ConfigMap always has the same name as cluster resource.* Which allows Stackable operators as well as users to look up service connection information simply by the name of the product instance they want to connect to.
 
