@@ -71,7 +71,7 @@ spec:
 
 This is a common pattern across the platform. For example the DruidCluster spec contains a field `zookeeperConfigMapName` and the TrinoCluster spec contains a field `hiveConfigMapName` to connect Druid to ZooKeeper and Trino to Hive respectively.
 
-=== Have third-party software depend on Stackable instances
+=== Service discovery from outside Stackable
 
 You can connect your own products to Stackable-operated product instances. How exactly you do this depends heavily on the application you want to connect.
 
