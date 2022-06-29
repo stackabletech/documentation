@@ -7,13 +7,11 @@ The different processes that a software consists of typically need different tre
 
 Roles provide this distinction at the process type level. You can specify a specific configuration for each role, meaning a specific type of process.
 
-A role has at least one role group. A role group allows even more fine-grained control.
-
-Role groups allow further
+A role has at least one role group. Role groups allow further subdivision of a role into multiple groups, for example to schedule one half of processes in one physical location and the other half in another location.
 
 == Example
 
-For example, HDFS uses three distinct processes that work together to fulfill its duty: NameNodes, DataNodes and JournalNodes. With roles you can specify different configuration settings for each of these, as well as schedule them on specific machines.
+HDFS uses three distinct processes that work together to fulfill its duty: NameNodes, DataNodes and JournalNodes. With roles you can specify different configuration settings for each of these, as well as schedule them on specific machines.
 
 [source,yaml]
 ----
@@ -22,46 +20,39 @@ kind: HdfsCluster
 metadata:
   name: simple-hdfs
 spec:
-  nameNodes:
-    config:
-      resources:
-        storage:
-          data:
-            capacity: 256Mi
+  journalNodes:
     roleGroups:
       default:
+        replicas: 3  # <1>
+  nameNodes:
+    roleGroups:
+      default:
+        replicas: 3
         selector:
           matchLabels:
-            kubernetes.io/os: linux
-        replicas: 2
+            kubernetes.io/os: linux  # <2>
   dataNodes:
     config:
       resources:
         storage:
           data:
-            capacity: 1Gi
+            capacity: 1Gi  # <3>
     roleGroups:
       default:
-        selector:
-          matchLabels:
-            kubernetes.io/os: linux
-        replicas: 3
-  journalNodes:
-    config:
-      resources:
-        storage:
-          data:
-            capacity: 512Mi
-        memory:
-          limit: '1Gi'
-    roleGroups:
-      default:
-        selector:
-          matchLabels:
-            kubernetes.io/os: linux
-        replicas: 3
+        replicas: 2
+      hiCapacity:  # <4>
+        config:
+          resources:
+            storage:
+              data: 2Gi
+        replicas: 1
   ...
 ----
+
+<1> The JournalNode role with only a single default role group. For the role group 3 replicas are specified.
+<2> For the NameNodes default role group, a label selector is given, the pods should only be specified on nodes where the `kubernetes.io/os` label has the value `linux`.
+<3> A common config setting for the DataNodes role. This configuration setting applies only to pods for this role.
+<4> The DataNode role has two role groups, the default group and the hiCapacity group. In it the config setting for the group is overridden with a higher value of 2Gi. This role group has only one replica.
 
 _Role groups_ are used to further subdivide a role. For every role, at least one role group needs to be specified. Inside of the role group you also specify the number of replicas.
 
