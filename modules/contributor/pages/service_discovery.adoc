@@ -1,34 +1,11 @@
 :source-highlighter: highlight.js
 :highlightjs-languages: rust
 
-= Service Discovery
+= Service discovery implementation guidelines
 
-== Introduction
+For a conceptual overview of service discovery, consult the xref:concepts:service_discovery.adoc[service discovery concept page].
 
-Several products deployed by the Stackable platform depend on other (Stackable) products. This could be a product that requires an external database, high availability support or synchronization.
-
-In order to programmatically resolve this dependency, the Stackable platform uses _service discovery_. A Stackable operator is aware of interfaces and connections that have to be exposed and may be consumed by other operators to configure their products. These interfaces or connections are usually referred to as _connection string_.
-
-As a real world example, the Stackable Operator for Apache Kafka has to configure Kafka brokers with an Apache ZooKeeper connection string in order to store and share information about e.g. Kafka topics. This connection string is provided by the Stackable Operator for Apache ZooKeeper, which is aware of all the pods and services related to ZooKeeper.
-
-== Examples for connection strings
-
-- JDBC SQL connection strings: `jdbc:postgresql://localhost:12345`
-- thrift protocol: `thrift://localhost:12345`
-- spark protocol: `spark://master:7077`
-- REST API: `\http://localhost:8080`
-- HDFS: `hdfs://localhost:12345`
-- ZooKeeper ZNode: `host1:2181,host2:2181/my-chroot`
-
-== Concepts of Service Discovery
-
-=== Architecture
-
-The Operator that provides service discovery writes a `ConfigMap` with all necessary information about its exposed services. Each service has its own entry in the `ConfigMap` as can be seen with the `ZOOKEEPER` entry below:
-
-image::service_discovery_arch.png[Service Discovery]
-
-=== Best practices
+== Best practices
 
 ==== Exposing config maps for service discovery
 
