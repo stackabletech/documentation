@@ -76,8 +76,6 @@ spec:
 <3> A common config setting for the DataNodes role. This configuration setting applies only to pods for this role.
 <4> The DataNode role has two role groups, the default group and the hiCapacity group. In it the config setting for the group is overridden with a higher value of 2Gi. This role group has only one replica.
 
-Some products provide specific configuration options for specific roles, ones that only make sense in the context of that role. You can also apply [configuration overrides](LINK TODO) at role and role group level.
-
-The other use is scheduling. You can influence where a role group should run, by specifying a  for a role group.
-
 == Further Reading / What's next
+
+// TODO mention config overrides somewhere?
