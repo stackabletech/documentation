@@ -1,14 +1,14 @@
 = Releases
 
-The Stackable platform consists of multiple operators that work together. Periodically a platform release is made, including all components of the platform at a specific version. We support the latest 3 versions.
+The Stackable platform consists of multiple operators that work together. Periodically a platform release is made, including all components of the platform at a specific version. The goal of the platform is to support the last three stable versions of each product.
 
 == Release 22.06
 
-This is the first release of the platform, bringing operators for 12 products as well as stackablectl, the commandline tool to interact with stackable components. All operators spin up production ready product instances. Also there are some common features across all operators, such as monitoring, service discovery and configuration overrides. Find the <<Platform features>>, <<_stackablectl,stackablectl features>> and <<_operators>> below.
+This is the first release of the platform, bringing operators for 12 products as well as <<_stackablectl>>, the commandline tool to easily install data products in Kubernetes. Operators spin up production ready product applications. Also there are some common features across all operators, such as monitoring, service discovery and configuration overrides. Find the <<Platform features>>, <<_stackablectl,stackablectl features>> and <<_operators>> below.
 
 === Platform features
 
-==== Producting ready clusters easily set up
+==== Easily install production ready data applications
 
 Using a familiar declarative approach, users can easily install data applications such as Apache Kafka or Trino across multiple cloud Kubernetes providers or on their own data centers. The installation process is fully automated while also providing the flexibility for the user to tune relevant aspects of each application.
 
@@ -20,7 +20,7 @@ xref:operators:monitoring.adoc[Learn more]
 
 ==== Service discovery
 
-Across the platform you can use discovery ConfigMaps to connect to products.
+Products on the Stackable platform use service discovery to easily interconnect with each other.
 //
 xref:concepts:service_discovery.adoc[Learn more]
 
