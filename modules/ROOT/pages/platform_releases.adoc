@@ -1,49 +1,64 @@
 = Platform releases
 
-The Stackable platform consists of multiple operators that work together. Periodically a platform release is made, including all components of the platform at a specific version. The goal of the platform is to support the last three stable versions of each product.
+The Stackable platform consists of multiple operators that work together.
+Periodically a platform release is made, including all components of the platform at a specific version.
+
 
 == Release 22.06
 
-This is the first release of the platform, bringing operators for 12 products as well as <<_stackablectl>>, the commandline tool to easily install data products in Kubernetes. Operators spin up production ready product applications. Also there are some common features across all operators, such as monitoring, service discovery and configuration overrides. Find the <<Platform features>>, <<_stackablectl,stackablectl features>> and <<_operators>> below.
+This is our first release of the Stackable Data Platform, bringing Kubernetes operators for 12 products as well as <<stackablectl>>, the commandline tool to easily install data products in Kubernetes.
+Operators spin up production ready product applications.
+Also, there are some common features across all operators, such as monitoring, service discovery and configuration overrides.
+Find the <<Platform features>>, <<stackablectl,stackablectl features>> and <<operators>> below.
+
+Please report any issues you find in the specific operator repositories or in our dedicated github.com/stackabletech/issues/[issues] repository.
+You may also join us in our https://slack.stackable.tech[Slack] community or https://stackable.tech[contact us via our homepage].
+
+While we are very proud of this release it is our first one and we'll add new features and fix bugs all the time and will have regular releases from now on.
 
 === Platform features
 
-==== Easily install production ready data applications
+Easily install production ready data applications::
+Using a familiar declarative approach, users can easily install data applications such as Apache Kafka or Trino across multiple cloud Kubernetes providers or on their own data centers.
+The installation process is fully automated while also providing the flexibility for the user to tune relevant aspects of each application.
 
-Using a familiar declarative approach, users can easily install data applications such as Apache Kafka or Trino across multiple cloud Kubernetes providers or on their own data centers. The installation process is fully automated while also providing the flexibility for the user to tune relevant aspects of each application.
-
-==== Monitoring
-
+Monitoring::
 All products have monitoring with prometheus enabled.
 //
 xref:operators:monitoring.adoc[Learn more]
 
-==== Service discovery
-
+Service discovery::
 Products on the Stackable platform use service discovery to easily interconnect with each other.
 //
 xref:concepts:service_discovery.adoc[Learn more]
 
-==== Configuration overrides
-
+Configuration overrides::
 All operators support configuration overrides, these are documented in the specific operator documentation pages.
 
-==== Common S3 configuration
-
-Many products support connecting to S3 to load and/or store data. There is a common resource for S3 connections and buckets across all operators that can be reused.
+Common S3 configuration::
+Many products support connecting to S3 to load and/or store data.
+There is a common resource for S3 connections and buckets across all operators that can be reused.
 //
 xref:concepts:s3.adoc[Learn more]
 
-==== Roles and role groups
+Roles and role groups::
+To support hybrid hardware clusters, the Stackable platform uses the concept of role groups.
+Services and applications can be configured to maximize hardware efficiency.
 
-To support hybrid hardware clusters, the Stackable platform uses the concept of role groups. Services and applications can be configured to maximize hardware efficiency.
+Standardized::
+Learn once reuse everywhere.
+We use the same conventions in all our operators.
+Configure your LDAP or S3 connections once and reuse them everywhere.
+All our operators reuse the same CRD structure as well.
 
+[#stackablectl]
 === stackablectl
 
-stackablectl is used to install and interact with the operators, either individually or multiple at once.
+`stackablectl` is used to install and interact with the operators, either individually or with multiple at once.
 //
 xref:stackablectl::index.adoc[Learn more]
 
+[#operators]
 === Operators
 
 This is the list of all operators in this current release, with their versions for this release.
@@ -65,6 +80,7 @@ This is the list of all operators in this current release, with their versions f
 * xref:spark-k8s::index.adoc[]
 * xref:superset::index.adoc[]
 ** connects to Druid as a backend
+** Supports LDAP authentication
 * xref:trino::index.adoc[]
 ** Supports OPA and file-based authorization
 ** Connects to the Hive Metastore
