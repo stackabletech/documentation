@@ -4,7 +4,7 @@ The Stackable platform consists of multiple operators that work together. Period
 
 == Release 22.06
 
-This is the first release of the platform, bringing operators for 12 products as well as stackablectl, the commandline tool to interact with stackable components. All operators spin up production ready product instances. Also there are some common features across all operators, such as monitoring, service discovery and configuration overrides. Find the <<Platform features>>, <<_stackablectl,stackablectl features>> and <<_operators>> below.
+This is the first release of the platform, bringing operators for 12 products as well as <<_stackablectl>>, the commandline tool to easily install data products in Kubernetes. Operators spin up production ready product applications. Also there are some common features across all operators, such as monitoring, service discovery and configuration overrides. Find the <<Platform features>>, <<_stackablectl,stackablectl features>> and <<_operators>> below.
 
 === Platform features
 
