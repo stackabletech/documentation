@@ -14,7 +14,7 @@ The Kubernetes https://kubernetes.io/docs/concepts/scheduling-eviction/assign-po
 ____
 Generally such constraints are unnecessary, as the scheduler will automatically do a reasonable placement (for example, spreading your Pods across nodes so as not place Pods on a node with insufficient free resources).
 ____
-This suggests that resources are automatically considered when pods are assigned to nodes, but it is not clear if the same is true for implicit dependencies, such as `PersistentVolumeClaim` usage. The https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/[scheduler] will take various factors into account, such as
+This suggests that resources are automatically considered when pods are assigned to nodes, but it is not clear if the same is true for implicit dependencies, such as `PersistentVolumeClaim` usage by multiple pods. The https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/[scheduler] will take various factors into account, such as
 
 ____
 ...individual and collective resource requirements, hardware / software / policy constraints, affinity and anti-affinity specifications, data locality, inter-workload interference....
