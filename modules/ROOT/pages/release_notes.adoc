@@ -8,7 +8,7 @@ This is the first release of the platform, bringing operators for 12 products as
 
 === Platform features
 
-==== Producting ready clusters easily set up
+==== Easily install production ready data applications
 
 All operators spin up production ready product instances.
 
