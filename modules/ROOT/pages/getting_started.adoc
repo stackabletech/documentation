@@ -82,11 +82,11 @@ Install the Stackable command line utility xref:stackablectl::index.adoc[stackab
 === Installing Stackable Operators
 The Stackable operators are components that translate the service definitions deployed via Kubernetes into deploy services on the worker nodes. These can be installed on any node that has access to the Kubernetes control plane. In this example we will install them on the controller node.
 
-Stackable operators are installed using stackablectl. Run the following commands to install the latest operator versions of ZooKeeper, Kafka and NiFi.
+Stackable operators can be installed using stackablectl. Run the following commands to install ZooKeeper, Kafka and NiFi from the Stackable 22.06 release.
 
 [source,bash]
 ----
-stackablectl operator install zookeeper secret nifi kafka
+stackablectl release install -i zookeeper -i kafka -i nifi -i secret 22.06
 ----
 
 .Using Helm instead
@@ -103,21 +103,21 @@ Install the operators:
 
 [source,bash]
 ----
-helm install zookeeper-operator stackable-stable/zookeeper-operator --version=0.9.0
-helm install kafka-operator stackable-stable/kafka-operator --version=0.5.0
-helm install secret-operator stackable-stable/secret-operator --version=0.2.0
-helm install nifi-operator stackable-stable/nifi-operator --version=0.5.0
+helm install zookeeper-operator stackable-stable/zookeeper-operator --version=0.10.0
+helm install kafka-operator stackable-stable/kafka-operator --version=0.6.0
+helm install secret-operator stackable-stable/secret-operator --version=0.5.0
+helm install nifi-operator stackable-stable/nifi-operator --version=0.6.0
 ----
 ====
 
 You can check which operators are installed using `stackablectl operator installed`:
 
 ----
-OPERATOR              VERSION         NAMESPACE      STATUS           LAST UPDATED
-kafka                 0.6.0-nightly   default        deployed         2022-06-16 13:51:05.661282811 +0200 CEST
-nifi                  0.6.0-nightly   default        deployed         2022-06-20 16:22:45.985504689 +0200 CEST
-secret                0.5.0-nightly   default        deployed         2022-06-20 16:07:40.248027167 +0200 CEST
-zookeeper             0.10.0-nightly  default        deployed         2022-06-16 13:50:51.497813301 +0200 CEST
+OPERATOR              VERSION         NAMESPACE                      STATUS           LAST UPDATED
+kafka                 0.6.0           default                        deployed         2022-06-30 17:01:17.552606 +0100 BST
+nifi                  0.6.0           default                        deployed         2022-06-30 17:01:31.895733 +0100 BST
+secret                0.5.0           default                        deployed         2022-06-30 17:07:48.542761 +0100 BST
+zookeeper             0.10.0          default                        deployed         2022-06-30 17:01:47.032154 +0100 BST
 ----
 
 == Deploying Stackable Services
