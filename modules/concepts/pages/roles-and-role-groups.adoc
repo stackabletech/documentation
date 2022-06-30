@@ -1,6 +1,6 @@
 = Roles and role groups
 
-Software - especially the distributed kind - often consists of multiple different process that work together to achieve their goal, Stackable calls these _roles_. The same kind of process is then often replicated multiple times. These replicas can further be subdivided into _role groups_.
+Software - especially the distributed kind - often consists of multiple different process that work together to achieve their goal, Stackable calls these _roles_. The same kind of process is then often replicated multiple times. These replicas can further be subdivided into _role groups_. Roles and role groups are defined in the resource manifest.
 
 == Motivation
 // configuration and scheduling
@@ -11,7 +11,7 @@ The use of roles and role groups is motivated by the need to configure different
 // internals of the process
 // thread counts, heap size,
 
-Different processes have different tasks that they need to fulfill, which in turn have different configuration settings that only apply to that task. Coordination, storage, logging and processing tasks require different amounts of threads, memory and storage capacity. Roles and role groups are used for this.
+Different processes have different tasks that they need to fulfill, which in turn have different configuration settings that only apply to that task. For example coordination, storage, logging and processing tasks require different amounts of threads, memory and storage capacity. These different settings can be put in the per role configuration spec.
 
 === Scheduling
 // the "where"
@@ -28,10 +28,9 @@ Role groups are motivated by the need to subdivide the replicas of a processes i
 
 == How it works
 
-// TODO word this better.
-An app/product/instance has multiple roles. Every role must be configured with at least one role group. Configuration can be specified at role level or at role group level, where the role group level overrides the role level. Label selectors for scheduling, as well as the number of replicas are specified on the role group, not at the role. The role group is the lowest level, so it makes sense to have to specify this there.
+A distributed software has multiple roles. Every role must be configured with at least one role group. Configuration can be specified at role level or at role group level, where the role group level overrides the role level. Label selectors for scheduling and the number of replicas are specified on the role group, not role. The role group is the lowest level, so it makes sense to have to specify this there.
 
-== Example
+=== Example
 
 HDFS uses three distinct processes that work together to fulfill its duty: NameNodes, DataNodes and JournalNodes. With roles you can specify different configuration settings for each of these, as well as schedule them on specific machines.
 
@@ -76,6 +75,6 @@ spec:
 <3> A common config setting for the DataNodes role. This configuration setting applies only to pods for this role.
 <4> The DataNode role has two role groups, the default group and the hiCapacity group. In it the config setting for the group is overridden with a higher value of 2Gi. This role group has only one replica.
 
-== Further Reading / What's next
+== Further Reading
 
-// TODO mention config overrides somewhere?
+Every operator uses roles. Have a look at the usage page of an operator for an example of roles.
