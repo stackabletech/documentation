@@ -20,7 +20,7 @@ xref:operators:monitoring.adoc[Learn more]
 
 ==== Service discovery
 
-Across the platform you can use discovery ConfigMaps to connect to products.
+Products on the Stackable platform use service discovery to easily interconnect with each other.
 //
 xref:concepts:service_discovery.adoc[Learn more]
 
