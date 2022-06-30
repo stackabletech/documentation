@@ -10,7 +10,7 @@ This is the first release of the platform, bringing operators for 12 products as
 
 ==== Producting ready clusters easily set up
 
-All operators spin up production ready product instances.
+Using a familiar declarative approach, users can easily install data applications such as Apache Kafka or Trino across multiple cloud Kubernetes providers or on their own data centers. The installation process is fully automated while also providing the flexibility for the user to tune relevant aspects of each application.
 
 ==== Monitoring
 
@@ -36,7 +36,7 @@ xref:concepts:s3.adoc[Learn more]
 
 ==== Roles and role groups
 
-Most products consist of multiple processes. All operators support configuring processes individually.
+To support hybrid hardware clusters, the Stackable platform uses the concept of role groups. Services and applications can be configured to maximize hardware efficiency.
 
 === stackablectl
 
