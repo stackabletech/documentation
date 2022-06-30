@@ -12,8 +12,8 @@ This tutorial is intended to run in a private network or lab; it does not enable
 You should make sure that you have everything you need:
 
 * A running Kubernetes cluster
-* https://kubernetes.io/docs/tasks/tools/#kubectl[Kubectl] to interact with the cluster
-* https://helm.sh/[Helm] to deploy third-party dependencies
+* https://kubernetes.io/docs/tasks/tools/#kubectl[kubectl] to interact with the cluster
+* https://helm.sh/[helm] to deploy third-party dependencies
 * xref:stackablectl::installation.adoc[stackablectl] to install and interact with Stackable operators
 +
 [NOTE]
@@ -33,7 +33,6 @@ Instructions for installing via Helm are also provided throughout the tutorial.
 == Nifi and Kafka
 
 This section shows how to instantiate the first part of the entire processing chain, which will ingest CSV files from an S3 bucket, split the files into individual records and send these records to a Kafka topic.
-
 
 === Deploy the Operators
 
@@ -85,7 +84,7 @@ stackablectl operator install kafka
 ====
 [source,bash]
 ----
-helm install zookeeper-operator stackable-stable/kafka-operator
+helm install kafka-operator stackable-stable/kafka-operator
 ----
 ====
 
@@ -95,14 +94,14 @@ NiFi is an ETL tool which will be used to model the dataflow of downloading and 
 It will also be used to convert the file content from CSV to JSON.
 
 [source,bash]
-stackablectl operator install nifi=0.6.0-nightly
+stackablectl operator install nifi
 
 .Using Helm instead
 [%collapsible]
 ====
 [source,bash]
 ----
-helm install --repo https://repo.stackable.tech/repository/helm-dev nifi-operator nifi-operator --version=0.6.0-nightly
+helm install nifi-operator stackable-stable/nifi-operator
 ----
 ====
 
@@ -118,7 +117,7 @@ kind: ZookeeperCluster
 metadata:
   name: simple-zk
 spec:
-  version: 3.8.0
+  version: 3.8.0-stackable0.1.0
   servers:
     roleGroups:
       default:
@@ -141,7 +140,7 @@ kind: KafkaCluster
 metadata:
   name: simple-kafka
 spec:
-  version: 3.1.0
+  version: 3.2.0-stackable0.1.0
   zookeeperConfigMapName: simple-kafka-znode
   brokers:
     config:
@@ -179,7 +178,7 @@ kind: NifiCluster
 metadata:
   name: simple-nifi
 spec:
-  version: "1.15.0-stackable0.4.0"
+  version: 1.16.3-stackable0.1.0
   zookeeperConfigMapName: simple-nifi-znode
   config:
     authentication:
@@ -393,7 +392,7 @@ kind: DruidCluster
 metadata:
   name: druid-nytaxidata
 spec:
-  version: 0.22.1
+  version: 0.23.0-stackable0.1.0
   zookeeperConfigMapName: simple-druid-znode  # <1>
   metadataStorageDatabase:  # <2>
     dbType: postgresql
@@ -568,7 +567,7 @@ stackablectl operator install superset
 ====
 [source,bash]
 ----
-helm install druid-operator stackable-stable/superset-operator
+helm install superset-operator stackable-stable/superset-operator
 ----
 ====
 
@@ -614,7 +613,7 @@ kind: SupersetCluster
 metadata:
   name: simple-superset
 spec:
-  version: 1.4.1  # <1>
+  version: 1.5.1-stackable0.1.0  # <1>
   statsdExporterVersion: v0.22.4
   credentialsSecret: simple-superset-credentials  # <2>
   nodes:
