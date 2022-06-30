@@ -4,9 +4,9 @@ The Stackable platform consists of multiple operators that work together. Period
 
 == Release 22.06
 
-In this release we support 12 big data products covering ...
+This is the first release of the platform, bringing operators for 12 products as well as stackablectl, the commandline tool to interact with stackable components. All operators spin up production ready product instances. Also there are some common features across all operators, such as monitoring, service discovery and configuration overrides. Find the <<Platform features>>, <<_stackablectl,stackablectl features>> and <<_operators>> below.
 
-=== Platform features / Common features
+=== Platform features
 
 ==== Producting ready clusters easily set up
 
@@ -14,25 +14,39 @@ All operators spin up production ready product instances.
 
 ==== Monitoring
 
-All products have monitoring with prometheus enabled. xref:operators:monitoring.adoc[Learn more]
+All products have monitoring with prometheus enabled.
+//
+xref:operators:monitoring.adoc[Learn more]
 
 ==== Service discovery
 
-Across the platform you can use discovery ConfigMaps to connect to products. xref:concepts:service_discovery.adoc[Learn more]
+Across the platform you can use discovery ConfigMaps to connect to products.
+//
+xref:concepts:service_discovery.adoc[Learn more]
 
 ==== Configuration overrides
 
+All operators support configuration overrides, these are documented in the specific operator documentation pages.
+
 ==== Common S3 configuration
 
-xref:concepts:service_discovery.adoc[Learn more]
+Many products support connecting to S3 to load and/or store data. There is a common resource for S3 connections and buckets across all operators that can be reused.
+//
+xref:concepts:s3.adoc[Learn more]
 
 ==== Roles and role groups
 
+Most products consist of multiple processes. All operators support configuring processes individually.
+
 === stackablectl
 
-xref:stackablectl::index.adoc[Read more ...]
+stackablectl is used to install and interact with the operators, either individually or multiple at once.
+//
+xref:stackablectl::index.adoc[Learn more]
 
 === Operators
+
+This is the list of all operators in this current release, with their versions for this release.
 
 * xref:airflow::index.adoc[]
 ** Load DAGs from ConfigMaps or PersistentVolumeClaims
@@ -52,10 +66,9 @@ xref:stackablectl::index.adoc[Read more ...]
 * xref:superset::index.adoc[]
 ** connects to Druid as a backend
 * xref:trino::index.adoc[]
-** Supports OAP authorization
+** Supports OPA and file-based authorization
 ** Connects to the Hive Metastore
 ** Query data from S3
-** File based authorization
 ** TLS support
 * xref:zookeeper::index.adoc[]
 ** Supports creating ZNodes with CRDs
