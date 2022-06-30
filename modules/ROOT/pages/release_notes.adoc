@@ -1,6 +1,6 @@
 = Releases
 
-The Stackable platform consists of multiple operators that work together. Periodically a platform release is made, including all components of the platform at a specific version. We support the latest 3 versions.
+The Stackable platform consists of multiple operators that work together. Periodically a platform release is made, including all components of the platform at a specific version. The goal of the platform is to support the last three stable versions of each product.
 
 == Release 22.06
 
