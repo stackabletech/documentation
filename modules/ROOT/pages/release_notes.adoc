@@ -1,12 +1,10 @@
 = Release notes
 
-// possible reference for nice docs: https://docs.docker.com/engine/release-notes/
-
-// TODO still to be decided whether to use semver or not?
-// or maybe 2022-07 or something like that?
-== Release 1
+== Release 22.06
 
 === stackablectl
+
+xref:stackablectl::index.adoc[Read more ...]
 
 === Operators
 

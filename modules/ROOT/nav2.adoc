@@ -1,2 +1,3 @@
-// This nav is at the end of the menu
+// This second nav file is for another menu entry at the end of the navigation menu
+// see: https://docs.antora.org/antora/2.0/navigation/filenames-and-locations/#multiple-navigation-files-per-module
 * xref:release_notes.adoc[]
