@@ -1,1 +1,36 @@
 = Release notes
+
+// possible reference for nice docs: https://docs.docker.com/engine/release-notes/
+
+// TODO still to be decided whether to use semver or not?
+// or maybe 2022-07 or something like that?
+== Release 1
+
+=== stackablectl
+
+=== Operators
+
+* xref:airflow::index.adoc[]
+* xref:druid::index.adoc[]
+* xref:hbase::index.adoc[]
+* xref:hdfs::index.adoc[]
+* xref:hive::index.adoc[]
+* xref:kafka::index.adoc[]
+* xref:nifi::index.adoc[]
+* xref:spark-k8s::index.adoc[]
+* xref:superset::index.adoc[]
+* xref:trino::index.adoc[]
+* xref:zookeeper::index.adoc[]
+* xref:opa::index.adoc[]
+* xref:commons-operator::index.adoc[]
+* xref:secret-operator::index.adoc[]
+
+=== Platform features / Common features
+
+==== Service discovery
+
+==== Configuration overrides
+
+==== Common S3 configuration
+
+==== Roles and role groups
