@@ -1,6 +1,32 @@
-= Release notes
+= Releases
+
+The Stackable platform consists of multiple operators that work together. Periodically a platform release is made, including all components of the platform at a specific version. We support the latest 3 versions.
 
 == Release 22.06
+
+In this release we support 12 big data products covering ...
+
+=== Platform features / Common features
+
+==== Producting ready clusters easily set up
+
+All operators spin up production ready product instances.
+
+==== Monitoring
+
+All products have monitoring with prometheus enabled. xref:operators:monitoring.adoc[Learn more]
+
+==== Service discovery
+
+Across the platform you can use discovery ConfigMaps to connect to products. xref:concepts:service_discovery.adoc[Learn more]
+
+==== Configuration overrides
+
+==== Common S3 configuration
+
+xref:concepts:service_discovery.adoc[Learn more]
+
+==== Roles and role groups
 
 === stackablectl
 
@@ -9,26 +35,31 @@ xref:stackablectl::index.adoc[Read more ...]
 === Operators
 
 * xref:airflow::index.adoc[]
+** Load DAGs from ConfigMaps or PersistentVolumeClaims
 * xref:druid::index.adoc[]
+** S3 and HDFS as deep storage options
+** ingestion from S3 buckets
+** authorization using OPA
 * xref:hbase::index.adoc[]
 * xref:hdfs::index.adoc[]
 * xref:hive::index.adoc[]
+** Hive Metastore can index S3
 * xref:kafka::index.adoc[]
+** Seamless integration with NiFi and Druid
+** Supports OPA authorization
 * xref:nifi::index.adoc[]
 * xref:spark-k8s::index.adoc[]
 * xref:superset::index.adoc[]
+** connects to Druid as a backend
 * xref:trino::index.adoc[]
+** Supports OAP authorization
+** Connects to the Hive Metastore
+** Query data from S3
+** File based authorization
+** TLS support
 * xref:zookeeper::index.adoc[]
+** Supports creating ZNodes with CRDs
 * xref:opa::index.adoc[]
+** Create RegoRules in ConfigMaps
 * xref:commons-operator::index.adoc[]
 * xref:secret-operator::index.adoc[]
-
-=== Platform features / Common features
-
-==== Service discovery
-
-==== Configuration overrides
-
-==== Common S3 configuration
-
-==== Roles and role groups
