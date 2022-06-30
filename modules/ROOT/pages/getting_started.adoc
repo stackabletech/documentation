@@ -141,7 +141,7 @@ spec:
         replicas: 1
         config:
           myidOffset: 10
-  version: 3.5.8
+  version: 3.8.0-stackable0
 EOF
 ----
 
@@ -157,15 +157,12 @@ kind: KafkaCluster
 metadata:
   name: simple-kafka
 spec:
-  version: 2.8.1
+  version: 2.8.1-stackable0
   zookeeperConfigMapName: simple-kafka-znode
   brokers:
     roleGroups:
       brokers:
         replicas: 1
-        selector:
-          matchLabels:
-            node: quickstart-1
 ---
 apiVersion: zookeeper.stackable.tech/v1alpha1
 kind: ZookeeperZnode
@@ -206,24 +203,24 @@ kind: NifiCluster
 metadata:
   name: simple-nifi
 spec:
-  version: "1.15.0"
+  version: 1.16.3-stackable0.1.0
   zookeeperConfigMapName: simple-nifi-znode
-  authenticationConfig:
-    method:
-      SingleUser:
-        adminCredentialsSecret:
-          name: nifi-admin-credentials-simple
-        autoGenerate: true
-  sensitivePropertiesConfig:
-    keySecret: nifi-sensitive-property-key
-    autoGenerate: true
+  config:
+    authentication:
+      method:
+        singleUser:
+          adminCredentialsSecret: nifi-admin-credentials-simple
+          autoGenerate: true
+    sensitiveProperties:
+      keySecret: nifi-sensitive-property-key
+      autoGenerate: true
   nodes:
     roleGroups:
       default:
-        selector:
-          matchLabels:
-            node: quickstart-1
         config:
+          selector:
+            matchLabels:
+              kubernetes.io/os: linux
           log:
             rootLogLevel: INFO
         replicas: 1
@@ -274,13 +271,12 @@ kubectl exec -i -t simple-kafka-broker-brokers-0 -c kafka -- \
 Created topic demo.
 ----
 
-Now let's check if it was actually created:
+You should see the message, "Created topic demo." on the console. Now let's check to see if it was actually created:
 
 [source,bash]
 ----
 kubectl exec -i -t simple-kafka-broker-brokers-0 -c kafka -- \
   bin/kafka-topics.sh --bootstrap-server localhost:9092 --list
-demo
 ----
 
 === Apache NiFi
