@@ -1,0 +1,29 @@
+= `PersistentVolumeClaim` usage
+
+Several of the tools on the Stackable platform can use external resources that the cluster administrator makes available via a `PersistentVolume`. Airflow users can access DAG jobs this way, and Spark users can do the same for data or other job dependencies, to name just two examples.
+
+A `PersistentVolume` will usually be provisioned by the cluster administrator, who will take into account the type of storage that is required. This will include, for example, an appropriate sizing, and relevant access modes (which  in turn are dependent on the `StorageClass` chosen to back the `PersistentVolume`).
+
+== Access modes and the `StorageClass`
+
+Not all access modes are compatible with all storage classes. This https://docs.openshift.com/container-platform/4.8/storage/understanding-persistent-storage.html#pv-access-modes_understanding-persistent-storage[link] provides a helpful compatability matrix (in this case for OpenShift). Other managed Kubernetes implementations will be similar, albeit with different default storage class names. The important point is that the default `StorageClass` only supports `ReadWriteOnce`, which limits access to the `PersistentVolumeClaim` to a single node.
+
+== Node selection
+
+The Kubernetes https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/[documentation] states the following with regard to assigning pods to specific nodes:
+____
+Generally such constraints are unnecessary, as the scheduler will automatically do a reasonable placement (for example, spreading your Pods across nodes so as not place Pods on a node with insufficient free resources).
+____
+This suggests that resources are automatically considered when pods are assigned to nodes, but it is not clear if the same is true for implicit dependencies, such as `PersistentVolumeClaim` usage. The https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/[scheduler] will take various factors into account, such as
+
+____
+...individual and collective resource requirements, hardware / software / policy constraints, affinity and anti-affinity specifications, data locality, inter-workload interference....
+____
+
+but implementations may vary in the way soft dependencies (e.g. optimal resource usage) and hard dependencies (e.g. access modes, that may prevent the job from running) are handled and prioritised.
+
+== Test considerations
+
+For `PersistentVolumeClaim`-relevant tests in the Stackable operator repositories the backing `PersistentVolume` is usually omitted as this is an implementation/provisioning choice to made by the cluster administrator and mocking e.g. an NFS volume for tests is non-trivial.
+
+The only viable access mode is thus `ReadWriteOnce` (see above) which means that all test steps dependent on a `PersistentVolumeClaim` should be run on the same node, and this assignment should be made explicitly with a declaration of either a node selector or pod-affinity.
