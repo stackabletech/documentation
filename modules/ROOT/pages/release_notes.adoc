@@ -1,4 +1,4 @@
-= Platform releases
+= Release notes for the Stackable Data Platform
 
 The Stackable platform consists of multiple operators that work together.
 Periodically a platform release is made, including all components of the platform at a specific version.
@@ -63,32 +63,38 @@ xref:stackablectl::index.adoc[Learn more]
 
 This is the list of all operators in this current release, with their versions for this release.
 
-* xref:airflow::index.adoc[]
+.*Products*
+* xref:airflow::index.adoc[] (0.4.0)
 ** Load DAGs from ConfigMaps or PersistentVolumeClaims
-* xref:druid::index.adoc[]
+* xref:druid::index.adoc[] (0.6.0)
 ** S3 and HDFS as deep storage options
 ** ingestion from S3 buckets
 ** authorization using OPA
-* xref:hbase::index.adoc[]
-* xref:hdfs::index.adoc[]
-* xref:hive::index.adoc[]
+* xref:hbase::index.adoc[] (0.3.0)
+* xref:hdfs::index.adoc[] (0.4.0)
+* xref:hive::index.adoc[] (0.6.0)
 ** Hive Metastore can index S3
-* xref:kafka::index.adoc[]
+* xref:kafka::index.adoc[] (0.6.0)
 ** Seamless integration with NiFi and Druid
 ** Supports OPA authorization
-* xref:nifi::index.adoc[]
-* xref:spark-k8s::index.adoc[]
-* xref:superset::index.adoc[]
+* xref:nifi::index.adoc[] (0.6.0)
+* xref:spark-k8s::index.adoc[] (0.3.0)
+* xref:superset::index.adoc[] (0.5.0)
 ** connects to Druid as a backend
 ** Supports LDAP authentication
-* xref:trino::index.adoc[]
+* xref:trino::index.adoc[] (0.4.0)
 ** Supports OPA and file-based authorization
 ** Connects to the Hive Metastore
 ** Query data from S3
 ** TLS support
-* xref:zookeeper::index.adoc[]
+* xref:zookeeper::index.adoc[] (0.10.0)
 ** Supports creating ZNodes with CRDs
-* xref:opa::index.adoc[]
+
+Read up on the xref:operators:supported_versions.adoc[supported versions] for each of these products.
+
+.*Supporting operators*
+* xref:opa::index.adoc[] (0.9.0)
 ** Create RegoRules in ConfigMaps
-* xref:commons-operator::index.adoc[]
-* xref:secret-operator::index.adoc[]
+* xref:commons-operator::index.adoc[] (0.2.0)
+* xref:secret-operator::index.adoc[] (0.5.0)
+
