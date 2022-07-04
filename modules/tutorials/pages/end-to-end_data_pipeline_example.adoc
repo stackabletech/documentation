@@ -13,7 +13,7 @@ You should make sure that you have everything you need:
 
 * A running Kubernetes cluster
 * https://kubernetes.io/docs/tasks/tools/#kubectl[kubectl] to interact with the cluster
-* https://helm.sh/[helm] to deploy third-party dependencies
+* https://helm.sh/[Helm] to deploy third-party dependencies
 * xref:stackablectl::installation.adoc[stackablectl] to install and interact with Stackable operators
 +
 [NOTE]
@@ -430,10 +430,6 @@ spec:
         accessStyle: Path
         credentials:
           secretClass: druid-s3-credentials  # <3>
-  deepStorage:
-    storageType: s3
-    bucket: nytaxidata
-    baseKey: storage
   deepStorage:
     s3:
       bucket:
