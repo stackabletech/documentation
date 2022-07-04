@@ -1,6 +1,6 @@
 = Roles and role groups
 
-Software - especially the distributed kind - often consists of multiple different process that work together to achieve their goal, Stackable calls these _roles_. The same kind of process is then often replicated multiple times. These replicas can further be subdivided into _role groups_. Roles and role groups are defined in the resource manifest.
+Software - especially the distributed kind - often consists of multiple different processes that work together to achieve their goal. Think of a client communicating with a server. Stackable calls these _roles_. The roles or processes are often replicated multiple times. These replicas can further be subdivided into _role groups_. Roles and role groups are defined in the resource manifest.
 
 == Motivation
 // configuration and scheduling
