@@ -48,7 +48,13 @@ spec:
 
 == Access modes and the StorageClass
 
-Not all https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes[access modes] are compatible with all storage classes. This https://docs.openshift.com/container-platform/4.8/storage/understanding-persistent-storage.html#pv-access-modes_understanding-persistent-storage[link] provides a helpful compatability matrix (in this case for OpenShift). Other managed Kubernetes implementations will be similar, albeit with different default storage class names. The important point is that the default StorageClass only supports `ReadWriteOnce`, which limits access to the PersistentVolumeClaim to a single node.
+Not all https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes[access modes] are compatible with all storage classes. This https://docs.openshift.com/container-platform/4.8/storage/understanding-persistent-storage.html#pv-access-modes_understanding-persistent-storage[link] provides a helpful compatability matrix (in this case for OpenShift). Other managed Kubernetes implementations will be similar, albeit with different default storage class names. The important point is that the default StorageClass only supports `ReadWriteOnce`, which limits access to the PersistentVolumeClaim to a single node. A strategy governing PersistentVolumeClaim resources will thus address the following:
+
+- what access mode is appropriate? Will the resources be accessed by multiple pods and/or modes?
+- does the Kubernetes cluster have a default implementation for these access modes?
+- if access modes are restricted (e.g. `ReadWriteOnce`), does the cluster prioritise available resources over implicit application dependencies (in other words, is the PersistentVolumeClaim treated as a soft- or hard-dependency)?
+
+If a PersistentVolumeClaim should be mounted on a single node for the application and its components that use it, this can be specified explicitly (see the next section).
 
 == Node selection
 
