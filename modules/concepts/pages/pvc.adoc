@@ -77,3 +77,18 @@ For PersistentVolumeClaim-relevant tests in the Stackable operator repositories 
 If the only viable access mode is `ReadWriteOnce` (see above) - meaning that all test steps dependent on a PersistentVolumeClaim should be run on the same node - this assignment should be made explicitly with a declaration of either a node selector or pod-affinity.
 
 Managed Kubernetes clusters will normally have a default storage implementation for access modes other than `ReadWriteOnce` so e.g. `ReadWriteMany` can be declared for tests running against such clusters in the knowledge that the appropriate storage will be used.
+
+== Operator usage
+
+=== Airflow
+The Airflow operator can use a PersistentVolumeClaim for externally-loaded airflow jobs, known as Direct Acyclic Graphs (DAGs), as shown in this https://github.com/stackabletech/airflow-operator/blob/main/examples/simple-airflow-cluster-dags-pvc.yaml[example]. Airflow expects that all components (webserver, scheduler and workers) have access to the DAG folder, so the PersistentVolumeClaim either has to be accessible with the `ReadWriteMany` access mode or node selection should be declared to ensure all components run on the same node.
+
+=== Spark-k8s
+Users of the Spark-k8s operator have a variety of ways to manage SparkApplication dependencies, one of which is to mount resources on a PersistentVolumeClaim. An example is shown https://github.com/stackabletech/spark-k8s-operator/blob/main/examples/ny-tlc-report.yaml[here].
+
+== Further reading
+
+- https://kubernetes.io/docs/concepts/storage/persistent-volumes/[Persistent Volumes]
+- https://kubernetes.io/docs/tasks/configure-pod-container/configure-persistent-volume-storage/#create-a-persistentvolumeclaim[PV/PVC example]
+- https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/[Labels and selectors
+]
