@@ -24,7 +24,7 @@ This is done by using link:https://kubernetes.io/docs/concepts/overview/working-
 
 === Role groups
 
-Role groups are motivated by the need to subdivide the replicas of a processes into groups as well, either to configure multiple groups differently or to schedule them differently. For example in a cluster spanning multiple physical locations, you may want to make sure half of your processes run in one location and half in the other.
+Role groups are motivated by the need to subdivide the replicas of a process into groups as well, either to configure or to schedule multiple groups differently. For example in a cluster spanning multiple physical locations, you may want to make sure half of your processes run in one location and half in the other.
 
 == How it works
 
