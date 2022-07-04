@@ -1,0 +1,140 @@
+:source-highlighter: highlight.js
+:highlightjs-languages: rust
+
+= OPA authorization
+
+The Stackable Platform offers policy-based access control via the https://www.openpolicyagent.org[OpenPolicyAgent] (OPA) operator.
+//
+Policies are defined in the Rego language, divided into packages and supplied via ConfigMaps.
+//
+Every node is running an OPA instance for fast policy evaluation and products are connected to OPA with the xref:service_discovery.adoc[service discovery] mechanism.
+
+== Motivation
+
+* A common authorization framework across all products
+
+
+== What is OPA?
+
+OPA is an open source, general purpose policy engine. It supports a high-level declarative language called https://www.openpolicyagent.org/docs/latest/policy-language/[Rego]. Rego enables you to specify complex policies as code and transfer the decision-making processes from your software to OPA. We refer to policies written in Rego as _Rego rules_.
+
+Policy requests are made to a REST API. In the request the requester can supply arbitrary structured input data as JSON to supply context information. For example the name of the user, resource and action for which an authorization is requested. In this way policy decision-making and policy enforcement are decoupled.
+
+== How it works on the stackabe platform
+
+OPA is run by the xref:opa::index.adoc[Stackable OPA operator]. OPA is deployed with the OpaCluster resource, from which the operator creates a DeamonSet to run an OPA instance on every node of the cluster.
+
+Policies are supplied as ConfigMaps. Every ConfigMap containing a policy needs to be labeled so the operator knows to include it.
+
+== Example
+
+Here's an example of a Rego rule package in a ConfigMap:
+
+[source,yaml]
+----
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: my-product-policies
+  labels:
+    opa.stackable.tech/bundle: "my-product" <1>
+data:
+  my-product.rego: |
+    package my-product <2>
+
+    import future.keywords.in
+
+    default allow = false <3>
+    allow {
+      is_admin
+    }
+
+    is_admin() { <4>
+      input.context.identity.user == "admin"
+    }
+----
+
+<1> The `opa.stackable.tech/bundle` label is needed to add this ConfigMap to the OPA policy set. Only ConfigMaps with this label are included.
+<2> `my-product` is the name of the package. Usually you will have one package per product or per product instance. The name of the package needs to be configured in product instances (i.e. a Trino or Druid instance). The product will use the policies from the configured policy package.
+<3> The `allow` rule. It is the main entry point. For every policy decision, the `allow` rule is always requested. In this case, the rule defaults to `false`. It references the `is_admin` rule.
+<4> the `is_admin` rule. It demonstrates the use of context information. Every policy decision request can supply context, in this case the user identity is supplied as context. Only if the user identity is "admin", the `is_admin` rule evaluates to true.
+
+The combination of arbitrary input data and the Rego rules enable you to specify and enforce almost any kind of policies.
+You can define powerful policies for e.g. user access for database tables, schemas, columns etc. You can enforce local network traffic, access time periods and many more.
+
+See the https://www.openpolicyagent.org/docs/latest/#overview[OPA documentation] for further examples.
+
+== Product configuration
+
+A product that supports OPA authorization will have a part of the spec like this
+
+[yaml,source]
+----
+opa:
+  configMapName: simple-opa <1>
+  package: my-product <2>
+----
+<1> The reference to the OPA cluster
+<2> The name of the policy package to use for this product
+
+
+
+== Stackable Operator for OPA
+
+The https://github.com/stackabletech/opa-operator[Stackable Operator for OPA] deploys OPA as a https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/[DaemonSet] in Kubernetes. This ensures that every registered `https://kubernetes.io/de/docs/concepts/architecture/nodes/[Node]` runs exactly one OPA instance.
+// TODO: how can I enforce local traffic?
+In order to reduce traffic and latency, deployed products querying OPA must use the local OPA provided on their respective Node.
+
+=== Service Discovery
+
+Furthermore, the Stackable Operator for OPA deploys a _service discovery_ `ConfigMap` (see xref:service_discovery.adoc[]) to expose its service URL to other Stackable operators. These operators then are configured to use the service discovery ConfigMap to extract the required URL and configure their products and authorizers. Authorizers are plugins for products that allow authorization and access control.
+
+The ConfigMap has one data entry that points to the OPA `ClusterIP` service:
+
+[source,yaml]
+----
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {clustername}
+data:
+  OPA: http://{clustername}.{rolegroup}.svc.cluster.local:8081/
+----
+
+=== Provide Rego rules
+
+In order for OPA to make policy decisions, Rego rules must be bundled and supplied. The Stackable Operator for OPA has its own controller to bundle policies and provide them to OPA. Polices can be provided via ConfigMaps:
+
+[source,yaml]
+----
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: simple-product-rego
+  labels:
+    opa.stackable.tech/bundle: "product"
+data:
+  product.rego: |
+    package product
+    allow {
+        true
+    }
+----
+
+The OPA bundle controller creates a `bundle.tar.gz` file locally, bundling the content of every `ConfigMap` labeled with `opa.stackable.tech/bundle` (the label value can be arbitrary). This bundle is read and activated by OPA.
+
+You can query the `allow` rule provided in the example above via:
+
+----
+http://{clustername}.{rolegroup}.svc.cluster.local:8081/data/v1/product/allow
+----
+
+== Further reading
+
+These products support OPA authorization for now:
+
+* xref:trino::usage.adoc#_authorization[Trino]
+* xref:kafka::usage.adoc[Kafka]
+* xref:druid::usage.adoc#_using_open_policy_agent_opa_for_authorization[Druid]
+
+You can also have a look at our xref:contributor:opa_configuration.adoc[implementation guidelines for OPA authorizers].
