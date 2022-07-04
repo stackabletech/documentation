@@ -93,7 +93,7 @@
                     <bundle>
                         <artifact>nifi-record-serialization-services-nar</artifact>
                         <group>org.apache.nifi</group>
-                        <version>1.15.0</version>
+                        <version>1.16.3</version>
                     </bundle>
                     <comments/>
                     <descriptors>
@@ -379,7 +379,7 @@
                     <bundle>
                         <artifact>nifi-record-serialization-services-nar</artifact>
                         <group>org.apache.nifi</group>
-                        <version>1.15.0</version>
+                        <version>1.16.3</version>
                     </bundle>
                     <comments/>
                     <descriptors>
@@ -594,7 +594,7 @@
                     <bundle>
                         <artifact>nifi-record-serialization-services-nar</artifact>
                         <group>org.apache.nifi</group>
-                        <version>1.15.0</version>
+                        <version>1.16.3</version>
                     </bundle>
                     <comments/>
                     <descriptors>
@@ -738,7 +738,7 @@
                     <bundle>
                         <artifact>nifi-aws-nar</artifact>
                         <group>org.apache.nifi</group>
-                        <version>1.15.0</version>
+                        <version>1.16.3</version>
                     </bundle>
                     <config>
                         <bulletinLevel>WARN</bulletinLevel>
@@ -1017,7 +1017,7 @@
                     <bundle>
                         <artifact>nifi-aws-nar</artifact>
                         <group>org.apache.nifi</group>
-                        <version>1.15.0</version>
+                        <version>1.16.3</version>
                     </bundle>
                     <config>
                         <bulletinLevel>WARN</bulletinLevel>
@@ -1258,7 +1258,7 @@
                     <bundle>
                         <artifact>nifi-kafka-2-6-nar</artifact>
                         <group>org.apache.nifi</group>
-                        <version>1.15.0</version>
+                        <version>1.16.3</version>
                     </bundle>
                     <config>
                         <bulletinLevel>WARN</bulletinLevel>
@@ -1577,7 +1577,7 @@
                     <bundle>
                         <artifact>nifi-standard-nar</artifact>
                         <group>org.apache.nifi</group>
-                        <version>1.15.0</version>
+                        <version>1.16.3</version>
                     </bundle>
                     <config>
                         <bulletinLevel>WARN</bulletinLevel>
