@@ -8,3 +8,4 @@ nav:
   - modules/reference/nav.adoc
   - modules/operators/nav.adoc
   - modules/contributor/nav.adoc
+  - modules/ROOT/nav2.adoc
