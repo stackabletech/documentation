@@ -4,7 +4,7 @@ Software - especially the distributed kind - often consists of multiple differen
 
 == Motivation
 // configuration and scheduling
-The use of roles and role groups is motivated by the need to configure differently *how* processes are configured and *where* they run.
+The use of roles and role groups is required to control *how* processes are configured and *where* they run.
 
 === Configuration
 // - the "how"
