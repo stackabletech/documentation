@@ -268,7 +268,6 @@ First create the topic with the following command:
 ----
 kubectl exec -i -t simple-kafka-broker-brokers-0 -c kafka -- \
   bin/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic demo
-Created topic demo.
 ----
 
 You should see the message, "Created topic demo." on the console. Now let's check to see if it was actually created:
