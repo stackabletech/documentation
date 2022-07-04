@@ -1,0 +1,80 @@
+= Roles and role groups
+
+Software - especially the distributed kind - often consists of multiple different processes that work together to achieve their goal. Think of a client communicating with a server. Stackable calls these _roles_. The roles or processes are often replicated multiple times. These replicas can further be subdivided into _role groups_. Roles and role groups are defined in the resource manifest.
+
+== Motivation
+// configuration and scheduling
+The use of roles and role groups is required to control *how* processes are configured and *where* they run.
+
+=== Configuration
+// - the "how"
+// internals of the process
+// thread counts, heap size,
+
+Different processes have different tasks that they need to fulfill, which in turn have different configuration settings that only apply to that task. For example coordination, storage, logging and processing tasks require different amounts of threads, memory and storage capacity. These different settings can be put in the per role configuration spec.
+
+=== Scheduling
+// the "where"
+// node labels for location and hardware are typical uses
+// also nodes that might have GPU attached, or special storage
+
+While configuration is concerned with modifying how the process works on the inside, scheduling is concerned with the context where it should run inside the cluster. A processing task should be scheduled on a node with faster CPUs or nodes with GPUs attached. A caching process is best scheduled on a node with SSD storage, for example.
+
+This is done by using link:https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/[label selectors]. Nodes can be labeled and then processes can be assigned to nodes based on these labels.
+
+=== Role groups
+
+Role groups are motivated by the need to subdivide the replicas of a process into groups as well, either to configure or to schedule multiple groups differently. For example in a cluster spanning multiple physical locations, you may want to make sure half of your processes run in one location and half in the other.
+
+== How it works
+
+A distributed software consists of one or more roles. Every role must be configured with at least one role group. Configuration can be specified at role level or at role group level, where the role group level overrides the role level. Label selectors for scheduling and the number of replicas are specified on the role group, not role. The role group is the lowest level, so it makes sense to have to specify this there.
+
+=== Example
+
+HDFS uses three distinct processes that work together to fulfill its duty: NameNodes, DataNodes and JournalNodes. With roles you can specify different configuration settings for each of these, as well as schedule them on specific machines.
+
+[source,yaml]
+----
+apiVersion: hdfs.stackable.tech/v1alpha1
+kind: HdfsCluster
+metadata:
+  name: simple-hdfs
+spec:
+  journalNodes:
+    roleGroups:
+      default:
+        replicas: 3  # <1>
+  nameNodes:
+    roleGroups:
+      default:
+        replicas: 3
+        selector:
+          matchLabels:
+            kubernetes.io/os: linux  # <2>
+  dataNodes:
+    config:
+      resources:
+        storage:
+          data:
+            capacity: 1Gi  # <3>
+    roleGroups:
+      default:
+        replicas: 2
+      hiCapacity:  # <4>
+        config:
+          resources:
+            storage:
+              data: 2Gi
+        replicas: 1
+  ...
+----
+
+<1> The JournalNode role with only a single default role group. For the role group 3 replicas are specified, specifying a replica count is optional, the default is 1.
+<2> For the NameNodes default role group, a label selector is given, the pods should only be specified on nodes where the `kubernetes.io/os` label has the value `linux`.
+<3> A common config setting for the DataNodes role. This configuration setting applies only to pods for this role.
+<4> The DataNode role has two role groups, the default group and the hiCapacity group. In it the config setting for the group is overridden with a higher value of 2Gi. This role group has only one replica.
+
+== Further Reading
+
+Every operator uses roles. Have a look at the usage page of an operator for an example of roles.
