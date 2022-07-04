@@ -9,24 +9,21 @@ Policies are defined in the Rego language, divided into packages and supplied vi
 //
 Every node is running an OPA instance for fast policy evaluation and products are connected to OPA with the xref:service_discovery.adoc[service discovery] mechanism.
 
-== Motivation
-
-* A common authorization framework across all products
-
-
 == What is OPA?
+// What's OPA? What are Rego Rules?
+OPA is an open source, general purpose policy engine. It supports a high-level declarative language called https://www.openpolicyagent.org/docs/latest/policy-language/[Rego]. Rego enables you to specify complex policies as code and transfer the decision-making processes from your software to OPA. Policies written in Rego are called _Rego rules_.
 
-OPA is an open source, general purpose policy engine. It supports a high-level declarative language called https://www.openpolicyagent.org/docs/latest/policy-language/[Rego]. Rego enables you to specify complex policies as code and transfer the decision-making processes from your software to OPA. We refer to policies written in Rego as _Rego rules_.
-
+// policy requests
 Policy requests are made to a REST API. In the request the requester can supply arbitrary structured input data as JSON to supply context information. For example the name of the user, resource and action for which an authorization is requested. In this way policy decision-making and policy enforcement are decoupled.
 
 == How it works on the stackabe platform
+// How it is deployed
+OPA is run by the xref:opa::index.adoc[Stackable OPA operator]. OPA is deployed with the OpaCluster resource, from which the operator creates a DaemonSet to run an OPA instance on every node of the cluster. Because of this, every other Pod making policy requests will always make the request locally, minimizing latency.
 
-OPA is run by the xref:opa::index.adoc[Stackable OPA operator]. OPA is deployed with the OpaCluster resource, from which the operator creates a DeamonSet to run an OPA instance on every node of the cluster.
+=== Define policies
 
-Policies are supplied as ConfigMaps. Every ConfigMap containing a policy needs to be labeled so the operator knows to include it.
-
-== Example
+// Rego rules in config maps
+The Rego rule policies are supplied as ConfigMaps. Multiple ConfigMaps can be used for multiple packages, for example one ConfigMap per product. ConfigMaps are easy to create. The operator takes care of assembling the ConfigMaps into a policy bundle. Every policy ConfigMap needs to be labeled so the operator knows to include it.
 
 Here's an example of a Rego rule package in a ConfigMap:
 
@@ -64,7 +61,11 @@ You can define powerful policies for e.g. user access for database tables, schem
 
 See the https://www.openpolicyagent.org/docs/latest/#overview[OPA documentation] for further examples.
 
-== Product configuration
+=== Connect a product
+
+// discovery
+The OpaCluster is also discoverable via the xref:service_discovery.adoc[service discovery mechanism]. To use OPA authorization you simply need the name of the OpaCluster to connect to and the name of the policy package to use.
+
 
 A product that supports OPA authorization will have a part of the spec like this
 
@@ -77,57 +78,6 @@ opa:
 <1> The reference to the OPA cluster
 <2> The name of the policy package to use for this product
 
-
-
-== Stackable Operator for OPA
-
-The https://github.com/stackabletech/opa-operator[Stackable Operator for OPA] deploys OPA as a https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/[DaemonSet] in Kubernetes. This ensures that every registered `https://kubernetes.io/de/docs/concepts/architecture/nodes/[Node]` runs exactly one OPA instance.
-// TODO: how can I enforce local traffic?
-In order to reduce traffic and latency, deployed products querying OPA must use the local OPA provided on their respective Node.
-
-=== Service Discovery
-
-Furthermore, the Stackable Operator for OPA deploys a _service discovery_ `ConfigMap` (see xref:service_discovery.adoc[]) to expose its service URL to other Stackable operators. These operators then are configured to use the service discovery ConfigMap to extract the required URL and configure their products and authorizers. Authorizers are plugins for products that allow authorization and access control.
-
-The ConfigMap has one data entry that points to the OPA `ClusterIP` service:
-
-[source,yaml]
-----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {clustername}
-data:
-  OPA: http://{clustername}.{rolegroup}.svc.cluster.local:8081/
-----
-
-=== Provide Rego rules
-
-In order for OPA to make policy decisions, Rego rules must be bundled and supplied. The Stackable Operator for OPA has its own controller to bundle policies and provide them to OPA. Polices can be provided via ConfigMaps:
-
-[source,yaml]
-----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: simple-product-rego
-  labels:
-    opa.stackable.tech/bundle: "product"
-data:
-  product.rego: |
-    package product
-    allow {
-        true
-    }
-----
-
-The OPA bundle controller creates a `bundle.tar.gz` file locally, bundling the content of every `ConfigMap` labeled with `opa.stackable.tech/bundle` (the label value can be arbitrary). This bundle is read and activated by OPA.
-
-You can query the `allow` rule provided in the example above via:
-
-----
-http://{clustername}.{rolegroup}.svc.cluster.local:8081/data/v1/product/allow
-----
 
 == Further reading
 
