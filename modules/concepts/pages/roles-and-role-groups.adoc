@@ -28,7 +28,7 @@ Role groups are motivated by the need to subdivide the replicas of a process int
 
 == How it works
 
-A distributed software has multiple roles. Every role must be configured with at least one role group. Configuration can be specified at role level or at role group level, where the role group level overrides the role level. Label selectors for scheduling and the number of replicas are specified on the role group, not role. The role group is the lowest level, so it makes sense to have to specify this there.
+A distributed software consists of one or more roles. Every role must be configured with at least one role group. Configuration can be specified at role level or at role group level, where the role group level overrides the role level. Label selectors for scheduling and the number of replicas are specified on the role group, not role. The role group is the lowest level, so it makes sense to have to specify this there.
 
 === Example
 
