@@ -7,11 +7,11 @@ For a conceptual overview of service discovery, consult the xref:concepts:servic
 
 == Best practices
 
-==== Exposing config maps for service discovery
+=== Exposing config maps for service discovery
 
 The question about which interfaces to expose varies from product to product and must be decided on an individual basis. However, as far as possible the exposed services should be reachable via Kubernetes services like `ClusterIP` or `NodePort`.
 
-==== Consuming config maps for service discovery
+=== Consuming config maps for service discovery
 
 The operator that discovers a service has two options for retrieving the information and providing it into the pods:
 

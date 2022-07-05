@@ -1,3 +1,4 @@
 * xref:concepts:index.adoc[]
 ** xref:service_discovery.adoc[]
+** xref:roles-and-role-groups.adoc[]
 ** xref:s3.adoc[]
