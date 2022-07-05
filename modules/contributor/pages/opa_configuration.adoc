@@ -1,7 +1,7 @@
 :source-highlighter: highlight.js
 :highlightjs-languages: rust
 
-= OPA Configuration
+= OPA connection implementation guidelines
 
 == Introduction
 
@@ -24,13 +24,13 @@ See the https://www.openpolicyagent.org/docs/latest/#overview[OPA documentation]
 
 == Stackable Operator for OPA
 
-The https://github.com/stackabletech/opa-operator[Stackable Operator for OPA] deploys OPA as a `https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/[DaemonSet]` in Kubernetes. This ensures that every registered `https://kubernetes.io/de/docs/concepts/architecture/nodes/[Node]` runs exactly one OPA instance. In order to reduce traffic and latency, deployed products querying OPA must use the local OPA provided on their respective Node.
+The https://github.com/stackabletech/opa-operator[Stackable Operator for OPA] deploys OPA as a https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/[DaemonSet] in Kubernetes. This ensures that every registered https://kubernetes.io/de/docs/concepts/architecture/nodes/[Node] runs exactly one OPA instance. In order to reduce traffic and latency, deployed products querying OPA must use the local OPA provided on their respective Node.
 
 === Service Discovery
 
-Furthermore, the Stackable Operator for OPA deploys a _service discovery_ `ConfigMap` (see xref:service_discovery.adoc[]) to expose its service URL to other Stackable operators. These operators then are configured to use the service discovery ConfigMap to extract the required URL and configure their products and authorizers. Authorizers are plugins for products that allow authorization and access control.
+Furthermore, the Stackable Operator for OPA deploys a _service discovery_ ConfigMap (see xref:service_discovery.adoc[]) to expose its service URL to other Stackable operators. These operators then are configured to use the service discovery ConfigMap to extract the required URL and configure their products and authorizers. Authorizers are plugins for products that allow authorization and access control.
 
-The ConfigMap has one data entry that points to the OPA `ClusterIP` service:
+The ConfigMap has one data entry that points to the OPA ClusterIP service:
 
 [source,yaml]
 ----
@@ -62,7 +62,7 @@ data:
     }
 ----
 
-The OPA bundle controller creates a `bundle.tar.gz` file locally, bundling the content of every `ConfigMap` labeled with `opa.stackable.tech/bundle` (the label value can be arbitrary). This bundle is read and activated by OPA.
+The OPA bundle controller creates a `bundle.tar.gz` file locally, bundling the content of every ConfigMap labeled with `opa.stackable.tech/bundle` (the label value can be arbitrary). This bundle is read and activated by OPA.
 
 You can query the `allow` rule provided in the example above via:
 
@@ -79,7 +79,7 @@ In order to configure another operator and its product to query OPA, the service
 
 === Configure OPA access in the operator
 
-The `https://github.com/stackabletech/operator-rs[operator-rs]` framework has a module called `opa.rs` that offers a predefined struct `OpaConfig` and several helper methods to extract the OPA URL from the service discovery ConfigMap.
+The `https://github.com/stackabletech/operator-rs[operator-rs]` framework has a module called `opa.rs` that offers a predefined struct OpaConfig and several helper methods to extract the OPA URL from the service discovery ConfigMap.
 
 [source,rust]
 ----
