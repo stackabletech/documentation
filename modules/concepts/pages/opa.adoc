@@ -75,7 +75,7 @@ spec:
 <1> The reference to the OPA cluster
 <2> The name of the policy package to use for this product
 
-The automatic connection is facilitated by the xref:service_discovery.adoc[service discovery mechanism] and so no further information about where OPA is running is required. Neither is any information required about which rules to use, as the products know this already. See <<Further reading>> for links to specific product authorization documentation.
+The automatic connection is facilitated by the xref:service_discovery.adoc[service discovery mechanism] and no further information about OPA is required. The products query their respective rules via the supplied package name. See <<Further reading>> for links to specific product authorization documentation.
 
 == Further reading
 
