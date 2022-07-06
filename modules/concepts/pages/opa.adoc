@@ -52,7 +52,7 @@ data:
 <1> The `opa.stackable.tech/bundle` label is needed to add this ConfigMap to the OPA policy set. Only ConfigMaps with this label are included.
 <2> `my-product` is the name of the package. Usually you will have one package per product or per product instance. The name of the package needs to be configured in product instances (i.e. a Trino or Druid instance). The product will use the policies from the configured policy package.
 <3> The `allow` rule. It is the main entry point. For every policy decision, the `allow` rule is always requested. In this case, the rule defaults to `false`. It references the `is_admin` rule.
-<4> the `is_admin` rule. It demonstrates the use of context information. Every policy decision request can supply context, in this case the user identity is supplied as context. Only if the user identity is "admin", the `is_admin` rule evaluates to true.
+<4> The `is_admin` rule. It demonstrates the use of context information. Every policy decision request can supply context, in this case the user identity is supplied as context. Only if the user identity is "admin", the `is_admin` rule evaluates to true.
 
 The combination of arbitrary input data and the Rego rules enable you to specify and enforce almost any kind of policies.
 You can define powerful policies for e.g. user access for database tables, schemas, columns etc. You can enforce local network traffic, access time periods and many more.
