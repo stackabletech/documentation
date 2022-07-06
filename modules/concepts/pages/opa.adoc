@@ -15,7 +15,7 @@ Policy requests are made to a REST API, which allows easy requests from microser
 
 == How it works
 // How it is deployed
-OPA is run by the xref:opa::index.adoc[Stackable OPA operator]. OPA is deployed with the OpaCluster resource, from which the operator creates a DaemonSet to run an OPA instance on every node of the cluster. Because of this, every Pod making policy requests will always make the request locally, minimizing latency.
+OPA is run by the xref:opa::index.adoc[Stackable OPA operator]. OPA is deployed with the OpaCluster resource, from which the operator creates a DaemonSet to run an OPA instance on every node of the cluster. Because of this, every Pod making policy requests will always make the request locally, minimizing latency and network traffic.
 
 === Define policies
 
