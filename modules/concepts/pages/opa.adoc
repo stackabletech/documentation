@@ -61,7 +61,7 @@ See the https://www.openpolicyagent.org/docs/latest/#overview[OPA documentation]
 
 === Connect a product
 
-To connect a product to an OpaCluster, the name of the OpaCluster is needed as well as the name of the policy package to use with this product instance. A product that supports connecting to OPA will have a spec section like this:
+To connect a product to an OpaCluster, the name of the OpaCluster is needed as well as the name of the policy package to use with this product instance. An operator that supports OPA for its operated product will have a spec section like this:
 
 [source, yaml]
 ----
