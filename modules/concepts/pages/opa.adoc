@@ -22,7 +22,7 @@ OPA is run by the xref:opa::index.adoc[Stackable OPA operator]. OPA is deployed 
 OPA by itself does not enforce a specific structure of Rego rules and the packages they are in, but the Stackable platform makes some assumptions. Whenever a product is connected to OPA (see <<_connect_a_product>>), a single package needs to be given, and that package needs to contain specific rules depending on the product. For example for Druid, a single `allow` rule needs to be defined.
 
 // Rego rules in config maps
-The Rego rule policies are supplied as ConfigMaps. Multiple ConfigMaps can be used for multiple packages, for example one package for Druid authorization, one package for a Trino development instance and one package for a Trino production instance. ConfigMaps were chosen as an easy to use method of supplying configuration files in a Kubernetes environment. The operator takes care of assembling the ConfigMaps into a policy bundle, every policy ConfigMap needs to be labeled so the operator knows to include it.
+The Rego rule policies are supplied as ConfigMaps. Multiple ConfigMaps can be used for multiple packages, for example one package for Druid authorization, one package for a Trino development instance and one package for a Trino production instance. ConfigMaps were chosen as an easy to use method of supplying configuration files in a Kubernetes environment. The operator takes care of assembling the ConfigMaps into a policy bundle, every policy ConfigMap must contain a `opa.stackable.tech/bundle` label in order to be processed by the OPA operator.
 
 Here's an example of a Rego rule package in a ConfigMap:
 
