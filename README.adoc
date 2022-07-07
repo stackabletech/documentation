@@ -4,9 +4,9 @@
 :base-repo: https://github.com/stackabletech
 
 This is the main repository for the documentation of the Stackable platform.
-It uses https://antora.org[Antora].
+Have a look at the https://docs.stackable.tech/[live version].
 
-This repository hosts the Antora playbook file as well as some generic documentation modules.
+The documentation is built with https://antora.org[Antora]. This repository hosts the Antora playbook file as well as platform documentation. Other Stackable repos contain 'docs' directories which are pulled in by this repo.
 
 To build the site, pull submodules, install dependencies and run `make`:
 
@@ -17,7 +17,7 @@ $ npm ci
 $ make
 ----
 
-NOTE: Antora caches all resources it downloads in the user's cache directory (e.g. `~/.cache/antora` directory on Linux). It will _not_ automatically update those. Use the `--fetch` flag (`make ANTORAFLAGS=--fetch`) to update all sources.
+NOTE: Antora caches the external content repos in the cache directory (configured to be `./cache`). It will _not_ automatically update those.  Use the `--fetch` flag (`make ANTORAFLAGS=--fetch`) to update all sources, or use `make clean` to delete the `cache` and `build` directory.
 
 == Development
 
