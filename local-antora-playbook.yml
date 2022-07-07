@@ -95,3 +95,9 @@ asciidoc:
     kroki-fetch-diagram: true
   extensions:
     - asciidoctor-kroki
+
+# the default caching directory is ./.cache/antora
+# Antora caches the git repos, this can sometimes lead to stale content
+# use 'make clean' to remove the build and cache directory
+runtime:
+  cache_dir: ./cache
