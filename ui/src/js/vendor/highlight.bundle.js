@@ -43,6 +43,6 @@ hljs.registerLanguage('xml', xml)
 hljs.registerLanguage('yaml', yaml)
 hljs.registerLanguage('toml', ini)
 
-for (const node of document.querySelectorAll('pre code.hljs')) {
+for (const node of document.querySelectorAll('pre code.hljs[data-lang]')) {
   hljs.highlightElement(node)
 }
