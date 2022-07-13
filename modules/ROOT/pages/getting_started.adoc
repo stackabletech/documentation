@@ -91,6 +91,8 @@ stackablectl release install -i zookeeper -i kafka -i nifi -i secret 22.06
 .Using Helm instead
 [%collapsible]
 ====
+NOTE: These examples assume Helm version 3. They will not work with Helm version 2.
+
 Add the stackable-stable Helm Chart repository:
 
 [source,bash]
