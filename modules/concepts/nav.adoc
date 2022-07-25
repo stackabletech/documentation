@@ -3,3 +3,4 @@
 ** xref:service_discovery.adoc[]
 ** xref:opa.adoc[]
 ** xref:s3.adoc[]
+** xref:pvc.adoc[]

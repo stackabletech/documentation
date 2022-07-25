@@ -1,0 +1,94 @@
+= PersistentVolumeClaim usage
+
+Several of the tools on the Stackable platform can use external resources that the cluster administrator makes available via a PersistentVolume. Airflow users can access DAG jobs this way, and Spark users can do the same for data or other job dependencies, to name just two examples.
+
+A PersistentVolume will usually be provisioned by the Kubernetes Container Storage Interface (CSI) on behalf of the cluster administrator, who will take into account the type of storage that is required. This will include, for example, an https://kubernetes.io/docs/concepts/storage/persistent-volumes/#capacity[appropriate sizing], and relevant access modes (which  in turn are dependent on the StorageClass chosen to back the PersistentVolume).
+
+The relationship between a PersistentVolume and a PersistentVolumeClaim can be illustrated by these https://kubernetes.io/docs/tasks/configure-pod-container/configure-persistent-volume-storage/#create-a-persistentvolume[two] https://kubernetes.io/docs/tasks/configure-pod-container/configure-persistent-volume-storage/#create-a-persistentvolumeclaim[examples]:
+
+[source,yaml]
+----
+---
+apiVersion: v1
+  kind: PersistentVolume
+metadata:
+  name: task-pv-volume
+  labels:
+    type: local
+spec:
+  storageClassName: manual #<1>
+  capacity:
+    storage: 10Gi #<2>
+  accessModes:
+    - ReadWriteOnce #<3>
+  hostPath:
+    path: "/mnt/data"
+----
+
+[source,yaml]
+----
+---
+apiVersion: v1
+  kind: PersistentVolumeClaim
+metadata:
+  name: task-pv-claim
+spec:
+  storageClassName: manual #<4>
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi #<5>
+----
+<1> The name of the storage class, which will be used by the PersistentVolumeClaim
+<2> The capacity of the PersistentVolume
+<3> a list of https://kubernetes.io/docs/concepts/storage/persistent-volumes/?force_isolation=true#access-modes[access modes]
+<4> The storageClassName which is used to match a PersistentVolume to a claim
+<5> The specific quantity of the resource that is being claimed
+
+== Access modes and the StorageClass
+
+Not all storage classes support all https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes[access modes]. The supported access modes also depend on the Kubernetes implementation, see for example the compatiblity table https://docs.openshift.com/container-platform/4.8/storage/understanding-persistent-storage.html#pv-access-modes_understanding-persistent-storage[Supported access modes for PVs] in the OpenShift documentation. Other managed Kubernetes implementations will be similar, albeit with different default storage class names. The important point is that the default StorageClass only supports `ReadWriteOnce`, which limits access to the PersistentVolumeClaim to a single node. A strategy governing PersistentVolumeClaim resources will thus address the following:
+
+- what access mode is appropriate? Will the resources be accessed by multiple pods and/or modes?
+- does the Kubernetes cluster have a default implementation for these access modes?
+- if access modes are restricted (e.g. `ReadWriteOnce`), does the cluster prioritise available resources over implicit application dependencies (in other words, is the PersistentVolumeClaim treated as a soft- or hard-dependency)?
+
+If a PersistentVolumeClaim should be mounted on a single node for the application and its components that use it, this can be specified explicitly (see the next section).
+
+== Node selection
+
+The Kubernetes https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/[documentation] states the following with regard to assigning pods to specific nodes:
+____
+the scheduler will automatically do a reasonable placement (for example, spreading your Pods across nodes so as not place Pods on a node with insufficient free resources).
+____
+This suggests that resources are automatically considered when pods are assigned to nodes, but it is not clear if the same is true for implicit dependencies, such as PersistentVolumeClaim usage by multiple pods. The https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/[scheduler] will take various factors into account, such as
+
+____
+...individual and collective resource requirements, hardware / software / policy constraints, affinity and anti-affinity specifications, data locality, inter-workload interference....
+____
+
+but implementations may vary in the way soft dependencies (e.g. optimal resource usage) and hard dependencies (e.g. access modes, that may prevent the job from running) are handled and prioritised.
+
+== Test considerations
+
+For PersistentVolumeClaim-relevant tests in the Stackable operator repositories the backing PersistentVolume is omitted as this is an implementation decision to be made by the cluster administrator and mocking e.g. an NFS volume for tests is non-trivial.
+
+If the only viable access mode is `ReadWriteOnce` (see above) - meaning that all test steps dependent on a PersistentVolumeClaim should be run on the same node - this assignment should be made explicitly with a declaration of either a node selector or pod-affinity.
+
+Managed Kubernetes clusters will normally have a default storage implementation for access modes other than `ReadWriteOnce` so e.g. `ReadWriteMany` can be declared for tests running against such clusters in the knowledge that the appropriate storage will be used.
+
+== Operator usage
+
+=== Airflow
+The xref:airflow::index.adoc[Airflow operator] can use a xref:airflow::usage.adoc#_via_persistentvolumeclaim[PersistentVolumeClaim for externally-loaded airflow jobs], known as Direct Acyclic Graphs (DAGs), as shown in this https://github.com/stackabletech/airflow-operator/blob/main/examples/simple-airflow-cluster-dags-pvc.yaml[example]. Airflow expects that all components (webserver, scheduler and workers) have access to the DAG folder, so the PersistentVolumeClaim either has to be accessible with the `ReadWriteMany` access mode or node selection should be declared to ensure all components run on the same node.
+
+=== Spark-k8s
+Users of the xref:spark-k8s::index.adoc[Spark-k8s operator] have a variety of ways to manage SparkApplication dependencies, one of which is to xref:spark-k8s::usage.adoc#_pyspark_externally_located_dataset_artifact_available_via_pvcvolume_mount[mount resources on a PersistentVolumeClaim]. An example is shown https://github.com/stackabletech/spark-k8s-operator/blob/main/examples/ny-tlc-report.yaml[here].
+
+== Further reading
+
+- https://kubernetes.io/docs/concepts/storage/persistent-volumes/[Persistent Volumes]
+- https://kubernetes.io/docs/tasks/configure-pod-container/configure-persistent-volume-storage/#create-a-persistentvolumeclaim[PV/PVC example]
+- https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/[Labels and selectors
+]
