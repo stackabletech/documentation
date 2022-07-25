@@ -12,7 +12,7 @@ This tutorial is intended to run in a private network or lab; it does not enable
 You should make sure that you have everything you need:
 
 * A running Kubernetes cluster
-* https://kubernetes.io/docs/tasks/tools/#kubectl[Kubectl] to interact with the cluster
+* https://kubernetes.io/docs/tasks/tools/#kubectl[kubectl] to interact with the cluster
 * https://helm.sh/[Helm] to deploy third-party dependencies
 * xref:stackablectl::installation.adoc[stackablectl] to install and interact with Stackable operators
 +
@@ -33,7 +33,6 @@ Instructions for installing via Helm are also provided throughout the tutorial.
 == Nifi and Kafka
 
 This section shows how to instantiate the first part of the entire processing chain, which will ingest CSV files from an S3 bucket, split the files into individual records and send these records to a Kafka topic.
-
 
 === Deploy the Operators
 
@@ -85,7 +84,7 @@ stackablectl operator install kafka
 ====
 [source,bash]
 ----
-helm install zookeeper-operator stackable-stable/kafka-operator
+helm install kafka-operator stackable-stable/kafka-operator
 ----
 ====
 
@@ -95,20 +94,20 @@ NiFi is an ETL tool which will be used to model the dataflow of downloading and 
 It will also be used to convert the file content from CSV to JSON.
 
 [source,bash]
-stackablectl operator install nifi=0.6.0-nightly
+stackablectl operator install nifi
 
 .Using Helm instead
 [%collapsible]
 ====
 [source,bash]
 ----
-helm install --repo https://repo.stackable.tech/repository/helm-dev nifi-operator nifi-operator --version=0.6.0-nightly
+helm install nifi-operator stackable-stable/nifi-operator
 ----
 ====
 
-=== Deploying Kafka and NiFi
+=== Deploying ZooKeeper
 
-To deploy Kafka and NiFi you can now apply the cluster configuration. You'll also need to deploy ZooKeeper, since both Kafka and NiFi depend on it. Run the following command in the console to deploy and configure all three services.
+Since both Kafka and NiFi depend on Apache ZooKeeper, we will create a ZooKeeper cluster first.
 
 [source,bash]
 kubectl apply -f - <<EOF
@@ -118,7 +117,7 @@ kind: ZookeeperCluster
 metadata:
   name: simple-zk
 spec:
-  version: 3.8.0
+  version: 3.8.0-stackable0.7.1
   servers:
     roleGroups:
       default:
@@ -127,6 +126,14 @@ spec:
             kubernetes.io/os: linux
         replicas: 1
         config: {}
+EOF
+
+=== Deploying Kafka and NiFi
+
+To deploy Kafka and NiFi you can now apply the cluster configuration. Run the following command in the console to deploy and configure all three services.
+
+[source,bash]
+kubectl apply -f - <<EOF
 ---
 apiVersion: zookeeper.stackable.tech/v1alpha1
 kind: ZookeeperZnode
@@ -141,7 +148,7 @@ kind: KafkaCluster
 metadata:
   name: simple-kafka
 spec:
-  version: 3.1.0
+  version: 3.2.0-stackable0.1.0
   zookeeperConfigMapName: simple-kafka-znode
   brokers:
     config:
@@ -179,7 +186,7 @@ kind: NifiCluster
 metadata:
   name: simple-nifi
 spec:
-  version: "1.15.0-stackable0.4.0"
+  version: 1.16.3-stackable0.1.0
   zookeeperConfigMapName: simple-nifi-znode
   config:
     authentication:
@@ -375,13 +382,26 @@ Now that the Operator and Dependencies are set up, you can deploy the Druid clus
 
 [source]
 kubectl apply -f - <<EOF
+---
+apiVersion: secrets.stackable.tech/v1alpha1
+kind: SecretClass
+metadata:
+  name: druid-s3-credentials
+spec:
+  backend:
+    k8sSearch:
+      searchNamespace:
+        pod: {}
+---
 apiVersion: v1
 kind: Secret
 metadata:
   name: druid-s3-credentials
+  labels:
+    secrets.stackable.tech/class: druid-s3-credentials
 stringData:
-  accessKeyId: minioAccessKey
-  secretAccessKey: minioSecretKey
+  accessKey: minioAccessKey
+  secretKey: minioSecretKey
 EOF
 
 And now the cluster definition:
@@ -393,7 +413,7 @@ kind: DruidCluster
 metadata:
   name: druid-nytaxidata
 spec:
-  version: 0.22.1
+  version: 0.23.0-stackable0.1.0
   zookeeperConfigMapName: simple-druid-znode  # <1>
   metadataStorageDatabase:  # <2>
     dbType: postgresql
@@ -402,13 +422,26 @@ spec:
     port: 5432
     user: druid
     password: druid
-  s3:
-    endpoint: http://minio:9000
-    credentialsSecret: druid-s3-credentials  # <3>
+  ingestion:
+    s3connection:
+      inline:
+        host: http://minio
+        port: 9000
+        accessStyle: Path
+        credentials:
+          secretClass: druid-s3-credentials  # <3>
   deepStorage:
-    storageType: s3
-    bucket: nytaxidata
-    baseKey: storage
+    s3:
+      bucket:
+        inline:
+          bucketName: nytaxidata
+          connection:
+            inline:
+              host: http://minio
+              port: 9000
+              accessStyle: Path
+              credentials:
+                secretClass: druid-s3-credentials # <3>
   brokers:
     configOverrides:
       runtime.properties:
@@ -485,7 +518,7 @@ kubectl port-forward svc/druid-nytaxidata-router 8888
 
 Keep this command running to continue accessing the Router port locally.
 
-The UI should now be reachable at http://localhost:8888 and should look like the screenshot below. Start with the “Load Data” option:
+The UI should now be reachable at http://localhost:8888 and should look like the screenshot below. Start with the "Load Data" and "New Spec" option:
 
 image::end-to-end_data_pipeline_example/druid-main.png[Main Screen]
 
@@ -568,7 +601,7 @@ stackablectl operator install superset
 ====
 [source,bash]
 ----
-helm install druid-operator stackable-stable/superset-operator
+helm install superset-operator stackable-stable/superset-operator
 ----
 ====
 
@@ -614,7 +647,7 @@ kind: SupersetCluster
 metadata:
   name: simple-superset
 spec:
-  version: 1.4.1  # <1>
+  version: 1.5.1-stackable0.1.0  # <1>
   statsdExporterVersion: v0.22.4
   credentialsSecret: simple-superset-credentials  # <2>
   nodes:
