@@ -45,6 +45,9 @@ The way the operator requests the volume is identical for all pods: it always re
 Pros:
 
 * There's no little to know routing overhead (compared to proxying or similar)
+* The lb operator can be extended to support more LoadBalancerClasses.
+* It is a very low-friction solution that doesn't require a lot of permissions to set up
+
 
 Cons:
 
