@@ -1,0 +1,81 @@
+= Networking with persistent identity
+Doc Writer <doc.writer@asciidoctor.org>
+v0.1, YYYY-MM-DD
+:status: draft
+
+* Status: {status}
+* Deciders: [list everyone involved in the decision] <!-- optional -->
+* Date: [YYYY-MM-DD when the decision was last updated] <!-- optional -->
+
+Technical Story: [description | ticket/issue URL] <!-- optional -->
+
+== Context and Problem Statement
+
+Some services (such as HDFS NameNodes) require a single persistent network identity per replica. In this scenario, clients want to connect
+to a specific replica (such as the active NameNode) and do their own client-side failover and load balancing.
+
+[Describe the context and problem statement, e.g., in free form using two to three sentences. You may want to articulate the problem in form of a question.]
+
+== Decision Drivers <!-- optional -->
+
+* This document is primarily about control-plane traffic, so performance is not a top priority and extra hops are acceptable
+* On-prem customers will often not have any kind of network-level load balancing (at least not one that is configurable by K8s)
+* Cloud customers will often have relatively short-lived K8s nodes
+
+== Considered Options
+
+* Export NodePort services per pod (identity)
+* Export LoadBalancer services per pod (identity)
+* ¤
+* 
+* [option 2]
+* [option 3]
+* … <!-- numbers of options can vary -->
+
+== Decision Outcome
+
+Chosen option: "[option 1]", because [justification. e.g., only option, which meets k.o. criterion decision driver | which resolves force force | … | comes out best (see below)].
+
+=== Positive Consequences <!-- optional -->
+
+* [e.g., improvement of quality attribute satisfaction, follow-up decisions required, …]
+* …
+
+=== Negative Consequences <!-- optional -->
+
+* [e.g., compromising quality attribute, follow-up decisions required, …]
+* …
+
+== Pros and Cons of the Options <!-- optional -->
+
+=== [option 1]
+
+[example | description | pointer to more information | …] <!-- optional -->
+
+* Good, because [argument a]
+* Good, because [argument b]
+* Bad, because [argument c]
+* … <!-- numbers of pros and cons can vary -->
+
+=== [option 2]
+
+[example | description | pointer to more information | …] <!-- optional -->
+
+* Good, because [argument a]
+* Good, because [argument b]
+* Bad, because [argument c]
+* … <!-- numbers of pros and cons can vary -->
+
+=== [option 3]
+
+[example | description | pointer to more information | …] <!-- optional -->
+
+* Good, because [argument a]
+* Good, because [argument b]
+* Bad, because [argument c]
+* … <!-- numbers of pros and cons can vary -->
+
+== Links <!-- optional -->
+
+* [Link type] [Link to ADR] <!-- example: Refined by [ADR-0005](0005-example.md) -->
+* … <!-- numbers of links can vary -->
