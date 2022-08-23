@@ -12,28 +12,62 @@ v0.1, 2022-08-23
 
 == Context and Problem Statement
 
-TODO (later)
+Monitoring Spark applications usually involves two types of components: a history server and a metrics collection server.
+__In this document we will concern ourselves with the history server__. Using metrics for application monitoring requires
+a completely different set of protocols and technologies and is outside the scope of this document.
+
+The Spark histroy server is part of the Apache Spark distribution and it provides a web interface where application
+developers can vizualize events that took place during the lifetime of a job as well as the outcome of various job phases.
+
+In this document, we propose a way to add the Spark history server to the Kubernetes resources that are managed by the
+Spark-on-Kubernetes operator. We also describe how Spark application definitions can leverage the history server and
+how the resource definitions make use of standard Stackable descriptors for S3 storage.
+
+Even though using a history server is optional when running Spark applications on the Stackable platform, it is highly
+recommended to make use of it in production environments.
 
 == Decision Drivers
 
-* Support multiple history servers.
-* Integrate with the Stackable platform resource handling for S3 storage.
 * Ease of use / intuitive / checked
-
-== Considered Options
-(refine/remove later?)
-* 1. 
-* 2. 
+* Support multiple history servers per operator installation
+* Integrate with the Stackable platform resource handling for S3 storage
 
 == Decision Outcome
 
 Chosen option: TODO (after presentation to/consultation with team)
 
-== Pros and Cons of the Options <!-- optional -->
+== History Server Definition
 
-=== History Server CRD referenced by SparkApplication
+A history server is a separate entity, completely decoupled from any `SparkApplication`s. The Spark-on-k8s makes use of
+it only if available and if the Spark application developer has requested it. See the chapter below, on how `SparkApplication`s
+can request logging events to an existing history server.
 
-Example:
+The most important part of the history server definition is the location of the event files. This is specified in the
+`logFileDirectory` entry of the resource specification as shown below.
+
+[source,yaml]
+----
+  ...
+  logFileDirectory:
+    s3:
+      prefix: eventlogs/
+      bucket: # S3BucketDef
+        bucketName: spark-eventlogs
+        connection:
+          reference: eventlogs-s3-connection
+  ...
+----
+
+Here the event files are stored in the S3 bucket `spark-eventlogs` with the `eventlogs/` prefix. The complete definition
+of the S3 connection is specified is resolved by the operator from the `eventlogs-s3-connection` resource (not shown here).
+
+All Spark history properties can be defined in the `properties` section. The operator will make them available to the
+server at runtime. The operator makes no effort to validate these properties so extreme care must be taken making use
+of this section. In particular, properties concerning the event file storage can conflict with the definition provided
+in the `logFileDirectory` section and it's not recommended to set them here at all.
+
+Here is a complete example of a history server definition:
+
 [source,yaml]
 ----
 # Namespaced
@@ -55,7 +89,7 @@ spec:
   logFileDirectory:
     s3:
       prefix: eventlogs/
-      bucket: spark-eventlogs # S3BucketDef
+      bucket: # S3BucketDef
         inline:
           bucketName: spark-eventlogs
           connection:
@@ -65,6 +99,12 @@ spec:
               accessStyle: Path
               credentials:
                 secretClass: history-server-s3-credentials
+----
+
+== History Server Usage
+
+[source,yaml]
+----
 ---
 apiVersion: spark.stackable.tech/v1alpha1
 kind: SparkApplication
