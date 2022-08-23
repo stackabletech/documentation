@@ -1,0 +1,93 @@
+= ADR022: Spark history server
+Sönke Liebau <soenke.liebau@stackable.de>
+v0.1, 2022-08-23
+:status: pending
+
+* Status: {status}
+* Deciders:
+** Andrew Kenworthy
+** Sebastian Bernauer
+** Razvan Mihai
+* Date: 2022-06-07
+
+== Context and Problem Statement
+
+TODO
+
+== Decision Drivers
+
+* Support multiple history severs.
+* Integrate with the Stackable platform resource handling for S3 storage.
+
+== Considered Options
+
+* 1..
+* 2...
+
+== Decision Outcome
+
+Chosen option: TODO
+
+=== Positive Consequences <!-- optional -->
+
+* Lots
+* and lots
+
+=== Negative Consequences <!-- optional -->
+
+* None
+
+== Pros and Cons of the Options <!-- optional -->
+
+=== First option
+
+=== Second option
+
+Example:
+[source,yaml]
+----
+# Namespaced
+apiVersion: spark.stackable.tech/v1alpha1
+kind: SparkHistoryServer
+metadata:
+  name: history
+  namespace: default
+spec:
+  version: 3.3.0-stackable0.1.0
+  # flatten complex enum with variant s3 (hdfs later on)
+  s3:
+    prefix: eventlogs/
+    bucket: spark-eventlogs # S3BucketDef
+      inline:
+        bucketName: spark-eventlogs
+        connection:
+          inline:
+            host: minio
+            port: 9000
+            accessStyle: Path
+            credentials:
+              secretClass: history-server-s3-credentials
+---
+apiVersion: spark.stackable.tech/v1alpha1
+kind: SparkApplication
+metadata:
+  name: spark
+  namespace: default
+spec:
+  version: "1.0"
+  sparkImage: docker.stackable.tech/stackable/spark-k8s:3.3.0-stackable0.1.0
+  mode: cluster
+  eventLogs: # Optional complex enum. Currently only supports a reference to a history server
+    historyServer: reference
+  s3Connection: # Optional. Used for normal data operations.
+    inline:
+      host: minio
+      port: 9000
+      accessStyle: Path
+      credentials:
+        secretClass: application-s3-credentials
+
+# SparkApplication will read the host and port (endpoint) from the HistoryServer and assert that it's the same as given in the normal "data" s3Connection.
+# Afterwards it will set "spark.eventLog.enabled true" and (in case of S3)
+# spark.eventLog.dir s3a://<build from SparkHistoryServer.eventLogs.s3.bucket.bucketName and SparkHistoryServer.eventLogs.s3.prefix>
+----
