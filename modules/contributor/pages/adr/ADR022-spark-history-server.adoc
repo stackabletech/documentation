@@ -8,40 +8,30 @@ v0.1, 2022-08-23
 ** Andrew Kenworthy
 ** Sebastian Bernauer
 ** Razvan Mihai
-* Date: 2022-06-07
+* Date: 2022-08-23
 
 == Context and Problem Statement
 
-TODO
+TODO (later)
 
 == Decision Drivers
 
-* Support multiple history severs.
+* Support multiple history servers.
 * Integrate with the Stackable platform resource handling for S3 storage.
+* Ease of use / intuitive / checked
 
 == Considered Options
-
-* 1..
-* 2...
+(refine/remove later?)
+* 1. 
+* 2. 
 
 == Decision Outcome
 
-Chosen option: TODO
-
-=== Positive Consequences <!-- optional -->
-
-* Lots
-* and lots
-
-=== Negative Consequences <!-- optional -->
-
-* None
+Chosen option: TODO (after presentation to/consultation with team)
 
 == Pros and Cons of the Options <!-- optional -->
 
-=== First option
-
-=== Second option
+=== History Server CRD referenced by SparkApplication
 
 Example:
 [source,yaml]
@@ -54,19 +44,27 @@ metadata:
   namespace: default
 spec:
   version: 3.3.0-stackable0.1.0
-  # flatten complex enum with variant s3 (hdfs later on)
-  s3:
-    prefix: eventlogs/
-    bucket: spark-eventlogs # S3BucketDef
-      inline:
-        bucketName: spark-eventlogs
-        connection:
-          inline:
-            host: minio
-            port: 9000
-            accessStyle: Path
-            credentials:
-              secretClass: history-server-s3-credentials
+  properties: # list TODO names, objects?
+    - # compaction
+    - # retention/ttl
+    - # update interval
+    - # cleaner on/off - struct with default values?
+    - ...
+  cleaner: true | false # option of bool; default=false: sets spark.history.fs.cleaner.enabled=true
+  # complex enum with variant s3 (hdfs later on)
+  logFileDirectory:
+    s3:
+      prefix: eventlogs/
+      bucket: spark-eventlogs # S3BucketDef
+        inline:
+          bucketName: spark-eventlogs
+          connection:
+            inline:
+              host: minio
+              port: 9000
+              accessStyle: Path
+              credentials:
+                secretClass: history-server-s3-credentials
 ---
 apiVersion: spark.stackable.tech/v1alpha1
 kind: SparkApplication
@@ -78,7 +76,7 @@ spec:
   sparkImage: docker.stackable.tech/stackable/spark-k8s:3.3.0-stackable0.1.0
   mode: cluster
   eventLogs: # Optional complex enum. Currently only supports a reference to a history server
-    historyServer: reference
+    historyServer: history # reference, see above
   s3Connection: # Optional. Used for normal data operations.
     inline:
       host: minio
@@ -91,3 +89,9 @@ spec:
 # Afterwards it will set "spark.eventLog.enabled true" and (in case of S3)
 # spark.eventLog.dir s3a://<build from SparkHistoryServer.eventLogs.s3.bucket.bucketName and SparkHistoryServer.eventLogs.s3.prefix>
 ----
+
+=== Features (name?)
+
+- history server and data sources are intentionally constrained to use the same common endpoint
+  - future extension (addition of new fields) will involve only non-breaking changes (which would not be the case if separate distinct sources were implemented as a first step and then reversed later)
+  - removes danger of false configuration
