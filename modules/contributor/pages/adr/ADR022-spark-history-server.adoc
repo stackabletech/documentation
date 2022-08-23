@@ -95,3 +95,7 @@ spec:
 - history server and data sources are intentionally constrained to use the same common endpoint
   - future extension (addition of new fields) will involve only non-breaking changes (which would not be the case if separate distinct sources were implemented as a first step and then reversed later)
   - removes danger of false configuration
+  
+=== Future work
+
+- # not direct HS reference, but an S3BucketRef (with prefix) etc. so that different endpoints can be used/defined
