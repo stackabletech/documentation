@@ -103,6 +103,12 @@ spec:
 
 == History Server Usage
 
+Spark applications don't have to use a history server but it's highly recommended to do so in production environments.
+The section `eventLogs` of a `SparkApplication` instructs the operator to configure the application such that it can be
+monitored using the provided (and existing) history server.
+
+The example below shows the relevant configuration snippet of an application definition:
+
 [source,yaml]
 ----
 ---
@@ -114,28 +120,49 @@ metadata:
 spec:
   version: "1.0"
   sparkImage: docker.stackable.tech/stackable/spark-k8s:3.3.0-stackable0.1.0
-  mode: cluster
   eventLogs: # Optional complex enum. Currently only supports a reference to a history server
     historyServer: history # reference, see above
-  s3Connection: # Optional. Used for normal data operations.
+  s3bucket: # Optional. Used for normal data operations.
     inline:
       host: minio
       port: 9000
       accessStyle: Path
       credentials:
         secretClass: application-s3-credentials
-
-# SparkApplication will read the host and port (endpoint) from the HistoryServer and assert that it's the same as given in the normal "data" s3Connection.
-# Afterwards it will set "spark.eventLog.enabled true" and (in case of S3)
-# spark.eventLog.dir s3a://<build from SparkHistoryServer.eventLogs.s3.bucket.bucketName and SparkHistoryServer.eventLogs.s3.prefix>
+...
 ----
 
-=== Features (name?)
+In the example above, the application will log it's events to the history server instance referenced with:
+[source,yaml]
+----
+  eventLogs:
+    historyServer: history
+----
 
-- history server and data sources are intentionally constrained to use the same common endpoint
-  - future extension (addition of new fields) will involve only non-breaking changes (which would not be the case if separate distinct sources were implemented as a first step and then reversed later)
-  - removes danger of false configuration
+In addition, the application processes data from a S3 buucket configured within the `s3bucket` section of the specification.
+
+The operator will read the host and port (endpoint) from the `HistoryServer` and compare them with the equivalent fields
+used of the "data" `s3bucket`. If these fields match, it will set `spark.eventLog.enabled` property to `true` and will
+construct the `spark.eventLog.dir` from `s3a://<SparkHistoryServer.eventLogs.s3.bucket.bucketName/<SparkHistoryServer.eventLogs.s3.prefix>`.
+
+=== Constraints
+
+The constraint with the highest impact with this approach is that, `SparkApplications` can only log events
+to the same S3 endpoint they use for data processing. In addition, `SparkApplications` use the same credentials to log
+events to S3 as well as process data from the same service.
+
+NOTE: the credentials used by the `HistoryServer` *do not* have to be shared with `SparkApplications`.
+
+This constraint is a consious design decision and a compromise between flexibilty and ease of use.
+
+=== Advantages
+
+Referencing the history server instance directly from a Spark application makes it clear where the event files are stored
+and ensures there is a single point of configuration for this location, namely in the `HistoryServer` specification.
+
+This approach allows for future extensions (addition of new fields) to the log storage to be implemented in a non-breaking fashion (which would not be the case if separate distinct sources were implemented as a first step and then reversed later).
   
 === Future work
 
-- # not direct HS reference, but an S3BucketRef (with prefix) etc. so that different endpoints can be used/defined
+Future changes might allow decoupling the `SparkApplication` from the history server reference by implementing
+direct referrences to the event storage.
