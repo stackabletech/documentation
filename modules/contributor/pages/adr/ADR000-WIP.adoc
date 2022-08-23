@@ -11,6 +11,10 @@ Technical Story: [description | ticket/issue URL] <!-- optional -->
 
 == Context and Problem Statement
 
+Some services need to know their own address to tell the address to clients. For outsite access to a pod, this address will be a node port, not the overlay network IP/pod name.
+
+For certain processes/pods we want to have a sticky address, one that doesn't change even if the Pod is restarted or crashes and is replaced. For example for an HDFS NameNode, where the client might cache the address of the NameNode.
+
 Some services (such as HDFS NameNodes) require a single persistent network identity per replica. In this scenario, clients want to connect
 to a specific replica (such as the active NameNode) and do their own client-side failover and load balancing.
 
@@ -21,20 +25,34 @@ to a specific replica (such as the active NameNode) and do their own client-side
 * This document is primarily about control-plane traffic, so performance is not a top priority and extra hops are acceptable
 * On-prem customers will often not have any kind of network-level load balancing (at least not one that is configurable by K8s)
 * Cloud customers will often have relatively short-lived K8s nodes
+*
 
 == Considered Options
 
+An Operator that is deployed using a DaemonSet which mounts config files into all pods based on the PVC/CSI mechanism. Through the PVC it can tell the pod its actual outside NodePort address.
+
+Communication flow:
+- The HDFS Operator requests a PVC of the lb.stackable.tech type. In the annotations it can requiest the lb class.
+- The lb operator provisions a service for the volume request. It reads the NodePort IP and port.
+- The lb operator provisions the volumes with files inside containing information about the pods outside address and port. Because of the PVC it knows which pod the volume will be mounted into, and can find out the nodeport that belongs to the pod.
+- the operator already provisioned the pod with a script that read the files into environment variables which are then read by HDFS. This part is product specific.
+
+The way the operator requests the volume is identical for all pods: it always requests a volume with the same type (i.e. nodeport lb).
+
 * Export NodePort services per pod (identity)
 * Export LoadBalancer services per pod (identity)
-* ¤
-* 
-* [option 2]
-* [option 3]
-* … <!-- numbers of options can vary -->
+
+Pros:
+
+* There's no little to know routing overhead (compared to proxying or similar)
+
+Cons:
+
+* Products like HDFS and Kafka only support having a single address. This means that if outside access with the lb operator is configured, all traffic will be routed that way
 
 == Decision Outcome
 
-Chosen option: "[option 1]", because [justification. e.g., only option, which meets k.o. criterion decision driver | which resolves force force | … | comes out best (see below)].
+There is only one design, which is already in its implementation.
 
 === Positive Consequences <!-- optional -->
 
