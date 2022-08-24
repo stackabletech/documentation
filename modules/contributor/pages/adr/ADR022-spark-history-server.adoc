@@ -155,7 +155,7 @@ The constraint with the highest impact with this approach is that `SparkApplicat
 to the same S3 endpoint they use for data processing. In addition, `SparkApplications` use the same credentials to log
 events to S3 as well as process data from the same service.
 
-NOTE: the credentials used by the `HistoryServer` *do not* have to be shared with `SparkApplications`.
+NOTE: the credentials used by the `HistoryServer` *do not* have to be shared with `SparkApplication`s.
 
 This constraint is a consious design decision and a compromise between flexibilty and ease of use.
 
