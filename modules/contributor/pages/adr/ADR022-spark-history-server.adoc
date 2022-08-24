@@ -169,4 +169,4 @@ This approach allows for future extensions (addition of new fields) to the log s
 === Future work
 
 Future changes might allow decoupling the `SparkApplication` from the history server reference by implementing
-direct referrences to the event storage.
+direct references to the event storage.
