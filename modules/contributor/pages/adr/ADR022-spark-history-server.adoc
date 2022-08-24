@@ -134,7 +134,7 @@ spec:
 ...
 ----
 
-In the example above, the application will log it's events to the history server instance referenced with:
+In the example above, the application will log its events to the history server instance referenced with:
 [source,yaml]
 ----
   eventLogs:
