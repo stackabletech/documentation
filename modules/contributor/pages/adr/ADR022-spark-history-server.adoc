@@ -143,7 +143,7 @@ In the example above, the application will log its events to the history server 
       namespace: default # optional
 ----
 
-In addition, the application processes data from a S3 buucket configured within the `s3bucket` section of the specification.
+In addition, the application processes data from a S3 bucket configured within the `s3connection` section of the specification.
 
 The operator will read the host and port (endpoint) from the `HistoryServer` and compare them with the equivalent fields
 used of the "data" `s3bucket`. If these fields match, it will set `spark.eventLog.enabled` property to `true` and will
