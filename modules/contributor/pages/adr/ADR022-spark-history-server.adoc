@@ -59,7 +59,7 @@ The most important part of the history server definition is the location of the 
 ----
 
 Here the event files are stored in the S3 bucket `spark-eventlogs` with the `eventlogs/` prefix. The complete definition
-of the S3 connection is specified is resolved by the operator from the `eventlogs-s3-connection` resource (not shown here).
+of the specified S3 connection is resolved by the operator from the `eventlogs-s3-connection` resource (not shown here).
 
 All Spark history properties can be defined in the `properties` section. The operator will make them available to the
 server at runtime. The operator makes no effort to validate these properties so extreme care must be taken making use
