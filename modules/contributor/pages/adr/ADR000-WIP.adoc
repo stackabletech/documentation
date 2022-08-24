@@ -58,8 +58,6 @@ Cons:
 * Products like HDFS and Kafka only support having a single address. This means that if outside access with the lb operator is configured, all traffic will be routed that way.
 * It is another DaemonSet Operator, which means more stuff that is running. It is also not clear how we will get this certified with OpenShift.
 
-// TODO write positive and negative consequences
-
 == Other notes
 
 === Spiked Alternative: MetalLB
