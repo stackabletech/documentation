@@ -151,7 +151,7 @@ construct the `spark.eventLog.dir` from `s3a://<SparkHistoryServer.eventLogs.s3.
 
 === Constraints
 
-The constraint with the highest impact with this approach is that, `SparkApplications` can only log events
+The constraint with the highest impact with this approach is that `SparkApplications` can only log events
 to the same S3 endpoint they use for data processing. In addition, `SparkApplications` use the same credentials to log
 events to S3 as well as process data from the same service.
 
