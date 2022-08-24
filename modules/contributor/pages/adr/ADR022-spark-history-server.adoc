@@ -1,7 +1,7 @@
 = ADR022: Spark history server
 Razvan-Daniel Mihai<razvan.mihai@stackable.tech>
 v0.1, 2022-08-23
-:status: pending
+:status: accepted
 
 * Status: {status}
 * Deciders:
