@@ -38,7 +38,7 @@ Chosen option: TODO (after presentation to/consultation with team)
 
 == History Server Definition
 
-A history server is a separate entity, completely decoupled from any `SparkApplication`s. The Spark-on-k8s makes use of
+A history server is a separate entity, completely decoupled from any `SparkApplication`s. The Spark-on-k8s operator makes use of
 it only if available and if the Spark application developer has requested it. See the chapter below, on how `SparkApplication`s
 can request logging events to an existing history server.
 
