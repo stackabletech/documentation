@@ -84,7 +84,7 @@ spec:
     - # update interval
     - # cleaner on/off - struct with default values?
     - ...
-  cleaner: true | false # option of bool; default=false: sets spark.history.fs.cleaner.enabled=true
+  cleaner: true # option of bool; default=false: sets spark.history.fs.cleaner.enabled=true
   # complex enum with variant s3 (hdfs later on)
   logFileDirectory:
     s3:
@@ -121,8 +121,10 @@ spec:
   version: "1.0"
   sparkImage: docker.stackable.tech/stackable/spark-k8s:3.3.0-stackable0.1.0
   eventLogs: # Optional complex enum. Currently only supports a reference to a history server
-    historyServer: history # reference, see above
-  s3bucket: # Optional. Used for normal data operations.
+    historyServer:
+      name: history # reference, see above
+      namespace: default # optional
+  s3connection: # Optional. Used for normal data operations.
     inline:
       host: minio
       port: 9000
@@ -136,7 +138,9 @@ In the example above, the application will log it's events to the history server
 [source,yaml]
 ----
   eventLogs:
-    historyServer: history
+    historyServer:
+      name: history # reference, see above
+      namespace: default # optional
 ----
 
 In addition, the application processes data from a S3 buucket configured within the `s3bucket` section of the specification.
