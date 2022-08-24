@@ -16,7 +16,7 @@ Monitoring Spark applications usually involves two types of components: a histor
 __In this document we will concern ourselves with the history server__. Using metrics for application monitoring requires
 a completely different set of protocols and technologies and is outside the scope of this document.
 
-The Spark histroy server is part of the Apache Spark distribution and it provides a web interface where application
+The Spark history server is part of the Apache Spark distribution and it provides a web interface where application
 developers can vizualize events that took place during the lifetime of a job as well as the outcome of various job phases.
 
 In this document, we propose a way to add the Spark history server to the Kubernetes resources that are managed by the
