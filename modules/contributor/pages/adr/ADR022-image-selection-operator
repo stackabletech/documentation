@@ -1,0 +1,120 @@
+= ADR022: Image selection with operators
+Maxi Wittich <maximilian.wittich@stackable.tech>
+v0.1, 2022-08-24
+:status: pending
+
+* Deciders:
+** Malte Sander
+** Sebastian Bernauer
+** Maximilian Wittich
+** Lars Franke (absent)
+** Soenke Liebau (absent)
+
+* Date: 22-08-24
+
+== Current State (example superset)
+
+apiVersion: superset.stackable.tech/v1alpha1
+kind: SupersetCluster
+metadata:
+  name: superset
+spec:
+  version: 1.4.1-stackable2.1.0
+  statsdExporterVersion: v0.22.4
+  credentialsSecret: superset-credentials
+  loadExamplesOnInit: false
+  nodes:
+    roleGroups:
+      default:
+        replicas: 1
+
+== Options and their pro and cons
+
+# Option 1 (non-breaking)
+version: 1.4.1-stackable2.1.0 # optional (currently operator will error out but in the future according to ADR 18 operator should pick a good version automatically)
+imageRepository: docker.stackable.tech/stackable/superset # Option<String>
+
+Good because
+* Users can specify ""version: 1.4.1"" and the operator will resolve it to ""1.4.1-stackable2.1.0"" (or whatever stackable versions works for *him*). This mechanism continues working. For this to work the customers needs to mirror the exact same tags as we at Stackable have (he can't rename the tags).
+
+
+# Option 2 (non-breaking brecause mechanism from 1 is not implemented yet)
+version: 1.4.1-stackable2.1.0 # optional (currently operator will error out but in the future according to ADR 18 operator should pick a good version automaically)
+image: docker.stackable.tech/stackable/superset:1.4.1-stackable2.1.0 # Option<String>. Will overwrite version (if specified)
+Bad because
+* Mechanism explain in Option 1 breaks.
+
+
+# Option 3 (breaking)
+image:
+  version: 1.4.1-stackable2.1.0 # optional (currently operator will error out but in the future according to ADR 18 operator should pick a good version automaically)
+  imageRepository: docker.stackable.tech/stackable/superset # Option<String>
+
+Bad because
+* breaking change
+* version can only contain the product version (e.g. ""1.4.1""). Having this ""hidden"" under image may seem like an implemtation detail to the user. It can be argued that version is important enough to be a top-level field.  
+
+
+# Option 4 (non-breaking)
+version: 1.4.1-stackable2.1.0 # optional (currently operator will error out but in the future according to ADR 18 operator should pick a good version automatically)
+imageOverwrite: # Option<struct>
+  repository: docker.stackable.tech/stackable/superset # String
+  tag: 1.4.1-stackable2.1.0 # Option<String>. Will overwrite tag (the specified version is ignored/overwriten)
+
+Good because
+* when only imageOverwrite.repository is specified, it's the same as option 1 whith all the benefits
+* when imageOverwrite.repository and imageOverwrite.tag is specified, it's the same as option 2 whith all the benefits
+
+
+# Option 5 (breaking)
+image: # mandatory complex enum
+  stackableImageTag: 1.4.1-stackable2.1.0 # String
+  # OR
+  custom: docker.stackable.tech/stackable/superset:1.4.1-stackable2.1.0 # String
+  # OR (later on)
+  stackableVersion: 1.4.1 # String
+  # OR (later on)
+  recommendedVersion: true # needs to be set to true. if set to false operator will error out
+
+Notes:
+* We want to start with the first two variants "stackableImageTag" and "custom". The "magicVersionResolving" variant _might_ be added later on.
+Good because:
+* Gives all flexibility of all previous options
+* We can non-breaking introduce new "magic" in the future by adding new image enum variants
+* We can implement it as enum called e.g. "ImageSpec" in operator-rs which will offer a function like "resolve_image" that will make it easy for operators to use
+
+== Possible use cases
+
+* use Stackable repo
+** users specified version 1.4.1-stackable2.1.0
+=> operator should use image docker.stackable.tech/stackable/superset:1.4.1-stackable2.1.0
+** users specified version 1.4.1
+=> operator should use image docker.stackable.tech/stackable/superset:1.4.1-stackable2.1.0 based on compability knowledge (which operator works with which image)
+** users specifies no version
+=> operator should use image docker.stackable.tech/stackable/superset:1.4.1-stackable2.1.0 based on recommended product version of the release/operator and knowledge (which operator works with which image)
+
+* use self-hosted (mirrored) repo
+** users specified version 1.4.1-stackable2.1.0 and imageRepository my.corp/superset
+=> operator should use image my.corp/superset:1.4.1-stackable2.1.0 based on imageRepository
+=> Equivalent to user saying use the image "my.corp/superset:1.4.1-stackable2.1.0"
+** users specified version 1.4.1 and imageRepository my.corp/superset
+=> operator should use image my.corp/superset:1.4.1-stackable2.1.0 based on imageRepository and compability knowledge (which operator works with which image)
+=> Equivalent to user saying use the image "my.corp/superset:1.4.1-stackable2.1.0"
+=> NOT equivalent to user saying use the image "my.corp/superset:1.4.1"
+=> When specifing the image directly users loose the ability to let the operator determine its compatible stackable image version
+
+== Decision Drivers
+
+* One time work to create a flexible and extendable solution for possible use cases
+* Preserve the possibility of magic version completition of operators for images (e.g. superset:1.4.1 => superset:1.4.1-stackable2.1.0) 
+
+== Decision Outcome
+
+Antendees made the decision for Option 5, since it covers almost all use cases except that with costum repositories the autocompletion magic will not work.
+We think, that this is a corner case because the probability of a user mirroring our whole image repository (docker.stackable.tech/stackable) to a custom repository
+and still want the magic mechanism to work seems to be small.
+Furthermore, Option 5 will provide enough flexibility to effortless build that specific usecase if really needed.
+
+== Open To-Do's
+
+[ ] Soenke and/or Lars have to review and decide wether to accept the proposal.
