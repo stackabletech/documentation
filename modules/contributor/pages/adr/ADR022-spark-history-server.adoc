@@ -1,5 +1,5 @@
 = ADR022: Spark history server
-Sönke Liebau <soenke.liebau@stackable.de>
+Razvan-Daniel Mihai<razvan.mihai@stackable.tech>
 v0.1, 2022-08-23
 :status: pending
 
@@ -31,10 +31,6 @@ recommended to make use of it in production environments.
 * Ease of use / intuitive / checked
 * Support multiple history servers per operator installation
 * Integrate with the Stackable platform resource handling for S3 storage
-
-== Decision Outcome
-
-Chosen option: TODO (after presentation to/consultation with team)
 
 == History Server Definition
 
