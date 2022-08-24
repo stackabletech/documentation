@@ -1,4 +1,4 @@
-= Networking with persistent identity
+= How to provide out-of-cluster access for products with built-in routing
 Doc Writer <doc.writer@asciidoctor.org>
 v0.1, YYYY-MM-DD
 :status: draft
@@ -10,93 +10,59 @@ v0.1, YYYY-MM-DD
 Technical Story: [description | ticket/issue URL] <!-- optional -->
 
 == Context and Problem Statement
+// Describe the context and problem statement, e.g., in free form using two to three sentences. You may want to articulate the problem in form of a question.
 
-Some services need to know their own address to tell the address to clients. For outsite access to a pod, this address will be a node port, not the overlay network IP/pod name.
+Some products like HDFS and Kafka don't use a single router or portal node to access the cluster, but have the client access multiple nodes. For example, HDFS name nodes will tell the client where data can be found (hostname/IP and port), the client is then expected to connect directly to a specific data node. Similarly for Kafka and topic shards.
 
-For certain processes/pods we want to have a sticky address, one that doesn't change even if the Pod is restarted or crashes and is replaced. For example for an HDFS NameNode, where the client might cache the address of the NameNode.
+Problem:
 
-Some services (such as HDFS NameNodes) require a single persistent network identity per replica. In this scenario, clients want to connect
-to a specific replica (such as the active NameNode) and do their own client-side failover and load balancing.
+* In our current setup, there's no way to connect to a specific replica in a StatefulSet or Deployement.
+* The hostname and IP that the pods know about themselves is from _inside_ the cluster. The IP only works inside the overlay network.
+* Clients might cache data locations that the received, and Kubernetes might move pods around. For some routing solutions, this can be a problem. (Stickiness)
 
-[Describe the context and problem statement, e.g., in free form using two to three sentences. You may want to articulate the problem in form of a question.]
+== Decision Drivers
+// Which criteria are useful to evaluate solutions?
 
-== Decision Drivers <!-- optional -->
-
-* This document is primarily about control-plane traffic, so performance is not a top priority and extra hops are acceptable
+* At least for HDFS, connections to individual pods will be used to transmit data, this means that performance is relevant.
 * On-prem customers will often not have any kind of network-level load balancing (at least not one that is configurable by K8s)
 * Cloud customers will often have relatively short-lived K8s nodes
-*
+* The solution should be minimally invasive - no large setups required outside of the cluster
 
-== Considered Options
+== Implemented Solution
 
-An Operator that is deployed using a DaemonSet which mounts config files into all pods based on the PVC/CSI mechanism. Through the PVC it can tell the pod its actual outside NodePort address.
+A solution was implemented.
 
-Communication flow:
-- The HDFS Operator requests a PVC of the lb.stackable.tech type. In the annotations it can requiest the lb class.
-- The lb operator provisions a service for the volume request. It reads the NodePort IP and port.
-- The lb operator provisions the volumes with files inside containing information about the pods outside address and port. Because of the PVC it knows which pod the volume will be mounted into, and can find out the nodeport that belongs to the pod.
-- the operator already provisioned the pod with a script that read the files into environment variables which are then read by HDFS. This part is product specific.
+There is a new lb-operator (name still not final) which runs as a DaemonSet and uses a CSI plugin to provide pseudo storage with files in it with information about the outside connection of the Pod.
 
-The way the operator requests the volume is identical for all pods: it always requests a volume with the same type (i.e. nodeport lb).
+Communication flow example using the HDFS Operator:
+- The HDFS Operator requests a PVC of the lb.stackable.tech type. In the annotations it can request the lb class (`nodeport`, `loadbalancer`), for this example it'll be the `nodeport` type.
+- The lb operator provisions a NodePort Service for the volume request, which means a Service per Pod. It reads the NodePort IP and port.
+- The lb operator provisions the volumes with files inside containing information about the pods outside address and port - The IP and port of the NodePort Service. Because of the PVC it knows which pod the volume will be mounted into, and can find out the NodePort that belongs to the pod.
+- the operator already provisioned the pod with a script that read the files from the mounted volume into environment variables which are then read by HDFS. This part is product specific.
 
-* Export NodePort services per pod (identity)
-* Export LoadBalancer services per pod (identity)
-
-Pros:
-
-* There's no little to know routing overhead (compared to proxying or similar)
-* The lb operator can be extended to support more LoadBalancerClasses.
-* It is a very low-friction solution that doesn't require a lot of permissions to set up
-
-
-Cons:
-
-* Products like HDFS and Kafka only support having a single address. This means that if outside access with the lb operator is configured, all traffic will be routed that way
+The way the operator requests the volume is identical for all pods: it always requests a volume with the same type (i.e. `nodeport`).
 
 == Decision Outcome
 
 There is only one design, which is already in its implementation.
 
-=== Positive Consequences <!-- optional -->
 
-* [e.g., improvement of quality attribute satisfaction, follow-up decisions required, …]
-* …
+Pros:
 
-=== Negative Consequences <!-- optional -->
+* There's no little to know routing overhead (compared to proxying or similar).
+* The lb operator can be extended to support more LoadBalancerClasses.
+* It is a very low-friction solution that doesn't require a lot of permissions to set up.
 
-* [e.g., compromising quality attribute, follow-up decisions required, …]
-* …
+Cons:
 
-== Pros and Cons of the Options <!-- optional -->
+* Products like HDFS and Kafka only support having a single address. This means that if outside access with the lb operator is configured, all traffic will be routed that way.
+* It is another DaemonSet Operator, which means more stuff that is running. It is also not clear how we will get this certified with OpenShift.
 
-=== [option 1]
+// TODO write positive and negative consequences
 
-[example | description | pointer to more information | …] <!-- optional -->
+== Other notes
 
-* Good, because [argument a]
-* Good, because [argument b]
-* Bad, because [argument c]
-* … <!-- numbers of pros and cons can vary -->
+=== Spiked Alternative: MetalLB
+See: https://metallb.universe.tf/
 
-=== [option 2]
-
-[example | description | pointer to more information | …] <!-- optional -->
-
-* Good, because [argument a]
-* Good, because [argument b]
-* Bad, because [argument c]
-* … <!-- numbers of pros and cons can vary -->
-
-=== [option 3]
-
-[example | description | pointer to more information | …] <!-- optional -->
-
-* Good, because [argument a]
-* Good, because [argument b]
-* Bad, because [argument c]
-* … <!-- numbers of pros and cons can vary -->
-
-== Links <!-- optional -->
-
-* [Link type] [Link to ADR] <!-- example: Refined by [ADR-0005](0005-example.md) -->
-* … <!-- numbers of links can vary -->
+SpikeLB is a bare metal load balancer that was spiked briefly. However it requires BGP integration, which is not feasible as a requirement for customer installations.
