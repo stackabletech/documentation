@@ -18,23 +18,22 @@ Problem:
 
 * In our current setup, there's no way to connect to a specific replica in a StatefulSet or Deployement.
 * The hostname and IP that the pods know about themselves is from _inside_ the cluster. The IP only works inside the overlay network.
-* Clients might cache data locations that the received, and Kubernetes might move pods around. For some routing solutions, this can be a problem. (Stickiness)
+* Clients might cache data locations that they received, and Kubernetes might move pods around. For some routing solutions, this can be a problem. (Stickiness)
 
 == Decision Drivers
 // Which criteria are useful to evaluate solutions?
 
 * At least for HDFS, connections to individual pods will be used to transmit data, this means that performance is relevant.
-* On-prem customers will often not have any kind of network-level load balancing (at least not one that is configurable by K8s)
-* Cloud customers will often have relatively short-lived K8s nodes
-* The solution should be minimally invasive - no large setups required outside of the cluster
+* On-prem customers will often not have any kind of network-level load balancing (at least not one that is configurable by K8s).
+* Cloud customers will often have relatively short-lived K8s nodes.
+* The solution should be minimally invasive - no large setups required outside of the cluster.
 
 == Implemented Solution
-
-A solution was implemented.
 
 There is a new lb-operator (name still not final) which runs as a DaemonSet and uses a CSI plugin to provide pseudo storage with files in it with information about the outside connection of the Pod.
 
 Communication flow example using the HDFS Operator:
+
 - The HDFS Operator requests a PVC of the lb.stackable.tech type. In the annotations it can request the lb class (`nodeport`, `loadbalancer`), for this example it'll be the `nodeport` type.
 - The lb operator provisions a NodePort Service for the volume request, which means a Service per Pod. It reads the NodePort IP and port.
 - The lb operator provisions the volumes with files inside containing information about the pods outside address and port - The IP and port of the NodePort Service. Because of the PVC it knows which pod the volume will be mounted into, and can find out the NodePort that belongs to the pod.
@@ -49,7 +48,7 @@ There is only one design, which is already in its implementation.
 
 Pros:
 
-* There's no little to know routing overhead (compared to proxying or similar).
+* There is little routing overhead (compared to proxying or similar).
 * The lb operator can be extended to support more LoadBalancerClasses.
 * It is a very low-friction solution that doesn't require a lot of permissions to set up.
 
