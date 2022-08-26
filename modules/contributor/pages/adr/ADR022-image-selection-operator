@@ -15,19 +15,8 @@ v0.1, 2022-08-24
 
 == Current State (example superset)
 
-apiVersion: superset.stackable.tech/v1alpha1
-kind: SupersetCluster
-metadata:
-  name: superset
 spec:
   version: 1.4.1-stackable2.1.0
-  statsdExporterVersion: v0.22.4
-  credentialsSecret: superset-credentials
-  loadExamplesOnInit: false
-  nodes:
-    roleGroups:
-      default:
-        replicas: 1
 
 == Options and their pro and cons
 
