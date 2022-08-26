@@ -14,9 +14,20 @@ v0.1, 2022-08-24
 * Date: 22-08-24
 
 == Current State (example superset)
-
+[source,yaml]
 spec:
   version: 1.4.1-stackable2.1.0
+----
+
+  Currently you need to state a fully qualified image name. This can only be a Image from stackable/ repository. In order to give the user the opportunity to provide a own repository, mirror our repository or provide a complete own image, we'd like to propose a solution for it.
+
+== Decision Drivers
+
+* One time work to create a flexible and extendable solution for possible use cases
+* Preserve the possibility of magic version completition of operators for images (e.g. superset:1.4.1 => superset:1.4.1-stackable2.1.0)
+* allow the user to easily paste in a complete image name
+* allow users to use some defaults, allow them to only override certain things
+
 
 == Options and their pro and cons
 
@@ -93,10 +104,6 @@ Good because:
 => NOT equivalent to user saying use the image "my.corp/superset:1.4.1"
 => When specifing the image directly users loose the ability to let the operator determine its compatible stackable image version
 
-== Decision Drivers
-
-* One time work to create a flexible and extendable solution for possible use cases
-* Preserve the possibility of magic version completition of operators for images (e.g. superset:1.4.1 => superset:1.4.1-stackable2.1.0) 
 
 == Decision Outcome
 
@@ -104,6 +111,8 @@ Antendees made the decision for Option 5, since it covers almost all use cases e
 We think, that this is a corner case because the probability of a user mirroring our whole image repository (docker.stackable.tech/stackable) to a custom repository
 and still want the magic mechanism to work seems to be small.
 Furthermore, Option 5 will provide enough flexibility to effortless build that specific usecase if really needed.
+
+Technically we want to realise that with complex enums.
 
 == Open To-Do's
 
