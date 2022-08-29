@@ -1,0 +1,124 @@
+= ADR023: Product image selection
+Maxi Wittich <maximilian.wittich@stackable.tech>, Sebastian Bernauer <sebastian.bernauer@stackable.tech>
+v0.1, 2022-08-24
+:status: pending
+
+* Deciders:
+** Malte Sander
+** Sebastian Bernauer
+** Felix Henning
+** Maximilian Wittich
+* Date: 2022-08-24
+
+== Context and Problem Statement
+Currently users have to specify the full image tag in the Products CRD.
+
+[source,yaml]
+----
+spec:
+  version: 1.4.1-stackable2.1.0
+----
+
+This must be a tag belonging to an image from the stackable repository. In order to give the user the opportunity to provide a own repository, mirror our repository or provide a complete own image, we'd like to propose a solution for it.
+
+== Decision Drivers
+
+* Flexible and extendable solution for possible use cases
+* Preserve the possibility of magic version completion of operators for images (e.g. `superset:1.4.1` => `superset:1.4.1-stackable2.1.0`)
+* Allow the user to easily paste in a complete image name
+* Allow users to use some defaults, allow them to only override certain things
+
+In detail we used the following use-cases to drive the decision:
+
+* use Stackable repo
+** users specified version 1.4.1-stackable2.1.0
+=> operator should use image docker.stackable.tech/stackable/superset:1.4.1-stackable2.1.0
+** users specified version 1.4.1
+=> operator should use image docker.stackable.tech/stackable/superset:1.4.1-stackable2.1.0 based on compatibility knowledge (which operator works with which image)
+** users specifies no version
+=> operator should use image docker.stackable.tech/stackable/superset:1.4.1-stackable2.1.0 based on recommended product version of the release/operator and knowledge (which operator works with which image)
+
+* use self-hosted (mirrored) repo
+** users specified version 1.4.1-stackable2.1.0 and imageRepository my.corp/superset
+=> operator should use image my.corp/superset:1.4.1-stackable2.1.0 based on imageRepository
+=> Equivalent to user saying use the image "my.corp/superset:1.4.1-stackable2.1.0"
+** users specified version 1.4.1 and imageRepository my.corp/superset
+=> operator should use image my.corp/superset:1.4.1-stackable2.1.0 based on imageRepository and compatibility knowledge (which operator works with which image)
+=> Equivalent to user saying use the image "my.corp/superset:1.4.1-stackable2.1.0"
+=> NOT equivalent to user saying use the image "my.corp/superset:1.4.1"
+=> When specifying the image directly users loose the ability to let the operator determine its compatible stackable image version
+
+
+== Decision Outcome
+
+Chosen option: "<<option5,Option 5>>" because it covers almost all use cases.
+The only exception is that with custom repositories the autocompletion magic will not work.
+We think, that this is a corner case because the probability of a user mirroring our whole image repository (docker.stackable.tech/stackable) to a custom repository and still want the magic mechanism to work seems to be small.
+Furthermore, Option 5 will provide enough flexibility to build that specific feature if really needed by adding a new enum variant.
+
+== Pros and Cons of the Options
+
+=== Option 1
+[source,yaml]
+----
+version: 1.4.1-stackable2.1.0 # optional (currently operator will error out but in the future according to ADR 18 operator should pick a good version automatically)
+imageRepository: docker.stackable.tech/stackable/superset # Option<String>
+----
+
+* Good, because it's non-breaking
+* Good, because users can specify `version: 1.4.1` and the operator will resolve it to `1.4.1-stackable2.1.0` (or whatever stackable versions works for *him*). This mechanism continues working. For this to work the customers needs to mirror the exact same tags as we at Stackable have (he can't rename the tags).
+
+=== Option 2
+[source,yaml]
+----
+version: 1.4.1-stackable2.1.0 # optional (currently operator will error out but in the future according to ADR 18 operator should pick a good version automatically)
+image: docker.stackable.tech/stackable/superset:1.4.1-stackable2.1.0 # Option<String>. Will overwrite version (if specified)
+----
+
+* Good, because it's non-breaking because mechanism from Option 1 is not implemented yet
+* Bad, because mechanism explain in Option 1 breaks.
+
+=== Option 3
+[source,yaml]
+----
+image:
+  version: 1.4.1-stackable2.1.0 # optional (currently operator will error out but in the future according to ADR 18 operator should pick a good version automatically)
+  imageRepository: docker.stackable.tech/stackable/superset # Option<String>
+----
+
+* Bad, because it's breaking
+* Bad, because versions can only contain the product version (e.g. `1.4.1`). Having this "hidden" under image may seem like an implementation detail to the user. It can be argued that version is important enough to be a top-level field.  
+
+=== Option 4
+[source,yaml]
+----
+version: 1.4.1-stackable2.1.0 # optional (currently operator will error out but in the future according to ADR 18 operator should pick a good version automatically)
+imageOverwrite: # Option<struct>
+  repository: docker.stackable.tech/stackable/superset # String
+  tag: 1.4.1-stackable2.1.0 # Option<String>. Will overwrite tag (the specified version is ignored/overwritten)
+----
+
+* Good, because it's non-breaking
+* Good, because when only `imageOverwrite.repository` is specified, it's the same as option 1 with all the benefits
+* Good, because when `imageOverwrite.repository` and `imageOverwrite.tag` is specified, it's the same as option 2 with all the benefits
+
+[[option5]]
+=== Option 5
+[source,yaml]
+----
+image: # mandatory complex enum
+  stackableImageTag: 1.4.1-stackable2.1.0 # String
+  # OR
+  custom: docker.stackable.tech/stackable/superset:1.4.1-stackable2.1.0 # String
+  # OR (later on)
+  stackableVersion: 1.4.1 # String
+  # OR (later on)
+  recommendedVersion: true # needs to be set to true. if set to false operator will error out
+----
+
+We want to start with the first two variants `stackableImageTag` and `custom`. The `magicVersionResolving` and `recommendedVersion` variants _might_ be added later on.
+
+* Bad, because it's breaking
+* Good, because it gives all flexibility of all previous options
+* Good, because we can non-breaking introduce new "magic" in the future by adding new image enum variants
+* Good, because we can implement it as enum called e.g. `ImageSpec` in operator-rs which will offer a function like `resolve_image` that will make it easy for operators to use
