@@ -116,10 +116,19 @@ metadata:
 spec:
   version: "1.0"
   sparkImage: docker.stackable.tech/stackable/spark-k8s:3.3.0-stackable0.1.0
-  eventLogs: # Optional complex enum. Currently only supports a reference to a history server
-    historyServer:
-      name: history # reference, see above
-      namespace: default # optional
+  logFileDirectory:
+    s3:
+      prefix: eventlogs/
+      bucket: # S3BucketDef
+        inline:
+          bucketName: spark-eventlogs
+          connection:
+            inline:
+              host: minio
+              port: 9000
+              accessStyle: Path
+              credentials:
+                secretClass: eventlogs-s3-credentials
   s3connection: # Optional. Used for normal data operations.
     inline:
       host: minio
@@ -130,15 +139,7 @@ spec:
 ...
 ----
 
-In the example above, the application will log its events to the history server instance referenced with:
-[source,yaml]
-----
-  eventLogs:
-    historyServer:
-      name: history # reference, see above
-      namespace: default # optional
-----
-
+In the example above, the application will log its events to the bucket specifed in `logFileDirectory`.
 In addition, the application processes data from a S3 bucket configured within the `s3connection` section of the specification.
 
 The operator will read the host and port (endpoint) from the `HistoryServer` and compare them with the equivalent fields
