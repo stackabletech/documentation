@@ -129,7 +129,7 @@ spec:
               accessStyle: Path
               credentials:
                 secretClass: eventlogs-s3-credentials
-  s3connection: # Optional. Used for normal data operations.
+  s3Connection: # Optional. Used for normal data operations.
     inline:
       host: minio
       port: 9000
@@ -142,28 +142,14 @@ spec:
 In the example above, the application will log its events to the bucket specifed in `logFileDirectory`.
 In addition, the application processes data from a S3 bucket configured within the `s3connection` section of the specification.
 
-The operator will read the host and port (endpoint) from the `HistoryServer` and compare them with the equivalent fields
-specified for the "data" `s3connection`. If these fields match, it will set `spark.eventLog.enabled` property to `true` and will
-construct the `spark.eventLog.dir` from `s3a://<SparkHistoryServer.eventLogs.s3.bucket.bucketName/<SparkHistoryServer.eventLogs.s3.prefix>`.
-
-=== Constraints
-
-The constraint with the highest impact with this approach is that `SparkApplications` can only log events
-to the same S3 endpoint they use for data processing. In addition, `SparkApplications` use the same credentials to log
-events to S3 as well as process data from the same service.
+The operator will read the `s3Connection` and set up the `fs.s3a.aws.credentials.provider` and co (endpoint, accesskey, secretkey, tls, path-style access - basically all attributes of S3Connection) settings.
+Afterwards if `logFileDirectory` attribute is set: Set `fs.s3a.bucket.<logFileDirectory-bucket-name(here spark-eventlogs)>.aws.credentials.provider` and co to overwrite endpoint and credentials for the logging bucket. Set `spark.eventLog.enabled` property to `true` and will
+construct the `spark.eventLog.dir` from `s3a://<logFileDirectory-bucket-name(here spark-eventlogs)>/<logFileDirectory-prefix(here eventlogs/)>`.
 
 NOTE: the credentials used by the `HistoryServer` *do not* have to be shared with `SparkApplication`s.
 
-This constraint is a consious design decision and a compromise between flexibilty and ease of use.
-
 === Advantages
 
-Referencing the history server instance directly from a Spark application makes it clear where the event files are stored
-and ensures there is a single point of configuration for this location, namely in the `HistoryServer` specification.
-
-This approach allows for future extensions (addition of new fields) to the log storage to be implemented in a non-breaking fashion (which would not be the case if separate distinct sources were implemented as a first step and then reversed later).
-  
-=== Future work
-
-Future changes might allow decoupling the `SparkApplication` from the history server reference by implementing
-direct references to the event storage.
+* Fully flexible solution, which allows the logDir to be on a different S3 ednpoint than the data.
+* If they are on the same endpojnt, a single S3BucketDef can be shared between HistoryServer and SparkApplication for ease of use.
+* HDFS and/or other distributed filesystems can be added non-breaking later on
