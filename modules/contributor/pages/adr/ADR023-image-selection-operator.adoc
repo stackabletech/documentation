@@ -1,6 +1,6 @@
 = ADR023: Product image selection
 Maxi Wittich <maximilian.wittich@stackable.tech>, Sebastian Bernauer <sebastian.bernauer@stackable.tech>
-v0.1, 2022-08-24
+v0.1, 2022-08-31
 :status: pending
 
 * Deciders:
@@ -122,3 +122,63 @@ We want to start with the first two variants `stackableImageTag` and `custom`. T
 * Good, because it gives all flexibility of all previous options
 * Good, because we can non-breaking introduce new "magic" in the future by adding new image enum variants
 * Good, because we can implement it as enum called e.g. `ImageSpec` in operator-rs which will offer a function like `resolve_image` that will make it easy for operators to use
+
+
+=== Option 6
+
+This option is **breaking**. It uses a complex enum, similar to Option 5. Option 5 does not account for the need to specify the product version with a custom image. It is also not possible to just use a custom docker repository and still use the operator recommended version (i.e. just mirroring the stackable repository). This option makes that possible.
+
+[source,yaml]
+----
+image: # complex enum
+  stackableVersion: # (1)
+    repo: docker.stackable.tech # String. Defaults to docker.stackable.tech (kind of optional).
+    productVersion: 1.4.1 # mandatory
+    stackableVersion: stackable2.1.0 # mandatory
+  # OR
+  stackable: # (2)
+    repo: docker.stackable.tech # String. Defaults to docker.stackable.tech (kind of optional).
+    productVersion: 1.4.1 # Option<String>. If not specified use recommended product version ("magic").
+  # OR
+  custom: # (3)
+    productVersion: 1.4.1
+    custom: docker.stackable.tech/stackable/superset:1.4.1-stackable2.1
+
+  pullPolicy: IfNotPresent
+----
+
+
+**Use-case**: I don't want to specify anything, just give me defaults!
+
+-> Don't specify anything.
+
+**Use-case**: I want a specific version of the product:
+
+[source,yaml]
+----
+image:
+  productVersion: 1.5.1
+----
+
+This resolves to the enum variant 2, with just the product version specified
+
+**Use-case**: I've mirrored the stackable repo locally, but want to use automatic image resolution:
+
+[source,yaml]
+----
+image:
+  repo: my.repo.company.org/stackable
+----
+
+This resolves to variant 2.
+
+**Use-case**: I have built my own custom image with i.e. additional dependencies for the product, which has a different tag than the original stackable image. I've uploaded it to my custom repo:
+
+[source,yaml]
+----
+image:
+  custom: my.repo.company.org/stackable/superset:my-custom-tag
+  productVersion: 1.4.1
+----
+
+This resolves to enum variant 3. The product version is mandatory so the operator knows what to do.
