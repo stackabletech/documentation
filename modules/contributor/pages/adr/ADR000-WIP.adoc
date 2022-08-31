@@ -1,5 +1,5 @@
 = How to provide out-of-cluster access for products with built-in routing
-Doc Writer <doc.writer@asciidoctor.org>
+Felix Hennig <felix.hennig@stackable.tech>
 v0.1, YYYY-MM-DD
 :status: draft
 
