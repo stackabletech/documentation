@@ -18,7 +18,7 @@ Problem:
 
 * In our current setup, there's no way to connect to a specific replica in a StatefulSet or Deployement.
 * The hostname and IP that the pods know about themselves is from _inside_ the cluster. The IP only works inside the overlay network.
-* Clients might cache data locations that they received, and Kubernetes might move pods around. For some routing solutions, this can be a problem. (Stickiness)
+* Clients need stable addresses to connect to, but Kubernetes can move pods around. While the discovery ConfigMap is updated, it's not feasible to ask the client to pull the new info from there every time, clients will want to use static config files with static addresses to connect to.
 
 == Decision Drivers
 // Which criteria are useful to evaluate solutions?
