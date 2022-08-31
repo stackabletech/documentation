@@ -8,7 +8,8 @@ v0.1, 2022-08-31
 ** Sebastian Bernauer
 ** Felix Henning
 ** Maximilian Wittich
-* Date: 2022-08-24
+** Lars Francke
+* Date: 2022-08-31
 
 == Context and Problem Statement
 Currently users have to specify the full image tag in the Products CRD.
@@ -47,14 +48,12 @@ In detail we used the following use-cases to drive the decision:
 => Equivalent to user saying use the image "my.corp/superset:1.4.1-stackable2.1.0"
 => NOT equivalent to user saying use the image "my.corp/superset:1.4.1"
 => When specifying the image directly users loose the ability to let the operator determine its compatible stackable image version
+** user just specifies a repo: my.corp/superset with no versions -> operator should use image my.corp/superset:1.4.1-stackable2.1.0 based on recommended product version of the release/operator and knowledge (which operator works with which image)
 
 
 == Decision Outcome
 
-Chosen option: "<<option5,Option 5>>" because it covers almost all use cases.
-The only exception is that with custom repositories the autocompletion magic will not work.
-We think, that this is a corner case because the probability of a user mirroring our whole image repository (docker.stackable.tech/stackable) to a custom repository and still want the magic mechanism to work seems to be small.
-Furthermore, Option 5 will provide enough flexibility to build that specific feature if really needed by adding a new enum variant.
+Chosen option: "<<option6,Option 6>>" because it is the only option to cover all use cases.
 
 == Pros and Cons of the Options
 
@@ -123,7 +122,7 @@ We want to start with the first two variants `stackableImageTag` and `custom`. T
 * Good, because we can non-breaking introduce new "magic" in the future by adding new image enum variants
 * Good, because we can implement it as enum called e.g. `ImageSpec` in operator-rs which will offer a function like `resolve_image` that will make it easy for operators to use
 
-
+[[option6]]
 === Option 6
 
 This option is **breaking**. It uses a complex enum, similar to Option 5. Option 5 does not account for the need to specify the product version with a custom image. It is also not possible to just use a custom docker repository and still use the operator recommended version (i.e. just mirroring the stackable repository). This option makes that possible.
