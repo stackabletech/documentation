@@ -30,7 +30,7 @@ Problem:
 
 == Implemented Solution
 
-There is a new lb-operator (name still not final) which runs as a DaemonSet and uses a CSI plugin to provide pseudo storage with files in it with information about the outside connection of the Pod.
+There is a new lb-operator (name still not final) which runs as a CSI driver to provide pseudo storage with files in it with information about how to connect to the Pod.
 
 Communication flow example using the HDFS Operator:
 
