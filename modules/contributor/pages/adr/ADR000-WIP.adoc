@@ -39,7 +39,7 @@ Communication flow example using the HDFS Operator:
 - The lb operator provisions the volumes with files inside containing information about the pods outside address and port - The IP and port of the NodePort Service. Because of the PVC it knows which pod the volume will be mounted into, and can find out the NodePort that belongs to the pod.
 - the operator already provisioned the pod with a script that read the files from the mounted volume into environment variables which are then read by HDFS. This part is product specific.
 
-The way the operator requests the volume is identical for all pods of a StatefulSet/Deployment: it always requests a volume with the same type (i.e. `nodeport`).
+The way the operator requests the volume is identical for all pods of a StatefulSet/Deployment: it always requests a volume with the type (i.e. `nodeport`) that was configured in the ProductCluster.
 
 == Decision Outcome
 
