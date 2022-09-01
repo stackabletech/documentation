@@ -1,4 +1,4 @@
-= How to provide out-of-cluster access for products with built-in routing
+= How to provide stable out-of-cluster access to products
 Felix Hennig <felix.hennig@stackable.tech>
 v0.1, YYYY-MM-DD
 :status: draft
@@ -12,13 +12,15 @@ Technical Story: [description | ticket/issue URL] <!-- optional -->
 == Context and Problem Statement
 // Describe the context and problem statement, e.g., in free form using two to three sentences. You may want to articulate the problem in form of a question.
 
-Some products like HDFS and Kafka don't use a single router or portal node to access the cluster, but have the client access multiple nodes. For example, HDFS name nodes will tell the client where data can be found (hostname/IP and port), the client is then expected to connect directly to a specific data node. Similarly for Kafka and topic shards.
+Eventually, the products we host in Kubernetes will need to be accessed from outside of the cluster. Our current solution for this is NodePort services. However, the IP and port can change, if a Pod is rescheduled to a different node, or if a ProductCluster is restarted.
 
-Problem:
+Furthermore, some products like HDFS and Kafka don't use a single router or portal node to access the cluster, but have the client access multiple nodes. For example, HDFS name nodes will tell the client where data can be found (hostname/IP and port), the client is then expected to connect directly to a specific data node. Similarly for Kafka and topic shards.
 
-* In our current setup, there's no way to connect to a specific replica in a StatefulSet or Deployement.
-* The hostname and IP that the pods know about themselves is from _inside_ the cluster. The IP only works inside the overlay network.
-* Clients need stable addresses to connect to, but Kubernetes can move pods around. While the discovery ConfigMap is updated, it's not feasible to ask the client to pull the new info from there every time, clients will want to use static config files with static addresses to connect to.
+Problems:
+
+* **Unstable addresses** - Clients need stable addresses to connect to, but Kubernetes can move pods around. While the discovery ConfigMap is updated, it's not feasible to ask the client to pull the new info from there every time, clients will want to use static config files with static addresses to connect to.
+* **Replicas not addressable** - In our current setup, there's no way to connect to a specific replica in a StatefulSet or Deployement - which is necessary for cases like the data nodes of HDFS.
+* **Pods don't know their outside address** - The hostname and IP that the pods know about themselves is from _inside_ the cluster. The IP only works inside the overlay network. This means ProductCluster processes cannot link to other nodes of the cluster.
 
 == Decision Drivers
 // Which criteria are useful to evaluate solutions?
@@ -30,16 +32,19 @@ Problem:
 
 == Implemented Solution
 
-There is a new lb-operator (name still not final) which runs as a CSI driver to provide pseudo storage with files in it with information about how to connect to the Pod.
+A new resource is proposed: Listener. It is handled similarly to storage. There is are ListenerClasses for different types of Listeners - analogous to StorageClass. There are Listener objects - similar to PersistentVolumes. And claims to listeners are made in ProductCluster objects.
+
+Under the hood a listener-operator runs as a CSI driver with a new `listener.stackable.tech` type. Listener claims in the ProductCluster resource are then converted by the product operator into PersistentVolumeClaims (PVCs) to the storage type. Listener settings are passed along as annotations to the PVC. Initially there will be two Listener types - `private` implemented with NodePorts; and `public` implemented with LoadBalancers. The listener-operator creates the Listeners according to the PVC settings and provides the listener info in the PV into the pods with the PVCs.
 
 Communication flow example using the HDFS Operator:
 
-- The HDFS Operator requests a PVC of the lb.stackable.tech type. In the annotations it can request the lb class (`nodeport`, `loadbalancer`), for this example it'll be the `nodeport` type.
-- The lb operator provisions a NodePort Service for the volume request, which means a Service per Pod. It reads the NodePort IP and port.
-- The lb operator provisions the volumes with files inside containing information about the pods outside address and port - The IP and port of the NodePort Service. Because of the PVC it knows which pod the volume will be mounted into, and can find out the NodePort that belongs to the pod.
-- the operator already provisioned the pod with a script that read the files from the mounted volume into environment variables which are then read by HDFS. This part is product specific.
+* A HDFS cluster resource is created by the user, with a `private` listener setting.
+* The HDFS Operator requests a PVC of the listener.stackable.tech type and an annotation to create a `private` listener.
+* The listener-operator provisions a NodePort Service for the volume request, which means a Service per Pod. It reads the NodePort IP and port.
+* The listener-operator provisions the volumes with files inside containing information about the pods outside address and port - The IP and port of the NodePort Service. Because of the PVC it knows which pod the volume will be mounted into, and can find out the NodePort that belongs to the pod.
+* the HDFS operator already provisioned the pod with a script that read the files from the mounted volume into environment variables which are then read by HDFS. This part is product specific.
 
-The way the operator requests the volume is identical for all pods of a StatefulSet/Deployment: it always requests a volume with the type (i.e. `nodeport`) that was configured in the ProductCluster.
+The way the product operator requests the volume is identical for all pods of a StatefulSet/Deployment: it always requests a volume with the type (i.e. `nodeport`) that was configured in the ProductCluster.
 
 == Decision Outcome
 
@@ -49,7 +54,7 @@ There is only one design, which is already in its implementation.
 Pros:
 
 * There is little routing overhead (compared to proxying or similar).
-* The lb operator can be extended to support more LoadBalancerClasses.
+* The listener-operator can be extended to support more ListenerClasses.
 * It is a very low-friction solution that doesn't require a lot of permissions to set up.
 
 Cons:
