@@ -12,7 +12,7 @@ Technical Story: [description | ticket/issue URL] <!-- optional -->
 == Context and Problem Statement
 // Describe the context and problem statement, e.g., in free form using two to three sentences. You may want to articulate the problem in form of a question.
 
-Some products like HDFS and Kafka don't use a single router or portal node to access the cluster, but have the client access multiple nodes. For example, HDFS name nodes will tele data can be found (hostname/IP and port), the client is then expected to connect directly to a specific data node. Similarly for Kafka and topic shards.
+Some products like HDFS and Kafka don't use a single router or portal node to access the cluster, but have the client access multiple nodes. For example, HDFS name nodes will tell the client where data can be found (hostname/IP and port), the client is then expected to connect directly to a specific data node. Similarly for Kafka and topic shards.
 
 Problem:
 
@@ -39,7 +39,7 @@ Communication flow example using the HDFS Operator:
 - The lb operator provisions the volumes with files inside containing information about the pods outside address and port - The IP and port of the NodePort Service. Because of the PVC it knows which pod the volume will be mounted into, and can find out the NodePort that belongs to the pod.
 - the operator already provisioned the pod with a script that read the files from the mounted volume into environment variables which are then read by HDFS. This part is product specific.
 
-The way the operator requests the volume is identical for all pods: it always requests a volume with the same type (i.e. `nodeport`).
+The way the operator requests the volume is identical for all pods of a StatefulSet/Deployment: it always requests a volume with the same type (i.e. `nodeport`).
 
 == Decision Outcome
 
@@ -59,7 +59,9 @@ Cons:
 
 == Other notes
 
-=== Spiked Alternative: MetalLB
-See: https://metallb.universe.tf/
+=== Spiked Alternatives: MetalLB, Calico
+See: https://metallb.universe.tf/, https://www.tigera.io/project-calico/
 
-SpikeLB is a bare metal load balancer that was spiked briefly. However it requires BGP integration, which is not feasible as a requirement for customer installations.
+MetalLB is a bare metal load balancer that was spiked briefly. However it requires BGP/ARP integration, which is not feasible as a requirement for customer installations. Calico requires BGP.
+
+With ARP, the LoadBalancers appear as "real" IP addresses in the same subnet as the nodes (with no need to configure custom routing roules). However, this scales poorly (it assumes that all nodes are in the same L2 broadcast domain) and is relatively likely to be blocked by firewalls or network policy.
