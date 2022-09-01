@@ -1,5 +1,5 @@
 name: home
-version: master
+version: "22.06"
 title: Stackable Documentation
 nav:
   - modules/ROOT/nav.adoc
@@ -9,3 +9,4 @@ nav:
   - modules/operators/nav.adoc
   - modules/contributor/nav.adoc
   - modules/ROOT/nav2.adoc
+prerelease: false
