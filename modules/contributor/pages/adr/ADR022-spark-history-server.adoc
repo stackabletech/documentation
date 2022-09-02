@@ -74,11 +74,10 @@ metadata:
   namespace: default
 spec:
   version: 3.3.0-stackable0.1.0
-  properties: # list TODO names, objects?
+  sparkConf:
     - # compaction
     - # retention/ttl
     - # update interval
-    - # cleaner on/off - struct with default values?
     - ...
   cleaner: true # option of bool; default=false: sets spark.history.fs.cleaner.enabled=true
   # complex enum with variant s3 (hdfs later on)
