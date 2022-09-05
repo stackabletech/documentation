@@ -3,6 +3,205 @@
 The Stackable platform consists of multiple operators that work together.
 Periodically a platform release is made, including all components of the platform at a specific version.
 
+== Release 22.09
+This is our second release of the Stackable Data Platform.
+It contains lots of new features and bugfixes.
+The main features focus on OpenShift support and security.
+
+=== New platform features
+The following new major platform features were added:
+
+OpenShift compatibility::
+The following operators are now OpenShift compatible:
+
+* https://github.com/stackabletech/airflow-operator/pull/127[airflow]
+* https://github.com/stackabletech/hbase-operator/pull/232[hbase]
+* https://github.com/stackabletech/spark-k8s-operator/pull/126[spark-k8s]
+
+Support for internal and external TLS::
+The following operators support operating the products at a maximal level of transport security by using TLS certificates to secure internal and external communication:
+
+* https://github.com/stackabletech/trino-operator/pull/244[trino]
+* https://github.com/stackabletech/zookeeper-operator/pull/479[zookeeper]
+
+LDAP authentication::
+Use a central LDAP server to manage all of your user identities in a single place.
+The following operators added support for LDAP authentication:
+
+* https://github.com/stackabletech/airflow-operator/pull/133[airflow]
+* https://github.com/stackabletech/nifi-operator/pull/303[nifi]
+* https://github.com/stackabletech/superset-operator/pull/180[superset]
+
+=== stackablectl
+
+`stackablectl` now supports deploying ready-to-use demos, which give and end-to-end demonstration of the usage of the Stackable data platform.
+The xref:stackablectl::quickstart.adoc[quickstart guide] shows how to get started with `stackablectl`. Here you can see the xref:stackablectl::demos/index.adoc[available demos].
+
+=== Supported Kubernetes versions
+This release supports the following Kubernetes versions:
+
+* `1.24`
+* `1.23`
+* `1.22`
+
+Support for `1.21` was dropped.
+
+=== Upgrade from 22.06
+==== Using stackablectl
+You can list the available releases as follows
+
+[source,console]
+----
+$ stackablectl release list
+RELEASE            RELEASE DATE   DESCRIPTION
+22.06              2022-06-30     First official release of the Stackable Data Platform
+22.09              2022-09-09     Second release focusing on OpenShift support and security
+----
+
+To uninstall the `22.06` release run
+
+[source,console]
+----
+$ stackablectl release uninstall 22.06
+[INFO ] Uninstalling release 22.06
+[INFO ] Uninstalling airflow operator
+[INFO ] Uninstalling commons operator
+# ...
+----
+
+To install the `22.09` release run
+
+[source,console]
+----
+$ stackablectl release install 22.09
+[INFO ] Installing release 22.09
+[INFO ] Installing airflow operator in version 0.5.0
+[INFO ] Installing commons operator in version 0.3.0
+[INFO ] Installing druid operator in version 0.7.0
+[INFO ] Installing hbase operator in version 0.4.0
+[INFO ] Installing hdfs operator in version 0.5.0
+[INFO ] Installing hive operator in version 0.7.0
+[INFO ] Installing kafka operator in version 0.7.0
+[INFO ] Installing nifi operator in version 0.7.0
+[INFO ] Installing opa operator in version 0.10.0
+[INFO ] Installing secret operator in version 0.6.0
+[INFO ] Installing spark-k8s operator in version 0.5.0
+[INFO ] Installing superset operator in version 0.6.0
+[INFO ] Installing trino operator in version 0.5.0
+[INFO ] Installing zookeeper operator in version 0.11.0
+# ...
+----
+
+==== Using helm
+Use `helm list` to list the currently installed operators.
+
+You can use the following command to install all of the operators that are part of the release 22.06:
+
+[source,console]
+----
+$ helm uninstall airflow-operator commons-operator druid-operator hbase-operator hdfs-operator hive-operator kafka-operator nifi-operator opa-operator secret-operator spark-k8s-operator superset-operator trino-operator zookeeper-operator
+release "airflow-operator" uninstalled
+release "commons-operator" uninstalled
+# ...
+----
+
+To install the release 22.09 run
+
+[source,console]
+----
+$ helm repo add stackable https://repo.stackable.tech/repository/helm-stable/
+$ helm install --wait airflow-operator stackable/airflow-operator --version 0.5.0
+$ helm install --wait commons-operator stackable/commons-operator --version 0.3.0
+$ helm install --wait druid-operator stackable/druid-operator --version 0.7.0
+$ helm install --wait hbase-operator stackable/hbase-operator --version 0.4.0
+$ helm install --wait hdfs-operator stackable/hdfs-operator --version 0.5.0
+$ helm install --wait hive-operator stackable/hive-operator --version 0.6.0
+$ helm install --wait kafka-operator stackable/kafka-operator --version 0.6.0
+$ helm install --wait nifi-operator stackable/nifi-operator --version 0.6.0
+$ helm install --wait opa-operator stackable/opa-operator --version 0.10.0
+$ helm install --wait secret-operator stackable/secret-operator --version 0.6.0
+$ helm install --wait spark-k8s-operator stackable/spark-k8s-operator --version 0.5.0
+$ helm install --wait superset-operator stackable/superset-operator --version 0.6.0
+$ helm install --wait trino-operator stackable/trino-operator --version 0.5.0
+$ helm install --wait zookeeper-operator stackable/zookeeper-operator --version 0.11.0
+----
+
+==== Breaking changes
+
+You will need to adapt your existing CRDs to the following breaking changes:
+
+==== druid-operator
+1. HDFS deep storage is now configurable via HDFS discovery config map instead of an url to a HDFS name node (https://github.com/stackabletech/druid-operator/pull/262[#262]).
+Instead of
+
+[source,yaml]
+----
+  deepStorage:
+    hdfs:
+      storageDirectory: hdfs://druid-hdfs-namenode-default-0:8020/data
+----
+
+use
+
+[source,yaml]
+----
+  deepStorage:
+    hdfs:
+      configMapName: druid-hdfs
+      directory: /druid
+----
+
+==== trino-operator
+1. TrinoCatalogs now have their own CRD object and get referenced by the TrinoCluster (https://github.com/stackabletech/trino-operator/pull/263[#263]). Instead of
+
+[source,yaml]
+----
+apiVersion: trino.stackable.tech/v1alpha1
+kind: TrinoCluster
+# ...
+spec:
+  hiveConfigMapName: hive
+  s3:
+    inline:
+      host: minio
+      port: 9000
+      accessStyle: Path
+      credentials:
+        secretClass: s3-credentials
+  # ...
+----
+
+use
+
+[source,yaml]
+----
+apiVersion: trino.stackable.tech/v1alpha1
+kind: TrinoCluster
+# ...
+spec:
+  catalogLabelSelector:
+    trino: simple-trino
+  # ...
+---
+apiVersion: trino.stackable.tech/v1alpha1
+kind: TrinoCatalog
+metadata:
+  name: hive
+  labels:
+    trino: trino
+spec:
+  connector:
+    hive:
+      metastore:
+        configMap: hive
+      s3:
+        inline:
+        host: minio
+        port: 9000
+        accessStyle: Path
+        credentials:
+            secretClass: s3-credentials
+----
 
 == Release 22.06
 
@@ -98,3 +297,9 @@ Read up on the xref:operators:supported_versions.adoc[supported versions] for ea
 * xref:commons-operator::index.adoc[] (0.2.0)
 * xref:secret-operator::index.adoc[] (0.5.0)
 
+=== Supported Kubernetes versions
+This release supports the following Kubernetes versions:
+
+* `1.23`
+* `1.22`
+* `1.21`
