@@ -36,6 +36,8 @@ Problems:
 
 A new resource is proposed: Listener. It is handled similarly to storage. There is are ListenerClasses for different types of Listeners - analogous to StorageClass. There are Listener objects - similar to PersistentVolumes. And claims to listeners are made in ProductCluster objects.
 
+ListenerClasses allow for various different ways of getting outside traffic into the cluster. A dedicated operator seperates the deployment of this out - the product operators need to only request the listeners.
+
 Under the hood a listener-operator runs as a CSI driver with a new `listener.stackable.tech` type. Listener claims in the ProductCluster resource are then converted by the product operator into PersistentVolumeClaims (PVCs) to the storage type. Listener settings are passed along as annotations to the PVC. Initially there will be two Listener types - `private` implemented with NodePorts; and `public` implemented with LoadBalancers. The listener-operator creates the Listeners according to the PVC settings and provides the listener info in the PV into the pods with the PVCs.
 
 Communication flow example using the HDFS Operator:
@@ -48,6 +50,18 @@ Communication flow example using the HDFS Operator:
 
 // Setup is done, how does the client connect now?
 The NodePorts are now created and HDFS knows about them, the client can now connect to HDFS from outside the cluster. An initial connection to HDFS is made through a NodePort, the address and port are found in the HDFS xref:concepts:service_discovery.adoc[]. Through the mechanism described above, any addresses of other nodes that HDFS gives to the client will be NodePort addresses, so subsequent connections will go through the NodePorts too.
+
+How are the problems in the <<_context_and_problem_statement,Problem Statement>> addressed?
+
+* **Unstable Addresses** - Using a CSI driver and mounting in storage automatically creates stickiness. Any new pods after a pod crashes will be created on the same node as the old pod - and thus also reuse the NodePort and the address it has.
+* **Replicas not addressable** - Since every replica in a StatefulSet will have its own Listener, they are also individually addressable
+* **Pods don't know their outside address** - The outside address of a pod gets passed into the pod through the mounted volume. The pod then knows its outside address.
+
+=== How the name came to be
+
+The new operator handles resources related to bringing outside traffic into the cluster. Some words that come to mind were Ingress and Gateway, but they are already used by Kubernetes native objects. Initially LoadBalancer-operator was considered, but since it doesn't exclusively deploy LoadBalancer objects (also NodePorts), the name is not good.
+
+Listener describes well its functionality: It is listening for outside traffic. Also, the name is not taken in Kubernetes yet.
 
 == Decision Outcome
 
