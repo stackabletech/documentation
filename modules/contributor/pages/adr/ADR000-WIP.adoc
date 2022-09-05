@@ -32,6 +32,12 @@ Problems:
 * Cloud customers will often have relatively short-lived K8s nodes.
 * The solution should be minimally invasive - no large setups required outside of the cluster.
 
+== Considered Options
+
+Off-the-shelf solutions were briefly spiked, but discarded due to requiring complex setup and/or heavy out-of-cluster dependencies which were deemed unacceptable to require from customers. Brief notes on this can be found in <<_spiked_alternatives>> below.
+
+The other alternative is a custom solution to be implemented by us. It is outlined below.
+
 == Implemented Solution
 
 A new resource is proposed: Listener. It is handled similarly to storage. There is are ListenerClasses for different types of Listeners - analogous to StorageClass. There are Listener objects - similar to PersistentVolumes. And claims to listeners are made in ProductCluster objects.
@@ -79,11 +85,15 @@ Cons:
 * Products like HDFS and Kafka only support having a single address. This means that if outside access with the lb operator is configured, all traffic will be routed that way.
 * It is another DaemonSet Operator, which means more stuff that is running. It is also not clear how we will get this certified with OpenShift.
 
-== Other notes
+== Spiked Alternatives
 
-=== Spiked Alternatives: MetalLB, Calico
-See: https://metallb.universe.tf/, https://www.tigera.io/project-calico/
+Some notes about the briefly tested off-the-shelf solutions.
 
-MetalLB is a bare metal load balancer that was spiked briefly. However it requires BGP/ARP integration, which is not feasible as a requirement for customer installations. Calico requires BGP.
+=== MetalLB
+link:https://metallb.universe.tf/[MetalLB] is a bare metal load balancer that was spiked briefly. However it requires BGP/ARP integration, which is not feasible as a requirement for customer installations.
 
 With ARP, the LoadBalancers appear as "real" IP addresses in the same subnet as the nodes (with no need to configure custom routing roules). However, this scales poorly (it assumes that all nodes are in the same L2 broadcast domain) and is relatively likely to be blocked by firewalls or network policy.
+
+=== Calico
+
+link:https://www.tigera.io/project-calico/[Calico] requires BGP, another component that we cannot make required for customer setups.
