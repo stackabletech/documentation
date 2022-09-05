@@ -115,9 +115,9 @@ $ helm install --wait commons-operator stackable/commons-operator --version 0.3.
 $ helm install --wait druid-operator stackable/druid-operator --version 0.7.0
 $ helm install --wait hbase-operator stackable/hbase-operator --version 0.4.0
 $ helm install --wait hdfs-operator stackable/hdfs-operator --version 0.5.0
-$ helm install --wait hive-operator stackable/hive-operator --version 0.6.0
-$ helm install --wait kafka-operator stackable/kafka-operator --version 0.6.0
-$ helm install --wait nifi-operator stackable/nifi-operator --version 0.6.0
+$ helm install --wait hive-operator stackable/hive-operator --version 0.7.0
+$ helm install --wait kafka-operator stackable/kafka-operator --version 0.7.0
+$ helm install --wait nifi-operator stackable/nifi-operator --version 0.7.0
 $ helm install --wait opa-operator stackable/opa-operator --version 0.10.0
 $ helm install --wait secret-operator stackable/secret-operator --version 0.6.0
 $ helm install --wait spark-k8s-operator stackable/spark-k8s-operator --version 0.5.0
