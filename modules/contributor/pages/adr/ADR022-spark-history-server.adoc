@@ -1,0 +1,154 @@
+= ADR022: Spark history server
+Razvan-Daniel Mihai<razvan.mihai@stackable.tech>
+v0.1, 2022-08-23
+:status: accepted
+
+* Status: {status}
+* Deciders:
+** Andrew Kenworthy
+** Sebastian Bernauer
+** Razvan Mihai
+* Date: 2022-08-23
+
+== Context and Problem Statement
+
+Monitoring Spark applications usually involves two types of components: a history server and a metrics collection server.
+__In this document we will concern ourselves with the history server__. Using metrics for application monitoring requires
+a completely different set of protocols and technologies and is outside the scope of this document.
+
+The Spark history server is part of the Apache Spark distribution and it provides a web interface where application
+developers can visualize events that took place during the lifetime of a job as well as the outcome of various job phases.
+
+In this document, we propose a way to add the Spark history server to the Kubernetes resources that are managed by the
+Spark-on-Kubernetes operator. We also describe how Spark application definitions can leverage the history server and
+how the resource definitions make use of standard Stackable descriptors for S3 storage.
+
+Even though using a history server is optional when running Spark applications on the Stackable platform, it is highly
+recommended to make use of it in production environments.
+
+== Decision Drivers
+
+* Ease of use / intuitive / checked
+* Support multiple history servers per operator installation
+* Integrate with the Stackable platform resource handling for S3 storage
+
+== History Server Definition
+
+A history server is a separate entity, completely decoupled from any `SparkApplication`s. The Spark-on-k8s operator makes use of
+it only if available and if the Spark application developer has requested it. See the chapter below, on how `SparkApplication`s
+can request logging events to an existing history server.
+
+The most important part of the history server definition is the location of the event files. This is specified in the
+`logFileDirectory` entry of the resource specification as shown below.
+
+[source,yaml]
+----
+  ...
+  logFileDirectory:
+    s3:
+      prefix: eventlogs/
+      bucket: # S3BucketDef
+        bucketName: spark-eventlogs
+        connection:
+          reference: eventlogs-s3-connection
+  ...
+----
+
+Here the event files are stored in the S3 bucket `spark-eventlogs` with the `eventlogs/` prefix. The complete definition
+of the specified S3 connection is resolved by the operator from the `eventlogs-s3-connection` resource (not shown here).
+
+All Spark history properties can be defined in the `properties` section. The operator will make them available to the
+server at runtime. The operator makes no effort to validate these properties so extreme care must be taken making use
+of this section. In particular, properties concerning the event file storage can conflict with the definition provided
+in the `logFileDirectory` section and it's not recommended to set them here at all.
+
+Here is a complete example of a history server definition:
+
+[source,yaml]
+----
+# Namespaced
+apiVersion: spark.stackable.tech/v1alpha1
+kind: SparkHistoryServer
+metadata:
+  name: history
+  namespace: default
+spec:
+  version: 3.3.0-stackable0.1.0
+  sparkConf:
+    - # compaction
+    - # retention/ttl
+    - # update interval
+    - ...
+  cleaner: true # option of bool; default=false: sets spark.history.fs.cleaner.enabled=true
+  # complex enum with variant s3 (hdfs later on)
+  logFileDirectory:
+    s3:
+      prefix: eventlogs/
+      bucket: # S3BucketDef
+        inline:
+          bucketName: spark-eventlogs
+          connection:
+            inline:
+              host: minio
+              port: 9000
+              accessStyle: Path
+              credentials:
+                secretClass: history-server-s3-credentials
+----
+
+== History Server Usage
+
+Spark applications don't have to use a history server but it's highly recommended to do so in production environments.
+The section `eventLogs` of a `SparkApplication` instructs the operator to configure the application such that it can be
+monitored using the provided (and existing) history server.
+
+The example below shows the relevant configuration snippet of an application definition:
+
+[source,yaml]
+----
+---
+apiVersion: spark.stackable.tech/v1alpha1
+kind: SparkApplication
+metadata:
+  name: spark
+  namespace: default
+spec:
+  version: "1.0"
+  sparkImage: docker.stackable.tech/stackable/spark-k8s:3.3.0-stackable0.1.0
+  logFileDirectory:
+    s3:
+      prefix: eventlogs/
+      bucket: # S3BucketDef
+        inline:
+          bucketName: spark-eventlogs
+          connection:
+            inline:
+              host: minio
+              port: 9000
+              accessStyle: Path
+              credentials:
+                secretClass: eventlogs-s3-credentials
+  s3Connection: # Optional. Used for normal data operations.
+    inline:
+      host: minio
+      port: 9000
+      accessStyle: Path
+      credentials:
+        secretClass: application-s3-credentials
+...
+----
+
+In the example above, the application will log its events to the bucket specifed in `logFileDirectory`.
+In addition, the application processes data from a S3 bucket configured within the `s3connection` section of the specification.
+
+The operator will read the `s3Connection` and set up the `fs.s3a.aws.credentials.provider` and co (endpoint, accesskey, secretkey, tls, path-style access - basically all attributes of S3Connection) settings.
+Afterwards if `logFileDirectory` attribute is set: Set `fs.s3a.bucket.<logFileDirectory-bucket-name(here spark-eventlogs)>.aws.credentials.provider` and co to overwrite endpoint and credentials for the logging bucket. Set `spark.eventLog.enabled` property to `true` and will
+construct the `spark.eventLog.dir` from `s3a://<logFileDirectory-bucket-name(here spark-eventlogs)>/<logFileDirectory-prefix(here eventlogs/)>`.
+
+NOTE: the credentials used by the `HistoryServer` *do not* have to be shared with `SparkApplication`s.
+
+=== Advantages
+
+* Fully flexible solution, which allows the logDir to be on a different S3 ednpoint than the data.
+* If they are on the same endpojnt, a single S3BucketDef can be shared between HistoryServer and SparkApplication for ease of use.
+* HDFS and/or other distributed filesystems can be added non-breaking later on
