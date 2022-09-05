@@ -12,11 +12,15 @@ Technical Story: [description | ticket/issue URL] <!-- optional -->
 == Context and Problem Statement
 // Describe the context and problem statement, e.g., in free form using two to three sentences. You may want to articulate the problem in form of a question.
 
+Eventually, the products we host in Kubernetes will need to be accessed from outside of the cluster, as this is where the client is. Our current solution for this is NodePort services. They are a simple and common solution for on-premise clusters, where nodes are reachable hosts in the local network. However, this is not a good solution for deployements in public clouds, where LoadBalancers are the preferred solution to get traffic into the cluster.
 
 
-Eventually, the products we host in Kubernetes will need to be accessed from outside of the cluster. Our current solution for this is NodePort services. However, the IP and port can change, if a Pod is rescheduled to a different node, or if a ProductCluster is restarted.
 
-Furthermore, some products like HDFS and Kafka don't use a single router or portal node to access the cluster, but have the client access multiple nodes. For example, HDFS name nodes will tell the client where data can be found (hostname/IP and port), the client is then expected to connect directly to a specific data node. Similarly for Kafka and topic shards.
+However, while a Pods name is stable across restarts and rescheduling, the IP and port of the NodePort can change if a Pod is rescheduled to a different node. This means that external addresses from simple NodePorts are not stable.
+
+Additionally, Pods currently do not know the address under which they are reachable from outside of the cluster. While this is not a problem for simple web UIs, it is a problem for products that do their own "routing", like HDFS or Kafka. These products will link to other nodes to point clients to specific data that only exists in specific nodes. These links cannot be constructed if the addresses under which nodes are reachable are not known to the product.
+
+If a LoadBalancer is used to connect to a StatefulSet, the individual replicas in the set are not individually addressable anymore. This is a problem, as LoadBalancers will be commonplace in public clouds where NodePorts don't make sense. However HDFS and Kafka need to be able to link to _specific_ replicas in a StatefulSet, as they shard data across process instances, across nodes. Therefore the nodes need to also be individually reachable from outside of the cluster.
 
 Problems:
 
