@@ -12,6 +12,8 @@ Technical Story: [description | ticket/issue URL] <!-- optional -->
 == Context and Problem Statement
 // Describe the context and problem statement, e.g., in free form using two to three sentences. You may want to articulate the problem in form of a question.
 
+
+
 Eventually, the products we host in Kubernetes will need to be accessed from outside of the cluster. Our current solution for this is NodePort services. However, the IP and port can change, if a Pod is rescheduled to a different node, or if a ProductCluster is restarted.
 
 Furthermore, some products like HDFS and Kafka don't use a single router or portal node to access the cluster, but have the client access multiple nodes. For example, HDFS name nodes will tell the client where data can be found (hostname/IP and port), the client is then expected to connect directly to a specific data node. Similarly for Kafka and topic shards.
@@ -44,7 +46,8 @@ Communication flow example using the HDFS Operator:
 * The listener-operator provisions the volumes with files inside containing information about the pods outside address and port - The IP and port of the NodePort Service. Because of the PVC it knows which pod the volume will be mounted into, and can find out the NodePort that belongs to the pod.
 * the HDFS operator already provisioned the pod with a script that read the files from the mounted volume into environment variables which are then read by HDFS. This part is product specific.
 
-The way the product operator requests the volume is identical for all pods of a StatefulSet/Deployment: it always requests a volume with the type (i.e. `nodeport`) that was configured in the ProductCluster.
+// Setup is done, how does the client connect now?
+The NodePorts are now created and HDFS knows about them, the client can now connect to HDFS from outside the cluster. An initial connection to HDFS is made through a NodePort, the address and port are found in the HDFS xref:concepts:service_discovery.adoc[]. Through the mechanism described above, any addresses of other nodes that HDFS gives to the client will be NodePort addresses, so subsequent connections will go through the NodePorts too.
 
 == Decision Outcome
 
