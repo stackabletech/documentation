@@ -13,6 +13,7 @@ urls:
 content:
   sources: 
     - url: ./
+      tags: docs/*
       branches: HEAD
 
     - url: https://github.com/stackabletech/stackablectl.git
