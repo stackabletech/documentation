@@ -125,7 +125,7 @@ We want to start with the first two variants `stackableImageTag` and `custom`. T
 [[option6]]
 === Option 6
 
-This option is **breaking**. It uses a complex enum, similar to Option 5. Option 5 does not account for the need to specify the product version with a custom image. It is also not possible to just use a custom docker repository and still use the operator recommended version (i.e. just mirroring the stackable repository). This option makes that possible.
+This option is **breaking**. It uses a complex enum, similar to Option 5. Option 5 does not account for the need to specify the product version with a custom image. It is also not possible to just use a custom docker repository and still use the operator recommended version (i.e. just mirroring the stackable repository). This option makes that possible. We first start with implementing stackableVersion and custom. The stackable enum will be implemented as soon as we have magic versioning. 
 
 [source,yaml]
 ----
@@ -148,6 +148,7 @@ image: # complex enum
     name: regcred # reference to secret in same namespace 
 ----
 
+**Known issues**: We will start to implement our own schema since kube-rs is not supporting flatten yet.
 
 **Use-case**: I don't want to specify anything, just give me defaults!
 
