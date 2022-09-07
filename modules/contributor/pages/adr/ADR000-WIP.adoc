@@ -1,13 +1,16 @@
-= How to provide stable out-of-cluster access to products
+= ADR024: How to provide stable out-of-cluster access to products
 Felix Hennig <felix.hennig@stackable.tech>
-v0.1, YYYY-MM-DD
-:status: draft
+v0.1, 2022-09-06
+:status: accepted
 
 * Status: {status}
-* Deciders: [list everyone involved in the decision] <!-- optional -->
-* Date: [YYYY-MM-DD when the decision was last updated] <!-- optional -->
+* Deciders:
+** Teo Klestrup Röijezon
+** Felix Hennig
+** Vladislav Supalov
+* Date: 2022-09-06
 
-Technical Story: [description | ticket/issue URL] <!-- optional -->
+Technical Story: https://github.com/stackabletech/listener-operator/pull/1
 
 == Context and Problem Statement
 // Describe the context and problem statement, e.g., in free form using two to three sentences. You may want to articulate the problem in form of a question.
