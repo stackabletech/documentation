@@ -198,11 +198,11 @@ spec:
         configMap: hive
       s3:
         inline:
-        host: minio
-        port: 9000
-        accessStyle: Path
-        credentials:
-            secretClass: s3-credentials
+          host: minio
+          port: 9000
+          accessStyle: Path
+          credentials:
+              secretClass: s3-credentials
 ----
 
 == Release 22.06
