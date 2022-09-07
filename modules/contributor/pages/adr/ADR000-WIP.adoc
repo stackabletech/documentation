@@ -89,7 +89,8 @@ Pros:
 Cons:
 
 * The processes of some products like HDFS and Kafka assume that they are only reachable under one specific address. They cannot, for example, use one network for internal communication and a different network for external communication. This means that if outside access with the listener operator is configured, all traffic will be routed that way, also internal traffic that would not need to be routed out of the cluster.
-* It is another DaemonSet Operator, which means more stuff that is running. It is also not clear how we will get this certified with OpenShift.
+* This operator is deployed as a `DaemonSet` , which means it adds a small amount of overhead on all nodes inside the cluster and to the control plane's api server.
+* Such an operator cannot be deployed using OpenShift's Operator Lifecycle Manager and consequently cannot be certified on that platform.
 
 == Spiked Alternatives
 
