@@ -151,6 +151,10 @@ It depends on the type of listener that is used. If a LoadBalancer is used, the 
 
 If NodePorts are used, it depends on whether the Listeners are sticky or not (implemented with ephemeral or persistent mounted volumes). If the Listener is not sticky, the Pod can be moved to a different Node. If the Listener is sticky, the Pod will not be able to start until the Node recovers.
 
+=== Will it still be possible to use a LoadBalancer per role, if individual replica access is not required?
+
+Yes. There is a 1:1 mapping of listener PVCs to deployed listeners. It is possible to pre-provision a listener PVCs for a role and then mount it into each role replica.
+
 === How the name came to be
 
 The new operator handles resources related to bringing outside traffic into the cluster. Some words that come to mind were Ingress and Gateway, but they are already used by Kubernetes native objects. Initially LoadBalancer-operator was considered, but since it doesn't exclusively deploy LoadBalancer objects (also NodePorts), the name is not good.
