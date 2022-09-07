@@ -182,7 +182,7 @@ kind: TrinoCluster
 # ...
 spec:
   catalogLabelSelector:
-    trino: simple-trino
+    trino: trino
   # ...
 ---
 apiVersion: trino.stackable.tech/v1alpha1
