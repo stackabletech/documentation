@@ -144,6 +144,8 @@ image: # complex enum
     custom: docker.stackable.tech/stackable/superset:1.4.1-stackable2.1
 
   pullPolicy: IfNotPresent
+  pullSecrets: # Option<Vec<LocalObjectReference>>
+    name: regcred # reference to secret in same namespace 
 ----
 
 
