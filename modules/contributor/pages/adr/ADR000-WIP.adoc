@@ -133,6 +133,12 @@ How are the problems in the <<_context_and_problem_statement,Problem Statement>>
 * **Replicas not addressable** - Since every replica in a StatefulSet will have its own Listener, they are also individually addressable.
 * **Pods don't know their outside address** - The outside address of a pod gets passed into the pod through the mounted volume. The pod then knows its outside address.
 
+=== How are external IPs retrieved by the listener operator?
+
+For LoadBalancers, the IPs are written back into the Service object, which are then taken from there.
+
+For NodePorts, for each Pod the IP of the Node the Pod is running on is taken.
+
 === How does a client connect?
 
 This depends on the location of the cluster and which type of listener was deployed. In the example above NodePorts were used. In that case an initial connection to HDFS is made through a NodePort, the address and port are found in the HDFS xref:concepts:service_discovery.adoc[]. Through the mechanism described above, any addresses of other nodes that HDFS gives to the client will be NodePort addresses, so subsequent connections will go through the NodePorts too.
