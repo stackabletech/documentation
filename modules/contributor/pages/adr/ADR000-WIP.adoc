@@ -48,26 +48,102 @@ The other alternative is a custom solution to be implemented by us. It is outlin
 
 A new resource is proposed: Listener. It is handled similarly to storage. There is are ListenerClasses for different types of Listeners - analogous to StorageClass. There are Listener objects - similar to PersistentVolumes. And claims to listeners are made in ProductCluster objects.
 
+
+This is an example of a NodePort ListenerClass useful for an on-prem cluster:
+
+[source,yaml]
+---
+apiVersion: listener.stackable.tech/v1alpha1
+kind: ListenerClass
+metadata:
+  name: public
+spec:
+  serviceType: NodePort
+
+This is what an internal Listener in a GKE cluster could look like:
+
+[source,yaml]
+---
+apiVersion: listener.stackable.tech/v1alpha1
+kind: ListenerClass
+metadata:
+  name: internal
+spec:
+  serviceType: LoadBalancer
+  serviceAnnotations:
+    networking.gke.io/load-balancer-type: Internal
+
 ListenerClasses allow for various different ways of getting outside traffic into the cluster. A dedicated operator seperates the deployment of this out - the product operators need to only request the listeners.
 
-Under the hood a listener-operator runs as a CSI driver with a new `listener.stackable.tech` type. Listener claims in the ProductCluster resource are then converted by the product operator into PersistentVolumeClaims (PVCs) to the storage type. Listener settings are passed along as annotations to the PVC. Initially there will be two Listener types - `private` implemented with NodePorts; and `public` implemented with LoadBalancers. The listener-operator creates the Listeners according to the PVC settings and provides the listener info in the PV into the pods with the PVCs.
+Requests for Listeners are made through annotated volume claim templates:
 
-Communication flow example using the HDFS Operator:
+[source,yaml]
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: example-public-pod
+spec:
+  volumes:
+    - name: listener
+      ephemeral: # <1>
+        volumeClaimTemplate:
+          metadata:
+            annotations:
+              listener.stackable.tech/listener-class: public # <2>
+          spec:
+            storageClassName: listener.stackable.tech
+            accessModes:
+              - ReadWriteMany
+            resources:
+              requests:
+                storage: "1"
+  containers:
+    - name: nginx
+      image: nginx
+      volumeMounts:
+        - name: listener
+          mountPath: /listener # <3>
 
-* A HDFS cluster resource is created by the user, with a `private` listener setting.
-* The HDFS Operator requests a PVC of the listener.stackable.tech type and an annotation to create a `private` listener.
-* The listener-operator provisions a NodePort Service for the volume request, which means a Service per Pod. It reads the NodePort IP and port.
+Under the hood a listener-operator runs as a CSI driver with a new `listener.stackable.tech` type. It provides a volume with files that provide information to the pod about the listener ((3)). When requesting the volume, whether the volume is `ephemeral` or `persistent` ((1)) defines whether the listener should be sticky or not. Through annotations ((2)) it is defined whether the listener is public or not.
+
+Inside a ProductCluster CRD there will be a new setting inside RoleGroups:
+
+[source,yaml]
+...
+  spec:
+    myRole:
+      default:
+        listenerClassName: public
+
+The product operator will use this as well as its own knowledge whether the role of this product requires sticky addresses to configure the PVC accordingly as seen above.
+
+Communication flow example using the HDFS Operator, assuming we're operating in an on-prem cluster:
+
+* A HDFS cluster resource is created by the user, with a `public` listenerClassName for all roles.
+* The HDFS Operator requests a PVC of the listener.stackable.tech type and an annotation to create a `public` listener. For Namenodes it requests sticky addresses, and for data nodes ephemeral addresses.
+* The listener-operator provisions a NodePort Service for every volume request. This means a NodePort service per Pod. It reads the NodePort IP and port.
 * The listener-operator provisions the volumes with files inside containing information about the pods outside address and port - The IP and port of the NodePort Service. Because of the PVC it knows which pod the volume will be mounted into, and can find out the NodePort that belongs to the pod.
 * the HDFS operator already provisioned the pod with a script that read the files from the mounted volume into environment variables which are then read by HDFS. This part is product specific.
 
-// Setup is done, how does the client connect now?
-The NodePorts are now created and HDFS knows about them, the client can now connect to HDFS from outside the cluster. An initial connection to HDFS is made through a NodePort, the address and port are found in the HDFS xref:concepts:service_discovery.adoc[]. Through the mechanism described above, any addresses of other nodes that HDFS gives to the client will be NodePort addresses, so subsequent connections will go through the NodePorts too.
 
 How are the problems in the <<_context_and_problem_statement,Problem Statement>> addressed?
 
-* **Unstable Addresses** - Using a CSI driver and mounting in storage automatically creates stickiness. Any new pods after a pod crashes will be created on the same node as the old pod - and thus also reuse the NodePort and the address it has.
-* **Replicas not addressable** - Since every replica in a StatefulSet will have its own Listener, they are also individually addressable
+* **Unstable Addresses** - Using a CSI driver and mounting in storage automatically creates stickiness. Any new pods after a pod crashes will be created on the same node as the old pod - and thus also reuse the NodePort and the address it has should the volume be configured to be sticky to the node.
+* **Replicas not addressable** - Since every replica in a StatefulSet will have its own Listener, they are also individually addressable.
 * **Pods don't know their outside address** - The outside address of a pod gets passed into the pod through the mounted volume. The pod then knows its outside address.
+
+=== How does a client connect?
+
+This depends on the location of the cluster and which type of listener was deployed. In the example above NodePorts were used. In that case an initial connection to HDFS is made through a NodePort, the address and port are found in the HDFS xref:concepts:service_discovery.adoc[]. Through the mechanism described above, any addresses of other nodes that HDFS gives to the client will be NodePort addresses, so subsequent connections will go through the NodePorts too.
+
+In a GCP Kubernetes cluster, one might instead use a listener of type LoadBalancer. This will then deploy a LoadBalancer with a Google Backend, and traffic can enter the cluster through there. Again, the initial connection information needs to be taken from the discovery ConfigMap.
+
+=== What about node failure?
+
+It depends on the type of listener that is used. If a LoadBalancer is used, the pods that were on the now failed node will just be started again on a different node, and Kubernetes will wire everything up again.
+
+If NodePorts are used, it depends on whether the Listeners are sticky or not (implemented with ephemeral or persistent mounted volumes). If the Listener is not sticky, the Pod can be moved to a different Node. If the Listener is sticky, the Pod will not be able to start until the Node recovers.
 
 === How the name came to be
 
