@@ -129,7 +129,7 @@ Communication flow example using the HDFS Operator, assuming we're operating in 
 
 How are the problems in the <<_context_and_problem_statement,Problem Statement>> addressed?
 
-* **Unstable Addresses** - Using a CSI driver and mounting in storage automatically creates stickiness. Any new pods after a pod crashes will be created on the same node as the old pod - and thus also reuse the NodePort and the address it has should the volume be configured to be sticky to the node.
+* **Unstable Addresses** - Using a CSI driver and mounting in storage lets us manage stickiness. Any new pods after a pod is deleted will be created on the same node as the old pod - and thus also reuse the NodePort and the address it has, should the volume be configured to be sticky to the node.
 * **Replicas not addressable** - Since every replica in a StatefulSet will have its own Listener, they are also individually addressable.
 * **Pods don't know their outside address** - The outside address of a pod gets passed into the pod through the mounted volume. The pod then knows its outside address.
 
