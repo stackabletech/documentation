@@ -169,7 +169,7 @@ There is only one design, which is already in its implementation.
 Pros:
 
 * There is little routing overhead (compared to proxying or similar).
-* The listener-operator can be extended to support more ListenerClasses.
+* The listener-operator can be extended to support more types of ListenerClasses.
 * It is a very low-friction solution that doesn't require a lot of permissions to set up.
 
 Cons:
