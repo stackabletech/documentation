@@ -135,7 +135,7 @@ How are the problems in the <<_context_and_problem_statement,Problem Statement>>
 
 === How are external IPs retrieved by the listener operator?
 
-For LoadBalancers, the IPs are written back into the Service object, which are then taken from there.
+For LoadBalancers, the IPs are written back into the Service object (by the third-party load balancer controller), which are then taken from there.
 
 For NodePorts, for each Pod the IP of the Node the Pod is running on is taken.
 
