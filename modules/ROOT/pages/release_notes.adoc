@@ -24,6 +24,7 @@ Support for internal and external TLS::
 The following operators support operating the products at a maximal level of transport security by using TLS certificates to secure internal and external communication:
 
 * https://github.com/stackabletech/trino-operator/pull/244[trino]
+* https://github.com/stackabletech/kafka-operator/pull/442[kafka]
 * https://github.com/stackabletech/zookeeper-operator/pull/479[zookeeper]
 
 LDAP authentication::
