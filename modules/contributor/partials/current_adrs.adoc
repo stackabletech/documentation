@@ -19,4 +19,4 @@
 **** xref:adr/ADR020-trino_catalog_usage.adoc[]
 **** xref:adr/ADR021-stackablectl_stacks_inital_version.adoc[]
 **** xref:adr/ADR022-spark-history-server.adoc[]
-**** xref:adr/ADR023-image-selection-operator.adoc[]
+**** xref:adr/ADR023-product-image-selection.adoc[]
