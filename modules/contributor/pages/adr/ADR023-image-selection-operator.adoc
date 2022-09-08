@@ -1,7 +1,7 @@
 = ADR023: Product image selection
 Maxi Wittich <maximilian.wittich@stackable.tech>, Sebastian Bernauer <sebastian.bernauer@stackable.tech>
 v0.1, 2022-08-31
-:status: pending
+:status: accepted
 
 * Deciders:
 ** Malte Sander
