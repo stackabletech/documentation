@@ -14,26 +14,26 @@ The following new major platform features were added:
 OpenShift compatibility::
 The following operators are now OpenShift compatible:
 
-* https://github.com/stackabletech/airflow-operator/pull/127[airflow]
-* https://github.com/stackabletech/hbase-operator/pull/232[hbase]
-* https://github.com/stackabletech/hdfs-operator/pull/225[hdfs]
-* https://github.com/stackabletech/spark-k8s-operator/pull/126[spark-k8s]
+* https://github.com/stackabletech/airflow-operator/pull/127[Apache Airflow]
+* https://github.com/stackabletech/hbase-operator/pull/232[Apache HBase]
+* https://github.com/stackabletech/hdfs-operator/pull/225[Apache HDFS]
+* https://github.com/stackabletech/spark-k8s-operator/pull/126[Apache Spark on K8s]
 
 
 Support for internal and external TLS::
 The following operators support operating the products at a maximal level of transport security by using TLS certificates to secure internal and external communication:
 
-* https://github.com/stackabletech/trino-operator/pull/244[trino]
-* https://github.com/stackabletech/kafka-operator/pull/442[kafka]
+* https://github.com/stackabletech/trino-operator/pull/244[Trino]
+* https://github.com/stackabletech/kafka-operator/pull/442[Apache Kafka]
 * https://github.com/stackabletech/zookeeper-operator/pull/479[zookeeper]
 
 LDAP authentication::
 Use a central LDAP server to manage all of your user identities in a single place.
 The following operators added support for LDAP authentication:
 
-* https://github.com/stackabletech/airflow-operator/pull/133[airflow]
-* https://github.com/stackabletech/nifi-operator/pull/303[nifi]
-* https://github.com/stackabletech/superset-operator/pull/180[superset]
+* https://github.com/stackabletech/airflow-operator/pull/133[Apache Airflow]
+* https://github.com/stackabletech/nifi-operator/pull/303[Apache NifFi]
+* https://github.com/stackabletech/superset-operator/pull/180[Apache Superset]
 
 === stackablectl
 
