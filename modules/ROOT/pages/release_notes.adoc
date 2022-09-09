@@ -32,7 +32,7 @@ Use a central LDAP server to manage all of your user identities in a single plac
 The following operators added support for LDAP authentication:
 
 * https://github.com/stackabletech/airflow-operator/pull/133[Apache Airflow]
-* https://github.com/stackabletech/nifi-operator/pull/303[Apache NifFi]
+* https://github.com/stackabletech/nifi-operator/pull/303[Apache NiFi]
 * https://github.com/stackabletech/superset-operator/pull/180[Apache Superset]
 
 === stackablectl
