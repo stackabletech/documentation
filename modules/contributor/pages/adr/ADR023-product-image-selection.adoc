@@ -12,7 +12,7 @@ v0.1, 2022-08-31
 * Date: 2022-08-31
 
 == Context and Problem Statement
-Currently users have to specify the full image tag in the Products CRD.
+Currently users have to specify the full image tag in the Products CRD, as described in xref:adr/ADR018-product_image_versioning.adoc[].
 
 [source,yaml]
 ----

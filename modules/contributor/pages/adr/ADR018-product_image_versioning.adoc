@@ -60,7 +60,7 @@ Based on the above, there are actually two decisions to take around this problem
 While these two questions are related to each other they can be decided fairly independently of each other.
 The decision process for _2._ will be influenced by the decision that is taken on _1._, so we will get this done first.
 
-This ADR will be limited to the question of how stackable image versions are created, with the question of how the operator derives the correct image to use deferred to a subsequent ADR.
+This ADR will be limited to the question of how stackable image versions are created, with the question of how the operator derives the correct image to use deferred to a subsequent ADR (see xref:adr/ADR023-product-image-selection.adoc[]).
 
 == Decision Drivers
 
