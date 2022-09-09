@@ -72,6 +72,14 @@ $ stackablectl release uninstall 22.06
 # ...
 ----
 
+Afterwards you will need to remove all the CustomResourceDefinitions installed by the Stackable Platform.
+Please note that this will remove all your installed CustomResources, so make sure to save them.
+
+[source,console]
+----
+$ kubectl get crd -o name | grep '\.stackable\.tech$' | xargs kubectl delete
+----
+
 To install the `22.09` release run
 
 [source,console]
