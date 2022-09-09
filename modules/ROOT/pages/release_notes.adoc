@@ -25,7 +25,7 @@ The following operators support operating the products at a maximal level of tra
 
 * https://github.com/stackabletech/trino-operator/pull/244[Trino]
 * https://github.com/stackabletech/kafka-operator/pull/442[Apache Kafka]
-* https://github.com/stackabletech/zookeeper-operator/pull/479[zookeeper]
+* https://github.com/stackabletech/zookeeper-operator/pull/479[Apache ZooKeeper]
 
 LDAP authentication::
 Use a central LDAP server to manage all of your user identities in a single place.
