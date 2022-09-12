@@ -1,0 +1,191 @@
+= ADR024: How to provide stable out-of-cluster access to products
+Felix Hennig <felix.hennig@stackable.tech>
+v0.1, 2022-09-06
+:status: accepted
+
+* Status: {status}
+* Deciders:
+** Teo Klestrup Röijezon
+** Felix Hennig
+** Vladislav Supalov
+* Date: 2022-09-06
+
+Technical Story: https://github.com/stackabletech/listener-operator/pull/1
+
+== Context and Problem Statement
+// Describe the context and problem statement, e.g., in free form using two to three sentences. You may want to articulate the problem in form of a question.
+
+Eventually, the products we host in Kubernetes will need to be accessed from outside of the cluster, as this is where the client is. Our current solution for this is NodePort services. They are a simple and common solution for on-premise clusters, where nodes are reachable hosts in the local network. To get traffic into a Kubernetes cluster that runs in a public cloud, NodePorts do not work; instead LoadBalancers are the preferred solution. 
+
+While a Pods name is stable across restarts and rescheduling, the IP of the NodePort can change if a Pod is rescheduled to a different node. This means that external addresses from simple NodePorts are not stable. LoadBalancers are not tied to nodes, but they are often not available in on-prem clusters.
+At the moment we deploy NodePort Services per RoleGroup; clients cannot connect to an individual Pod in a RoleGroup.
+Some products need to be able to link to _specific_ replicas in a StatefulSet, as they shard data across process instances, across nodes. Therefore the nodes need to also be individually reachable from outside of the cluster.
+
+Additionally, Pods currently do not know the address under which they are reachable from outside of the cluster, no matter if NodePorts or LoadBalancers are used. While this is not a problem for simple web UIs, it is a problem for products that do their own "routing", like HDFS or Kafka. These products will link to other nodes to point clients to specific data that only exists in specific nodes. These links cannot be constructed if the addresses under which nodes are reachable are not known to the product.
+
+Problems:
+
+* **Unstable addresses** - Clients need stable addresses to connect to, but Kubernetes can move pods around. While the discovery ConfigMap is updated, it's not feasible to ask the client to pull the new info from there every time, clients will want to use static config files with static addresses to connect to.
+* **Replicas not addressable** - In our current setup, there's no way to connect to a specific replica in a StatefulSet or Deployement - which is necessary for cases like the data nodes of HDFS.
+* **Pods don't know their outside address** - The hostname and IP that the pods know about themselves is from _inside_ the cluster. The IP only works inside the overlay network. This means ProductCluster processes cannot link to other nodes of the cluster.
+
+== Decision Drivers
+// Which criteria are useful to evaluate solutions?
+
+* At least for HDFS, connections to individual pods will be used to transmit data, this means that performance is relevant.
+* On-prem customers will often not have any kind of network-level load balancing (at least not one that is configurable by K8s).
+* Cloud customers will often have relatively short-lived K8s nodes.
+* The solution should be minimally invasive - no large setups required outside of the cluster.
+
+== Considered Options
+
+Off-the-shelf solutions were briefly spiked, but discarded due to requiring complex setup and/or heavy out-of-cluster dependencies which were deemed unacceptable to require from customers. Brief notes on this can be found in <<_spiked_alternatives>> below.
+
+The other alternative is a custom solution to be implemented by us. It is outlined below.
+
+== Implemented Solution
+
+A new resource is proposed: Listener. It is handled similarly to storage. There is are ListenerClasses for different types of Listeners - analogous to StorageClass. There are Listener objects - similar to PersistentVolumes. And claims to listeners are made in ProductCluster objects.
+
+
+This is an example of a NodePort ListenerClass useful for an on-prem cluster:
+
+[source,yaml]
+---
+apiVersion: listener.stackable.tech/v1alpha1
+kind: ListenerClass
+metadata:
+  name: public
+spec:
+  serviceType: NodePort
+
+This is what an internal Listener in a GKE cluster could look like:
+
+[source,yaml]
+---
+apiVersion: listener.stackable.tech/v1alpha1
+kind: ListenerClass
+metadata:
+  name: internal
+spec:
+  serviceType: LoadBalancer
+  serviceAnnotations:
+    networking.gke.io/load-balancer-type: Internal
+
+ListenerClasses allow for various different ways of getting outside traffic into the cluster. A dedicated operator seperates the deployment of this out - the product operators need to only request the listeners.
+
+Requests for Listeners are made through annotated volume claim templates:
+
+[source,yaml]
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: example-public-pod
+spec:
+  volumes:
+    - name: listener
+      ephemeral: # <1>
+        volumeClaimTemplate:
+          metadata:
+            annotations:
+              listener.stackable.tech/listener-class: public # <2>
+          spec:
+            storageClassName: listener.stackable.tech
+            accessModes:
+              - ReadWriteMany
+            resources:
+              requests:
+                storage: "1"
+  containers:
+    - name: nginx
+      image: nginx
+      volumeMounts:
+        - name: listener
+          mountPath: /listener # <3>
+
+Under the hood a listener-operator runs as a CSI driver with a new `listener.stackable.tech` type. It provides a volume with files that provide information to the pod about the listener ((3)). When requesting the volume, whether the volume is `ephemeral` or `persistent` ((1)) defines whether the listener should be sticky or not. Through annotations ((2)) it is defined whether the listener is public or not.
+
+Inside a ProductCluster CRD there will be a new setting inside RoleGroups:
+
+[source,yaml]
+...
+  spec:
+    myRole:
+      default:
+        listenerClassName: public
+
+The product operator will use this as well as its own knowledge whether the role of this product requires sticky addresses to configure the PVC accordingly as seen above.
+
+Communication flow example using the HDFS Operator, assuming we're operating in an on-prem cluster:
+
+* A HDFS cluster resource is created by the user, with a `public` listenerClassName for all roles.
+* The HDFS Operator requests a PVC of the listener.stackable.tech type and an annotation to create a `public` listener. For Namenodes it requests sticky addresses, and for data nodes ephemeral addresses.
+* The listener-operator provisions a NodePort Service for every volume request. This means a NodePort service per Pod. It reads the NodePort IP and port.
+* The listener-operator provisions the volumes with files inside containing information about the pods outside address and port - The IP and port of the NodePort Service. Because of the PVC it knows which pod the volume will be mounted into, and can find out the NodePort that belongs to the pod.
+* the HDFS operator already provisioned the pod with a script that read the files from the mounted volume into environment variables which are then read by HDFS. This part is product specific.
+
+
+How are the problems in the <<_context_and_problem_statement,Problem Statement>> addressed?
+
+* **Unstable Addresses** - Using a CSI driver and mounting in storage lets us manage stickiness. Any new pods after a pod is deleted will be created on the same node as the old pod - and thus also reuse the NodePort and the address it has, should the volume be configured to be sticky to the node.
+* **Replicas not addressable** - Since every replica in a StatefulSet will have its own Listener, they are also individually addressable.
+* **Pods don't know their outside address** - The outside address of a pod gets passed into the pod through the mounted volume. The pod then knows its outside address.
+
+=== How are external IPs retrieved by the listener operator?
+
+For LoadBalancers, the IPs are written back into the Service object (by the third-party load balancer controller), which are then taken from there.
+
+For NodePorts, for each Pod the IP of the Node the Pod is running on is taken.
+
+=== How does a client connect?
+
+This depends on the location of the cluster and which type of listener was deployed. In the example above NodePorts were used. In that case an initial connection to HDFS is made through a NodePort, the address and port are found in the HDFS xref:concepts:service_discovery.adoc[]. Through the mechanism described above, any addresses of other nodes that HDFS gives to the client will be NodePort addresses, so subsequent connections will go through the NodePorts too.
+
+In a GCP Kubernetes cluster, one might instead use a listener of type LoadBalancer. This will then deploy a LoadBalancer with a Google Backend, and traffic can enter the cluster through there. Again, the initial connection information needs to be taken from the discovery ConfigMap.
+
+=== What about node failure?
+
+It depends on the type of listener that is used. If a LoadBalancer is used, the pods that were on the now failed node will just be started again on a different node, and Kubernetes will wire everything up again.
+
+If NodePorts are used, it depends on whether the Listeners are sticky or not (implemented with ephemeral or persistent mounted volumes). If the Listener is not sticky, the Pod can be moved to a different Node. If the Listener is sticky, the Pod will not be able to start until the Node recovers.
+
+=== Will it still be possible to use a LoadBalancer per role, if individual replica access is not required?
+
+Yes. There is a 1:1 mapping of listener PVCs to deployed listeners. It is possible to pre-provision a listener PVCs for a role and then mount it into each role replica.
+
+=== How the name came to be
+
+The new operator handles resources related to bringing outside traffic into the cluster. Some words that come to mind were Ingress and Gateway, but they are already used by Kubernetes native objects. Initially LoadBalancer-operator was considered, but since it doesn't exclusively deploy LoadBalancer objects (also NodePorts), the name is not good.
+
+Listener describes well its functionality: It is listening for outside traffic. Also, the name is not taken in Kubernetes yet.
+
+== Decision Outcome
+
+There is only one design, which is already in its implementation.
+
+
+Pros:
+
+* There is little routing overhead (compared to proxying or similar).
+* The listener-operator can be extended to support more types of ListenerClasses.
+* It is a very low-friction solution that doesn't require a lot of permissions to set up.
+
+Cons:
+
+* The processes of some products like HDFS and Kafka assume that they are only reachable under one specific address. They cannot, for example, use one network for internal communication and a different network for external communication. This means that if outside access with the listener operator is configured, all traffic will be routed that way, also internal traffic that would not need to be routed out of the cluster.
+* This operator is deployed as a `DaemonSet` , which means it adds a small amount of overhead on all nodes inside the cluster and to the control plane's api server.
+* Such an operator cannot be deployed using OpenShift's Operator Lifecycle Manager and consequently cannot be certified on that platform.
+
+== Spiked Alternatives
+
+Some notes about the briefly tested off-the-shelf solutions.
+
+=== MetalLB
+link:https://metallb.universe.tf/[MetalLB] is a bare metal load balancer that was spiked briefly. However it requires BGP/ARP integration, which is not feasible as a requirement for customer installations.
+
+With ARP, the LoadBalancers appear as "real" IP addresses in the same subnet as the nodes (with no need to configure custom routing roules). However, this scales poorly (it assumes that all nodes are in the same L2 broadcast domain) and is relatively likely to be blocked by firewalls or network policy.
+
+=== Calico
+
+link:https://www.tigera.io/project-calico/[Calico] requires BGP, another component that we cannot make required for customer setups.
