@@ -57,8 +57,8 @@ You can list the available releases as follows
 ----
 $ stackablectl release list
 RELEASE            RELEASE DATE   DESCRIPTION
-22.06              2022-06-30     First official release of the Stackable Data Platform
 22.09              2022-09-09     Second release focusing on security and OpenShift support
+22.06              2022-06-30     First official release of the Stackable Data Platform
 ----
 
 To uninstall the `22.06` release run
@@ -72,12 +72,25 @@ $ stackablectl release uninstall 22.06
 # ...
 ----
 
-Afterwards you will need to remove all the CustomResourceDefinitions installed by the Stackable Platform.
-Please note that this will remove all your installed CustomResources, so make sure to save them.
+Afterwards you will need to update the CustomResourceDefinitions (CRDs) installed by the Stackable Platform.
+The reason is, that helm will uninstall the operators but not the CRDs.
 
 [source,console]
 ----
-$ kubectl get crd -o name | grep '\.stackable\.tech$' | xargs kubectl delete
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/airflow-operator/0.5.0/deploy/helm/airflow-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/commons-operator/0.3.0/deploy/helm/commons-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/druid-operator/0.7.0/deploy/helm/druid-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/hbase-operator/0.4.0/deploy/helm/hbase-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/hdfs-operator/0.5.0/deploy/helm/hdfs-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/hive-operator/0.7.0/deploy/helm/hive-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/kafka-operator/0.7.0/deploy/helm/kafka-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/nifi-operator/0.7.0/deploy/helm/nifi-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/opa-operator/0.10.0/deploy/helm/opa-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/secret-operator/0.5.0/deploy/helm/secret-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/0.5.0/deploy/helm/spark-k8s-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/superset-operator/0.6.0/deploy/helm/superset-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/trino-operator/0.6.0/deploy/helm/trino-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/0.11.0/deploy/helm/zookeeper-operator/crds/crds.yaml
 ----
 
 To install the `22.09` release run
@@ -116,11 +129,33 @@ release "commons-operator" uninstalled
 # ...
 ----
 
+Afterwards you will need to update the CustomResourceDefinitions (CRDs) installed by the Stackable Platform.
+The reason is, that helm will uninstall the operators but not the CRDs.
+
+[source,console]
+----
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/airflow-operator/0.5.0/deploy/helm/airflow-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/commons-operator/0.3.0/deploy/helm/commons-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/druid-operator/0.7.0/deploy/helm/druid-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/hbase-operator/0.4.0/deploy/helm/hbase-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/hdfs-operator/0.5.0/deploy/helm/hdfs-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/hive-operator/0.7.0/deploy/helm/hive-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/kafka-operator/0.7.0/deploy/helm/kafka-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/nifi-operator/0.7.0/deploy/helm/nifi-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/opa-operator/0.10.0/deploy/helm/opa-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/secret-operator/0.5.0/deploy/helm/secret-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/0.5.0/deploy/helm/spark-k8s-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/superset-operator/0.6.0/deploy/helm/superset-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/trino-operator/0.6.0/deploy/helm/trino-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/0.11.0/deploy/helm/zookeeper-operator/crds/crds.yaml
+----
+
 To install the release 22.09 run
 
 [source,console]
 ----
 $ helm repo add stackable https://repo.stackable.tech/repository/helm-stable/
+$ helm repo update stackable
 $ helm install --wait airflow-operator stackable/airflow-operator --version 0.5.0
 $ helm install --wait commons-operator stackable/commons-operator --version 0.3.0
 $ helm install --wait druid-operator stackable/druid-operator --version 0.7.0
@@ -162,8 +197,24 @@ use
       directory: /druid
 ----
 
+==== kafka-operator
+1. Add TLS encryption and authentication support for internal and client communications. This is breaking for clients because the cluster is secured per default, which results in a client port change (https://github.com/stackabletech/kafka-operator/pull/442[#442]).
+If you don't want to use TLS to secure your Kafka cluster you can restore the old behavior by using the `tls` attribute as follows:
+
+[source,yaml]
+----
+apiVersion: kafka.stackable.tech/v1alpha1
+kind: KafkaCluster
+# ...
+spec:
+  config:
+    tls: null
+  # ...
+----
+
 ==== trino-operator
-1. TrinoCatalogs now have their own CRD object and get referenced by the TrinoCluster (https://github.com/stackabletech/trino-operator/pull/263[#263]). Instead of
+1. TrinoCatalogs now have their own CRD object and get referenced by the TrinoCluster (https://github.com/stackabletech/trino-operator/pull/263[#263]).
+Instead of
 
 [source,yaml]
 ----
