@@ -37,7 +37,7 @@ The following operators added support for LDAP authentication:
 
 === stackablectl
 
-`stackablectl` now supports deploying ready-to-use demos, which give an end-to-end demonstration of the usage of the Stackable data platform.
+`stackablectl` now supports deploying ready-to-use demos, which give an end-to-end demonstration of the usage of the Stackable Data Platform.
 The xref:stackablectl::quickstart.adoc[quickstart guide] shows how to get started with `stackablectl`. Here you can see the xref:stackablectl::demos/index.adoc[available demos].
 
 === Supported Kubernetes versions
