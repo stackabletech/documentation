@@ -4,6 +4,8 @@ site:
   url: https://docs.stackable.tech
   start_page: home::index.adoc
   robots: allow
+  keys:
+    enable_tracking: false
 
 urls:
   # This replaces the component version in the URL of the latest stable version with 'stable'
