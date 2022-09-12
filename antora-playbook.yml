@@ -2,6 +2,7 @@
 site:
   title: Stackable Documentation
   url: https://docs.stackable.tech
+  start_page: home::index.adoc
   robots: allow
 
 urls:
@@ -81,7 +82,7 @@ content:
 ui:
   bundle:
     url: ./ui/build/ui-bundle.zip
-  supplemental_files: ./node_modules/@antora/lunr-extension/supplemental_ui
+  supplemental_files: ./supplemental-ui
 
 antora:
   extensions:
@@ -92,6 +93,7 @@ asciidoc:
   attributes:
     base-repo: https://github.com/stackabletech
     plantuml-server-url: http://www.plantuml.com/plantuml
+    kroki-fetch-diagram: true
   extensions:
     - asciidoctor-kroki
 
