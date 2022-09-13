@@ -12,15 +12,13 @@ The main features focus on OpenShift support and security.
 The following new major platform features were added:
 
 OpenShift compatibility::
-As a first step towards certification of our own SDP operators we are implementing stricter security rules so that compatibility is satisfied.
-This work will be iterative in nature but similar security features - mainly the fact that product Pods must run with a custom `ServiceAccount` and `SecurityContextConstraint` - will be added to other operators over time.
-With this release the following operators have been improved with the previously mentioned features:
+We have made continued progress towards OpenShift compability, and the following operators can now be previewed on OpenShift.
+Further improvements are expected in future releases, but no stability or compatibility guarantees are currently made for OpenShift clusters.
 
 * https://github.com/stackabletech/airflow-operator/pull/127[Apache Airflow]
 * https://github.com/stackabletech/hbase-operator/pull/232[Apache HBase]
 * https://github.com/stackabletech/hdfs-operator/pull/225[Apache HDFS]
 * https://github.com/stackabletech/spark-k8s-operator/pull/126[Apache Spark on K8s]
-
 
 Support for internal and external TLS::
 The following operators support operating the products at a maximal level of transport security by using TLS certificates to secure internal and external communication:
