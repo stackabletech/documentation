@@ -12,7 +12,9 @@ The main features focus on OpenShift support and security.
 The following new major platform features were added:
 
 OpenShift compatibility::
-The following operators are now OpenShift compatible:
+As a first step towards certification of our own SDP operators we are implementing stricter security rules so that compatibility is satisfied.
+This work will be iterative in nature but similar security features - mainly the fact that product Pods must run with a custom `ServiceAccount` and `SecurityContextConstraint` - will be added to other operators over time.
+With this release the following operators have been improved with the previously mentioned features:
 
 * https://github.com/stackabletech/airflow-operator/pull/127[Apache Airflow]
 * https://github.com/stackabletech/hbase-operator/pull/232[Apache HBase]
