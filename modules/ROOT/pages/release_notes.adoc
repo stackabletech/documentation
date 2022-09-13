@@ -134,20 +134,21 @@ The reason is, that helm will uninstall the operators but not the CRDs.
 
 [source,console]
 ----
-$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/airflow-operator/0.5.0/deploy/helm/airflow-operator/crds/crds.yaml
-$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/commons-operator/0.3.0/deploy/helm/commons-operator/crds/crds.yaml
-$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/druid-operator/0.7.0/deploy/helm/druid-operator/crds/crds.yaml
-$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/hbase-operator/0.4.0/deploy/helm/hbase-operator/crds/crds.yaml
-$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/hdfs-operator/0.5.0/deploy/helm/hdfs-operator/crds/crds.yaml
-$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/hive-operator/0.7.0/deploy/helm/hive-operator/crds/crds.yaml
-$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/kafka-operator/0.7.0/deploy/helm/kafka-operator/crds/crds.yaml
-$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/nifi-operator/0.7.0/deploy/helm/nifi-operator/crds/crds.yaml
-$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/opa-operator/0.10.0/deploy/helm/opa-operator/crds/crds.yaml
-$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/secret-operator/0.5.0/deploy/helm/secret-operator/crds/crds.yaml
-$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/0.5.0/deploy/helm/spark-k8s-operator/crds/crds.yaml
-$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/superset-operator/0.6.0/deploy/helm/superset-operator/crds/crds.yaml
-$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/trino-operator/0.6.0/deploy/helm/trino-operator/crds/crds.yaml
-$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/0.11.0/deploy/helm/zookeeper-operator/crds/crds.yaml
+$ kubectl apply \
+  -f https://raw.githubusercontent.com/stackabletech/airflow-operator/0.5.0/deploy/helm/airflow-operator/crds/crds.yaml \
+  -f https://raw.githubusercontent.com/stackabletech/commons-operator/0.3.0/deploy/helm/commons-operator/crds/crds.yaml \
+  -f https://raw.githubusercontent.com/stackabletech/druid-operator/0.7.0/deploy/helm/druid-operator/crds/crds.yaml \
+  -f https://raw.githubusercontent.com/stackabletech/hbase-operator/0.4.0/deploy/helm/hbase-operator/crds/crds.yaml \
+  -f https://raw.githubusercontent.com/stackabletech/hdfs-operator/0.5.0/deploy/helm/hdfs-operator/crds/crds.yaml \
+  -f https://raw.githubusercontent.com/stackabletech/hive-operator/0.7.0/deploy/helm/hive-operator/crds/crds.yaml \
+  -f https://raw.githubusercontent.com/stackabletech/kafka-operator/0.7.0/deploy/helm/kafka-operator/crds/crds.yaml \
+  -f https://raw.githubusercontent.com/stackabletech/nifi-operator/0.7.0/deploy/helm/nifi-operator/crds/crds.yaml \
+  -f https://raw.githubusercontent.com/stackabletech/opa-operator/0.10.0/deploy/helm/opa-operator/crds/crds.yaml \
+  -f https://raw.githubusercontent.com/stackabletech/secret-operator/0.5.0/deploy/helm/secret-operator/crds/crds.yaml \
+  -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/0.5.0/deploy/helm/spark-k8s-operator/crds/crds.yaml \
+  -f https://raw.githubusercontent.com/stackabletech/superset-operator/0.6.0/deploy/helm/superset-operator/crds/crds.yaml \
+  -f https://raw.githubusercontent.com/stackabletech/trino-operator/0.6.0/deploy/helm/trino-operator/crds/crds.yaml \
+  -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/0.11.0/deploy/helm/zookeeper-operator/crds/crds.yaml
 ----
 
 To install the release 22.09 run
