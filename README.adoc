@@ -42,3 +42,7 @@ The design & layout comes from our https://github.com/stackabletech/documentatio
 === Remote IDE
 
 A remote vscode instance can be used via https://gitpod.io/#/github.com/stackabletech/documentation
+
+== Tracking
+
+The documentation UI includes a script for user tracking. The documentation can be built with or without it. Tracking enabled/disabled by setting `site.keys.enable_tracking` to `true` or `false`. The tracking code is in the UI repository in `src/partials/head-scripts.hbs`.

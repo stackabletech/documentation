@@ -20,7 +20,7 @@ jobs:
           node-version: '16'
           cache: 'npm'
       - run: npm ci
-      - run: make ANTORAFLAGS=--fetch
+      - run: make ANTORAFLAGS=--fetch PLAYBOOK=antora-playbook.yml
       - name: Publish to GitHub Pages
         uses: peaceiris/actions-gh-pages@068dc23d9710f1ba62e86896f84735d869951305 # tag=v3
         with:
