@@ -76,9 +76,9 @@ docker push -t <tag>
 ----
 to
 [source, bash]
- ----
- docker buildx build -t <tag> -f <dockerfile> --platform <platform1><platform2> --push
- ----
+----
+docker buildx build -t <tag> -f <dockerfile> --platform <platform1><platform2> --push
+----
 This made it possible to have multi arch images in Nexus. This is, because we do not have to compile anything to build product images.
 === Operators
 For operators this is a different story. We encountered several problems with docker respective with qemu due to certain flaws of the emulation. For making this work, we needed to tell cargo precisly what we compile for. We had to follow the whole process to multi-arch as if we would compile for a non-native architecture. Although we basically are in the target architecture (since emulated) we needed to have the toolchain downloaded and linker and c-compiler setted in the environment. Because of a library called unicode-bidi, we encountered segmentation faults during compile time. This was not possible to solve without giving cargo a specific target as if the base os was non-native. 
