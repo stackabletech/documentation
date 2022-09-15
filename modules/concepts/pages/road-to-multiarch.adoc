@@ -1,0 +1,92 @@
+= Road to Multi-Arch
+
+== Motivation
+// Talk about why we want multi-arch, what was the initiator
+With the release of Apples M1 chip, ARM became accessable for a brought audience. AWS published to bring some clusters online with ARM at it's heart ( link:https://aws.amazon.com/ec2/graviton/[AWS Graviton3] ). They prupose a 40% better price performance compared to the current X86-based instances. We therefore assume an siginificant audience being attracted to the better price and higher performance ARM-based systems have to offer. 
+
+As a Start-Up we want to gain traction for our products and try to cover as many developing systems on the market as possible. Although ARM-based systems are announced a while ago, we decided now to go for multi-arch since developer showed interest in Apples M1 based systems. In order to provide the freedom of choice to our team, we decided to use this interest as a kick-off for enabling multi-arch images for our products and operators. 
+
+Please notice that this article is written by somebody who chose a arm64-based system.
+
+== Definitions
+// define what you are going to talk about, difference between operator- and product-images
+=== Product Image
+Product Images are products which actually work for our customer. We understand things like Kafka, Nifi, Airflow and Superset as our products and those are as images in our repository. Important to notice is, that products do not require a compiled binary by us. We just bundle those up in a Image, this image on the other hand requires to be prepared in the architecture the customer wants to use. For those, we use docker buildx. 
+=== Operators
+Operators represent our infrastructure as code. Those are written in Rust and require compilation for the target architecture and therefore we use cargos target flag to specify the architecture to build for. However, operators are going to be shipped in a image.
+=== Multi-Arch-Images
+Multi-Arch-Images are images which are looking from the outside like a usual image. Under the hood, you find a manifest list in your repository which is pointing to different builds for the architectures defined. When pulling a image, docker can decide which architecture it's running on and pulling the correct image accordingly.
+
+== Outline and seperation
+// What do we do with docker, why cross-compiling with cargo
+Cross-platfrom-builds require some prerequisite and requirements in term of code, library and developement environment. For clarity we would like to make some seperations between techniques necessary to archive multi-platform coverage. 
+=== Docker (qemu) 
+link:https://docs.docker.com/[Docker] comes with an emulator called qemu, which comes with arichtecture simulations and provides a architecture independed foudation to run software of different platforms within. Furthermore Docker provided a method called link:https://docs.docker.com/build/buildx/multiple-builders/[buildx] which can be used for multi-arch docker-images. How to leverage buildx will be outlined later. 
+=== cargo cross-compiling
+The Rust-compiler cargo comes by default with the option to define a target platform using cargo build --target=ARCH. Thus you can compile x86 executable binaries from a arm64-based system. Important to notice, with cargo you *can not* produce multi-arch binaries. 
+
+=== Combination of cargo and docker
+As outlined before, docker is required to build images. As operators are shipped as those, we find a interplay between cargo and docker. On image-build-time, we compile our operator within a docker container. As base image, we use ubi8-minimal hosted by RedHat. Within ubi8 we have a builder (which is also an image) which executes everything necessary to compile the operator. This leads to interplay between an emulated base image via qemu within a docker build where cargo is building a binary for a specific target. 
+
+== Gathered knowledge
+// Problems and technical difficulties. Requirements on qemu and cross-compilation
+This section is dedicated to some technical requirments and difficulties we found. We will outline the problems and limitations we found in a broughter fashion. 
+=== Technical Know-How
+For a short introduction, we would like to give you a hand with the commands and methods we used with docker and cargo to build and publish (you have to publish) multi-arch images of our products and operators
+==== docker buildx
+Docker comes with buildx, which is intended to give a foundation for multi-arch images. This is a extentions to the well known build command. Under the hood, buildx uses a build-kit which is empowered by qemu to produce non-native images on a single architecture. There are certain flags and options you can go with, those will be shown in the following. 
+[source, bash]
+ ----
+ docker buildx build -f <Dockerfile> --platform <platform1>,<platform2> --push
+ ----
+This is the basic command to build a image with two different architectures. In principle, there is no further limitation on the platform1 or 2. It is not necessary that one of those platform is a native one. You might have stumbled now over --push. This flag is going to publish your manifest list to repository. This is, becasue docker is not supporting manifest lists in your local repository due to exporting from cache for the builder instance moby. If you compile exclusively for one non-native architecture, you can use --load to load the image from cache to the local docker repository.
+As a prerequisite, you need for each instance of non-native architecture a builder. Those builder run on the link:https://hub.docker.com/r/moby/buildkit[moby build], this buildkit is basically providing each architecture you might want to target. Native builds (your current system) do not require emulation and therefore do not need a builder. 
+
+To evoke a builder, you can go with:
+[source, bash]
+ ----
+ docker create --name <builder-name> --use
+ ---- 
+This will produce a instance of moby and tell docker to this as additional builder in parallel. If you want to have more than one you need to give an --append <builder-name> flag (to do so, the instance must exist). With this you can create a abitrary number of instances. 
+==== cargo build --target
+Cargo comes with an --target option. Basically you can give cargo a target platform to compile the binary for. To have thought about everything you have to do the following steps:
+[source, bash]
+ ----
+ rustup target add <Target architecture> // for arm64 e.g. aarch64-unknown-linux-gnu
+ ----
+Having now your toolchain ready you habe to set cc, cxx and linker in your environment variables. We will give it as example for arm64:
+[source, bash]
+ ----
+ CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-linux-gnu-gcc 
+ CC_aarch64_unknown_linux_gnu=aarch64-linux-gnu-gcc 
+ CXX_aarch64_unknown_linux_gnu=aarch64-linux-gnu-g++
+ ----
+ Surely those compiler and linker have to be present on your machine and now you are ready to cross-compile for arm64 on a non-native machine. 
+=== Base Images
+Base images are basically the OS we use for the container. We use ubi8-minimal which is available as multi-arch in the RedHat repository. We didn't have to take any former actions here.
+=== Product Images
+In order to have Product Images in multi-arch we only had to change from 
+[source, bash]
+ ----
+ docker build -t <tag> -f <dockerfile>
+ docker push -t <tag>
+ ----
+to
+[source, bash]
+ ----
+ docker buildx build -t <tag> -f <dockerfile> --platform <platform1><platform2> --push
+ ----
+This made it possible to have multi arch images in Nexus. This is, because we do not have to compile anything to build product images.
+=== Operators
+For operators this is a different story. We encountered several problems with docker respective with qemu due to certain flaws of the emulation. For making this work, we needed to tell cargo precisly what we compile for. We had to follow the whole process to multi-arch as if we would compile for a non-native architecture. Although we basically are in the target architecture (since emulated) we needed to have the toolchain downloaded and linker and c-compiler setted in the environment. Because of a library called unicode-bidi, we encountered segmentation faults during compile time. This was not possible to solve without giving cargo a specific target as if the base os was non-native. 
+=== Limitations
+Folowing limitations have been encountered:
+- OpenSSL 
+    We fixed a compile error with OpenSSL with vendoring it 
+== Current state
+// Outline solutions we found and show how to realise stuff (technical discussion)
+=== Product Images
+=== Operators
+
+== Outlook
+// Talk about GH-Actions and what we want to achieve in the future
