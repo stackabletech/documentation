@@ -2,7 +2,7 @@
 
 == Motivation
 // Talk about why we want multi-arch, what was the initiator
-With the release of Apples M1 chip, ARM became accessable for a brought audience. AWS published to bring some clusters online with ARM at it's heart ( link:https://aws.amazon.com/ec2/graviton/[AWS Graviton3] ). They prupose a 40% better price performance compared to the current X86-based instances. We therefore assume an siginificant audience being attracted to the better price and higher performance ARM-based systems have to offer. 
+With the release of Apples M1 chip, ARM became accessable for a brought audience. AWS published to bring spin up some clusters with ARM at their heart ( link:https://aws.amazon.com/ec2/graviton/[AWS Graviton3] ). They prupose a 40% better price performance compared to the current X86-based instances. We therefore assume an siginificant audience being attracted to the better price and higher performance ARM-based systems have to offer. 
 
 As a Start-Up we want to gain traction for our products and try to cover as many developing systems on the market as possible. Although ARM-based systems are announced a while ago, we decided now to go for multi-arch since developer showed interest in Apples M1 based systems. In order to provide the freedom of choice to our team, we decided to use this interest as a kick-off for enabling multi-arch images for our products and operators. 
 
@@ -10,9 +10,11 @@ Please notice that this article is written by somebody who chose a arm64-based s
 
 == Definitions
 // define what you are going to talk about, difference between operator- and product-images
+In the following, we will talk about different problems we were facing during developing mulit architecture images. To avoid confusion we'd like to define things proper. If you feel already informed and confident about de difference between Products and Operators as well as the definition of mulit-arch you may skip this section. 
+
 === Product Image
 
-Product Images are products which actually work for our customer. We understand things like Kafka, Nifi, Airflow and Superset as our products and those are as images in our repository. Important to notice is, that products do not require a compiled binary by us. We just bundle those up in a Image, this image on the other hand requires to be prepared in the architecture the customer wants to use. For those, we use docker buildx. 
+Product Images are products which actually work for our customer. We understand things like Kafka, Nifi, Airflow and Superset as our products and those are as (docker-) images in our repository. Important to notice is, that products do not require to compile a binary on build. We just bundle products and prerequisites up in a Image. This image on the other hand requires to be provided in the architecture the customer wants to use. For those, we use docker buildx. 
 
 === Operators
 
@@ -70,7 +72,7 @@ This will produce a instance of moby and tell docker to this as additional build
 Cargo comes with an --target option. Basically you can give cargo a target platform to compile the binary for. To have thought about everything you have to do the following steps:
 [source, bash]
 ----
-rustup target add <Target architecture> // for arm64 e.g. aarch64-unknown-linux-gnu
+rustup target add <Target architecture> # for arm64 e.g. aarch64-unknown-linux-gnu
 ----
 
 Having now your toolchain ready you habe to set cc, cxx and linker in your environment variables. We will give it as example for arm64:
@@ -81,7 +83,7 @@ CC_aarch64_unknown_linux_gnu=aarch64-linux-gnu-gcc
 CXX_aarch64_unknown_linux_gnu=aarch64-linux-gnu-g++
 ----
 
-Surely those compiler and linker have to be present on your machine and now you are ready to cross-compile for arm64 on a non-native machine. 
+Surely those compiler and linker have to be present on your machine and now you are ready to cross-compile for arm64 on a non-native machine. After reading this, you may ask why we have to go the route with cargo --target and the specifications of linker and c-compiler, since the baseOS will be pulled with the architecture of your machine or the one from your emulation. Exactly that's the point, qemu got a flaw when it comes to compiling with certain libraries such as link:https://crates.io/crates/unicode-bidi[unicode-bidi]. If we compile within qemu we will end up with an segmentation fault, which is a current and known link:https://github.com/rust-lang/rust/issues/94967[issue]. 
 
 === Base Images
 
@@ -110,9 +112,11 @@ For operators this is a different story. We encountered several problems with do
 
 Folowing limitations have been encountered:
 - OpenSSL 
-    We fixed a compile error with OpenSSL with vendoring it 
+    We fixed a compile error with OpenSSL with vendoring it
+
 == Current state
 // Outline solutions we found and show how to realise stuff (technical discussion)
+
 === Product Images
 
 === Operators
