@@ -1,6 +1,6 @@
 = Resource management
 
-The https://stackable.tech/en/[Stackable data platform] and its xref:operators:index.adoc[] deploy their products in https://kubernetes.io/docs/concepts/containers/[Containers] within https://kubernetes.io/docs/concepts/workloads/pods/[Pods] using https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/[Statefulsets] or https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/[DaemonSets]. In order for the Kubernetes scheduler to select a proper https://kubernetes.io/docs/concepts/architecture/nodes/[Node] for a Pod, https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/[resource] requests and limits for CPU and memory are specified. The Kubernetes scheduler ensures that the sum of the CPU and memory requests does not exceed the capacity of a given Node.
+The https://stackable.tech/en/[Stackable data platform] and its xref:operators:index.adoc[] deploy their products in https://kubernetes.io/docs/concepts/containers/[Containers] within https://kubernetes.io/docs/concepts/workloads/pods/[Pods] using https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/[StatefulSets] or https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/[DaemonSets]. In order for the Kubernetes scheduler to select a proper https://kubernetes.io/docs/concepts/architecture/nodes/[Node] for a Pod, https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/[resource] requests and limits for CPU and memory are specified. The Kubernetes scheduler ensures that the sum of the CPU and memory requests does not exceed the capacity of a given Node.
 
 == Terminology
 
@@ -28,7 +28,7 @@ The memory limit is a hard bound. If a Container tries to use more memory than s
 
 === Storage
 
-Some Stackable operators and their products require data storage. This is done using https://kubernetes.io/docs/concepts/storage/persistent-volumes/#persistentvolumeclaims[Persistent Volume Claims] where the size of storage can be specified.
+Some Stackable products require data storage. This is done using https://kubernetes.io/docs/concepts/storage/persistent-volumes/#persistentvolumeclaims[Persistent Volume Claims] where the size of storage can be specified.
 
 == The Kubernetes way
 
@@ -54,7 +54,7 @@ spec:
         cpu: "500m"
 ----
 
-This Pod/Container will be scheduled on a Node that has at least `64Mi` of memory free. It is allowed to use a maximum amount of `128Mi` of memory or will be restarted if this value is exceeded. It can not use more CPU time than `500m` which is half of a physical or virtual core.
+This Pod/Container will be scheduled on a Node that has at least `64Mi` of memory free. It is allowed to use a maximum amount of `128Mi` of memory or will be restarted if this value is exceeded. It can not use more CPU time than `500m` (which is half of a physical or virtual core), but has a guaranteed CPU resource of 250m it can always use.
 
 == The Stackable way
 
@@ -98,7 +98,7 @@ In this case, the role group `resources-from-role` will inherit the resources sp
 
 The role group `resources-from-role-group` has maximum of `4Gi` memory and `800m` CPU time (which overrides the role resources).
 
-IMPORTANT: For Java products the actual used Heap memory is lower than the specified memory limit due to other processes in the Container requiring memory to run as well. This currently is about 0.8 to the specified memory limit.
+IMPORTANT: For Java products the actual used Heap memory is lower than the specified memory limit due to other processes in the Container requiring memory to run as well. Currently we only pass 80% of the specified memory limit to the JVM.
 
 For memory only a limit can be specified, which will be set as memory request and limit in the Container. This is to always guarantee a Container the full amount memory during Kubernetes scheduling.
 
