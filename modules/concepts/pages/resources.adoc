@@ -1,0 +1,139 @@
+= Resource management
+
+The https://stackable.tech/en/[Stackable data platform] and its xref:operators:index.adoc[] deploy their products in https://kubernetes.io/docs/concepts/containers/[Containers] within https://kubernetes.io/docs/concepts/workloads/pods/[Pods] using https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/[Statefulsets] or https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/[DaemonSets]. In order for the Kubernetes scheduler to select a proper https://kubernetes.io/docs/concepts/architecture/nodes/[Node] for a Pod, https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/[resource] requests and limits for CPU and memory are specified. The Kubernetes scheduler ensures that the sum of the CPU and memory requests does not exceed the capacity of a given Node.
+
+== Terminology
+
+The most commonly defined resources are CPU and memory (RAM). Keep in mind that there are other resources as well.
+
+=== CPU
+
+==== Requests
+
+The CPU request defines which containers are allowed to have more CPU time. Larger requests lead to more CPU time than smaller requests if not enough resources are available.
+
+==== Limits
+
+The CPU limit is a hard bound on how much CPU time the Container can use. The Linux Kernel checks to see if the limit is exceeded and waits if this is the case to resume the process.
+
+=== Memory
+
+==== Requests
+
+The memory request is used during Kubernetes scheduling and checks which Nodes offer sufficient memory for a Pod to be scheduled.
+
+==== Limits
+
+The memory limit is a hard bound. If a Container tries to use more memory than specified, the Container is usually marked for restart.
+
+=== Storage
+
+Some Stackable operators and their products require data storage. This is done using https://kubernetes.io/docs/concepts/storage/persistent-volumes/#persistentvolumeclaims[Persistent Volume Claims] where the size of storage can be specified.
+
+== The Kubernetes way
+
+In Kubernetes, you can specify resource requests and limits within Containers of Pods.
+
+[source, yaml]
+----
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: stackable
+spec:
+  containers:
+  - name: stackable
+    image: stackable:0.1.0
+    resources:
+      requests:
+        memory: "64Mi"
+        cpu: "250m"
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+----
+
+This Pod/Container will be scheduled on a Node that has at least `64Mi` of memory free. It is allowed to use a maximum amount of `128Mi` of memory or will be restarted if this value is exceeded. It can not use more CPU time than `500m` which is half of a physical or virtual core.
+
+== The Stackable way
+
+For Stackable operators the resources are defined differently. You can define resources on a xref:roles-and-role-groups.adoc[] level. On a role level this means that e.g. all workers will use the same resource requests and limits. This can be further specified on role group level (which takes priority to the role level) to apply different resources.
+
+=== CPU and memory
+
+This is an example on how to specify CPU and memory resources using the Stackable https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/[Custom Resources]:
+
+[source, yaml]
+----
+---
+apiVersion: example.stackable.tech/v1alpha1
+kind: ExampleCluster
+metadata:
+  name: example
+spec:
+  workers: # role-level
+    config:
+      resources:
+        cpu:
+          min: 300m
+          max: 600m
+        memory:
+          limit: 3Gi
+    roleGroups: # role-group-level
+      resources-from-role: # role-group 1
+        replicas: 1
+      resources-from-role-group: # role-group 2
+        replicas: 1
+        config:
+          resources:
+            cpu:
+              min: 400m
+              max: 800m
+            memory:
+              limit: 4Gi
+----
+
+In this case, the role group `resources-from-role` will inherit the resources specified on the role level. In this case a maximum of `3Gi` memory and `600m` CPU time.
+
+The role group `resources-from-role-group` has maximum of `4Gi` memory and `800m` CPU time (which overrides the role resources).
+
+IMPORTANT: For Java products the actual used Heap memory is lower than the specified memory limit due to other processes in the Container requiring memory to run as well. This currently is about 0.8 to the specified memory limit.
+
+For memory only a limit can be specified, which will be set as memory request and limit in the Container. This is to always guarantee a Container the full amount memory during Kubernetes scheduling.
+
+=== Storage
+
+This is an example on how to specify storage resources using the Stackable https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/[Custom Resources]:
+
+[source, yaml]
+----
+---
+apiVersion: example.stackable.tech/v1alpha1
+kind: ExampleCluster
+metadata:
+  name: example
+spec:
+  workers: # role-level
+    config:
+      resources:
+        storage:
+          data: # name of the storage
+            capacity: 3Gi
+    roleGroups: # role-group-level
+      resources-from-role: # role-group 1
+        replicas: 1
+      resources-from-role-group: # role-group 2
+        replicas: 1
+        config:
+          resources:
+            storage:
+              data: # name of the storage
+                capacity: 4Gi
+----
+
+In this case, the role group `resources-from-role` will inherit the resources specified on the role level. In this case the storage for `data` is requested to be `3Gi`.
+
+The role group `resources-from-role-group` has maximum of `4Gi` storage space for `data` (which overrides the role resources).
+
+IMPORTANT: Stackable operators use different names (`data` in this example) for their storage specification. This is documented in the operator specific documentation.
