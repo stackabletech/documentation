@@ -55,11 +55,15 @@ spec:
         cpu: "500m"
 ----
 
-This Pod/Container will be scheduled on a Node that has at least `64Mi` of memory free. It is allowed to use a maximum amount of `128Mi` of memory or will be restarted if this value is exceeded. It can not use more CPU time than `500m` (which is half of a physical or virtual core), but has a guaranteed CPU resource of `250m` it can always use.
+This Pod/Container will be scheduled on a Node that has at least `64Mi` of free memory. It is allowed to use a maximum amount of `128Mi` of memory or will be restarted if this value is exceeded. It can not use more CPU resources than `500m` (which is half of a physical or virtual core), but has a guaranteed CPU resources of `250m`.
 
 == The Stackable way
 
 For Stackable operators the resources are defined differently. You can define resources on a xref:roles-and-role-groups.adoc[] level. On a role level this means that e.g. all workers will use the same resource requests and limits. This can be further specified on role group level (which takes priority to the role level) to apply different resources.
+
+=== Defaults
+
+If no resources are provided, the Stackable operators will set sensible defaults to ensure a minimal running product. This is by no means production ready. Please configure the resources according to your requirements.
 
 === CPU and memory
 
