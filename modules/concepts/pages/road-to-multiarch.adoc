@@ -27,7 +27,7 @@ Please notice that this article is written by somebody who chose a arm64-based s
 == Outline and seperation
 
 What do we do with docker, why cross-compiling with cargo?
-Cross-platfrom-builds require some prerequisite and requirements in term of code, library and developement environment. For clarity we would like to make some seperations between techniques necessary to archive multi-platform coverage. 
+Cross-platfrom-builds require some prerequisite and requirements in terms of code, libraries and developement environment. For clarity we would like to make some seperations between techniques necessary to archive multi-platform coverage. 
 
 === Docker
 
@@ -36,16 +36,16 @@ Docker is the go-to tool for building images. Those images usally have a base im
 ----
 docker build -f Dockerfile -t tag-of-your-choice 
 ----
-If you push those images to the repository, a manifest will be created storing all metadata such as digests, architecture, lables and so on. If images got pulled by Docker, it will check the manifest list and pull the image if metadata provided matches metadata given (such as tag and version).
+If you push those images to the repository, a manifest will be created storing all metadata such as digests, architecture, lables and so on. If images got pulled by Docker, it will check the manifest and pull the image if metadata provided matches metadata given (such as tag and version).
 For multi-arch, Docker comes with some features to enable the build and the storage in your repository. The following will outline the most important ones.
 
 ==== qemu
 
-link:https://docs.docker.com/[Docker] comes with an emulator called qemu, which comes with arichtecture simulations and provides a architecture independed foundation to run software of different platforms within. Furthermore Docker provided a method called link:https://docs.docker.com/build/buildx/multiple-builders/[buildx] which can be used for multi-arch docker-images. How to leverage buildx will be shown later. 
+link:https://docs.docker.com/[Docker] comes with an emulator called qemu, which comes with arichtecture simulations and provides a architecture independed foundation to run software of different platforms within. Furthermore Docker provides a method called link:https://docs.docker.com/build/buildx/multiple-builders/[buildx] which can be used for multi-arch docker-images. How to leverage buildx will be shown later. 
 
 ==== Manifest Lists
 
-Manifest lists are basically the meta version of a manifest. As the name suggests, manifest list are a list of manifests with different architectures. Each manifest list has a digest, and stores the digests of the corresponding multi arch images. Those list can be created in several ways. In our case we directly exported a manifest list to our repository, since we simultaniously build both architectures via a builder instance. You may also build each architecture seperatly on a native machine, and leverage manifest link:https://docs.docker.com/engine/reference/commandline/manifest_create/[create] 
+Manifest lists are basically the meta version of a manifest. As the name suggests, manifest list are a list of manifests with different architectures. Each manifest list has a digest, and stores the digests of the corresponding images of different architectures. Those lists can be created in several ways. In our case we directly exported a manifest list to our repository, since we simultaniously build both architectures via a builder instance. You may also build each architecture seperatly on a native machine, and leverage manifest link:https://docs.docker.com/engine/reference/commandline/manifest_create/[create] 
 [source, bash]
 ----
 docker manifest create MANIFEST_LIST --amend MANIFEST<Platform1> --amend MANIFEST<Platform2>
@@ -55,20 +55,30 @@ This little larger command will enable you to build all platforms locally, test 
 === cargo cross-compiling
 
 The Rust-compiler cargo comes by default with the option to define a target platform using cargo build --target=ARCH. Thus you can compile x86 executable binaries from a arm64-based system. Important to notice, with cargo you *can not* produce multi-arch binaries. 
-In the full context of qemu and multi-arch builds, you might ask the question why to use cargo cross-compiling since the architecture can get emulated. 
+In the full context of qemu and multi-arch builds, you might ask the question why to use cargo cross-compiling since the architecture can get emulated. Sadly we do not have a apropriate answer to this question, we only can tell that it is not working without it.
 
-=== Combination of cargo and docker
+==== Rustup (Toolchain)
 
-As outlined before, docker is required to build images. As operators are shipped as those, we find a interplay between cargo and docker. On image-build-time, we compile our operator within a docker container. As base image, we use ubi8-minimal hosted by RedHat. Within ubi8 we have a builder (which is also an image) which executes everything necessary to compile the operator. This leads to interplay between an emulated base image via qemu within a docker build where cargo is building a binary for a specific target. 
+If you want to build for a certain architecture, it's necessarry to add the archtecture specific toolchain. In terms of multi-arch, you have to rustup again for the architecture you are already in (qemu emulated architecture). We think at this point, that this is because qemu is not coming with all the regular libraries provided by a native OS or hase some infrastructre problems.
 
-== Gathered knowledge
+=== Why combine cargo and docker
+
+As outlined before, docker is required to build images. Since operators are shipped as those, we find a interplay between cargo and docker. On image-build-time, we compile our operator within a docker container. As base image, we use ubi8-minimal hosted by RedHat. Within ubi8 we have a builder (which is also an image) which executes everything necessary to compile the operator. This leads to interplay between an emulated base image via qemu within a docker build where cargo is building a binary for a specific target.
+
+Please note, that cargos cross-compiling is necessary if and only if you want to compile code within dockers qemu.
+
+=== Dependencies
+
+Since Images are build in layers, you might have at least one dependency for your custom build image such as a base OS. Note that every dependency in the sense of an Image, have to be available in the architecture you target. If you tell Docker to build for different platforms, it will try to retrieve the image in the architecture specified. If it fails to do so, it will default back to any available architecture. This way, it will build mixed images and will not make it obvious to you. There are certain methods to reveal the architecture of your image, we will come to that later.
+
+== Gathered knowledge (Steps to success without further explanation)
 
 // Problems and technical difficulties. Requirements on qemu and cross-compilation
-This section is dedicated to some technical requirments and difficulties we found. We will outline the problems and limitations we found in a broughter fashion. 
+This section is dedicated to some technical requirments and difficulties we found. We will outline the problems and limitations in a wider fashion. 
 
 === Technical Know-How
 
-For a short introduction, we would like to give you a hand with the commands and methods we used with docker and cargo to build and publish (you have to publish) multi-arch images of our products and operators
+We would like to give you a hand with the commands and methods we used with docker and cargo to build and publish (you have to publish) multi-arch images of our products and operators. This section is dedicated to the technical implementation of multi architecture images.  
 
 ==== docker buildx
 
@@ -105,6 +115,8 @@ CXX_aarch64_unknown_linux_gnu=aarch64-linux-gnu-g++
 ----
 
 Surely those compiler and linker have to be present on your machine and now you are ready to cross-compile for arm64 on a non-native machine. After reading this, you may ask why we have to go the route with cargo --target and the specifications of linker and c-compiler, since the baseOS will be pulled with the architecture of your machine or the one from your emulation. Exactly that's the point, qemu got a flaw when it comes to compiling with certain libraries such as link:https://crates.io/crates/unicode-bidi[unicode-bidi]. If we compile within qemu we will end up with an segmentation fault, which is a current and known link:https://github.com/rust-lang/rust/issues/94967[issue]. 
+
+=== Testing and checking multi-architecture images
 
 === Base Images
 
