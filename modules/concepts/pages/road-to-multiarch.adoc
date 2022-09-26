@@ -8,29 +8,44 @@ As a Start-Up we want to gain traction for our products and try to cover as many
 
 Please notice that this article is written by somebody who chose a arm64-based system.
 
-== Definitions
-// define what you are going to talk about, difference between operator- and product-images
-In the following, we will talk about different problems we were facing during developing mulit architecture images. To avoid confusion we'd like to define things proper. If you feel already informed and confident about de difference between Products and Operators as well as the definition of mulit-arch you may skip this section. 
+// shadow-utils= Definitions
+// // define what you are going to talk about, difference between operator- and product-images
+// In the following, we will talk about different problems we were facing during developing mulit architecture images. To avoid confusion we'd like to define things proper. If you feel already informed and confident about de difference between Products and Operators as well as the definition of mulit-arch you may skip this section. 
 
-=== Product Image
+// === Product Image
 
-Product Images are products which actually work for our customer. We understand things like Kafka, Nifi, Airflow and Superset as our products and those are as (docker-) images in our repository. Important to notice is, that products do not require to compile a binary on build. We just bundle products and prerequisites up in a Image. This image on the other hand requires to be provided in the architecture the customer wants to use. For those, we use docker buildx. 
+// Product Images are products which actually work for our customer. We understand things like Kafka, Nifi, Airflow and Superset as our products and those are as (docker-) images in our repository. Important to notice is, that products do not require to compile a binary on build. We just bundle products and prerequisites up in a Image. This image on the other hand requires to be provided in the architecture the customer wants to use. For those, we use docker buildx. 
 
-=== Operators
+// === Operators
 
-Operators represent our infrastructure as code. Those are written in Rust and require compilation for the target architecture and therefore we use cargos target flag to specify the architecture to build for. However, operators are going to be shipped in a image.
+// Operators represent our infrastructure as code. Those are written in Rust and require compilation for the target architecture and therefore we use cargos target flag to specify the architecture to build for. However, operators are going to be shipped in a image.
 
-=== Multi-Arch-Images
+// === Multi-Arch-Images
 
-Multi-Arch-Images are images which are looking from the outside like a usual image. Under the hood, you find a manifest list in your repository which is pointing to different builds for the architectures defined. When pulling a image, docker can decide which architecture it's running on and pulling the correct image accordingly.
+// Multi-Arch-Images are images which are looking from the outside like a usual image. Under the hood, you find a manifest list in your repository which is pointing to different builds for the architectures defined. When pulling a image, docker can decide which architecture it's running on and pulling the correct image accordingly.
 
 == Outline and seperation
-// What do we do with docker, why cross-compiling with cargo
+
+What do we do with docker, why cross-compiling with cargo
 Cross-platfrom-builds require some prerequisite and requirements in term of code, library and developement environment. For clarity we would like to make some seperations between techniques necessary to archive multi-platform coverage. 
 
-=== Docker (qemu)
+=== Docker
 
-link:https://docs.docker.com/[Docker] comes with an emulator called qemu, which comes with arichtecture simulations and provides a architecture independed foudation to run software of different platforms within. Furthermore Docker provided a method called link:https://docs.docker.com/build/buildx/multiple-builders/[buildx] which can be used for multi-arch docker-images. How to leverage buildx will be outlined later. 
+Docker is the go-to tool for building images. Those images usally have a base images (e.g. nginx, ubi8-minimal, ...) and some stuff installed on. Normally you go for something like:
+[source, bash]
+----
+docker build -f Dockerfile -t tag-of-your-choice 
+----
+If you push those images to the repository, a manifest will be created storing all metadata such as digests, architecture, lables and so on. If images got pulled by Docker, it will check the manifest list and pull the image if metadata provided matches metadata given (such as tag and version).
+For multi-arch, Docker comes with some features to enable the build and the storage in your repository. The following will outline the most important ones.
+
+==== qemu
+
+link:https://docs.docker.com/[Docker] comes with an emulator called qemu, which comes with arichtecture simulations and provides a architecture independed foudation to run software of different platforms within. Furthermore Docker provided a method called link:https://docs.docker.com/build/buildx/multiple-builders/[buildx] which can be used for multi-arch docker-images. How to leverage buildx will be shown later. 
+
+==== Manifest Lists
+
+Manifest lists are basically the meta version of a manifest. As the name suggests, manifest list are a list of manifests with different architectures. Each manifest list has a digest, and stores the digests of the corresponding multi arch images. Those list can be created in several ways. In our case we directly exported a manifest list to our repository, since we simultaniously build both architectures via a builder instance. You may also build each architecture 
 
 === cargo cross-compiling
 
@@ -87,7 +102,7 @@ Surely those compiler and linker have to be present on your machine and now you 
 
 === Base Images
 
-Base images are basically the OS we use for the container. We use ubi8-minimal which is available as multi-arch in the RedHat repository. We didn't have to take any former actions here.
+Base images are basically the OS we use for the container. We use ubi8-minimal which is available as multi-arch in the RedHat repository. We didn't have to take any former actions here. Since the latest update from RedHat, we are forced to pin that version. We enabled renovate to check newest versions. 
 
 === Product Images
 
@@ -102,7 +117,7 @@ to
 ----
 docker buildx build -t <tag> -f <dockerfile> --platform <platform1><platform2> --push
 ----
-This made it possible to have multi arch images in Nexus. This is, because we do not have to compile anything to build product images.
+This made it possible to have multi arch images in Nexus. This is, because we do not have to compile anything to build product images. Under the hood, docker is building simultanious both images for platform 1 and for platform 2. After the build is complete, we will have a link:https://docs.docker.com/engine/reference/commandline/manifest/[manifest] list containing all images build during that process. 
 
 === Operators
 
