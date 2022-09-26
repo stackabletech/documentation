@@ -26,7 +26,7 @@ Please notice that this article is written by somebody who chose a arm64-based s
 
 == Outline and seperation
 
-What do we do with docker, why cross-compiling with cargo
+What do we do with docker, why cross-compiling with cargo?
 Cross-platfrom-builds require some prerequisite and requirements in term of code, library and developement environment. For clarity we would like to make some seperations between techniques necessary to archive multi-platform coverage. 
 
 === Docker
@@ -41,15 +41,21 @@ For multi-arch, Docker comes with some features to enable the build and the stor
 
 ==== qemu
 
-link:https://docs.docker.com/[Docker] comes with an emulator called qemu, which comes with arichtecture simulations and provides a architecture independed foudation to run software of different platforms within. Furthermore Docker provided a method called link:https://docs.docker.com/build/buildx/multiple-builders/[buildx] which can be used for multi-arch docker-images. How to leverage buildx will be shown later. 
+link:https://docs.docker.com/[Docker] comes with an emulator called qemu, which comes with arichtecture simulations and provides a architecture independed foundation to run software of different platforms within. Furthermore Docker provided a method called link:https://docs.docker.com/build/buildx/multiple-builders/[buildx] which can be used for multi-arch docker-images. How to leverage buildx will be shown later. 
 
 ==== Manifest Lists
 
-Manifest lists are basically the meta version of a manifest. As the name suggests, manifest list are a list of manifests with different architectures. Each manifest list has a digest, and stores the digests of the corresponding multi arch images. Those list can be created in several ways. In our case we directly exported a manifest list to our repository, since we simultaniously build both architectures via a builder instance. You may also build each architecture 
+Manifest lists are basically the meta version of a manifest. As the name suggests, manifest list are a list of manifests with different architectures. Each manifest list has a digest, and stores the digests of the corresponding multi arch images. Those list can be created in several ways. In our case we directly exported a manifest list to our repository, since we simultaniously build both architectures via a builder instance. You may also build each architecture seperatly on a native machine, and leverage manifest link:https://docs.docker.com/engine/reference/commandline/manifest_create/[create] 
+[source, bash]
+----
+docker manifest create MANIFEST_LIST --amend MANIFEST<Platform1> --amend MANIFEST<Platform2>
+----
+This little larger command will enable you to build all platforms locally, test them and bundel them up to push them into your repository. There is the downside, that the images bundeld up in the new list have to be pushed into the same repository within the same organisation. E.g stackable/opartarA-arm, stackable/opartorA-amd bundeld into stackable/operatorA. 
 
 === cargo cross-compiling
 
 The Rust-compiler cargo comes by default with the option to define a target platform using cargo build --target=ARCH. Thus you can compile x86 executable binaries from a arm64-based system. Important to notice, with cargo you *can not* produce multi-arch binaries. 
+In the full context of qemu and multi-arch builds, you might ask the question why to use cargo cross-compiling since the architecture can get emulated. 
 
 === Combination of cargo and docker
 
@@ -90,7 +96,7 @@ Cargo comes with an --target option. Basically you can give cargo a target platf
 rustup target add <Target architecture> # for arm64 e.g. aarch64-unknown-linux-gnu
 ----
 
-Having now your toolchain ready you habe to set cc, cxx and linker in your environment variables. We will give it as example for arm64:
+Having now your toolchain ready you have to set cc, cxx and linker in your environment variables. We will give it as example for arm64:
 [source, bash]
 ----
 CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-linux-gnu-gcc 
@@ -127,14 +133,7 @@ For operators this is a different story. We encountered several problems with do
 
 Folowing limitations have been encountered:
 - OpenSSL 
-    We fixed a compile error with OpenSSL with vendoring it
-
-== Current state
-// Outline solutions we found and show how to realise stuff (technical discussion)
-
-=== Product Images
-
-=== Operators
+    We fixed a compile error with OpenSSL by vendoring it
 
 == Outlook
 // Talk about GH-Actions and what we want to achieve in the future
