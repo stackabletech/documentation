@@ -118,6 +118,52 @@ Surely those compiler and linker have to be present on your machine and now you 
 
 === Testing and checking multi-architecture images
 
+This section is dedicated to how to test the architecture of your image. There are surely a few ways how to get do this, here we will outline the most decent ones in our opinion. 
+
+==== Docker inspect
+
+Once your Manifest List in your repositroy, you might wanna check if all your architectures where build. To do so you can leverage dockers inspect command:
+
+[source, bash]
+----
+docker manifest inspect <Tag>
+----
+This will output the manifest list with all the architectures referenced within. This will only check, which architectures where build compared to what was supposed to do. If you build in parallel, usually if one architecture fails to build, the whole building process is supposed to fail.
+
+A better overview will be given when you pull all specific architectures from your repositiory one by one. To do so you can do 
+
+[source, bash]
+----
+docker pull <Tag> --platform <Platform>
+----
+
+From there you can go and 
+
+[source, bash]
+----
+docker image inspect <IMAGE-ID>
+----
+
+This will output some metadata. The interesting part are the fields 'Architecture' and 'architecture'. If both are showing the supposed tags, you should have a pure image. Before you keep progressing from this point and pull the next architecture of your image, don't forget to delete the old one to avoid overlaps or problems.
+
+==== Binutils (objdump)
+
+Another nice way to make sure that things are working as expected, is to pull the image you want to check, run it with:
+[source, bash]
+----
+docker run -it --entrypoint bash --user root <Image-Tag>
+----
+
+You may need root access here since we want to install binutils via apt-get, microdnf or yum depending on what is available on your image. If you have installed the package you can run:
+[source, bash]
+----
+objdump -f /usr/lib/libssl.so
+objdump -f path-to-comnpiled-binary
+----
+
+objdump will give you informations about the architecture of the OS and the comnpiled binary as well. This way you can ensure that binary and operating system have the architecture desired.
+
+
 === Base Images
 
 Base images are basically the OS we use for the container. We use ubi8-minimal which is available as multi-arch in the RedHat repository. We didn't have to take any former actions here. Since the latest update from RedHat, we are forced to pin that version. We enabled renovate to check newest versions. 
