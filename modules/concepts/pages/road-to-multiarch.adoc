@@ -204,10 +204,11 @@ objdump will give you informations about the architecture of the OS and the comn
 == Limitations
 
 Folowing limitations have been encountered:
-* OpenSSL:: 
-    We fixed a compile error with OpenSSL by vendoring it link:https://stackoverflow.com/questions/65553557/why-rust-is-failing-to-build-command-for-openssl-sys-v0-9-60-even-after-local-in[issue on stackoverflow]
-* Local manifest lists::
-    Currently it is not possible to export manifest lists on a local repository. This is a limitation due to docker.
+
+OpenSSL:: 
+We fixed a compile error with OpenSSL by vendoring it link:https://stackoverflow.com/questions/65553557/why-rust-is-failing-to-build-command-for-openssl-sys-v0-9-60-even-after-local-in[issue on stackoverflow]
+Local manifest lists::
+Currently it is not possible to export manifest lists on a local repository. This is a limitation due to docker.
 
 == Outlook
 // Talk about GH-Actions and what we want to achieve in the future
