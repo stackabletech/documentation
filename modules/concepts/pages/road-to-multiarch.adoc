@@ -2,7 +2,7 @@
 
 == Motivation
 // Talk about why we want multi-arch, what was the initiator
-With the release of Apples M1 chip, ARM became accessable for a brought audience. AWS published to bring spin up some clusters with ARM at their heart ( link:https://aws.amazon.com/ec2/graviton/[AWS Graviton3] ). They prupose a 40% better price performance compared to the current X86-based instances. We therefore assume an siginificant audience being attracted to the better price and higher performance ARM-based systems have to offer. 
+With the release of Apples M1 chip, ARM became accessable for a brought audience. AWS published to spin up some clusters with ARM at their heart ( link:https://aws.amazon.com/ec2/graviton/[AWS Graviton3] ). They prupose a 40% better price performance compared to the current X86-based instances. We therefore assume an siginificant audience being attracted to the better price and higher performance ARM-based systems have to offer. 
 
 As a Start-Up we want to gain traction for our products and try to cover as many developing systems on the market as possible. Although ARM-based systems are announced a while ago, we decided now to go for multi-arch since developer showed interest in Apples M1 based systems. In order to provide the freedom of choice to our team, we decided to use this interest as a kick-off for enabling multi-arch images for our products and operators. 
 
@@ -49,7 +49,7 @@ Manifest lists are basically the meta version of a manifest. As the name suggest
 
 [source, bash]
 ----
-docker manifest create MANIFEST_LIST --amend MANIFEST<Platform1> --amend MANIFEST<Platform2>
+docker manifest create <MANIFEST_LIST> --amend MANIFEST<Platform1> --amend MANIFEST<Platform2>
 ----
 
 This little larger command will enable you to build all platforms locally, test them and bundel them up to push them into your repository. There is the downside, that the images bundeld up in the new list have to be pushed into the same repository within the same organisation. E.g. stackable/opartarA-arm, stackable/opartorA-amd bundeld into stackable/operatorA. 
@@ -78,7 +78,7 @@ Please note, that cargos cross-compiling is necessary if and only if you want to
 
 === Dependencies
 
-Since Images are build in layers, you might have at least one dependency for your custom build image such as a base OS. Note that every dependency in the sense of an Image, have to be available in the architecture you target. If you tell Docker to build for different platforms, it will try to retrieve the image in the architecture specified. If it fails to do so, it will default back to any available architecture. This way, it will build mixed images and will not make it obvious to you. There are certain methods to reveal the architecture of your image, we will come to that later.
+Since Images are build in layers, you might have at least one dependency for your custom build image such as a base OS. Note that every dependency in the sense of an Image, have to be available in the architecture you target. If you tell Docker to build for different platforms, it will try to retrieve the image in the architecture specified. If it fails to do so, it will default back to any available architecture. This way, it will build mixed images and will not make it obvious to you. There are certain methods to reveal the architecture of your image, you can read more in <<test_and_checking>>.
 
 == Gathered knowledge (Steps to success without further explanation)
 
@@ -92,13 +92,14 @@ We would like to give you a hand with the commands and methods we used with dock
 [#buildx]
 ==== docker buildx
 
-Docker comes with buildx, which is intended to give a foundation for multi-arch images. This is a extentions to the well known build command. Under the hood, buildx uses a build-kit which is empowered by qemu to produce non-native images on a single architecture. There are certain flags and options you can go with, those will be shown in the following. 
+Docker comes with buildx, which is intended to give a foundation for multi-arch images. This is a extention to the well known build command. Under the hood, buildx uses a build-kit which is empowered by qemu to produce non-native images on a single architecture. There are certain flags and options you can go with, those will be shown in the following.
+
 [source, bash]
 ----
 docker buildx build -f <Dockerfile> --platform <platform1>,<platform2> --push
 ----
-This is the basic command to build a image with two different architectures. In principle, there is no further limitation on the platform1 or 2. It is not necessary that one of those platform is a native one. You might have stumbled now over --push. This flag is going to publish your manifest list to repository. This is, becasue docker is not supporting manifest lists in your local repository due to exporting from cache for the builder instance moby. If you compile exclusively for one non-native architecture, you can use --load to load the image from cache to the local docker repository.
-As a prerequisite, you need for each instance of non-native architecture a builder. Those builder run on the link:https://hub.docker.com/r/moby/buildkit[moby build], this buildkit is basically providing each architecture you might want to target. Native builds (your current system) do not require emulation and therefore do not need a builder. 
+This is the basic command to build a image with two different architectures. In principle, there is no further limitation on the platform1 or 2. It is not necessary that one of those platform is a native one. You might have stumbled over --push. This flag is going to publish your manifest list to repository. This is, becasue docker is not supporting manifest lists in your local repository due to exporting from cache for the builder instance moby. If you compile exclusively for one non-native architecture, you can use --load to load the image from cache to the local docker repository.
+As a prerequisite, you need for each instance of non-native architecture a builder. Those builder run on the link:https://hub.docker.com/r/moby/buildkit[moby buildkit], this buildkit is basically providing each architecture you might want to target. Native builds (your current system) do not require emulation and therefore do not need a builder. 
 
 To evoke a builder, you can go with:
 
@@ -128,6 +129,7 @@ CXX_aarch64_unknown_linux_gnu=aarch64-linux-gnu-g++
 
 Surely those compiler and linker have to be present on your machine and now you are ready to cross-compile for arm64 on a non-native machine. After reading this, you may ask why we have to go the route with cargo --target and the specifications of linker and c-compiler, since the baseOS will be pulled with the architecture of your machine or the one from your emulation. Exactly that's the point, qemu got a flaw when it comes to compiling with certain libraries such as link:https://crates.io/crates/unicode-bidi[unicode-bidi]. If we compile within qemu we will end up with an segmentation fault, which is a current and known link:https://github.com/rust-lang/rust/issues/94967[issue]. 
 
+[#test_and_checking]
 === Testing and checking multi-architecture images
 
 This section is dedicated to how to test the architecture of your image. There are surely a few ways how to get do this, here we will outline the most decent ones in our opinion. 
@@ -224,7 +226,7 @@ For products like Hive, Hadoop, Nifi, Kafka and so on we already realised an mul
 
 ==== Operator
 
-For operators, we've done a proof of concept which can be found in the link:https://github.com/stackabletech/docker-images/blob/ubi8-rust-builder-multi-arch/ubi8-rust-builder/Dockerfile[experimental ubi8-rust-builder]. We are now working on having custom images roled out by operators, since the corresponding product image is currently hard-coded in an operator. We call this ticket link:https://github.com/stackabletech/operator-rs/issues/470[Product image selection] and was proposed and accepted in link:https://github.com/stackabletech/documentation/blob/main/modules/contributor/pages/adr/ADR023-product-image-selection.adoc[ADR032]. 
+For operators, we've done a proof of concept which can be found in the link:https://github.com/stackabletech/docker-images/blob/ubi8-rust-builder-multi-arch/ubi8-rust-builder/Dockerfile[experimental ubi8-rust-builder]. We are now working on having custom images roled out by operators, since the corresponding product image is currently hard-coded in an operator. We call this ticket link:https://github.com/stackabletech/operator-rs/issues/470[Product image selection] and was proposed and accepted in link:https://github.com/stackabletech/documentation/blob/main/modules/contributor/pages/adr/ADR023-product-image-selection.adoc[ADR023]. 
 
 However, we already tested those changes within the link:https://github.com/stackabletech/kafka-operator/compare/main...stackable-experimental[Kafka Operator]. We plan to have more branches called *stackable-experimental*. 
 
