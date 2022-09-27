@@ -212,3 +212,34 @@ Currently it is not possible to export manifest lists on a local repository. Thi
 
 == Outlook
 // Talk about GH-Actions and what we want to achieve in the future
+In the following, we will show our current state with useful links to the direct issues and branches where we realised changes. Afterwards we would like to outline our target state how it should look like one day. 
+
+=== Current State
+
+Currently, we have introduced an link:https://repo.stackable.tech/#browse/browse:docker:v2%2Fstackable-experimental[stackable-experimental] repository. Within this repo, we are uploading multi-arch images for testing reasons and for some of our developers to work with it. 
+
+==== Products
+
+For products like Hive, Hadoop, Nifi, Kafka and so on we already realised an multi-arch CI build. You can find the build script for products link:https://github.com/stackabletech/docker-images/blob/main/build_product_images.py[here]. The state is, that single architecture images will still be build in link:https://repo.stackable.tech/#browse/browse:docker:v2%2Fstackable[docker.stackable.tech/stackable/]. On the other hand, the same images will be regulary published to link:https://repo.stackable.tech/#browse/browse:docker:v2%2Fstackable-experimental[stackable-experimental] as multi-arch. This means, that up to date products are already available like in the main repository.
+
+==== Operator
+
+For operators, we've done a proof of concept which can be found in the link:https://github.com/stackabletech/docker-images/blob/ubi8-rust-builder-multi-arch/ubi8-rust-builder/Dockerfile[experimental ubi8-rust-builder]. We are now working on having custom images roled out by operators, since the corresponding product image is currently hard-coded in an operator. We call this ticket link:https://github.com/stackabletech/operator-rs/issues/470[Product image selection] and was proposed and accepted in link:https://github.com/stackabletech/documentation/blob/main/modules/contributor/pages/adr/ADR023-product-image-selection.adoc[ADR032]. 
+
+However, we already tested those changes within the link:https://github.com/stackabletech/kafka-operator/compare/main...stackable-experimental[Kafka Operator]. We plan to have more branches called *stackable-experimental*. 
+
+=== Target State
+
+As a wishful state in general, we would like to merge the stackable-experimental repository with the stackable repository. From there it should be a standard to provide multi-arch images to all products and operators. This means, all merged PR's are available to (currently) both platforms. 
+
+==== Products
+
+Our products have as shown above an overall desireable state. Only thing left to do is to test it in a broughter fashion and merge things into the stackable repository. 
+
+==== Operators
+
+Operators should have a flexible way of setting the repositroy of a product image. Additionally, we would like to have the mulit-arch images for operators build automatically via our CI-pipeline. 
+
+==== Test Infrastructure
+
+We want to set up a test infrastructure with native ARM-nodes and test both sides of the product and operator images. We doubt currently that it is save to assume that if one side of things is working, the other one is fine too. 
