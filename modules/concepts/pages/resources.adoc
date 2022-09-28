@@ -31,7 +31,7 @@ The memory limit is a hard bound. If a Container tries to use more memory than s
 
 Some Stackable products require data storage. This is done using https://kubernetes.io/docs/concepts/storage/persistent-volumes/#persistentvolumeclaims[Persistent Volume Claims] where the size of storage can be specified.
 
-== The Kubernetes way
+== Kubernetes Resource Requests
 
 In Kubernetes, you can specify resource requests and limits within Containers of Pods.
 
@@ -57,55 +57,11 @@ spec:
 
 This Pod/Container will be scheduled on a Node that has at least `64Mi` of free memory. It is allowed to use a maximum amount of `128Mi` of memory or will be restarted if this value is exceeded. It can not use more CPU resources than `500m` (which is half of a physical or virtual core), but has a guaranteed CPU resources of `250m`.
 
-== The Stackable way
+== Stackable Resource Requests
 
-For Stackable operators the resources are defined differently. You can define resources on a xref:roles-and-role-groups.adoc[] level. On a role level this means that e.g. all workers will use the same resource requests and limits. This can be further specified on role group level (which takes priority to the role level) to apply different resources.
+=== CPU and Memory
 
-=== Defaults
-
-If no resources are provided, the Stackable operators will set sensible defaults to ensure a minimal running product. This is by no means production ready. Please configure the resources according to your requirements.
-
-=== CPU and memory
-
-This is an example on how to specify CPU and memory resources using the Stackable https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/[Custom Resources]:
-
-[source, yaml]
-----
----
-apiVersion: example.stackable.tech/v1alpha1
-kind: ExampleCluster
-metadata:
-  name: example
-spec:
-  workers: # role-level
-    config:
-      resources:
-        cpu:
-          min: 300m
-          max: 600m
-        memory:
-          limit: 3Gi
-    roleGroups: # role-group-level
-      resources-from-role: # role-group 1
-        replicas: 1
-      resources-from-role-group: # role-group 2
-        replicas: 1
-        config:
-          resources:
-            cpu:
-              min: 400m
-              max: 800m
-            memory:
-              limit: 4Gi
-----
-
-In this case, the role group `resources-from-role` will inherit the resources specified on the role level. Resulting in a maximum of `3Gi` memory and `600m` CPU resources.
-
-The role group `resources-from-role-group` has maximum of `4Gi` memory and `800m` CPU resources (which overrides the role CPU resources).
-
-IMPORTANT: For Java products the actual used Heap memory is lower than the specified memory limit due to other processes in the Container requiring memory to run as well. Currently, 80% of the specified memory limits is passed to the JVM.
-
-For memory only a limit can be specified, which will be set as memory request and limit in the Container. This is to always guarantee a Container the full amount memory during Kubernetes scheduling.
+include::stackable_resource_requests.adoc[]
 
 === Storage
 
