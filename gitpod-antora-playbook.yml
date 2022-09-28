@@ -29,6 +29,10 @@ content:
       branches: main
       tags: docs/*
       start_path: docs
+    - url: https://github.com/stackabletech/listener-operator.git
+      branches: main
+      tags: docs/*
+      start_path: docs
 
     - url: https://github.com/stackabletech/airflow-operator.git
       branches: main
