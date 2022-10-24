@@ -228,7 +228,7 @@ For products like Hive, Hadoop, Nifi, Kafka and so on we already realised an mul
 
 For operators, we've done a proof of concept which can be found in the link:https://github.com/stackabletech/docker-images/blob/ubi8-rust-builder-multi-arch/ubi8-rust-builder/Dockerfile[experimental ubi8-rust-builder]. We are now working on having custom images roled out by operators, since the corresponding product image is currently hard-coded in an operator. We call this ticket link:https://github.com/stackabletech/operator-rs/issues/470[Product image selection] and was proposed and accepted in link:https://github.com/stackabletech/documentation/blob/main/modules/contributor/pages/adr/ADR023-product-image-selection.adoc[ADR023]. 
 
-However, we already tested those changes within the link:https://github.com/stackabletech/kafka-operator/compare/main...stackable-experimental[Kafka Operator]. We plan to have more branches called *stackable-experimental*. 
+However, we already tested those changes within the link:https://github.com/stackabletech/kafka-operator/compare/main...stackable-experimental[Kafka Operator]. We plan to support all other products in the future as well.
 
 === Target State
 
