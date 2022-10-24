@@ -6,7 +6,7 @@ With the release of Apples M1 chip, ARM became accessible for a brought audience
 
 As a start-up we want to gain traction for our products and try to support as many developing systems and technologies on the market as possible. Although ARM-based systems are announced a while ago, we decided now to go for multi-arch since developers showed interest in Apples M1 based systems. In order to provide the freedom of choice to our team, we decided to use this interest as a kick-off for enabling multi-arch images for our products and operators. 
 
-Please notice that this article is written by somebody who chose a arm64-based system.
+Please notice that this article is written by somebody who chose an arm64-based system.
 
 // shadow-utils= Definitions
 // // define what you are going to talk about, difference between operator- and product-images
