@@ -31,7 +31,7 @@ Cross-platform-builds require some prerequisites and requirements in terms of co
 
 === Docker
 
-Docker is the go-to tool for building images. Those images usally have a base image (e.g. nginx, ubi8-minimal, ...) and some stuff installed on. Normally you go for something like:
+Docker is the go-to tool for building images. Those images usually contain a base image (e.g. nginx, ubi8-minimal, ...) and additional libraries or tools. Normally you go for something like:
 [source, bash]
 ----
 docker build -f <Dockerfile> -t <tag-of-your-choice> 
