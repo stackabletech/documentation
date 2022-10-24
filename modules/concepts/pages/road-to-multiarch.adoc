@@ -27,7 +27,7 @@ Please notice that this article is written by somebody who chose an arm64-based 
 == Outline and seperation
 
 What do we do with docker, why cross-compiling with cargo?
-Cross-platfrom-builds require some prerequisite and requirements in terms of code, libraries and developement environment. For clarity we would like to make some seperations between techniques necessary to archive multi-platform coverage. 
+Cross-platform-builds require some prerequisites and requirements in terms of code, libraries and development environment. For clarity we would like to make some separations between techniques necessary to achieve multi-platform support. 
 
 === Docker
 
