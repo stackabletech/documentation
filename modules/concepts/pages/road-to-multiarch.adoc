@@ -36,7 +36,7 @@ Docker is the go-to tool for building images. Those images usually contain a bas
 ----
 docker build -f <Dockerfile> -t <tag-of-your-choice> 
 ----
-If you push those images to the repository, a manifest will be created storing all metadata such as digests, architecture, labels and so on. If images got pulled by Docker, it will check the manifest and pull the image if metadata provided matches metadata given (such as tag and version).
+If you push those images to the repository, a manifest will be created storing all metadata such as digests, architecture, lables and so on. If images got pulled by Docker, it will check the manifest and pull the image if metadata provided matches metadata given (such as tag and version).
 For multi-arch, Docker comes with some features to enable the build and the storage in your repository. The following will outline the most important ones.
 
 ==== qemu
@@ -174,7 +174,7 @@ You may need root access here since we want to install binutils via apt-get, mic
 [source, bash]
 ----
 objdump -f /usr/lib/libssl.so
-objdump -f path-to-compiled-binary
+objdump -f path-to-comnpiled-binary
 ----
 
 objdump will give you information's about the architecture of the OS and the compiled binary as well. This way you can ensure that binary and operating system have the architecture desired.
@@ -222,11 +222,11 @@ Currently, we have introduced an link:https://repo.stackable.tech/#browse/browse
 
 ==== Products
 
-For products like Hive, Hadoop, Nifi, Kafka and so on we already realized an multi-arch CI build. You can find the build script for products link:https://github.com/stackabletech/docker-images/blob/main/build_product_images.py[here]. The state is, that single architecture images will still be build in link:https://repo.stackable.tech/#browse/browse:docker:v2%2Fstackable[docker.stackable.tech/stackable/]. On the other hand, the same images will be regularly published to link:https://repo.stackable.tech/#browse/browse:docker:v2%2Fstackable-experimental[stackable-experimental] as multi-arch. This means, that up to date products are already available like in the main repository.
+For products like Hive, Hadoop, Nifi, Kafka and so on we already realized an multi-arch CI build. You can find the build script for products link:https://github.com/stackabletech/docker-images/blob/main/build_product_images.py[here]. The state is, that single architecture images will still be build in link:https://repo.stackable.tech/#browse/browse:docker:v2%2Fstackable[docker.stackable.tech/stackable/]. On the other hand, the same images will be regulars published to link:https://repo.stackable.tech/#browse/browse:docker:v2%2Fstackable-experimental[stackable-experimental] as multi-arch. This means, that up to date products are already available like in the main repository.
 
 ==== Operator
 
-For operators, we've done a proof of concept which can be found in the link:https://github.com/stackabletech/docker-images/blob/ubi8-rust-builder-multi-arch/ubi8-rust-builder/Dockerfile[experimental ubi8-rust-builder]. We are now working on having custom images rolled out by operators, since the corresponding product image is currently hard-coded in an operator. We call this ticket link:https://github.com/stackabletech/operator-rs/issues/470[Product image selection] and was proposed and accepted in link:https://github.com/stackabletech/documentation/blob/main/modules/contributor/pages/adr/ADR023-product-image-selection.adoc[ADR023]. 
+For operators, we've done a proof of concept which can be found in the link:https://github.com/stackabletech/docker-images/blob/ubi8-rust-builder-multi-arch/ubi8-rust-builder/Dockerfile[experimental ubi8-rust-builder]. We are now working on having custom images roled out by operators, since the corresponding product image is currently hard-coded in an operator. We call this ticket link:https://github.com/stackabletech/operator-rs/issues/470[Product image selection] and was proposed and accepted in link:https://github.com/stackabletech/documentation/blob/main/modules/contributor/pages/adr/ADR023-product-image-selection.adoc[ADR023]. 
 
 However, we already tested those changes within the link:https://github.com/stackabletech/kafka-operator/compare/main...stackable-experimental[Kafka Operator]. We plan to support all other products in the future as well.
 
@@ -238,7 +238,7 @@ The final goal is to merge the stackable-experimental repository with the stacka
 
 As shown above, our products have an overall desirable state. The only thing left is test it in a broader fashion and merge things into the stable stackable repository to be accessible for everyone. 
 
-==== Operators
+==== Operator
 
 Operators should have a flexible way of setting the repository of a product image. Additionally, we would like to have the multi-arch images for operators build automatically via our CI-pipeline. 
 
