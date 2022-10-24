@@ -240,7 +240,7 @@ As shown above, our products have an overall desirable state. The only thing lef
 
 ==== Operators
 
-Operators should have a flexible way of setting the repositroy of a product image. Additionally, we would like to have the mulit-arch images for operators build automatically via our CI-pipeline. 
+Operators should have a flexible way of setting the repository of a product image. Additionally, we would like to have the multi-arch images for operators build automatically via our CI-pipeline. 
 
 ==== Test Infrastructure
 
