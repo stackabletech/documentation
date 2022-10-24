@@ -2,7 +2,7 @@
 
 == Motivation
 // Talk about why we want multi-arch, what was the initiator
-With the release of Apples M1 chip, ARM became accessable for a brought audience. AWS published to spin up some clusters with ARM at their heart ( link:https://aws.amazon.com/ec2/graviton/[AWS Graviton3] ). They prupose a 40% better price performance compared to the current X86-based instances. We therefore assume an siginificant audience being attracted to the better price and higher performance ARM-based systems have to offer. 
+With the release of Apples M1 chip, ARM became accessible for a brought audience. AWS published to spin up some clusters with ARM chips at their heart ( link:https://aws.amazon.com/ec2/graviton/[AWS Graviton3] ). They promise a 40% better price-performance compared to the current X86-based instances. We therefore assume a significant audience being attracted to the better price and higher performance ARM-based systems have to offer. 
 
 As a Start-Up we want to gain traction for our products and try to cover as many developing systems on the market as possible. Although ARM-based systems are announced a while ago, we decided now to go for multi-arch since developer showed interest in Apples M1 based systems. In order to provide the freedom of choice to our team, we decided to use this interest as a kick-off for enabling multi-arch images for our products and operators. 
 
