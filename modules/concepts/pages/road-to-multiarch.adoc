@@ -236,7 +236,7 @@ The final goal is to merge the stackable-experimental repository with the stacka
 
 ==== Products
 
-Our products have as shown above an overall desireable state. Only thing left to do is to test it in a broughter fashion and merge things into the stackable repository. 
+As shown above, our products have an overall desirable state. The only thing left is test it in a broader fashion and merge things into the stable stackable repository to be accessible for everyone. 
 
 ==== Operators
 
