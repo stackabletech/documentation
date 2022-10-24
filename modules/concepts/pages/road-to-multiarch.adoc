@@ -232,7 +232,7 @@ However, we already tested those changes within the link:https://github.com/stac
 
 === Target State
 
-As a wishful state in general, we would like to merge the stackable-experimental repository with the stackable repository. From there it should be a standard to provide multi-arch images to all products and operators. This means, all merged PR's are available to (currently) both platforms. 
+The final goal is to merge the stackable-experimental repository with the stackable repository. From there, the standard will be to provide multi-arch images to all products and operators. This means, all merged PR's are available to (currently) both platforms. 
 
 ==== Products
 
