@@ -244,4 +244,4 @@ Operators should have a flexible way of setting the repository of a product imag
 
 ==== Test Infrastructure
 
-We want to set up a test infrastructure with native ARM-nodes and test both sides of the product and operator images. We doubt currently that it is save to assume that if one side of things is working, the other one is fine too. 
+We want to set up a test infrastructure with native ARM-nodes and test both sides of the product and operator images. We currently doubt that it is save to assume that if one side of things is working, the other one is fine too. 
