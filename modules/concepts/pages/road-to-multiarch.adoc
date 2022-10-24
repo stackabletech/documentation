@@ -10,7 +10,7 @@ Please notice that this article is written by somebody who chose an arm64-based 
 
 // shadow-utils= Definitions
 // // define what you are going to talk about, difference between operator- and product-images
-// In the following, we will talk about different problems we were facing during developing mulit architecture images. To avoid confusion we'd like to define things proper. If you feel already informed and confident about de difference between Products and Operators as well as the definition of mulit-arch you may skip this section. 
+// In the following, we will talk about different problems we were facing during developing multi architecture images. To avoid confusion we'd like to define things proper. If you feel already informed and confident about de difference between Products and Operators as well as the definition of multi-arch you may skip this section. 
 
 // === Product Image
 
@@ -24,7 +24,7 @@ Please notice that this article is written by somebody who chose an arm64-based 
 
 // Multi-Arch-Images are images which are looking from the outside like a usual image. Under the hood, you find a manifest list in your repository which is pointing to different builds for the architectures defined. When pulling a image, docker can decide which architecture it's running on and pulling the correct image accordingly.
 
-== Outline and seperation
+== Outline and separation
 
 What do we do with docker, why cross-compiling with cargo?
 Cross-platform-builds require some prerequisites and requirements in terms of code, libraries and development environment. For clarity we would like to make some separations between techniques necessary to achieve multi-platform support. 
@@ -36,23 +36,23 @@ Docker is the go-to tool for building images. Those images usually contain a bas
 ----
 docker build -f <Dockerfile> -t <tag-of-your-choice> 
 ----
-If you push those images to the repository, a manifest will be created storing all metadata such as digests, architecture, lables and so on. If images got pulled by Docker, it will check the manifest and pull the image if metadata provided matches metadata given (such as tag and version).
+If you push those images to the repository, a manifest will be created storing all metadata such as digests, architecture, labels and so on. If images got pulled by Docker, it will check the manifest and pull the image if metadata provided matches metadata given (such as tag and version).
 For multi-arch, Docker comes with some features to enable the build and the storage in your repository. The following will outline the most important ones.
 
 ==== qemu
 
-link:https://docs.docker.com/[Docker] comes with an emulator called qemu, which comes with arichtecture simulations and provides a architecture independed foundation to run software of different platforms within. Furthermore Docker provides a method called link:https://docs.docker.com/build/buildx/multiple-builders/[buildx] which can be used for multi-arch docker-images. How to leverage buildx will be shown in section <<buildx>>. 
+link:https://docs.docker.com/[Docker] comes with an emulator called qemu, which comes with architecture simulations and provides a architecture independent foundation to run software of different platforms within. Furthermore Docker provides a method called link:https://docs.docker.com/build/buildx/multiple-builders/[buildx] which can be used for multi-arch docker-images. How to leverage buildx will be shown in section <<buildx>>. 
 
 ==== Manifest Lists
 
-Manifest lists are basically the meta version of a manifest. As the name suggests, manifest list are a list of manifests with different architectures. Each manifest list has a digest, and stores the digests of the corresponding images of different architectures. Those lists can be created in several ways. In our case we directly exported a manifest list to our repository, since we simultaniously build both architectures via a builder instance. You may also build each architecture seperatly on a native machine, and leverage manifest link:https://docs.docker.com/engine/reference/commandline/manifest_create/[create]
+Manifest lists are basically the meta version of a manifest. As the name suggests, manifest list are a list of manifests with different architectures. Each manifest list has a digest, and stores the digests of the corresponding images of different architectures. Those lists can be created in several ways. In our case we directly exported a manifest list to our repository, since we simultaneously build both architectures via a builder instance. You may also build each architecture separately on a native machine, and leverage manifest link:https://docs.docker.com/engine/reference/commandline/manifest_create/[create]
 
 [source, bash]
 ----
 docker manifest create <MANIFEST_LIST> --amend MANIFEST<Platform1> --amend MANIFEST<Platform2>
 ----
 
-This little larger command will enable you to build all platforms locally, test them and bundel them up to push them into your repository. There is the downside, that the images bundeld up in the new list have to be pushed into the same repository within the same organisation. E.g. stackable/opartarA-arm, stackable/opartorA-amd bundeld into stackable/operatorA. 
+This little larger command will enable you to build all platforms locally, test them and bundle them up to push them into your repository. There is the downside, that the images bundled up in the new list have to be pushed into the same repository within the same organization. E.g. stackable/operatorA-arm, stackable/operatorA-amd bundled into stackable/operatorA. 
 
 === cargo cross-compiling
 
@@ -64,11 +64,11 @@ cargo build --target=ARCH
 ----
 
 Thus you can compile x86 executable binaries from a arm64-based system. Important to notice, with cargo you *can not* produce multi-arch binaries. 
-In the full context of qemu and multi-arch builds, you might ask the question why to use cargo cross-compiling since the architecture can get emulated. Sadly we do not have a apropriate answer to this question, we only can tell that it is not working without it.
+In the full context of qemu and multi-arch builds, you might ask the question why to use cargo cross-compiling since the architecture can get emulated. Sadly we do not have a appropriate answer to this question, we only can tell that it is not working without it.
 
 ==== Rustup (Toolchain)
 
-If you want to build for a certain architecture, it's necessarry to add the archtecture specific toolchain. In terms of multi-arch, you have to rustup again for the architecture you are already in (qemu emulated architecture). We believe at this point, that this is because qemu is not coming with all the regular libraries provided by a native OS or hase some infrastructre problems.
+If you want to build for a certain architecture, it's necessary to add the architecture specific toolchain. In terms of multi-arch, you have to rustup again for the architecture you are already in (qemu emulated architecture). We believe at this point, that this is because qemu is not coming with all the regular libraries provided by a native OS or has some infrastructure problems.
 
 === Why combine cargo and docker
 
@@ -83,7 +83,7 @@ Since Images are build in layers, you might have at least one dependency for you
 == Gathered knowledge (Steps to success without further explanation)
 
 // Problems and technical difficulties. Requirements on qemu and cross-compilation
-This section is dedicated to some technical requirments and difficulties we found. We will outline the problems and limitations in a wider fashion. 
+This section is dedicated to some technical requirements and difficulties we found. We will outline the problems and limitations in a wider fashion. 
 
 === Technical Know-How
 
@@ -92,13 +92,13 @@ We would like to give you a hand with the commands and methods we used with dock
 [#buildx]
 ==== docker buildx
 
-Docker comes with buildx, which is intended to give a foundation for multi-arch images. This is a extention to the well known build command. Under the hood, buildx uses a build-kit which is empowered by qemu to produce non-native images on a single architecture. There are certain flags and options you can go with, those will be shown in the following.
+Docker comes with buildx, which is intended to give a foundation for multi-arch images. This is a extension to the well known build command. Under the hood, buildx uses a build-kit which is empowered by qemu to produce non-native images on a single architecture. There are certain flags and options you can go with, those will be shown in the following.
 
 [source, bash]
 ----
 docker buildx build -f <Dockerfile> --platform <platform1>,<platform2> --push
 ----
-This is the basic command to build a image with two different architectures. In principle, there is no further limitation on the platform1 or 2. It is not necessary that one of those platform is a native one. You might have stumbled over --push. This flag is going to publish your manifest list to repository. This is, becasue docker is not supporting manifest lists in your local repository due to exporting from cache for the builder instance moby. If you compile exclusively for one non-native architecture, you can use --load to load the image from cache to the local docker repository.
+This is the basic command to build a image with two different architectures. In principle, there is no further limitation on the platform1 or 2. It is not necessary that one of those platform is a native one. You might have stumbled over --push. This flag is going to publish your manifest list to repository. This is, because docker is not supporting manifest lists in your local repository due to exporting from cache for the builder instance moby. If you compile exclusively for one non-native architecture, you can use --load to load the image from cache to the local docker repository.
 As a prerequisite, you need for each instance of non-native architecture a builder. Those builder run on the link:https://hub.docker.com/r/moby/buildkit[moby buildkit], this buildkit is basically providing each architecture you might want to target. Native builds (your current system) do not require emulation and therefore do not need a builder. 
 
 To evoke a builder, you can go with:
@@ -108,7 +108,7 @@ To evoke a builder, you can go with:
 docker create --name <builder-name> --use
 ----
 
-This will produce a instance of moby and tell docker to this as additional builder in parallel. If you want to have more than one you need to give an --append <builder-name> flag (to do so, the instance must exist). With this you can create a abitrary number of instances. 
+This will produce a instance of moby and tell docker to this as additional builder in parallel. If you want to have more than one you need to give an --append <builder-name> flag (to do so, the instance must exist). With this you can create a arbitrary number of instances. 
 
 ==== cargo build --target
 
@@ -136,7 +136,7 @@ This section is dedicated to how to test the architecture of your image. There a
 
 ==== Docker inspect
 
-Once your Manifest List in your repositroy, you might wanna check if all your architectures where build. To do so you can leverage dockers inspect command:
+Once your Manifest List in your repository, you might wanna check if all your architectures where build. To do so you can leverage dockers inspect command:
 
 [source, bash]
 ----
@@ -144,7 +144,7 @@ docker manifest inspect <Tag>
 ----
 This will output the manifest list with all the architectures referenced within. This will only check, which architectures where build compared to what was supposed to do. If you build in parallel, usually if one architecture fails to build, the whole building process is supposed to fail.
 
-A better overview will be given when you pull all specific architectures from your repositiory one by one. To do so you can do 
+A better overview will be given when you pull all specific architectures from your repository one by one. To do so you can do 
 
 [source, bash]
 ----
@@ -174,10 +174,10 @@ You may need root access here since we want to install binutils via apt-get, mic
 [source, bash]
 ----
 objdump -f /usr/lib/libssl.so
-objdump -f path-to-comnpiled-binary
+objdump -f path-to-compiled-binary
 ----
 
-objdump will give you informations about the architecture of the OS and the comnpiled binary as well. This way you can ensure that binary and operating system have the architecture desired.
+objdump will give you information's about the architecture of the OS and the compiled binary as well. This way you can ensure that binary and operating system have the architecture desired.
 
 
 // === Base Images
@@ -197,11 +197,11 @@ objdump will give you informations about the architecture of the OS and the comn
 // ----
 // docker buildx build -t <tag> -f <dockerfile> --platform <platform1><platform2> --push
 // ----
-// This made it possible to have multi arch images in Nexus. This is, because we do not have to compile anything to build product images. Under the hood, docker is building simultanious both images for platform 1 and for platform 2. After the build is complete, we will have a link:https://docs.docker.com/engine/reference/commandline/manifest/[manifest] list containing all images build during that process. 
+// This made it possible to have multi arch images in Nexus. This is, because we do not have to compile anything to build product images. Under the hood, docker is building simultaneous both images for platform 1 and for platform 2. After the build is complete, we will have a link:https://docs.docker.com/engine/reference/commandline/manifest/[manifest] list containing all images build during that process. 
 
 // === Operators
 
-// For operators this is a different story. We encountered several problems with docker respective with qemu due to certain flaws of the emulation. For making this work, we needed to tell cargo precisly what we compile for. We had to follow the whole process to multi-arch as if we would compile for a non-native architecture. Although we basically are in the target architecture (since emulated) we needed to have the toolchain downloaded and linker and c-compiler setted in the environment. Because of a library called unicode-bidi, we encountered segmentation faults during compile time. This was not possible to solve without giving cargo a specific target as if the base os was non-native. 
+// For operators this is a different story. We encountered several problems with docker respective with qemu due to certain flaws of the emulation. For making this work, we needed to tell cargo precisely what we compile for. We had to follow the whole process to multi-arch as if we would compile for a non-native architecture. Although we basically are in the target architecture (since emulated) we needed to have the toolchain downloaded and linker and c-compiler set in the environment. Because of a library called unicode-bidi, we encountered segmentation faults during compile time. This was not possible to solve without giving cargo a specific target as if the base os was non-native. 
 
 == Limitations
 
@@ -222,11 +222,11 @@ Currently, we have introduced an link:https://repo.stackable.tech/#browse/browse
 
 ==== Products
 
-For products like Hive, Hadoop, Nifi, Kafka and so on we already realised an multi-arch CI build. You can find the build script for products link:https://github.com/stackabletech/docker-images/blob/main/build_product_images.py[here]. The state is, that single architecture images will still be build in link:https://repo.stackable.tech/#browse/browse:docker:v2%2Fstackable[docker.stackable.tech/stackable/]. On the other hand, the same images will be regulary published to link:https://repo.stackable.tech/#browse/browse:docker:v2%2Fstackable-experimental[stackable-experimental] as multi-arch. This means, that up to date products are already available like in the main repository.
+For products like Hive, Hadoop, Nifi, Kafka and so on we already realized an multi-arch CI build. You can find the build script for products link:https://github.com/stackabletech/docker-images/blob/main/build_product_images.py[here]. The state is, that single architecture images will still be build in link:https://repo.stackable.tech/#browse/browse:docker:v2%2Fstackable[docker.stackable.tech/stackable/]. On the other hand, the same images will be regularly published to link:https://repo.stackable.tech/#browse/browse:docker:v2%2Fstackable-experimental[stackable-experimental] as multi-arch. This means, that up to date products are already available like in the main repository.
 
 ==== Operator
 
-For operators, we've done a proof of concept which can be found in the link:https://github.com/stackabletech/docker-images/blob/ubi8-rust-builder-multi-arch/ubi8-rust-builder/Dockerfile[experimental ubi8-rust-builder]. We are now working on having custom images roled out by operators, since the corresponding product image is currently hard-coded in an operator. We call this ticket link:https://github.com/stackabletech/operator-rs/issues/470[Product image selection] and was proposed and accepted in link:https://github.com/stackabletech/documentation/blob/main/modules/contributor/pages/adr/ADR023-product-image-selection.adoc[ADR023]. 
+For operators, we've done a proof of concept which can be found in the link:https://github.com/stackabletech/docker-images/blob/ubi8-rust-builder-multi-arch/ubi8-rust-builder/Dockerfile[experimental ubi8-rust-builder]. We are now working on having custom images rolled out by operators, since the corresponding product image is currently hard-coded in an operator. We call this ticket link:https://github.com/stackabletech/operator-rs/issues/470[Product image selection] and was proposed and accepted in link:https://github.com/stackabletech/documentation/blob/main/modules/contributor/pages/adr/ADR023-product-image-selection.adoc[ADR023]. 
 
 However, we already tested those changes within the link:https://github.com/stackabletech/kafka-operator/compare/main...stackable-experimental[Kafka Operator]. We plan to support all other products in the future as well.
 
