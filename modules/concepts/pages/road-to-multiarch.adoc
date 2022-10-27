@@ -36,7 +36,7 @@ Docker is the go-to tool for building images. Those images usually contain a bas
 ----
 docker build -f <Dockerfile> -t <tag-of-your-choice> 
 ----
-If you push those images to the repository, a manifest will be created storing all metadata such as digests, architecture, lables and so on. If images got pulled by Docker, it will check the manifest and pull the image if metadata provided matches metadata given (such as tag and version).
+If you push those images to the repository, a manifest will be created storing all metadata such as digests, architecture, labels and so on. If images get pulled by Docker, it will check the manifest and pull the image if the provided metadata matches the existing metadata (such as tag and version).
 For multi-arch, Docker comes with some features to enable the build and the storage in your repository. The following will outline the most important ones.
 
 ==== qemu
