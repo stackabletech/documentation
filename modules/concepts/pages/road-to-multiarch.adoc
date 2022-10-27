@@ -132,7 +132,7 @@ Surely the compiler and linker have to be present on your machine and now you ar
 [#test_and_checking]
 === Testing and checking multi-architecture images
 
-This section is dedicated to how to test the architecture of your image. There are surely a few ways how to get do this, here we will outline the most decent ones in our opinion. 
+This section is dedicated to how to test the architecture of your image. There are multiple ways to do this, however we will outline the most decent ones in our opinion here. 
 
 ==== Docker inspect
 
