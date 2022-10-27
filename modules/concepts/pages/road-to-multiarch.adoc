@@ -72,7 +72,7 @@ If you want to build for a certain architecture, it's necessary to add the archi
 
 === Why combine cargo and docker
 
-As outlined before, docker is required to build images. Since operators are shipped as those, we find a interplay between cargo and docker. On image-build-time, we compile our operator within a docker container. As base image, we use ubi8-minimal hosted by RedHat. As another layer we have a builder (also an image) which executes everything necessary to compile the operator. This leads to the rather complicated interplay between an emulated base image via qemu within a docker build where cargo is building a binary for a specific target.
+As outlined before, docker is required to build images. Since operators are shipped as those, we find an interplay between cargo and docker. On image-build-time, we compile our operator within a docker container. As base image, we use ubi8-minimal hosted by RedHat. As another layer we have a builder (also an image) which executes everything necessary to compile the operator. This leads to the rather complicated interplay between an emulated base image via qemu within a docker build where cargo is building a binary for a specific target.
 
 Please note, that cargos cross-compiling is necessary if and only if you want to compile code within dockers qemu.
 
