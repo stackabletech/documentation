@@ -115,7 +115,7 @@ This will produce a instance of moby and tell docker to this as additional build
 Cargo provides a --target option. Basically, you can instruct cargo to use a target platform to compile the binary for. Run the following steps:
 [source, bash]
 ----
-rustup target add <Target architecture> # for arm64 e.g. aarch64-unknown-linux-gnu
+rustup target add <target architecture> # for arm64 e.g. aarch64-unknown-linux-gnu
 ----
 
 Having now your toolchain ready you have to set cc, cxx and linker in your environment variables. We will give it as example for arm64:
