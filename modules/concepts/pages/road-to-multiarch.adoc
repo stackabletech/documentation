@@ -158,7 +158,7 @@ From there you can go and
 docker image inspect <IMAGE-ID>
 ----
 
-This will output some metadata. The interesting part are the fields 'Architecture' and 'architecture'. If both are showing the supposed tags, you should have a pure image. Before you keep progressing from this point and pull the next architecture of your image, don't forget to delete the old one to avoid overlaps or problems.
+This will output some metadata. The interesting part are the fields 'Architecture' and 'architecture'. If both are showing the supposed tags, you should have a correct image. Before you keep progressing from this point and pull the next architecture of your image, don't forget to delete the old one to avoid overlaps or problems.
 
 ==== Binutils (objdump)
 
