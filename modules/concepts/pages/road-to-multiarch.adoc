@@ -87,7 +87,7 @@ This section is dedicated to some technical requirements and difficulties we fou
 
 === Technical Know-How
 
-We would like to give you a hand with the commands and methods we used with docker and cargo to build and publish (you have to publish) multi-arch images of our products and operators. This section is dedicated to the technical implementation of multi architecture images.  
+We would like to give you a hand with the commands and methods we used with docker and cargo to build and publish multi-arch images of our products and operators. This section is dedicated to the technical implementation of multi architecture images.  
 
 [#buildx]
 ==== docker buildx
