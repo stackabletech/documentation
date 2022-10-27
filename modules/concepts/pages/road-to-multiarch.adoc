@@ -218,7 +218,7 @@ In the following, we will show our current state with useful links to the direct
 
 === Current State
 
-Currently, we have introduced an link:https://repo.stackable.tech/#browse/browse:docker:v2%2Fstackable-experimental[stackable-experimental] repository. Within this repo, we are uploading multi-arch images for testing reasons and for some of our developers to work with it. 
+Currently, we have introduced a link:https://repo.stackable.tech/#browse/browse:docker:v2%2Fstackable-experimental[stackable-experimental] repository. Within this repository, we are uploading multi-arch images for testing purposes and for our developers to work with it. 
 
 ==== Products
 
