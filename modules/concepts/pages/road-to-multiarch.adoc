@@ -127,7 +127,7 @@ CC_aarch64_unknown_linux_gnu=aarch64-linux-gnu-gcc
 CXX_aarch64_unknown_linux_gnu=aarch64-linux-gnu-g++
 ----
 
-Surely those compiler and linker have to be present on your machine and now you are ready to cross-compile for arm64 on a non-native machine. After reading this, you may ask why we have to go the route with cargo --target and the specifications of linker and c-compiler, since the baseOS will be pulled with the architecture of your machine or the one from your emulation. Exactly that's the point, qemu got a flaw when it comes to compiling with certain libraries such as link:https://crates.io/crates/unicode-bidi[unicode-bidi]. If we compile within qemu we will end up with an segmentation fault, which is a current and known link:https://github.com/rust-lang/rust/issues/94967[issue]. 
+Surely the compiler and linker have to be present on your machine and now you are ready to cross-compile for arm64 on a non-native machine. After reading this, you may ask why we have to go the route with cargo --target and the specifications of linker and c-compiler, since the baseOS will be pulled with the architecture of your machine or the one from your emulation. Exactly that's the point, qemu got a flaw when it comes to compiling with certain libraries such as link:https://crates.io/crates/unicode-bidi[unicode-bidi]. If we compile within qemu we will end up with an segmentation fault, which is a current and known link:https://github.com/rust-lang/rust/issues/94967[issue]. 
 
 [#test_and_checking]
 === Testing and checking multi-architecture images
