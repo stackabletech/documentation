@@ -214,7 +214,7 @@ Currently it is not possible to export manifest lists on a local repository. Thi
 
 == Outlook
 // Talk about GH-Actions and what we want to achieve in the future
-In the following, we will show our current state with useful links to the direct issues and branches where we realised changes. Afterwards we would like to outline our target state how it should look like one day. 
+In the following, we will show our current state with useful links to the direct issues and branches we were forced to adapt. Afterwards we would like to outline our target state how it should look like one day. 
 
 === Current State
 
