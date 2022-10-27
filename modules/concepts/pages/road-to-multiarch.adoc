@@ -112,7 +112,7 @@ This will produce a instance of moby and tell docker to this as additional build
 
 ==== cargo build --target
 
-Cargo comes with an --target option. Basically you can give cargo a target platform to compile the binary for. To have thought about everything you have to do the following steps:
+Cargo provides a --target option. Basically, you can instruct cargo to use a target platform to compile the binary for. Run the following steps:
 [source, bash]
 ----
 rustup target add <Target architecture> # for arm64 e.g. aarch64-unknown-linux-gnu
