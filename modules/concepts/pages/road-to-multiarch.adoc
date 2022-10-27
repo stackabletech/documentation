@@ -205,7 +205,7 @@ objdump will give you information's about the architecture of the OS and the com
 
 == Limitations
 
-Folowing limitations have been encountered:
+The following limitations have been encountered:
 
 OpenSSL:: 
 We fixed a compile error with OpenSSL by vendoring it link:https://stackoverflow.com/questions/65553557/why-rust-is-failing-to-build-command-for-openssl-sys-v0-9-60-even-after-local-in[issue on stackoverflow]
