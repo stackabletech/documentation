@@ -78,7 +78,7 @@ Please note, that cargos cross-compiling is necessary if and only if you want to
 
 === Dependencies
 
-Since Images are build in layers, you might have at least one dependency for your custom build image such as a base OS. Note that every dependency in the sense of an Image, have to be available in the architecture you target. If you tell Docker to build for different platforms, it will try to retrieve the image in the architecture specified. If it fails to do so, it will default back to any available architecture. This way, it will build mixed images and will not make it obvious to you. There are certain methods to reveal the architecture of your image, you can read more in <<test_and_checking>>.
+Since images are build in layers, you might have at least one dependency for your custom build image such as a base OS. Note that every dependency in the sense of an image, has to be available in the architecture you target. If you tell Docker to build for different platforms, it will try to retrieve the image in the architecture specified. If it fails to do so, it will default back to any available architecture. This way, it will build mixed images and will not make it obvious to you. There are certain methods to reveal the architecture of your image, you can read more in <<test_and_checking>>.
 
 == Gathered knowledge (Steps to success without further explanation)
 
