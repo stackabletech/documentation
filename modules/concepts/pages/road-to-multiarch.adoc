@@ -118,7 +118,7 @@ Cargo provides a --target option. Basically, you can instruct cargo to use a tar
 rustup target add <target architecture> # for arm64 e.g. aarch64-unknown-linux-gnu
 ----
 
-Having now your toolchain ready you have to set cc, cxx and linker in your environment variables. We will give it as example for arm64:
+With the cargo toolchain ready, you have to set cc, cxx and linker flags in your environment variables. Have a look at the following example for arm64:
 
 [source, bash]
 ----
