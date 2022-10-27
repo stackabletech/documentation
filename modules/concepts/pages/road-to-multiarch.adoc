@@ -101,7 +101,7 @@ docker buildx build -f <Dockerfile> --platform <platform1>,<platform2> --push
 This is the basic command to build a image with two different architectures. In principle, there is no further limitation on the platform1 or 2. It is not necessary that one of those platform is a native one. You might have stumbled over --push. This flag is going to publish your manifest list to repository. This is, because docker is not supporting manifest lists in your local repository due to exporting from cache for the builder instance moby. If you compile exclusively for one non-native architecture, you can use --load to load the image from cache to the local docker repository.
 As a prerequisite, you need a builder for each instance of a non-native architecture. Those builders run on the link:https://hub.docker.com/r/moby/buildkit[moby buildkit], this buildkit is basically providing each architecture you might want to target. Native builds (your current system) do not require emulation and therefore do not need a builder. 
 
-To evoke a builder, you can go with:
+To evoke a builder, you can run:
 
 [source, bash]
 ----
