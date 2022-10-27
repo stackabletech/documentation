@@ -63,7 +63,7 @@ The Rust-compiler cargo comes by default with the option to define a target plat
 cargo build --target=ARCH
 ----
 
-Thus you can compile x86 executable binaries from a arm64-based system. Important to notice, with cargo you *can not* produce multi-arch binaries. 
+Thus you can compile x86 executable binaries from an arm64-based system. Important to notice, with cargo you *can not* produce multi-arch binaries. 
 In the full context of qemu and multi-arch builds, you might ask the question why to use cargo cross-compiling since the architecture can get emulated. Sadly we do not have a appropriate answer to this question, we only can tell that it is not working without it.
 
 ==== Rustup (Toolchain)
