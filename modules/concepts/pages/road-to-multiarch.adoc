@@ -162,7 +162,7 @@ This will output some metadata. The interesting part are the fields 'Architectur
 
 ==== Binutils (objdump)
 
-Another nice way to make sure that things are working as expected, is to pull the image you want to check, run it with:
+Another way to ensure that things are working as expected is to pull the image under test and run it with:
 
 [source, bash]
 ----
