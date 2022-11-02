@@ -96,3 +96,40 @@ We chose to provide **plaintext logs on stdout** and **structured logs on file**
 
 * [Link type] [Link to ADR] <!-- example: Refined by [ADR-0005](0005-example.md) -->
 * … <!-- numbers of links can vary -->
+
+
+
+
+== Notes on CRD Fragment
+Configuration requirements
+
+* stdout and files should have different log levels
+* different packages/components should have different log levels
+
+
+at cluster level or at role level?
+-> probably per role / role group
+
+```
+spec:
+  someRole:
+    resources:
+      ...
+    logging:
+      stdout:
+        level: DEBUG
+        modules:
+          my.specific.package: TRACE
+          my.other.package: TRACE
+      file:
+        level: INFO
+```
+
+What should be the default level? WARN? INFO?
+
+
+
+
+
+
+what if we change log levels while the pod is running?
