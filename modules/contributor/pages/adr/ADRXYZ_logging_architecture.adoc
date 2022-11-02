@@ -25,7 +25,7 @@ Product logs cannot be correlated to operator logs easily, we want to have both 
 * **transport security** - Logs should transmitted with encryption/TLS.
 * **custom overrides** - The log format, aggregator and sink should be substitutable by the user.
 
-== Considered Options
+== Decision
 
 === Log Aggregation Framework: Vector
 
@@ -36,37 +36,6 @@ https://vector.dev/[Vector] has been picked without comparison to other existing
 * Parse logs as they are (in plaintext) vs. provide custom structured logs (i.e. json/XML)
 * Retrieve logs from stdout vs. from file
 
-=== Log Aggregation Architecture
-
-* Agent: DaemonSet vs. Sidecar
-* Aggregator vs. no aggregator
-
-=== Log Sink: OpenSearch
-
-https://opensearch.org/[OpenSearch] has been picked as the sink for all the aggregated logs. No other opens have been considered, but as the sink sits at the very top of the chain, it is easy to swap it out for a different software.
-
-=== Logging configuration
-
-TODO
-
-== Decision Outcome
-
-We have already decided to use https://vector.dev/[Vector] as an aggregator. It looked good, no other options were evaluated.
-
-We chose to provide **plaintext logs on stdout** and **structured logs on file**. For the architecture, we chose to deploy the agent as a **sidecar** and **use an aggregator**. We chose to provide **OpenSearch** as a default Sink for logs.
-
-=== Positive Consequences
-
-* All logs can be accessed from a central placed, and logs for multiple products and operators can be correlated easily
-
-=== Negative Consequences
-
-* Sidecar deployment has more overhead than the DaemonSet deployment
-
-== Pros and Cons of the Options
-
-=== Plaintext vs. Structured Log; Stdout vs File
-
 * Logs on stdout are still useful, because you can read them with kubectl or k9s to debug things. In that case, they should be plain, so they are easy to read for a human.
 * Logs parsed by the aggregator are differt.
   * Parsing plaintext logs can be tricky, because regexes are needed
@@ -74,33 +43,32 @@ We chose to provide **plaintext logs on stdout** and **structured logs on file**
 * Some products _need_ to log to file, because of _reasons_. They either cannot be configured differently (which ones?), have logs confidential logs that shouldn't go do stdout, or ...
 * File logs can be structured, as they are not meant to be read by a human.
 
-=== Topology: Aggregator vs. no Aggregator
+=== Log Aggregation Architecture
+
+* Agent: DaemonSet vs. Sidecar
+* Aggregator vs. no aggregator
 
 Vector offers multiple https://vector.dev/docs/setup/deployment/topologies/[topologies] and already lists pros and cons.
 
 An aggregator makes it easier to configure a sink: only one place to configure it (the aggregator has "multi-host context" as Vector calls it).
 
-=== Agent roles: Sidecar vs. DaemonSet
 
 Vector offers multiple https://vector.dev/docs/setup/deployment/roles/#agent[roles] in which it can run.
 
 The DaemonSet is easier to deploy, and only one vector instance is running per host. But the sidecar has deeper integration with the product container and can read log files, something that we decided we need.
 
-=== Sinks
+=== Log Sink: OpenSearch
+
+https://opensearch.org/[OpenSearch] has been picked as the sink for all the aggregated logs. No other opens have been considered, but as the sink sits at the very top of the chain, it is easy to swap it out for a different software.
 
 We want to make it easy for users to deploy OpenSearch, but also easy to switch out the sink.
 
 (How and where is this configured, and how can we make it easy for the user?)
 
-== Links
+=== Logging configuration
 
-* https://vector.dev/[Vector]
-* https://vector.dev/docs/setup/deployment/roles/[Vector Deployment Roles]
-* https://vector.dev/docs/setup/deployment/topologies/[Vector Deployment Topologies]
+TODO
 
----
-
-== Notes on CRD Fragment
 Configuration requirements
 
 * stdout and files should have different log levels
@@ -125,11 +93,35 @@ spec:
         level: INFO
 ```
 
-What should be the default level? WARN? INFO?
+
+=== Deploying the Stack
+
+Our Oper
+
+== Decision Outcome - Summary
+
+We have already decided to use https://vector.dev/[Vector] as an aggregator. It looked good, no other options were evaluated.
+
+We chose to provide **plaintext logs on stdout** and **structured logs on file**. For the architecture, we chose to deploy the agent as a **sidecar** and **use an aggregator**. We chose to provide **OpenSearch** as a default Sink for logs.
+
+== Consequences
+
+=== Positive
+
+* All logs can be accessed from a central placed, and logs for multiple products and operators can be correlated easily
+
+=== Negative
+
+* Sidecar deployment has more overhead than the DaemonSet deployment
 
 
+== Links
 
+* https://vector.dev/[Vector]
+* https://vector.dev/docs/setup/deployment/roles/[Vector Deployment Roles]
+* https://vector.dev/docs/setup/deployment/topologies/[Vector Deployment Topologies]
 
+== Open Questions
 
-
-what if we change log levels while the pod is running?
+* What should be the default level? WARN? INFO?
+* What if we change log levels while the pod is running?
