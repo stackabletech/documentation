@@ -81,7 +81,7 @@ The automatic connection is facilitated by the xref:service_discovery.adoc[servi
 
 Read more about the xref:opa::index.adoc[]. Read more about product integration with OPA for these products:
 
-* xref:trino::usage.adoc#_authorization[Trino]
+* xref:trino:usage_guide:security.adoc#_authorization[Trino]
 * xref:kafka::usage.adoc[Kafka]
 * xref:druid::usage.adoc#_using_open_policy_agent_opa_for_authorization[Druid]
 
