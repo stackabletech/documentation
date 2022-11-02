@@ -1,4 +1,4 @@
-= [Logging and Log Aggregation Architecture]
+= Logging and Log Aggregation Architecture
 Felix Hennig <felix.hennig@stackable.tech>
 v0.1, 2022-10-26
 :status: [draft]
@@ -15,7 +15,7 @@ Technical Story: https://github.com/stackabletech/issues/issues/202, https://git
 
 Context: As of the day of writing, every product logs in its own log format to stdout. Logs cannot be viewed centrally, log levels cannot be set for individual parts of applications or across multiple products at once.
 
-// TODO: Are operator logs out of scope or in scope?
+Product logs cannot be correlated to operator logs easily, we want to have both aggregated in a central place (aggregating operator logs is in scope).
 
 == Decision Drivers
 
@@ -26,8 +26,6 @@ Context: As of the day of writing, every product logs in its own log format to s
 * **custom overrides** - The log format, aggregator and sink should be substitutable by the user.
 
 == Considered Options
-
-// TODO: Why vector?
 
 === Log Retrieval
 
@@ -42,7 +40,9 @@ Context: As of the day of writing, every product logs in its own log format to s
 
 == Decision Outcome
 
-We chose to provide **plaintext logs on stdout** and *structured logs on file**. For the architecture, we chose to deploy the agent as a **sidecar** and **use an aggregator**. We chose to provide **OpenSearch** as a default Sink for logs.
+We have already decided to use https://vector.dev/[Vector] as an aggregator. It looked good, no other options were evaluated.
+
+We chose to provide **plaintext logs on stdout** and **structured logs on file**. For the architecture, we chose to deploy the agent as a **sidecar** and **use an aggregator**. We chose to provide **OpenSearch** as a default Sink for logs.
 
 === Positive Consequences <!-- optional -->
 
