@@ -27,16 +27,27 @@ Product logs cannot be correlated to operator logs easily, we want to have both 
 
 == Considered Options
 
-=== Log Retrieval
+=== Log Aggregation Framework: Vector
 
-* Parse plaintext vs. provide structured logs (i.e. json)
+https://vector.dev/[Vector] has been picked without comparison to other existing choices. Some googling shows https://medium.com/ibm-cloud/log-collectors-performance-benchmarking-8c5218a08fea[Vector has better performance than fluentd], the biggest name in this space. Vector is also open source and written in Rust: https://github.com/vectordotdev/vector[GitHub].
+
+=== Log Retrieval Strategy
+
+* Parse logs as they are (in plaintext) vs. provide custom structured logs (i.e. json/XML)
 * Retrieve logs from stdout vs. from file
 
 === Log Aggregation Architecture
 
+* Agent: DaemonSet vs. Sidecar
 * Aggregator vs. no aggregator
-* DaemonSet vs. Sidecar
-* Sink: OpenSearch vs. ???
+
+=== Log Sink: OpenSearch
+
+https://opensearch.org/[OpenSearch] has been picked as the sink for all the aggregated logs. No other opens have been considered, but as the sink sits at the very top of the chain, it is easy to swap it out for a different software.
+
+=== Logging configuration
+
+TODO
 
 == Decision Outcome
 
@@ -44,15 +55,13 @@ We have already decided to use https://vector.dev/[Vector] as an aggregator. It 
 
 We chose to provide **plaintext logs on stdout** and **structured logs on file**. For the architecture, we chose to deploy the agent as a **sidecar** and **use an aggregator**. We chose to provide **OpenSearch** as a default Sink for logs.
 
-=== Positive Consequences <!-- optional -->
+=== Positive Consequences
 
-* [e.g., improvement of quality attribute satisfaction, follow-up decisions required, …]
-* …
+* All logs can be accessed from a central placed, and logs for multiple products and operators can be correlated easily
 
-=== Negative Consequences <!-- optional -->
+=== Negative Consequences
 
-* [e.g., compromising quality attribute, follow-up decisions required, …]
-* …
+* Sidecar deployment has more overhead than the DaemonSet deployment
 
 == Pros and Cons of the Options
 
@@ -65,40 +74,31 @@ We chose to provide **plaintext logs on stdout** and **structured logs on file**
 * Some products _need_ to log to file, because of _reasons_. They either cannot be configured differently (which ones?), have logs confidential logs that shouldn't go do stdout, or ...
 * File logs can be structured, as they are not meant to be read by a human.
 
-=== Aggregator vs. no Aggregator
+=== Topology: Aggregator vs. no Aggregator
 
-[example | description | pointer to more information | …] <!-- optional -->
+Vector offers multiple https://vector.dev/docs/setup/deployment/topologies/[topologies] and already lists pros and cons.
 
-* Good, because [argument a]
-* Good, because [argument b]
-* Bad, because [argument c]
-* … <!-- numbers of pros and cons can vary -->
+An aggregator makes it easier to configure a sink: only one place to configure it (the aggregator has "multi-host context" as Vector calls it).
 
-=== Sidecar vs. DaemonSet
+=== Agent roles: Sidecar vs. DaemonSet
 
-[example | description | pointer to more information | …] <!-- optional -->
+Vector offers multiple https://vector.dev/docs/setup/deployment/roles/#agent[roles] in which it can run.
 
-* Good, because [argument a]
-* Good, because [argument b]
-* Bad, because [argument c]
-* … <!-- numbers of pros and cons can vary -->
+The DaemonSet is easier to deploy, and only one vector instance is running per host. But the sidecar has deeper integration with the product container and can read log files, something that we decided we need.
 
 === Sinks
 
-[example | description | pointer to more information | …] <!-- optional -->
+We want to make it easy for users to deploy OpenSearch, but also easy to switch out the sink.
 
-* Good, because [argument a]
-* Good, because [argument b]
-* Bad, because [argument c]
-* … <!-- numbers of pros and cons can vary -->
+(How and where is this configured, and how can we make it easy for the user?)
 
-== Links <!-- optional -->
+== Links
 
-* [Link type] [Link to ADR] <!-- example: Refined by [ADR-0005](0005-example.md) -->
-* … <!-- numbers of links can vary -->
+* https://vector.dev/[Vector]
+* https://vector.dev/docs/setup/deployment/roles/[Vector Deployment Roles]
+* https://vector.dev/docs/setup/deployment/topologies/[Vector Deployment Topologies]
 
-
-
+---
 
 == Notes on CRD Fragment
 Configuration requirements
