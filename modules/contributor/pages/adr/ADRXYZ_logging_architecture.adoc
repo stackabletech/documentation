@@ -21,6 +21,7 @@ Product logs cannot be correlated to operator logs easily, we want to have both 
 
 * **identical configuration** - All product logs should be configurable in the same way, no matter their underlying logging framework (log4j, logback, Python logging, etc.). Every product should have a logging section in its CRD.
 * **easily configured sinks** - A log sink (i.e. elasticsearch) should only be configured in a single place for the whole platform (not in every product instance).
+* **Support plaintext logs on stdout** - It is a Kubernetes convention to log in plaintext to stdout. This should be kept, as it is a useful tool for debugging.
 * **custom overrides** - The log format, aggregator and sink should be substitutable by the user.
 * **transport security** - Logs should transmitted with encryption/TLS.
 
