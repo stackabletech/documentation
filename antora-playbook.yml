@@ -15,8 +15,7 @@ urls:
 content:
   sources: 
     - url: https://github.com/stackabletech/documentation.git
-      branches: main
-      tags: docs/*
+      branches: [main, release/*]
 
     - url: https://github.com/stackabletech/stackablectl.git
       branches: main
