@@ -19,11 +19,18 @@ Product logs cannot be correlated to operator logs easily, we want to have both 
 
 == Decision Drivers
 
-* **identical configuration** - All product logs should be configurable in the same way, no matter their underlying logging framework (log4j, logback, Python logging, etc.).
-// TODO: Open question: Which properties do we support?
+* **identical configuration** - All product logs should be configurable in the same way, no matter their underlying logging framework (log4j, logback, Python logging, etc.). Every product should have a logging section in its CRD.
 * **easily configured sinks** - A log sink (i.e. elasticsearch) should only be configured in a single place for the whole platform (not in every product instance).
-* **transport security** - Logs should transmitted with encryption/TLS.
 * **custom overrides** - The log format, aggregator and sink should be substitutable by the user.
+* **transport security** - Logs should transmitted with encryption/TLS.
+
+=== Assumptions
+
+* **RegEx parsing is error prone** - Parsing pure string log output to get structure (time, module, log level, message, ...) is prone to errors. Especially for multi-line messages like stacktraces. The design should use structured log ouput whenever possible.
+
+=== Constraints
+
+* **Multiple files** - Some products like HDFS _need_ to log to (multiple) files, so parsing just stdout is not sufficient; we need to parse files.
 
 == Decision
 
@@ -39,6 +46,8 @@ https://vector.dev/[Vector] has been picked without comparison to other existing
 
 === Log Retrieval Strategy
 
+
+
 * Parse logs as they are (in plaintext) vs. provide custom structured logs (i.e. json/XML)
 * Retrieve logs from stdout vs. from file
 
@@ -51,17 +60,9 @@ https://vector.dev/[Vector] has been picked without comparison to other existing
 
 === Log Aggregation Architecture
 
-* Agent: DaemonSet vs. Sidecar
-* Aggregator vs. no aggregator
+**Topology** - Vector offers multiple https://vector.dev/docs/setup/deployment/topologies/[topologies] and already lists pros and cons. An aggregator makes it easier to configure a sink: only one place to configure it (the aggregator has "multi-host context" as Vector calls it).
 
-Vector offers multiple https://vector.dev/docs/setup/deployment/topologies/[topologies] and already lists pros and cons.
-
-An aggregator makes it easier to configure a sink: only one place to configure it (the aggregator has "multi-host context" as Vector calls it).
-
-
-Vector offers multiple https://vector.dev/docs/setup/deployment/roles/#agent[roles] in which it can run.
-
-The DaemonSet is easier to deploy, and only one vector instance is running per host. But the sidecar has deeper integration with the product container and can read log files, something that we decided we need.
+**Agent role** - Vector offers multiple https://vector.dev/docs/setup/deployment/roles/#agent[roles] in which it can run. The DaemonSet is easier to deploy, and only one vector instance is running per host. But the sidecar has deeper integration with the product container and can read log files, something that we decided we need.
 
 === Log Sink: OpenSearch
 
