@@ -4,7 +4,15 @@ v0.1, 2022-10-26
 :status: [draft]
 
 * Status: {status}
-* Deciders: Stackable Team
+* Deciders:
+** Felix Hennig
+** Lars Francke
+** Malte Sander
+** Razvan Mihai
+** Sebastian Bernauer
+** Siegfried Weber
+** Sönke Liebau
+** Teo Klestrup Röijezon
 * Date: 2022-10-26
 
 Technical Story: https://github.com/stackabletech/issues/issues/202, https://github.com/stackabletech/issues/issues/261
