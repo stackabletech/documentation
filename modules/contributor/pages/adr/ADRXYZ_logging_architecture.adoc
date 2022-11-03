@@ -114,10 +114,30 @@ spec:
           ...
 ```
 
+**Override everything** - The customer should be able to supply their own configuration file. Where this is placed depends on the product.
+
+```
+logging:
+  custom:
+    configMap: nameOfMyConfigMapWithTheConfigFile
+```
+
+Setting the `custom` field will disable any configurations made in `file` and `stdout`.
+
+**Disable vector** - Vector should be optional, if the user wants to use their own logging system.
+
+```
+logging:
+  enableVectorAgent: false  # defaults to true
+```
+
+
 
 === Deploying the Stack
 
-TODO
+The operator deploys the Vector agent as a sidecar and deploys the logging configuration for the product.
+
+The aggregator and OpenSearch sink are deployed with Helm for now, with a plan to integrate this into stackablectl. _Maybe_ we build our own operators for Vector and OpenSearch in the future.
 
 == Consequences
 
