@@ -27,6 +27,12 @@ Product logs cannot be correlated to operator logs easily, we want to have both 
 
 == Decision
 
+We decided to use https://vector.dev/[Vector] as an aggregator. It looked good, no other options were evaluated.
+
+We chose to provide **plaintext logs on stdout** and **structured logs on file**. For the architecture, we chose to deploy the agent as a **sidecar** and **use an aggregator**. We chose to provide **OpenSearch** as a default Sink for logs.
+
+Find detailed considerations below.
+
 === Log Aggregation Framework: Vector
 
 https://vector.dev/[Vector] has been picked without comparison to other existing choices. Some googling shows https://medium.com/ibm-cloud/log-collectors-performance-benchmarking-8c5218a08fea[Vector has better performance than fluentd], the biggest name in this space. Vector is also open source and written in Rust: https://github.com/vectordotdev/vector[GitHub].
@@ -67,42 +73,51 @@ We want to make it easy for users to deploy OpenSearch, but also easy to switch 
 
 === Logging configuration
 
-TODO
+**Log levels** - It is common to have four or five log levels: Error, Warning, Info, Debug and - optionally - Trace. We want to support them across all products.
 
-Configuration requirements
+**stdout vs. file** - We want to have different log levels (and possibly other settings) for stdout and file output. This makes debugging easier, without also filling up the log aggregator with very chatty logs.
 
-* stdout and files should have different log levels
-* different packages/components should have different log levels
+**Settings per logger** - Most products (especially Java based ones) support setting a log level per package. We also want to support this in our CRD.
 
+```
+logging:
+  file:
+    loggers:
+      ROOT:
+        level: INFO
+      some.interesting.module:
+        level: DEBUG
+  stdout:
+    loggers:
+      ROOT:
+        level: DEBUG
+      my.specific.package:
+        level: TRACE
+      my.other.package:
+        level: TRACE
+```
 
-at cluster level or at role level?
--> probably per role / role group
+**Settings per role** - All of these should be configurable per role and role group. Some sub-loggers are only available in certain roles.
 
 ```
 spec:
   someRole:
-    resources:
-      ...
-    logging:
-      stdout:
-        level: DEBUG
-        modules:
-          my.specific.package: TRACE
-          my.other.package: TRACE
-      file:
-        level: INFO
+    config:
+      logging:
+        ...
+    roleGroups:
+      default:
+        logging:
+          ...
+      aDifferentGroup:
+        logging:
+          ...
 ```
 
 
 === Deploying the Stack
 
-Our Oper
-
-== Decision Outcome - Summary
-
-We have already decided to use https://vector.dev/[Vector] as an aggregator. It looked good, no other options were evaluated.
-
-We chose to provide **plaintext logs on stdout** and **structured logs on file**. For the architecture, we chose to deploy the agent as a **sidecar** and **use an aggregator**. We chose to provide **OpenSearch** as a default Sink for logs.
+TODO
 
 == Consequences
 
