@@ -13,15 +13,17 @@ Technical Story: https://github.com/stackabletech/issues/issues/202, https://git
 
 // Describe the context and problem statement, e.g., in free form using two to three sentences. You may want to articulate the problem in form of a question.
 
-Context: As of the day of writing, every product logs in its own log format to stdout. Logs cannot be viewed centrally, log levels cannot be set for individual parts of applications or across multiple products at once.
+As a user of the platform, I have poor visibility into what is happening in different components of the platform, as well as how components influence each other, especially the operator and the product clusters it manages.
 
-Product logs cannot be correlated to operator logs easily, we want to have both aggregated in a central place (aggregating operator logs is in scope).
+Logs usually give this insight. Currently, every pod logs to stdout with a certain default log format. For log configuration we support setting a custom log configuration file in some products.
+
+Logs are **not persisted**, a crashed pod is difficult to investigate. Logs are **not aggregated**, investigating issues that involve multiple pods is difficult. Log **configuration is difficult** or impossible.
 
 == Decision Drivers
 
 * **identical configuration** - All product logs should be configurable in the same way, no matter their underlying logging framework (log4j, logback, Python logging, etc.). Every product should have a logging section in its CRD.
 * **easily configured sinks** - A log sink (i.e. elasticsearch) should only be configured in a single place for the whole platform (not in every product instance).
-* **Support plaintext logs on stdout** - It is a Kubernetes convention to log in plaintext to stdout. This should be kept, as it is a useful tool for debugging.
+* **Support plaintext logs on stdout** - It is a Kubernetes convention to log in plaintext to stdout. This should be kept, as it is a useful tool for interactive debugging.
 * **custom overrides** - The log format, aggregator and sink should be substitutable by the user.
 * **transport security** - Logs should transmitted with encryption/TLS.
 
@@ -47,23 +49,13 @@ https://vector.dev/[Vector] has been picked without comparison to other existing
 
 === Log Retrieval Strategy
 
-
-
-* Parse logs as they are (in plaintext) vs. provide custom structured logs (i.e. json/XML)
-* Retrieve logs from stdout vs. from file
-
-* Logs on stdout are still useful, because you can read them with kubectl or k9s to debug things. In that case, they should be plain, so they are easy to read for a human.
-* Logs parsed by the aggregator are differt.
-  * Parsing plaintext logs can be tricky, because regexes are needed
-  * Using structured logs is much more robust.
-* Some products _need_ to log to file, because of _reasons_. They either cannot be configured differently (which ones?), have logs confidential logs that shouldn't go do stdout, or ...
-* File logs can be structured, as they are not meant to be read by a human.
+We want to parse logs out of structured log entries and also keep the stdout log as plaintext. Also, some products require reading log files instead of stdout. Which means **we opt to read logs from files for every product** and **parse structured log entries**.
 
 === Log Aggregation Architecture
 
-**Topology** - Vector offers multiple https://vector.dev/docs/setup/deployment/topologies/[topologies] and already lists pros and cons. An aggregator makes it easier to configure a sink: only one place to configure it (the aggregator has "multi-host context" as Vector calls it).
-
 **Agent role** - Vector offers multiple https://vector.dev/docs/setup/deployment/roles/#agent[roles] in which it can run. The DaemonSet is easier to deploy, and only one vector instance is running per host. But the sidecar has deeper integration with the product container and can read log files, something that we decided we need.
+
+**Topology** - Vector offers multiple https://vector.dev/docs/setup/deployment/topologies/[topologies] and already lists pros and cons. An aggregator makes it easier to configure a sink: only one place to configure it (the aggregator has "multi-host context" as Vector calls it). It also reduces requests made to the sink, as it aggregates and buffers requests.
 
 === Log Sink: OpenSearch
 
@@ -75,7 +67,7 @@ We want to make it easy for users to deploy OpenSearch, but also easy to switch 
 
 === Logging configuration
 
-**Log levels** - It is common to have four or five log levels: Error, Warning, Info, Debug and - optionally - Trace. We want to support them across all products.
+**Log levels** - It is common to have four or five log levels: Error, Warning, Info, Debug and - optionally - Trace. We want to support them across all products. The **default log level** should be Info.
 
 **stdout vs. file** - We want to have different log levels (and possibly other settings) for stdout and file output. This makes debugging easier, without also filling up the log aggregator with very chatty logs.
 
@@ -133,8 +125,6 @@ logging:
   enableVectorAgent: false  # defaults to true
 ```
 
-
-
 === Deploying the Stack
 
 The operator deploys the Vector agent as a sidecar and deploys the logging configuration for the product.
@@ -143,13 +133,17 @@ The aggregator and OpenSearch sink are deployed with Helm for now, with a plan t
 
 == Consequences
 
+
 === Positive
 
-* All logs can be accessed from a central placed, and logs for multiple products and operators can be correlated easily
+Logs across the platform (from products and operators) are **persisted** and **aggregated** in a central location. Crashed pods can be investigated, as well as issues involving multiple products.
 
 === Negative
 
-* Sidecar deployment has more overhead than the DaemonSet deployment
+* Every pod will contain a vector sidecar container, which adds overhead.
+* The unified logging configuration hides product specific logging settings.
+
+Changing a log level might lead to a pod getting restarted.
 
 
 == Links
@@ -157,8 +151,3 @@ The aggregator and OpenSearch sink are deployed with Helm for now, with a plan t
 * https://vector.dev/[Vector]
 * https://vector.dev/docs/setup/deployment/roles/[Vector Deployment Roles]
 * https://vector.dev/docs/setup/deployment/topologies/[Vector Deployment Topologies]
-
-== Open Questions
-
-* What should be the default level? WARN? INFO?
-* What if we change log levels while the pod is running?
