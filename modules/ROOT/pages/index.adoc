@@ -87,7 +87,7 @@ The Stackable Data Platform supports the following products:
 ++++
 
 ++++
-<h3>Apache Airflow</h3>
+<h3 id="airflow"><a class="anchor" href="#airflow"></a>Apache Airflow</h3>
 ++++
 
 Airflow is a workflow engine and your replacement should you be using Apache Oozie.
@@ -103,7 +103,7 @@ xref:airflow::index.adoc[Read more]
 ++++
 
 ++++
-<h3>Apache Druid</h3>
+<h3 id="druid"><a class="anchor" href="#druid"></a>Apache Druid</h3>
 ++++
 
 Apache Druid is a real-time database to power modern analytics applications.
@@ -119,7 +119,7 @@ xref:druid::index.adoc[Read more]
 ++++
 
 ++++
-<h3>Apache HBase</h3>
+<h3 id="hbase"><a class="anchor" href="#hbase"></a>Apache HBase</h3>
 ++++
 
 HBase is a distributed, scalable, big data store.
@@ -135,7 +135,7 @@ xref:hbase::index.adoc[Read more]
 ++++
 
 ++++
-<h3>Apache Hadoop HDFS</h3>
+<h3 id="hdfs"><a class="anchor" href="#hdfs"></a>Apache Hadoop HDFS</h3>
 ++++
 
 HDFS is a distributed file system that provides high-throughput access to application data.
@@ -151,7 +151,7 @@ xref:hdfs::index.adoc[Read more]
 ++++
 
 ++++
-<h3>Apache Hive</h3>
+<h3 id="hive"><a class="anchor" href="#hive"></a>Apache Hive</h3>
 ++++
 
 The Apache Hive data warehouse software facilitates reading, writing, and managing large datasets residing in distributed storage using SQL. We support the Hive Metastore.
@@ -167,7 +167,7 @@ xref:hive::index.adoc[Read more]
 ++++
 
 ++++
-<h3>Apache Kafka</h3>
+<h3 id="kafka"><a class="anchor" href="#kafka"></a>Apache Kafka</h3>
 ++++
 
 Apache Kafka is an open-source distributed event streaming platform used by thousands of companies for high-performance data pipelines, streaming analytics, data integration, and mission-critical applications.
@@ -183,7 +183,7 @@ xref:kafka::index.adoc[Read more]
 ++++
 
 ++++
-<h3>Apache NiFi</h3>
+<h3 id="nifi"><a class="anchor" href="#nifi"></a>Apache NiFi</h3>
 ++++
 
 An easy to use, powerful, and reliable system to process and distribute data.
@@ -199,7 +199,7 @@ xref:nifi::index.adoc[Read more]
 ++++
 
 ++++
-<h3>Apache Spark</h3>
+<h3 id="spark"><a class="anchor" href="#spark"></a>Apache Spark</h3>
 ++++
 
 Apache Spark is a multi-language engine for executing data engineering, data science, and machine learning on single-node machines or clusters.
@@ -215,7 +215,7 @@ xref:spark-k8s::index.adoc[Read more]
 ++++
 
 ++++
-<h3>Apache Superset</h3>
+<h3 id="superset"><a class="anchor" href="#superset"></a>Apache Superset</h3>
 ++++
 
 Apache Superset is a modern data exploration and visualization platform.
@@ -231,7 +231,7 @@ xref:superset::index.adoc[Read more]
 ++++
 
 ++++
-<h3>Trino</h3>
+<h3 id="trino"><a class="anchor" href="#trino"></a>Apache Trino</h3>
 ++++
 
 Fast distributed SQL query engine for big data analytics that helps you explore your data universe.
@@ -247,7 +247,7 @@ xref:trino::index.adoc[Read more]
 ++++
 
 ++++
-<h3>Apache ZooKeeper</h3>
+<h3 id="zookeeper"><a class="anchor" href="#zookeeper"></a>Apache ZooKeeper</h3>
 ++++
 
 ZooKeeper is a centralized service for maintaining configuration information, naming, providing distributed synchronization, and providing group services.
