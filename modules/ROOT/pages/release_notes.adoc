@@ -4,10 +4,15 @@ The Stackable platform consists of multiple operators that work together.
 Periodically a platform release is made, including all components of the platform at a specific version.
 
 == Release 22.11
+This is the third release of the Stackable Data Platform.
+TODO
 
 === New platform features
+The following new major platform features were added:
 
 Cpu and memory limits configurable::
+TODO
+
 * https://github.com/stackabletech/opa-operator/pull/347[OpenPolicyAgent]
 * https://github.com/stackabletech/zookeeper-operator/pull/563[Apache ZooKeeper]
 * https://github.com/stackabletech/kafka-operator/pull/485[Apache Kafka]
@@ -19,6 +24,8 @@ Cpu and memory limits configurable::
 * https://github.com/stackabletech/superset-operator/pull/273[Apache Superset]
 
 Orphaned Resources::
+TODO
+
 * https://github.com/stackabletech/zookeeper-operator/pull/569[Apache ZooKeeper]
 * https://github.com/stackabletech/hbase-operator/pull/215[Apache HBase]
 * https://github.com/stackabletech/hdfs-operator/pull/249[Apache Hadoop HDFS]
@@ -28,6 +35,8 @@ Orphaned Resources::
 * https://github.com/stackabletech/airflow-operator/pull/174[Apache Airflow]
 
 New Versions::
+TODO
+
 * https://github.com/stackabletech/opa-operator/pull/360[Apache Airflow 2.4.1]
 * https://github.com/stackabletech/kafka-operator/pull/492[Apache Kafka 3.3.1]
 * https://github.com/stackabletech/hdfs-operator/pull/250[Apache Hadoop HDFS 3.3.4]
@@ -36,16 +45,31 @@ New Versions::
 * https://github.com/stackabletech/airflow-operator/pull/179[Apache Airflow 2.4.1]
 
 Other::
+TODO
+
 * https://github.com/stackabletech/kafka-operator/pull/221[HBase: Phoenix support]
 * https://github.com/stackabletech/hive-operator/pull/264[Hive: Support HDFS connection]
 * https://github.com/stackabletech/nifi-operator/pull/323[NiFi: Support for in-place upgrades]
 * https://github.com/stackabletech/nifi-operator/pull/371[NiFi: repository sizes are now adjusted based on declared PVC sizes]
 * https://github.com/stackabletech/trino-operator/pull/306[Trino: Support for LDAP authentication]
 
+=== stackablectl
+TODO
+
+=== Supported Kubernetes versions
+This release supports the following Kubernetes versions:
+
+* `1.25` (new)
+* `1.24`
+* `1.23`
+* `1.22`
+
+=== Upgrade from 22.09
+TODO
 
 
 == Release 22.09
-This is our second release of the Stackable Data Platform.
+This is the second release of the Stackable Data Platform.
 It contains lots of new features and bugfixes.
 The main features focus on OpenShift support and security.
 
