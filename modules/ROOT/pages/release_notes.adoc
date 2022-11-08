@@ -71,16 +71,18 @@ You can list the available releases as follows
 ----
 $ stackablectl release list
 RELEASE            RELEASE DATE   DESCRIPTION
+22.11              2022-11-08     TODO release .... TODO
 22.09              2022-09-09     Second release focusing on security and OpenShift support
 22.06              2022-06-30     First official release of the Stackable Data Platform
+
 ----
 
-To uninstall the `22.06` release run
+To uninstall the `22.09` release run
 
 [source,console]
 ----
-$ stackablectl release uninstall 22.06
-[INFO ] Uninstalling release 22.06
+$ stackablectl release uninstall 22.09
+[INFO ] Uninstalling release 22.09
 [INFO ] Uninstalling airflow operator
 [INFO ] Uninstalling commons operator
 # ...
@@ -91,49 +93,49 @@ The reason is, that helm will uninstall the operators but not the CRDs.
 
 [source,console]
 ----
-$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/airflow-operator/0.5.0/deploy/helm/airflow-operator/crds/crds.yaml
-$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/commons-operator/0.3.0/deploy/helm/commons-operator/crds/crds.yaml
-$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/druid-operator/0.7.0/deploy/helm/druid-operator/crds/crds.yaml
-$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/hbase-operator/0.4.0/deploy/helm/hbase-operator/crds/crds.yaml
-$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/hdfs-operator/0.5.0/deploy/helm/hdfs-operator/crds/crds.yaml
-$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/hive-operator/0.7.0/deploy/helm/hive-operator/crds/crds.yaml
-$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/kafka-operator/0.7.0/deploy/helm/kafka-operator/crds/crds.yaml
-$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/nifi-operator/0.7.0/deploy/helm/nifi-operator/crds/crds.yaml
-$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/opa-operator/0.10.0/deploy/helm/opa-operator/crds/crds.yaml
-$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/secret-operator/0.5.0/deploy/helm/secret-operator/crds/crds.yaml
-$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/0.5.0/deploy/helm/spark-k8s-operator/crds/crds.yaml
-$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/superset-operator/0.6.0/deploy/helm/superset-operator/crds/crds.yaml
-$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/trino-operator/0.6.0/deploy/helm/trino-operator/crds/crds.yaml
-$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/0.11.0/deploy/helm/zookeeper-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/airflow-operator/0.6.0/deploy/helm/airflow-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/commons-operator/0.4.0/deploy/helm/commons-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/druid-operator/0.8.0/deploy/helm/druid-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/hbase-operator/0.5.0/deploy/helm/hbase-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/hdfs-operator/0.6.0/deploy/helm/hdfs-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/hive-operator/0.8.0/deploy/helm/hive-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/kafka-operator/0.8.0/deploy/helm/kafka-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/nifi-operator/0.8.0/deploy/helm/nifi-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/opa-operator/0.11.0/deploy/helm/opa-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/secret-operator/0.6.0/deploy/helm/secret-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/0.6.0/deploy/helm/spark-k8s-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/superset-operator/0.7.0/deploy/helm/superset-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/trino-operator/0.8.0/deploy/helm/trino-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/0.12.0/deploy/helm/zookeeper-operator/crds/crds.yaml
 ----
 
-To install the `22.09` release run
+To install the `22.11` release run
 
 [source,console]
 ----
-$ stackablectl release install 22.09
-[INFO ] Installing release 22.09
-[INFO ] Installing airflow operator in version 0.5.0
-[INFO ] Installing commons operator in version 0.3.0
-[INFO ] Installing druid operator in version 0.7.0
-[INFO ] Installing hbase operator in version 0.4.0
-[INFO ] Installing hdfs operator in version 0.5.0
-[INFO ] Installing hive operator in version 0.7.0
-[INFO ] Installing kafka operator in version 0.7.0
-[INFO ] Installing nifi operator in version 0.7.0
-[INFO ] Installing opa operator in version 0.10.0
-[INFO ] Installing secret operator in version 0.5.0
-[INFO ] Installing spark-k8s operator in version 0.5.0
-[INFO ] Installing superset operator in version 0.6.0
-[INFO ] Installing trino operator in version 0.6.0
-[INFO ] Installing zookeeper operator in version 0.11.0
+$ stackablectl release install 22.11
+[INFO ] Installing release 22.11
+[INFO ] Installing airflow operator in version 0.6.0
+[INFO ] Installing commons operator in version 0.4.0
+[INFO ] Installing druid operator in version 0.8.0
+[INFO ] Installing hbase operator in version 0.5.0
+[INFO ] Installing hdfs operator in version 0.6.0
+[INFO ] Installing hive operator in version 0.8.0
+[INFO ] Installing kafka operator in version 0.8.0
+[INFO ] Installing nifi operator in version 0.8.0
+[INFO ] Installing opa operator in version 0.11.0
+[INFO ] Installing secret operator in version 0.6.0
+[INFO ] Installing spark-k8s operator in version 0.6.0
+[INFO ] Installing superset operator in version 0.7.0
+[INFO ] Installing trino operator in version 0.7.0
+[INFO ] Installing zookeeper operator in version 0.12.0
 # ...
 ----
 
 ==== Using helm
 Use `helm list` to list the currently installed operators.
 
-You can use the following command to install all of the operators that are part of the release 22.06:
+You can use the following command to uninstall all of the operators that are part of the release 22.09:
 
 [source,console]
 ----
@@ -148,50 +150,91 @@ The reason is, that helm will uninstall the operators but not the CRDs.
 
 [source,console]
 ----
-$ kubectl apply \
-  -f https://raw.githubusercontent.com/stackabletech/airflow-operator/0.5.0/deploy/helm/airflow-operator/crds/crds.yaml \
-  -f https://raw.githubusercontent.com/stackabletech/commons-operator/0.3.0/deploy/helm/commons-operator/crds/crds.yaml \
-  -f https://raw.githubusercontent.com/stackabletech/druid-operator/0.7.0/deploy/helm/druid-operator/crds/crds.yaml \
-  -f https://raw.githubusercontent.com/stackabletech/hbase-operator/0.4.0/deploy/helm/hbase-operator/crds/crds.yaml \
-  -f https://raw.githubusercontent.com/stackabletech/hdfs-operator/0.5.0/deploy/helm/hdfs-operator/crds/crds.yaml \
-  -f https://raw.githubusercontent.com/stackabletech/hive-operator/0.7.0/deploy/helm/hive-operator/crds/crds.yaml \
-  -f https://raw.githubusercontent.com/stackabletech/kafka-operator/0.7.0/deploy/helm/kafka-operator/crds/crds.yaml \
-  -f https://raw.githubusercontent.com/stackabletech/nifi-operator/0.7.0/deploy/helm/nifi-operator/crds/crds.yaml \
-  -f https://raw.githubusercontent.com/stackabletech/opa-operator/0.10.0/deploy/helm/opa-operator/crds/crds.yaml \
-  -f https://raw.githubusercontent.com/stackabletech/secret-operator/0.5.0/deploy/helm/secret-operator/crds/crds.yaml \
-  -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/0.5.0/deploy/helm/spark-k8s-operator/crds/crds.yaml \
-  -f https://raw.githubusercontent.com/stackabletech/superset-operator/0.6.0/deploy/helm/superset-operator/crds/crds.yaml \
-  -f https://raw.githubusercontent.com/stackabletech/trino-operator/0.6.0/deploy/helm/trino-operator/crds/crds.yaml \
-  -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/0.11.0/deploy/helm/zookeeper-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/airflow-operator/0.6.0/deploy/helm/airflow-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/commons-operator/0.4.0/deploy/helm/commons-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/druid-operator/0.8.0/deploy/helm/druid-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/hbase-operator/0.5.0/deploy/helm/hbase-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/hdfs-operator/0.6.0/deploy/helm/hdfs-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/hive-operator/0.8.0/deploy/helm/hive-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/kafka-operator/0.8.0/deploy/helm/kafka-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/nifi-operator/0.8.0/deploy/helm/nifi-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/opa-operator/0.11.0/deploy/helm/opa-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/secret-operator/0.6.0/deploy/helm/secret-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/0.6.0/deploy/helm/spark-k8s-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/superset-operator/0.7.0/deploy/helm/superset-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/trino-operator/0.8.0/deploy/helm/trino-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/0.12.0/deploy/helm/zookeeper-operator/crds/crds.yaml
 ----
 
-To install the release 22.09 run
+To install the release 22.11 run
 
 [source,console]
 ----
 $ helm repo add stackable https://repo.stackable.tech/repository/helm-stable/
 $ helm repo update stackable
-$ helm install --wait airflow-operator stackable/airflow-operator --version 0.5.0
-$ helm install --wait commons-operator stackable/commons-operator --version 0.3.0
-$ helm install --wait druid-operator stackable/druid-operator --version 0.7.0
-$ helm install --wait hbase-operator stackable/hbase-operator --version 0.4.0
-$ helm install --wait hdfs-operator stackable/hdfs-operator --version 0.5.0
-$ helm install --wait hive-operator stackable/hive-operator --version 0.7.0
-$ helm install --wait kafka-operator stackable/kafka-operator --version 0.7.0
-$ helm install --wait nifi-operator stackable/nifi-operator --version 0.7.0
-$ helm install --wait opa-operator stackable/opa-operator --version 0.10.0
-$ helm install --wait secret-operator stackable/secret-operator --version 0.5.0
-$ helm install --wait spark-k8s-operator stackable/spark-k8s-operator --version 0.5.0
-$ helm install --wait superset-operator stackable/superset-operator --version 0.6.0
-$ helm install --wait trino-operator stackable/trino-operator --version 0.6.0
-$ helm install --wait zookeeper-operator stackable/zookeeper-operator --version 0.11.0
+$ helm install --wait airflow-operator stackable/airflow-operator --version 0.6.0
+$ helm install --wait commons-operator stackable/commons-operator --version 0.4.0
+$ helm install --wait druid-operator stackable/druid-operator --version 0.8.0
+$ helm install --wait hbase-operator stackable/hbase-operator --version 0.5.0
+$ helm install --wait hdfs-operator stackable/hdfs-operator --version 0.6.0
+$ helm install --wait hive-operator stackable/hive-operator --version 0.8.0
+$ helm install --wait kafka-operator stackable/kafka-operator --version 0.8.0
+$ helm install --wait nifi-operator stackable/nifi-operator --version 0.8.0
+$ helm install --wait opa-operator stackable/opa-operator --version 0.11.0
+$ helm install --wait secret-operator stackable/secret-operator --version 0.6.0
+$ helm install --wait spark-k8s-operator stackable/spark-k8s-operator --version 0.6.0
+$ helm install --wait superset-operator stackable/superset-operator --version 0.7.0
+$ helm install --wait trino-operator stackable/trino-operator --version 0.7.0
+$ helm install --wait zookeeper-operator stackable/zookeeper-operator --version 0.12.0
 ----
 
 ==== Breaking changes
-
 You will need to adapt your existing CRDs to the following breaking changes:
 
-BREAKING: use resource limit struct instead of passing spark configuration arguments (#147) https://github.com/stackabletech/spark-k8s-operator/pull/147
+==== Stackable operator for Apache Spark
+The configuration of pod resource requests has been changed to be consistent with other operators that are part of the Stackable Data Platform (https://github.com/stackabletech/spark-k8s-operator/pull/147[#174]).
+
+In the previous version, these were configured like this:
+
+```
+  driver:
+    cores: 1
+    coreLimit: "1200m"
+    memory: "512m"`
+```
+
+From now on, Pod resources can be configured in two different ways. The first and recommended way is to add a resources section for each role as the following examples shows:
+
+```
+  driver:
+    resources:
+      cpu:
+        min: "1"
+        max: "1500m"
+      memory:
+        limit: "1Gi"
+```
+
+The second method is to use the `sparkConf` section and and set them individually as spark properties:
+
+```
+  sparkConf:
+    spark.kubernetes.submission.waitAppCompletion: "false"
+    spark.kubernetes.driver.pod.name: "resources-sparkconf-driver"
+    spark.kubernetes.executor.podNamePrefix: "resources-sparkconf"
+    spark.kubernetes.driver.request.cores: "2"
+    spark.kubernetes.driver.limit.cores: "3"
+```
+
+When both methods are used, the settings in the `sparkConf` section override the `resources` configuration.
+
+Note that none of the setting above have any influence over the parallelism used by Spark it's self. To consumize this, the only supported way is as follows:
+
+```
+  sparkConf:
+    spark.driver.cores: "3"
+    spark.executor.cores: "3"
+```
 
 == Release 22.09
 This is the second release of the Stackable Data Platform.
@@ -310,7 +353,7 @@ $ stackablectl release install 22.09
 ==== Using helm
 Use `helm list` to list the currently installed operators.
 
-You can use the following command to install all of the operators that are part of the release 22.06:
+You can use the following command to uninstall all of the operators that are part of the release 22.06:
 
 [source,console]
 ----
