@@ -4,7 +4,7 @@ The Stackable platform consists of multiple operators that work together.
 Periodically a platform release is made, including all components of the platform at a specific version.
 
 == Release 22.11
-This is the third release of the Stackable Data Platform, it focuses on resource management.
+This is the third release of the Stackable Data Platform, which this time focuses on resource management.
 
 === New platform features
 The following new major platform features were added:
