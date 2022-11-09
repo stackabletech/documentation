@@ -67,7 +67,7 @@ We want to parse logs out of structured log entries and also keep the stdout log
 
 === Log Sink: OpenSearch
 
-https://opensearch.org/[OpenSearch] has been picked as the sink for all the aggregated logs. No other opens have been considered, but as the sink sits at the very top of the chain, it is easy to swap it out for a different software.
+https://opensearch.org/[OpenSearch] has been picked as the sink for all the aggregated logs. No other options have been considered, but as the sink sits at the very top of the chain, it is easy to swap it out for a different software.
 
 We want to make it easy for users to deploy OpenSearch, but also easy to switch out the sink.
 
