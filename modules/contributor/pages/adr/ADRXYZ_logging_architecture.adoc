@@ -69,9 +69,9 @@ We want to parse logs out of structured log entries and also keep the stdout log
 
 https://opensearch.org/[OpenSearch] has been picked as the sink for all the aggregated logs. No other options have been considered, but as the sink sits at the very top of the chain, it is easy to swap it out for a different software.
 
-We want to make it easy for users to deploy OpenSearch, but also easy to switch out the sink.
+The sink is configured in the Vector aggregator. We initially do not provide any "Stackable way" of configuring the sink, but it is easily configured by the user in a single location for the whole platform. Other sinks can be configured easily as well (https://vector.dev/docs/reference/configuration/sinks/[Vector docs for sink configuration]).
 
-(How and where is this configured, and how can we make it easy for the user?)
+**For now, setting up the aggregator and sink is the responsibility of the user**.
 
 === Logging configuration
 
