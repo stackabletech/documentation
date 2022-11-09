@@ -50,7 +50,7 @@ Additionally there are some individual product features that are noteworthy
 * https://github.com/stackabletech/nifi-operator/pull/323[NiFi: Support for in-place upgrades]
 * https://github.com/stackabletech/nifi-operator/pull/371[NiFi: repository sizes are now adjusted based on declared PVC sizes]
 * https://github.com/stackabletech/trino-operator/pull/306[Trino: Support for LDAP authentication]
-* Also the github repositories contain new and improved READMEs.
+* The github repositories contain new and improved READMEs.
 
 === Supported Kubernetes versions
 This release supports the following Kubernetes versions:
