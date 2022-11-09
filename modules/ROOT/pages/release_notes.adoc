@@ -187,7 +187,7 @@ $ helm install --wait zookeeper-operator stackable/zookeeper-operator --version 
 ----
 
 ==== Breaking changes
-You will need to adapt your existing CRDs to the following breaking changes:
+You will need to adapt your existing CRDs due to the following breaking changes:
 
 ==== Stackable Operator for Apache Spark
 The configuration of pod resource requests has been changed to be consistent with other operators that are part of the Stackable Data Platform (https://github.com/stackabletech/spark-k8s-operator/pull/147[#174]).
