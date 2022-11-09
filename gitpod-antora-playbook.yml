@@ -14,7 +14,7 @@ urls:
 content:
   sources: 
     - url: /workspace/documentation
-      branches: HEAD
+      branches: [HEAD, release/*]
 
     - url: https://github.com/stackabletech/stackablectl.git
       branches: main
