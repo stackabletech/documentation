@@ -226,7 +226,7 @@ The second method is to use the `sparkConf` section and and set them individuall
 
 When both methods are used, the settings in the `sparkConf` section override the `resources` configuration.
 
-Note that none of the setting above have any influence over the parallelism used by Spark it's self. To consumize this, the only supported way is as follows:
+Note that none of the settings above have any influence over the parallelism used by Spark itself. The only supported way to affect this is as follows:
 
 ```
   sparkConf:
