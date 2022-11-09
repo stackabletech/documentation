@@ -3,8 +3,239 @@
 The Stackable platform consists of multiple operators that work together.
 Periodically a platform release is made, including all components of the platform at a specific version.
 
+== Release 22.11
+This is the third release of the Stackable Data Platform, which this time focuses on resource management.
+
+=== New platform features
+The following new major platform features were added:
+
+CPU and memory limits configurable::
+The operators now https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/[request] resources from Kubernetes for the products and required CPU and memory can now also be configured for all products. If your product instances are less performant after the update, the new defaults might be set too low and we recommend to https://docs.stackable.tech/kafka/stable/usage.html#_resource_requests[set custom requests] for your cluster.
+
+* https://github.com/stackabletech/opa-operator/pull/347[OpenPolicyAgent]
+* https://github.com/stackabletech/zookeeper-operator/pull/563[Apache ZooKeeper]
+* https://github.com/stackabletech/kafka-operator/pull/485[Apache Kafka]
+* https://github.com/stackabletech/hbase-operator/pull/245[Apache HBase]
+* https://github.com/stackabletech/hive-operator/pull/242[Apache Hive]
+* https://github.com/stackabletech/nifi-operator/pull/353[Apache NiFi]
+* https://github.com/stackabletech/druid-operator/pull/298[Apache Druid]
+* https://github.com/stackabletech/airflow-operator/pull/167[Apache Airflow]
+* https://github.com/stackabletech/superset-operator/pull/273[Apache Superset]
+
+Orphaned Resources::
+The operators now properly clean up after scaling down products. This means for example deleting StatefulSets that were left over after scaling down.
+
+* https://github.com/stackabletech/zookeeper-operator/pull/569[Apache ZooKeeper]
+* https://github.com/stackabletech/hbase-operator/pull/215[Apache HBase]
+* https://github.com/stackabletech/hdfs-operator/pull/249[Apache Hadoop HDFS]
+* https://github.com/stackabletech/hive-operator/pull/254[Apache Hive]
+* https://github.com/stackabletech/druid-operator/pull/310[Apache Druid]
+* https://github.com/stackabletech/trino-operator/pull/310[Trino]
+* https://github.com/stackabletech/airflow-operator/pull/174[Apache Airflow]
+
+New Versions::
+New product versions are supported.
+
+* https://github.com/stackabletech/kafka-operator/pull/492[Apache Kafka 3.3.1]
+* https://github.com/stackabletech/hdfs-operator/pull/250[Apache Hadoop HDFS 3.3.4]
+* https://github.com/stackabletech/nifi-operator/pull/360[Apache NiFi 1.18.0]
+* https://github.com/stackabletech/druid-operator/pull/317[Apache Druid 24.0.0]
+* https://github.com/stackabletech/airflow-operator/pull/179[Apache Airflow 2.4.1]
+
+Product features::
+Additionally there are some individual product features that are noteworthy
+
+* https://github.com/stackabletech/kafka-operator/pull/221[HBase: Phoenix support]
+* https://github.com/stackabletech/hive-operator/pull/264[Hive: Support HDFS connection]
+* https://github.com/stackabletech/nifi-operator/pull/323[NiFi: Support for in-place upgrades]
+* https://github.com/stackabletech/nifi-operator/pull/371[NiFi: repository sizes are now adjusted based on declared PVC sizes]
+* https://github.com/stackabletech/trino-operator/pull/306[Trino: Support for LDAP authentication]
+* The github repositories contain new and improved READMEs.
+
+=== Supported Kubernetes versions
+This release supports the following Kubernetes versions:
+
+* `1.25` (new)
+* `1.24`
+* `1.23`
+* `1.22`
+
+=== Upgrade from 22.09
+
+==== Using stackablectl
+You can list the available releases as follows
+
+[source,console]
+----
+$ stackablectl release list
+RELEASE            RELEASE DATE   DESCRIPTION
+22.11              2022-11-08     Third release focusing on resource management
+22.09              2022-09-09     Second release focusing on security and OpenShift support
+22.06              2022-06-30     First official release of the Stackable Data Platform
+
+----
+
+To uninstall the `22.09` release run
+
+[source,console]
+----
+$ stackablectl release uninstall 22.09
+[INFO ] Uninstalling release 22.09
+[INFO ] Uninstalling airflow operator
+[INFO ] Uninstalling commons operator
+# ...
+----
+
+Afterwards you will need to update the CustomResourceDefinitions (CRDs) installed by the Stackable Platform.
+The reason for this is that helm will uninstall the operators but not the CRDs.
+
+[source,console]
+----
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/airflow-operator/0.6.0/deploy/helm/airflow-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/commons-operator/0.4.0/deploy/helm/commons-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/druid-operator/0.8.0/deploy/helm/druid-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/hbase-operator/0.5.0/deploy/helm/hbase-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/hdfs-operator/0.6.0/deploy/helm/hdfs-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/hive-operator/0.8.0/deploy/helm/hive-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/kafka-operator/0.8.0/deploy/helm/kafka-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/nifi-operator/0.8.0/deploy/helm/nifi-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/opa-operator/0.11.0/deploy/helm/opa-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/secret-operator/0.6.0/deploy/helm/secret-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/0.6.0/deploy/helm/spark-k8s-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/superset-operator/0.7.0/deploy/helm/superset-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/trino-operator/0.8.0/deploy/helm/trino-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/0.12.0/deploy/helm/zookeeper-operator/crds/crds.yaml
+----
+
+To install the `22.11` release run
+
+[source,console]
+----
+$ stackablectl release install 22.11
+[INFO ] Installing release 22.11
+[INFO ] Installing airflow operator in version 0.6.0
+[INFO ] Installing commons operator in version 0.4.0
+[INFO ] Installing druid operator in version 0.8.0
+[INFO ] Installing hbase operator in version 0.5.0
+[INFO ] Installing hdfs operator in version 0.6.0
+[INFO ] Installing hive operator in version 0.8.0
+[INFO ] Installing kafka operator in version 0.8.0
+[INFO ] Installing nifi operator in version 0.8.0
+[INFO ] Installing opa operator in version 0.11.0
+[INFO ] Installing secret operator in version 0.6.0
+[INFO ] Installing spark-k8s operator in version 0.6.0
+[INFO ] Installing superset operator in version 0.7.0
+[INFO ] Installing trino operator in version 0.7.0
+[INFO ] Installing zookeeper operator in version 0.12.0
+# ...
+----
+
+==== Using helm
+Use `helm list` to list the currently installed operators.
+
+You can use the following command to uninstall all of the operators that are part of the release 22.09:
+
+[source,console]
+----
+$ helm uninstall airflow-operator commons-operator druid-operator hbase-operator hdfs-operator hive-operator kafka-operator nifi-operator opa-operator secret-operator spark-k8s-operator superset-operator trino-operator zookeeper-operator
+release "airflow-operator" uninstalled
+release "commons-operator" uninstalled
+# ...
+----
+
+Afterwards you will need to update the CustomResourceDefinitions (CRDs) installed by the Stackable Platform.
+This is because helm will uninstall the operators but not the CRDs.
+
+[source,console]
+----
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/airflow-operator/0.6.0/deploy/helm/airflow-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/commons-operator/0.4.0/deploy/helm/commons-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/druid-operator/0.8.0/deploy/helm/druid-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/hbase-operator/0.5.0/deploy/helm/hbase-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/hdfs-operator/0.6.0/deploy/helm/hdfs-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/hive-operator/0.8.0/deploy/helm/hive-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/kafka-operator/0.8.0/deploy/helm/kafka-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/nifi-operator/0.8.0/deploy/helm/nifi-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/opa-operator/0.11.0/deploy/helm/opa-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/secret-operator/0.6.0/deploy/helm/secret-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/0.6.0/deploy/helm/spark-k8s-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/superset-operator/0.7.0/deploy/helm/superset-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/trino-operator/0.8.0/deploy/helm/trino-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/0.12.0/deploy/helm/zookeeper-operator/crds/crds.yaml
+----
+
+To install the release 22.11 run
+
+[source,console]
+----
+$ helm repo add stackable https://repo.stackable.tech/repository/helm-stable/
+$ helm repo update stackable
+$ helm install --wait airflow-operator stackable/airflow-operator --version 0.6.0
+$ helm install --wait commons-operator stackable/commons-operator --version 0.4.0
+$ helm install --wait druid-operator stackable/druid-operator --version 0.8.0
+$ helm install --wait hbase-operator stackable/hbase-operator --version 0.5.0
+$ helm install --wait hdfs-operator stackable/hdfs-operator --version 0.6.0
+$ helm install --wait hive-operator stackable/hive-operator --version 0.8.0
+$ helm install --wait kafka-operator stackable/kafka-operator --version 0.8.0
+$ helm install --wait nifi-operator stackable/nifi-operator --version 0.8.0
+$ helm install --wait opa-operator stackable/opa-operator --version 0.11.0
+$ helm install --wait secret-operator stackable/secret-operator --version 0.6.0
+$ helm install --wait spark-k8s-operator stackable/spark-k8s-operator --version 0.6.0
+$ helm install --wait superset-operator stackable/superset-operator --version 0.7.0
+$ helm install --wait trino-operator stackable/trino-operator --version 0.7.0
+$ helm install --wait zookeeper-operator stackable/zookeeper-operator --version 0.12.0
+----
+
+==== Breaking changes
+You will need to adapt your existing CRDs due to the following breaking changes:
+
+==== Stackable Operator for Apache Spark
+The configuration of pod resource requests has been changed to be consistent with other operators that are part of the Stackable Data Platform (https://github.com/stackabletech/spark-k8s-operator/pull/147[#174]).
+
+In the previous version, these were configured like this:
+
+```
+  driver:
+    cores: 1
+    coreLimit: "1200m"
+    memory: "512m"`
+```
+
+From now on, Pod resources can be configured in two different ways. The first and recommended way is to add a resources section for each role as the following examples shows:
+
+```
+  driver:
+    resources:
+      cpu:
+        min: "1"
+        max: "1500m"
+      memory:
+        limit: "1Gi"
+```
+
+The second method is to use the `sparkConf` section and and set them individually as spark properties:
+
+```
+  sparkConf:
+    spark.kubernetes.submission.waitAppCompletion: "false"
+    spark.kubernetes.driver.pod.name: "resources-sparkconf-driver"
+    spark.kubernetes.executor.podNamePrefix: "resources-sparkconf"
+    spark.kubernetes.driver.request.cores: "2"
+    spark.kubernetes.driver.limit.cores: "3"
+```
+
+When both methods are used, the settings in the `sparkConf` section override the `resources` configuration.
+
+Note that none of the settings above have any influence over the parallelism used by Spark itself. The only supported way to affect this is as follows:
+
+```
+  sparkConf:
+    spark.driver.cores: "3"
+    spark.executor.cores: "3"
+```
+
 == Release 22.09
-This is our second release of the Stackable Data Platform.
+This is the second release of the Stackable Data Platform.
 It contains lots of new features and bugfixes.
 The main features focus on OpenShift support and security.
 
@@ -57,6 +288,7 @@ You can list the available releases as follows
 ----
 $ stackablectl release list
 RELEASE            RELEASE DATE   DESCRIPTION
+22.11              2022-11-08     Third release candidate of 22.11
 22.09              2022-09-09     Second release focusing on security and OpenShift support
 22.06              2022-06-30     First official release of the Stackable Data Platform
 ----
@@ -119,7 +351,7 @@ $ stackablectl release install 22.09
 ==== Using helm
 Use `helm list` to list the currently installed operators.
 
-You can use the following command to install all of the operators that are part of the release 22.06:
+You can use the following command to uninstall all of the operators that are part of the release 22.06:
 
 [source,console]
 ----
