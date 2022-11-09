@@ -87,7 +87,7 @@ $ stackablectl release uninstall 22.09
 ----
 
 Afterwards you will need to update the CustomResourceDefinitions (CRDs) installed by the Stackable Platform.
-The reason is, that helm will uninstall the operators but not the CRDs.
+The reason for this is that helm will uninstall the operators but not the CRDs.
 
 [source,console]
 ----
