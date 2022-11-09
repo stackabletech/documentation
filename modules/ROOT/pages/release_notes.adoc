@@ -4,16 +4,13 @@ The Stackable platform consists of multiple operators that work together.
 Periodically a platform release is made, including all components of the platform at a specific version.
 
 == Release 22.11
-This is the third release of the Stackable Data Platform.
-TODO
-
-Better READMEs
+This is the third release of the Stackable Data Platform, it focuses on resource management.
 
 === New platform features
 The following new major platform features were added:
 
 CPU and memory limits configurable::
-Required CPU and memory can now be configured for all products.
+The operators now https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/[request] resources from Kubernetes for the products and required CPU and memory can now also be configured for all products. If your product instances are less performant after the update, the new defaults might be set too low and we recommend to https://docs.stackable.tech/kafka/stable/usage.html#_resource_requests[set custom requests] for your cluster.
 
 * https://github.com/stackabletech/opa-operator/pull/347[OpenPolicyAgent]
 * https://github.com/stackabletech/zookeeper-operator/pull/563[Apache ZooKeeper]
@@ -26,7 +23,7 @@ Required CPU and memory can now be configured for all products.
 * https://github.com/stackabletech/superset-operator/pull/273[Apache Superset]
 
 Orphaned Resources::
-The operators now properly clean up after scaling down products.
+The operators now properly clean up after scaling down products. This means for example deleting StatefulSets that were left over after scaling down.
 
 * https://github.com/stackabletech/zookeeper-operator/pull/569[Apache ZooKeeper]
 * https://github.com/stackabletech/hbase-operator/pull/215[Apache HBase]
@@ -53,6 +50,7 @@ Additionally there are some individual product features that are noteworthy
 * https://github.com/stackabletech/nifi-operator/pull/323[NiFi: Support for in-place upgrades]
 * https://github.com/stackabletech/nifi-operator/pull/371[NiFi: repository sizes are now adjusted based on declared PVC sizes]
 * https://github.com/stackabletech/trino-operator/pull/306[Trino: Support for LDAP authentication]
+* Also the github repositories contain new and improved READMEs.
 
 === Supported Kubernetes versions
 This release supports the following Kubernetes versions:
@@ -71,7 +69,7 @@ You can list the available releases as follows
 ----
 $ stackablectl release list
 RELEASE            RELEASE DATE   DESCRIPTION
-22.11              2022-11-08     TODO release .... TODO
+22.11              2022-11-08     Third release focusing on resource management
 22.09              2022-09-09     Second release focusing on security and OpenShift support
 22.06              2022-06-30     First official release of the Stackable Data Platform
 
