@@ -59,25 +59,53 @@ https://vector.dev/[Vector] has been picked without comparison to other existing
 
 We want to parse logs out of structured log entries and also keep the stdout log as plaintext. Also, some products require reading log files instead of stdout. Which means **we opt to read logs from files for every product** and **parse structured log entries**.
 
+[#log_aggregation_architecture]
 === Log Aggregation Architecture
 
 **Agent role** - Vector offers multiple https://vector.dev/docs/setup/deployment/roles/#agent[roles] in which it can run. The DaemonSet is easier to deploy, and only one vector instance is running per host. But the sidecar has deeper integration with the product container and can read log files, something that we decided we need.
 
 **Topology** - Vector offers multiple https://vector.dev/docs/setup/deployment/topologies/[topologies] and already lists pros and cons. An aggregator makes it easier to configure a sink: only one place to configure it (the aggregator has "multi-host context" as Vector calls it). It also reduces requests made to the sink, as it aggregates and buffers requests.
 
+The connection from the agent to the aggregator is made with the help of a **discovery ConfigMap**. The aggregator is discoverable with a discovery ConfigMap, which is referenced in the ProductCluster with a property called `vectorAggregatorConfigMapName`, similar to `zookeeperConfigMapName` or `hdfsConfigMapName`. The property is located at the top level of the spec.
+
 === Log Sink: OpenSearch
 
 https://opensearch.org/[OpenSearch] has been picked as the sink for all the aggregated logs. No other options have been considered, but as the sink sits at the very top of the chain, it is easy to swap it out for a different software.
 
-The sink is configured in the Vector aggregator. We initially do not provide any "Stackable way" of configuring the sink, but it is easily configured by the user in a single location for the whole platform. Other sinks can be configured easily as well (https://vector.dev/docs/reference/configuration/sinks/[Vector docs for sink configuration]).
+The sink is configured in the Vector aggregator. We initially do not provide any "Stackable way" of configuring the sink, but it is easily configured by the user in a single location for the whole platform. Other sinks can be configured easily as well (https://vector.dev/docs/reference/configuration/sinks/[Vector docs for sink configuration]). See also <<deploying_the_stack>>.
 
 **For now, setting up the aggregator and sink is the responsibility of the user**.
 
 === Logging configuration
 
-**Log levels** - It is common to have four or five log levels: Error, Warning, Info, Debug and - optionally - Trace. We want to support them across all products. The **default log level** should be Info.
+**Log levels** - The following log levels are supported: ERROR, WARN, INFO, DEBUG, and TRACE. We support them across all products. The **default log level** is INFO. Products might have slightly different log levels, which are mapped accordingly by the agent. For instance, Superset emits logs with the levels CRITICAL, ERROR, WARNING, INFO, and DEBUG. The mapping should be:
 
-**stdout vs. file** - We want to have different log levels (and possibly other settings) for stdout and file output. This makes debugging easier, without also filling up the log aggregator with very chatty logs.
+[cols="1,1"]
+|===
+|Superset log level | Stackable log level 
+
+|CRITICAL
+| ERROR
+
+| ERROR
+| ERROR
+
+| WARNING
+| WARN
+
+| INFO
+| INFO
+
+| DEBUG
+| DEBUG
+
+| DEBUG
+| TRACE
+|===
+
+There is no TRACE log level in Superset, so if the user sets the desired log level to TRACE then it is actually set to DEBUG in Superset.
+
+**console vs. file** - We want to have different log levels (and possibly other settings) for console (stdout) and file output. This makes debugging easier, without also filling up the log aggregator with very chatty logs.
 
 **Settings per logger** - Most products (especially Java based ones) support setting a log level per package. We also want to support this in our CRD.
 
@@ -89,7 +117,7 @@ logging:
         level: INFO
       some.interesting.module:
         level: DEBUG
-  stdout:
+  console:
     loggers:
       ROOT:
         level: DEBUG
@@ -124,7 +152,9 @@ logging:
     configMap: nameOfMyConfigMapWithTheConfigFile
 ```
 
-Setting the `custom` field will disable any configurations made in `file` and `stdout`.
+Like the other logging settings, this costum configuration file can be supplied per role and/or role-group.
+
+Setting the `custom` field will disable any configurations made in `file` and `console`. (TODO maybe we can disallow this alltogether in the CRD type)
 
 **Disable vector** - Vector should be optional, if the user wants to use their own logging system.
 
@@ -133,11 +163,12 @@ logging:
   enableVectorAgent: false  # defaults to true
 ```
 
+[#deploying_the_stack]
 === Deploying the Stack
 
 The operator deploys the Vector agent as a sidecar and deploys the logging configuration for the product.
 
-The aggregator and OpenSearch sink are deployed with Helm for now, with a plan to integrate this into stackablectl. _Maybe_ we build our own operators for Vector and OpenSearch in the future.
+The aggregator and OpenSearch sink are deployed with a stackablectl Stack for now. The Stack also supports deploying the <<log_aggregation_architecture, aggregator ConfigMap>>. A more integrated way of deployment and configuration of the aggregator and sink is still to be defined, see <<future_work>>.
 
 == Consequences
 
@@ -153,6 +184,10 @@ Logs across the platform (from products and operators) are **persisted** and **a
 
 Changing a log level might lead to a pod getting restarted.
 
+[#future_work]
+== Future work that will become necessary
+
+We will have to better integrate the deployment of the Vector aggregator and the OpenSearch sink into Stackable.
 
 == Links
 
