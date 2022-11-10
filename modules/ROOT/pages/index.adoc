@@ -6,9 +6,9 @@ This documentation gives you an overview of the Stackable Data Platform, how to 
 
 
 [NOTE]
-.Our second release - September 2022
+.Our third release - November 2022
 ====
-We are proud to announce our second public release!
+We are proud to announce our third public release!
 
 Please read the xref:release_notes.adoc[release notes] to read up on the details.
 ====
