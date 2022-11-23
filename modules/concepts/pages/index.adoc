@@ -1,3 +1,49 @@
-= Concepts
+= Stackable Data Platform explained
 
-This section of the documentation is intended to be read to gain a deeper understanding of the bigger picture and architectural design of the platform.
+The Stackable Data Platform (SDP) is built on Kubernetes.
+Its core is a collection of Kubernetes Operators and custom resources which are designed to work together.
+
+They are _conceptually similar_ in that they are deployed and used the same way.
+Per supported product there is an operator.
+Every operator has at its core a custom resource (CR) which defines a product instance.
+
+Aspects like SQL database configuration, storage configuration or authentication and authorization work the same way across all operators.
+Most operators support LDAP as a common way to authenticate with product instances and OPA as a common way to set up authorization.
+
+image::overview.drawio.svg[]
+
+== Operator Overview
+
+All Stackable Operators work very similar, so they are easy to use.
+
+Every Operator relies on a central custom resource (CR) which is specific to the product it operates (i.e. DruidCluster for Apache Druid).
+It reads this resource and creates kubernetes resources in accordance with the product CR.
+
+image::operator_overview.drawio.svg[]
+
+=== Resource lifecycle
+
+When do resources get created and destroyed?
+
+What about reosurces like the DruidConnection?
+
+=== Discovery
+
+Products find each other with **discovery ConfigMaps**. The ConfigMap has the same name as the product instance resource.
+
+image::discovery.drawio.svg[]
+
+=== Roles
+
+== Deployment
+
+The operators are deployed with stackablectl - the Stackable CLI - or Helm, into the Kubernetes cluster, using docker images.
+Product cluster manfests are created by the user and put into the Kubernetes cluster.
+The operators read the product resources and create the according Kubernetes resources.
+They also pull product images from the docker repository.
+
+image::deployment.drawio.svg[]
+
+=== Stackable command line interface
+
+The Stackable command line interface is  called stackablectl. It knows about the Stackable platform releases and can install sets of operators from a specific release. It is also possible to deploy stacks of product instances that are already wired together.
