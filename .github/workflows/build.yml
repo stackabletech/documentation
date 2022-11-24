@@ -28,9 +28,6 @@ jobs:
           curl --fail --user 'github:${{ secrets.NEXUS_PASSWORD }}'
           --upload-file {} 
           https://repo.stackable.tech/repository/misc/docs/pr${{ github.event.pull_request.number }}/{} \;
-      - name: Comment
-        if: github.event.action == opened
-        run: 
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@v1
         with:
