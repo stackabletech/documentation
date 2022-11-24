@@ -27,9 +27,10 @@ jobs:
           build/site -name '*' -type f -exec 
           curl --fail --user 'github:${{ secrets.NEXUS_PASSWORD }}'
           --upload-file {} 
-          https://repo.stackable.tech/repository/misc/docs/pr${{ github.event.pull_request.number }}/{} \;
+          https://repo.stackable.tech/repository/docs/pr${{ github.event.pull_request.number }}/{} \;
       - name: Comment PR
+        if: github.event.action == opened
         uses: thollander/actions-comment-pull-request@v1
         with:
           GITHUB_TOKEN: ${{ secrets.STACKY_MC_STACKFACE_TOKEN }}
-          message: 'View the docs in this PR [rendered online](https://repo.stackable.tech/repository/misc/docs/pr${{ github.event.pull_request.number }}/index.html)'
+          message: 'View the docs in this PR [rendered online](https://repo.stackable.tech/repository/docs/pr${{ github.event.pull_request.number }}/build/site/index.html)'
