@@ -29,7 +29,7 @@ jobs:
           --upload-file {} 
           https://repo.stackable.tech/repository/docs/pr${{ github.event.pull_request.number }}/{} \;
       - name: Comment PR
-        if: github.event.action == opened
+        if: github.event.action == 'opened'
         uses: thollander/actions-comment-pull-request@v1
         with:
           GITHUB_TOKEN: ${{ secrets.STACKY_MC_STACKFACE_TOKEN }}
