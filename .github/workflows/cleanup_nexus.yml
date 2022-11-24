@@ -1,0 +1,19 @@
+name: Clean up Nexus
+
+on:
+  pull_request:
+    types: [ closed ]
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    env:
+      NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
+    steps:
+      - name: Delete PR build
+        if: env.NEXUS_PASSWORD != null # pragma: allowlist secret
+        run: >-
+          curl --fail --user 'github:${{ secrets.NEXUS_PASSWORD }}'
+          --request DELETE
+          https://repo.stackable.tech/repository/misc/docs/pr${{ github.event.pull_request.number }}
