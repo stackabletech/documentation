@@ -26,4 +26,4 @@ jobs:
           /usr/bin/find 
           build/site -name '*' -type f -exec 
           curl --user 'github:$NEXUS_PASSWORD' --upload-file {} 
-          https://repo.stackable.tech/repository/misc/docs/pr${{ github.event.pull_request.number }} \;
+          https://repo.stackable.tech/repository/misc/docs/pr${{ github.event.pull_request.number }}/{} \;
