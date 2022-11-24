@@ -20,16 +20,11 @@ jobs:
           cache: 'npm'
       - run: npm ci
       - run: make ANTORAFLAGS=--fetch
-      
-      - name: Publish to nexus test
+      - name: Publish to nexus
         if: env.NEXUS_PASSWORD != null # pragma: allowlist secret
-        run: >-
-          curl --fail --user 'github:${{ secrets.NEXUS_PASSWORD }}' --upload-file build/site/index.html
-          https://repo.stackable.tech/repository/misc/docs/pr${{ github.event.pull_request.number }}/index.html
-      - name: Publish to nexus disabled
-        if: false
         run: >-
           /usr/bin/find 
           build/site -name '*' -type f -exec 
-          curl --fail --user 'github:${{ secrets.NEXUS_PASSWORD }}' --upload-file {} 
+          curl --fail --user 'github:${{ secrets.NEXUS_PASSWORD }}'
+          --upload-file {} 
           https://repo.stackable.tech/repository/misc/docs/pr${{ github.event.pull_request.number }}/{} \;
