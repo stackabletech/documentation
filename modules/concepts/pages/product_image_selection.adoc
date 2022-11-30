@@ -1,0 +1,68 @@
+= Product image selection
+
+All products of the Stackable Data Platform run on Kubernetes and are managed by Stackable Operators.
+One operator is responsible for exactly one product like Apache Spark.
+The products are deployed using `Pods` and their `Containers` to initialize and run the respective product.
+Containers require images (e.g. Docker) to run of.
+These images contain different tools for initialization jobs and/or the actual product itself.
+Images are prepared for different architectures and different product versions.
+
+There are multiple ways to specify the image used:
+
+== Stackable provided images
+
+If your Kubernetes cluster has internet access, the easiest way is to use the publicly available Images from the https://docker.stackable.tech/[Image registry hosted by Stackable].
+If the Kubernetes cluster does not have internet access, a xref:_custom_docker_registry[] or xref:_custom_images[] can be used.
+
+Currently, you need to specify two versions:
+
+1. **Product version:** The version of the product, as it e.g. can be found on the xref:operators:supported_versions.adoc[list of supported product versions] or on the website of the product itself.
+2. **Stackable version:** As we need to make changes to the Images from time to time (e.g. security updates), we also have to version them using the Stackable version.
+All the available images (with their product and stackable version) can be found in our https://repo.stackable.tech/#browse/browse:docker:v2%2Fstackable[docker repository].
+
+The versions need to be specified on Stackable products as follows:
+
+[source,yaml]
+----
+spec:
+  image:
+    productVersion: 3.3.1
+    stackableVersion: 0.1.0
+----
+
+== Custom docker registry
+
+Custom docker registries can be used to fetch the image from a local image registry rather than from the internet.
+The perquisite is that you mirror all the required images the same way (with the same name and tag) as the images provided by Stackable.
+
+Afterwards you can use the following snippet to configure your custom docker repo:
+
+[source,yaml]
+----
+spec:
+  image:
+    productVersion: 3.3.1
+    stackableVersion: 0.1.0
+    repo: my.corp/myteam/stackable
+----
+
+This will change the image from the default Stackable repository `docker.stackable.tech/stackable/kafka:3.3.1-stackable0.1.0` to `my.corp/myteam/stackable/kafka:3.3.1-stackable0.1.0`.
+
+== Custom images
+
+Custom images can be used to fetch arbitrary images from local or public registries.
+In comparison to the xref:_custom_docker_registry[], this allows to provide self-hosted or user-created images (e.g. user extended Stackable images).
+If your image has other tags or names than the ones provided by Stackable you need to use this option.
+
+[source,yaml]
+----
+spec:
+  image:
+    custom: my.corp/myteam/stackable/kafka:latest-and-greatest
+    productVersion: 3.3.1
+----
+
+The Stackable Operators configure their respective products based on the product version.
+This affects e.g. configuration properties or available features.
+Therefore, the operators are dependent on the product and its product version contained in the custom image.
+It's your responsibility to put in the correct product version.
