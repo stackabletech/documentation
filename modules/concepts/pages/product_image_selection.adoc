@@ -1,20 +1,22 @@
 = Product image selection
 
-All the Stackable Data Platform products run on Kubernetes.
-Every container - which executes the actual product - needs a docker image to run of.
-The docker images contain the actual products as well as some other tools needed to operate them.
-Therefore choosing an image influences which version of the product wil be started.
+All products of the Stackable Data Platform run on Kubernetes and are managed by Stackable Operators.
+One operator is responsible for exactly one product like Apache Spark.
+The products are deployed using `Pods` and their `Containers` to initialize and run the respective product.
+Containers require images (e.g. Docker) to run of. These images contain different tools for initialization jobs or the actual product itself.
+Images are prepared for different architectures and different product versions.
 
-There are multiple ways to specify the docker image used:
+There are multiple ways to specify the image used:
 
 == Stackable provided images
+
 If your Kubernetes cluster has internet access, the easiest way is to use the publicly available Images from the https://docker.stackable.tech/[Image registry hosted by Stackable].
 If the Kubernetes cluster does not have internet access, a xref:_custom_docker_registry[] or xref:_custom_images[] can be used.
 
-Currently you need to specify two versions:
+Currently, you need to specify two versions:
 
 1. **Product version:** The version of the product, as it e.g. can be found on the xref:operators:supported_versions.adoc[list of supported product versions] or on the website of the product itself.
-2. **Stackable version:** As we need to make changes to the Images, we also have to version them using the Stackable version.
+2. **Stackable version:** As we need to make changes to the Images from time to time (e.g. security updates), we also have to version them using the Stackable version.
 All the available images (with their product and stackable version) can be found in our https://repo.stackable.tech/#browse/browse:docker:v2%2Fstackable[docker repository].
 
 The versions need to be specified on Stackable products as follows:
@@ -28,8 +30,9 @@ spec:
 ----
 
 == Custom docker registry
+
 Custom docker registries can be used to fetch the image from a local image registry rather than from the internet.
-The perquisite is that you mirror all the needed images the same way (with the same name and tag) as the image provided by Stackable.
+The perquisite is that you mirror all the required images the same way (with the same name and tag) as the images provided by Stackable.
 
 Afterwards you can use the following snippet to configure your custom docker repo:
 
@@ -42,11 +45,12 @@ spec:
     repo: my.corp/myteam/stackable
 ----
 
-This will change the image from e.g. `docker.stackable.tech/stackable/kafka:3.3.1-stackable0.1.0` to `my.corp/myteam/stackable/kafka:3.3.1-stackable0.1.0`.
+This will change the image from the default Stackable repository `docker.stackable.tech/stackable/kafka:3.3.1-stackable0.1.0` to `my.corp/myteam/stackable/kafka:3.3.1-stackable0.1.0`.
 
 == Custom images
-Custom images can be used to fetch the image from a local image registry rather than from the internet.
-The difference in comparison to the xref:_custom_docker_registry[] is, that this option is the most flexible, as an arbitrary image can be specified.
+
+Custom images can be used to fetch arbitrary images from local or public registries.
+In comparison to the xref:_custom_docker_registry[], this allows to provide self-made images (e.g. user extended Stackable images).
 If your image has other tags or names than the ones provided by Stackable you need to use this option.
 
 [source,yaml]
@@ -57,6 +61,6 @@ spec:
     productVersion: 3.3.1
 ----
 
-The operators need to make decisions based upon the product version - e.g which config properties are supported as of which version.
-Therefore they need to know the product version that is contained within the image.
+The Stackable Operators configure their respective products based on the product version. This affects e.g. configuration properties or available features.
+Therefore, the operators are dependent on the product and its product version contained in the custom image.
 It's your responsibility to put in the correct product version in here.
