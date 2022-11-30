@@ -3,7 +3,8 @@
 All products of the Stackable Data Platform run on Kubernetes and are managed by Stackable Operators.
 One operator is responsible for exactly one product like Apache Spark.
 The products are deployed using `Pods` and their `Containers` to initialize and run the respective product.
-Containers require images (e.g. Docker) to run of. These images contain different tools for initialization jobs or the actual product itself.
+Containers require images (e.g. Docker) to run of.
+These images contain different tools for initialization jobs and/or the actual product itself.
 Images are prepared for different architectures and different product versions.
 
 There are multiple ways to specify the image used:
@@ -50,7 +51,7 @@ This will change the image from the default Stackable repository `docker.stackab
 == Custom images
 
 Custom images can be used to fetch arbitrary images from local or public registries.
-In comparison to the xref:_custom_docker_registry[], this allows to provide self-made images (e.g. user extended Stackable images).
+In comparison to the xref:_custom_docker_registry[], this allows to provide self-hosted or user-created images (e.g. user extended Stackable images).
 If your image has other tags or names than the ones provided by Stackable you need to use this option.
 
 [source,yaml]
@@ -61,6 +62,7 @@ spec:
     productVersion: 3.3.1
 ----
 
-The Stackable Operators configure their respective products based on the product version. This affects e.g. configuration properties or available features.
+The Stackable Operators configure their respective products based on the product version.
+This affects e.g. configuration properties or available features.
 Therefore, the operators are dependent on the product and its product version contained in the custom image.
-It's your responsibility to put in the correct product version in here.
+It's your responsibility to put in the correct product version.
