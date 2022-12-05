@@ -49,6 +49,8 @@ We decided to use https://vector.dev/[Vector] as an aggregator. It looked good, 
 
 We chose to provide **plaintext logs on stdout** and **structured logs on file**. For the architecture, we chose to deploy the agent as a **sidecar** and **use an aggregator**. We chose to provide **OpenSearch** as a default Sink for logs.
 
+image::adr/logging_architecture.drawio.svg[]
+
 Find detailed considerations below.
 
 === Log Aggregation Framework: Vector
@@ -78,14 +80,14 @@ The sink is configured in the Vector aggregator. We initially do not provide any
 
 === Logging configuration
 
-**Log levels** - The following log levels are supported: ERROR, WARN, INFO, DEBUG, and TRACE. We support them across all products. The **default log level** is INFO. Products might have slightly different log levels, which are mapped accordingly by the agent. For instance, Superset emits logs with the levels CRITICAL, ERROR, WARNING, INFO, and DEBUG. The mapping should be:
+**Log levels** - The following log levels are supported: NONE, FATAL, ERROR, WARN, INFO, DEBUG, and TRACE. We support them across all products. The **default log level** is INFO. Products might have slightly different log levels, which are mapped accordingly by the agent. For instance, Superset emits logs with the levels CRITICAL, ERROR, WARNING, INFO, and DEBUG. The mapping should be:
 
 [cols="1,1"]
 |===
 |Superset log level | Stackable log level 
 
 |CRITICAL
-| ERROR
+| FATAL
 
 | ERROR
 | ERROR
@@ -105,31 +107,32 @@ The sink is configured in the Vector aggregator. We initially do not provide any
 
 There is no TRACE log level in Superset, so if the user sets the desired log level to TRACE then it is actually set to DEBUG in Superset.
 
-**console vs. file** - We want to have different log levels (and possibly other settings) for console (stdout) and file output. This makes debugging easier, without also filling up the log aggregator with very chatty logs.
+NONE is the log level to disable logging.
 
-**Settings per logger** - Most products (especially Java based ones) support setting a log level per package. We also want to support this in our CRD.
+**hiearchical configuration** - The actual code that is running the logging might is running inside a container for a specific role group for a role. Also, software oft supports logging configuration for specific modules:
 
+```yaml
+spec:
+  vectorAggregatorConfigMapName: ...
+  role:
+    roleGroups:
+      myFirstRoleGroup:
+        config:
+          logging:
+            enableVectorAgent: true
+            containers:
+              myFirstContainer:
+                loggers:
+                  ROOT:
+                    level: INFO
+                  another.logger:
+                    level: ERROR
+              mySecondContainer: ...
 ```
-logging:
-  file:
-    loggers:
-      ROOT:
-        level: INFO
-      some.interesting.module:
-        level: DEBUG
-  console:
-    loggers:
-      ROOT:
-        level: DEBUG
-      my.specific.package:
-        level: TRACE
-      my.other.package:
-        level: TRACE
-```
 
-**Settings per role** - All of these should be configurable per role and role group. Some sub-loggers are only available in certain roles.
+Different configurations at role level or for different role groups:
 
-```
+```yaml
 spec:
   someRole:
     config:
@@ -142,6 +145,19 @@ spec:
       aDifferentGroup:
         logging:
           ...
+```
+
+**console vs. file** - We want to have different log levels (and possibly other settings) for console (stdout) and file (aggregator) output. This makes debugging easier, without also filling up the log aggregator with very chatty logs.
+
+```yaml
+logging:
+  enableVectorAgent: true
+  containers:
+    myFirstContainer:
+      console:
+        levelThreshold: INFO
+      file:
+        levelThreshold: WARN
 ```
 
 **Override everything** - The customer should be able to supply their own configuration file. Where this is placed depends on the product.
