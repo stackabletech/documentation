@@ -24,7 +24,7 @@ A quick analysis of the status-quo regarding database connection definitions sho
 Here we attempt to standardize the way database connections are defined across the Stackable platform in such a way that:
 
 * Different database systems are supported.
-* Access credentials are dinfined in Kubernetes Secret objects
+* Access credentials are defined in Kubernetes `Secret`` objects.
 * Database connections can be reused across product services and even product installations.
 
 == Considered Options
