@@ -15,7 +15,7 @@ Many products supported by the Stackable Data Platform require databases to stor
 
 A quick analysis of the status-quo regarding database connection definitions shows how different operators handle them:
 
-* Apache Hive : the cluster custom resource defined a field called "database" with access credentials in clear text.
+* Apache Hive: the cluster custom resource defined a field called "database" with access credentials in clear text.
 * Apache Airflow and Apache Superset: uses a field called "credentialSecret" that contains multiple different database connection definitions. Even worse, it contains credentials not related to a database, such as a secret to encrypt the cookies. In case of Airflow, this secret only supports the Celery executor.
 * Apache Druid: uses a field called "metadataStorageDatabase" where access crdentials are expected to be inline and in plain text.
 
