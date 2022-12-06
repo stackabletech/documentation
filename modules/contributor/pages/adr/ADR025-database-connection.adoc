@@ -1,0 +1,106 @@
+= [short title of solved problem and solution]
+Doc Writer <doc.writer@asciidoctor.org>
+v0.1, YYYY-MM-DD
+:status: draft
+
+* Status: {draft}
+* Deciders: [list everyone involved in the decision] <!-- optional -->
+* Date: [YYYY-MM-DD when the decision was last updated] <!-- optional -->
+
+Technical Story: https://github.com/stackabletech/hive-operator/issues/148
+
+== Context and Problem Statement
+
+Many products supported by the Stackable Data Platform require databases to store metadata. Currently there is no uniform, consistent way to define database conections. In addition, some Stackable operators define database credentials to be provided inline and in plain text in the cluster definitions.
+
+A quick analysis of the status-quo regarding database connection definitions shows how different operators handle them:
+
+* Apache Hive : the cluster custom resource defined a field called "database" with access credentials in clear text.
+* Apache Airflow and Apache Superset: uses a field called "credentialSecret" that contains multiple different database connection definitions. In case of Airflow, this secret only supports the Celery executor.
+* Apache Druid: uses a field called "metadataStorageDatabase" where access crdentials are expected to be inline and in plain text.
+
+== Decision Drivers
+
+Here we attempt to standardize the way database connections are defined across the Stackable platform in such a way that:
+
+* Different database systems are supported.
+* Access credentials are dinfined in Kubernetes Secret objects
+* Database connections can be reused across product services and even product installations.
+
+== Considered Options
+
+To achieve the acceptance criteria defined above, we propose a new Kubernetes resource called `DatabaseConnection` with the following fields:
+
+[cols="1,1"]
+|===
+|Field name | Description
+|credentials
+|A string with name of a `Secret` containing at least a user name and a password field. Additional fields are allowed.
+|driver
+|A string with the database driver named. This is a generic field that identifies the type of the database used.
+|protocol
+|The protocol prefix of the final connection string. Most Java based products will use `jdbc:`.
+|host
+|A string with the host name to connect to.
+|instance
+|A string with the database instance to connect to. Optional.
+|port
+|A positive integer with the TCP port used for the connection. Optional.
+|properties
+|A dictionary of addtional properties for driver tuning like number of client threads, various buffer sizes and so on. Some drivers, like `derby` use this to define the database name and whether the DB should by automatically created or not. Optional
+|===
+ 
+The `Secret` object referenced by `credentials` must contain two fields named `USER_NAME` and `PASSWORD` but can contain additional fields like first name, last name, email, user role and so on.
+
+=== Examples
+
+These examples showcase the spec change required from the current status:
+
+The current Druid metadata database connection
+
+[source,yaml]
+---
+metadataStorageDatabase:
+    dbType: postgresql
+    connString: jdbc:postgresql://druid-postgresql/druid
+    host: druid-postgresql
+    port: 5432
+    user: druid
+    password: druid
+
+becomes
+
+[source,yaml]
+---
+metadataStorageDatabase: druid-metadata-connection
+ 
+where `druid-metadata-connection` is a standalone `DatabaseConnection` resource defined as follows
+
+[source,yaml]
+---
+apiVersion: databaseconnection.stackable.tech/v1alpha1
+kind: DatabaseConnection
+metadata:
+    name: druid-metadata-connection
+spec:
+    driver: postgresql
+    host: druid-postgresql
+    port: 5432
+    protocol: jdbc:postgresql
+    instance: druid
+    credentials: druid-metadata-credentials
+
+and the credentials field contains the name of a Kubernetes `Secret` defined as:
+
+[source,yaml]
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: druid-metadata-credentials
+type: Opaque
+data:
+  USER_NAME: druid
+  PASSWORD: druid
+
+== Decision Outcome
