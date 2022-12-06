@@ -103,4 +103,31 @@ data:
   USER_NAME: druid
   PASSWORD: druid
 
+An alternative aproach could look like the following. We will discuss this approach on Wednesday, 07.12.2022
+
+[source,yaml]
+---
+apiVersion: databaseconnection.stackable.tech/v1alpha1
+kind: DatabaseConnection
+metadata:
+    name: druid-metadata-connection
+    namespace: default
+spec:
+  database:
+    postgresql:
+      host: druid-postgresql # mandatory
+      port: 5432 # defaults to some port number - depending on wether tls is enabled
+      schema: druid # defaults to druid
+      credentials: druid-postgresql-credentials # mandatory. key username and password
+      parameters: "" # optional
+    redis:
+      host: airflow-redis-master # mandatory
+      port: 6379 # defaults to some port number - depending on wether tls is enabled
+      schema: druid # defaults to druid
+      credentials: airflow-redis-credentials # optional. key password. In case redis also supports usernames key username and password
+      parameters: "" # optional
+    derby:
+      location: /tmp/derby/ # optional, defaults to /tmp/derby-{metadata.name}/derby.db
+      parameters: "create=true" # optional
+
 == Decision Outcome
