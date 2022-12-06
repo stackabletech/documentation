@@ -29,6 +29,11 @@ Here we attempt to standardize the way database connections are defined across t
 
 == Considered Options
 
+1. A generic resource definition.
+2. Database driver specific resource definition.
+
+=== A generic resource definition
+
 To achieve the acceptance criteria defined above, we propose a new Kubernetes resource called `DatabaseConnection` with the following fields:
 
 [cols="1,1"]
@@ -78,7 +83,7 @@ where `druid-metadata-connection` is a standalone `DatabaseConnection` resource 
 
 [source,yaml]
 ---
-apiVersion: databaseconnection.stackable.tech/v1alpha1
+apiVersion: db.stackable.tech/v1alpha1
 kind: DatabaseConnection
 metadata:
     name: druid-metadata-connection
@@ -102,6 +107,8 @@ type: Opaque
 data:
   USER_NAME: druid
   PASSWORD: druid
+
+=== Database driver specific resource definition
 
 An alternative aproach could look like the following. We will discuss this approach on Wednesday, 07.12.2022
 
