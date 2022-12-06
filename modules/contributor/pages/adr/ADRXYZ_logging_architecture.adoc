@@ -109,7 +109,24 @@ There is no TRACE log level in Superset, so if the user sets the desired log lev
 
 NONE is the log level to disable logging.
 
-**hiearchical configuration** - The actual code that is running the logging might is running inside a container for a specific role group for a role. Also, software oft supports logging configuration for specific modules:
+**Logging configuration for roles or role groups** - Like many other configuration settings, logging can be defined at role or role group level:
+
+```yaml
+spec:
+  someRole:
+    config:
+      logging:
+        ...
+    roleGroups:
+      default:
+        logging:
+          ...
+      aDifferentGroup:
+        logging:
+          ...
+```
+
+**Configuration per container** - While we don't typicall configure things at the container level, it is necessary to do so for logging. As shown below we want to be able to set log levels for specific modules or override a log configuration file entirely. This is however container specific. For example, an init container, the product container itself and the vector container are all configured in different ways, and offer different modules for which log level can be set. And because of that, log configuration needs to be specified per container.
 
 ```yaml
 spec:
@@ -127,27 +144,27 @@ spec:
                     level: INFO
                   another.logger:
                     level: ERROR
+                console:
+                  levelThreshold: INFO
+                file:
+                  levelThreshold: WARN    
               mySecondContainer: ...
 ```
-
-Different configurations at role level or for different role groups:
+**Log levels per module** - We want to be able to set log levels for specific modules. This is a common feature across logging frameworks and languages.
 
 ```yaml
-spec:
-  someRole:
-    config:
-      logging:
-        ...
-    roleGroups:
-      default:
-        logging:
-          ...
-      aDifferentGroup:
-        logging:
-          ...
+logging:
+  enableVectorAgent: true
+  containers:
+    myFirstContainer:
+      loggers:
+        ROOT:
+          level: INFO
+        another.logger:
+          level: ERROR
 ```
 
-**console vs. file** - We want to have different log levels (and possibly other settings) for console (stdout) and file (aggregator) output. This makes debugging easier, without also filling up the log aggregator with very chatty logs.
+**console vs. file** - We want to have different log levels (and possibly other settings) for console (stdout) and file (aggregator) output. This makes debugging easier, without also filling up the log aggregator with very chatty logs. This is also defined per container.
 
 ```yaml
 logging:
@@ -162,7 +179,7 @@ logging:
 
 **Override everything** - The customer should be able to supply their own configuration file. Where this is placed depends on the product.
 
-```
+```yaml
 logging:
   custom:
     configMap: nameOfMyConfigMapWithTheConfigFile
@@ -174,7 +191,7 @@ Setting the `custom` field will disable any configurations made in `file` and `c
 
 **Disable vector** - Vector should be optional, if the user wants to use their own logging system.
 
-```
+```yaml
 logging:
   enableVectorAgent: false  # defaults to true
 ```
