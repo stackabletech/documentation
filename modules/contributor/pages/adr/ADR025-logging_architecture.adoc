@@ -47,7 +47,7 @@ However, logs are **not persisted**, meaning that a crashed pod is difficult to 
 
 We decided to use https://vector.dev/[Vector] as an aggregator. It looked promising - no other options were evaluated.
 
-We chose to provide **plaintext logs on stdout** and **structured logs on file**. For the architecture, we chose to deploy the agent as a **sidecar** and **use an aggregator**. We chose to provide **OpenSearch** as a default Sink for logs.
+We chose to provide **plaintext logs on stdout** and **structured logs on file**. For the architecture, we chose to deploy the agent as a **sidecar** and to **use an aggregator**. We chose to provide **OpenSearch** as a default Sink for logs.
 
 image::adr/logging_architecture.drawio.svg[]
 
