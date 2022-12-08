@@ -189,7 +189,7 @@ logging:
 
 Like the other logging settings, this custom configuration file can be supplied per role and/or role-group.
 
-Setting the `custom` field will disable any configurations made in `file` and `console`. (TODO maybe we can disallow this alltogether in the CRD type)
+Setting the `custom` field will disable any configurations made in `file` and `console`. (TODO maybe we can disallow this altogether in the CRD type)
 
 **Disable vector** - Vector should be optional, if the user wants to use their own logging system.
 
