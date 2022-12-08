@@ -38,11 +38,11 @@ Initially we thought that database connections should be implemented as stand-al
 
 == Considered Options
 
-1. `DatabaseConnection` A generic resource definition.
-2. Database driver specific resource definition.
-3. Product supported and a generic DB specifications.
+1. (rejected) `DatabaseConnection` A generic resource definition.
+2. (rejected) Database driver specific resource definition.
+3. (accepted) Product supported and a generic DB specifications.
 
-=== 1. (discarded) `DatabaseConnection` A generic resource definition
+=== 1. (rejected) `DatabaseConnection` A generic resource definition
 
 The first idea was to introduce a new Kubernetes resource called `DatabaseConnection` with the following fields:
 
@@ -120,7 +120,7 @@ data:
 
 NOTE: This idea was discarded because it didn't satisfy all acceptance criteria. In particular it wouldn't be possible to catch misconfigurations at cluster creation time.
 
-=== (discarded) 2. Database driver specific resource definition.
+=== (rejected) 2. Database driver specific resource definition.
 
 In an attempt to address the issues of the first option above, a more detailed specification was necessary. Here, database generic configurations are possible that can be better validated, as in the example below.
 
@@ -173,90 +173,27 @@ In addition, a second generic DB type (`genericConnectionString`) is introduced.
 
 NOTE: This proposal was rejected because for the same reason as the first proposal. In addition, it fails to make possible DB configurations product specific.
 
-Hive
+=== (accepted) Product supported and a generic DB specifications.
 
-[source,xml]
-<property>
-    <name>javax.jdo.option.ConnectionURL</name>
-    <value>jdbc:postgresql://mypostgresql.testabcd1111.us-west-2.rds.amazonaws.com:5432/mypgdb</value>
-    <description>PostgreSQL JDBC driver connection URL</description>
-  </property>
-  <property>
-    <name>javax.jdo.option.ConnectionDriverName</name>
-    <value>org.postgresql.Driver</value>
-    <description>PostgreSQL metastore driver class name</description>
-  </property>
-  <property>
-    <name>javax.jdo.option.ConnectionUserName</name>
-    <value>database_username</value>
-    <description>the username for the DB instance</description>
-  </property>
-  <property>
-    <name>javax.jdo.option.ConnectionPassword</name>
-    <value>database_password</value>
-    <description>the password for the DB instance</description>
-  </property>
+It seems that an unique, platform wide mechanism to describe database connections that also fulfills all acceptance criteria is not feasable. Database drivers and product configurations are too diverse and cannot be forced into a type safe specification.
 
-Druid
+Thus the single, global connection manifest needs to split into two different categories, each covering a subset of the acceptance criteria:
 
-[source]
-druid.extensions.loadList=["postgresql-metadata-storage"]
-druid.metadata.storage.type=postgresql
-druid.metadata.storage.connector.connectURI=jdbc:postgresql://<host>/druid
-druid.metadata.storage.connector.user=druid
-druid.metadata.storage.connector.password=diurd
+1. A database specific mechanism. This allows to catch misconfigurations early, it promotes good documentation and uniformity inside the platform.
+2. An operator specific mechanism. This is a wildcard that can be used to configure database connections that are not officially supported by the products but that can still be partially validated early.
 
-Superset
+The first mechanism requires the operator framwork to provide predefined structures and supporting functions for widely available database systems such as: PostgreSQL, MySQL, MariaDB, Oracle, SQLite, Derby, Redis and so on. This doesn't mean that all products can be configured with all DB implementations. The product definitions will only allow the subset that is officially supported by the products.
 
-[source]
-postgresql://{username}:{password}@{host}:{port}/{database}?sslmode=require
+The second mechanism is operator/product specific and it contains mostly a pass-through list of relevant **product properties**. There is at least one exception, and that is the handling of user credentials which still need to be provisioned in a secure way (as long as the product supports it).
 
-
-Airflow
+The following example shows how to configure the metadata storage for a Druid cluster using either one of the supported back-ends or a generic system. In a production setting only the PostgreSQL or MySQL manifests should be used.
 
 [source,yaml]
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: simple-airflow-credentials
-type: Opaque
-stringData:
-  adminUser.username: airflow
-  adminUser.firstname: Airflow
-  adminUser.lastname: Admin
-  adminUser.email: airflow@airflow.com
-  adminUser.password: airflow
-  connections.secretKey: thisISaSECRET_1234
-  connections.sqlalchemyDatabaseUri: postgresql+psycopg2://airflow:airflow@airflow-postgresql.default.svc.cluster.local/airflow
-  connections.celeryResultBackend: db+postgresql://airflow:airflow@airflow-postgresql.default.svc.cluster.local/airflow
-  connections.celeryBrokerUrl: redis://:redis@airflow-redis-master:6379/0
-
-[source,yaml]
-----
-Within operator-rs we have a commons struct for every DB that we support:
-1. postgresql
-2. mysql
-3. mariadb
-4. oracle
-5. sqlite
-6. derby
-7. redis
-8. etc...
-
-This has the advantage that all our products configure e.g. a PostgresQL the exact same way.
-We can also add some functions on the structs for e.g. jdbc-based connections strings or similar.
-
-Every product operators has a enum containing all the structs of the DBs the product supports (or only a subset if Stackable does only support a subset)
-This has the advantage that the CRD as well as automatically generated documentation will list not only the supported dbs, but also documents all the attributes of them.
-
-Also every operator has a *individual* `generic` struct, which exposes exactly the settings the product has.
-This enables full flexibility, as all the settings of the product are configurable.
-
 ---
 kind: DruidCluster
 spec:
-  metadataDB:
+  # ...
+  metadataStorageDatabase:
     postgresql:
       host: postgresql # mandatory
       port: 5432 # defaults to some port number - depending on wether tls is enabled
@@ -275,11 +212,16 @@ spec:
       driver: postgresql # mandatory
       uri: jdbc:postgresql://<host>/druid?foo;bar # mandatory
       credentialsSecret: my-secret # mandatory. key username + password
-# druid.metadata.storage.type=postgresql
-# druid.metadata.storage.connector.connectURI=jdbc:postgresql://<host>/druid
-# druid.metadata.storage.connector.user=druid
-# druid.metadata.storage.connector.password=diurd
 
+We do not discuss implementation details in this document but want to note that the `generic` manifest can be derived from all DB specific specifications. Regardless of what Db system is used, all of the above translate to a fragment of `runtime.properties` such as:
+
+[source]
+druid.metadata.storage.type=postgresql
+druid.metadata.storage.connector.connectURI=jdbc:postgresql://<host>/druid
+druid.metadata.storage.connector.user=druid
+druid.metadata.storage.connector.password=diurd
+
+[source,yaml]
 ---
 kind: SupersetCluster
 spec:
@@ -344,6 +286,4 @@ spec:
   #   <value>database_password</value>
   #   <description>the password for the DB instance</description>
   # </property>
-----
 
-== Decision Outcome
