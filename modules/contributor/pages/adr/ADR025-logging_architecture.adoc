@@ -66,7 +66,7 @@ We want to parse logs out of structured log entries and also keep the stdout log
 
 **Agent role** - Vector offers multiple https://vector.dev/docs/setup/deployment/roles/#agent[roles] in which it can run. The DaemonSet is easier to deploy, and only one vector instance is running per host. But the sidecar has deeper integration with the product container and can read log files - something that we decided we need.
 
-**Topology** - Vector offers multiple https://vector.dev/docs/setup/deployment/topologies/[topologies] and already lists pros and cons. An aggregator makes it easier to configure a sink: only one place to configure it (the aggregator has "multi-host context" as Vector calls it). It also reduces requests made to the sink, as it aggregates and buffers requests.
+**Topology** - Vector offers multiple https://vector.dev/docs/setup/deployment/topologies/[topologies] and already lists pros and cons. An aggregator makes it easier to configure a sink as there is only one place to configure it (the aggregator has "multi-host context" as Vector calls it). It also reduces requests made to the sink, as it aggregates and buffers requests.
 
 The connection from the agent to the aggregator is made with the help of a **discovery ConfigMap**. The aggregator is discoverable with a discovery ConfigMap, which is referenced in the ProductCluster with a property called `vectorAggregatorConfigMapName`, similar to `zookeeperConfigMapName` or `hdfsConfigMapName`. The property is located at the top level of the spec.
 
