@@ -19,7 +19,7 @@ Technical Story: https://github.com/stackabletech/issues/issues/202, https://git
 
 == Context and Problem Statement
 
-// Describe the context and problem statement, e.g., in free form using two to three sentences. You may want to articulate the problem in form of a question.
+// Describe the context and problem statement, e.g., in free-form using two to three sentences. You may want to articulate the problem in form of a question.
 
 As a user of the platform, I have poor visibility into what is happening in different components of the platform, as well as how components influence each other, especially the operator and the product clusters it manages.
 
