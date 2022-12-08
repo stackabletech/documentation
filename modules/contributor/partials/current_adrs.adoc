@@ -21,3 +21,4 @@
 **** xref:adr/ADR022-spark-history-server.adoc[]
 **** xref:adr/ADR023-product-image-selection.adoc[]
 **** xref:adr/ADR024-out-of-cluster_access.adoc[]
+**** xref:adr/ADR025-logging_architecture.adoc[]
