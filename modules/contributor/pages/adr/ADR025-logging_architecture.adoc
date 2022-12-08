@@ -41,7 +41,7 @@ However, logs are **not persisted**, meaning that a crashed pod is difficult to 
 
 === Constraints
 
-* **Multiple files** - Some products like HDFS _need_ to log to (multiple) files, so parsing just stdout is not sufficient; we need to parse files.
+* **Multiple files** - Some products like HDFS _need_ to log to (multiple) files, so parsing stdout alone is not sufficient; we need to parse files.
 
 == Decision
 
