@@ -164,7 +164,7 @@ logging:
           level: ERROR
 ```
 
-The ROOT logger is not tied to a module, but is configures the overall log level of the underlying logging framework.
+The ROOT logger is not tied to a module but configures the overall log level of the underlying logging framework.
 
 **Console vs. file** - We want to have different log levels (and possibly other settings) for console (stdout) and file (aggregator) output. This makes debugging easier, without also filling up the log aggregator with very chatty logs. This is also defined per container.
 
