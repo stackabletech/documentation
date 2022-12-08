@@ -164,6 +164,8 @@ logging:
           level: ERROR
 ```
 
+The ROOT logger is not tied to a module, but is configures the overall log level of the underlying logging framework.
+
 **Console vs. file** - We want to have different log levels (and possibly other settings) for console (stdout) and file (aggregator) output. This makes debugging easier, without also filling up the log aggregator with very chatty logs. This is also defined per container.
 
 ```yaml
@@ -172,9 +174,9 @@ logging:
   containers:
     myFirstContainer:
       console:
-        levelThreshold: INFO
+        level: INFO
       file:
-        levelThreshold: WARN
+        level: WARN
 ```
 
 **Override everything** - The customer should be able to supply their own configuration file. Where this is placed depends on the product.
@@ -196,6 +198,26 @@ Setting the `custom` field will disable any configurations made in `file` and `c
 ```yaml
 logging:
   enableVectorAgent: false  # defaults to true
+```
+
+**Summary** - To summarize, a complete logging configuration looks like this:
+
+```yaml
+logging:
+  enableVectorAgent: true
+  containers:  # can contain configuration for multiple containers
+    myContainer:
+      console:
+        level: INFO
+      file:
+        level: INFO
+      loggers:  # can contain configuration for multiple modules
+        ROOT:
+          level: INFO
+        my.module:
+          level: INFO
+      custom:  # this field cannot be used together with the others. Using it will override any settings made in the other fields
+        configMap: my-configmap
 ```
 
 [#deploying_the_stack]
