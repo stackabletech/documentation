@@ -137,7 +137,23 @@ spec:
       location: /tmp/derby/ # optional, defaults to /tmp/derby-{metadata.name}/derby.db
       parameters: # optional
         create: "true"
-    custom:
-      connectionString: "postgresql://superset:superset@superset-postgresql.default.svc.cluster.local/superset"
+    genericConnectionString:
+      format: postgresql://$SUPERSET_DB_USER:$SUPERSET_DB_PASS@postgres.default.svc.local:$SUPERSET_DB_PORT/superset&param1=value1&param2=value2
+      secret: ... # optional
+         SUPERSET_DB_USER: ...
+         SUPERSET_DB_PASS: ...
+         SUPERSET_DB_PORT: ...
+    generic:
+      host: superset-postgresql.default.svc.cluster.local # optional
+      port: 5432 # optional
+      protocol: pgsql123 # optional
+      instance: superset # optional
+      credentials: name-of-secret-with-credentials #optional
+      parameters: {...} # optional
+      connectionStringFormat: "{protocol}://{credentials.user_name}:{credentials.credentials}@{host}:{port}/{instance}&[parameters,;]"
+      tls: # optional
+        verification:
+          ca_cert:
+            ...
 
 == Decision Outcome
