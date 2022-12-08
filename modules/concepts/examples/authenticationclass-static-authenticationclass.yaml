@@ -1,0 +1,9 @@
+apiVersion: authentication.stackable.tech/v1alpha1
+kind: AuthenticationClass
+metadata:
+  name: simple-trino-users
+spec:
+  provider:
+    static:
+      userCredentialsSecret:
+        name: simple-trino-users-secret # <1>

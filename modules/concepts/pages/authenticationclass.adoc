@@ -1,0 +1,79 @@
+= `AuthenticationClass`
+
+`AuthenticationClass` is a CRD describing a generic authentication method like LDAP or Kerberos.
+It has `cluster` scope, so it does not belong to a specific namespace.
+Multiple operators use this CRD as a way to express the authentication of the product.
+
+At the moment the following Authentication providers are supported:
+
+* <<LDAP>>
+* TLS
+* <<Static>>
+
+== LDAP
+A very simple `AuthenticationClass` with LDAP Authentication looks like this:
+
+[source,yaml]
+----
+include::example$authenticationclass-ldap-simple.yaml[]
+----
+<1> The hostname of the LDAP server without any protocol or port
+<2> The port of the LDAP server. If TLS is used it defaults to `636` otherwise to `389`
+<3> An optional searchBase where the users should be searched
+
+=== OpenLDAP
+Here is an example that is tuned for an OpenLDAP LDAP server and is configured to read bind user credentials from a secret:
+
+[source,yaml]
+----
+include::example$authenticationclass-ldap-openldap-simple.yaml[]
+----
+<1> The name of the xref:secret-operator::secretclass.adoc[] providing the bind credentials (username and password). Must match the name of the xref:secret-operator::secretclass.adoc[] in this example in ②
+<2> The name of the xref:secret-operator::secretclass.adoc[] we are creating that is referred to by ➀. See xref:secret-operator::secretclass.adoc[]
+<3> This determines the namespace in which the referenced `Secret` will be looked for. In this case it searches for a `Secret` in the same namespace as the product runs in. See xref:secret-operator::secretclass.adoc#backend-k8ssearch[the documentation of SecretClass]
+<4> The `Secret` containing the actual bind credentials. Please keep in mind that the `Secret` needs to be in the same namespace as the product
+<5> The name of the xref:secret-operator::secretclass.adoc[] that wants to refer to this `Secret`. Must match the name of the xref:secret-operator::secretclass.adoc[] in this example in ②
+
+The following diagram describes the relationship between the created CRDs
+
+[plantuml]
+----
+include::image$authenticationclass-ldap.plantuml[]
+----
+
+=== All possible attributes
+The following example shows all possible attributes:
+
+[source,yaml]
+----
+include::example$authenticationclass-ldap-full.yaml[]
+----
+<1> The hostname of the LDAP server without any protocol or port
+<2> The port of the LDAP server. If TLS is used defaults to `636` otherwise to `389`
+<3> The searchBase where the users should be searched
+<4> Additional filter that filters the allowed users
+<5> The name of the corresponding field names in the LDAP objects
+<6> The name of the xref:secret-operator::secretclass.adoc[] providing the bind credentials (username and password)
+<7> The xref:secret-operator::scope.adoc[] of the xref:secret-operator::secretclass.adoc[]
+<8> xref:tls_server_verification.adoc[] of the LDAP server
+
+== Static
+The `static` provider is used to represent a simple - static - set of users.
+Users are identified by a username and a password.
+
+First of the `AuthenticationClass` needs to be defined as follows:
+
+[source,yaml]
+----
+include::example$authenticationclass-static-authenticationclass.yaml[]
+----
+<1> The name of the `Secret` containing the credentials
+
+Afterwards the referenced `Secret` needs to be created:
+
+[source,yaml]
+----
+include::example$authenticationclass-static-secret.yaml[]
+----
+<1> The name of the `Secret`, which needs to match the `Secret` name specified in the `AuthenticationClass` above
+<2> The namespace of the `Secret`. The `Secret` needs to be in the same namespace as the product that tries to use the static `AuthenticationClass`
