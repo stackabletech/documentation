@@ -145,9 +145,9 @@ spec:
                   another.logger:
                     level: ERROR
                 console:
-                  levelThreshold: INFO
+                  level: INFO
                 file:
-                  levelThreshold: WARN    
+                  level: WARN    
               mySecondContainer: ...
 ```
 **Log levels per module** - We want to be able to set log levels for specific modules. This is a common feature across logging frameworks and languages.
