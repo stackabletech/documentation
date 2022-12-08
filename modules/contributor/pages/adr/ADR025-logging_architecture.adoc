@@ -37,7 +37,7 @@ However, logs are **not persisted**, meaning that a crashed pod is difficult to 
 
 === Assumptions
 
-* **RegEx parsing is error prone** - Parsing pure string log output to get structure (time, module, log level, message, ...) is prone to errors. Especially for multi-line messages like stacktraces. The design should use structured log ouput whenever possible.
+* **RegEx parsing is error prone** - Parsing pure string log output to get structure (time, module, log level, message, ...) is prone to errors, especially for multi-line messages like stacktraces. The design should use structured log output whenever possible.
 
 === Constraints
 
