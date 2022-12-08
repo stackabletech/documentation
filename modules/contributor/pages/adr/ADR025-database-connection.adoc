@@ -217,4 +217,119 @@ stringData:
   connections.sqlalchemyDatabaseUri: postgresql+psycopg2://airflow:airflow@airflow-postgresql.default.svc.cluster.local/airflow
   connections.celeryResultBackend: db+postgresql://airflow:airflow@airflow-postgresql.default.svc.cluster.local/airflow
   connections.celeryBrokerUrl: redis://:redis@airflow-redis-master:6379/0
+
+[source,yaml]
+----
+Within operator-rs we have a commons struct for every DB that we support:
+1. postgresql
+2. mysql
+3. mariadb
+4. oracle
+5. sqlite
+6. derby
+7. redis
+8. etc...
+
+This has the advantage that all our products configure e.g. a PostgresQL the exact same way.
+We can also add some functions on the structs for e.g. jdbc-based connections strings or similar.
+
+Every product operators has a enum containing all the structs of the DBs the product supports (or only a subset if Stackable does only support a subset)
+This has the advantage that the CRD as well as automatically generated documentation will list not only the supported dbs, but also documents all the attributes of them.
+
+Also every operator has a *individual* `generic` struct, which exposes exactly the settings the product has.
+This enables full flexibility, as all the settings of the product are configurable.
+
+---
+kind: DruidCluster
+spec:
+  metadataDB:
+    postgresql:
+      host: postgresql # mandatory
+      port: 5432 # defaults to some port number - depending on wether tls is enabled
+      schema: druid # mandatory
+      credentials: postgresql-credentials # mandatory. key username and password
+      parameters: {} # optional
+    mysql:
+      host: mysql # mandatory
+      port: XXXX # defaults to some port number - depending on wether tls is enabled
+      schema: druid # mandatory
+      credentials: mysql-credentials # mandatory. key username and password
+      parameters: {} # optional
+    derby:
+      location: /tmp/derby/ # optional, defaults to /tmp/derby-<some-suffix>/derby.db
+    generic:
+      driver: postgresql # mandatory
+      uri: jdbc:postgresql://<host>/druid?foo;bar # mandatory
+      credentialsSecret: my-secret # mandatory. key username + password
+# druid.metadata.storage.type=postgresql
+# druid.metadata.storage.connector.connectURI=jdbc:postgresql://<host>/druid
+# druid.metadata.storage.connector.user=druid
+# druid.metadata.storage.connector.password=diurd
+
+---
+kind: SupersetCluster
+spec:
+  metadataDB:
+    postgresql:
+      host: postgresql # mandatory
+      port: 5432 # defaults to some port number - depending on wether tls is enabled
+      schema: superset # mandatory
+      credentials: postgresql-credentials # mandatory. key username and password
+      parameters: {} # optional
+    mysql:
+      host: mysql # mandatory
+      port: XXXX # defaults to some port number - depending on wether tls is enabled
+      schema: superset # mandatory
+      credentials: mysql-credentials # mandatory. key username and password
+      parameters: {} # optional
+    sqlite:
+      location: /tmp/sqlite/ # optional, defaults to /tmp/sqlite-<some-suffix>/derby.db
+    generic:
+      uriSecret: my-secret # mandatory. key uri
+      # ALTERNATIVE SOLUTION
+      uriTemplate: postgresql://$SUPERSET_DB_USER:$SUPERSET_DB_PASS@postgres.default.svc.local:$SUPERSET_DB_PORT/superset&param1=value1&param2=value2
+      templateSecret: my-secret # optional
+         SUPERSET_DB_USER: ...
+         SUPERSET_DB_PASS: ...
+         SUPERSET_DB_PORT: ...
+# postgresql://{username}:{password}@{host}:{port}/{database}?sslmode=require
+
+kind: HiveCluster
+spec:
+  metadataDB:
+    postgresql:
+      host: postgresql # mandatory
+      port: 5432 # defaults to some port number - depending on wether tls is enabled
+      schema: druid # mandatory
+      credentials: postgresql-credentials # mandatory. key username and password
+      parameters: {} # optional
+    derby:
+      location: /tmp/derby/ # optional, defaults to /tmp/derby-<some-suffix>/derby.db
+    # Missing: MS-SQL server, Oracle
+    generic:
+      driver: org.postgresql.Driver # mandatory
+      uri: jdbc:postgresql://postgresql.us-west-2.rds.amazonaws.com:5432/mypgdb # mandatory
+      credentialsSecret: my-secret # mandatory (?). key username + password
+  # <property>
+  #   <name>javax.jdo.option.ConnectionURL</name>
+  #   <value>jdbc:postgresql://postgresql.us-west-2.rds.amazonaws.com:5432/mypgdb</value>
+  #   <description>PostgreSQL JDBC driver connection URL</description>
+  # </property>
+  # <property>
+  #   <name>javax.jdo.option.ConnectionDriverName</name>
+  #   <value>org.postgresql.Driver</value>
+  #   <description>PostgreSQL metastore driver class name</description>
+  # </property>
+  # <property>
+  #   <name>javax.jdo.option.ConnectionUserName</name>
+  #   <value>database_username</value>
+  #   <description>the username for the DB instance</description>
+  # </property>
+  # <property>
+  #   <name>javax.jdo.option.ConnectionPassword</name>
+  #   <value>database_password</value>
+  #   <description>the password for the DB instance</description>
+  # </property>
+----
+
 == Decision Outcome
