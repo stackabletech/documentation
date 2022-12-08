@@ -137,9 +137,6 @@ spec:
       location: /tmp/derby/ # optional, defaults to /tmp/derby-{metadata.name}/derby.db
       parameters: # optional
         create: "true"
-    
-    
-    
     genericConnectionString:
       driver: postgresql
       format: postgresql://$SUPERSET_DB_USER:$SUPERSET_DB_PASS@postgres.default.svc.local:$SUPERSET_DB_PORT/superset&param1=value1&param2=value2
@@ -147,8 +144,6 @@ spec:
          SUPERSET_DB_USER: ...
          SUPERSET_DB_PASS: ...
          SUPERSET_DB_PORT: ...
-    
-    
     generic:
       driver: postgresql
       host: superset-postgresql.default.svc.cluster.local # optional
