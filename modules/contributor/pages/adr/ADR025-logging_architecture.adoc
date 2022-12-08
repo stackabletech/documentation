@@ -51,7 +51,7 @@ We chose to provide **plaintext logs on stdout** and **structured logs on file**
 
 image::adr/logging_architecture.drawio.svg[]
 
-Find detailed considerations below.
+Detailed considerations are given below.
 
 === Log Aggregation Framework: Vector
 
