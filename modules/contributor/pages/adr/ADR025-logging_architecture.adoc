@@ -1,7 +1,7 @@
-= Logging and Log Aggregation Architecture
+= ADR025: Logging and Log Aggregation Architecture
 Felix Hennig <felix.hennig@stackable.tech>
-v0.1, 2022-10-26
-:status: [draft]
+v0.1, 2022-12-07
+:status: accepted
 
 * Status: {status}
 * Deciders:
@@ -13,7 +13,7 @@ v0.1, 2022-10-26
 ** Siegfried Weber
 ** Sönke Liebau
 ** Teo Klestrup Röijezon
-* Date: 2022-10-26
+* Date: 2022-12-07
 
 Technical Story: https://github.com/stackabletech/issues/issues/202, https://github.com/stackabletech/issues/issues/261
 
@@ -29,11 +29,11 @@ Logs are **not persisted**, a crashed pod is difficult to investigate. Logs are 
 
 == Decision Drivers
 
-* **identical configuration** - All product logs should be configurable in the same way, no matter their underlying logging framework (log4j, logback, Python logging, etc.). Every product should have a logging section in its CRD.
-* **easily configured sinks** - A log sink (i.e. elasticsearch) should only be configured in a single place for the whole platform (not in every product instance).
+* **Identical configuration** - All product logs should be configurable in the same way, no matter their underlying logging framework (log4j, logback, Python logging, etc.). Every product should have a logging section in its CRD.
+* **Easily configured sinks** - A log sink (i.e. elasticsearch) should only be configured in a single place for the whole platform (not in every product instance).
 * **Support plaintext logs on stdout** - It is a Kubernetes convention to log in plaintext to stdout. This should be kept, as it is a useful tool for interactive debugging.
-* **custom overrides** - The log format, aggregator and sink should be substitutable by the user.
-* **transport security** - Logs should transmitted with encryption/TLS.
+* **Custom overrides** - The log format, aggregator and sink should be substitutable by the user.
+* **Transport security** - Logs should transmitted with encryption/TLS.
 
 === Assumptions
 
@@ -78,7 +78,7 @@ The sink is configured in the Vector aggregator. We initially do not provide any
 
 **For now, setting up the aggregator and sink is the responsibility of the user**.
 
-=== Logging configuration
+=== Logging Configuration
 
 **Log levels** - The following log levels are supported: NONE, FATAL, ERROR, WARN, INFO, DEBUG, and TRACE. We support them across all products. The **default log level** is INFO. Products might have slightly different log levels, which are mapped accordingly by the agent. For instance, Superset emits logs with the levels CRITICAL, ERROR, WARNING, INFO, and DEBUG. The mapping should be:
 
@@ -164,7 +164,7 @@ logging:
           level: ERROR
 ```
 
-**console vs. file** - We want to have different log levels (and possibly other settings) for console (stdout) and file (aggregator) output. This makes debugging easier, without also filling up the log aggregator with very chatty logs. This is also defined per container.
+**Console vs. file** - We want to have different log levels (and possibly other settings) for console (stdout) and file (aggregator) output. This makes debugging easier, without also filling up the log aggregator with very chatty logs. This is also defined per container.
 
 ```yaml
 logging:
@@ -181,8 +181,10 @@ logging:
 
 ```yaml
 logging:
-  custom:
-    configMap: nameOfMyConfigMapWithTheConfigFile
+  containers:
+  myContainer:
+    custom:
+      configMap: nameOfMyConfigMapWithTheConfigFile
 ```
 
 Like the other logging settings, this costum configuration file can be supplied per role and/or role-group.
@@ -218,7 +220,7 @@ Logs across the platform (from products and operators) are **persisted** and **a
 Changing a log level might lead to a pod getting restarted.
 
 [#future_work]
-== Future work that will become necessary
+== Future Work that Will Become Necessary
 
 We will have to better integrate the deployment of the Vector aggregator and the OpenSearch sink into Stackable.
 
