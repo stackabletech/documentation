@@ -1,13 +1,17 @@
-= [short title of solved problem and solution]
-Doc Writer <doc.writer@asciidoctor.org>
-v0.1, YYYY-MM-DD
+= ADR026: Standardize database connection specifications
+Razvan Mihai <razvan.mihai@stackable.tech>
+v0.1, 2022-12-08
 :status: draft
 
 * Status: {draft}
-* Deciders: [list everyone involved in the decision] <!-- optional -->
-* Date: [YYYY-MM-DD when the decision was last updated] <!-- optional -->
+* Deciders:
+** Felix Henning
+** Malte Sanders
+** Sebastian Bernauer
+** Razvan Mihai
+* Date: 2022-12-08
 
-Technical Story: https://github.com/stackabletech/hive-operator/issues/148
+Technical Story: https://github.com/stackabletech/issues/issues/238
 
 == Context and Problem Statement
 
@@ -25,16 +29,22 @@ Here we attempt to standardize the way database connections are defined across t
 
 * Different database systems are supported.
 * Access credentials are defined in Kubernetes `Secret`` objects.
-* Database connections can be reused across product services and even product installations.
+* Product configuration only allows (product) supported databases ...
+* But there is a generic way to configure additional database systems.
+* Misconfigured connections should be rejected as early as possible in the product lifecycle.
+* Generated CRD documentation is easy to follow by users.
+
+Initially we thought that database connections should be implemented as stand-alone Kubernetes resources and should be referenced in cluster definitions. This idea was thrown away mostly because sharing database connections across products is not good practice and we shouldn't encourage it.
 
 == Considered Options
 
-1. A generic resource definition.
+1. `DatabaseConnection` A generic resource definition.
 2. Database driver specific resource definition.
+3. Product supported and a generic DB specifications.
 
-=== A generic resource definition
+=== 1. (discarded) `DatabaseConnection` A generic resource definition
 
-To achieve the acceptance criteria defined above, we propose a new Kubernetes resource called `DatabaseConnection` with the following fields:
+The first idea was to introduce a new Kubernetes resource called `DatabaseConnection` with the following fields:
 
 [cols="1,1"]
 |===
@@ -108,9 +118,11 @@ data:
   USER_NAME: druid
   PASSWORD: druid
 
-=== Database driver specific resource definition
+NOTE: This idea was discarded because it didn't satisfy all acceptance criteria. In particular it wouldn't be possible to catch misconfigurations at cluster creation time.
 
-An alternative aproach could look like the following. We will discuss this approach on Wednesday, 07.12.2022
+=== (discarded) 2. Database driver specific resource definition.
+
+In an attempt to address the issues of the first option above, a more detailed specification was necessary. Here, database generic configurations are possible that can be better validated, as in the example below.
 
 [source,yaml]
 ---
@@ -157,7 +169,9 @@ spec:
         verification:
           ca_cert:
             ...
+In addition, a second generic DB type (`genericConnectionString`) is introduced. This specification allows templating connection URLs with variables defined in secrets and it's not restricted only to user credentials.
 
+NOTE: This proposal was rejected because for the same reason as the first proposal. In addition, it fails to make possible DB configurations product specific.
 
 Hive
 
