@@ -25,7 +25,7 @@ As a user of the platform, I have poor visibility into what is happening in diff
 
 Logs usually give this insight. Currently, every pod logs to stdout with a certain default log format. For log configuration we support setting a custom log configuration file in some products.
 
-Logs are **not persisted**, a crashed pod is difficult to investigate. Logs are **not aggregated**, investigating issues that involve multiple pods is difficult. Log **configuration is difficult** or impossible.
+However, logs are **not persisted**, meaning that a crashed pod is difficult to investigate. They are also **not aggregated**, so that investigating issues involving multiple pods is difficult. Log **configuration is difficult** and sometimes not even possible.
 
 == Decision Drivers
 
