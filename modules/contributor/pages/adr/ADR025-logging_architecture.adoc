@@ -86,7 +86,7 @@ The sink is configured in the Vector aggregator. We initially do not provide any
 |===
 |Superset log level | Stackable log level 
 
-|CRITICAL
+| CRITICAL
 | FATAL
 
 | ERROR
