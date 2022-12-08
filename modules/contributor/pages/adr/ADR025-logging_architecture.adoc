@@ -126,7 +126,7 @@ spec:
           ...
 ```
 
-**Configuration per container** - While we don't typically configure things at the container level, it is necessary to do so for logging. As shown below we want to be able to set log levels for specific modules or override a log configuration file entirely. This is however container specific. For example, an init container, the product container itself and the vector container are all configured in different ways, and offer different modules for which log level can be set. And because of that, log configuration needs to be specified per container.
+**Configuration per container** - While we don't typically configure things at the container level, it is necessary to do so for logging. As shown below we want to be able to set log levels for specific modules or override a log configuration file entirely. This is however container specific. For example, an init container, the product container itself and the vector container are all configured in different ways, and offer different modules for which the log level can be set. For this reason log configuration needs to be specified per container.
 
 ```yaml
 spec:
