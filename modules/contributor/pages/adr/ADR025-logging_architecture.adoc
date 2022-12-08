@@ -59,7 +59,7 @@ https://vector.dev/[Vector] has been picked without comparison to other existing
 
 === Log Retrieval Strategy
 
-We want to parse logs out of structured log entries and also keep the stdout log as plaintext. Also, some products require reading log files instead of stdout. Which means **we opt to read logs from files for every product** and **parse structured log entries**.
+We want to parse logs out of structured log entries and also keep the stdout log as plaintext. Some products also require reading log files instead of stdout. Which means **we opt to read logs from files for every product** and **parse structured log entries**.
 
 [#log_aggregation_architecture]
 === Log Aggregation Architecture
