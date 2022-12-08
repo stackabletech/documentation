@@ -32,7 +32,7 @@ However, logs are **not persisted**, meaning that a crashed pod is difficult to 
 * **Identical configuration** - All product logs should be configurable in the same way, no matter their underlying logging framework (log4j, logback, Python logging, etc.). Every product should have a logging section in its CRD.
 * **Easily configured sinks** - A log sink (i.e. elasticsearch) should only be configured in a single place for the whole platform (not in every product instance).
 * **Support plaintext logs on stdout** - It is a Kubernetes convention to log in plaintext to stdout. This should be kept as it is a useful tool for interactive debugging.
-* **Custom overrides** - The log format, aggregator and sink should be substitutable by the user.
+* **Custom overrides** - The user should be able to override the log format, aggregator and sink.
 * **Transport security** - Logs should transmitted with encryption/TLS.
 
 === Assumptions
