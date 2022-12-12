@@ -1,3 +1,79 @@
 = Logging
 
-Logging is important
+// Abstract
+Logging is important for observability of the platform. Stackable provides human-readable plaintext logs for each running container, as well as aggregated and persisted logs with identical structure across the whole platform. Log levels can be set for individual modules and configuration is identical across all products, but custom logging configuration files can be supplied as well.
+
+image::logging_overview.drawio.svg[]
+
+== Motivation
+
+**Aggregate and persist** - The logging on the platform was designed to aggregate logs from all parts of the platform to make it easy to correlate events from different parts. For this, logs should share the same structure, and should be viewable in a central location. Logs should also be persisted in a central location, so if a component crashes, the logs are still there to identify the reason.
+
+**Easy to read on the fly** - At the same time, logs should still be accessible in an easy to read format on the containers, to allow for easy on the fly inspection of each part of the platform. The logging configuration also supports setting different thresholds for the logs readable on the container and the aggregated logs. This way you can get a detailed view of the operations of a component while viewing it on the container, but aggregate logs at a coarser granularity when aggregating across the whole platform.
+
+**Consistent configuration** - Finally, logging should be always configured the same way, no matter which product and which underlying technology is used to produce the logs. Logging for each product is configured in the ProductCluster resource. It is still supported to supply custom logging configuration files, these are then product specific.
+
+== Architecture
+
+Below you can see the overall architecture using ZooKeeper as an example. Stackable uses https://vector.dev/[Vector] for log aggregation and https://opensearch.org/[OpenSearch] as the sink to persist logs in.
+
+image::logging_architecture.drawio.svg[]
+
+You configure your logging in the resource describing the cluster, seen in the top left in the diagram (see the <<configuration, configuration>> section below). The operator reads this resource and creates the appropriate log configuration files as ConfigMaps, which are then mounted into the containers. The ZooKeeper Pod has three containers: The `prepare` sidecar container, the `zookeeper` container and the `vector` https://vector.dev/docs/setup/deployment/roles/#sidecar[sidecar container]. All logs get written into a shared mounted directory, from which the Vector agent reads them and sends them to the vector https://vector.dev/docs/setup/deployment/roles/#aggregator[aggregator].
+
+The aggregator is configured to use the OpenSearch sink. It sends all logs to the sink. If the sink is unavailable, it will buffer the log messages. It is also the single point where the sink is configured, so the sink is decoupled from the individual product configurations and only needs to be configured in this single location for the whole platform.
+
+[#configuration]
+== Identical configuration in each product
+
+Logging configuration usually requires configuration what to log, where to log it and in which format. Stackable provides a unified format and also configures where to log - either to the container console or the aggregator. The only thing left to configure is the _what_. As part of the logging configuration, individual modules can be configured with different log levels:
+
+```yaml
+logging:
+  containers:          // <1>
+    mainContainer:
+      console:         // <2>
+        level: DEBUG
+      file:
+        level: INFO
+      loggers:         // <3>
+        ROOT:
+          level: INFO
+        my.module:
+          level: DEBUG
+        some.chatty.module:
+          level: NONE
+    sidecarContainer:
+      ...
+```
+
+<1> Logging is defined for each container
+<2> Console and file (aggregator) have different log levels
+<3> Setting log levels for individual modules is also possible
+
+**Log levels per module** - In the `loggers` section the log levels for each module are configured. Note the `ROOT` module. This is a special module and refers to the default log level for the container. The log levels are the commonly used ones (TRACE, DEBUG, INFO, WARN, FATAL) as well as the NONE level to turn of logging.
+
+**Log levels for console and file** - The configuration supports setting another level threshold for the console and the file output from which the aggregation is done. A typical use case is that the log level for the console is set to a more detailed level to allow for detailed inspection of a container, but less information in the aggregated log store.
+
+**Per container configuration** - A Pod actually consists of multiple containers and you might want different log levels for each of them. Also the log levels per module are container specific.
+
+== Custom overrides
+
+As with many parts of the Stackable platform, custom overrides are supported as well, by supplying your own logging configuration file. This is then product specific.
+
+```yaml
+logging:
+  enableVectorAgent: false       // <1>
+  containers:
+    myContainer:
+      custom:
+        configMap: my-configmap  // <2>
+```
+
+<1> The vector logging agent is not deployed
+<2> A custom logging configuration is loaded from a ConfigMap called `my-configmap`
+
+== Further Reading
+
+// TODO fix links
+To get some hands on experience and see logging in action, try out the http://example.org/[logging demo]. If you want to know details about logging configuration, have a look at the http://example.org/[logging reference] documentation page.
