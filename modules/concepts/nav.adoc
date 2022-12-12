@@ -5,3 +5,4 @@
 ** xref:opa.adoc[]
 ** xref:s3.adoc[]
 ** xref:pvc.adoc[]
+** xref:product_image_selection.adoc[]
