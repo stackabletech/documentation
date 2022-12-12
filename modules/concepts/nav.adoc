@@ -1,6 +1,7 @@
 * xref:concepts:index.adoc[]
 ** xref:roles-and-role-groups.adoc[]
 ** xref:service_discovery.adoc[]
+** xref:logging.adoc[]
 ** xref:opa.adoc[]
 ** xref:s3.adoc[]
 ** xref:pvc.adoc[]
