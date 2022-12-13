@@ -32,7 +32,7 @@ Logging configuration usually requires configuration what to log, where to log i
 logging:
   vectorAggregatorConfigMapName
   containers:          // <1>
-    mainContainer:
+    main-container:
       console:         // <2>
         level: DEBUG
       file:
@@ -44,7 +44,7 @@ logging:
           level: DEBUG
         some.chatty.module:
           level: NONE
-    sidecarContainer:
+    sidecar-container:
       ...
 ```
 
@@ -70,7 +70,7 @@ As with many parts of the Stackable platform, custom overrides are supported as 
 logging:
   enableVectorAgent: false       // <1>
   containers:
-    myContainer:
+    my-container:
       custom:
         configMap: my-configmap  // <2>
 ```
@@ -81,4 +81,4 @@ logging:
 == Further Reading
 
 // TODO fix links
-To get some hands on experience and see logging in action, try out the http://example.org/[logging demo]. If you want to know details about logging configuration, have a look at the http://example.org/[logging reference] documentation page.
+To get some hands on experience and see logging in action, try out the http://example.org/[logging demo].
