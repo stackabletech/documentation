@@ -49,7 +49,7 @@ logging:
 ```
 
 <1> Logging is defined for each container
-<2> Console and file (aggregator) have different log levels
+<2> Console and file appenders can have different log level thresholds.
 <3> Setting log levels for individual modules is also possible
 
 **Log levels per module** - In the `loggers` section the log levels for each module are configured. Note the `ROOT` module. This is a special module and refers to the default log level for the container. The log levels are the commonly used ones (TRACE, DEBUG, INFO, WARN, FATAL) as well as the NONE level to turn of logging.
