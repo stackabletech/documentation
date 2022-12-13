@@ -2,7 +2,7 @@
 
 `AuthenticationClass` is a CRD describing a generic authentication method like LDAP or Kerberos.
 It has `cluster` scope, so it does not belong to a specific namespace.
-Multiple operators use this CRD as a way to express the authentication of the product.
+Multiple operators use this CRD as a way to express and configure the authentication methods of their respective product.
 
 At the moment the following Authentication providers are supported:
 
