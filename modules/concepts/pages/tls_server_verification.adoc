@@ -2,7 +2,7 @@
 
 A TLS section is part of Stackable CRDs and describes how to connect to a TLS enabled system like LDAP or S3.
 
-If the `tls` attribute is set to `null` (or is not specified) no TLS will be used for the connection.
+If the `tls` attribute is set to `null` (or is not specified), no TLS will be used for the connection.
 
 A simple TLS section looks like this:
 
