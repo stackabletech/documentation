@@ -1,0 +1,10 @@
+apiVersion: authentication.stackable.tech/v1alpha1
+kind: AuthenticationClass
+metadata:
+  name: ldap-simple
+spec:
+  provider:
+    ldap:
+      hostname: my.ldap.server # <1>
+      port: 389 # <2>
+      searchBase: ou=users,dc=example,dc=org # <3>

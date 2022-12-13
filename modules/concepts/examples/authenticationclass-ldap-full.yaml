@@ -1,0 +1,29 @@
+apiVersion: authentication.stackable.tech/v1alpha1
+kind: AuthenticationClass
+metadata:
+  name: ldap-full
+spec:
+  provider:
+    ldap:
+      hostname: my.ldap.server # <1>
+      port: 389 # <2>
+      searchBase: ou=users,dc=example,dc=org # <3>
+      searchFilter: (memberOf=cn=myTeam,ou=teams,dc=example,dc=org) # <4>
+      ldapFieldNames: # <5>
+        uid: uid
+        group: memberof
+        givenName: givenName
+        surname: sn
+        email: mail
+      bindCredentials:
+        secretClass: ldap-full-bind # <6>
+        scope: # <7>
+          pod: true
+          node: false
+          services:
+            - ldap-full
+      tls: # <8>
+        verification:
+          server:
+            caCert:
+              secretClass: ldap-full-ca-cert
