@@ -39,7 +39,7 @@ include::example$tls-server-verification-webpki.yaml[]
 This example will use TLS and verify the server using the provided ca certificate.
 For this to work you need to create a xref:secret-operator::secretclass.adoc[] that - at least - contains the ca certificate.
 Note that a SecretClass does not need to have a key but can also work with just a ca cert.
-So if you got provided with a ca cert but don't have access to the key you can still use this method.
+So if you were provided with a ca cert but do not have access to the key you can still use this method.
 
 [source,yaml]
 ----
