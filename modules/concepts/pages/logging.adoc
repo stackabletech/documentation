@@ -19,17 +19,18 @@ Below you can see the overall architecture using ZooKeeper as an example. Stacka
 
 image::logging_architecture.drawio.svg[]
 
-You configure your logging in the resource describing the cluster, seen in the top left in the diagram (see the <<configuration, configuration>> section below). The operator reads this resource and creates the appropriate log configuration files as ConfigMaps, which are then mounted into the containers. The ZooKeeper Pod has three containers: The `prepare` sidecar container, the `zookeeper` container and the `vector` https://vector.dev/docs/setup/deployment/roles/#sidecar[sidecar container]. All logs get written into a shared mounted directory, from which the Vector agent reads them and sends them to the vector https://vector.dev/docs/setup/deployment/roles/#aggregator[aggregator].
+You configure your logging in the resource describing the cluster, seen in the top left in the diagram (see the <<configuration, configuration>> section below). The operator reads this resource and creates the appropriate log configuration files in the ConfigMap which also holds other product configuration. The ConfigMap is then mounted into the containers. The ZooKeeper Pod has three containers: The `prepare` sidecar container, the `zookeeper` container and the `vector` https://vector.dev/docs/setup/deployment/roles/#sidecar[sidecar container]. All logs get written into a shared mounted directory, from which the Vector agent reads them and sends them to the vector https://vector.dev/docs/setup/deployment/roles/#aggregator[aggregator].
 
 The aggregator is configured to use the OpenSearch sink. It sends all logs to the sink. If the sink is unavailable, it will buffer the log messages. It is also the single point where the sink is configured, so the sink is decoupled from the individual product configurations and only needs to be configured in this single location for the whole platform.
 
 [#configuration]
 == Identical configuration in each product
 
-Logging configuration usually requires configuration what to log, where to log it and in which format. Stackable provides a unified format and also configures where to log - either to the container console or the aggregator. The only thing left to configure is the _what_. As part of the logging configuration, individual modules can be configured with different log levels:
+Logging configuration usually requires configuration what to log, where to log it and in which format. Usually you want to persist logs but also view them on the fly in a console, and possibly both of these in different formats. Stackable provides configuration for this out of the box. The only thing left to configure is the _what_. As part of the logging configuration, individual modules can be configured with different log levels:
 
 ```yaml
 logging:
+  vectorAggregatorConfigMapName
   containers:          // <1>
     mainContainer:
       console:         // <2>
@@ -56,6 +57,10 @@ logging:
 **Log levels for console and file** - The configuration supports setting another level threshold for the console and the file output from which the aggregation is done. A typical use case is that the log level for the console is set to a more detailed level to allow for detailed inspection of a container, but less information in the aggregated log store.
 
 **Per container configuration** - A Pod actually consists of multiple containers and you might want different log levels for each of them. Also the log levels per module are container specific.
+
+=== Configuring the aggregator location
+
+Every product also has a `vectorAggregatorConfigMapName` property in its spec that needs to be set to the name of the ConfigMap that contains the address of the aggregator. The field is called `ADDRESS` and the value could be `vector-aggregator:6000` if you're running the aggregator behind a service named `vector-aggregator`.
 
 == Custom overrides
 
