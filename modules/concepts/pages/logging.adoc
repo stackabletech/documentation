@@ -30,7 +30,7 @@ Logging configuration usually requires configuration what to log, where to log i
 
 ```yaml
 logging:
-  vectorAggregatorConfigMapName
+  vectorAggregatorConfigMapName: vector-aggregator-discovery
   containers:          // <1>
     main-container:
       console:         // <2>
@@ -57,6 +57,8 @@ logging:
 **Log levels for console and file** - The configuration supports setting another level threshold for the console and the file output from which the aggregation is done. A typical use case is that the log level for the console is set to a more detailed level to allow for detailed inspection of a container, but less information in the aggregated log store.
 
 **Per container configuration** - A Pod actually consists of multiple containers and you might want different log levels for each of them. Also the log levels per module are container specific.
+
+Following the Stackable xref::roles-and-role-groups.adoc[roles and role groups] concept, this configuration fragment can be set either at role or role group level.
 
 === Configuring the aggregator location
 
