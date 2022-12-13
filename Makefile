@@ -4,6 +4,7 @@ ANTORAFLAGS :=
 build:
 	node_modules/.bin/gulp --cwd ui bundle
 	node_modules/.bin/antora generate $(PLAYBOOK) $(ANTORAFLAGS)
+	scripts/fix_noindex.sh
 
 .PHONY: clean
 clean:
