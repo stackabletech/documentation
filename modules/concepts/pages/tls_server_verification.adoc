@@ -12,7 +12,7 @@ include::example$tls-simple.yaml[]
 ----
 
 == Verification
-The parties participating at an TLS connection can be verified using certificates.
+The parties participating via a TLS connection can be verified using certificates.
 At the moment the following verification methods are supported:
 
 * <<No verification>>
