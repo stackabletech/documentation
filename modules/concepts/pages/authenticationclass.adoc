@@ -22,7 +22,7 @@ include::example$authenticationclass-ldap-simple.yaml[]
 <3> An optional searchBase where the users should be searched
 
 === OpenLDAP
-Here is an example that is tuned for an OpenLDAP LDAP server and is configured to read bind user credentials from a secret:
+Here is an example that is tuned for an OpenLDAP server and is configured to read bind user credentials from a secret:
 
 [source,yaml]
 ----
