@@ -83,5 +83,4 @@ logging:
 
 == Further Reading
 
-// TODO fix links
-To get some hands on experience and see logging in action, try out the http://example.org/[logging demo].
+To get some hands on experience and see logging in action, try out the xref:stackablectl::demos/logging.adoc[logging demo].
