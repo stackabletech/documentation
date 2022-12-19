@@ -29,23 +29,24 @@ The aggregator is configured to use the OpenSearch sink. It sends all logs to th
 Logging configuration usually requires configuration what to log, where to log it and in which format. Usually you want to persist logs but also view them on the fly in a console, and possibly both of these in different formats. Stackable provides configuration for this out of the box. The only thing left to configure is the _what_. As part of the logging configuration, individual modules can be configured with different log levels:
 
 ```yaml
-logging:
-  vectorAggregatorConfigMapName: vector-aggregator-discovery
-  containers:          // <1>
-    main-container:
-      console:         // <2>
-        level: DEBUG
-      file:
-        level: INFO
-      loggers:         // <3>
-        ROOT:
-          level: INFO
-        my.module:
+vectorAggregatorConfigMapName: vector-aggregator-discovery
+...
+  logging:
+    containers:          // <1>
+      main-container:
+        console:         // <2>
           level: DEBUG
-        some.chatty.module:
-          level: NONE
-    sidecar-container:
-      ...
+        file:
+          level: INFO
+        loggers:         // <3>
+          ROOT:
+            level: INFO
+          my.module:
+            level: DEBUG
+          some.chatty.module:
+            level: NONE
+      sidecar-container:
+        ...
 ```
 
 <1> Logging is defined for each container
