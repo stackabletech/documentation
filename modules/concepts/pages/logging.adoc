@@ -26,19 +26,21 @@ The aggregator is configured to use the OpenSearch sink. It sends all logs to th
 [#configuration]
 == Identical configuration in each product
 
-Logging configuration usually requires configuration what to log, where to log it and in which format. Usually you want to persist logs but also view them on the fly in a console, and possibly both of these in different formats. Stackable provides configuration for this out of the box. The only thing left to configure is the _what_. As part of the logging configuration, individual modules can be configured with different log levels:
+Logging configuration usually requires configuration what to log, where to log it and in which format. Usually you want to persist logs but also view them on the fly in a console, and possibly both of these in different formats. Stackable provides configuration for this out of the box. You only need to enable log aggregation and configure _what_ you want to log. As part of the logging configuration, individual modules can be configured with different log levels:
 
-```yaml
-vectorAggregatorConfigMapName: vector-aggregator-discovery
+[source,yaml]
+----
+vectorAggregatorConfigMapName: vector-aggregator-discovery  // <1>
 ...
-  logging:
-    containers:          // <1>
+  logging:                   // <2>
+    enableVectorAgent: true  // <3>
+    containers:              // <4>
       main-container:
-        console:         // <2>
+        console:             // <5>
           level: DEBUG
         file:
           level: INFO
-        loggers:         // <3>
+        loggers:             // <6>
           ROOT:
             level: INFO
           my.module:
@@ -47,13 +49,15 @@ vectorAggregatorConfigMapName: vector-aggregator-discovery
             level: NONE
       sidecar-container:
         ...
-```
+----
+<1> The discovery ConfigMap of the Vector aggregator to publish the logs to. This is set at cluster level.
+<2> The logging configuration fragment, can be set at role or role group level.
+<2> Enable the Vector agent to aggregate logs. 
+<3> Logging is defined for each container.
+<4> Console and file appenders can have different log level thresholds.
+<5> Setting log levels for individual modules is also possible.
 
-<1> Logging is defined for each container
-<2> Console and file appenders can have different log level thresholds.
-<3> Setting log levels for individual modules is also possible
-
-**Log levels per module** - In the `loggers` section the log levels for each module are configured. Note the `ROOT` module. This is a special module and refers to the default log level for the container. The log levels are the commonly used ones (TRACE, DEBUG, INFO, WARN, ERROR, FATAL) as well as the NONE level to turn of logging.
+**Log levels per module** - In the `loggers` section the log levels for each module are configured. Note the `ROOT` module. This is a special module and refers to the default log level for the container. The log levels are the commonly used ones (TRACE, DEBUG, INFO, WARN, ERROR, FATAL) as well as the NONE level to turn of logging. The default log level is `INFO`.
 
 **Log levels for console and file** - The configuration supports setting another level threshold for the console and the file output from which the aggregation is done. A typical use case is that the log level for the console is set to a more detailed level to allow for detailed inspection of a container, but less information in the aggregated log store.
 
