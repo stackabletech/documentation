@@ -1,0 +1,32 @@
+# Authentication with OpenLDAP
+
+Prerequisites:
+- a k8s cluster
+- stackablectl installed
+
+
+1. install the release
+
+We install the release as a first step just so we have all our operators
+
+2. install OpenLDAP with the stackable stack
+
+stackablectl stack install tutorial-openldap
+
+The tutorial-openLDAP is running inside the cluster, at the `openldap` service.
+It has an admin/bind user with credentials ...
+And users alice, bob with credentials ...
+
+
+3. setup Authenticationclass etc.
+
+create all the yamls
+
+4. Connect products
+
+refernce the AuthClass in superset, NiFi, etc. ...
+
+5. Try it!
+
+Log in with alice:alice or bob:bob
+
