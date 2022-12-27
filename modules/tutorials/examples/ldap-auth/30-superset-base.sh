@@ -34,9 +34,12 @@ superset_endpoint=$(stackablectl svc list -o json | jq --raw-output '.superset| 
 # init cookie jar
 cookie_jar=cookies.tmp
 touch $cookie_jar
-#trap "rm $cookie_jar" EXIT
+trap "rm $cookie_jar" EXIT
 
+# request cookie
 curl -Ls --cookie-jar $cookie_jar --output /dev/null $superset_endpoint
+
+# attempt login
 curl -Ls --cookie-jar $cookie_jar --output /dev/null $superset_endpoint/login \
   --header "Content-Type: application/x-www-form-urlencoded" \
   --data "username=admin&password=admin" \

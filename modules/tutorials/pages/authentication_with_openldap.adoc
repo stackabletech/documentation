@@ -3,6 +3,7 @@
 Prerequisites:
 - a k8s cluster
 - stackablectl installed
+- a basic knowledge of how to create resources in Kubernetes
 
 
 You should already be familiar with setting up basic instances of Stackable supported products.
@@ -20,56 +21,16 @@ We install the release as a first step just so we have all our operators
 ## Setup Superset
 
 Follow the getting started tutorial for superset to set up a basic instance (TODO: Link guide).
-(Set up a )
-
-In Short:
-
-[source,bash]
-include::example$ldap-auth/20-setup-bitnami.sh[tag=add-bitnami-repo]
-
-[source,bash]
-include::example$ldap-auth/20-setup-bitnami.sh[tag=install-bitnami-psql]
-
-A secret with the necessary credentials must be created: this contains database connection credentials as well as an admin account for Superset itself. Create a file called `superset-credentials.yaml`:
-
-[source,yaml]
-include::example$ldap-auth/superset-credentials.yaml[]
-
-And apply it:
-
-[source,bash]
-include::example$ldap-auth/30-superset-base.sh[tag=apply-superset-credentials]
-
-A Superset node must be created as a custom resource, create file called `superset.yaml`:
+Your Superset cluster definition should look similar to this one:
 
 [source,yaml]
 include::example$ldap-auth/superset/superset-no-ldap.yaml[]
 
-And apply it:
+In the Secret `superset-credentials` that is referenced in the SupersetCluster, you have
+defined admin credentials for logging into superset. Go to the web interface and make sure you
+can use these credentials to log into Superset.
 
-[source,bash]
-include::example$ldap-auth/30-superset-base.sh[tag=apply-superset-cluster]
-
-A Kubernetes job is created which starts a pod to initialize the database. This can take a while.
-
-You can use kubectl to wait on the resource:
-
-[source,bash]
-include::example$ldap-auth/30-superset-base.sh[tag=wait-supersetdb]
-
-When the Superset node is created and the database is initialized, Superset can be opened in the
-browser.
-
-The Superset port which defaults to `8088` can be forwarded to the local host:
-
-[source,bash]
-include::example$ldap-auth/30-superset-base.sh[tag=port-forwarding]
-
-Then it can be opened in the browser with `http://localhost:8088`.
-
-Enter the admin credentials from the Kubernetes secret, you should be able to log in.
-
-Shut down the superset cluster again, as we will modify it and start it again later.
+Shut down the superset cluster for now, as we will modify it and start it again later.
 
 [source,bash]
 include::example$ldap-auth/30-superset-base.sh[tag=delete-superset]
