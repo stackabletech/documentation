@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+shopt -s lastpipe
 
 echo "Creating credentials secret"
 # tag::apply-superset-credentials[]
@@ -33,13 +34,15 @@ superset_endpoint=$(stackablectl svc list -o json | jq --raw-output '.superset| 
 # init cookie jar
 cookie_jar=cookies.tmp
 touch $cookie_jar
-trap "rm $cookie_jar" EXIT
+#trap "rm $cookie_jar" EXIT
 
-curl -Ls --cookie-jar $cookie_jar $superset_endpoint > /dev/null
-curl -Ls -v --cookie-jar $cookie_jar $superset_endpoint/login \
+curl -Ls --cookie-jar $cookie_jar --output /dev/null $superset_endpoint
+curl -Ls --cookie-jar $cookie_jar --output /dev/null $superset_endpoint/login \
   --header "Content-Type: application/x-www-form-urlencoded" \
-  --data "username=admin&password=admn" \
-  --write-out %{url_effective}
+  --data "username=admin&password=admin" \
+  --write-out "%{url_effective}\n" | read final_url
+
+echo "curl redirected to: $final_url, should be welcome, not login"
 
 # TODO
 # The curl login check doesn't work yet
