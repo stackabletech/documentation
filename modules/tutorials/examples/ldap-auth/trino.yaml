@@ -1,0 +1,20 @@
+---
+apiVersion: trino.stackable.tech/v1alpha1
+kind: TrinoCluster
+metadata:
+  name: trino
+spec:
+  version: 396-stackable0.3.0
+  catalogLabelSelector: {}
+  authentication:
+    method:
+      ldap:
+        authenticationClass: openldap
+  coordinators:
+    roleGroups:
+      default:
+        replicas: 1
+  workers:
+    roleGroups:
+      default:
+        replicas: 1

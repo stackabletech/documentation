@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-bash 10-install-release.sh
-
-bash 20-setup-bitnami.sh
-
-bash 30-superset-base.sh
-
+for script in $(find -name '[0-9][0-9]*sh' | sort)
+do
+    echo "Executing $script"
+    bash $script
+done

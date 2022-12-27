@@ -3,7 +3,7 @@ set -euo pipefail
 
 echo "Installing tutorial-openldap stack"
 # tag::install-openldap[]
-#stackablectl stack install tutorial-openldap
+stackablectl stack install tutorial-openldap
 # end::install-openldap[]
 
 echo "Applying yamls"

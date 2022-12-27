@@ -1,11 +1,16 @@
-# Authentication with OpenLDAP
+= Authentication with OpenLDAP
 
 Prerequisites:
 - a k8s cluster
 - stackablectl installed
 
 
-## Install the latest Stackable release
+You should already be familiar with setting up basic instances of Stackable supported products.
+In this tutorial you will need to set up a Superset and Trino cluster. You can follow the getting started guides
+for these products to learn how to do it.
+
+
+== Install the latest Stackable release
 
 [source,bash]
 include::example$ldap-auth/10-install-release.sh[tag=stackablectl-release-install]
@@ -14,7 +19,8 @@ We install the release as a first step just so we have all our operators
 
 ## Setup Superset
 
-Follow the getting started tutorial for superset to set up a basic instance (TODO: Link guide)
+Follow the getting started tutorial for superset to set up a basic instance (TODO: Link guide).
+(Set up a )
 
 In Short:
 
@@ -63,11 +69,24 @@ Then it can be opened in the browser with `http://localhost:8088`.
 
 Enter the admin credentials from the Kubernetes secret, you should be able to log in.
 
+Shut down the superset cluster again, as we will modify it and start it again later.
+
+[source,bash]
+include::example$ldap-auth/30-superset-base.sh[tag=delete-superset]
+
 == Install OpenLDAP with the Stackable stack
 
 [source,bash]
 include::example$ldap-auth/40-install-openldap.sh[tag=install-openldap]
 
+The tutorial-openLDAP is running inside the cluster, at the `openldap` service.
+It has an admin/bind user with credentials ...
+And users alice, bob with credentials ...
+
+
+3. setup Authenticationclass etc.
+
+create all the yamls
 
 [source,yaml]
 include::example$ldap-auth/bind-credentials-secret.yaml[]
@@ -89,18 +108,42 @@ include::example$ldap-auth/ldap-authenticationclass.yaml[]
 [source,bash]
 include::example$ldap-auth/40-install-openldap.sh[tag=apply-ldap-authenticationclass]
 
-The tutorial-openLDAP is running inside the cluster, at the `openldap` service.
-It has an admin/bind user with credentials ...
-And users alice, bob with credentials ...
+
+== Add OpenLDAP authentication to Superset
+
+Update your superset defintion to reference the authenticationclass
+
+[source,yaml]
+include::example$ldap-auth/superset/superset-yes-ldap.yaml[]
+
+Now deploy the updated superset cluster:
+
+[source,bash]
+include::example$ldap-auth/50-superset-with-ldap.sh[tag=apply-superset-cluster]
+
+Connect with port-forwarding as before
+
+[source,bash]
+include::example$ldap-auth/50-superset-with-ldap.sh[tag=port-forwarding]
+
+and log in. Notice that the `admin` user cannot be used anymore. It is a Superset internal user.
+You can now log in with one of the OpenLDAP users, either alice or bob!
+
+== Connect Trino
+
+You can now use the `openldap` AuthenticationClass in other products as well.
+
+[source,yaml]
+include::example$ldap-auth/trino.yaml[]
 
 
-3. setup Authenticationclass etc.
+[source,bash]
+include::example$ldap-auth/60-trino.sh[tag=apply-superset-cluster]
 
-create all the yamls
+TODO
 
-4. Connect products
 
-refernce the AuthClass in superset, NiFi, etc. ...
+==
 
 5. Try it!
 
