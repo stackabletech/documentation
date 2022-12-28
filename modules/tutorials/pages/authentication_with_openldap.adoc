@@ -29,9 +29,11 @@ Be patient, this might take 5 minutes or so. Get a coffee.
 
 Have a look aroud ...
 
-In the Secret `superset-credentials` that is referenced in the SupersetCluster, you have
-defined admin credentials for logging into superset. Go to the web interface and make sure you
-can use these credentials to log into Superset.
+Use `stackablectl svc list` to find the endpoints of Superset and Trino and open their web interfaces in the Browser.
+
+You can log into Superset with user _admin_ and password _admin_, and into Trino with user _admin_ and password _adminadmin_.
+
+These are the current users defined in Supersets and Trinos internal user management. You will see that these users cannot be used for authentication anymore after LDAP authentication has been enabled.
 
 == Steps
 

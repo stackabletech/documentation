@@ -1,0 +1,13 @@
+data:
+  trino.rego: |
+    package trino
+
+    default allow = false
+
+    allow {
+      input.context.identity.user == "alice"
+    }
+
+    allow {
+      input.context.identity.user == "bob"
+    }

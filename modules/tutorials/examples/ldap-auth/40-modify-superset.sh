@@ -19,8 +19,7 @@ kubectl delete superset superset
 echo "Waiting on deletion to complete ..."
 kubectl wait --for=delete statefulset/superset-node-default --timeout=60s
 
-
-sleep 10
+sleep 2
 
 echo "Updating superset.yaml in-place with authentication LDAP snippet"
 yq -i '. *= load("superset-auth-snippet.yaml")' superset.yaml
@@ -30,10 +29,7 @@ echo "Applying updated configuration"
 kubectl apply -f superset.yaml
 # end::apply-superset-cluster[]
 
-sleep 2
-
 echo "Waiting on superset StatefulSet ..."
 kubectl rollout status --watch statefulset/superset-node-default
 
-sleep 2
-
+sleep 2  # just to be sure we're up and running
