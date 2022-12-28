@@ -2,6 +2,8 @@
 set -euo pipefail
 shopt -s lastpipe
 
+source "./utils.sh"
+
 ln -s superset/superset-yes-ldap.yaml superset.yaml
 echo "Updating Superset cluster definition"
 # tag::apply-superset-cluster[]
@@ -16,21 +18,22 @@ kubectl rollout status --watch statefulset/superset-node-default
 
 sleep 2
 
-# get superset endpoint from stackablectl
-superset_endpoint=$(stackablectl svc list -o json | jq --raw-output '.superset| .[0] | .endpoints | .["external-superset"]')
+username="admin"
+password="admin"
 
-# init cookie jar
-cookie_jar=cookies.tmp
-touch $cookie_jar
-trap "rm $cookie_jar" EXIT
+if superset_login "db" "$username" "$password"; then
+  echo "Login with DB admin user succeeded but should not have. Exiting."
+  exit 1
+else
+  echo "Login now un-successful with $username:$password and provider 'db'"
+fi
 
-# request cookie
-curl -Ls --cookie-jar $cookie_jar --output /dev/null $superset_endpoint
+username="alice"
+password="alice"
 
-# attempt login
-curl -Ls --cookie-jar $cookie_jar --output /dev/null $superset_endpoint/login \
-  --header "Content-Type: application/x-www-form-urlencoded" \
-  --data "username=alice&password=alice" \
-  --write-out "%{url_effective}\n" | read final_url
-
-echo "curl redirected to: $final_url, should be welcome, not login"
+if superset_login "ldap" "$username" "$password"; then
+  echo "Login with LDAP $username:$password successful"
+else
+  echo "Login with LDAP $username:$password unsuccessful. Exiting."
+  exit 1
+fi

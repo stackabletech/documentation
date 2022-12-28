@@ -2,6 +2,8 @@
 set -euo pipefail
 shopt -s lastpipe
 
+source "./utils.sh"
+
 echo "Creating credentials secret"
 # tag::apply-superset-credentials[]
 kubectl apply -f superset-credentials.yaml
@@ -28,29 +30,27 @@ kubectl rollout status --watch statefulset/superset-node-default
 
 sleep 5
 
-# get superset endpoint from stackablectl
-superset_endpoint=$(stackablectl svc list -o json | jq --raw-output '.superset| .[0] | .endpoints | .["external-superset"]')
+username="admin"
+password="admin"
 
-# init cookie jar
-cookie_jar=cookies.tmp
-touch $cookie_jar
-trap "rm $cookie_jar" EXIT
+if superset_login "db" "$username" "$password"; then
+  echo "Login successful with $username:$password"
+else
+  echo "Login not successful. Exiting."
+  exit 1
+fi
 
-# request cookie
-curl -Ls --cookie-jar $cookie_jar --output /dev/null $superset_endpoint
+username="admin"
+password="wrongpassword"
 
-# attempt login
-curl -Ls --cookie-jar $cookie_jar --output /dev/null $superset_endpoint/login \
-  --header "Content-Type: application/x-www-form-urlencoded" \
-  --data "username=admin&password=admin" \
-  --write-out "%{url_effective}\n" | read final_url
-
-echo "curl redirected to: $final_url, should be welcome, not login"
-
-# TODO
-# The curl login check doesn't work yet
+if ! superset_login "db" "$username" "$password"; then
+  echo "Login un-successful with $username:$password as expected"
+else
+  echo "Login with $username:$password successful but should not be! Exiting."
+  exit 1
+fi
 
 echo "Deleting superset"
 # tag::delete-superset[]
-kubectl delete superset superset
+#kubectl delete superset superset
 # end::delete-superset[]
