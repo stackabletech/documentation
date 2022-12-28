@@ -4,20 +4,6 @@ shopt -s lastpipe
 
 source "./utils.sh"
 
-ln -s superset/superset-yes-ldap.yaml superset.yaml
-echo "Updating Superset cluster definition"
-# tag::apply-superset-cluster[]
-kubectl apply -f superset.yaml
-# end::apply-superset-cluster[]
-rm superset.yaml
-
-sleep 2
-
-echo "Wainting on superset StatefulSet ..."
-kubectl rollout status --watch statefulset/superset-node-default
-
-sleep 2
-
 username="admin"
 password="admin"
 

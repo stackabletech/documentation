@@ -4,31 +4,12 @@ shopt -s lastpipe
 
 source "./utils.sh"
 
-echo "Creating credentials secret"
-# tag::apply-superset-credentials[]
-kubectl apply -f superset-credentials.yaml
-# end::apply-superset-credentials[]
-
-ln -s superset/superset-no-ldap.yaml superset.yaml
-echo "Creating Superset cluster"
-# tag::apply-superset-cluster[]
-kubectl apply -f superset.yaml
-# end::apply-superset-cluster[]
-rm superset.yaml
-
-echo "Waiting on SupersetDB ..."
-# tag::wait-supersetdb[]
-kubectl wait supersetdb/superset \
-  --for jsonpath='{.status.condition}'=Ready \
-  --timeout 300s
-# end::wait-supersetdb[]
-
-sleep 5
-
 echo "Wainting on superset StatefulSet ..."
 kubectl rollout status --watch statefulset/superset-node-default
 
 sleep 5
+
+echo "Checking if login is working correctly ..."
 
 username="admin"
 password="admin"
@@ -50,7 +31,4 @@ else
   exit 1
 fi
 
-echo "Deleting superset"
-# tag::delete-superset[]
-#kubectl delete superset superset
-# end::delete-superset[]
+echo "Login is working correctly"
