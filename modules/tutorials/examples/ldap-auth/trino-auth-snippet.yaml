@@ -3,6 +3,6 @@
 spec:
   authentication:
     method:
-      ldap:
-        authenticationClass: openldap
+      ldap:                            # <1>
+        authenticationClass: openldap  # <2>
 # end::snippet[]

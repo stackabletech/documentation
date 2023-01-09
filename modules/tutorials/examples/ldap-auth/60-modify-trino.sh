@@ -11,7 +11,7 @@ echo "Fetching TrinoCluster definition from k8s"
 kubectl get trino trino -o yaml > trino.yaml
 # end::get-yaml[]
 
-echo "Deleting SupersetCluster"
+echo "Deleting TrinoCluster"
 # tag::delete[]
 kubectl delete trino trino
 # end::delete[]
@@ -27,13 +27,12 @@ yq -i 'del(.spec.authentication.method.multiUser)' trino.yaml
 yq -i '. *= load("trino-auth-snippet.yaml")' trino.yaml
 
 echo "Applying updated configuration"
-# tag::apply-cluster[]
+# tag::apply[]
 kubectl apply -f trino.yaml
-# end::apply-cluster[]
+# end::apply[]
 
 echo "Waiting on Trino StatefulSets rollout ..."
 kubectl rollout status --watch statefulset/trino-coordinator-default
 kubectl rollout status --watch statefulset/trino-worker-default
 
 sleep 2
-
