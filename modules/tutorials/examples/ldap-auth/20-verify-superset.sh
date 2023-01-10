@@ -4,7 +4,7 @@ shopt -s lastpipe
 
 source "./utils.sh"
 
-echo "Waiting on superset StatefulSet ..."
+echo "Waiting for superset StatefulSet ..."
 kubectl rollout status --watch statefulset/superset-node-default
 
 sleep 5
