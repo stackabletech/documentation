@@ -34,7 +34,7 @@ Use `stackablectl svc list` to find the endpoints of Superset and Trino and open
 
 You can log into Superset with user _admin_ and password _adminadmin_, and into Trino with user _admin_ and password _adminadmin_.
 
-These are the current users defined in Supersets and Trinos internal user management. Later you will see that these users cannot be used for authentication anymore after LDAP authentication has been enabled.
+These are the current users defined in Superset's and Trino's internal user management. Later you will see that these users cannot be used for authentication anymore after LDAP authentication has been enabled.
 
 === OpenLDAP Stack
 
