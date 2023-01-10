@@ -28,7 +28,7 @@ NOTE: The stack installed here is used in the xref:stackablectl::demos/trino-tax
 [#setup_login]
 ==== Inspect
 
-Before starting with adding configuration to your Stackable cluster, inspect what the command above has set up in your Kubernetes cluster.
+Before starting to add configuration to your Stackable cluster, inspect what the command above has set up in your Kubernetes cluster.
 
 Use `stackablectl svc list` to find the endpoints of Superset and Trino and open their web interfaces in the Browser.
 
