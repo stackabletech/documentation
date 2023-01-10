@@ -2,13 +2,12 @@
 apiVersion: authentication.stackable.tech/v1alpha1
 kind: AuthenticationClass
 metadata:
-  name: openldap
+  name: openldap  # <1>
 spec:
   provider:
     ldap:
       hostname: openldap.default.svc.cluster.local
       searchBase: ou=users,dc=example,dc=org
-      # The bind credentials are used so an application can bind to the LDAP server
       bindCredentials:
         secretClass: openldap-bind-credentials
       port: 1636
