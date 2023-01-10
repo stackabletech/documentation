@@ -10,7 +10,7 @@ Prerequisites:
 
 == Setup
 
-Before configuring LDAP you need to set up some services to configure, as well as an LDAP to use for authentication. This tutorial is about learning how to configure an LDAP, so there won't be detailed instructions on how to set up all of this, instead we will use xref:stackablectl::commands/stack.adoc[stackablectl Stacks]. 
+Before configuring LDAP you need to set up some services to configure, as well as an LDAP server to use for authentication. This tutorial is about learning how to configure LDAP, so there won't be detailed instructions on how to set up all of this, instead we will use xref:stackablectl::commands/stack.adoc[stackablectl Stacks]. 
 
 === Superset and Trino Stack
 
