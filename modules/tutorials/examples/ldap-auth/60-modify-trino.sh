@@ -16,7 +16,7 @@ echo "Deleting TrinoCluster"
 kubectl delete trino trino
 # end::delete[]
 
-echo "Waiting on deletion to complete ..."
+echo "Waiting for deletion to complete ..."
 kubectl wait --for=delete statefulset/trino-coordinator-default --timeout=60s
 kubectl wait --for=delete statefulset/trino-worker-default --timeout=60s
 
