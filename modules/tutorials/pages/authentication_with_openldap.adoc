@@ -4,9 +4,9 @@ The Stackable platform supports user authentication with LDAP in multiple produc
 
 Prerequisites:
 
-* a k8s cluster
+* a k8s cluster available, or https://kind.sigs.k8s.io/[kind] installed
 * xref:stackablectl::index.adoc[] installed
-* basic knowledge of how to create resources in Kubernetes (i.e. `kubectl apply -f <filename>.yaml`) and inspect them (`kubectl get` or a tool like `k9s`)
+* basic knowledge of how to create resources in Kubernetes (i.e. `kubectl apply -f <filename>.yaml`) and inspect them (`kubectl get` or a tool like https://k9scli.io/[k9s])
 
 == Setup
 
@@ -15,6 +15,8 @@ Before configuring LDAP you need to set up some services to configure, as well a
 === Superset and Trino Stack
 
 This command will install the latest Stackable release for you, and set up the `trino-superset-s3` Stack. It contains a Superset instance connected to a Trino instance, and all their dependencies (Minio S3, PostgreSQL). Later in this guide, a Superset and Trino instance will be configured to use LDAP.
+
+If you do not have a Kubernetes cluster already, add the `--kind-cluster` (or `-k`) flag to let stackablectl deploy one for you.
 
 [source,bash]
 include::example$ldap-auth/10-install-base.sh[tag=stackablectl-install]
