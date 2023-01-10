@@ -97,7 +97,7 @@ Now you can create the AuthenticationClass `openldap` which references the Secre
 [source,yaml]
 include::example$ldap-auth/ldap-authenticationclass.yaml[]
 
-<1> The name of the AuthenticationClass, needs to be referenced later
+<1> The name of the AuthenticationClass, which needs to be referenced later
 
 // [source,bash]
 // include::example$ldap-auth/30-install-openldap.sh[tag=apply-ldap-authenticationclass]
