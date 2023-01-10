@@ -1,0 +1,8 @@
+---
+# tag::snippet[]
+spec:
+  authentication:
+    method:
+      ldap:                            # <1>
+        authenticationClass: openldap  # <2>
+# end::snippet[]
