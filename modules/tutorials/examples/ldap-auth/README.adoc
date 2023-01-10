@@ -2,5 +2,5 @@
 
 `main.sh` executes all the other shell scripts in order (10-install-release.sh etc.).
 
-The numbered scripts correspond to steps in the tutorial, you can run them one by one 
+The numbered scripts correspond to steps in the tutorial: you can run them one by one 
 if you're testing the scripts.
