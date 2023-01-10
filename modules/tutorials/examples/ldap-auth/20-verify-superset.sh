@@ -4,7 +4,7 @@ shopt -s lastpipe
 
 source "./utils.sh"
 
-echo "Wainting on superset StatefulSet ..."
+echo "Waiting on superset StatefulSet ..."
 kubectl rollout status --watch statefulset/superset-node-default
 
 sleep 5
@@ -12,7 +12,7 @@ sleep 5
 echo "Checking if login is working correctly ..."
 
 username="admin"
-password="admin"
+password="adminadmin"
 
 if superset_login "db" "$username" "$password"; then
   echo "Login successful with $username:$password"
