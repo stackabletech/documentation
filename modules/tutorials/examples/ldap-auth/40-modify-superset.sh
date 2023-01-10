@@ -16,7 +16,7 @@ echo "Deleting SupersetCluster"
 kubectl delete superset superset
 # end::delete-superset[]
 
-echo "Waiting on deletion to complete ..."
+echo "Waiting for deletion to complete ..."
 kubectl wait --for=delete statefulset/superset-node-default --timeout=60s
 
 sleep 2
