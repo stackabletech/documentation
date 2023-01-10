@@ -225,7 +225,7 @@ spec:
 ----
 ====
 
-You can now delete the TrinoCluster, we will recreate it later with the new configuration:
+You can now delete the TrinoCluster. We will recreate it later with the new configuration:
 
 [source,bash]
 include::example$ldap-auth/60-modify-trino.sh[tag=delete]
