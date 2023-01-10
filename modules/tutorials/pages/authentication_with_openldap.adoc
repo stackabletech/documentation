@@ -10,7 +10,7 @@ Prerequisites:
 
 == Setup
 
-Before configuring LDAP you need to set up some services to configure, as well as an LDAP server to use for authentication. This tutorial is about learning how to configure LDAP, so there won't be detailed instructions on how to set up all of this, instead we will use xref:stackablectl::commands/stack.adoc[stackablectl Stacks]. 
+Before configuring LDAP you need to set up some services to configure, as well as an LDAP server to use for authentication. This tutorial is about learning how to configure LDAP, so there won't be detailed instructions on how to set up all of this, instead the tutorial uses xref:stackablectl::commands/stack.adoc[stackablectl Stacks]. 
 
 === Superset and Trino Stack
 
@@ -137,7 +137,7 @@ spec:
 ----
 ====
 
-You can now delete the SupersetCluster, we will recreate it later with the new configuration:
+You can now delete the SupersetCluster, you recreate it later with the new configuration:
 
 [source,bash]
 include::example$ldap-auth/40-modify-superset.sh[tag=delete-superset]
@@ -225,7 +225,7 @@ spec:
 ----
 ====
 
-You can now delete the TrinoCluster. We will recreate it later with the new configuration:
+You can now delete the TrinoCluster. you recreate it later with the new configuration:
 
 [source,bash]
 include::example$ldap-auth/60-modify-trino.sh[tag=delete]
