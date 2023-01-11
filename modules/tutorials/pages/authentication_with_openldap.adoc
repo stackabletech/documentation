@@ -66,7 +66,11 @@ Now that you have a couple of data products installed as well as an LDAP server,
 
 === Configure LDAP
 
-The AuthenticationClass is the main resource required to configure the products, but it depends on some other resources. Below you will create a Secret, SecretClass and the AuthenticationClass. Use `kubectl apply` to deploy the manifests shown below.
+The AuthenticationClass is the main resource required to configure the products, but it depends on some other resources. Below you will create a Secret, SecretClass and the AuthenticationClass. The following image shows the parts that are already there in blue and the parts you will add in green:
+
+image::image$openldap-tutorial.drawio.svg[]
+
+Use `kubectl apply` to deploy the manifests shown below.
 
 NOTE: If you're having problems here, install the `openldap` stack instead of `tutorial-openldap` which comes with an already configured AuthenticationClass ready to use. You can then skip to <<superset, configuring superset>>.
 
@@ -87,6 +91,9 @@ Notice the SecretClass annotation. Create the SecretClass next:
 [source,yaml]
 include::example$ldap-auth/bind-credentials-secretclass.yaml[]
 
+<1> The name of the xref:secret-operator::secretclass.adoc[] we are creating that is referred to by the Secret
+<2> This determines the namespace in which the referenced `Secret` will be looked for. In this case it searches for a `Secret` in the same namespace as the product runs in. See xref:secret-operator::secretclass.adoc#backend-k8ssearch[the documentation of SecretClass]
+
 // [source,bash]
 // include::example$ldap-auth/30-install-openldap.sh[tag=apply-credentials-secretclass]
 
@@ -98,6 +105,8 @@ Now you can create the AuthenticationClass `openldap` which references the Secre
 include::example$ldap-auth/ldap-authenticationclass.yaml[]
 
 <1> The name of the AuthenticationClass, which needs to be referenced later
+<2> The hostname in this case is the Service at which the OpenLDAP is running, inside of Kubernetes.
+<2> Here the SecretClass name is referenced
 
 // [source,bash]
 // include::example$ldap-auth/30-install-openldap.sh[tag=apply-ldap-authenticationclass]
@@ -274,10 +283,6 @@ Now deploy the updated Trino cluster:
 include::example$ldap-auth/60-modify-trino.sh[tag=apply]
 
 Again, like with Superset, connect to Trino now (make sure that the StatefulSets are running). You will notice that the _admin_ user cannot be used anymore, but the LDAP users _alice_ and _bob_ work!
-
-TODO verify that it works in the script using the Trino CLI https://trino.io/docs/current/client/cli.html#username-and-password-authentication 
-
-
 
 === Bonus: Reconfigure OPA to use the new LDAP users
 

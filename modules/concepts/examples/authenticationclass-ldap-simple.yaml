@@ -8,3 +8,5 @@ spec:
       hostname: my.ldap.server # <1>
       port: 389 # <2>
       searchBase: ou=users,dc=example,dc=org # <3>
+      bindCredentials:
+        secretClass: openldap-bind-credentials  # <4>

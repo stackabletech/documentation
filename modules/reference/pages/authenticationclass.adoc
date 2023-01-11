@@ -1,0 +1,18 @@
+= AuthenticationClass
+
+== LDAP Provider
+
+The following example shows all possible attributes:
+
+[source,yaml]
+----
+include::example$authenticationclass-ldap-full.yaml[]
+----
+<1> The hostname of the LDAP server without any protocol or port
+<2> The port of the LDAP server. If TLS is used defaults to `636` otherwise to `389`
+<3> The searchBase where the users should be searched
+<4> Additional filter that filters the allowed users
+<5> The name of the corresponding field names in the LDAP objects
+<6> The name of the xref:secret-operator::secretclass.adoc[] providing the bind credentials (username and password)
+<7> The xref:secret-operator::scope.adoc[] of the xref:secret-operator::secretclass.adoc[]
+<8> xref:tls_server_verification.adoc[] of the LDAP server

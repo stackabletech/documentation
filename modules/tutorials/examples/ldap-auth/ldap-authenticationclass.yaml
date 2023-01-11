@@ -6,10 +6,10 @@ metadata:
 spec:
   provider:
     ldap:
-      hostname: openldap.default.svc.cluster.local
+      hostname: openldap.default.svc.cluster.local  # <2>
       searchBase: ou=users,dc=example,dc=org
       bindCredentials:
-        secretClass: openldap-bind-credentials
+        secretClass: openldap-bind-credentials  # <3>
       port: 1636
       tls:
         verification:

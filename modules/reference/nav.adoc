@@ -1,2 +1,3 @@
 * xref:index.adoc[]
+** xref:authenticationclass.adoc[]
 ** xref:s3.adoc[]
