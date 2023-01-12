@@ -1,0 +1,76 @@
+= Authentication
+
+The Stackable Platform uses the AuthenticationClass as a central mechanism to handle user authentication across supported products.
+The authentication mechanism needs to be configured only in the AuthenticationClass which is then referenced in the product.
+Multiple different authentication providers are supported.
+
+== AuthenticationClass
+
+The AuthenticationClass is a resource describing a generic authentication method like LDAP or Kerberos.
+It has `cluster` scope, so it does not belong to a specific namespace.
+Multiple operators use this CRD as a way to express and configure the authentication methods of their respective product.
+
+The following authentication providers are supported:
+
+* <<LDAP>>: Authenticate users using an LDAP server.
+* <<TLS>>: Authenticate users with client TLS certificates.
+* <<Static>>: Authenticate users against a static list of users and passwords in a simple Kubernetes Secret.
+
+=== LDAP
+A very simple AuthenticationClass with LDAP Authentication looks like this:
+
+[source,yaml]
+----
+include::example$authenticationclass-ldap-simple.yaml[]
+----
+<1> The hostname of the LDAP server without any protocol or port
+<2> The port of the LDAP server. If TLS is used it defaults to `636` otherwise to `389`
+<3> An optional searchBase where the users should be searched
+<4> The reference to the SecretClass for the bind credentials
+
+In a diagram it would look like this:
+
+image::image$authentication-overview.drawio.svg[]
+
+NOTE: For more details, look at the xref:reference:authenticationclass.adoc[AuthenticationClass reference] as well as the xref:tutorials:authentication_with_openldap.adoc[OpenLDAP tutorial].
+
+=== TLS
+The `TLS` provider configures a product to authenticate users using TLS certificates.
+When establishing a connection the client will first validate the certificate of the server.
+This step is not influenced by this `AuthenticationClass`, it only affects the next step:
+Afterwards the server checks the validity of the certificate the client has provided.
+This includes the usual checks - such as checking that it hasn't expired and matches the hostname of the client.
+Additionally the client certificate needs to be signed with the `ca` certificate, which is provided by the `SecretClass` specified in `clientCertSecretClass`.
+
+A sample TLS provider looks as follows:
+
+[source,yaml]
+----
+include::example$authenticationclass-tls.yaml[]
+----
+
+=== Static
+The `static` provider is used to represent a simple - static - set of users.
+Users are identified by a username and a password.
+
+First, the `AuthenticationClass` needs to be defined as follows:
+
+[source,yaml]
+----
+include::example$authenticationclass-static-authenticationclass.yaml[]
+----
+<1> The name of the `Secret` containing the credentials
+
+Afterwards the referenced `Secret` needs to be created:
+
+[source,yaml]
+----
+include::example$authenticationclass-static-secret.yaml[]
+----
+<1> The name of the `Secret`, which needs to match the `Secret` name specified in the `AuthenticationClass` above
+<2> The namespace of the `Secret`. The `Secret` needs to be in the same namespace as the product that tries to use the static `AuthenticationClass`
+
+== Further Reading
+
+* xref:tutorials:authentication_with_openldap.adoc[] tutorial
+* xref:reference:authenticationclass.adoc[] reference

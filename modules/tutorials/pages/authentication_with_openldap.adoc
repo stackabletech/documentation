@@ -1,6 +1,6 @@
 = Authentication with OpenLDAP
 
-The Stackable platform supports user authentication with LDAP in multiple products. This page guides you through setting up the configuration necessary to use an exising LDAP installation with Stackable supported products.
+The Stackable platform supports user authentication with LDAP in multiple products. This page guides you through setting up the configuration necessary to use an exising LDAP installation with Stackable supported products. You can learn more about authentication in the Stackable Platform on the xref:concepts:authentication.adoc[concepts page].
 
 Prerequisites:
 
@@ -58,9 +58,13 @@ LDAP_PASSWORDS:           alice,bob
 
 == Steps
 
-Now that you have a couple of data products installed as well as an LDAP server, you can start configuring the products to use LDAP. The tutorial has 3 steps:
+Now that you have a couple of data products installed as well as an LDAP server, you can start configuring the products to use LDAP. The following image shows the parts that are already there in blue and the parts you will add in green:
 
-1. Configure an AuthenticationClass with this LDAP installation
+image::image$openldap-tutorial.drawio.svg[]
+
+The tutorial has 3 steps:
+
+1. Configure an AuthenticationClass (as well as SecretClass and Secret) with this LDAP installation
 2. Update the SupersetCluster to use the AuthenticationClass to authenticate users
 3. Update the TrinoCluster to use the AuthenticationClass to authenticate users
 
@@ -87,6 +91,9 @@ Notice the SecretClass annotation. Create the SecretClass next:
 [source,yaml]
 include::example$ldap-auth/bind-credentials-secretclass.yaml[]
 
+<1> The name of the xref:secret-operator::secretclass.adoc[] we are creating that is referred to by the Secret
+<2> This determines the namespace in which the referenced `Secret` will be looked for. In this case it searches for a `Secret` in the same namespace as the product runs in. See xref:secret-operator::secretclass.adoc#backend-k8ssearch[the documentation of SecretClass]
+
 // [source,bash]
 // include::example$ldap-auth/30-install-openldap.sh[tag=apply-credentials-secretclass]
 
@@ -98,6 +105,8 @@ Now you can create the AuthenticationClass `openldap` which references the Secre
 include::example$ldap-auth/ldap-authenticationclass.yaml[]
 
 <1> The name of the AuthenticationClass, which needs to be referenced later
+<2> The hostname in this case is the Service at which the OpenLDAP is running, inside of Kubernetes.
+<2> Here the SecretClass name is referenced
 
 // [source,bash]
 // include::example$ldap-auth/30-install-openldap.sh[tag=apply-ldap-authenticationclass]
@@ -275,10 +284,6 @@ include::example$ldap-auth/60-modify-trino.sh[tag=apply]
 
 Again, like with Superset, connect to Trino now (make sure that the StatefulSets are running). You will notice that the _admin_ user cannot be used anymore, but the LDAP users _alice_ and _bob_ work!
 
-TODO verify that it works in the script using the Trino CLI https://trino.io/docs/current/client/cli.html#username-and-password-authentication 
-
-
-
 === Bonus: Reconfigure OPA to use the new LDAP users
 
 This is a bonus step, and if you want you can skip straight to the next section: <<trino_try_it>>
@@ -328,9 +333,8 @@ The LDAP connection details only need to be written down once, in the Authentica
 
 == Further Reading
 
+- xref:concepts:authentication.adoc[Authentication concepts page]
+- xref:reference:authenticationclass.adoc[AuthenticationClass reference]
 - xref:superset:getting_started:index.adoc[Getting started with the Stackable Operator for Apache Superset]
 - xref:trino:getting_started:index.adoc[Getting started with the Stackable Operator for Trino]
-// TODO for later:
-// - Concept page
-// - Operator docs for LDAP
-// - AuthenticationClass Reference
+// TODO Operator docs for LDAP
