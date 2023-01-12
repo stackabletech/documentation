@@ -53,7 +53,7 @@ include::example$authenticationclass-tls.yaml[]
 The `static` provider is used to represent a simple - static - set of users.
 Users are identified by a username and a password.
 
-First of the `AuthenticationClass` needs to be defined as follows:
+First, the `AuthenticationClass` needs to be defined as follows:
 
 [source,yaml]
 ----
