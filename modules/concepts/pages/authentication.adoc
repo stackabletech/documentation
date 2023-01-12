@@ -13,7 +13,7 @@ Multiple operators use this CRD as a way to express and configure the authentica
 The following authentication providers are supported:
 
 * <<LDAP>>: Authenticate users using an LDAP server.
-* <<TLS>>: Authenticate users with client CLS certificates.
+* <<TLS>>: Authenticate users with client TLS certificates.
 * <<Static>>: Authenticate users against a static list of users and passwords in a simple Kubernetes Secret.
 
 === LDAP
