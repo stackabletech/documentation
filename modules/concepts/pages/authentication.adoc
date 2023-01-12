@@ -4,6 +4,7 @@ The Stackable Platform uses the AuthenticationClass as a central mechanism to ha
 The authentication mechanism needs to be configured only in the AuthenticationClass which is then referenced in the product.
 Multiple different authentication providers are supported.
 
+[#authenticationclass]
 == AuthenticationClass
 
 The AuthenticationClass is a resource describing a generic authentication method like LDAP or Kerberos.
