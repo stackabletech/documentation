@@ -5,7 +5,7 @@
   },
   "dependencies": {
     "@antora/lunr-extension": "^1.0.0-alpha.6",
-    "asciidoctor-kroki": "0.15.4"
+    "asciidoctor-kroki": "0.16.0"
   },
   "workspaces": [
     "ui"
