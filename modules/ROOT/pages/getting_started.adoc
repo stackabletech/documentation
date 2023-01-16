@@ -219,9 +219,6 @@ spec:
     roleGroups:
       default:
         config:
-          selector:
-            matchLabels:
-              kubernetes.io/os: linux
           log:
             rootLogLevel: INFO
         replicas: 1
