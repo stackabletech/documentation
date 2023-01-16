@@ -1,2 +1,3 @@
 * xref:tutorials:index.adoc[]
 ** xref:end-to-end_data_pipeline_example.adoc[]
+** xref:authentication_with_openldap.adoc[]

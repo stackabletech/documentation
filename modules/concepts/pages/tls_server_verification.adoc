@@ -1,0 +1,57 @@
+= TLS server verification
+
+A TLS section is part of Stackable CRDs and describes how to connect to a TLS enabled system like LDAP or S3.
+
+If the `tls` attribute is set to `null` (or is not specified), no TLS will be used for the connection.
+
+A simple TLS section looks like this:
+
+[source,yaml]
+----
+include::example$tls-simple.yaml[]
+----
+
+== Verification
+The parties participating via a TLS connection can be verified using certificates.
+At the moment the following verification methods are supported:
+
+* <<No verification>>
+* <<Server verification>>
+* <<Mutual verification>>
+
+=== No verification
+This example will use TLS but not perform any checks on the certificate presented by the server or present a client certificate if asked for one by the server.
+
+[source,yaml]
+----
+include::example$tls-no-verification.yaml[]
+----
+
+=== Server verification
+This example will use TLS and verify the server using the ca certificates that are trusted by common web browsers.
+This can be useful when you e.g. use public AWS S3 or other public available services.
+
+[source,yaml]
+----
+include::example$tls-server-verification-webpki.yaml[]
+----
+
+This example will use TLS and verify the server using the provided ca certificate.
+For this to work you need to create a xref:secret-operator::secretclass.adoc[] that - at least - contains the ca certificate.
+Note that a SecretClass does not need to have a key but can also work with just a ca cert.
+So if you were provided with a ca cert but do not have access to the key you can still use this method.
+
+[source,yaml]
+----
+include::example$tls-server-verification-custom-ca.yaml[]
+----
+
+=== Mutual verification
+This example will use TLS and verify both - the server and the client using certificates.
+For this to work you need to create a xref:secret-operator::secretclass.adoc[] containing the ca certificate and a key to create new client-certificates.
+The xref:secret-operator::index.adoc[] will automatically provide the product with a `ca.crt`, `tls.crt` and `tls.key` so that the product can authenticate the server and it can authenticate itself at the server.
+
+[source,yaml]
+----
+include::example$tls-mutual-verification.yaml[]
+----

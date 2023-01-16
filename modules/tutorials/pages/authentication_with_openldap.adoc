@@ -1,0 +1,340 @@
+= Authentication with OpenLDAP
+
+The Stackable platform supports user authentication with LDAP in multiple products. This page guides you through setting up the configuration necessary to use an exising LDAP installation with Stackable supported products. You can learn more about authentication in the Stackable Platform on the xref:concepts:authentication.adoc[concepts page].
+
+Prerequisites:
+
+* a k8s cluster available, or https://kind.sigs.k8s.io/[kind] installed
+* xref:stackablectl::index.adoc[] installed
+* basic knowledge of how to create resources in Kubernetes (i.e. `kubectl apply -f <filename>.yaml`) and inspect them (`kubectl get` or a tool like https://k9scli.io/[k9s])
+
+== Setup
+
+Before configuring LDAP you need to set up some services to configure, as well as an LDAP server to use for authentication. This tutorial is about learning how to configure LDAP, so there won't be detailed instructions on how to set up all of this, instead the tutorial uses xref:stackablectl::commands/stack.adoc[stackablectl Stacks]. 
+
+=== Superset and Trino Stack
+
+This command will install the latest Stackable release for you, and set up the `trino-superset-s3` Stack. It contains a Superset instance connected to a Trino instance, and all their dependencies (Minio S3, PostgreSQL). Later in this guide, a Superset and Trino instance will be configured to use LDAP.
+
+If you do not have a Kubernetes cluster already, add the `--kind-cluster` (or `-k`) flag to let stackablectl deploy one for you.
+
+[source,bash]
+include::example$ldap-auth/10-install-base.sh[tag=stackablectl-install]
+
+This command will take a few minutes to complete.
+
+NOTE: The stack installed here is used in the xref:stackablectl::demos/trino-taxi-data.adoc[`trino-tax-data` demo]. Click the link to learn more.
+
+[#setup_login]
+==== Inspect
+
+Before starting to add configuration to your Stackable cluster, inspect what the command above has set up in your Kubernetes cluster.
+
+Use `stackablectl svc list` to find the endpoints of Superset and Trino and open their web interfaces in the Browser.
+
+You can log into Superset with user _admin_ and password _adminadmin_, and into Trino with user _admin_ and password _adminadmin_.
+
+These are the current users defined in Superset's and Trino's internal user management. Later you will see that these users cannot be used for authentication anymore after LDAP authentication has been enabled.
+
+=== OpenLDAP Stack
+
+Install another Stack, the `tutorial-openldap`.
+
+[source,bash]
+include::example$ldap-auth/30-install-openldap.sh[tag=install-openldap]
+
+==== Inspect
+
+Look at the Pod definition of the `openldap-0` Pod, it contains the environment settings
+
+```
+LDAP_ADMIN_USERNAME:      ldapadmin
+LDAP_ADMIN_PASSWORD:      ldapadminpassword
+LDAP_USERS:               alice,bob
+LDAP_PASSWORDS:           alice,bob
+```
+
+`ldapadmin` is the admin or bind user, and `ldapadminpassword` is the password that belongs to that user. `alice` and `bob` (and their respective passwords) are the only two users defined in the LDAP instance. You will use this information later to configure LDAP.
+
+== Steps
+
+Now that you have a couple of data products installed as well as an LDAP server, you can start configuring the products to use LDAP. The following image shows the parts that are already there in blue and the parts you will add in green:
+
+image::image$openldap-tutorial.drawio.svg[]
+
+The tutorial has 3 steps:
+
+1. Configure an AuthenticationClass (as well as SecretClass and Secret) with this LDAP installation
+2. Update the SupersetCluster to use the AuthenticationClass to authenticate users
+3. Update the TrinoCluster to use the AuthenticationClass to authenticate users
+
+=== Configure LDAP
+
+The AuthenticationClass is the main resource required to configure the products, but it depends on some other resources. Below you will create a Secret, SecretClass and the AuthenticationClass. Use `kubectl apply` to deploy the manifests shown below.
+
+NOTE: If you're having problems here, install the `openldap` stack instead of `tutorial-openldap` which comes with an already configured AuthenticationClass ready to use. You can then skip to <<superset, configuring superset>>.
+
+First, create a secret that contains the LDAP bind credentials which products can use to authenticate with LDAP:
+
+[source,yaml]
+include::example$ldap-auth/bind-credentials-secret.yaml[]
+
+<1> The annotation which SecretClass this secret belongs to
+<2> The LDAP bind user that was provided by the `tutorial-ldap` Stack
+<3> The corresponding password
+
+// [source,bash]
+// include::example$ldap-auth/30-install-openldap.sh[tag=apply-bind-credentials-secret]
+
+Notice the SecretClass annotation. Create the SecretClass next:
+
+[source,yaml]
+include::example$ldap-auth/bind-credentials-secretclass.yaml[]
+
+<1> The name of the xref:secret-operator::secretclass.adoc[] we are creating that is referred to by the Secret
+<2> This determines the namespace in which the referenced `Secret` will be looked for. In this case it searches for a `Secret` in the same namespace as the product runs in. See xref:secret-operator::secretclass.adoc#backend-k8ssearch[the documentation of SecretClass]
+
+// [source,bash]
+// include::example$ldap-auth/30-install-openldap.sh[tag=apply-credentials-secretclass]
+
+This level of indirection is necessary, because the AuthenticationClass is cluster-scoped but Secrets are not.
+
+Now you can create the AuthenticationClass `openldap` which references the SecretClass:
+
+[source,yaml]
+include::example$ldap-auth/ldap-authenticationclass.yaml[]
+
+<1> The name of the AuthenticationClass, which needs to be referenced later
+<2> The hostname in this case is the Service at which the OpenLDAP is running, inside of Kubernetes.
+<2> Here the SecretClass name is referenced
+
+// [source,bash]
+// include::example$ldap-auth/30-install-openldap.sh[tag=apply-ldap-authenticationclass]
+
+Remember the name of the AuthenticationClass (`openldap`), you will use it in the next steps when configuring the products.
+
+[#superset]
+=== Add LDAP authentication to Superset
+
+To make Superset use your new LDAP AuthenticationClass, you have to update the SupersetCluster definition. A SupersetCluster named `superset` is already installed by the stack. 
+
+Fetch the existing SupersetCluster defintion from the Kubernetes API server and save it into a `superset.yaml` file:
+
+[source,bash]
+include::example$ldap-auth/40-modify-superset.sh[tag=get-superset-yaml]
+
+.The `superset.yaml` file should look similar to this
+[%collapsible]
+====
+[source,yaml]
+----
+---
+apiVersion: superset.stackable.tech/v1alpha1
+kind: SupersetCluster
+metadata:
+  name: superset
+  ...
+spec:
+  version: ...
+  statsdExporterVersion: ...
+  credentialsSecret: superset-credentials
+  nodes:
+    roleGroups:
+      default:
+        config:
+  ...
+----
+====
+
+You can now delete the SupersetCluster, you recreate it later with the new configuration:
+
+[source,bash]
+include::example$ldap-auth/40-modify-superset.sh[tag=delete-superset]
+
+Modify your `superset.yaml` to include this new `authenticationConfig` property under the `spec`:
+
+[source,yaml]
+include::example$ldap-auth/superset-auth-snippet.yaml[tag=snippet]
+
+<1> The new `authenticationConfig` section which configures how Superset is authenticating users
+<2> The `authenticationClass` property is referencing the AuthenticationClass `openldap` you created earlier
+<3> The default Superset role that users should be assigned to when they log in. Any user will be an Admin
+
+.Your `superset.yaml` should now look similar to this
+[%collapsible]
+====
+[source,yaml]
+----
+---
+apiVersion: superset.stackable.tech/v1alpha1
+kind: SupersetCluster
+metadata:
+  name: superset
+  ...
+spec:
+  version: ...
+  statsdExporterVersion: ...
+  credentialsSecret: superset-credentials
+  authenticationConfig:
+    authenticationClass: openldap
+    userRegistrationRole: Admin
+  nodes:
+    roleGroups:
+      default:
+        config:
+  ...
+----
+====
+
+Now deploy the updated superset cluster:
+
+[source,bash]
+include::example$ldap-auth/40-modify-superset.sh[tag=apply-superset-cluster]
+
+
+Connect to superset as before, and try logging in again with username _admin_ and password _adminadmin_, Superset will not accept these credentials anymore. You now have to use LDAP credentials to log in. The OpenLDAP you installed earlier comes with two users, _alice_ (password _alice_) and _bob_ (password _bob_). Log in with any of these users and Superset will accept.
+
+[#trino]
+=== Add LDAP configuration to Trino
+
+Trino is configured very similarly to Superset.
+
+Fetch the existing TrinoCluster defintion from the Kubernetes API server and save it into a `trino.yaml` file:
+
+[source,bash]
+include::example$ldap-auth/60-modify-trino.sh[tag=get-yaml]
+
+.The `trino.yaml` file should look similar to this
+[%collapsible]
+====
+[source,yaml]
+----
+---
+apiVersion: trino.stackable.tech/v1alpha1
+kind: TrinoCluster
+metadata:
+  name: trino
+  ...
+spec:
+  version: 396-stackable0.1.0
+  authentication:
+    method:
+      multiUser:
+        ...
+  opa:
+    configMapName: opa
+    package: trino
+  catalogLabelSelector:
+    ...
+  workers:
+    ...
+  coordinators:
+    ...
+  ...
+----
+====
+
+You can now delete the TrinoCluster. you recreate it later with the new configuration:
+
+[source,bash]
+include::example$ldap-auth/60-modify-trino.sh[tag=delete]
+
+Replace the `multiUser` authentication method in your `trino.yaml` with an `ldap` method that references the `openldap` AuthenticationClass:
+
+[source,yaml]
+include::example$ldap-auth/trino-auth-snippet.yaml[tag=snippet]
+
+<1> The new `ldap` authentication method replaces the previous `multiUser` authentication method
+<2> The `authenticationClass` property is referencing the AuthenticationClass `openldap` you created earlier
+
+.Your `trino.yaml` should now look similar to this
+[%collapsible]
+====
+[source,yaml]
+----
+---
+apiVersion: trino.stackable.tech/v1alpha1
+kind: TrinoCluster
+metadata:
+  name: trino
+  ...
+spec:
+  version: 396-stackable0.1.0
+  authentication:
+    method:
+      ldap:
+        authenticationClass: openldap
+  opa:
+    configMapName: opa
+    package: trino
+  catalogLabelSelector:
+    ...
+  workers:
+    ...
+  coordinators:
+    ...
+  ...
+----
+====
+
+Now deploy the updated Trino cluster:
+
+[source,bash]
+include::example$ldap-auth/60-modify-trino.sh[tag=apply]
+
+Again, like with Superset, connect to Trino now (make sure that the StatefulSets are running). You will notice that the _admin_ user cannot be used anymore, but the LDAP users _alice_ and _bob_ work!
+
+=== Bonus: Reconfigure OPA to use the new LDAP users
+
+This is a bonus step, and if you want you can skip straight to the next section: <<trino_try_it>>
+
+This step is not required for _authentication_ by itself. But the demo stack you installed comes with an _authorization_ configuration for Trino as well. Authorization on the platform is done using the xref:opa::index.adoc[].
+
+Fetch the snippet as before:
+
+[source,bash]
+include::example$ldap-auth/70-modify-trino-opa-bundle.sh[tag=get-yaml]
+
+Apply this patch:
+
+[source,yaml]
+----
+include::example$ldap-auth/trino-opa-bundle-snippet.yaml[]
+----
+
+And apply the new bundle:
+
+[source,bash]
+include::example$ldap-auth/70-modify-trino-opa-bundle.sh[tag=apply]
+
+The OPA Operator will automatically detect the change and update the Trino authorization bundle.
+
+[#trino_try_it]
+=== Log in with the new LDAP credentials
+
+Congratulations! You have configured Superset and Trino to use LDAP for authentication.
+
+Log in with the LDAP user credentials `alice:alice` or `bob:bob` into Superset and Trino. Note also that the previously used `admin` credentials no longer work.
+
+If you skipped the OPA step, you will be able to log into Trino, but running queries will not work, as the LDAP users are not authorized to do so. If you _did_ do this step, running queries with the LDAP users will also work.
+
+That concludes the tutorial!
+
+[#summary]
+== Summary
+
+To summarize, you have done the following:
+
+* Written an AuthenticationClass for an existing LDAP server. The credentials are stored in a Secret with a SecretClass that is referenced in the AuthenticationClass.
+* Adapted the SupersetCluster spec to include the reference to the LDAP AuthenticationClass.
+* Adapted the TrinoCluster spec to include the reference to the AuthenticationClass.
+
+The LDAP connection details only need to be written down once, in the AuthenticationClass. Making a product use this AuthenticationClass is then done by referencing the AuthenticationClass, so the configuration for LDAP is all in a single resource.
+
+== Further Reading
+
+- xref:concepts:authentication.adoc[Authentication concepts page]
+- xref:reference:authenticationclass.adoc[AuthenticationClass reference]
+- xref:superset:getting_started:index.adoc[Getting started with the Stackable Operator for Apache Superset]
+- xref:trino:getting_started:index.adoc[Getting started with the Stackable Operator for Trino]
+// TODO Operator docs for LDAP

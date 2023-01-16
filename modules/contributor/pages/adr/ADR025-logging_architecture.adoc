@@ -1,0 +1,261 @@
+= ADR025: Logging and Log Aggregation Architecture
+Felix Hennig <felix.hennig@stackable.tech>
+v0.1, 2022-12-07
+:status: accepted
+
+* Status: {status}
+* Deciders:
+** Felix Hennig
+** Lars Francke
+** Malte Sander
+** Razvan Mihai
+** Sebastian Bernauer
+** Siegfried Weber
+** Sönke Liebau
+** Teo Klestrup Röijezon
+* Date: 2022-12-07
+
+Technical Story: https://github.com/stackabletech/issues/issues/202, https://github.com/stackabletech/issues/issues/261
+
+== Context and Problem Statement
+
+// Describe the context and problem statement, e.g., in free-form using two to three sentences. You may want to articulate the problem in form of a question.
+
+As a user of the platform, I have poor visibility into what is happening in different components of the platform and how these components influence each other, especially operators and the product clusters they manage.
+
+Logs are used to make this information available. Currently, every pod logs to stdout with a certain default log format. For log configuration we support setting a custom log configuration file in some products.
+
+However, logs are **not persisted**, meaning that a crashed pod is difficult to investigate. They are also **not aggregated**, so that investigating issues involving multiple pods is difficult. Log **configuration is difficult** and sometimes not even possible.
+
+== Decision Drivers
+
+* **Identical configuration** - All product logs should be configurable in the same way, no matter their underlying logging framework (log4j, logback, Python logging, etc.). Every product should have a logging section in its CRD.
+* **Easily configured sinks** - A log sink (i.e. elasticsearch) should only be configured in a single place for the whole platform (not in every product instance).
+* **Support plaintext logs on stdout** - It is a Kubernetes convention to log in plaintext to stdout. This should be kept as it is a useful tool for interactive debugging.
+* **Custom overrides** - The user should be able to override the log format, aggregator and sink.
+* **Transport security** - Logs should transmitted with encryption/TLS.
+
+=== Assumptions
+
+* **RegEx parsing is error prone** - Parsing pure string log output to get structure (time, module, log level, message, ...) is prone to errors, especially for multi-line messages like stacktraces. The design should use structured log output whenever possible.
+
+=== Constraints
+
+* **Multiple files** - Some products like HDFS _need_ to log to (multiple) files, so parsing stdout alone is not sufficient; we need to parse files.
+
+== Decision
+
+We decided to use https://vector.dev/[Vector] as an aggregator. It looked promising - no other options were evaluated.
+
+We chose to provide **plaintext logs on stdout** and **structured logs on file**. For the architecture, we chose to deploy the agent as a **sidecar** and to **use an aggregator**. We chose to provide **OpenSearch** as a default Sink for logs.
+
+image::adr/logging_architecture.drawio.svg[]
+
+Detailed considerations are given below.
+
+=== Log Aggregation Framework: Vector
+
+https://vector.dev/[Vector] has been picked without comparison to other existing choices. Some googling shows https://medium.com/ibm-cloud/log-collectors-performance-benchmarking-8c5218a08fea[Vector has better performance than fluentd], the biggest name in this space. Vector is also open source and written in Rust: https://github.com/vectordotdev/vector[GitHub].
+
+=== Log Retrieval Strategy
+
+We want to parse logs out of structured log entries and also keep the stdout log as plaintext. Some products also require reading log files instead of stdout. Which means **we opt to read logs from files for every product** and **parse structured log entries**.
+
+[#log_aggregation_architecture]
+=== Log Aggregation Architecture
+
+**Agent role** - Vector offers multiple https://vector.dev/docs/setup/deployment/roles/#agent[roles] in which it can run. The DaemonSet is easier to deploy, and only one vector instance is running per host. But the sidecar has deeper integration with the product container and can read log files - something that we decided we need.
+
+**Topology** - Vector offers multiple https://vector.dev/docs/setup/deployment/topologies/[topologies] and already lists pros and cons. An aggregator makes it easier to configure a sink as there is only one place to configure it (the aggregator has "multi-host context" as Vector calls it). It also reduces requests made to the sink, as it aggregates and buffers requests.
+
+The connection from the agent to the aggregator is made with the help of a **discovery ConfigMap**. The aggregator can be detected with a discovery ConfigMap, which is referenced in the ProductCluster with a property called `vectorAggregatorConfigMapName`, similar to `zookeeperConfigMapName` or `hdfsConfigMapName`. The property is located at the top level of the spec.
+
+=== Log Sink: OpenSearch
+
+https://opensearch.org/[OpenSearch] has been picked as the sink for all the aggregated logs. No other options have been considered, but as the sink sits at the very top of the chain, it is easy to swap it out for different software.
+
+The sink is configured in the Vector aggregator. We initially do not provide any "Stackable way" of configuring the sink, but it is easily configured by the user in a single location for the whole platform. Other sinks can be configured easily as well (https://vector.dev/docs/reference/configuration/sinks/[Vector docs for sink configuration]). See also <<deploying_the_stack>>.
+
+**For now, setting up the aggregator and sink is the responsibility of the user**.
+
+=== Logging Configuration
+
+**Log levels** - The following log levels are supported: NONE, FATAL, ERROR, WARN, INFO, DEBUG, and TRACE. We support them across all products. The **default log level** is INFO. Products might have slightly different log levels, which are mapped accordingly by the agent. For instance, Superset emits logs with the levels CRITICAL, ERROR, WARNING, INFO, and DEBUG. The mapping should be:
+
+[cols="1,1"]
+|===
+|Superset log level | Stackable log level 
+
+| CRITICAL
+| FATAL
+
+| ERROR
+| ERROR
+
+| WARNING
+| WARN
+
+| INFO
+| INFO
+
+| DEBUG
+| DEBUG
+
+| DEBUG
+| TRACE
+|===
+
+There is no TRACE log level in Superset, so if the user sets the desired log level to TRACE then it is actually set to DEBUG in Superset.
+
+NONE is the log level to disable logging.
+
+**Logging configuration for roles or role groups** - Like many other configuration settings, logging can be defined at role or role group level:
+
+```yaml
+spec:
+  someRole:
+    config:
+      logging:
+        ...
+    roleGroups:
+      default:
+        logging:
+          ...
+      aDifferentGroup:
+        logging:
+          ...
+```
+
+**Configuration per container** - While we don't typically configure things at the container level, it is necessary to do so for logging. As shown below we want to be able to set log levels for specific modules or override a log configuration file entirely. This is however container specific. For example, an init container, the product container itself and the vector container are all configured in different ways, and offer different modules for which the log level can be set. For this reason log configuration needs to be specified per container.
+
+```yaml
+spec:
+  vectorAggregatorConfigMapName: ...
+  role:
+    roleGroups:
+      myFirstRoleGroup:
+        config:
+          logging:
+            enableVectorAgent: true
+            containers:
+              myFirstContainer:
+                loggers:
+                  ROOT:
+                    level: INFO
+                  another.logger:
+                    level: ERROR
+                console:
+                  level: INFO
+                file:
+                  level: WARN    
+              mySecondContainer: ...
+```
+**Log levels per module** - We want to be able to set log levels for specific modules. This is a common feature across logging frameworks and languages.
+
+```yaml
+logging:
+  enableVectorAgent: true
+  containers:
+    myFirstContainer:
+      loggers:
+        ROOT:
+          level: INFO
+        another.logger:
+          level: ERROR
+```
+
+The ROOT logger is not tied to a module but configures the overall log level of the underlying logging framework.
+
+**Console vs. file** - We want to have different log levels (and possibly other settings) for console (stdout) and file (aggregator) output. This makes debugging easier, without also filling up the log aggregator with very chatty logs. This is also defined per container.
+
+```yaml
+logging:
+  enableVectorAgent: true
+  containers:
+    myFirstContainer:
+      console:
+        level: INFO
+      file:
+        level: WARN
+```
+
+**Override everything** - The customer should be able to supply their own configuration file. Where this is placed depends on the product.
+
+```yaml
+logging:
+  containers:
+  myContainer:
+    custom:
+      configMap: nameOfMyConfigMapWithTheConfigFile
+```
+
+Like the other logging settings, this custom configuration file can be supplied per role and/or role-group.
+
+Setting the `custom` field will disable any configurations made in `file` and `console`. (TODO maybe we can disallow this altogether in the CRD type)
+
+**Enable vector** - Vector is optional, so that the users can use their own logging system.
+
+To enable it, the property `enableVectorAgent` must be set to `true`. In this
+case, also the `vectorAggregatorConfigMapName` must contain the name of the
+Vector aggregator discovery ConfigMap.
+
+```yaml
+vectorAggregatorConfigMapName: vector-aggregator-discovery
+...
+  logging:
+    enableVectorAgent: true  # defaults to false
+```
+
+**Summary** - To summarize, a complete logging configuration looks like this:
+
+```yaml
+vectorAggregatorConfigMapName: vector-aggregator-discovery
+...
+  logging:
+    enableVectorAgent: true
+    containers:  # can contain configuration for multiple containers
+      myContainer:
+        console:
+          level: INFO
+        file:
+          level: INFO
+        loggers:  # can contain configuration for multiple modules
+          ROOT:
+            level: INFO
+          my.module:
+            level: INFO
+        custom:  # this field cannot be used together with the others. Using it will override any settings made in the other fields
+          configMap: my-configmap
+```
+
+[#deploying_the_stack]
+=== Deploying the Stack
+
+The operator deploys the Vector agent as a sidecar and deploys the logging configuration for the product.
+
+The aggregator and OpenSearch sink are deployed with a stackablectl Stack for now. The Stack also supports deploying the <<log_aggregation_architecture, aggregator ConfigMap>>. A more integrated way of deployment and configuration of the aggregator and sink is still to be defined, see <<future_work>>.
+
+== Consequences
+
+
+=== Positive
+
+Logs across the platform (from products and operators) are **persisted** and **aggregated** in a central location. Crashed pods can be investigated, as well as issues involving multiple products.
+
+=== Negative
+
+* Every pod will contain a vector sidecar container, which adds overhead.
+* The unified logging configuration hides product specific logging settings.
+
+Changing a log level might lead to a pod getting restarted.
+
+[#future_work]
+== Future Work that Will Become Necessary
+
+We will have to better integrate the deployment of the Vector aggregator and the OpenSearch sink into Stackable.
+
+== Links
+
+* https://vector.dev/[Vector]
+* https://vector.dev/docs/setup/deployment/roles/[Vector Deployment Roles]
+* https://vector.dev/docs/setup/deployment/topologies/[Vector Deployment Topologies]
