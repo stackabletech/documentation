@@ -43,7 +43,39 @@ The xref:stackablectl:demos/trino-taxi-data.adoc[`trino-taxi-data`] Demo install
 
 [source,console]
 ----
-stackablectl demo install trino-taxi-data
+./stackablectl demo install trino-taxi-data
 ----
 
-connect to it by ...
+TIP: Learn more about this demo in the demo docs: xref:stackablectl::demos/trino-taxi-data.adoc[]
+
+== Connect
+
+To list the installed installed Stackable services run the following command:
+
+[source,console]
+----
+./stackablectl services list --all-namespaces
+----
+
+It will output something like:
+
+[source]
+----
+ PRODUCT   NAME         NAMESPACE  ENDPOINTS                                     EXTRA INFOS                          
+                                                                                                                      
+ hive      hive         default    hive                172.18.0.5:30298                                               
+                                   metrics             172.18.0.5:31633                                               
+                                                                                                                      
+ opa       opa          default    http                http://172.18.0.5:30316                                        
+                                                                                                                      
+ superset  superset     default    external-superset   http://172.18.0.4:32295   Admin user: admin, password: adminadmin   
+                                                                                                                      
+ trino     trino        default    coordinator-http    http://172.18.0.3:30167                                        
+                                   coordinator-metrics 172.18.0.3:31818                                               
+                                   coordinator-https   https://172.18.0.3:30141                                       
+                                                                                                                      
+ minio     minio-trino  default    http                http://172.18.0.3:31062   Third party service                  
+                                   console-http        http://172.18.0.3:30503   Admin user: admin, password: adminadmin
+----
+
+To connect to Superset, open the listed endpoint in your browser and log in with the username `admin` and the password `adminadmin`.
