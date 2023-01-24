@@ -4,23 +4,78 @@ This is the super-short getting started guide that should enable you to get some
 
 == Setup
 
-Download the cluster script and install the dependencies.
+Install `stackablectl`, the Stackable CLI utility.
 
-The script requires Python 3.7 or newer to run.
+On Linux (Windows and MacOS instructions below):
+
+[source,console]
 ----
-curl -L https://raw.githubusercontent.com/stackabletech/integration-tests/main/create_test_cluster.py > create_test_cluster.py
-
-chmod +x create_test_cluster.py
-
-pip install requests
+$ curl -L -o stackablectl https://github.com/stackabletech/stackablectl/releases/latest/download/stackablectl-x86_64-unknown-linux-gnu
 ----
 
-== Install Example Architecture
+and mark it as executable:
 
-Using the following command you will can install the Stackable Operators for Apache NiFi, Druid and Superset and deploy example definitions at the same time.
-
+[source,console]
 ----
-./create-test-cluster.py -o nifi druid superset --example
+$ chmod +x stackablectl
 ----
 
-After this has finished you will have working installations of the three mentioned tools.
+.Instruction for Windows and MacOS
+[%collapsible]
+====
+Download `stackablectl-x86_64-pc-windows-gnu.exe` (for Windows) or `stackablectl-x86_64-apple-darwin` (Mac OS Intel) or `stackablectl-aarch64-apple-darwin` (MacOS ARM) from the https://github.com/stackabletech/stackablectl/releases/latest[latest release] and save it as `stackablectl`.
+
+For windows, you can simply execute it. For MacOS mark it as executable:
+
+[source,console]
+----
+$ chmod +x stackablectl
+----
+
+If you want to execute it from anywhere in your system, you need to add it to the system `PATH`.
+
+NOTE: If macOS denies the execution of stackablectl go to `Settings` -> `Security & Privacy` -> `General`. Here you will see a pop up asking if you want to allow access for `stackablectl`. You must allow access.
+====
+
+== Install the Taxi data demo
+
+The xref:stackablectl:demos/trino-taxi-data.adoc[`trino-taxi-data`] Demo installs the latest Stackable platform release and a visualization of https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page[New York City Taxi Data] using Trino and Superset:
+
+[source,console]
+----
+./stackablectl demo install trino-taxi-data
+----
+
+TIP: Learn more about this demo in the demo docs: xref:stackablectl::demos/trino-taxi-data.adoc[]
+
+== Connect
+
+To list the installed installed Stackable services run the following command:
+
+[source,console]
+----
+./stackablectl services list --all-namespaces
+----
+
+It will output something like:
+
+[source]
+----
+ PRODUCT   NAME         NAMESPACE  ENDPOINTS                                     EXTRA INFOS                          
+                                                                                                                      
+ hive      hive         default    hive                172.18.0.5:30298                                               
+                                   metrics             172.18.0.5:31633                                               
+                                                                                                                      
+ opa       opa          default    http                http://172.18.0.5:30316                                        
+                                                                                                                      
+ superset  superset     default    external-superset   http://172.18.0.4:32295   Admin user: admin, password: adminadmin   
+                                                                                                                      
+ trino     trino        default    coordinator-http    http://172.18.0.3:30167                                        
+                                   coordinator-metrics 172.18.0.3:31818                                               
+                                   coordinator-https   https://172.18.0.3:30141                                       
+                                                                                                                      
+ minio     minio-trino  default    http                http://172.18.0.3:31062   Third party service                  
+                                   console-http        http://172.18.0.3:30503   Admin user: admin, password: adminadmin
+----
+
+To connect to Superset, open the listed endpoint in your browser and log in with the username `admin` and the password `adminadmin`.
