@@ -3,6 +3,388 @@
 The Stackable platform consists of multiple operators that work together.
 Periodically a platform release is made, including all components of the platform at a specific version.
 
+== Release 23.1
+The internal release process for the Stackable platform has been changed as part of the fourth release: as a result, operator and product images are tagged with the platform release version, and the release names are now compatible with semantic versioning (hence 23.1 and not 23.01). The focus in this platform release is on the support of offline (or on-premise) product images and the partial rollout of logging support.
+
+=== New platform features
+The following new major platform features were added:
+
+Product image selection::
+Product image selection has been expanded to cover different scenarios:
+
+* Stackable-provided product images, defined with the repository, the product version and the stackable tag
+* As above, but without the stackable tag (whereby the most recent tagged image will be taken)
+* The product version and a full repository path (this allows fully-customized product images)
+
+These options are described in more detail in this ADR: https://docs.stackable.tech/home/stable/contributor/adr/ADR023-product-image-selection.html#option6
+
+*N.B.* this is a breaking change as `spec.version` has been replaced by `spec.image`.
+
+Logging Aggregation::
+
+Component activity within the platform is logged in a way that makes it difficult to find, persist and consolidate this information. Log configuration is also a challenge. To address these two issues a logging framework has been added to the platform, offering a consistent custom resource configuration and a separate, persisted sink (the current implementation support OpenSearch). This is discussed in more detail here: https://docs.stackable.tech/home/stable/contributor/adr/ADR025-logging_architecture.html
+
+In this release this has been added to the following components:
+
+* https://github.com/stackabletech/hbase-operator/pull/294[Apache HBase]
+* https://github.com/stackabletech/hdfs-operator/pull/290[Apache Hadoop]
+* https://github.com/stackabletech/zookeeper-operator/pull/588[Apache Zookeeper]
+
+Support for other products will be added in future releases.
+
+New Versions::
+
+The following new product version is now supported:
+
+* https://github.com/stackabletech/trino-operator/pull/358[Trino 403]
+
+Deprecated Versions::
+
+The following product version is no longer supported:
+
+* https://github.com/stackabletech/druid-operator/pull/339[Druid 0.22.1]
+
+Product features::
+
+Additionally, there are some individual product features that are noteworthy
+
+* https://github.com/stackabletech/druid-operator/pull/342[The Druid segment cache size is configurable]
+* https://github.com/stackabletech/druid-operator/pull/333[Druid support for TLS encryption and authentication]
+* https://github.com/stackabletech/hdfs-operator/pull/296[HDFS support for multiple storage directories]
+* https://github.com/stackabletech/spark-k8s-operator/pull/187[Support for Spark History Server]
+* https://github.com/stackabletech/trino-operator/pull/337[Trino support for Google Sheets connector]
+* https://github.com/stackabletech/trino-operator/pull/347[Trino support for Black Hole connector]
+
+
+=== Supported Kubernetes versions
+This release supports the following Kubernetes versions:
+
+* `1.25`
+* `1.24`
+* `1.23`
+* `1.22`
+
+==== Breaking changes
+This release brings with it several breaking changes needed to future-proof the platform. You will need to adapt your existing CRDs due to the following breaking changes:
+
+==== All Stackable Operators
+As mentioned above, product image selection is a breaking for all operators. Previously the product image was declared using `spec.version`:
+
+
+```
+spec:
+  version: 396-stackable23.1
+```
+(example for Trino)
+
+This must now be replaced with `spec.image`:
+
+```
+spec:
+  image:
+    productVersion: 396
+    stackableVersion: 23.1
+```
+
+This is the same pattern across operators. so for Hive the change would look like this. From:
+
+```
+spec:
+  version: 3.1.3-stackable23.1
+```
+
+to
+
+```
+spec:
+  image:
+    productVersion: 3.1.3
+    stackableVersion: 23.1
+```
+
+==== Stackable Operator for Apache Druid
+
+* https://github.com/stackabletech/druid-operator/pull/358[Tools image replaced with Druid image]
+
+This means a stackable version >= 23.1 has to be used for the product image.
+
+* https://github.com/stackabletech/druid-operator/pull/333[Reworked top level configuration to support TLS changes]
+
+Deep storage, Ingestion spec, discovery config maps, authentication etc. are now subfields of spec.clusterConfig instead of being top level under spec. Change the resource from e.g.
+
+```
+  zookeeperConfigMapName: simple-druid-znode
+  metadataStorageDatabase:
+    dbType: derby
+    connString: jdbc:derby://localhost:1527/var/druid/metadata.db;create=true
+    host: localhost
+    port: 1527
+  deepStorage:
+    hdfs:
+      configMapName: simple-hdfs
+      directory: /data
+```
+to
+```
+  clusterConfig:
+    deepStorage:
+      hdfs:
+        configMapName: simple-hdfs
+        directory: /data
+    metadataStorageDatabase:
+      dbType: derby
+      connString: jdbc:derby://localhost:1527/var/druid/metadata.db;create=true
+      host: localhost
+      port: 1527
+    tls: null
+    zookeeperConfigMapName: simple-druid-znode
+```
+
+
+==== Stackable Operator for Apache Hive
+* https://github.com/stackabletech/hive-operator/pull/292[Moved database specification from role/role-group level to top-level clusterConfig]
+* https://github.com/stackabletech/hive-operator/pull/292[Moved s3, serviceType and hdfs discovery to top-level clusterConfig]
+
+These two changes mean that resources previously defined like this:
+```
+  s3:
+    reference: minio
+  metastore:
+    roleGroups:
+      default:
+        replicas: 1
+        config:
+          database:
+            connString: jdbc:postgresql://hive-postgresql:5432/hive
+            user: hive
+            password: hive
+            dbType: postgres
+```
+will now be defined like this:
+```
+  clusterConfig:
+    database:
+      connString: jdbc:postgresql://hive-postgresql:5432/hive
+      user: hive
+      password: hive
+      dbType: postgres
+    s3:
+      reference: minio
+  metastore:
+    roleGroups:
+      default:
+        replicas: 1
+```
+
+==== Stackable Operator for Apache Kafka
+* https://github.com/stackabletech/kafka-operator/pull/527[Tools image removed with Kafka image]
+
+This means a stackable version >= 23.1 has to be used for the product image.
+
+* https://github.com/stackabletech/kafka-operator/pull/532[Consolidate TLS encryption and authentication]
+
+```
+spec:
+  ...
+  zookeeperConfigMapName: simple-kafka-znode
+  config:
+    authentication:
+      - authenticationClass: kafka-client-auth-tls
+    tls:
+      secretClass: tls
+    clientAuthentication:
+      authenticationClass: kafka-client-auth-tls
+    internalTls:
+      secretClass: kafka-internal-tls
+```
+Changes to:
+```
+spec:
+  ...
+  clusterConfig:
+    authentication:
+      - authenticationClass: kafka-client-auth-tls
+    tls:
+      internalSecretClass: kafka-internal-tls
+      serverSecretClass: tls
+    zookeeperConfigMapName: simple-kafka-znode
+```
+
+==== Stackable Operator for Apache Nifi
+* https://github.com/stackabletech/nifi-operator/pull/397[Removed tools image]
+
+This means a stackable version >= 23.1 has to be used for the product image.
+
+==== Stackable Operator for Trino
+* https://github.com/stackabletech/trino-operator/pull/357[Removed tools image]
+
+This means a stackable version >= 23.1 has to be used for the product image.
+
+* https://github.com/stackabletech/trino-operator/pull/362[Use user and password Secret keys for LDAP bind credentials Secrets, instead of env var names]
+
+This changes the secret definition from:
+```
+stringData:
+  LDAP_USER: cn=admin,dc=example,dc=org
+  LDAP_PASSWORD: admin
+```
+to:
+```
+stringData:
+  user: cn=admin,dc=example,dc=org
+  password: admin
+```
+
+
+==== Stackable Operator for Apache Zookeeper
+* https://github.com/stackabletech/zookeeper-operator/pull/612[Consolidate config]
+
+Similar to the Kafka example above, the configuration settings are consolidated under `.spec` i.e. from:
+```
+  config:
+    tls:
+      secretClass: tls
+    clientAuthentication:
+      authenticationClass: zk-client-tls
+    quorumTlsSecretClass: tls
+```
+to:
+```
+  clusterConfig:
+    authentication:
+      - authenticationClass: zk-client-tls
+    tls:
+      serverSecretClass: tls
+      quorumSecretClass: tls
+```
+
+=== Upgrade from 22.11
+
+==== Using stackablectl
+You can list the available releases as follows
+
+[source,console]
+----
+$ stackablectl release list
+RELEASE            RELEASE DATE   DESCRIPTION
+23.1               2023-01-27     Fourth release focusing on image selection and logging
+22.11              2022-11-08     Third release focusing on resource management
+22.09              2022-09-09     Second release focusing on security and OpenShift support
+22.06              2022-06-30     First official release of the Stackable Data Platform
+----
+
+To uninstall the `22.11` release run
+
+[source,console]
+----
+$ stackablectl release uninstall 22.11
+[INFO ] Uninstalling release 22.11
+[INFO ] Uninstalling airflow operator
+[INFO ] Uninstalling commons operator
+# ...
+----
+
+Afterwards you will need to update the CustomResourceDefinitions (CRDs) installed by the Stackable Platform.
+The reason for this is that helm will uninstall the operators but not the CRDs.
+
+[source,console]
+----
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/airflow-operator/23.1.0/deploy/helm/airflow-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/commons-operator/23.1.0/deploy/helm/commons-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/druid-operator/23.1.0/deploy/helm/druid-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/hbase-operator/23.1.0/deploy/helm/hbase-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/hdfs-operator/23.1.0/deploy/helm/hdfs-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/hive-operator/23.1.0/deploy/helm/hive-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/kafka-operator/23.1.0/deploy/helm/kafka-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/nifi-operator/23.1.0/deploy/helm/nifi-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/opa-operator/23.1.0/deploy/helm/opa-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/secret-operator/23.1.0/deploy/helm/secret-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/23.1.0/deploy/helm/spark-k8s-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/superset-operator/23.1.0/deploy/helm/superset-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/trino-operator/23.1.0/deploy/helm/trino-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/23.1.0/deploy/helm/zookeeper-operator/crds/crds.yaml
+----
+
+To install the `23.1` release run
+
+[source,console]
+----
+$ stackablectl release install 23.1
+[INFO ] Installing release 23.1
+[INFO ] Installing airflow operator in version 23.1.0
+[INFO ] Installing commons operator in version 23.1.0
+[INFO ] Installing druid operator in version 23.1.0
+[INFO ] Installing hbase operator in version 23.1.0
+[INFO ] Installing hdfs operator in version 23.1.0
+[INFO ] Installing hive operator in version 23.1.0
+[INFO ] Installing kafka operator in version 23.1.0
+[INFO ] Installing listener operator in version 23.1.0
+[INFO ] Installing nifi operator in version 23.1.0
+[INFO ] Installing opa operator in version 23.1.0
+[INFO ] Installing secret operator in version 23.1.0
+[INFO ] Installing spark-k8s operator in version 23.1.0
+[INFO ] Installing superset operator in version 23.1.0
+[INFO ] Installing trino operator in version 23.1.0
+[INFO ] Installing zookeeper operator in version 23.1.0
+# ...
+----
+
+==== Using helm
+Use `helm list` to list the currently installed operators.
+
+You can use the following command to uninstall all operators that are part of the release 23.1:
+
+[source,console]
+----
+$ helm uninstall airflow-operator commons-operator druid-operator hbase-operator hdfs-operator hive-operator kafka-operator nifi-operator opa-operator secret-operator spark-k8s-operator superset-operator trino-operator zookeeper-operator
+release "airflow-operator" uninstalled
+release "commons-operator" uninstalled
+# ...
+----
+
+Afterwards you will need to update the CustomResourceDefinitions (CRDs) installed by the Stackable Platform.
+This is because helm will uninstall the operators but not the CRDs.
+
+[source,console]
+----
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/airflow-operator/23.1.0/deploy/helm/airflow-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/commons-operator/23.1.0/deploy/helm/commons-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/druid-operator/23.1.0/deploy/helm/druid-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/hbase-operator/23.1.0/deploy/helm/hbase-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/hdfs-operator/23.1.0/deploy/helm/hdfs-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/hive-operator/23.1.0/deploy/helm/hive-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/kafka-operator/23.1.0/deploy/helm/kafka-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/nifi-operator/23.1.0/deploy/helm/nifi-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/opa-operator/23.1.0/deploy/helm/opa-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/secret-operator/23.1.0/deploy/helm/secret-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/23.1.0/deploy/helm/spark-k8s-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/superset-operator/23.1.0/deploy/helm/superset-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/trino-operator/23.1.0/deploy/helm/trino-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/23.1.0/deploy/helm/zookeeper-operator/crds/crds.yaml
+----
+
+To install the release 23.1 run
+
+[source,console]
+----
+$ helm repo add stackable-stable https://repo.stackable.tech/repository/helm-stable/
+$ helm repo update stackable-stable
+$ helm install --wait airflow-operator stackable-stable/airflow-operator --version 0.6.0
+$ helm install --wait commons-operator stackable-stable/commons-operator --version 0.4.0
+$ helm install --wait druid-operator stackable-stable/druid-operator --version 0.8.0
+$ helm install --wait hbase-operator stackable-stable/hbase-operator --version 0.5.0
+$ helm install --wait hdfs-operator stackable-stable/hdfs-operator --version 0.6.0
+$ helm install --wait hive-operator stackable-stable/hive-operator --version 0.8.0
+$ helm install --wait kafka-operator stackable-stable/kafka-operator --version 0.8.0
+$ helm install --wait nifi-operator stackable-stable/nifi-operator --version 0.8.0
+$ helm install --wait opa-operator stackable-stable/opa-operator --version 0.11.0
+$ helm install --wait secret-operator stackable-stable/secret-operator --version 0.6.0
+$ helm install --wait spark-k8s-operator stackable-stable/spark-k8s-operator --version 0.6.0
+$ helm install --wait superset-operator stackable-stable/superset-operator --version 0.7.0
+$ helm install --wait trino-operator stackable-stable/trino-operator --version 0.7.0
+$ helm install --wait zookeeper-operator stackable-stable/zookeeper-operator --version 0.12.0
+----
+
 == Release 22.11
 This is the third release of the Stackable Data Platform, which this time focuses on resource management.
 
