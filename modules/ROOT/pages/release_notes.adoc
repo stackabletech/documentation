@@ -332,7 +332,7 @@ $ stackablectl release install 23.1
 ==== Using helm
 Use `helm list` to list the currently installed operators.
 
-You can use the following command to uninstall all operators that are part of the release 23.1:
+You can use the following command to uninstall all operators that are part of the release 22.11:
 
 [source,console]
 ----
