@@ -185,7 +185,7 @@ will now be defined like this:
 ```
 
 ==== Stackable Operator for Apache Kafka
-* https://github.com/stackabletech/kafka-operator/pull/527[Tools image removed with Kafka image]
+* https://github.com/stackabletech/kafka-operator/pull/527[Remove the tools image and add kcat to the product image]
 
 This means a stackable version >= 23.1 has to be used for the product image.
 
