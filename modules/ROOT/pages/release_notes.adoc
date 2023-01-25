@@ -376,7 +376,7 @@ $ helm install --wait hbase-operator stackable-stable/hbase-operator --version 2
 $ helm install --wait hdfs-operator stackable-stable/hdfs-operator --version 23.1.0
 $ helm install --wait hive-operator stackable-stable/hive-operator --version 23.1.0
 $ helm install --wait kafka-operator stackable-stable/kafka-operator --version 23.1.0
-$ helm install --wait kafka-operator stackable-stable/listener-operator --version 23.1.0
+$ helm install --wait listener-operator stackable-stable/listener-operator --version 23.1.0
 $ helm install --wait nifi-operator stackable-stable/nifi-operator --version 23.1.0
 $ helm install --wait opa-operator stackable-stable/opa-operator --version 23.1.0
 $ helm install --wait secret-operator stackable-stable/secret-operator --version 23.1.0
