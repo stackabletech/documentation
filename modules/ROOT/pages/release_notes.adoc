@@ -10,7 +10,9 @@ This release marks a major change in the way operator and product images are ver
 On the technical side, a huge multi-dimensional matrix of versions had to be tested, documentation cross-references had to be maintained and coordinating a platform release was extremely difficult.
 
 Organizationally the biggest challenge was communication and coordination within the teams as well as to and with users.
-The internal release process for the Stackable platform has been changed as part of the fourth release: as a result, operator and product images are tagged with the platform release version, and the release names are now compatible with semantic versioning (hence 23.1 and not 23.01). The focus in this platform release is on the support of offline (or on-premise) product images and the partial rollout of logging support.
+As a result, starting with this release, all operator and product images are versioned in lock-step. This platform release is marked `23.1` and all included components are tagged with `23.1.0`. Eventual patch versions of the components that might follow and will be tagged with `23.1.1`, `23.1.2` and so on. 
+
+The focus in this platform release is on the support of offline (or on-premise) product images and the partial rollout of logging support.
 
 === New platform features
 The following new major platform features were added:
