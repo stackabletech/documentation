@@ -7,7 +7,7 @@ Periodically a platform release is made, including all components of the platfor
 
 This release marks a major change in the way operator and product images are versioned. Up until now, operators were versioned independently of each other and a platform release was a loosely coupled set of operator versions. This had major disadvantages both technical and organisational.
 
-On the technical side, a huge multi-dimensional matrix of versions had to be tested, documentation cross-references had to be maintained and coordinating a platform release was extremely difficult.
+On the technical side, a multi-dimensional matrix of versions had to be tested, documentation cross-references had to be maintained and coordinating a platform release was extremely difficult.
 
 Organizationally the biggest challenge was communication and coordination within the teams as well as to and with users.
 As a result, starting with this release, all operator and product images are versioned in lock-step. This platform release is marked `23.1` and all included components are tagged with `23.1.0`. Eventual patch versions of the components that might follow and will be tagged with `23.1.1`, `23.1.2` and so on. 
@@ -24,13 +24,13 @@ Product image selection has been expanded to cover different scenarios:
 * As above, but without the stackable tag (whereby the most recent tagged image will be taken)
 * The product version and a full repository path (this allows fully-customized product images)
 
-These options are described in more detail in this ADR: https://docs.stackable.tech/home/stable/contributor/adr/ADR023-product-image-selection.html#option6
+These options are described in more detail https://docs.stackable.tech/home/stable/contributor/adr/ADR023-product-image-selection.html#option6[in this ADR] and on https://docs.stackable.tech/home/stable/concepts/product_image_selection.html[this concepts page].
 
-*N.B.* this is a breaking change as `spec.version` has been replaced by `spec.image`.
+*N.B.* this is a breaking change across all operators as `spec.version` has been replaced by `spec.image`.
 
 Logging Aggregation::
 
-Component activity within the platform is logged in a way that makes it difficult to find, persist and consolidate this information. Log configuration is also a challenge. To address these two issues a logging framework has been added to the platform, offering a consistent custom resource configuration and a separate, persisted sink (the current implementation support OpenSearch). This is discussed in more detail here: https://docs.stackable.tech/home/stable/contributor/adr/ADR025-logging_architecture.html
+Component activity within the platform is logged in a way that makes it difficult to find, persist and consolidate this information. Log configuration is also a challenge. To address these two issues a logging framework has been added to the platform, offering a consistent custom resource configuration and a separate, persisted sink (the current implementation support OpenSearch). This is discussed in more detail https://docs.stackable.tech/home/stable/contributor/adr/ADR025-logging_architecture.html[in this ADR] and https://docs.stackable.tech/home/stable/concepts/logging.html[on this concepts page].
 
 In this release this has been added to the following components:
 
@@ -62,6 +62,21 @@ Additionally, there are some individual product features that are noteworthy
 * https://github.com/stackabletech/spark-k8s-operator/pull/187[Support for Spark History Server]
 * https://github.com/stackabletech/trino-operator/pull/337[Trino support for Google Sheets connector]
 * https://github.com/stackabletech/trino-operator/pull/347[Trino support for Black Hole connector]
+
+=== stackablectl
+
+The following have been added to `stackablectl`:
+
+==== Logging demo
+
+This illustrates how to set up logging for Zookeeper and browse the results in an Open Search dashboard. This has been implemented for HBase, Hadoop and Zookeeper and will eventually be available for all Stackable operators.
+
+==== LDAP stack and tutorial
+
+LDAP support has now been added to multiple products. An explanation of the overall approach is given https://docs.stackable.tech/home/stable/concepts/authentication.html[here] but in order to make the configuration steps a little clearer a https://docs.stackable.tech/home/stable/tutorials/authentication_with_openldap.html[tutorial] has been added that uses a dedicated Stackable https://docs.stackable.tech/stackablectl/stable/commands/stack.html[stack] for OpenLDAP and shows its usage.
+
+
+The xref:stackablectl::quickstart.adoc[quickstart guide] shows how to get started with `stackablectl`. This link lists the xref:stackablectl::demos/index.adoc[available demos].
 
 
 === Supported Kubernetes versions
