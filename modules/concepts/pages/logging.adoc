@@ -52,10 +52,10 @@ vectorAggregatorConfigMapName: vector-aggregator-discovery  // <1>
 ----
 <1> The discovery ConfigMap of the Vector aggregator to publish the logs to. This is set at cluster level.
 <2> The logging configuration fragment, can be set at role or role group level.
-<2> Enable the Vector agent to aggregate logs. 
-<3> Logging is defined for each container.
-<4> Console and file appenders can have different log level thresholds.
-<5> Setting log levels for individual modules is also possible.
+<3> Enable the Vector agent to aggregate logs. 
+<4> Logging is defined for each container.
+<5> Console and file appenders can have different log level thresholds.
+<6> Setting log levels for individual modules is also possible.
 
 **Log levels per module** - In the `loggers` section the log levels for each module are configured. Note the `ROOT` module. This is a special module and refers to the default log level for the container. The log levels are the commonly used ones (TRACE, DEBUG, INFO, WARN, ERROR, FATAL) as well as the NONE level to turn of logging. The default log level is `INFO`.
 
