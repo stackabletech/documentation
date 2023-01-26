@@ -4,28 +4,6 @@
 Welcome to Stackable!
 This documentation gives you an overview of the Stackable Data Platform, how to install and manage it as well as some tutorials.
 
-
-[NOTE]
-.Our second release - September 2022
-====
-We are proud to announce our second public release!
-
-Please read the xref:release_notes.adoc[release notes] to read up on the details.
-====
-
-
-++++
-<br>
-++++
-
-++++
-<div class="boxes two-column">
-++++
-
-++++
-<div class="box">
-++++
-
 ++++
 <h3>Introduction</h3>
 ++++
