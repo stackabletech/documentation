@@ -39,7 +39,7 @@ NOTE: If macOS denies the execution of stackablectl go to `Settings` -> `Securit
 
 == Install the Taxi data demo
 
-The xref:stackablectl:demos/trino-taxi-data.adoc[`trino-taxi-data`] Demo installs the latest Stackable platform release and a visualization of https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page[New York City Taxi Data] using Trino and Superset:
+The xref:stackablectl::demos/trino-taxi-data.adoc[`trino-taxi-data`] Demo installs the latest Stackable platform release and a visualization of https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page[New York City Taxi Data] using Trino and Superset:
 
 [source,console]
 ----

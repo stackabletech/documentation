@@ -106,7 +106,7 @@ include::example$ldap-auth/ldap-authenticationclass.yaml[]
 
 <1> The name of the AuthenticationClass, which needs to be referenced later
 <2> The hostname in this case is the Service at which the OpenLDAP is running, inside of Kubernetes.
-<2> Here the SecretClass name is referenced
+<3> Here the SecretClass name is referenced
 
 // [source,bash]
 // include::example$ldap-auth/30-install-openldap.sh[tag=apply-ldap-authenticationclass]
