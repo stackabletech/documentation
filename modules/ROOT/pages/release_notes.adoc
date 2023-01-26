@@ -24,13 +24,13 @@ Product image selection has been expanded to cover different scenarios:
 * As above, but without the stackable tag (whereby the most recent tagged image will be taken)
 * The product version and a full repository path (this allows fully-customized product images)
 
-These options are described in more detail https://docs.stackable.tech/home/stable/contributor/adr/ADR023-product-image-selection.html#option6[in this ADR] and on https://docs.stackable.tech/home/stable/concepts/product_image_selection.html[this concepts page].
+These options are described in more detail xref:contributor:adr/ADR023-product-image-selection.adoc[in this ADR] and on xref:concepts:product_image_selection.adoc[this concepts page].
 
 *N.B.* this is a breaking change across all operators as `spec.version` has been replaced by `spec.image`.
 
 Logging Aggregation::
 
-Component activity within the platform is logged in a way that makes it difficult to find, persist and consolidate this information. Log configuration is also a challenge. To address these two issues a logging framework has been added to the platform, offering a consistent custom resource configuration and a separate, persisted sink (the current implementation support OpenSearch). This is discussed in more detail https://docs.stackable.tech/home/stable/contributor/adr/ADR025-logging_architecture.html[in this ADR] and https://docs.stackable.tech/home/stable/concepts/logging.html[on this concepts page].
+Component activity within the platform is logged in a way that makes it difficult to find, persist and consolidate this information. Log configuration is also a challenge. To address these two issues a logging framework has been added to the platform, offering a consistent custom resource configuration and a separate, persisted sink (the current implementation support OpenSearch). This is discussed in more detail xref:contributor:adr/ADR025-logging_architecture.adoc[in this ADR] and xref:concepts:logging.adoc[on this concepts page].
 
 In this release this has been added to the following components:
 
@@ -73,7 +73,7 @@ This illustrates how to set up logging for Zookeeper and browse the results in a
 
 ==== LDAP stack and tutorial
 
-LDAP support has now been added to multiple products. An explanation of the overall approach is given https://docs.stackable.tech/home/stable/concepts/authentication.html[here] but in order to make the configuration steps a little clearer a https://docs.stackable.tech/home/stable/tutorials/authentication_with_openldap.html[tutorial] has been added that uses a dedicated Stackable https://docs.stackable.tech/stackablectl/stable/commands/stack.html[stack] for OpenLDAP and shows its usage.
+LDAP support has now been added to multiple products. An explanation of the overall approach is given xref:concepts:authentication.adoc[here] but in order to make the configuration steps a little clearer a xref:tutorials:authentication_with_openldap.adoc[tutorial] has been added that uses a dedicated Stackable https://docs.stackable.tech/stackablectl/stable/commands/stack.html[stack] for OpenLDAP and shows its usage.
 
 
 The xref:stackablectl::quickstart.adoc[quickstart guide] shows how to get started with `stackablectl`. This link lists the xref:stackablectl::demos/index.adoc[available demos].
