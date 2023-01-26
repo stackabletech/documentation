@@ -1,4 +1,5 @@
 = Authentication
+:page-aliases: nightly@commons-operator::authenticationclass.adoc
 
 The Stackable Platform uses the AuthenticationClass as a central mechanism to handle user authentication across supported products.
 The authentication mechanism needs to be configured only in the AuthenticationClass which is then referenced in the product.
