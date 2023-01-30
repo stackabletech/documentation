@@ -217,7 +217,7 @@ xref:superset::index.adoc[Read more]
 ++++
 
 ++++
-<h3 id="trino"><a class="anchor" href="#trino"></a>Apache Trino</h3>
+<h3 id="trino"><a class="anchor" href="#trino"></a>Trino</h3>
 ++++
 
 Fast distributed SQL query engine for big data analytics that helps you explore your data universe.
