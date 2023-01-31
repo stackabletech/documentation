@@ -172,15 +172,15 @@ This change affects the directory structure the operator creates inside of the P
 
 The old folder naming was:
 
- - DataNode -> 'data'
- - JournalNode -> 'journal'
- - NameNode -> 'name'
+ - DataNode -> `data`
+ - JournalNode -> `journal`
+ - NameNode -> `name`
 
 which has now been adopted to match the actual rolename:
 
-- DataNode -> 'datanode'
-- JournalNode -> 'journalnode'
-- NameNode -> 'namenode'
+- DataNode -> `datanode`
+- JournalNode -> `journalnode`
+- NameNode -> `namenode`
 
 
 Unfortunately, this means that for cluster that where initially rolled out with an older operator version, a one-time migration step becomes necessary to rename these directories.
@@ -190,7 +190,9 @@ You can either do this manually by attaching the PVs to a pod and performing the
 WARNING: Please be aware that if this script runs after the cluster was already restarted with the newer operator version it will delete any data that was written to the empty post-upgrade HDFS that was stood up by the new operator.
 
 [source,bash]
-include::example$code/migrate-hdfs-23_1.sh
+----
+include::example$code/migrate-hdfs-23_1.sh[]
+----
 
 The migration process for this now becomes:
 
