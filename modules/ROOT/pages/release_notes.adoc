@@ -164,53 +164,42 @@ to
 ```
 
 ==== Stackable Operator for Apache Hadoop
-* https://github.com/stackabletech/hdfs-operator/issues/274[Support for multiple storage directories]
+* https://github.com/stackabletech/hdfs-operator/issues/290[Enable Log Aggregation for HDFS]
 
-As part of the change mentioned above the naming scheme for the PersistentVolumeClaims written for DataNodes has been changed, so that PVCs written by earlier operator versions are not recognized any more.
-Previous PVCs were called `hdfs-datanode-default-0` but now need to have the prefix `data-` added, because otherwise there may be naming collisions due to the ability to specify multiple storage classes.
+As part of the change mentioned above we also did some code cleanup that allowed us to remove arbitrary hard-coded values from the operator.
 
-In order to move over existing PVCs a few migration steps are required.
-Since it is not possible to rename PVCs you'll need to delete the existing PVCs and recreate them with the correct name and bound to the correct backing PV.
+This change affects the directory structure the operator creates inside of the PersistentVolumes used for permanent storage.
 
-Please find an example workflow of how this can be achieved below, this also sets the reclaim policy for the backing PV to `Retain` to avoid the PV being deleted when it becomes unbound, depending on your Kubernetes config this step may not be necessary.
+The old folder naming was:
+
+ - DataNode -> `data`
+ - JournalNode -> `journal`
+ - NameNode -> `name`
+
+which has now been adopted to match the actual rolename:
+
+- DataNode -> `datanode`
+- JournalNode -> `journalnode`
+- NameNode -> `namenode`
+
+
+Unfortunately, this means that for cluster that where initially rolled out with an older operator version, a one-time migration step becomes necessary to rename these directories.
+
+You can either do this manually by attaching the PVs to a pod and performing the rename (cluster needs to be stopped for this) or use the script provided below.
+
+WARNING: Please be aware that if this script runs after the cluster was already restarted with the newer operator version it will delete any data that was written to the empty post-upgrade HDFS that was stood up by the new operator.
 
 [source,bash]
 ----
-export PVNAME=$(kubectl get pvc hdfs-datanode-default-0 -o yaml | yq '.spec.volumeName')
-
-kubectl patch pv ${PVNAME} -p '{"spec":{"persistentVolumeReclaimPolicy": "Retain"}}'
-
-kubectl delete pvc hdfs-datanode-default-0
-
-kubectl patch pv ${PVNAME} -p '{"spec":{"claimRef": null}}'
+include::example$code/migrate-hdfs-23_1.sh[]
 ----
 
-Afterwards you can recreate the PVC with the new name and bind it to the PV.
+The migration process for this now becomes:
 
-Please note that you will need to adapt labels, storageClassName and resources to your specific configuration.
-Ideally export the pre-existing PVC with kubectl and change the name.
-
-[source,yaml]
-----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  labels:
-    app.kubernetes.io/component: datanode
-    app.kubernetes.io/instance: hdfs
-    app.kubernetes.io/name: hdfs
-    app.kubernetes.io/role-group: default
-  name: data-hdfs-datanode-default-0
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
-  storageClassName: standard
-  volumeMode: Filesystem
-  volumeName: <insert PV Name here>
-----
+* Stop HDFS cluster by either removing the HdfsCluster definition object or scaling all roles to 0 replicas
+* Uninstall Stackable Operator for Apache Hadoop
+* Run migration script
+* Install newer version of Stackable Operator for Apache Hadoop
 
 ==== Stackable Operator for Apache Hive
 * https://github.com/stackabletech/hive-operator/pull/292[Moved database specification from role/role-group level to top-level clusterConfig]
