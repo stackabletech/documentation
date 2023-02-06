@@ -11,6 +11,7 @@ nav:
   - modules/airflow/nav.adoc
   - modules/druid/nav.adoc
   - modules/hbase/nav.adoc
+  - modules/hdfs/nav.adoc
   - modules/trino/nav.adoc
   - modules/zookeeper/nav.adoc
   # ...
