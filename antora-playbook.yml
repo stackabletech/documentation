@@ -11,6 +11,7 @@ urls:
   # This replaces the component version in the URL of the latest stable version with 'stable'
   # i.e. /commons-operator/stable/index.html instead of /commons-operator/0.3/index.html
   latest_version_segment: stable
+  redirect_facility: netlify
 
 content:
   branches: [release-*, main]
