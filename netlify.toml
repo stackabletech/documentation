@@ -1,3 +1,4 @@
 [[redirects]]
-  from = "/zookeeper/nightly/*"
-  to = "/home/nightly/zookeeper/:splat"
+  from = "/:operator/nightly/*"
+  to = "/home/nightly/:operator/:splat"
+
