@@ -7,7 +7,10 @@ nav:
   - modules/tutorials/nav.adoc
   - modules/reference/nav.adoc
   - modules/operators/nav.adoc
+  # operators
+  - modules/trino/nav.adoc
+  - modules/zookeeper/nav.adoc
+  # ...
   - modules/contributor/nav.adoc
   - modules/ROOT/nav2.adoc
-  - modules/trino/nav.adoc
 prerelease: true
