@@ -8,6 +8,7 @@ nav:
   - modules/reference/nav.adoc
   - modules/operators/nav.adoc
   # operators
+  - modules/airflow/nav.adoc
   - modules/trino/nav.adoc
   - modules/zookeeper/nav.adoc
   # ...

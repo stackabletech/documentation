@@ -33,6 +33,7 @@ content:
     # product operators
     - url: https://github.com/stackabletech/airflow-operator.git
       start_path: docs
+      branches: [release-*, spike/distributed-component]
     - url: https://github.com/stackabletech/druid-operator.git
       start_path: docs
     - url: https://github.com/stackabletech/hbase-operator.git
