@@ -9,6 +9,8 @@ nav:
   - modules/operators/nav.adoc
   # operators
   - modules/airflow/nav.adoc
+  - modules/druid/nav.adoc
+  - modules/hbase/nav.adoc
   - modules/trino/nav.adoc
   - modules/zookeeper/nav.adoc
   # ...
