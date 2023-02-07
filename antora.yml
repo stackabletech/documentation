@@ -15,6 +15,7 @@ nav:
   - modules/hive/nav.adoc
   - modules/kafka/nav.adoc
   - modules/nifi/nav.adoc
+  - modules/opa/nav.adoc
   - modules/trino/nav.adoc
   - modules/zookeeper/nav.adoc
   # ...
