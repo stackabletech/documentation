@@ -32,6 +32,7 @@ content:
       branches: [release-*, spike/distributed-component]
     - url: https://github.com/stackabletech/listener-operator.git
       start_path: docs
+      branches: [release-*, spike/distributed-component]
     # product operators
     - url: https://github.com/stackabletech/airflow-operator.git
       start_path: docs

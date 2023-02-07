@@ -23,6 +23,7 @@ nav:
   # stackable operators
   - modules/commons-operator/nav.adoc
   - modules/secret-operator/nav.adoc
+  - modules/listener-operator/nav.adoc
   # ...
   - modules/contributor/nav.adoc
   - modules/ROOT/nav2.adoc
