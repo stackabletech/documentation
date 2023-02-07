@@ -48,6 +48,7 @@ content:
       branches: [release-*, spike/distributed-component]
     - url: https://github.com/stackabletech/kafka-operator.git
       start_path: docs
+      branches: [release-*, spike/distributed-component]
     - url: https://github.com/stackabletech/nifi-operator.git
       start_path: docs
     - url: https://github.com/stackabletech/opa-operator.git

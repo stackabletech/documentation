@@ -13,6 +13,7 @@ nav:
   - modules/hbase/nav.adoc
   - modules/hdfs/nav.adoc
   - modules/hive/nav.adoc
+  - modules/kafka/nav.adoc
   - modules/trino/nav.adoc
   - modules/zookeeper/nav.adoc
   # ...
