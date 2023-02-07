@@ -1,16 +1,74 @@
-** xref:airflow::index.adoc[Apache Airflow]
-** xref:druid::index.adoc[Apache Druid]
-** xref:hbase::index.adoc[Apache HBase]
-** xref:hdfs::index.adoc[Apache Hadoop HDFS]
-** xref:hive::index.adoc[Apache Hive]
-** xref:kafka::index.adoc[Apache Kafka]
-** xref:nifi::index.adoc[Apache NiFi]
-** xref:spark-k8s::index.adoc[Apache Spark on K8S]
-** xref:superset::index.adoc[Apache Superset]
-** xref:trino::index.adoc[Trino]
-** xref:zookeeper::index.adoc[Apache ZooKeeper]
-** xref:opa::index.adoc[OpenPolicyAgent]
-** xref:commons-operator::index.adoc[Commons]
+// docs for the syntax below: https://docs.antora.org/antora/latest/navigation/include-lists/#include-a-nested-list
+** xref:airflow:index.adoc[Apache Airflow]
++
+--
+include::airflow:partial$nav.adoc[]
+--
+** xref:druid:index.adoc[Apache Druid]
++
+--
+include::druid:partial$nav.adoc[]
+--
+** xref:hbase:index.adoc[Apache HBase]
++
+--
+include::hbase:partial$nav.adoc[]
+--
+** xref:hdfs:index.adoc[Apache Hadoop HDFS]
++
+--
+include::hdfs:partial$nav.adoc[]
+--
+** xref:hive:index.adoc[Apache Hive]
++
+--
+include::hive:partial$nav.adoc[]
+--
+** xref:kafka:index.adoc[Apache Kafka]
++
+--
+include::kafka:partial$nav.adoc[]
+--
+** xref:nifi:index.adoc[Apache NiFi]
++
+--
+include::nifi:partial$nav.adoc[]
+--
+** xref:spark-k8s:index.adoc[Apache Spark on K8S]
++
+--
+include::spark-k8s:partial$nav.adoc[]
+--
+** xref:superset:index.adoc[Apache Superset]
++
+--
+include::superset:partial$nav.adoc[]
+--
+** xref:trino:index.adoc[Trino]
++
+--
+include::trino:partial$nav.adoc[]
+--
+** xref:zookeeper:index.adoc[Apache ZooKeeper]
++
+--
+include::zookeeper:partial$nav.adoc[]
+--
+** xref:opa:index.adoc[OpenPolicyAgent]
++
+--
+include::opa:partial$nav.adoc[]
+--
+** xref:commons-operator:index.adoc[Commons]
++
+--
+include::commons-operator:partial$nav.adoc[]
+--
+** xref:listener-operator:index.adoc[Listener]
++
+--
+include::listener-operator:partial$nav.adoc[]
+--
 ** xref:secret-operator:index.adoc[Secret]
 +
 --
