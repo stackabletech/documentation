@@ -12,6 +12,7 @@ nav:
   - modules/druid/nav.adoc
   - modules/hbase/nav.adoc
   - modules/hdfs/nav.adoc
+  - modules/hive/nav.adoc
   - modules/trino/nav.adoc
   - modules/zookeeper/nav.adoc
   # ...
