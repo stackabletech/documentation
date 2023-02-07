@@ -11,4 +11,8 @@
 ** xref:zookeeper::index.adoc[Apache ZooKeeper]
 ** xref:opa::index.adoc[OpenPolicyAgent]
 ** xref:commons-operator::index.adoc[Commons]
-** xref:secret-operator::index.adoc[Secret]
+** xref:secret-operator:index.adoc[Secret]
++
+--
+include::secret-operator:partial$nav.adoc[]
+--
