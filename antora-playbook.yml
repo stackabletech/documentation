@@ -57,6 +57,7 @@ content:
       branches: [release-*, spike/distributed-component]
     - url: https://github.com/stackabletech/spark-k8s-operator.git
       start_path: docs
+      branches: [release-*, spike/distributed-component]
     - url: https://github.com/stackabletech/superset-operator.git
       start_path: docs
     - url: https://github.com/stackabletech/trino-operator.git

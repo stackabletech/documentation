@@ -16,6 +16,7 @@ nav:
   - modules/kafka/nav.adoc
   - modules/nifi/nav.adoc
   - modules/opa/nav.adoc
+  - modules/spark-k8s/nav.adoc
   - modules/trino/nav.adoc
   - modules/zookeeper/nav.adoc
   # ...
