@@ -20,7 +20,9 @@ nav:
   - modules/superset/nav.adoc
   - modules/trino/nav.adoc
   - modules/zookeeper/nav.adoc
+  # stackable operators
   - modules/commons-operator/nav.adoc
+  - modules/secret-operator/nav.adoc
   # ...
   - modules/contributor/nav.adoc
   - modules/ROOT/nav2.adoc
