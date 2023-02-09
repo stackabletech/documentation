@@ -29,6 +29,9 @@ echo "Applying updated configuration"
 kubectl apply -f superset.yaml
 # end::apply-superset-cluster[]
 
+# wait for superset resource to appear
+sleep 3
+
 echo "Waiting for superset StatefulSet ..."
 kubectl rollout status --watch statefulset/superset-node-default
 
