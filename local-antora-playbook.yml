@@ -45,7 +45,7 @@ content:
       start_path: docs
     - url: https://github.com/stackabletech/nifi-operator.git
       start_path: docs
-    - url: ../opa-operator
+    - url: https://github.com/stackabletech/opa-operator.git
       start_path: docs
     - url: https://github.com/stackabletech/spark-k8s-operator.git
       start_path: docs
