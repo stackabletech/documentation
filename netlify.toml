@@ -1,7 +1,79 @@
 [[redirects]]
+  from = "/airflow/nightly/*"
+  to = "/home/nightly/airflow/:splat"
+  status = 302
+
+[[redirects]]
+  from = "/druid/nightly/*"
+  to = "/home/nightly/druid/:splat"
+  status = 302
+
+[[redirects]]
+  from = "/hbase/nightly/*"
+  to = "/home/nightly/hbase/:splat"
+  status = 302
+
+[[redirects]]
+  from = "/hdfs/nightly/*"
+  to = "/home/nightly/hdfs/:splat"
+  status = 302
+
+[[redirects]]
+  from = "/hive/nightly/*"
+  to = "/home/nightly/hive/:splat"
+  status = 302
+
+[[redirects]]
+  from = "/kafka/nightly/*"
+  to = "/home/nightly/kafka/:splat"
+  status = 302
+
+[[redirects]]
+  from = "/nifi/nightly/*"
+  to = "/home/nightly/nifi/:splat"
+  status = 302
+
+[[redirects]]
+  from = "/spark-k8s/nightly/*"
+  to = "/home/nightly/spark-k8s/:splat"
+  status = 302
+
+[[redirects]]
+  from = "/superset/nightly/*"
+  to = "/home/nightly/superset/:splat"
+  status = 302
+
+[[redirects]]
+  from = "/trino/nightly/*"
+  to = "/home/nightly/trino/:splat"
+  status = 302
+
+[[redirects]]
+  from = "/zookeeper/nightly/*"
+  to = "/home/nightly/zookeeper/:splat"
+  status = 302
+
+[[redirects]]
   from = "/opa/nightly/*"
   to = "/home/nightly/opa/:splat"
   status = 302
+
+[[redirects]]
+  from = "/commons-operator/nightly/*"
+  to = "/home/nightly/commons-operator/:splat"
+  status = 302
+
+[[redirects]]
+  from = "/secret-operator/nightly/*"
+  to = "/home/nightly/secret-operator/:splat"
+  status = 302
+
+[[redirects]]
+  from = "/listener-operator/nightly/*"
+  to = "/home/nightly/listener-operator/:splat"
+  status = 302
+
+# stable redirects
 
 [[redirects]]
   from = "/opa/stable/*"
