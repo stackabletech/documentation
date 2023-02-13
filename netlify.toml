@@ -2,3 +2,8 @@
   from = "/opa/nightly/*"
   to = "/home/nightly/opa/:splat"
   status = 302
+
+[[redirects]]
+  from = "/opa/stable/*"
+  to = "/home/stable/opa/:splat"
+  status = 302
