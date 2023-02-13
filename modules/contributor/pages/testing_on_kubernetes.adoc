@@ -41,7 +41,7 @@ Just installing Nix does not affect your system much, as it keeps all its config
 
 The build and deploy steps for installing and running the operator are defined in the `Tiltfile` in the operators repository.
 We do encourage you to check out this file if you are interested in how things work under the hood, but you can also just use the command provided below and everything should _just work_.
-For more context on how to read this file please have a look at the https://docs.tilt.dev/api.html[Tiltfile API Reference], which is based on https://github.com/bazelbuild/starlark/blob/master/spec.md[Starlark].
+For more context on how to read this file please have a look at the https://docs.tilt.dev/api.html[Tiltfile API Reference], which is based on https://github.com/bazelbuild/starlark/blob/32993fa0d1f1e4f3af167d249be95885ba5014ad/spec.md[Starlark].
 
 We provide a target in the Makefile to start everything up:
 
