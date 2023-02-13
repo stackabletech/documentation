@@ -7,3 +7,4 @@
   from = "/opa/stable/*"
   to = "/home/stable/opa/:splat"
   status = 302
+  force = true
