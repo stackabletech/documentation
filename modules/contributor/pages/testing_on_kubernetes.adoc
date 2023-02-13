@@ -30,6 +30,11 @@ The only prerequisite you need to install is the actual Nix package manager - yo
 sh <(curl -L https://nixos.org/nix/install) --daemon
 ----
 
+After this is done you also need to add a setting to your Nix config in `/etc/nix/nix.conf`:
+----
+experimental-features = nix-command
+----
+
 Just installing Nix does not affect your system much, as it keeps all its configuration and installed packages separate from other package managers and you won't even notice it is there, unless you actually start using it.
 
 == Using
