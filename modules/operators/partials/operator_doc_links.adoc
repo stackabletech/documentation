@@ -1,3 +1,4 @@
+// docs for the syntax below: https://docs.antora.org/antora/latest/navigation/include-lists/#include-a-nested-list
 ** xref:airflow::index.adoc[Apache Airflow]
 ** xref:druid::index.adoc[Apache Druid]
 ** xref:hbase::index.adoc[Apache HBase]
@@ -9,6 +10,11 @@
 ** xref:superset::index.adoc[Apache Superset]
 ** xref:trino::index.adoc[Trino]
 ** xref:zookeeper::index.adoc[Apache ZooKeeper]
-** xref:opa::index.adoc[OpenPolicyAgent]
+** xref:opa:index.adoc[Open Policy Agent]
++
+--
+include::opa:partial$nav.adoc[]
+--
 ** xref:commons-operator::index.adoc[Commons]
+** xref:listener-operator::index.adoc[Listener]
 ** xref:secret-operator::index.adoc[Secret]
