@@ -13,7 +13,7 @@ urls:
   latest_version_segment: stable
 
 content:
-  branches: [release-*, main]
+  branches: [release-*, main, distributed-component-compat]
   tags: docs/*
   sources: 
     - url: ./
