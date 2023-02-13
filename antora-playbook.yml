@@ -14,7 +14,7 @@ urls:
   redirect_facility: netlify
 
 content:
-  branches: [release-*, main]
+  branches: [release-*, main, distributed-component-compat]
   tags: docs/*
   sources: 
     - url: https://github.com/stackabletech/documentation.git

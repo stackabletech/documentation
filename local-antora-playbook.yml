@@ -13,7 +13,7 @@ urls:
   latest_version_segment: stable
 
 content:
-  branches: [release-*, main]
+  branches: [release-*, main, distributed-component-compat]
   tags: docs/*
   sources: 
     - url: ./
@@ -45,7 +45,7 @@ content:
       start_path: docs
     - url: https://github.com/stackabletech/nifi-operator.git
       start_path: docs
-    - url: https://github.com/stackabletech/opa-operator.git
+    - url: ../opa-operator
       start_path: docs
     - url: https://github.com/stackabletech/spark-k8s-operator.git
       start_path: docs
