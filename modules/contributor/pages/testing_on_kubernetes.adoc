@@ -67,3 +67,19 @@ v0.30.13, built
 You can now either hit the spacebar to open the Tilt user interface, or manually navigate to the url shown.
 
 NOTE: The port used will be different for every repository from the Stackable organisation, in order to allow running multiple deployment workflows at the same time without getting port conflicts.
+
+=== Configuring the Registry Used
+If you are using a local Kubernetes like Kind, K3s or similar for your development Tilt will work right out of the box for you, as it will directly push the images to your local Kubernetes cluster (see https://docs.tilt.dev/personal_registry.html for more information).
+
+If you are using a remote cluster, Tilt will push the generated container images to a remote registry, in order for your Kubernetes to be able to access them.
+We have configured `docker.stackable.tech/sandbox` as the default registry, as this is what all our developers use.
+External contributors will not have access to this registry and need to override this to a registry of their choice.
+
+Overriding the default registry can be done by providing a file called `tilt_options.json` in the same directory as the Tiltfile.
+
+[source, json]
+----
+{
+"default_registry": "docker.stackable.tech/soenkeliebau",
+}
+----
