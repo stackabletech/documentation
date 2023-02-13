@@ -19,6 +19,7 @@ content:
   sources: 
     - url: https://github.com/stackabletech/documentation.git
       tags: []
+      branches: [release/*, main]
     # stackablectl
     - url: https://github.com/stackabletech/stackablectl.git
       start_path: docs
