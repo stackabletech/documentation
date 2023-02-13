@@ -12,7 +12,7 @@ For these reasons we have created a developer focused deployment mechanism that 
 The main tool that is used for enabling these short feedback loops is called https://tilt.dev/[Tilt].
 Tilt is a tool that continuously monitors your local codebase and automatically deploys any changes you make to the Kubernetes cluster defined by your current kubeconfig.
 
-Effectively this means, that when you have reached a state in your code that you would like to deploy to Kubernetes to look at more in depth, all you need to do is .. nothing - it has already been build, packaged and deployed in the background.
+Effectively this means, that when you have reached a state in your code that you would like to deploy to Kubernetes to look at more in depth, all you need to do is .. nothing - it has already been built, packaged and deployed in the background.
 
 A very important prerequisite for this of course is short build times!
 
