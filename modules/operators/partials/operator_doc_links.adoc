@@ -10,7 +10,7 @@
 ** xref:superset::index.adoc[Apache Superset]
 ** xref:trino::index.adoc[Trino]
 ** xref:zookeeper::index.adoc[Apache ZooKeeper]
-** xref:opa:index.adoc[OpenPolicyAgent]
+** xref:opa:index.adoc[Open Policy Agent]
 +
 --
 include::opa:partial$nav.adoc[]
