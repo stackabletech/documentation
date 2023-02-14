@@ -21,7 +21,7 @@ In other cases it makes sense to distribute the Pods among as much Nodes as poss
 There can also be some additional requirements, such as placing important services - such as HDFs namenode - in different racks, datacenter rooms or even datacenters.
 
 This ADR proposes a solution to automatically deploy some default affinities that should work for most users out-of-the box and improve the availability of the products.
-Additionally users need to be able to configure their own affinity rules on a
+Additionally users need to be able to configure their own affinity rules on a role as well as role-group level.
 
 == Decision Drivers
 
@@ -56,34 +56,34 @@ spec:
   image:
     productVersion: 3.8.0
     stackableVersion: "23.1"
-  config:
-    podAffinity: # Whole struct is atomic. When you set something below this you are one your own
-      podAntiAffinity:
-        requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchExpressions:
-                - key: app.kubernetes.io/name
-                  operator: In
-                  values:
-                  - zookeeper
-                - key: app.kubernetes.io/instance
-                  operator: In
-                  values:
-                  - zookeeper
-                - key: app.kubernetes.io/component
-                  operator: In
-                  values:
-                  - server
-                - key: app.kubernetes.io/role-group
-                  operator: In
-                  values:
-                  - default
-            topologyKey: "kubernetes.io/hostname"
-      podAffinity: null
-    nodeAffinity: # Whole struct is atomic. When you set something below this you are one your own
-      nodeAffinity: null # We don't set any nodeAffinity as a default, but can be set from the user
-      nodeSelector: null
   servers:
+    config:
+      podAffinity: # Whole struct is atomic. When you set something below this you are one your own
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app.kubernetes.io/name
+                    operator: In
+                    values:
+                    - zookeeper
+                  - key: app.kubernetes.io/instance
+                    operator: In
+                    values:
+                    - zookeeper
+                  - key: app.kubernetes.io/component
+                    operator: In
+                    values:
+                    - server
+                  - key: app.kubernetes.io/role-group
+                    operator: In
+                    values:
+                    - default
+              topologyKey: "kubernetes.io/hostname"
+        podAffinity: null
+      nodeAffinity: # Whole struct is atomic. When you set something below this you are one your own
+        nodeAffinity: null # We don't set any nodeAffinity as a default, but can be set from the user
+        nodeSelector: null
     roleGroups:
       default:
         replicas: 3
