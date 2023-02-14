@@ -1,0 +1,167 @@
+= [Affinities]
+Sebastian Bernauer <sebastian.bernauer@stackable.tech>
+v0.1, 2023-02-13
+:status: draft
+
+* Status: {status}
+* Deciders:
+** Sönke Liebau
+** Sebastian Bernauer
+* Date: 2023-02-13
+
+Technical Story: https://github.com/stackabletech/issues/issues/323
+
+== Context and Problem Statement
+
+// Describe the context and problem statement, e.g., in free form using two to three sentences. You may want to articulate the problem in form of a question.
+
+When running multiple instances of services of a data product most of the time it makes sense to influence the way Pods get assigned to Nodes.
+In some cases it makes sense to co-locate certain services that talk a lot to each other, such as HBase regionservers with HDFS datanodes.
+In other cases it makes sense to distribute the Pods among as much Nodes as possible.
+There can also be some additional requirements, such as placing important services - such as HDFs namenode - in different racks, datacenter rooms or even datacenters.
+
+This ADR proposes a solution to automatically deploy some default affinities that should work for most users out-of-the box and improve the availability of the products.
+Additionally users need to be able to configure their own affinity rules on a
+
+== Decision Drivers
+
+We considered the following use-cases
+
+1. Leave defaults -> no nodeAffinity oder nodeSelect, podAffinities
+2. Don't configure podAffinities, configure nodeSelector -> We still write podAffinities, additionally the specified nodeSelector
+3. Don't configure podAffinities, configure nodeAffinity -> We still write podAffinities, additionally the specified nodeAffinity
+4. Configure podAffinities, no nodeSelector or nodeAffinity -> We paste in the podAffinities from user
+5. Configure podAffinities and nodeSelector or nodeAffinity -> We paste in the podAffinities from user as well as nodeSelector/nodeAffinity from user
+
+== Considered Options
+
+=== Option 1
+
+From the considered use-cases we can conclude the following points:
+
+1. All podAffinities are atomic.
+2. All (nodeAffinities + nodeSelector) are atomic as they influence each other and we don't want to encourage setting both.
+3. For compatibility reasons we want to deprecate and still support the old nodeSelector field.
+If the nodeSelector field is specified and `nodeAffinity.nodeSelector` is not, `nodeAffinity.nodeSelector` will be set to the value of nodeSelector.
+
+==== CRD
+
+[source,yaml]
+----
+apiVersion: zookeeper.stackable.tech/v1alpha1
+kind: ZookeeperCluster
+metadata:
+  name: zookeeper
+spec:
+  image:
+    productVersion: 3.8.0
+    stackableVersion: "23.1"
+  config:
+    podAffinity: # Whole struct is atomic. When you set something below this you are one your own
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+                - key: app.kubernetes.io/name
+                  operator: In
+                  values:
+                  - zookeeper
+                - key: app.kubernetes.io/instance
+                  operator: In
+                  values:
+                  - zookeeper
+                - key: app.kubernetes.io/component
+                  operator: In
+                  values:
+                  - server
+                - key: app.kubernetes.io/role-group
+                  operator: In
+                  values:
+                  - default
+            topologyKey: "kubernetes.io/hostname"
+      podAffinity: null
+    nodeAffinity: # Whole struct is atomic. When you set something below this you are one your own
+      nodeAntiAffinity: null # We don't set any nodeAntiAffinity as a default, but can be set from the user
+      nodeAffinity: null
+      nodeSelector: null
+  servers:
+    roleGroups:
+      default:
+        replicas: 3
+        config:
+          nodeAffinity:
+            nodeSelector:
+              machine: ultrafast # This will not overwrite the podAffinity setting, only the nodeAffinity
+----
+
+==== Default affinities per product
+The default affinities should be as follows.
+It should give a overall idea of what the affinities should look like, but does not claim to be a complete list.
+
+*The List is sorted in ascending order of priority!*
+
+*airflow:*
+
+* Affinity between different roles
+* Anti-affinity between all pods with the same role
+
+*druid:*
+
+* Affinity between different roles
+* Affinity between different brokers and routers (the broker and router should ideally run on the same node (see https://druid.apache.org/docs/latest/design/processes.html[docs])
+* Affinity of historicals to datanodes if hdfs is used for deep storage
+* Anti-affinity between all pods with the same role
+
+*hbase:*
+
+* Affinity between different roles
+* Affinity between regionservers and datanodes of the referenced HDFS
+* Anti-affnity between all region servers
+* Anti-affinity between all masters
+
+*hdfs:*
+
+* Affinity between different roles
+* Anti-affinity between datanodes
+* Anti-affinity between namenodes
+
+*hive:*
+
+* Anti-affinity between all HMS
+* NOT RELEVANT: Affinity of HMS to datanodes if hdfs is used. TODO: Better to namenodes as we only do metadata operations? Is it even worth it, as we don't know which NN is active?
+
+*kafka:*
+
+* Anti-affinity between all kafka instances (We know this causes more replication traffic)
+
+*nifi*
+
+* Anti-affinity between all nifi instances
+
+*opa*
+
+* No affinity needed, because deployed as DaemonSet
+
+*spark-k8s:*
+
+* We currently don't support automatically connecting to HDFS clusters. If we start to do so: Affinity to datanodes
+* Anti-affinity between all executors. Tradeoff is reliability <-> shuffle traffic. We choose reliability over traffic here, as someone makes such small executors that a node can handle multiple of them he is already asking for shuffle traffic.
+
+*superset:*
+
+* If DruidConnection is deployed affinity to routers
+* We currently don't support TrinoConnection. If we start to do so: Affinity to coordinators
+* Anti-affinity between all superset instances
+
+*trino:*
+
+* Anti-affinity between all worker. Tradeoff is reliability <-> exchange traffic. We choose reliability over traffic here, as someone makes such small executors that a node can handle multiple of them he is already asking for shuffle traffic.
+* Anti-affinity between all coordinators. Currently only one coordinator is supported, but that might change in the future
+
+*zookeeper:*
+
+* Anti-affinity between all pods with the same role
+
+== Decision Outcome
+
+Chosen option: "Option 1", because it's the only option.

@@ -15,7 +15,7 @@ urls:
 content:
   branches: [release-*, main, distributed-component-compat]
   tags: docs/*
-  sources: 
+  sources:
     - url: ./
       tags: []
       branches: [HEAD, release/*]
