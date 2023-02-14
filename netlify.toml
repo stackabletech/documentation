@@ -74,9 +74,16 @@
   status = 302
 
 # stable redirects
+# force = true --> We're generating a compat page, but redirect it
+
+[[redirects]]
+  from = "/airflow/stable/*"
+  to = "/home/stable/airflow/:splat"
+  status = 302
+  force = true
 
 [[redirects]]
   from = "/opa/stable/*"
   to = "/home/stable/opa/:splat"
   status = 302
-  force = true  # We're generating a compat page, but redirect it
+  force = true
