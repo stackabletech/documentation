@@ -4,48 +4,48 @@ The latest versions of each of the Stackable Operators support the following pro
 
 == Apache Airflow
 
-include::airflow::partial$supported-versions.adoc[]
+include::0.6@airflow::partial$supported-versions.adoc[]
 
 == Apache Druid
 
-include::druid::partial$supported-versions.adoc[]
+include::0.8@druid::partial$supported-versions.adoc[]
 
 == Apache HBase
 
-include::hbase::partial$supported-versions.adoc[]
+include::0.5@hbase::partial$supported-versions.adoc[]
 
 == Apache HDFS
 
-include::hdfs::partial$supported-versions.adoc[]
+include::0.6@hdfs::partial$supported-versions.adoc[]
 
 == Apache Hive
 
-include::hive::partial$supported-versions.adoc[]
+include::0.8@hive::partial$supported-versions.adoc[]
 
 == Apache Kafka
 
-include::kafka::partial$supported-versions.adoc[]
+include::0.8@kafka::partial$supported-versions.adoc[]
 
 == Apache NiFi
 
-include::nifi::partial$supported-versions.adoc[]
+include::0.8@nifi::partial$supported-versions.adoc[]
 
 == Open Policy Agent (OPA)
 
-include::opa::partial$supported-versions.adoc[]
+include::0.11@opa::partial$supported-versions.adoc[]
 
 == Apache Spark on Kubernetes
 
-include::spark-k8s::partial$supported-versions.adoc[]
+include::0.6@spark-k8s::partial$supported-versions.adoc[]
 
 == Apache Superset
 
-include::superset::partial$supported-versions.adoc[]
+include::0.7@superset::partial$supported-versions.adoc[]
 
 == Apache ZooKeeper
 
-include::zookeeper::partial$supported-versions.adoc[]
+include::0.12@zookeeper::partial$supported-versions.adoc[]
 
 == Trino
 
-include::trino::partial$supported-versions.adoc[]
+include::0.8@trino::partial$supported-versions.adoc[]
