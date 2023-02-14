@@ -1,10 +1,168 @@
 [[redirects]]
+  from = "/airflow/nightly/*"
+  to = "/home/nightly/airflow/:splat"
+  status = 302
+
+[[redirects]]
+  from = "/druid/nightly/*"
+  to = "/home/nightly/druid/:splat"
+  status = 302
+
+[[redirects]]
+  from = "/hbase/nightly/*"
+  to = "/home/nightly/hbase/:splat"
+  status = 302
+
+[[redirects]]
+  from = "/hdfs/nightly/*"
+  to = "/home/nightly/hdfs/:splat"
+  status = 302
+
+[[redirects]]
+  from = "/hive/nightly/*"
+  to = "/home/nightly/hive/:splat"
+  status = 302
+
+[[redirects]]
+  from = "/kafka/nightly/*"
+  to = "/home/nightly/kafka/:splat"
+  status = 302
+
+[[redirects]]
+  from = "/nifi/nightly/*"
+  to = "/home/nightly/nifi/:splat"
+  status = 302
+
+[[redirects]]
+  from = "/spark-k8s/nightly/*"
+  to = "/home/nightly/spark-k8s/:splat"
+  status = 302
+
+[[redirects]]
+  from = "/superset/nightly/*"
+  to = "/home/nightly/superset/:splat"
+  status = 302
+
+[[redirects]]
+  from = "/trino/nightly/*"
+  to = "/home/nightly/trino/:splat"
+  status = 302
+
+[[redirects]]
+  from = "/zookeeper/nightly/*"
+  to = "/home/nightly/zookeeper/:splat"
+  status = 302
+
+[[redirects]]
   from = "/opa/nightly/*"
   to = "/home/nightly/opa/:splat"
   status = 302
 
 [[redirects]]
+  from = "/commons-operator/nightly/*"
+  to = "/home/nightly/commons-operator/:splat"
+  status = 302
+
+[[redirects]]
+  from = "/secret-operator/nightly/*"
+  to = "/home/nightly/secret-operator/:splat"
+  status = 302
+
+[[redirects]]
+  from = "/listener-operator/nightly/*"
+  to = "/home/nightly/listener-operator/:splat"
+  status = 302
+
+# stable redirects
+# force = true --> We're generating a compat page, but redirect it
+
+[[redirects]]
+  from = "/airflow/stable/*"
+  to = "/home/stable/airflow/:splat"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/druid/stable/*"
+  to = "/home/stable/druid/:splat"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/hbase/stable/*"
+  to = "/home/stable/hbase/:splat"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/hdfs/stable/*"
+  to = "/home/stable/hdfs/:splat"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/hive/stable/*"
+  to = "/home/stable/hive/:splat"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/kafka/stable/*"
+  to = "/home/stable/kafka/:splat"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/nifi/stable/*"
+  to = "/home/stable/nifi/:splat"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/spark-k8s/stable/*"
+  to = "/home/stable/spark-k8s/:splat"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/superset/stable/*"
+  to = "/home/stable/superset/:splat"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/trino/stable/*"
+  to = "/home/stable/trino/:splat"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/zookeeper/stable/*"
+  to = "/home/stable/zookeeper/:splat"
+  status = 302
+  force = true
+
+[[redirects]]
   from = "/opa/stable/*"
   to = "/home/stable/opa/:splat"
   status = 302
-  force = true  # We're generating a compat page, but redirect it
+  force = true
+
+[[redirects]]
+  from = "/commons-operator/stable/*"
+  to = "/home/stable/commons-operator/:splat"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/secret-operator/stable/*"
+  to = "/home/stable/secret-operator/:splat"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/listener-operator/stable/*"
+  to = "/home/stable/listener-operator/:splat"
+  status = 302
+  force = true
+
