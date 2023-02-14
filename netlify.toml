@@ -83,7 +83,85 @@
   force = true
 
 [[redirects]]
+  from = "/druid/stable/*"
+  to = "/home/stable/druid/:splat"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/hbase/stable/*"
+  to = "/home/stable/hbase/:splat"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/hdfs/stable/*"
+  to = "/home/stable/hdfs/:splat"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/hive/stable/*"
+  to = "/home/stable/hive/:splat"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/kafka/stable/*"
+  to = "/home/stable/kafka/:splat"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/nifi/stable/*"
+  to = "/home/stable/nifi/:splat"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/spark-k8s/stable/*"
+  to = "/home/stable/spark-k8s/:splat"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/superset/stable/*"
+  to = "/home/stable/superset/:splat"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/trino/stable/*"
+  to = "/home/stable/trino/:splat"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/zookeeper/stable/*"
+  to = "/home/stable/zookeeper/:splat"
+  status = 302
+  force = true
+
+[[redirects]]
   from = "/opa/stable/*"
   to = "/home/stable/opa/:splat"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/commons-operator/stable/*"
+  to = "/home/stable/commons-operator/:splat"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/secret-operator/stable/*"
+  to = "/home/stable/secret-operator/:splat"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/listener-operator/stable/*"
+  to = "/home/stable/listener-operator/:splat"
   status = 302
   force = true
