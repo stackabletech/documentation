@@ -91,8 +91,8 @@ Notice the SecretClass annotation. Create the SecretClass next:
 [source,yaml]
 include::example$ldap-auth/bind-credentials-secretclass.yaml[]
 
-<1> The name of the xref:secret-operator::secretclass.adoc[] we are creating that is referred to by the Secret
-<2> This determines the namespace in which the referenced `Secret` will be looked for. In this case it searches for a `Secret` in the same namespace as the product runs in. See xref:secret-operator::secretclass.adoc#backend-k8ssearch[the documentation of SecretClass]
+<1> The name of the xref:secret-operator:secretclass.adoc[] we are creating that is referred to by the Secret
+<2> This determines the namespace in which the referenced `Secret` will be looked for. In this case it searches for a `Secret` in the same namespace as the product runs in. See xref:secret-operator:secretclass.adoc#backend-k8ssearch[the documentation of SecretClass]
 
 // [source,bash]
 // include::example$ldap-auth/30-install-openldap.sh[tag=apply-credentials-secretclass]
@@ -288,7 +288,7 @@ Again, like with Superset, connect to Trino now (make sure that the StatefulSets
 
 This is a bonus step, and if you want you can skip straight to the next section: <<trino_try_it>>
 
-This step is not required for _authentication_ by itself. But the demo stack you installed comes with an _authorization_ configuration for Trino as well. Authorization on the platform is done using the xref:opa::index.adoc[].
+This step is not required for _authentication_ by itself. But the demo stack you installed comes with an _authorization_ configuration for Trino as well. Authorization on the platform is done using the xref:opa:index.adoc[].
 
 Fetch the snippet as before:
 
@@ -335,6 +335,6 @@ The LDAP connection details only need to be written down once, in the Authentica
 
 - xref:concepts:authentication.adoc[Authentication concepts page]
 - xref:reference:authenticationclass.adoc[AuthenticationClass reference]
-- xref:superset:getting_started:index.adoc[Getting started with the Stackable Operator for Apache Superset]
-- xref:trino:getting_started:index.adoc[Getting started with the Stackable Operator for Trino]
+- xref:superset:getting_started/index.adoc[Getting started with the Stackable Operator for Apache Superset]
+- xref:trino:getting_started/index.adoc[Getting started with the Stackable Operator for Trino]
 // TODO Operator docs for LDAP
