@@ -81,8 +81,7 @@ spec:
             topologyKey: "kubernetes.io/hostname"
       podAffinity: null
     nodeAffinity: # Whole struct is atomic. When you set something below this you are one your own
-      nodeAntiAffinity: null # We don't set any nodeAntiAffinity as a default, but can be set from the user
-      nodeAffinity: null
+      nodeAffinity: null # We don't set any nodeAffinity as a default, but can be set from the user
       nodeSelector: null
   servers:
     roleGroups:
