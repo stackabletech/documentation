@@ -115,8 +115,8 @@ spec:
 Consult discovery ConfigMap documentation for specific products:
 
 * xref:0.8@druid::discovery.adoc[Apache Druid]
-* xref:0.6@hdfs:discovery.adoc[Apache Hadoop HDFS]
-* xref:0.8@hive:discovery.adoc[Apache Hive]
-* xref:0.8@kafka:discovery.adoc[Apache Kafka]
-* xref:0.11@opa:discovery.adoc[OPA]
-* xref:0.12@zookeeper:discovery.adoc[Apache ZooKeeper]
+* xref:0.6@hdfs::discovery.adoc[Apache Hadoop HDFS]
+* xref:0.8@hive::discovery.adoc[Apache Hive]
+* xref:0.8@kafka::discovery.adoc[Apache Kafka]
+* xref:0.11@opa::discovery.adoc[OPA]
+* xref:0.12@zookeeper::discovery.adoc[Apache ZooKeeper]
