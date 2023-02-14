@@ -15,7 +15,7 @@ Policy requests are made to a REST API, which allows easy requests from microser
 
 == How it works
 // How it is deployed
-OPA is run by the xref:opa::index.adoc[Stackable OPA operator]. OPA is deployed with the OpaCluster resource, from which the operator creates a DaemonSet to run an OPA instance on every node of the cluster. Because of this, every Pod making policy requests will always make the request locally, minimizing latency and network traffic.
+OPA is run by the xref:opa:index.adoc[Stackable OPA operator]. OPA is deployed with the OpaCluster resource, from which the operator creates a DaemonSet to run an OPA instance on every node of the cluster. Because of this, every Pod making policy requests will always make the request locally, minimizing latency and network traffic.
 
 === Define policies
 
@@ -79,10 +79,10 @@ The automatic connection is facilitated by the xref:service_discovery.adoc[servi
 
 == Further reading
 
-Read more about the xref:opa::index.adoc[]. Read more about product integration with OPA for these products:
+Read more about the xref:opa:index.adoc[]. Read more about product integration with OPA for these products:
 
-* xref:trino:usage_guide:security.adoc#_authorization[Trino]
-* xref:kafka::usage.adoc[Kafka]
-* xref:druid::usage.adoc#_using_open_policy_agent_opa_for_authorization[Druid]
+* xref:trino:usage_guide/security.adoc#_authorization[Trino]
+* xref:kafka:usage.adoc[Kafka]
+* xref:druid:usage.adoc#_using_open_policy_agent_opa_for_authorization[Druid]
 
 You can also have a look at the xref:contributor:opa_configuration.adoc[implementation guidelines for OPA authorizers] or learn more about the xref:service_discovery.adoc[service discovery mechanism] used across the platform.
