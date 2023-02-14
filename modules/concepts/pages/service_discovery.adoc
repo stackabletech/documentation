@@ -37,7 +37,7 @@ data:
   ZOOKEEPER: simple-zk-server-default-0.simple-zk-server-default.default.svc.cluster.local:2181,simple-zk-server-default-1.simple-zk-server-default.default.svc.cluster.local:2181
 ----
 
-The information needed to connect can be a string like above, for example a JDBC connect string: `jdbc:postgresql://localhost:12345`. But a ConfigMap can also contain multiple configuration files which can then be mounted into a client Pod. This is the case for xref:hdfs::discovery.adoc[HDFS], where the `core-site.xml` and `hdfs-site.xml` files are put into the discovery ConfigMap.
+The information needed to connect can be a string like above, for example a JDBC connect string: `jdbc:postgresql://localhost:12345`. But a ConfigMap can also contain multiple configuration files which can then be mounted into a client Pod. This is the case for xref:0.4@hdfs::discovery.adoc[HDFS], where the `core-site.xml` and `hdfs-site.xml` files are put into the discovery ConfigMap.
 
 == Usage of the service discovery ConfigMap
 
@@ -79,7 +79,7 @@ In general, use the name of the product instance to retrieve the ConfigMap and u
 
 === Discovering services outside Stackable
 
-It is not uncommon to already have some core software running in your stack, such as HDFS. If you want to use HBase with the Stackable operator, you can still connect your already existing HDFS instance. You will have to create the discovery ConfigMap for your already existing HDFS yourself. Looking at xref:hdfs::discovery.adoc[the discovery documentation for HDFS], you can see that the discovery ConfigMap for HDFS contains the `core-site.xml` and `hdfs-site.xml` files.
+It is not uncommon to already have some core software running in your stack, such as HDFS. If you want to use HBase with the Stackable operator, you can still connect your already existing HDFS instance. You will have to create the discovery ConfigMap for your already existing HDFS yourself. Looking at xref:0.4@hdfs::discovery.adoc[the discovery documentation for HDFS], you can see that the discovery ConfigMap for HDFS contains the `core-site.xml` and `hdfs-site.xml` files.
 
 The ConfigMap should look something like this:
 
@@ -114,9 +114,9 @@ spec:
 
 Consult discovery ConfigMap documentation for specific products:
 
-* xref:druid::discovery.adoc[Apache Druid]
-* xref:hdfs::discovery.adoc[Apache Hadoop HDFS]
-* xref:hive::discovery.adoc[Apache Hive]
-* xref:kafka::discovery.adoc[Apache Kafka]
-* xref:opa::discovery.adoc[OPA]
-* xref:zookeeper::discovery.adoc[Apache ZooKeeper]
+* xref:0.6@druid::discovery.adoc[Apache Druid]
+* xref:0.4@hdfs::discovery.adoc[Apache Hadoop HDFS]
+* xref:0.6@hive::discovery.adoc[Apache Hive]
+* xref:0.6@kafka::discovery.adoc[Apache Kafka]
+* xref:0.9@opa::discovery.adoc[OPA]
+* xref:0.10@zookeeper::discovery.adoc[Apache ZooKeeper]
