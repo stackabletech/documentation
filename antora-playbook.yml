@@ -15,7 +15,7 @@ urls:
 
 content:
   sources: 
-    - url: ./
+    - url: https://github.com/stackabletech/documentation.git
       branches: 
         - HEAD
         - release/23.1
