@@ -6,6 +6,7 @@ v0.1, 2023-02-13
 * Status: {status}
 * Deciders:
 ** Sönke Liebau
+** Razvan Mihai
 ** Sebastian Bernauer
 * Date: 2023-02-13
 
@@ -99,7 +100,7 @@ spec:
 
 === Introduce one dedicated attribute
 
-Same as <_introduce_two_dedicated_attributes>, but all the affinity related settings are below a attribute `affinity`.
+Same as Option "Introduce two dedicated attributes", but all the affinity related settings are below a attribute `affinity`.
 Every setting is atomic for itself, so we can ship a pod anti-affinity in the defaults and a role can configure a pod affinity without overwriting our anti-affinity.
 
 ==== CRD
