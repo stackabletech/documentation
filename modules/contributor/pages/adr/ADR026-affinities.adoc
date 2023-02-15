@@ -39,7 +39,7 @@ We considered the following use-cases
 
 Don't handle affinities in a dedicated attribute, but let the users use `podOverwrite` when it is implemented https://github.com/stackabletech/issues/issues/346[tracked by this Issue]
 
-=== Introduce dedicated attribute
+=== Introduce two dedicated attributes
 
 From the considered use-cases we can conclude the following points:
 
@@ -97,7 +97,66 @@ spec:
               machine: ultrafast # This will not overwrite the podAffinity setting, only the nodeAffinity
 ----
 
-==== Default affinities per product
+=== Introduce one dedicated attribute
+
+Same as <_introduce_two_dedicated_attributes>, but all the affinity related settings are below a attribute `affinity`.
+Every setting is atomic for itself, so we can ship a pod anti-affinity in the defaults and a role can configure a pod affinity without overwriting our anti-affinity.
+
+==== CRD
+
+[source,yaml]
+----
+apiVersion: zookeeper.stackable.tech/v1alpha1
+kind: ZookeeperCluster
+metadata:
+  name: zookeeper
+spec:
+  image:
+    productVersion: 3.8.0
+    stackableVersion: "23.1"
+  servers:
+    config:
+      affinity:
+        podAntiAffinity: # atomic
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app.kubernetes.io/name
+                    operator: In
+                    values:
+                    - zookeeper
+                  - key: app.kubernetes.io/instance
+                    operator: In
+                    values:
+                    - zookeeper
+                  - key: app.kubernetes.io/component
+                    operator: In
+                    values:
+                    - server
+                  - key: app.kubernetes.io/role-group
+                    operator: In
+                    values:
+                    - default
+              topologyKey: "kubernetes.io/hostname"
+        podAffinity: null # atomic
+        nodeAffinity: null # atomic
+        nodeSelector: null # atomic
+    roleGroups:
+      default:
+        replicas: 3
+        config:
+          affinity:
+            nodeSelector:
+              machine: ultrafast # This will *only* overwrite the nodeSelector, nothing else
+----
+
+== Decision Outcome
+
+Chosen option: "Introduce one dedicated attribute", because affinity is a feature we expect a sufficiently large number of customers to configure.
+We don't want that these users to need to rely on `podOverwrite` for such as "basic feature".
+This way we also express that we support configuring a different affinity officially.
+
+== Default affinities per product
 The default affinities should be as follows.
 It should give a overall idea of what the affinities should look like, but does not claim to be a complete list.
 
@@ -164,8 +223,3 @@ It should give a overall idea of what the affinities should look like, but does 
 *zookeeper:*
 
 * Anti-affinity between all pods with the same role
-
-== Decision Outcome
-
-Chosen option: "Introduce dedicated attribute", because affinity is a feature we expect a sufficiently large number of customers to configure.
-We don't want that these users to need to rely on `podOverwrite` for such as "basic feature".
