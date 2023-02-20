@@ -51,7 +51,7 @@ Here the pod placement for the broker Pods of an Apache Kafka cluster is configu
 <1> The pod assignment for all Pods of the `brokers` role.
 <2> No constraint is defined for clustering Pods.
 <3> A `preferred` constraint is defined for spreading `brokers` across cluster nodes. The intent here is to increase availability in case of node failures.
-<4> A `required` constraint for scheduling `brokers` on nodes with the fictional `high-throughput-network` label. Failing to satisfy this constraint will prevent the Kafka cluster for starting up.
+<4> A `required` constraint for scheduling `brokers` on nodes with the fictional `high-throughput-network` label. Failing to satisfy this constraint will prevent the Kafka cluster from starting up.
 
 
 
