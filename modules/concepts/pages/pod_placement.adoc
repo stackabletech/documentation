@@ -1,10 +1,10 @@
 = Pod Placement
 
-Several operators of the Stackable Data Platform permit the configuration of pod affinity as described in the Kubernetes https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/[documentation]. If no affinity is defined in the product's custom resource, the operators define defaults that make use of the `preferred_during_scheduling_ignored_during_execution` property. Refer to the operator documentation for details.
+Several operators of the Stackable Data Platform permit the configuration of pod affinity as described in the Kubernetes https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/[documentation]. If no affinity is defined in the product's custom resource, the operators apply reasonable defaults that make use of the `preferred_during_scheduling_ignored_during_execution` property. Refer to the operator documentation for details.
 
-The Pod affinity can be defined at role and/or group level and the final configuration is built by merging these from group to role level.
+Affinities can be defined at role level, group level or both. When defined at both levels, the two affinities for are merged with the group affinity taking precedence. The resulting definition is that added to the corresponding pod template.
 
-The Pod affinities can be customized by adding an `affinity` property to the product's custom resource, as shown below:
+Affinities can be configured by adding an `affinity` property to the product's custom resource, as shown below:
 
 [source,yaml]
 ----
@@ -14,7 +14,7 @@ affinity:
   nodeAffinity: ...
 ----
 
-The following snipped showcases how to configure pod affinities at role level:
+The following example shows how to configure pod affinities at role level:
 
 [source,yaml]
 ----
@@ -46,6 +46,7 @@ spec:
                 values:
                 - enabled
 ----
+Here the pod placement for the broker Pods of an Apache Kafka cluster is configured as follows:
 
 <1> The pod assignment for all Pods of the `brokers` role.
 <2> No constraint is defined for clustering Pods.
