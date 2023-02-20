@@ -2,7 +2,7 @@
 
 Several operators of the Stackable Data Platform permit the configuration of pod affinity as described in the Kubernetes https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/[documentation]. If no affinity is defined in the product's custom resource, the operators apply reasonable defaults that make use of the `preferred_during_scheduling_ignored_during_execution` property. Refer to the operator documentation for details.
 
-Affinities can be defined at role level, group level or both. When defined at both levels, the two affinities are merged with the group affinity taking precedence. The resulting definition is that added to the corresponding pod template.
+Affinities can be defined at role level, group level or both. When defined at both levels, the two affinities are merged with the group affinity taking precedence. The resulting definition is then added to the corresponding pod template.
 
 Affinities can be configured by adding an `affinity` property to the product's custom resource, as shown below:
 
