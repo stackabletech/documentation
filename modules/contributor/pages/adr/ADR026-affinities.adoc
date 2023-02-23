@@ -26,19 +26,29 @@ Additionally users need to be able to configure their own affinity rules on a ro
 
 == Decision Drivers
 
-We considered the following use-cases
+During our deliberations we worked out the following main use cases that should be possible with the chosen solution:
 
-1. Leave defaults -> no nodeAffinity oder nodeSelect, podAffinities
-2. Don't configure podAffinities, configure nodeSelector -> We still write podAffinities, additionally the specified nodeSelector
-3. Don't configure podAffinities, configure nodeAffinity -> We still write podAffinities, additionally the specified nodeAffinity
-4. Configure podAffinities, no nodeSelector or nodeAffinity -> We paste in the podAffinities from user
-5. Configure podAffinities and nodeSelector or nodeAffinity -> We paste in the podAffinities from user as well as nodeSelector/nodeAffinity from user
+1. Leave defaults as set by the operator -> no nodeAffinity oder nodeSelect, podAffinities
+2. Set node affinities, but leave the default pod affinities as set by the operator
+3. Override pod affinities set by the operator with custom ones
+4. Override pod affinities and set node affinities at the same time
+
+In addition to these use-cases, our operators currently offer a `nodeSelector` field in the CRD, which offers similar functionality to the node affinities discussed in this ADR.
+The chosen option needs to enable us to properly handle the existing field going forward and have a defined migration path towards deprecating this field and using the more detailed node affinities.
 
 == Considered Options
 
 === Use podOverwrite
 
 Don't handle affinities in a dedicated attribute, but let the users use `podOverwrite` when it is implemented https://github.com/stackabletech/issues/issues/346[tracked by this Issue]
+
+==== Pros
+
+* No extra implementation effort once `podOverwrite` has been done
+* No CRD changes needed
+
+==== Cons
+* It 'degrades' the functionality to being used via overrides instead of being exposed as a proper abstraction in our api surface
 
 === Introduce two dedicated attributes
 
@@ -49,7 +59,7 @@ From the considered use-cases we can conclude the following points:
 3. For compatibility reasons we want to deprecate and still support the old nodeSelector field.
 If the nodeSelector field is specified and `nodeAffinity.nodeSelector` is not, `nodeAffinity.nodeSelector` will be set to the value of nodeSelector.
 
-==== CRD
+==== Example CRD
 
 [source,yaml]
 ----
@@ -97,6 +107,16 @@ spec:
             nodeSelector:
               machine: ultrafast # This will not overwrite the podAffinity setting, only the nodeAffinity
 ----
+
+
+==== Pros
+
+* Enables definining only one of the two structs an the CRD
+
+==== Cons
+
+* Creates a logical split between two entities that are closely related and should usually be kept together
+
 
 === Introduce one dedicated attribute
 
@@ -151,11 +171,25 @@ spec:
               machine: ultrafast # This will *only* overwrite the nodeSelector, nothing else
 ----
 
+==== Pros
+
+* Defines one common abstraction that can be reused everywhere and contains everything we might need
+
+==== Cons
+
+* Not able to use only one sort of affinity in CRDs
+
 == Decision Outcome
 
 Chosen option: "Introduce one dedicated attribute", because affinity is a feature we expect a sufficiently large number of customers to configure.
 We don't want that these users to need to rely on `podOverwrite` for such as "basic feature".
 This way we also express that we support configuring a different affinity officially.
+
+=== Compatibility with existing `nodeSelector` field
+We will keep, but deprecate, the existing `nodeSelector` field.
+Existing CRDs with this field set will be treated by the operator as if the nodeSelector was set in the new struct, as defined by this ADR.
+If both, `nodeSelector` at the top level and in the `affinities` field are defined the operator will throw an error and stop reconciliation.
+This should not affect any pre-existing CR objects, as only one field exists at this time, so this will only affect changes after the implementation of this PR has gone live and the users should use the new functionality in this case.
 
 == Default affinities per product
 The default affinities should be as follows.
