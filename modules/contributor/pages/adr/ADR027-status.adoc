@@ -15,13 +15,7 @@ Technical Story: https://github.com/stackabletech/issues/issues/343
 
 // Describe the context and problem statement, e.g., in free form using two to three sentences. You may want to articulate the problem in form of a question.
 
-When running multiple instances of services of a data product most of the time it makes sense to influence the way Pods get assigned to Nodes.
-In some cases it makes sense to co-locate certain services that talk a lot to each other, such as HBase regionservers with HDFS datanodes.
-In other cases it makes sense to distribute the Pods among as much Nodes as possible.
-There can also be some additional requirements, such as placing important services - such as HDFs namenode - in different racks, datacenter rooms or even datacenters.
-
-This ADR proposes a solution to automatically deploy some default affinities that should work for most users out-of-the box and improve the availability of the products.
-Additionally users need to be able to configure their own affinity rules on a role as well as role-group level.
+Resources managed by operators must offer a consistent and easy interface to query their availabilty. This is important for users to determine if the resource is functioning properly as well as for automated processes to ensure that flows or pipelines reach certain states and can continue.
 
 == Decision Drivers
 
@@ -40,31 +34,44 @@ Nice to have based on product functionality:
 - security status (tls on/off)
 - accessability (external, internal k8s cluster only, hybrid)
 
+
 == Considered Options
 
-=== Set Status Conditions Based on Cluster Resou
+=== Set Status Conditions
+
+The status conditions can be set in a generic way by querying the sub-resources of a cluster resource and applying logical opertors to compute the cluster status. For example, the Superset operator, queries the status of all StatefulSets, DB jobs, etc. and computes the cluster conditions based on all of them. 
+
+If all sub-resources have a corresponding "Available" type with status `True` then, the custer will also have a condition of type  "Available" and status `True`. If any of the sub-resources are not `Available`, then the cluster status will reflect this by setting the condition `Degraded` to status `True`
+
 
 OpenShift predefined condition types: https://github.com/openshift/api/blob/b1bcdbc3/config/v1/types_cluster_operator.go#L123-L140
 Kubernetes Pod conditions: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#pod-conditions
 
+QUESTION: should depending services be considered for status checks ? For example, should the Superset operator check that Druid services function properly ?
 
 ==== Pros
 
-* Implementaion detail: reuse `ClusterResources` from the `operator-rs` framework as much as possible.
-* No extra implementation effort once `podOverwrite` has been done
-* No CRD changes needed
+* Implementaion detail: reuse `ClusterResources` from the `operator-rs` framework as much as possible and have a generic way to update cluster status.
+* Non-breaking CRD changes needed to add conditions.
+* Transparent and easy to understand. Failure messages can be propagated from sub-resources hat have problems.
+
 
 ==== Cons
-* It 'degrades' the functionality to being used via overrides instead of being exposed as a proper abstraction in our api surface
 
-=== Introduce two dedicated attributes
+* It completely relies on Kubernetes resource status fields without querying the actual products. This assumes that liveliness probes and other checks htat Kubermetes performs, mirror the true product status.
+* It requires that all resource dependencies run inside the Kubernetes cluster. For example, if Superset is configured with a Druid connection outside the Kubernetes cluster, the `Available` confition of the connection will have a status of `Unknown`.
 
-From the considered use-cases we can conclude the following points:
+=== Set Status Custom Fields and Conditions
 
-1. All podAffinities are atomic.
-2. All (nodeAffinities + nodeSelector) are atomic as they influence each other and we don't want to encourage setting both.
-3. For compatibility reasons we want to deprecate and still support the old nodeSelector field.
-If the nodeSelector field is specified and `nodeAffinity.nodeSelector` is not, `nodeAffinity.nodeSelector` will be set to the value of nodeSelector.
+Most custom fields are set by querying the products directly. One exception is the deployed product version.
+
+==== Pros
+
+* Fine graned status information
+* More reliable status information that is queried directly from the product
+* Products can run inside and
+
+==== Cons
 
 ==== Example CRD
 
