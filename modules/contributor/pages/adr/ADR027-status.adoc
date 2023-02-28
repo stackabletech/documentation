@@ -1,12 +1,14 @@
 = [Resource Status]
-Sebastian Bernauer <sebastian.bernauer@stackable.tech>
+Razvan Mihai <razvan.mihai@stackable.tech>
 v0.1, 2023-02-28
 :status: draft
 
 * Status: {status}
-* Deciders:
+* Contributors:
+** Felix Henning
 ** Malte Sander
 ** Razvan Mihai
+** Sebastian Bernauer
 * Date: 2023-02-28
 
 Technical Story: https://github.com/stackabletech/issues/issues/343
@@ -15,27 +17,33 @@ Technical Story: https://github.com/stackabletech/issues/issues/343
 
 // Describe the context and problem statement, e.g., in free form using two to three sentences. You may want to articulate the problem in form of a question.
 
-Resources managed by operators must offer a consistent and easy interface to query their availabilty. This is important for users to determine if the resource is functioning properly as well as for automated processes to ensure that flows or pipelines reach certain states and can continue.
+Operators of the Stackable Data Platform create, manage and delete Kubernetes resources. These resources describe how products are installed and configured, how they interact with each other and with clients. To ensure this interaction works reliably and to enable users to recognize and react to exceptional situations, Kubernetes resources must publish the health status of the products behind them. Users and processes should be ably to easily query the health state of the products and react accordingly. Processes that set up stacks or demos for example, should be able to use the product health information to decide wether a particlar milestone in the pipeline has been successful and if sequential steps can be started or not.
 
-Possible predefined condition types:
-* Available (OpenShift)
-* Progressing (OpenShift)
-* Degraded (OpenShift)
-* Upgradable (OpenShift)
-* Paused (Stackable)
-* Stopped (Stackable)
+Often times it's impossible to summarize the health status of a product in a single variable because Stackable managed products are usually distributed systems made up of multiple services, each with a different purpose. In such architectures, parts of the system might function properly while others might be suspended for maintenance. Deciding on the health status of the entire system, becomes a matter of interpretation and usage scenarios.
 
-Possible condition states (strings):
+Thus, the health status should able to capture different aspects of product's availability. Kubernetes status conditions offer a flexible mechanism for this purpose. This document recommends that Stackable Operators use the following predefined condition types:
+
+1. Available
+2. Progressing 
+3. Degraded 
+4. Upgradable 
+5. Paused
+6. Stopped
+
+The first four condition types (Available, Progressing, Degraded and Upgradable) are inspired by https://github.com/openshift/api/blob/b1bcdbc3/config/v1/types_cluster_operator.go#L123-L140[OpenShift's recommended types], while the last two (Paused and Stopped) are needed by Stackable operators for advanced operational purposes.
+
+Each of the condition types defined should take one of the follwing states:
+
 * True
 * False
 * Unknown
 
 == Decision Drivers
 
-The status field should be set and maintained for cluster resources as well as sub-resources (ex. `ZNode`, `SupersetDB`, etc.).
+All Stackable Operators should update the health status of cluster resources and sub-resources they manage (where this makes sense). For example, The Stackable Operator for Apache Zookeeper should manage the health status of `ZookeeperCluster` as well as `ZNode` resources.
 
 Must haves for cluster resources and sub-resources:
-- Status string field to allow easy programatic query of the resource state (Available, Degraded, Stopped, Paused, ...).
+- Status string field to allow easy programatic query of the resource state. This should be one of the condition types recommended above (Available, Stopped, Paused, ...).
 - Status conditions as a generic and easy way to check the availability of the cluster and transition history.
 
 Must have for cluster resources:
@@ -50,15 +58,16 @@ Nice to have based on product functionality:
 
 == Considered Options
 
-=== Set Status Conditions
+=== Set Status Conditions Only
 
-The status conditions can be set in a generic way by querying the sub-resources of a cluster resource and applying logical opertors to compute the cluster status. For example, the Superset operator, queries the status of all StatefulSets, DB jobs, etc. and computes the cluster conditions based on all of them. 
+Cluster resources created by Stackable Operators usually own a entire batch of sub-resources such as: StatefulSets, DaemonSets, Pods, ConfigMaps, Services and so on and Kubernetes it's self maintains status fields for many of these objects. The idea of this proposal is to aggregate all these fields into the the status field of the cluster resource.
 
-If all sub-resources have a corresponding "Available" type with status `True` then, the custer will also have a condition of type  "Available" and status `True`. If any of the sub-resources are not `Available`, then the cluster status will reflect this by setting the condition `Degraded` to status `True`
+For example, the Superset operator should query the StatefulSets, database jobs, etc. and aggregate them into cluster conditions of the `SupersetCluster`.
 
+In the simplest case, if all sub-resources have a health type of "Ready" (as usually defined by Kubernetes) with status the `True`, then these will be aggregated into a condition of type "Available" with the status "True" at the product cluster level.
 
-OpenShift predefined condition types: https://github.com/openshift/api/blob/b1bcdbc3/config/v1/types_cluster_operator.go#L123-L140
-Kubernetes Pod conditions: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#pod-conditions
+In often times however, sub-resources might be transitioning from one phase to another. In such cases, the product cluster state might still have a condition "Available" set to true but also an additional  "Degraded" condition with the status "True". This might reflect that even if the product and it's services are available and running, the entire cluster setup does not correspond to the requested custom resource.
+
 
 QUESTION: should depending services be considered for status checks ? For example, should the Superset operator check that Druid services function properly ?
 
@@ -71,9 +80,11 @@ QUESTION: should depending services be considered for status checks ? For exampl
 
 ==== Cons
 
-* It completely relies on Kubernetes resource status fields without querying the actual products. This assumes that liveliness probes and other checks htat Kubermetes performs, mirror the true product status.
-* It requires that all resource dependencies run inside the Kubernetes cluster. For example, if Superset is configured with a Druid connection outside the Kubernetes cluster, the `Available` confition of the connection will have a status of `Unknown`.
+* It completely relies on Kubernetes resource status fields without querying the actual products. This assumes that liveliness probes and other checks that Kubernetes performs, mirror the true product status.
+* It requires that all resource dependencies run inside the Kubernetes cluster. For example, if a Superset cluster is configured with a Druid connection outside the Kubernetes cluster, the `Available` condition of the connection will have a status of `Unknown`. The Superset cluster it's self, might have a "Degraded" condition with status "True" and a message informing the user that the Druid connection cannot be queried.
 
+
+Here is an example of a status field with various conditions. The managed product here is assumed to be Superset:
 
 [source,yaml]
 ----
@@ -105,7 +116,7 @@ status:
       message: "User requested reconcide pause."
 ----
 
-Second example:
+Another example, also for a Superset cluster, where the user requested a cluster stop operation to be performed. After this operation, no Superset Pod should be running anymore and thus the entire cluster is not available.
 
 [source,yaml]
 ----
