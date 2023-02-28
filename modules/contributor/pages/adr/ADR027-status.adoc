@@ -68,10 +68,14 @@ Most custom fields are set by querying the products directly. One exception is t
 ==== Pros
 
 * Fine graned status information
-* More reliable status information that is queried directly from the product
-* Products can run inside and
+* More reliable status information that is queried directly from the operated product and dependencies
+* Products can run inside and outside the Kubernetes cluster
 
 ==== Cons
+
+* Complexity and specificity of the implementation. Operators must implement product network protocols and metadata structures to be able to communicate with the products.
+* Hard to maintain across product versions.
+* Each new sub-resource requires additional code and dependencies.
 
 ==== Example CRD
 
