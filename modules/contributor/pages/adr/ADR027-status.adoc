@@ -17,6 +17,14 @@ Technical Story: https://github.com/stackabletech/issues/issues/343
 
 Resources managed by operators must offer a consistent and easy interface to query their availabilty. This is important for users to determine if the resource is functioning properly as well as for automated processes to ensure that flows or pipelines reach certain states and can continue.
 
+Possible predefined conditions:
+* Available (OpenShift)
+* Progressing (OpenShift)
+* Degraded (OpenShift)
+* Upgradable (OpenShift)
+* Paused (Stackable)
+* Stopped (Stackable)
+
 == Decision Drivers
 
 The status field should be set and maintained for cluster resources as well as sub-resources (ex. `ZNode`, `SupersetDB`, etc.).
@@ -60,6 +68,55 @@ QUESTION: should depending services be considered for status checks ? For exampl
 
 * It completely relies on Kubernetes resource status fields without querying the actual products. This assumes that liveliness probes and other checks htat Kubermetes performs, mirror the true product status.
 * It requires that all resource dependencies run inside the Kubernetes cluster. For example, if Superset is configured with a Druid connection outside the Kubernetes cluster, the `Available` confition of the connection will have a status of `Unknown`.
+
+
+[source,yaml]
+----
+status:
+  conditions:
+    - type: Available
+      status: "True"
+      lastProbeTime: null
+      lastTransitionTime: 2018-01-01T00:00:00Z
+      message: "UI and Postgres DB running"
+    - type: Degraded
+      status: "True"
+      lastProbeTime: null
+      lastTransitionTime: 2018-01-01T00:00:00Z
+      reason: "DruidConnection failed. <Optional: Druid degraded message>"
+    - type: Progressing
+      status: "True"
+      lastProbeTime: null
+      lastTransitionTime: 2018-01-01T00:00:00Z
+      message: "New replicas starting."
+    - type: Upgradable
+      status: "Unknown"
+      lastProbeTime: null
+      lastTransitionTime: 2018-01-01T00:00:00Z
+    - type: Paused
+      status: "True"
+      lastProbeTime: null
+      lastTransitionTime: 2018-01-01T00:00:00Z
+      message: "User requested reconcide pause."
+----
+
+Second example:
+
+[source,yaml]
+----
+status:
+  conditions:
+    - type: Available
+      status: "False"
+      lastProbeTime: null
+      lastTransitionTime: 2018-01-01T00:00:00Z
+      message: "No Pods running."
+    - type: Stopped
+      status: "True"
+      lastProbeTime: null
+      lastTransitionTime: 2018-01-01T00:00:00Z
+      reason: "User requested reconcile stop."
+----
 
 === Set Status Custom Fields and Conditions
 
