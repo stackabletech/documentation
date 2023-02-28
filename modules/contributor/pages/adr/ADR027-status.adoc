@@ -1,16 +1,15 @@
-= [Affinities]
+= [Resource Status]
 Sebastian Bernauer <sebastian.bernauer@stackable.tech>
-v0.1, 2023-02-13
+v0.1, 2023-02-28
 :status: draft
 
 * Status: {status}
 * Deciders:
-** Sönke Liebau
+** Malte Sander
 ** Razvan Mihai
-** Sebastian Bernauer
-* Date: 2023-02-13
+* Date: 2023-02-28
 
-Technical Story: https://github.com/stackabletech/issues/issues/323
+Technical Story: https://github.com/stackabletech/issues/issues/343
 
 == Context and Problem Statement
 
@@ -26,24 +25,32 @@ Additionally users need to be able to configure their own affinity rules on a ro
 
 == Decision Drivers
 
-During our deliberations we worked out the following main use cases that should be possible with the chosen solution:
+The status field should be set and maintained for cluster resources as well as sub-resources (ex. `ZNode`, `SupersetDB`, etc.).
 
-1. Leave defaults as set by the operator -> no nodeAffinity oder nodeSelect, podAffinities
-2. Set node affinities, but leave the default pod affinities as set by the operator
-3. Override pod affinities set by the operator with custom ones
-4. Override pod affinities and set node affinities at the same time
+Must haves for cluster resources and sub-resources:
+- Status string field to allow easy programatic query of the resource state (Available, Degraded, Stopped, Paused, ...).
+- Status conditions as a generic and easy way to check the availability of the cluster and transition history.
 
-In addition to these use-cases, our operators currently offer a `nodeSelector` field in the CRD, which offers similar functionality to the node affinities discussed in this ADR.
-The chosen option needs to enable us to properly handle the existing field going forward and have a defined migration path towards deprecating this field and using the more detailed node affinities.
+Must have for cluster resources:
+- Deployed product version. Used for in-place product upgrades/downgrades/migrations.
+  
+Nice to have based on product functionality:
+- task/qurey load status (ram, cpu)
+- disk pressure
+- security status (tls on/off)
+- accessability (external, internal k8s cluster only, hybrid)
 
 == Considered Options
 
-=== Use podOverwrite
+=== Set Status Conditions Based on Cluster Resou
 
-Don't handle affinities in a dedicated attribute, but let the users use `podOverwrite` when it is implemented https://github.com/stackabletech/issues/issues/346[tracked by this Issue]
+OpenShift predefined condition types: https://github.com/openshift/api/blob/b1bcdbc3/config/v1/types_cluster_operator.go#L123-L140
+Kubernetes Pod conditions: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#pod-conditions
+
 
 ==== Pros
 
+* Implementaion detail: reuse `ClusterResources` from the `operator-rs` framework as much as possible.
 * No extra implementation effort once `podOverwrite` has been done
 * No CRD changes needed
 
