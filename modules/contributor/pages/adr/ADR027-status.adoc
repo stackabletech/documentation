@@ -173,4 +173,4 @@ status:
 
 == Decision Outcome
 
-TODO
+The first iteration will implement the first proposal: "Set Status Conditions Only".
