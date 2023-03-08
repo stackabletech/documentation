@@ -5,7 +5,7 @@ v0.1, 2023-02-28
 
 * Status: {status}
 * Contributors:
-** Felix Henning
+** Felix Hennig
 ** Malte Sander
 ** Razvan Mihai
 ** Sebastian Bernauer
@@ -43,17 +43,20 @@ Each of the condition types defined should take one of the following states:
 All Stackable Operators should update the health status of cluster resources and sub-resources they manage (where this makes sense). For example, The Stackable Operator for Apache Zookeeper should manage the health status of `ZookeeperCluster` as well as `ZNode` resources.
 
 Must-haves for cluster resources and sub-resources:
-- Status string field to allow easy programmatic query of the resource state. This should be one of the condition types recommended above (Available, Stopped, Paused, ...).
-- Status conditions as a generic and easy way to check the availability of the cluster and transition history.
+
+* Status string field to allow easy programmatic query of the resource state. This should be one of the condition types recommended above (Available, Stopped, Paused, ...).
+* Status conditions as a generic and easy way to check the availability of the cluster and transition history.
 
 Must-have for cluster resources:
-- Deployed product version. Used for in-place product upgrades/downgrades/migrations.
+
+* Deployed product version. Used for in-place product upgrades/downgrades/migrations.
   
 Nice to have based on product functionality:
-- task/query load status (ram, cpu)
-- disk pressure
-- security status (tls on/off)
-- accessibility (external, internal k8s cluster only, hybrid)
+
+* task/query load status (ram, cpu)
+* disk pressure
+* security status (tls on/off)
+* accessibility (external, internal k8s cluster only, hybrid)
 
 
 == Considered Options
