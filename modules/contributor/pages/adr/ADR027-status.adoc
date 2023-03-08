@@ -44,7 +44,6 @@ All Stackable Operators should update the health status of cluster resources and
 
 Must-haves for cluster resources and sub-resources:
 
-* Status string field to allow easy programmatic query of the resource state. This should be one of the condition types recommended above (Available, Stopped, Paused, ...).
 * Status conditions as a generic and easy way to check the availability of the cluster and transition history.
 
 Must-have for cluster resources:
@@ -72,7 +71,7 @@ In the simplest case, if all sub-resources have a health type of "Ready" (as usu
 In often times however, sub-resources might be transitioning from one phase to another. In such cases, the product cluster state might still have a condition "Available" set to true but also an additional "Degraded" condition with the status "True". This might reflect that even if the product and it's services are available and running, the entire cluster setup does not correspond to the requested custom resource.
 
 
-QUESTION: should dependent services be considered for status checks ? For example, should the Superset operator check that Druid services function properly ?
+QUESTION: should dependent services be considered for status checks? For example, should the Superset operator check that Druid services function properly?
 
 ==== Pros
 
@@ -177,3 +176,72 @@ status:
 == Decision Outcome
 
 The first iteration will implement the first proposal: "Set Status Conditions Only".
+
+
+== Implementation details
+
+- Precondition - Reconcile without errors
+
+|===
+|ConditionType |ConditionStatus | Description | Example Message
+
+|Available
+|True
+|availableReplicas == replicas
+|The cluster has the desired amount of replicas.
+
+|Available
+|False
+|availableReplicas != replicas && any_pod has phase != Unknown
+|The cluster does not have the desired amount of replicas.
+
+|Available
+|Unknown
+|availableReplicas != replicas && any_pod has phase == Unknown
+|The cluster has not the desired amount of replicas. At least one Pod [Pod1,Pod2] has phase Unknown.
+
+|Progressing
+|True
+|availableReplicas != replicas && any_pod has phase != Failed
+|The cluster does not have the desired amount of replicas. No Pod has phase Unknown.
+
+|Progressing
+|False
+|availableReplicas == replicas
+|The cluster has the desired amount of replicas.
+
+|Progressing
+|False
+|availableReplicas != replicas && any_pod has phase == Failed
+|The cluster does not have the desired amount of replicas. At least one Pod [Pod1,Pod2] has Phase Failed.
+
+|Degraded
+|True
+|availableReplicas < replicas && any_pod has phase IN [Unknown, Failed]
+|The cluster has less than the desired amount of replicas. At least one Pod [Pod1,Pod2] has Phase [Unknown,Failed].
+
+|Degraded
+|False
+|StatefulSet / DaemonSet / Deployment: availableReplicas == replicas
+|The cluster has the desired amount of replicas.
+
+|Paused
+|True
+|Annotation "operator-command" == "Paused"
+|The cluster is currently not reconciled by the operator.
+
+|Paused
+|False
+|Annotation "operator-command" != "Paused"
+|The cluster is currently reconciled by the operator.
+
+|Stopped
+|True
+|Annotation "operator-command" == "Stopped"
+|The cluster is currently stopped. All replicas are set to 0.
+
+|Stopped
+|False
+|Annotation "operator-command" != "Stopped"
+|The cluster is currently not stopped.
+|===
