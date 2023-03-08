@@ -72,6 +72,7 @@ In often times however, sub-resources might be transitioning from one phase to a
 
 
 QUESTION: should dependent services be considered for status checks? For example, should the Superset operator check that Druid services function properly?
+ANSWER: It was decided that this is not a "must have" but a "nice to have". The first implementation of this ADR will only take cluster owned resources into consideration.
 
 ==== Pros
 
