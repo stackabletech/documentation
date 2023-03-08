@@ -192,7 +192,7 @@ The first iteration will implement the first proposal: "Set Status Conditions On
 
 |Available
 |False
-|availableReplicas != replicas && any_pod has phase != Unknown
+|availableReplicas != replicas && all_pods has phase != Unknown
 |The cluster does not have the desired amount of replicas.
 
 |Available
