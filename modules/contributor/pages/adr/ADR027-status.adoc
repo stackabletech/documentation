@@ -1,7 +1,7 @@
-= [Resource Status]
+= ADR027: Resource Status
 Razvan Mihai <razvan.mihai@stackable.tech>
 v0.1, 2023-02-28
-:status: draft
+:status: accepted
 
 * Status: {status}
 * Contributors:
