@@ -16,7 +16,7 @@ do
 done
 
 echo "Waiting for superset StatefulSet to become ready ..."
-kubectl rollout status --watch statefulset/superset-node-default
+kubectl rollout status --watch --timeout=5m statefulset/superset-node-default
 
 sleep 5
 
