@@ -5,14 +5,14 @@ shopt -s lastpipe
 source "./utils.sh"
 
 # wait for superset resource to appear
-for (( i=1; i<=15; i++ ))
+for (( i=1; i<=30; i++ ))
 do
   echo "Waiting for superset StatefulSet to appear ..."
   if eval kubectl get statefulset superset-node-default; then
     break
   fi
 
-  sleep 1
+  sleep 3
 done
 
 echo "Waiting for superset StatefulSet to become ready ..."
