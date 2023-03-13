@@ -20,6 +20,10 @@ kubectl rollout status --watch --timeout=5m statefulset/superset-node-default
 
 sleep 5
 
+echo "Stackable services:"
+
+stackablectl svc list
+
 echo "Checking if login is working correctly ..."
 
 username="admin"
