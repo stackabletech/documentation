@@ -15,9 +15,9 @@ urls:
 
 content:
   sources: 
-    - url: ./
+    - url: https://github.com/stackabletech/documentation.git
       branches: 
-        - HEAD
+        - operator-concept
         - release/23.1
         - release/22.11
         - release/22.09
