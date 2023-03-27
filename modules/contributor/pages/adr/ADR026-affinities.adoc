@@ -1,0 +1,260 @@
+= ADR026: Affinities
+Sebastian Bernauer <sebastian.bernauer@stackable.tech>
+v0.1, 2023-02-13
+:status: draft
+
+* Status: {status}
+* Deciders:
+** Sönke Liebau
+** Razvan Mihai
+** Sebastian Bernauer
+* Date: 2023-02-13
+
+Technical Story: https://github.com/stackabletech/issues/issues/323
+
+== Context and Problem Statement
+
+// Describe the context and problem statement, e.g., in free form using two to three sentences. You may want to articulate the problem in form of a question.
+
+When running multiple instances of services of a data product most of the time it makes sense to influence the way Pods get assigned to Nodes.
+In some cases it makes sense to co-locate certain services that talk a lot to each other, such as HBase regionservers with HDFS datanodes.
+In other cases it makes sense to distribute the Pods among as much Nodes as possible.
+There can also be some additional requirements, such as placing important services - such as HDFs namenode - in different racks, datacenter rooms or even datacenters.
+
+This ADR proposes a solution to automatically deploy some default affinities that should work for most users out-of-the box and improve the availability of the products.
+Additionally users need to be able to configure their own affinity rules on a role as well as role-group level.
+
+== Decision Drivers
+
+During our deliberations we worked out the following main use cases that should be possible with the chosen solution:
+
+1. Leave defaults as set by the operator -> no nodeAffinity oder nodeSelect, podAffinities
+2. Set node affinities, but leave the default pod affinities as set by the operator
+3. Override pod affinities set by the operator with custom ones
+4. Override pod affinities and set node affinities at the same time
+
+In addition to these use-cases, our operators currently offer a `nodeSelector` field in the CRD, which offers similar functionality to the node affinities discussed in this ADR.
+The chosen option needs to enable us to properly handle the existing field going forward and have a defined migration path towards deprecating this field and using the more detailed node affinities.
+
+== Considered Options
+
+=== Use podOverwrite
+
+Don't handle affinities in a dedicated attribute, but let the users use `podOverwrite` when it is implemented https://github.com/stackabletech/issues/issues/346[tracked by this Issue]
+
+==== Pros
+
+* No extra implementation effort once `podOverwrite` has been done
+* No CRD changes needed
+
+==== Cons
+* It 'degrades' the functionality to being used via overrides instead of being exposed as a proper abstraction in our api surface
+
+=== Introduce two dedicated attributes
+
+From the considered use-cases we can conclude the following points:
+
+1. All podAffinities are atomic.
+2. All (nodeAffinities + nodeSelector) are atomic as they influence each other and we don't want to encourage setting both.
+3. For compatibility reasons we want to deprecate and still support the old nodeSelector field.
+If the nodeSelector field is specified and `nodeAffinity.nodeSelector` is not, `nodeAffinity.nodeSelector` will be set to the value of nodeSelector.
+
+==== Example CRD
+
+[source,yaml]
+----
+apiVersion: zookeeper.stackable.tech/v1alpha1
+kind: ZookeeperCluster
+metadata:
+  name: zookeeper
+spec:
+  image:
+    productVersion: 3.8.0
+    stackableVersion: "23.1"
+  servers:
+    config:
+      podAffinity: # Whole struct is atomic. When you set something below this you are one your own
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app.kubernetes.io/name
+                    operator: In
+                    values:
+                    - zookeeper
+                  - key: app.kubernetes.io/instance
+                    operator: In
+                    values:
+                    - zookeeper
+                  - key: app.kubernetes.io/component
+                    operator: In
+                    values:
+                    - server
+                  - key: app.kubernetes.io/role-group
+                    operator: In
+                    values:
+                    - default
+              topologyKey: "kubernetes.io/hostname"
+        podAffinity: null
+      nodeAffinity: # Whole struct is atomic. When you set something below this you are one your own
+        nodeAffinity: null # We don't set any nodeAffinity as a default, but can be set from the user
+        nodeSelector: null
+    roleGroups:
+      default:
+        replicas: 3
+        config:
+          nodeAffinity:
+            nodeSelector:
+              machine: ultrafast # This will not overwrite the podAffinity setting, only the nodeAffinity
+----
+
+
+==== Pros
+
+* Enables definining only one of the two structs an the CRD
+
+==== Cons
+
+* Creates a logical split between two entities that are closely related and should usually be kept together
+
+
+=== Introduce one dedicated attribute
+
+Same as Option "Introduce two dedicated attributes", but all the affinity related settings are below a attribute `affinity`.
+Every setting is atomic for itself, so we can ship a pod anti-affinity in the defaults and a role can configure a pod affinity without overwriting our anti-affinity.
+
+==== CRD
+
+[source,yaml]
+----
+apiVersion: zookeeper.stackable.tech/v1alpha1
+kind: ZookeeperCluster
+metadata:
+  name: zookeeper
+spec:
+  image:
+    productVersion: 3.8.0
+    stackableVersion: "23.1"
+  servers:
+    config:
+      affinity:
+        podAntiAffinity: # atomic
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app.kubernetes.io/name
+                    operator: In
+                    values:
+                    - zookeeper
+                  - key: app.kubernetes.io/instance
+                    operator: In
+                    values:
+                    - zookeeper
+                  - key: app.kubernetes.io/component
+                    operator: In
+                    values:
+                    - server
+                  - key: app.kubernetes.io/role-group
+                    operator: In
+                    values:
+                    - default
+              topologyKey: "kubernetes.io/hostname"
+        podAffinity: null # atomic
+        nodeAffinity: null # atomic
+        nodeSelector: null # atomic
+    roleGroups:
+      default:
+        replicas: 3
+        config:
+          affinity:
+            nodeSelector:
+              machine: ultrafast # This will *only* overwrite the nodeSelector, nothing else
+----
+
+==== Pros
+
+* Defines one common abstraction that can be reused everywhere and contains everything we might need
+
+==== Cons
+
+* Not able to use only one sort of affinity in CRDs
+
+== Decision Outcome
+
+Chosen option: "Introduce one dedicated attribute", because affinity is a feature we expect a sufficiently large number of customers to configure.
+We don't want that these users to need to rely on `podOverwrite` for such as "basic feature".
+This way we also express that we support configuring a different affinity officially.
+
+=== Compatibility with existing `nodeSelector` field
+We will keep, but deprecate, the existing `nodeSelector` field.
+Existing CRDs with this field set will be treated by the operator as if the nodeSelector was set in the new struct, as defined by this ADR.
+If both, `nodeSelector` at the top level and in the `affinities` field are defined the operator will throw an error and stop reconciliation.
+This should not affect any pre-existing CR objects, as only one field exists at this time, so this will only affect changes after the implementation of this PR has gone live and the users should use the new functionality in this case.
+
+== Default affinities per product
+The default affinities should be as follows.
+It should give a overall idea of what the affinities should look like, but does not claim to be a complete list.
+
+*The List is sorted in ascending order of priority!*
+
+*airflow:*
+
+* Affinity between different roles
+* Anti-affinity between all pods with the same role
+
+*druid:*
+
+* Affinity between different roles
+* Affinity between different brokers and routers (the broker and router should ideally run on the same node (see https://druid.apache.org/docs/latest/design/processes.html[docs])
+* Affinity of historicals to datanodes if hdfs is used for deep storage
+* Anti-affinity between all pods with the same role
+
+*hbase:*
+
+* Affinity between different roles
+* Affinity between regionservers and datanodes of the referenced HDFS
+* Anti-affnity between all region servers
+* Anti-affinity between all masters
+
+*hdfs:*
+
+* Affinity between different roles
+* Anti-affinity between datanodes
+* Anti-affinity between namenodes
+
+*hive:*
+
+* Anti-affinity between all HMS
+* NOT RELEVANT: Affinity of HMS to datanodes if hdfs is used. TODO: Better to namenodes as we only do metadata operations? Is it even worth it, as we don't know which NN is active?
+
+*kafka:*
+
+* Anti-affinity between all kafka instances (We know this causes more replication traffic)
+
+*nifi*
+
+* Anti-affinity between all nifi instances
+
+*opa*
+
+* No affinity needed, because deployed as DaemonSet
+
+*spark-k8s:*
+
+* We currently don't support automatically connecting to HDFS clusters. If we start to do so: Affinity to datanodes
+* Anti-affinity between all executors. Tradeoff is reliability <-> shuffle traffic. We choose reliability over traffic here, as someone makes such small executors that a node can handle multiple of them he is already asking for shuffle traffic.
+
+*superset:*
+
+* If DruidConnection is deployed affinity to routers
+* We currently don't support TrinoConnection. If we start to do so: Affinity to coordinators
+* Anti-affinity between all superset instances
+
+*trino:*
+
+* Anti-affinity between all worker. Tradeoff is reliability <-> exchange traffic. We choose reliability over traffic here, as someone makes such small executors that a node can handle multiple of them he is already asking for shuffle traffic.
+* Anti-affinity between all coordinators. Currently only one coordinator is supported, but that might change in the future
+
+*zookeeper:*
+
+* Anti-affinity between all pods with the same role

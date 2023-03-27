@@ -1,6 +1,7 @@
 * xref:index.adoc[]
 
 ** xref:steps.adoc[]
+** xref:testing_on_kubernetes.adoc[]
 ** xref:development_dashboard.adoc[]
 ** xref:style_guide.adoc[]
 ** Implementation guidelines

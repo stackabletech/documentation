@@ -193,31 +193,39 @@ Like the other logging settings, this custom configuration file can be supplied 
 
 Setting the `custom` field will disable any configurations made in `file` and `console`. (TODO maybe we can disallow this altogether in the CRD type)
 
-**Disable vector** - Vector should be optional, if the user wants to use their own logging system.
+**Enable vector** - Vector is optional, so that the users can use their own logging system.
+
+To enable it, the property `enableVectorAgent` must be set to `true`. In this
+case, also the `vectorAggregatorConfigMapName` must contain the name of the
+Vector aggregator discovery ConfigMap.
 
 ```yaml
-logging:
-  enableVectorAgent: false  # defaults to true
+vectorAggregatorConfigMapName: vector-aggregator-discovery
+...
+  logging:
+    enableVectorAgent: true  # defaults to false
 ```
 
 **Summary** - To summarize, a complete logging configuration looks like this:
 
 ```yaml
-logging:
-  enableVectorAgent: true
-  containers:  # can contain configuration for multiple containers
-    myContainer:
-      console:
-        level: INFO
-      file:
-        level: INFO
-      loggers:  # can contain configuration for multiple modules
-        ROOT:
+vectorAggregatorConfigMapName: vector-aggregator-discovery
+...
+  logging:
+    enableVectorAgent: true
+    containers:  # can contain configuration for multiple containers
+      myContainer:
+        console:
           level: INFO
-        my.module:
+        file:
           level: INFO
-      custom:  # this field cannot be used together with the others. Using it will override any settings made in the other fields
-        configMap: my-configmap
+        loggers:  # can contain configuration for multiple modules
+          ROOT:
+            level: INFO
+          my.module:
+            level: INFO
+        custom:  # this field cannot be used together with the others. Using it will override any settings made in the other fields
+          configMap: my-configmap
 ```
 
 [#deploying_the_stack]

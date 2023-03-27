@@ -1,0 +1,5 @@
+tls:
+  verification:
+    server:
+      caCert:
+        secretClass: openldap-tls-ca
