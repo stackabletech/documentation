@@ -17,7 +17,7 @@ content:
   sources: 
     - url: https://github.com/stackabletech/documentation.git
       branches: 
-        - spike/druid-overview
+        - main
         - release/23.1
         - release/22.11
         - release/22.09
@@ -64,7 +64,7 @@ content:
     - url: https://github.com/stackabletech/druid-operator.git
       start_path: docs
       branches:
-        - idea/overview-diagram
+        - main
         - release-23.1
         - distributed-component-compat
         - old-release-docs/0.8

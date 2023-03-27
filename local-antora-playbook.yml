@@ -63,7 +63,7 @@ content:
     - url: https://github.com/stackabletech/druid-operator.git
       start_path: docs
       branches:
-        - idea/overview-diagram
+        - main
         - release-23.1
         - distributed-component-compat
         - old-release-docs/0.8
