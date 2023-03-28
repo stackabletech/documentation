@@ -140,10 +140,10 @@ content:
         - docs/0.4
         - docs/0.3
         - docs/0.2
-    - url: https://github.com/stackabletech/superset-operator.git
+    - url: ../superset-operator
       start_path: docs
       branches:
-        - main
+        - docs-new-landing-page
         - release-23.1
         - distributed-component-compat
         - old-release-docs/0.7

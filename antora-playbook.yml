@@ -17,7 +17,7 @@ content:
   sources: 
     - url: https://github.com/stackabletech/documentation.git
       branches: 
-        - HEAD
+        - demo/superset-new-landing-page
         - release/23.1
         - release/22.11
         - release/22.09
@@ -144,7 +144,7 @@ content:
     - url: https://github.com/stackabletech/superset-operator.git
       start_path: docs
       branches:
-        - main
+        - docs-new-landing-page
         - release-23.1
         - distributed-component-compat
         - old-release-docs/0.7
