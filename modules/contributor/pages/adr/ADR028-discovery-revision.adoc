@@ -1,5 +1,5 @@
 = ADR028: Discovery revision
-Razvan Mihai <razvan.mihai@stackable.tech>
+Sebastian Bernauer <sebastian.bernauer@stackable.tech>
 v0.1, 2023-03-30
 :status: draft
 
@@ -8,7 +8,6 @@ v0.1, 2023-03-30
 ** Felix Hennig
 ** Malte Sander
 ** Natalie Klestrup Röijezon
-** Razvan Mihai
 ** Sebastian Bernauer
 * Date: 2023-02-28
 
@@ -33,10 +32,11 @@ We have some common use-cases that we need to express via the discovery mechanis
 **** protocol (http/https)
 **** host
 **** port
-** What Secretclass must be used to authenticate
+*** In case of https: The SecretClass that provided the cert for the *server*
+** What AuthenticationClass must be used to authenticate
 *** null (no SecretClass): Means no authentication at all
 *** (future) static: One of these plain credentials
-*** tls: provides ca.crt that needs to have signed the client
+*** tls: provides ca.crt that needs to have signed the *client* certificate
 *** ldap: <whatever>
 *** (future) kerberos: kdc where you can get a ticket from (together with the realm)
 *** (future) oauth: <whatever>
@@ -47,49 +47,168 @@ We have some common use-cases that we need to express via the discovery mechanis
 * We need at least
 ** hdfs-site
 ** core-site
-** What Secretclass must be used to authenticate
+** What AuthenticationClass must be used to authenticate
 *** (future) kerberos: kdc where you can get a ticket from (together with the realm)
-** The information about rpc encryption is already in the core-site, so not needed explicitly
-** The information about data encryption is already in the hdfs-site, so not needed explicitly
+** The information about rpc encryption is already in the core-site, so need to expose it explicitly
+** The information about data encryption is already in the hdfs-site, so need to expose it explicitly
 
 == Considered Options
 
-=== Option 1
+=== TLS: Discovery config contains SecretClass
+The discovery includes the SecretClass used to obtain the *server* certificate
+
+Trino discovery:
+[source,yaml]
+----
+metadata:
+  name: my-trino
+coordinatorEndpoint:
+  host: trino-coordinator.ns.svc.cluster.local
+  port: 8443
+  protocol:
+    http: {}
+    # OR
+    https:
+      caCertSecretClass: tls
+---
+# superset config
+security:
+  tls:
+    secretClassName: tls
+  kerberos:
+    secretClassName: kerberos
+backends: # Don't look at the Superset CRD structure, we are only interested in the tls stuff here
+  - name: my-trino
+    trino:
+      discoveryConfigName: my-trino
+----
 
 ==== Pros
 
+==== Cons
+
+=== TLS: Client needs to specify SecretClass
+---
+The discovery does *not* include the SecretClass used to obtain the *server* certificate.
+Instead the client must specify which SecretClass should be used to verify the *server* certificate.
+For usability reasons it can be omitted and defaults to the SecretClass the client uses for itself.
+
+Trino discovery:
+[source,yaml]
+----
+metadata:
+  name: my-trino
+coordinatorEndpoint: https://trino-coordinator.ns.svc.cluster.local:8443
+---
+# superset config
+security:
+  tls:
+    secretClassName: tls
+  kerberos:
+    secretClassName: kerberos
+backends: # Don't look at the Superset CRD structure, we are only interested in the tls stuff here
+  - name: my-trino
+    trino:
+      discoveryConfigName: my-trino
+      # override tls from the global config, OPTIONALLY
+      tlsSecretClass: my-second-pki
+----
+
+==== Pros
+
+* Operator does not need to read/look at the DiscoveryConfig (as we can statically set up the secret-op tls secretClass volumes rather than retrieving them from the DiscoveryConfig).
+* Some clients only support a single pki, in that case we could not give the ability to overwrite the secretClass coming from the product itself.
 
 ==== Cons
 
+* The client has to know what pki/secretClass the server is using.
+
+=== TLS: Include caCert in Discovery config
+
+Trino discovery:
 [source,yaml]
 ----
-status:
-  conditions:
-    - type: Available
-      status: "True"
-      lastProbeTime: 2023-02-28T14:02:00Z
-      lastTransitionTime: 2023-02-28T12:00:00Z
-      message: "UI and Postgres DB running"
-    - type: Degraded
-      status: "True"
-      lastProbeTime: 2023-02-28T14:02:00Z
-      lastTransitionTime: 2023-02-28T12:00:00Z
-      reason: "DruidConnection failed. <Optional: Druid degraded message>"
-    - type: Progressing
-      status: "True"
-      lastProbeTime: 2023-02-28T14:02:00Z
-      lastTransitionTime: 2023-02-28T12:00:00Z
-      message: "New replicas starting."
-    - type: Upgradable
-      status: "Unknown"
-      lastProbeTime: 2023-02-28T14:02:00Z
-      lastTransitionTime: 2023-02-28T12:00:00Z
-    - type: Paused
-      status: "True"
-      lastProbeTime: 2023-02-28T14:02:00Z
-      lastTransitionTime: 2023-02-28T12:00:00Z
-      message: "User requested reconcile pause."
+metadata:
+  name: my-trino
+endpoint:
+  host: trino-coordinator.ns.svc.cluster.local
+  port: 8443
+  protocol:
+    http: {}
+    # OR
+    https:
+      caBundle: | # Containing a PEM certificate
+        === BEGIN CERTIFICATE ===
+        XXX
+        === END CERTIFICATE ===
 ----
+
+==== Pros
+
+* Assuming DiscoveryConfig is located within a CM, the operator can simply mount the discovery CM to get the ca.crt.  Operator does not need to read/look at the DiscoveryConfig.
+* Easier for external clients to use as they don't need to know the concept of SecretClasses and don't even need to run withing k8s.
+* The client has to *not* know what pki/secretClass the server is using.
+
+==== Cons
+
+* BIG QUESTION: How should the product operator get the ca cert from the SecretClass it uses to get the *server* cert from?
+** The secret-op could e.g. offer an HTTP api to fetch the ca.crt of a given SecretClass or e.g. write the ca.crt into the status of a SecretClass
+
+
+=== Authentication: Add AuthenticationClass to Discovery Config
+
+Trino discovery:
+[source,yaml]
+----
+metadata:
+  name: my-trino
+authentication:
+  authenticationClass: my-class
+----
+
+==== Cons
+
+* Operator has to read the AuthenticationClass to determine its type (pw/tls/keytab) and set up the needed volumes and commands.
+* The AuthenticationClass is meant to describe "how should a server verify connecting clients" and re-purpose it to mean "how a client should authenticate itself".
+
+
+=== Authentication: Add SecretClass to Discovery Config
+
+Trino discovery:
+[source,yaml]
+----
+metadata:
+  name: my-trino
+authentication:
+  secretClass: client-tls # Use this SecretClass to obtain your credentials (regardless of type of SecretClass)
+----
+
+==== Cons
+
+* Operator has to read the SecretClass to determine its type (pw/tls/keytab) and set up the needed volumes and commands.
+
+
+=== Authentication: Add needed details
+
+Trino discovery:
+[source,yaml]
+----
+metadata:
+  name: my-trino
+authentication:
+  none: {}
+  password: {}
+  tls:
+    secretClass: client-tls # Use this SecretClass to obtain a *client* cert
+  kerberos:
+    secretClass: client-tls # Use this SecretClass to obtain a keytab
+  oauth:
+    secretClass: client-tls # Use this SecretClass to obtain whatever it needs
+----
+
+==== Pros
+
+* Operator has *not* to read the SecretClass to determine its type (pw/tls/keytab), as the type is already encoded in the Discovery config.
 
 == Decision Outcome
 
