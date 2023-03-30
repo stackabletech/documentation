@@ -39,7 +39,7 @@ content:
     - url: https://github.com/stackabletech/secret-operator.git
       start_path: docs
       branches:
-        - main
+        - docs/root
         - release-23.1
         - distributed-component-compat  # (required for 0.6 and below)
       tags:
