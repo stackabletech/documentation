@@ -99,10 +99,10 @@ content:
         - docs/0.8
         - docs/0.7
         - docs/0.6
-    - url: https://github.com/stackabletech/kafka-operator.git
+    - url: ../kafka-operator
       start_path: docs
       branches:
-        - main
+        - docs-new-landing-page
         - release-23.1
         - distributed-component-compat
       tags:

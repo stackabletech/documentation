@@ -103,7 +103,7 @@ content:
     - url: https://github.com/stackabletech/kafka-operator.git
       start_path: docs
       branches:
-        - main
+        - docs-new-landing-page
         - release-23.1
         - distributed-component-compat
       tags:
