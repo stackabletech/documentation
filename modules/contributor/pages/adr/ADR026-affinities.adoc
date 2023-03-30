@@ -1,7 +1,7 @@
 = ADR026: Affinities
 Sebastian Bernauer <sebastian.bernauer@stackable.tech>
 v0.1, 2023-02-13
-:status: draft
+:status: accepted
 
 * Status: {status}
 * Deciders:

@@ -1,0 +1,96 @@
+= ADR028: Discovery revision
+Razvan Mihai <razvan.mihai@stackable.tech>
+v0.1, 2023-03-30
+:status: draft
+
+* Status: {status}
+* Contributors:
+** Felix Hennig
+** Malte Sander
+** Natalie Klestrup Röijezon
+** Razvan Mihai
+** Sebastian Bernauer
+* Date: 2023-02-28
+
+== Context and Problem Statement
+
+// Describe the context and problem statement, e.g., in free form using two to three sentences. You may want to articulate the problem in form of a question.
+
+This ADR is written with a specific problems in mind, but the goal is to reach a generic mechanism for the discovery of products.
+The current discovery mechanism is described https://docs.stackable.tech/home/stable/concepts/service_discovery.html[in our docs] (make sure to pick the 23.1 version).
+
+Basically when clients connect to products managed by Stackable, they need to have certain information about how to connect to these products.
+Currently we expose some of these information, but not all (e.g. which ca cert the exposed product uses).
+
+== Decision Drivers
+We have some common use-cases that we need to express via the discovery mechanism:
+
+1. Trino cluster
+* Currently we don't write any discovery CM
+* We need at least
+** Coordinator address (currently only single coordinator is supported)
+*** Ideally split it into the following attributes, so that clients can construct the URI. (trino python client e.g. needs all of these attributes separately and I don't want to rely on parsing and extracting the URI)
+**** protocol (http/https)
+**** host
+**** port
+** What Secretclass must be used to authenticate
+*** null (no SecretClass): Means no authentication at all
+*** (future) static: One of these plain credentials
+*** tls: provides ca.crt that needs to have signed the client
+*** ldap: <whatever>
+*** (future) kerberos: kdc where you can get a ticket from (together with the realm)
+*** (future) oauth: <whatever>
+*** (future) jwt: <whatever>
+
+2. HDFS cluster
+* Currently we expose hdfs-site and core-site
+* We need at least
+** hdfs-site
+** core-site
+** What Secretclass must be used to authenticate
+*** (future) kerberos: kdc where you can get a ticket from (together with the realm)
+** The information about rpc encryption is already in the core-site, so not needed explicitly
+** The information about data encryption is already in the hdfs-site, so not needed explicitly
+
+== Considered Options
+
+=== Option 1
+
+==== Pros
+
+
+==== Cons
+
+[source,yaml]
+----
+status:
+  conditions:
+    - type: Available
+      status: "True"
+      lastProbeTime: 2023-02-28T14:02:00Z
+      lastTransitionTime: 2023-02-28T12:00:00Z
+      message: "UI and Postgres DB running"
+    - type: Degraded
+      status: "True"
+      lastProbeTime: 2023-02-28T14:02:00Z
+      lastTransitionTime: 2023-02-28T12:00:00Z
+      reason: "DruidConnection failed. <Optional: Druid degraded message>"
+    - type: Progressing
+      status: "True"
+      lastProbeTime: 2023-02-28T14:02:00Z
+      lastTransitionTime: 2023-02-28T12:00:00Z
+      message: "New replicas starting."
+    - type: Upgradable
+      status: "Unknown"
+      lastProbeTime: 2023-02-28T14:02:00Z
+      lastTransitionTime: 2023-02-28T12:00:00Z
+    - type: Paused
+      status: "True"
+      lastProbeTime: 2023-02-28T14:02:00Z
+      lastTransitionTime: 2023-02-28T12:00:00Z
+      message: "User requested reconcile pause."
+----
+
+== Decision Outcome
+
+TODO
