@@ -19,4 +19,4 @@ include::example$cluster-operations.yaml[]
 
 If not specified, `clusterOperation.reconcilePaused` and `clusterOperation.stopped` default to `false`.
 
-IMPORTANT: When setting `clusterOperation.reconcilePaused` and `clusterOperation.stopped` to true in the same step, `clusterOperation.reconcilePaused` will take precedence. This means the cluster will stop reconciling immediately (and therefore not setting any replicas to 0). To avoid this, the cluster should first be stopped and then paused.
+IMPORTANT: When setting `clusterOperation.reconcilePaused` and `clusterOperation.stopped` to true in the same step, `clusterOperation.reconcilePaused` will take precedence. This means the cluster will stop reconciling immediately and the `stopped` field is ignored. To avoid this, the cluster should first be stopped and then paused.
