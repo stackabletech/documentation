@@ -1,7 +1,7 @@
 
 = Cluster operations
 
-The Stackable Operators offer different cluster operations to control the reconciliation process. This might be useful for updating operators, debugging or testing of new settings:
+Stackable operators offer different cluster operations to control the reconciliation process. This is useful when updating operators, debugging or testing of new settings:
 
 * `reconcilePaused` - Stop the operator from reconciling the cluster spec. The status will still be updated.
 * `stopped` - Stop all running pods but keep updating all deployed resources like `ConfigMaps`, `Services` and the cluster status.
