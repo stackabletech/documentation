@@ -54,7 +54,110 @@ We have some common use-cases that we need to express via the discovery mechanis
 
 == Considered Options
 
-=== TLS: Discovery config contains SecretClass
+=== [1] Discovery Object: Use ConfigMap
+
+Use a ConfigMap:
+
+[source,yaml]
+----
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: simple-hdfs
+spec:
+  data:
+    hdfs-site.xml:
+    core-site.xml:
+    ca.crt: | # Containing a PEM certificate
+      === BEGIN CERTIFICATE ===
+      XXX
+      === END CERTIFICATE ===
+    authentication: |
+      kerberos:
+        secretClass: client-tls # Use this SecretClass to obtain a keytab
+    # Alternative solution without yaml enum:
+    authenticationType: Kerberos
+    authenticationSecretClass: client-kerberos
+----
+
+==== Pros
+
+* Easier to use for consuming applications outside of Stackable, as they can simply mount the CM or download it to a file.
+  On the other hand when we start to put in yaml objects that need to be parsed we would loose the benefit.
+
+==== Cons
+
+* No complex structure such as enums (we can mitigate this by sticking in custom yaml into the CM).
+  Users don't have any form of validation when creating their own discovery CM e.g. pointing to their existing HDFS.
+
+=== [1] Discovery Object: Use dedicated CRD object for every product
+
+Or use a dedicated HdfsClusterDiscovery crd:
+
+[source,yaml]
+----
+apiVersion: hdfs.stackable.tech/v1alpha1
+kind: HdfsClusterDiscovery
+metadata:
+  name: simple-hdfs
+spec:
+  hdfs-site.xml: # xml
+  core-site.xml: # xml
+  httpProtocol:
+    http: {}
+    # OR
+    https:
+      caBundle: | # Containing a PEM certificate
+        === BEGIN CERTIFICATE ===
+        XXX
+        === END CERTIFICATE ===
+  authentication: |
+    kerberos:
+      secretClass: client-tls # Use this SecretClass to obtain a keytab
+----
+
+==== Pros
+
+==== Cons
+
+* Operator A needs to compile against operator b to have access to it's discovery struct. An alternative would be to put the Discovery CRDs in operator-rs.
+* Operator versioning hell. On the other hand we have the same problem with ConfigMaps, as e.g. a newly introduced key is missing because of an older hdfs operator version.
+
+=== [1] Discovery Object: Use dedicated CRD object shared between all products
+
+Or use a dedicated ClusterDiscovery crd:
+
+[source,yaml]
+----
+apiVersion: discovery.stackable.tech/v1alpha1
+kind: ClusterDiscovery
+metadata:
+  name: simple-hdfs
+spec:
+  # Whatever
+----
+
+==== Pros
+
+* Only one struct in operator-rs -> No cross-operator dependencies.
+
+==== Cons
+
+* It does not seem like it's possible to find a common struct all products can agree upon
+
+=== [1] Discovery Object: Write the discovery to Product CR status
+
+Instead of writing discovery information to dedicated objects - such as CM or custom CR - we "simply" write the discovery information to the status of the Cluster CR.
+
+==== Pros
+
+==== Cons
+
+* It does not enable users to bring their own product and talk to it from Stackable, e.g. a user-provided HDFS.
+* It does not allow things such as a ZNode for Zookeeper as we either use the Zookeeper CR for discovery or we use a ZNode but than can't use a Zookeeper CR.
+  Currently we have the freedom of either connection to a Zookeeper root dir or a ZNode transparently.
+
+=== [2] TLS: Discovery config contains SecretClass
 The discovery includes the SecretClass used to obtain the *server* certificate
 
 Trino discovery:
@@ -87,7 +190,7 @@ backends: # Don't look at the Superset CRD structure, we are only interested in 
 
 ==== Cons
 
-=== TLS: Client needs to specify SecretClass
+=== [2] TLS: Client needs to specify SecretClass
 ---
 The discovery does *not* include the SecretClass used to obtain the *server* certificate.
 Instead the client must specify which SecretClass should be used to verify the *server* certificate.
@@ -123,7 +226,7 @@ backends: # Don't look at the Superset CRD structure, we are only interested in 
 
 * The client has to know what pki/secretClass the server is using.
 
-=== TLS: Include caCert in Discovery config
+=== [2] TLS: Include caCert in Discovery config
 
 Trino discovery:
 [source,yaml]
@@ -155,7 +258,7 @@ endpoint:
 ** The secret-op could e.g. offer an HTTP api to fetch the ca.crt of a given SecretClass or e.g. write the ca.crt into the status of a SecretClass
 
 
-=== Authentication: Add AuthenticationClass to Discovery Config
+=== [3] Authentication: Add AuthenticationClass to Discovery Config
 
 Trino discovery:
 [source,yaml]
@@ -172,7 +275,7 @@ authentication:
 * The AuthenticationClass is meant to describe "how should a server verify connecting clients" and re-purpose it to mean "how a client should authenticate itself".
 
 
-=== Authentication: Add SecretClass to Discovery Config
+=== [3] Authentication: Add SecretClass to Discovery Config
 
 Trino discovery:
 [source,yaml]
@@ -188,7 +291,7 @@ authentication:
 * Operator has to read the SecretClass to determine its type (pw/tls/keytab) and set up the needed volumes and commands.
 
 
-=== Authentication: Add needed details
+=== [3] Authentication: Add needed details
 
 Trino discovery:
 [source,yaml]
@@ -201,15 +304,42 @@ authentication:
   tls:
     secretClass: client-tls # Use this SecretClass to obtain a *client* cert
   kerberos:
-    secretClass: client-tls # Use this SecretClass to obtain a keytab
+    secretClass: client-kerberos # Use this SecretClass to obtain a keytab
   oauth:
-    secretClass: client-tls # Use this SecretClass to obtain whatever it needs
+    secretClass: client-oauth # Use this SecretClass to obtain whatever it needs
 ----
 
 ==== Pros
 
 * Operator has *not* to read the SecretClass to determine its type (pw/tls/keytab), as the type is already encoded in the Discovery config.
 
+==== Cons
+
+* Operator has read the Discovery CM it wants to connect to
+
 == Decision Outcome
 
-TODO
+[1] Discovery Object: TODO
+[2] TLS: TODO
+[3] Authentication: TODO
+
+=== Appendix A
+Let's model a kerberos secured HDFS with the Options "TLS: Include caCert in Discovery config" and "Authentication: Add needed details"
+
+[source,yaml]
+----
+apiVersion: hdfs.stackable.tech/v1alpha1
+kind: HdfsCluster
+metadata:
+  name: simple-hdfs
+spec:
+  zookeeperConfigMapName: simple-hdfs-znode
+  nameNodes: {}
+  dataNodes: {}
+  journalNodes: {}
+  # TODO Refine CRD
+  kerberos:
+    tlsSecretClass: tls
+    kerberosSecretClass: kerberos
+    wireEncryption: Privacy
+----
