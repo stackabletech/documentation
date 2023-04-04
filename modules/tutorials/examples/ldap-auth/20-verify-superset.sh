@@ -36,6 +36,40 @@ else
   exit 1
 fi
 
+echo "11111111111111111111111111111111111111111"
+sleep 300
+
+if superset_login "db" "$username" "$password"; then
+  echo "Login successful with $username:$password"
+else
+  echo "Login not successful. Exiting."
+  exit 1
+fi
+
+echo "2222222222222222222222222222222222222222222"
+sleep 300
+
+if superset_login "db" "$username" "$password"; then
+  echo "Login successful with $username:$password"
+else
+  echo "Login not successful. Exiting."
+  exit 1
+fi
+
+echo "33333333333333333333333333333333"
+sleep 300
+
+if superset_login "db" "$username" "$password"; then
+  echo "Login successful with $username:$password"
+else
+  echo "Login not successful. Exiting."
+  exit 1
+fi
+
+echo "FINISHED FINISHED FINISHED FINISHED"
+sleep 30000
+
+
 username="admin"
 password="wrongpassword"
 
