@@ -16,8 +16,8 @@ urls:
 content:
   sources: 
     - url: https://github.com/stackabletech/documentation.git
-      branches: 
-        - HEAD
+      branches:
+        - fix/spark-links
         - release/23.1
         - release/22.11
         - release/22.09
