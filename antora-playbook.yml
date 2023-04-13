@@ -132,7 +132,7 @@ content:
     - url: https://github.com/stackabletech/spark-k8s-operator.git
       start_path: docs
       branches:
-        - main
+        - docs/new-usage-and-index
         - release-23.1
         - distributed-component-compat
       tags:
