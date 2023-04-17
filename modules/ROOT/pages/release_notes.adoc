@@ -3,6 +3,242 @@
 The Stackable platform consists of multiple operators that work together.
 Periodically a platform release is made, including all components of the platform at a specific version.
 
+== Release 23.4
+
+The focus in this platform release is on the support of default/custom affinities and the status field as well as the rollout of log aggregation across the remaining operators.
+
+=== New/extended platform features
+The following new major platform features were added:
+
+Status Field::
+
+Operators of the Stackable Data Platform create, manage and delete Kubernetes resources: in order to easily query the health state of the products - and react accordingly - Stackable Operators use the several predefined condition types to capture different aspects of a product's availability. See this https://docs.stackable.tech/home/stable/contributor/adr/ADR027-status[ADR] for more information.
+
+Default / Custom Affinities::
+
+In Kubernetes there are different ways to influence how Pods are assigned to Nodes. In some cases it makes sense to co-locate certain services that talk a lot to each other, such as HBase regionservers with HDFS datanodes. In other cases it makes sense to distribute the Pods among as much Nodes as possible. There can also be some additional requirements, such as placing important services - such as HDFs namenode - in different racks, datacenter rooms or even datacenters. This release supports default affinities that should suffice for many scenarios out-of-the box as well as enabling the configuration of custom affinity rules at a role and/or role-group level. See this https://docs.stackable.tech/home/stable/contributor/adr/ADR026-affinities[ADR] for more information.
+
+Log Aggregation::
+
+The logging framework (added to the platform in Release 23.1) that offers a consistent custom resource configuration and a separate, persisted sink, has been rolled out across all operators. See this https://docs.stackable.tech/home/stable/contributor/adr/ADR023-product-image-selection.html[ADR] and this https://docs.stackable.tech/home/stable/concepts/product_image_selection.html[concepts page] for more information.
+
+Service Type::
+
+The Service type can now be specified: this enables a later switch to using ListenerClasses for the exposure of Services. This change is breaking, because - for security reasons - the default is set to the cluster-internal ListenerClass. A cluster can be made accessible from outside of Kubernetes by setting clusterConfig.listenerClass to external-unstable or external-stable.
+
+New Versions::
+
+No new product versions are supported in this platform release.
+
+Deprecated Versions::
+
+No product versions have been deprecated in platform release.
+
+Product features::
+
+Additionally, there are some individual product features that are noteworthy:
+
+* https://github.com/stackabletech/airflow-operator/issues/177[Apache Airflow: load DAGs per git-sync]
+* https://github.com/stackabletech/hdfs-operator/issues/289[Apache HDFS: Rework HDFS TLS / Auth structs]
+* https://github.com/stackabletech/trino-operator/issues/395[Trino: Rework HDFS TLS / Auth structs]
+* https://github.com/stackabletech/secret-operator/issues/243[Secret operator: support running the Secret operator in rootless mode  ]
+* https://github.com/stackabletech/secret-operator/pull/235[Secret operator: allow configuring CSI docker images ]
+* https://github.com/stackabletech/secret-operator/issues/4[Secret operator: Kerberos keytab provisioning ]
+
+=== stackablectl
+
+The following have been added to `stackablectl`:
+
+==== Trino-iceberg demo
+
+This is a condensed form of the https://docs.stackable.tech/stackablectl/stable/demos/data-lakehouse-iceberg-trino-spark.html[data-lakehouse-iceberg-trino-spark] demo focusing on using the lakehouse to store and modify data. It focuses on the Trino and Iceberg integration and should run on a local workstation.
+
+==== Jupyterhub/Spark demo
+
+This demo showcases the integration between Jupyter and Apache Hadoop deployed on the Stackable Data Platform (SDP) Kubernetes cluster. This demo can be installed on most cloud managed Kubernetes clusters as well as on premise or on a reasonably provisioned laptop.
+
+
+The xref:stackablectl::quickstart.adoc[quickstart guide] shows how to get started with `stackablectl`. This link lists the xref:stackablectl::demos/index.adoc[available demos].
+
+
+=== Supported Kubernetes versions
+This release supports the following Kubernetes versions:
+
+* `1.25`
+* `1.24`
+* `1.23`
+* `1.22`
+
+==== Breaking changes
+This release brings with it several breaking changes needed to future-proof the platform. You will need to adapt your existing CRDs due to the following breaking changes:
+
+==== All Stackable Operators
+
+As mentioned above, specifying the service type is a breaking for all operators.
+The default value is set to the `cluster-internal` `ListenerClass`: if you need your cluster to be accessible from outside of Kubernetes then set `clusterConfig.listenerClass`
+  to `external-unstable` or `external-stable`
+
+```
+spec:
+  image:
+    productVersion: "396"
+    stackableVersion: "23.4.0"
+  clusterConfig:
+    listenerClass: external-unstable
+```
+This is an example for Trino, but it is the same pattern across all operators.
+
+==== Stackable Operator for Apache HBase
+
+Consolidated top level configuration to clusterConfig
+
+* https://github.com/stackabletech/druid-operator/pull/358[Tools image replaced with Druid image]
+
+==== Stackable Operator for Apache Hadoop
+
+Consolidated top level configuration to clusterConfig
+
+* [Breaking] Moved top level config option to clusterConfig (#326).
+
+==== Stackable Operator for Apache Nifi
+
+[BREAKING]: Renamed global config to clusterConfig (#417)
+[BREAKING]: Moved zookeeper_configmap_name to clusterConfig (#417)
+
+==== Stackable Operator for Apache Spark
+
+[BREAKING]: Dropped support for old spec.{driver,executor}.nodeSelector field. Use spec.{driver,executor}.affinity.nodeSelector instead (#217)
+
+
+=== Upgrade from 22.11
+
+==== Using stackablectl
+You can list the available releases as follows
+
+[source,console]
+----
+$ stackablectl release list
+RELEASE            RELEASE DATE   DESCRIPTION
+23.1               2023-01-27     Fourth release focusing on image selection and logging
+22.11              2022-11-08     Third release focusing on resource management
+22.09              2022-09-09     Second release focusing on security and OpenShift support
+22.06              2022-06-30     First official release of the Stackable Data Platform
+----
+
+To uninstall the `22.11` release run
+
+[source,console]
+----
+$ stackablectl release uninstall 22.11
+[INFO ] Uninstalling release 22.11
+[INFO ] Uninstalling airflow operator
+[INFO ] Uninstalling commons operator
+# ...
+----
+
+Afterwards you will need to update the CustomResourceDefinitions (CRDs) installed by the Stackable Platform.
+The reason for this is that helm will uninstall the operators but not the CRDs.
+
+[source,console]
+----
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/airflow-operator/23.1.0/deploy/helm/airflow-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/commons-operator/23.1.0/deploy/helm/commons-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/druid-operator/23.1.0/deploy/helm/druid-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/hbase-operator/23.1.0/deploy/helm/hbase-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/hdfs-operator/23.1.0/deploy/helm/hdfs-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/hive-operator/23.1.0/deploy/helm/hive-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/kafka-operator/23.1.0/deploy/helm/kafka-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/nifi-operator/23.1.0/deploy/helm/nifi-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/opa-operator/23.1.0/deploy/helm/opa-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/secret-operator/23.1.0/deploy/helm/secret-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/23.1.0/deploy/helm/spark-k8s-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/superset-operator/23.1.0/deploy/helm/superset-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/trino-operator/23.1.0/deploy/helm/trino-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/23.1.0/deploy/helm/zookeeper-operator/crds/crds.yaml
+----
+
+To install the `23.1` release run
+
+[source,console]
+----
+$ stackablectl release install 23.1
+[INFO ] Installing release 23.1
+[INFO ] Installing airflow operator in version 23.1.0
+[INFO ] Installing commons operator in version 23.1.0
+[INFO ] Installing druid operator in version 23.1.0
+[INFO ] Installing hbase operator in version 23.1.0
+[INFO ] Installing hdfs operator in version 23.1.0
+[INFO ] Installing hive operator in version 23.1.0
+[INFO ] Installing kafka operator in version 23.1.0
+[INFO ] Installing listener operator in version 23.1.0
+[INFO ] Installing nifi operator in version 23.1.0
+[INFO ] Installing opa operator in version 23.1.0
+[INFO ] Installing secret operator in version 23.1.0
+[INFO ] Installing spark-k8s operator in version 23.1.0
+[INFO ] Installing superset operator in version 23.1.0
+[INFO ] Installing trino operator in version 23.1.0
+[INFO ] Installing zookeeper operator in version 23.1.0
+# ...
+----
+
+==== Using helm
+Use `helm list` to list the currently installed operators.
+
+You can use the following command to uninstall all operators that are part of the release 22.11:
+
+[source,console]
+----
+$ helm uninstall airflow-operator commons-operator druid-operator hbase-operator hdfs-operator hive-operator kafka-operator nifi-operator opa-operator secret-operator spark-k8s-operator superset-operator trino-operator zookeeper-operator
+release "airflow-operator" uninstalled
+release "commons-operator" uninstalled
+# ...
+----
+
+Afterwards you will need to update the CustomResourceDefinitions (CRDs) installed by the Stackable Platform.
+This is because helm will uninstall the operators but not the CRDs.
+
+[source,console]
+----
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/airflow-operator/23.1.0/deploy/helm/airflow-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/commons-operator/23.1.0/deploy/helm/commons-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/druid-operator/23.1.0/deploy/helm/druid-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/hbase-operator/23.1.0/deploy/helm/hbase-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/hdfs-operator/23.1.0/deploy/helm/hdfs-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/hive-operator/23.1.0/deploy/helm/hive-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/kafka-operator/23.1.0/deploy/helm/kafka-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/nifi-operator/23.1.0/deploy/helm/nifi-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/opa-operator/23.1.0/deploy/helm/opa-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/secret-operator/23.1.0/deploy/helm/secret-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/23.1.0/deploy/helm/spark-k8s-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/superset-operator/23.1.0/deploy/helm/superset-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/trino-operator/23.1.0/deploy/helm/trino-operator/crds/crds.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/23.1.0/deploy/helm/zookeeper-operator/crds/crds.yaml
+----
+
+To install the release 23.1 run
+
+[source,console]
+----
+$ helm repo add stackable-stable https://repo.stackable.tech/repository/helm-stable/
+$ helm repo update stackable-stable
+$ helm install --wait airflow-operator stackable-stable/airflow-operator --version 23.1.0
+$ helm install --wait commons-operator stackable-stable/commons-operator --version 23.1.0
+$ helm install --wait druid-operator stackable-stable/druid-operator --version 23.1.0
+$ helm install --wait hbase-operator stackable-stable/hbase-operator --version 23.1.0
+$ helm install --wait hdfs-operator stackable-stable/hdfs-operator --version 23.1.0
+$ helm install --wait hive-operator stackable-stable/hive-operator --version 23.1.0
+$ helm install --wait kafka-operator stackable-stable/kafka-operator --version 23.1.0
+$ helm install --wait listener-operator stackable-stable/listener-operator --version 23.1.0
+$ helm install --wait nifi-operator stackable-stable/nifi-operator --version 23.1.0
+$ helm install --wait opa-operator stackable-stable/opa-operator --version 23.1.0
+$ helm install --wait secret-operator stackable-stable/secret-operator --version 23.1.0
+$ helm install --wait spark-k8s-operator stackable-stable/spark-k8s-operator --version 23.1.0
+$ helm install --wait superset-operator stackable-stable/superset-operator --version 23.1.0
+$ helm install --wait trino-operator stackable-stable/trino-operator --version 23.1.0
+$ helm install --wait zookeeper-operator stackable-stable/zookeeper-operator --version 23.1.0
+----
+
+
 == Release 23.1
 
 This release marks a major change in the way operator and product images are versioned. Up until now, operators were versioned independently of each other and a platform release was a loosely coupled set of operator versions. This had major disadvantages both technical and organisational.
