@@ -17,7 +17,7 @@ content:
   sources: 
     - url: https://github.com/stackabletech/documentation.git
       branches:
-        - fix/spark-links
+        - main
         - release/23.1
         - release/22.11
         - release/22.09
@@ -132,7 +132,7 @@ content:
     - url: https://github.com/stackabletech/spark-k8s-operator.git
       start_path: docs
       branches:
-        - docs/new-usage-and-index
+        - main
         - release-23.1
         - distributed-component-compat
       tags:
