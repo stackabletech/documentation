@@ -16,7 +16,7 @@ content:
   sources:
     - url: ./
       branches: 
-        - main
+        - HEAD
         - release/23.1
         - release/22.11
         - release/22.09
@@ -60,7 +60,7 @@ content:
         - old-release-docs/0.5
       tags:
         - docs/0.4
-    - url: ../druid-operator
+    - url: https://github.com/stackabletech/druid-operator.git
       start_path: docs
       branches:
         - main
@@ -128,7 +128,7 @@ content:
         - docs/0.11
         - docs/0.10
         - docs/0.9
-    - url:  https://github.com/stackabletech/spark-k8s-operator.git
+    - url: https://github.com/stackabletech/spark-k8s-operator.git
       start_path: docs
       branches:
         - main
@@ -149,10 +149,10 @@ content:
         - old-release-docs/0.7
         - old-release-docs/0.6
         - old-release-docs/0.5
-    - url: ../trino-operator
+    - url: https://github.com/stackabletech/trino-operator.git
       start_path: docs
       branches:
-        - docs/cleanup
+        - main
         - release-23.1
         - distributed-component-compat
       tags:
