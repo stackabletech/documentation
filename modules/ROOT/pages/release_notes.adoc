@@ -74,6 +74,13 @@ This release supports the following Kubernetes versions:
 * `1.24`
 * `1.23` (it is planned to discontinue support for this version in the next release)
 
+=== Supported OpenShift versions
+
+This release supports the following OpenShift versions:
+
+* `4.11`
+* `4.10`
+
 === Breaking changes
 
 You will need to adapt your existing CRDs due to the following breaking changes detailed below.
