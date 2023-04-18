@@ -16,7 +16,7 @@ Operators of the Stackable Data Platform create, manage and delete Kubernetes re
 
 Default / Custom Affinities::
 
-In Kubernetes there are different ways to influence how Pods are assigned to Nodes. In some cases it makes sense to co-locate certain services that talk a lot to each other, such as HBase regionservers with HDFS datanodes. In other cases it makes sense to distribute the Pods among as much Nodes as possible. There can also be some additional requirements, such as placing important services - such as HDFs namenode - in different racks, datacenter rooms or even datacenters. This release supports default affinities that should suffice for many scenarios out-of-the box as well as enabling the configuration of custom affinity rules at a role and/or role-group level. See this https://docs.stackable.tech/home/stable/contributor/adr/ADR026-affinities[ADR] for more information.
+In Kubernetes there are different ways to influence how Pods are assigned to Nodes. In some cases it makes sense to co-locate certain services that talk a lot to each other, such as HBase regionservers with HDFS datanodes. In other cases it makes sense to distribute the Pods among as many Nodes as possible. There may also be additional requirements e.g. placing important services - such as HDFS namenodes - in different racks, datacenter rooms or even datacenters. This release supports default affinities that should suffice for many scenarios out-of-the box, as well as enabling the configuration of custom affinity rules at a role and/or role-group level. See this https://docs.stackable.tech/home/stable/contributor/adr/ADR026-affinities[ADR] for more information.
 
 Log Aggregation::
 
@@ -24,7 +24,7 @@ The logging framework (added to the platform in Release 23.1) that offers a cons
 
 Service Type::
 
-The Service type can now be specified: this enables a later switch to using ListenerClasses for the exposure of Services. This change is breaking, because - for security reasons - the default is set to the cluster-internal ListenerClass. A cluster can be made accessible from outside of Kubernetes by setting clusterConfig.listenerClass to external-unstable or external-stable.
+The Service type can now be specified: this enables a later switch to using ListenerClasses for the exposure of Services. This change is breaking: for security reasons the default is set to the cluster-internal ListenerClass. A cluster can be made accessible from outside of Kubernetes by setting clusterConfig.listenerClass to external-unstable or external-stable.
 
 New Versions::
 
@@ -32,7 +32,7 @@ No new product versions are supported in this platform release.
 
 Deprecated Versions::
 
-No product versions have been deprecated in platform release.
+No product versions have been deprecated in this platform release.
 
 Product features::
 
@@ -51,7 +51,7 @@ The following have been added to `stackablectl`:
 
 ==== Trino-iceberg demo
 
-This is a condensed form of the https://docs.stackable.tech/stackablectl/stable/demos/data-lakehouse-iceberg-trino-spark.html[data-lakehouse-iceberg-trino-spark] demo focusing on using the lakehouse to store and modify data. It focuses on the Trino and Iceberg integration and should run on a local workstation.
+This is a condensed form of the https://docs.stackable.tech/stackablectl/stable/demos/data-lakehouse-iceberg-trino-spark.html[data-lakehouse-iceberg-trino-spark] demo focusing on using the lakehouse to store and modify data. It demonstrates how to integrate Trino and Iceberg and should run on a local workstation.
 
 ==== Jupyterhub/Spark demo
 
@@ -70,13 +70,13 @@ This release supports the following Kubernetes versions:
 * `1.23`
 
 ==== Breaking changes
-You will need to adapt your existing CRDs due to the following breaking changes:
+You will need to adapt your existing CRDs due to the following breaking changes detailed below.
 
 ==== All Stackable Operators
 
-As mentioned above, specifying the service type is a breaking for all operators.
-The default value is set to the `cluster-internal` `ListenerClass`: if you need your cluster to be accessible from outside of Kubernetes then set `clusterConfig.listenerClass`
-  to `external-unstable` or `external-stable`
+As mentioned above, specifying the service type is a breaking change for all operators.
+The default value is set to the `cluster-internal` `ListenerClass`: if the cluster requires external access outside of Kubernetes then set `clusterConfig.listenerClass`
+  to `external-unstable` or `external-stable`:
 
 ```
 spec:
@@ -86,7 +86,7 @@ spec:
   clusterConfig:
     listenerClass: external-unstable
 ```
-This is an example for Trino, but it is the same pattern across all operators.
+This is an example for Trino, but the pattern is the same across all operators.
 
 ==== Stackable Operator for Apache HBase
 
@@ -159,7 +159,7 @@ spec:
 
 ==== Stackable Operator for Apache Spark-k8s
 
-* Dropped support for old spec.{driver,executor}.nodeSelector field. Use spec.{driver,executor}.affinity.nodeSelector instead - part of https://github.com/stackabletech/issues/issues/323[Deploy default and support custom affinities in our operators]
+* Support has been dropped for the use of the `spec.{driver,executor}.nodeSelector` field. Use `spec.{driver,executor}.affinity.nodeSelector` instead - this is part of https://github.com/stackabletech/issues/issues/323[Deploy default and support custom affinities in our operators]
 
 CRDs should be changed from e.g.
 
