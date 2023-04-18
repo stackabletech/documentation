@@ -259,7 +259,12 @@ $ stackablectl release uninstall 23.1
 ----
 
 Afterwards you will need to delete the CustomResourceDefinitions (CRDs) installed by the Stackable Platform.
-The reason for this is that helm will uninstall the operators but not the CRDs. This best done by deleting the CRDS rather than using `kubectl apply`, as this will cause some annotations to be concatenated and eventually hit a field size limit.
+The reason for this is that helm will uninstall the operators but not the CRDs. This can be done in two ways:
+
+* by updating the CRDS with `kubectl apply`: this updates the definitions "in place" and is a less invasive approach. However, this concatenates some of the annotations so as to keep track of cumulative changes, meaning that eventually a field size limit will be reached. Then the CRD has to be deleted and re-created.
+* by deleting the CRDS with `kubectl delete`: this avoids the field size problem, but should be used with care, especially with actively running clusters.
+
+The example below will delete the CRDs before rolling out the new ones that are part of the release.
 
 [source]
 ----
