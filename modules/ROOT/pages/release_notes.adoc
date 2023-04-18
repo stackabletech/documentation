@@ -5,7 +5,7 @@ Periodically a platform release is made, including all components of the platfor
 
 == Release 23.4
 
-The focus in this platform release is on the support of default/custom affinities and the status field, as well as the rollout of log aggregation across the remaining operators. Additionally, all operators have been adapted and tested for compatibility with Openshift clusters (versions 4.10 and 4.11). Several operators from the 23.1 platform release were already certified against Openshift: over the coming weeks this certification process will now be extended across all operators and will be specific to each platform-release.
+The focus in this platform release is on the support of default/custom affinities and the status field, as well as the rollout of log aggregation across the remaining operators. Additionally, all operators have been adapted and tested for compatibility with Openshift clusters (versions 4.10 and 4.11). Several operators from the 23.1 platform release were already certified against Openshift. Over the coming weeks this certification process will now be extended across all operators and will be specific to each platform-release.
 
 === New / extended platform features
 The following new major platform features were added:
