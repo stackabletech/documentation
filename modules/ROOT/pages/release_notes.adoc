@@ -5,7 +5,7 @@ Periodically a platform release is made, including all components of the platfor
 
 == Release 23.4
 
-The focus in this platform release is on the support of default/custom affinities and the status field as well as the rollout of log aggregation across the remaining operators.
+The focus in this platform release is on the support of default/custom affinities and the status field, as well as the rollout of log aggregation across the remaining operators. Additionally, all operators have been adapted and tested for compatibility with Openshift clusters (versions 4.10 and 4.11). Several operators from the 23.1 platform release were already certified against Openshift: over the coming weeks this certification process will now be extended across all operators and will be specific to each platform-release.
 
 === New/extended platform features
 The following new major platform features were added:
@@ -41,9 +41,9 @@ Additionally, there are some individual product features that are noteworthy:
 * https://github.com/stackabletech/airflow-operator/issues/177[Apache Airflow: load DAGs per git-sync]
 * https://github.com/stackabletech/hdfs-operator/issues/289[Apache HDFS: Rework HDFS TLS / Auth structs]
 * https://github.com/stackabletech/trino-operator/issues/395[Trino: Rework HDFS TLS / Auth structs]
-* https://github.com/stackabletech/secret-operator/issues/243[Secret operator: support running the Secret operator in rootless mode  ]
-* https://github.com/stackabletech/secret-operator/pull/235[Secret operator: allow configuring CSI docker images ]
-* https://github.com/stackabletech/secret-operator/issues/4[Secret operator: Kerberos keytab provisioning ]
+* https://github.com/stackabletech/secret-operator/issues/243[Secret operator: support running the Secret operator in rootless mode ]
+* https://github.com/stackabletech/secret-operator/pull/235[Secret operator: allow configuring CSI docker images]
+* https://github.com/stackabletech/secret-operator/issues/4[Secret operator: Kerberos keytab provisioning]
 
 === stackablectl
 
@@ -70,7 +70,7 @@ This release supports the following Kubernetes versions:
 * `1.23`
 
 ==== Breaking changes
-This release brings with it several breaking changes needed to future-proof the platform. You will need to adapt your existing CRDs due to the following breaking changes:
+You will need to adapt your existing CRDs due to the following breaking changes:
 
 ==== All Stackable Operators
 
@@ -90,27 +90,141 @@ This is an example for Trino, but it is the same pattern across all operators.
 
 ==== Stackable Operator for Apache HBase
 
-Consolidated top level configuration to clusterConfig
+* https://github.com/stackabletech/hbase-operator/issues/329[Consolidated top level configuration to clusterConfig]
 
-* https://github.com/stackabletech/druid-operator/pull/358[Tools image replaced with Druid image]
+CRDs should be changed from e.g.
+
+```
+spec:
+  ...
+  hdfsConfigMapName: simple-hdfs
+  zookeeperConfigMapName: simple-znode
+```
+
+to:
+
+```
+spec:
+  ...
+  clusterConfig:
+    hdfsConfigMapName: simple-hdfs
+    zookeeperConfigMapName: simple-znode
+```
 
 ==== Stackable Operator for Apache Hadoop
 
-Consolidated top level configuration to clusterConfig
+* https://github.com/stackabletech/hdfs-operator/issues/289[Consolidated top level configuration to clusterConfig]
 
-* [Breaking] Moved top level config option to clusterConfig (#326).
+CRDs should be changed from e.g.
+
+```
+spec:
+  ...
+  zookeeperConfigMapName: simple-hdfs-znode
+  dfsReplication: 3
+  vectorAggregatorConfigMapName: vector-aggregator-discovery
+```
+
+to:
+
+```
+spec:
+  ...
+  clusterConfig:
+    zookeeperConfigMapName: simple-hdfs-znode
+    dfsReplication: 1
+    vectorAggregatorConfigMapName: vector-aggregator-discovery
+```
 
 ==== Stackable Operator for Apache Nifi
 
-[BREAKING]: Renamed global config to clusterConfig (#417)
-[BREAKING]: Moved zookeeper_configmap_name to clusterConfig (#417)
+* https://github.com/stackabletech/nifi-operator/pull/417[Consolidated top level configuration to clusterConfig]
 
-==== Stackable Operator for Apache Spark
+CRDs should be changed from e.g.
 
-[BREAKING]: Dropped support for old spec.{driver,executor}.nodeSelector field. Use spec.{driver,executor}.affinity.nodeSelector instead (#217)
+```
+spec:
+  ...
+  zookeeperConfigMapName: simple-nifi-znode
+```
+
+to:
+
+```
+spec:
+  ...
+  clusterConfig:
+    zookeeperConfigMapName: simple-nifi-znode
+```
+
+==== Stackable Operator for Apache Spark-k8s
+
+* Dropped support for old spec.{driver,executor}.nodeSelector field. Use spec.{driver,executor}.affinity.nodeSelector instead - part of https://github.com/stackabletech/issues/issues/323[Deploy default and support custom affinities in our operators]
+
+CRDs should be changed from e.g.
+
+```
+spec:
+  ...
+  driver:
+    nodeSelector:
+```
+
+to:
+
+```
+spec:
+  ...
+  driver:
+    affinity:
+```
+
+==== Stackable Operator for Apache Trino
+
+* https://github.com/stackabletech/trino-operator/issues/395[Consolidated top level configuration to clusterConfig]
+
+CRDs should be changed from e.g.
+
+```
+spec:
+  ...
+  opa:
+    configMapName: simple-opa
+    package: trino
+  authentication:
+    method:
+      multiUser:
+        userCredentialsSecret:
+          name: simple-trino-users-secret
+  catalogLabelSelector:
+    matchLabels:
+      trino: simple-trino
+  vectorAggregatorConfigMapName: vector-aggregator-discovery
+```
+
+to:
+
+```
+spec:
+  ...
+  clusterConfig:
+    authentication:
+      method:
+        multiUser:
+          userCredentialsSecret:
+            name: simple-trino-users-secret
+    authorization:
+      opa:
+        configMapName: simple-opa
+        package: trino
+    catalogLabelSelector:
+      matchLabels:
+        trino: simple-trino
+    vectorAggregatorConfigMapName: vector-aggregator-discovery
+```
 
 
-=== Upgrade from 22.11
+=== Upgrade from 23.1
 
 ==== Using stackablectl
 You can list the available releases as follows
