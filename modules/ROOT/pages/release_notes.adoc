@@ -28,7 +28,7 @@ The logging framework (added to the platform in Release 23.1) offers a consisten
 
 Service Type::
 
-The Service type can now be specified in all products. This currently differentiates between the internal ClusterIP and the external NodePort and is forward compatible with the [ListenerClass](https://docs.stackable.tech/home/stable/listener-operator/listenerclass.html) for the automatic exposure of Services via the Listener Operator. This change is breaking. For security reasons the default is set to the cluster-internal (ClusterIP) ListenerClass. A cluster can be made accessible from outside of Kubernetes by setting clusterConfig.listenerClass to external-unstable (NodePort) or external-stable (LoadBalancer).
+The Service type can now be specified in all products. This currently differentiates between the internal ClusterIP and the external NodePort and is forward compatible with the [ListenerClass](https://docs.stackable.tech/home/stable/listener-operator/listenerclass.html) for the automatic exposure of Services via the Listener Operator. This change not backwards compatible with older platform releases. For security reasons, the default is set to the cluster-internal (ClusterIP) ListenerClass. A cluster can be exposed outside of Kubernetes by setting clusterConfig.listenerClass to external-unstable (NodePort) or external-stable (LoadBalancer).
 
 New Versions::
 
