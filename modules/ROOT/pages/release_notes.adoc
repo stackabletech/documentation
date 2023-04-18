@@ -10,6 +10,10 @@ The focus in this platform release is on the support of default/custom affinitie
 === New / extended platform features
 The following new major platform features were added:
 
+Cluster Operation::
+
+The first part of https://docs.stackable.tech/home/stable/concepts/cluster_operations.html[ClusterOperations] was rolled out in every applicable Stackable Operator. This supports pausing the cluster reconciliation and stopping the cluster completely. Pausing reconciliation will not apply any changes to the Kubernetes resources (e.g. when changing the custom resource). Stopping the cluster will set all replicas of StatefulSets, Deployments or DaemonSets to zero and therefore deleting all Pods belonging to that cluster (not the PVCs).
+
 Status Field::
 
 Operators of the Stackable Data Platform create, manage and delete Kubernetes resources: in order to easily query the health state of the products - and react accordingly - Stackable Operators use the several predefined condition types to capture different aspects of a product's availability. See this https://docs.stackable.tech/home/stable/contributor/adr/ADR027-status[ADR] for more information.
