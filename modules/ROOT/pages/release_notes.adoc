@@ -62,6 +62,7 @@ The xref:stackablectl::quickstart.adoc[quickstart guide] shows how to get starte
 
 
 === Supported Kubernetes versions
+
 This release supports the following Kubernetes versions:
 
 * `1.26`
@@ -70,6 +71,7 @@ This release supports the following Kubernetes versions:
 * `1.23`
 
 ==== Breaking changes
+
 You will need to adapt your existing CRDs due to the following breaking changes detailed below.
 
 ==== All Stackable Operators
