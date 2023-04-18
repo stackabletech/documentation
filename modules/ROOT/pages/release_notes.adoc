@@ -24,7 +24,7 @@ In Kubernetes there are different ways to influence how Pods are assigned to Nod
 
 Log Aggregation::
 
-The logging framework (added to the platform in Release 23.1) offers a consistent custom resource configuration and a separate, persisted sink (the default implementation is Opensearch but is interchangeable). This has now been rolled out across all operators. See this https://docs.stackable.tech/home/stable/contributor/adr/adr025-logging_architecture[ADR] and this https://docs.stackable.tech/home/stable/concepts/logging.html[concepts page] for more information.
+The logging framework (added to the platform in Release 23.1) offers a consistent custom resource configuration and a separate, persisted sink (defaulting to OpenSearch). This has now been rolled out across all products. See this https://docs.stackable.tech/home/stable/contributor/adr/adr025-logging_architecture[ADR] and this https://docs.stackable.tech/home/stable/concepts/logging.html[concepts page] for more information.
 
 Service Type::
 
