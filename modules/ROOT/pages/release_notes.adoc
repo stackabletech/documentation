@@ -64,10 +64,10 @@ The xref:stackablectl::quickstart.adoc[quickstart guide] shows how to get starte
 === Supported Kubernetes versions
 This release supports the following Kubernetes versions:
 
+* `1.26`
 * `1.25`
 * `1.24`
 * `1.23`
-* `1.22`
 
 ==== Breaking changes
 This release brings with it several breaking changes needed to future-proof the platform. You will need to adapt your existing CRDs due to the following breaking changes:
