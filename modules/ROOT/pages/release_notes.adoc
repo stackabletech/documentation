@@ -16,7 +16,7 @@ The first part of https://docs.stackable.tech/home/stable/concepts/cluster_opera
 
 Status Field::
 
-Operators of the Stackable Data Platform create, manage and delete Kubernetes resources: in order to easily query the health state of the products - and react accordingly - Stackable Operators use the several predefined condition types to capture different aspects of a product's availability. See this https://docs.stackable.tech/home/stable/contributor/adr/ADR027-status[ADR] for more information.
+Operators of the Stackable Data Platform create, manage and delete Kubernetes resources: in order to easily query the health state of the products - and react accordingly - Stackable Operators use several predefined condition types to capture different aspects of a product's availability. See this https://docs.stackable.tech/home/stable/contributor/adr/ADR027-status[ADR] for more information.
 
 Default / Custom Affinities::
 
