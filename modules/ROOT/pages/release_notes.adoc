@@ -253,7 +253,7 @@ $ stackablectl release uninstall 23.1
 ----
 
 Afterwards you will need to delete the CustomResourceDefinitions (CRDs) installed by the Stackable Platform.
-The reason for this is that helm will uninstall the operators but not the CRDs. This best done by deleting the CRDS rather than using kubectl apply, as this will cause some annotations to be concatenated and eventually hit a field size limit.
+The reason for this is that helm will uninstall the operators but not the CRDs. This best done by deleting the CRDS rather than using `kubectl apply`, as this will cause some annotations to be concatenated and eventually hit a field size limit.
 
 [source]
 ----
@@ -309,7 +309,7 @@ $ stackablectl release install 23.4
 ==== Using helm
 Use `helm list` to list the currently installed operators.
 
-You can use the following command to uninstall all operators that are part of the release 23.1:
+You can use the following command to uninstall all operators that are part of the `23.1` release:
 
 [source,console]
 ----
@@ -341,27 +341,27 @@ kubectl delete -f https://raw.githubusercontent.com/stackabletech/trino-operator
 kubectl delete -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/23.1.0/deploy/helm/zookeeper-operator/crds/crds.yaml
 ----
 
-To install the release 23.4 run
+To install the `23.4` release run
 
 [source,console]
 ----
 helm repo add stackable-stable https://repo.stackable.tech/repository/helm-stable/
 helm repo update stackable-stable
-helm install --wait airflow-operator stackable-stable/airflow-operator --version 23.1.0
-helm install --wait commons-operator stackable-stable/commons-operator --version 23.1.0
-helm install --wait druid-operator stackable-stable/druid-operator --version 23.1.0
-helm install --wait hbase-operator stackable-stable/hbase-operator --version 23.1.0
-helm install --wait hdfs-operator stackable-stable/hdfs-operator --version 23.1.0
-helm install --wait hive-operator stackable-stable/hive-operator --version 23.1.0
-helm install --wait kafka-operator stackable-stable/kafka-operator --version 23.1.0
-helm install --wait listener-operator stackable-stable/listener-operator --version 23.1.0
-helm install --wait nifi-operator stackable-stable/nifi-operator --version 23.1.0
-helm install --wait opa-operator stackable-stable/opa-operator --version 23.1.0
-helm install --wait secret-operator stackable-stable/secret-operator --version 23.1.0
-helm install --wait spark-k8s-operator stackable-stable/spark-k8s-operator --version 23.1.0
-helm install --wait superset-operator stackable-stable/superset-operator --version 23.1.0
-helm install --wait trino-operator stackable-stable/trino-operator --version 23.1.0
-helm install --wait zookeeper-operator stackable-stable/zookeeper-operator --version 23.1.0
+helm install --wait airflow-operator stackable-stable/airflow-operator --version 23.4.0
+helm install --wait commons-operator stackable-stable/commons-operator --version 23.4.0
+helm install --wait druid-operator stackable-stable/druid-operator --version 23.4.0
+helm install --wait hbase-operator stackable-stable/hbase-operator --version 23.4.0
+helm install --wait hdfs-operator stackable-stable/hdfs-operator --version 23.4.0
+helm install --wait hive-operator stackable-stable/hive-operator --version 23.4.0
+helm install --wait kafka-operator stackable-stable/kafka-operator --version 23.4.0
+helm install --wait listener-operator stackable-stable/listener-operator --version 23.4.0
+helm install --wait nifi-operator stackable-stable/nifi-operator --version 23.4.0
+helm install --wait opa-operator stackable-stable/opa-operator --version 23.4.0
+helm install --wait secret-operator stackable-stable/secret-operator --version 23.4.0
+helm install --wait spark-k8s-operator stackable-stable/spark-k8s-operator --version 23.4.0
+helm install --wait superset-operator stackable-stable/superset-operator --version 23.4.0
+helm install --wait trino-operator stackable-stable/trino-operator --version 23.4.0
+helm install --wait zookeeper-operator stackable-stable/zookeeper-operator --version 23.4.0
 ----
 
 == Release 23.1
