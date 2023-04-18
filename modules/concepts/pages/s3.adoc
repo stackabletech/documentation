@@ -3,7 +3,7 @@
 // -------------- Intro ----------------
 
 Many of the tools on the Stackable platform integrate with S3 storage in some way.
-For example Druid can xref:druid:usage-guide/ingestion.adoc#s3[ingest data from S3] and also xref:druid:usage-guide/deep-storage.adoc#s3[use S3 as a backend for deep storage], Spark can use an xref:spark-k8s:usage.adoc#_s3_bucket_specification[S3 bucket] to store application files and data.
+For example Druid can xref:druid:usage-guide/ingestion.adoc#s3[ingest data from S3] and also xref:druid:usage-guide/deep-storage.adoc#s3[use S3 as a backend for deep storage], Spark can use an xref:spark-k8s:usage-guide/s3.adoc[S3 bucket] to store application files and data.
 
 == S3Connection and S3Bucket
 // introducing the objects

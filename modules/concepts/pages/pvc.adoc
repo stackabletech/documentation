@@ -84,7 +84,7 @@ Managed Kubernetes clusters will normally have a default storage implementation 
 The xref:airflow:index.adoc[Airflow operator] can use a xref:airflow:usage.adoc#_via_persistentvolumeclaim[PersistentVolumeClaim for externally-loaded airflow jobs], known as Direct Acyclic Graphs (DAGs), as shown in this https://github.com/stackabletech/airflow-operator/blob/main/examples/simple-airflow-cluster-dags-pvc.yaml[example]. Airflow expects that all components (webserver, scheduler and workers) have access to the DAG folder, so the PersistentVolumeClaim either has to be accessible with the `ReadWriteMany` access mode or node selection should be declared to ensure all components run on the same node.
 
 === Spark-k8s
-Users of the xref:spark-k8s:index.adoc[Spark-k8s operator] have a variety of ways to manage SparkApplication dependencies, one of which is to xref:spark-k8s:usage.adoc#_pyspark_externally_located_dataset_artifact_available_via_pvcvolume_mount[mount resources on a PersistentVolumeClaim]. An example is shown https://github.com/stackabletech/spark-k8s-operator/blob/main/examples/ny-tlc-report.yaml[here].
+Users of the xref:spark-k8s:index.adoc[Spark-k8s operator] have a variety of ways to manage SparkApplication dependencies, one of which is to xref:spark-k8s:usage-guide/examples.adoc#_pyspark_externally_located_dataset_artifact_available_via_pvcvolume_mount[mount resources on a PersistentVolumeClaim]. An example is shown https://github.com/stackabletech/spark-k8s-operator/blob/main/examples/ny-tlc-report.yaml[here].
 
 == Further reading
 
