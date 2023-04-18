@@ -16,7 +16,7 @@ Operators of the Stackable Data Platform create, manage and delete Kubernetes re
 
 Default / Custom Affinities::
 
-In Kubernetes there are different ways to influence how Pods are assigned to Nodes. In some cases it makes sense to co-locate certain services that talk a lot to each other, such as HBase regionservers with HDFS datanodes. In other cases it makes sense to distribute the Pods among as many Nodes as possible. There may also be additional requirements e.g. placing important services - such as HDFS namenodes - in different racks, datacenter rooms or even datacenters. This release supports default affinities that should suffice for many scenarios out-of-the box, as well as enabling the configuration of custom affinity rules at a role and/or role-group level. See this https://docs.stackable.tech/home/stable/contributor/adr/ADR026-affinities[ADR] for more information.
+In Kubernetes there are different ways to influence how Pods are assigned to Nodes. In some cases it makes sense to co-locate certain services that communicate a lot with each other, such as HBase regionservers with HDFS datanodes. In other cases it makes sense to distribute the Pods among as many Nodes as possible. There may also be additional requirements e.g. placing important services - such as HDFS namenodes - in different racks, datacenter rooms or even datacenters. This release supports default affinities that should suffice for many scenarios out-of-the box, as well as enabling the configuration of custom affinity rules at a role and/or role-group level. See this https://docs.stackable.tech/home/stable/contributor/adr/ADR026-affinities[ADR] for more information.
 
 Log Aggregation::
 
