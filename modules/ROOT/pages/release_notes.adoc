@@ -12,23 +12,23 @@ The following new major platform features were added:
 
 Cluster Operation::
 
-The first part of https://docs.stackable.tech/home/stable/concepts/cluster_operations.html[ClusterOperations] was rolled out in every applicable Stackable Operator. This supports pausing the cluster reconciliation and stopping the cluster completely. Pausing reconciliation will not apply any changes to the Kubernetes resources (e.g. when changing the custom resource). Stopping the cluster will set all replicas of StatefulSets, Deployments or DaemonSets to zero and therefore deleting all Pods belonging to that cluster (not the PVCs).
+The first part of xref:concepts:cluster_operations.adoc[Cluster operations] was rolled out in every applicable Stackable Operator. This supports pausing the cluster reconciliation and stopping the cluster completely. Pausing reconciliation will not apply any changes to the Kubernetes resources (e.g. when changing the custom resource). Stopping the cluster will set all replicas of StatefulSets, Deployments or DaemonSets to zero and therefore deleting all Pods belonging to that cluster (not the PVCs).
 
 Status Field::
 
-Operators of the Stackable Data Platform create, manage and delete Kubernetes resources: in order to easily query the health state of the products - and react accordingly - Stackable Operators use several predefined condition types to capture different aspects of a product's availability. See this https://docs.stackable.tech/home/stable/contributor/adr/ADR027-status[ADR] for more information.
+Operators of the Stackable Data Platform create, manage and delete Kubernetes resources: in order to easily query the health state of the products - and react accordingly - Stackable Operators use several predefined condition types to capture different aspects of a product's availability. See this xref:contributor:adr/ADR027-status[ADR] for more information.
 
 Default / Custom Affinities::
 
-In Kubernetes there are different ways to influence how Pods are assigned to Nodes. In some cases it makes sense to co-locate certain services that communicate a lot with each other, such as HBase regionservers with HDFS datanodes. In other cases it makes sense to distribute the Pods among as many Nodes as possible. There may also be additional requirements e.g. placing important services - such as HDFS namenodes - in different racks, datacenter rooms or even datacenters. This release implements default affinities that should suffice for many scenarios out-of-the box, while also allowing for custom affinity rules at a role and/or role-group level. See this https://docs.stackable.tech/home/stable/contributor/adr/ADR026-affinities[ADR] for more information.
+In Kubernetes there are different ways to influence how Pods are assigned to Nodes. In some cases it makes sense to co-locate certain services that communicate a lot with each other, such as HBase regionservers with HDFS datanodes. In other cases it makes sense to distribute the Pods among as many Nodes as possible. There may also be additional requirements e.g. placing important services - such as HDFS namenodes - in different racks, datacenter rooms or even datacenters. This release implements default affinities that should suffice for many scenarios out-of-the box, while also allowing for custom affinity rules at a role and/or role-group level. See this xref:contributor:adr/ADR026-affinities.adoc[ADR] for more information.
 
 Log Aggregation::
 
-The logging framework (added to the platform in Release 23.1) offers a consistent custom resource configuration and a separate, persisted sink (defaulting to OpenSearch). This has now been rolled out across all products. See this https://docs.stackable.tech/home/stable/contributor/adr/adr025-logging_architecture[ADR] and this https://docs.stackable.tech/home/stable/concepts/logging.html[concepts page] for more information.
+The logging framework (added to the platform in Release 23.1) offers a consistent custom resource configuration and a separate, persisted sink (defaulting to OpenSearch). This has now been rolled out across all products. See this xref:contributor:adr/adr025-logging_architecture[ADR] and this xref:concepts:logging.adoc[concepts page] for more information.
 
 Service Type::
 
-The Service type can now be specified in all products. This currently differentiates between the internal ClusterIP and the external NodePort and is forward compatible with the [ListenerClass](https://docs.stackable.tech/home/stable/listener-operator/listenerclass.html) for the automatic exposure of Services via the Listener Operator. This change is not backwards compatible with older platform releases. For security reasons, the default is set to the cluster-internal (ClusterIP) ListenerClass. A cluster can be exposed outside of Kubernetes by setting clusterConfig.listenerClass to external-unstable (NodePort) or external-stable (LoadBalancer).
+The Service type can now be specified in all products. This currently differentiates between the internal ClusterIP and the external NodePort and is forward compatible with the xref:listener-operator:listenerclass.adoc[ListenerClass] for the automatic exposure of Services via the Listener Operator. This change is not backwards compatible with older platform releases. For security reasons, the default is set to the cluster-internal (ClusterIP) ListenerClass. A cluster can be exposed outside of Kubernetes by setting clusterConfig.listenerClass to external-unstable (NodePort) or external-stable (LoadBalancer).
 
 New Versions::
 
@@ -55,7 +55,7 @@ The following have been added to `stackablectl`:
 
 ==== Trino-iceberg demo
 
-This is a condensed form of the https://docs.stackable.tech/stackablectl/stable/demos/data-lakehouse-iceberg-trino-spark.html[data-lakehouse-iceberg-trino-spark] demo focusing on using the lakehouse to store and modify data. It demonstrates how to integrate Trino and Iceberg and should run on a local workstation.
+This is a condensed form of the xref:stackablectl::demos/data-lakehouse-iceberg-trino-spark.adoc[] demo focusing on using the lakehouse to store and modify data. It demonstrates how to integrate Trino and Iceberg and should run on a local workstation.
 
 ==== Jupyterhub/Spark demo
 
@@ -452,7 +452,7 @@ This illustrates how to set up logging for Zookeeper and browse the results in a
 
 ==== LDAP stack and tutorial
 
-LDAP support has now been added to multiple products. An explanation of the overall approach is given xref:concepts:authentication.adoc[here] but in order to make the configuration steps a little clearer a xref:tutorials:authentication_with_openldap.adoc[tutorial] has been added that uses a dedicated Stackable https://docs.stackable.tech/stackablectl/stable/commands/stack.html[stack] for OpenLDAP and shows its usage.
+LDAP support has now been added to multiple products. An explanation of the overall approach is given xref:concepts:authentication.adoc[here] but in order to make the configuration steps a little clearer a xref:tutorials:authentication_with_openldap.adoc[tutorial] has been added that uses a dedicated Stackable xref:stackablectl::commands/stack.adoc[stack] for OpenLDAP and shows its usage.
 
 
 The xref:stackablectl::quickstart.adoc[quickstart guide] shows how to get started with `stackablectl`. This link lists the xref:stackablectl::demos/index.adoc[available demos].
@@ -832,7 +832,7 @@ This is the third release of the Stackable Data Platform, which this time focuse
 The following new major platform features were added:
 
 CPU and memory limits configurable::
-The operators now https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/[request] resources from Kubernetes for the products and required CPU and memory can now also be configured for all products. If your product instances are less performant after the update, the new defaults might be set too low and we recommend to https://docs.stackable.tech/kafka/stable/usage.html#_resource_requests[set custom requests] for your cluster.
+The operators now https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/[request] resources from Kubernetes for the products and required CPU and memory can now also be configured for all products. If your product instances are less performant after the update, the new defaults might be set too low and we recommend to xref:kafka:usage-guide/storage-resources.adoc[set custom requests] for your cluster.
 
 * https://github.com/stackabletech/opa-operator/pull/347[OpenPolicyAgent]
 * https://github.com/stackabletech/zookeeper-operator/pull/563[Apache ZooKeeper]
