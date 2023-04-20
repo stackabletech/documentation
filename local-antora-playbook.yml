@@ -170,14 +170,12 @@ content:
         - release-23.4
         - release-23.1
         - distributed-component-compat
+        - old-release-docs/0.8
+        - old-release-docs/0.7
       tags:
-        - docs/0.8
-        - docs/0.7
         - docs/0.6
         - docs/0.5
         - docs/0.4
-        - docs/0.3
-        - docs/0.2
     - url: https://github.com/stackabletech/zookeeper-operator.git
       start_path: docs
       branches:
