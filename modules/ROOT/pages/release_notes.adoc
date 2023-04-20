@@ -45,7 +45,7 @@ Additionally, there are some individual product features that are noteworthy:
 * https://github.com/stackabletech/airflow-operator/issues/177[Apache Airflow: load DAGs per git-sync]
 * https://github.com/stackabletech/hdfs-operator/issues/289[Apache HDFS: Rework HDFS TLS / Auth structs]
 * https://github.com/stackabletech/trino-operator/issues/395[Trino: Rework HDFS TLS / Auth structs]
-* https://github.com/stackabletech/secret-operator/issues/243[Secret operator: support running the Secret operator in rootless mode ]
+* https://github.com/stackabletech/secret-operator/pull/252[Secret operator: support running the Secret operator in unprivileged mode ]
 * https://github.com/stackabletech/secret-operator/pull/235[Secret operator: allow configuring CSI docker images]
 * https://github.com/stackabletech/secret-operator/issues/4[Secret operator: Kerberos keytab provisioning]
 
