@@ -3,6 +3,11 @@
 # netlify messes with some files, restore everything to how it was
 git reset --hard --recurse-submodule
 
+cd ui
+
+git diff
+cd -
+
 # save current commit for later
 current_commit=$(git rev-parse HEAD)
 
