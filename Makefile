@@ -1,11 +1,13 @@
-PLAYBOOK := local-antora-playbook.yml
-ANTORAFLAGS :=
 CURRENT_COMMIT := $(shell git rev-parse HEAD)
 
+build-dev: build-ui
+	node_modules/.bin/antora generate local-antora-playbook.yml
 
-build:
+build-prod: build-ui
+	node_modules/.bin/antora generate antora-playbook.yml --fetch
+
+build-ui:
 	node_modules/.bin/gulp --cwd ui bundle
-	node_modules/.bin/antora generate $(PLAYBOOK) $(ANTORAFLAGS)
 
 clean:
 	rm -r build
@@ -30,6 +32,6 @@ netlify-fetch:
 	# go back to the initial commit to start the build
 	git -c advice.detachedHead=false checkout --recurse-submodules $(CURRENT_COMMIT)
 
-netlify-build: netlify-fetch build
+netlify-build: netlify-fetch build-prod
 
-.PHONY: build clean netlify-fetch
+.PHONY: build-dev build-prod build-ui clean netlify-build netlify-fetch

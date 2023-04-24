@@ -1,5 +1,5 @@
 [build]
-  command = "make netlify-fetch && make ANTORAFLAGS=--fetch PLAYBOOK=antora-playbook.yml"
+  command = "make netlify-build"
   publish = "build/site"
 
 [[redirects]]
