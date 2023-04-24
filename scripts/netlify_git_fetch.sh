@@ -2,6 +2,7 @@
 
 # netlify messes with some files, restore everything to how it was
 git restore .
+git submodule foreach git reset --hard
 
 # save current commit for later
 current_commit=$(git rev-parse HEAD)
