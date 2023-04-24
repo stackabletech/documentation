@@ -1,3 +1,7 @@
+[build]
+  command = "make netlify-build"
+  publish = "build/site"
+
 [[redirects]]
   from = "/airflow/nightly/*"
   to = "/home/nightly/airflow/:splat"
