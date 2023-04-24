@@ -16,7 +16,6 @@ urls:
 content:
   sources: 
     - url: .
-      worktrees: false
       branches:
         - HEAD
         - release/23.4
