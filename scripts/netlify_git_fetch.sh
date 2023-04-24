@@ -7,10 +7,14 @@ git submodule update --init --recursive
 echo "reset"
 git reset --hard --recurse-submodule
 
+echo "diffff"
+git diff
+
 cd ui
 
 echo "diff"
 git diff
+git clean
 cd -
 
 # save current commit for later
