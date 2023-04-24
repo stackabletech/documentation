@@ -16,4 +16,4 @@ jobs:
       - name: Call Netlify build hook
         with:
           HOOK_URL: ${{ secrets.NETLIFY_BUILD_TRIGGER_HOOK }}
-      - run: curl -X POST -d '{}' $HOOK_URL
+        run: curl -X POST -d '{}' $HOOK_URL
