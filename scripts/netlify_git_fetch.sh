@@ -1,5 +1,8 @@
 #!/usr/bin/bash
 
+# init submodule
+git submodule update --init --recursive
+
 # netlify messes with some files, restore everything to how it was
 echo "reset"
 git reset --hard --recurse-submodule
