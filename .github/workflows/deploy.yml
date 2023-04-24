@@ -1,9 +1,10 @@
-name: Build and deploy site
+name: Build and deploy production site
+
+# This job simply calls a trigger hook in netlify.
+# The hook is configured in an organization secret.
+# https://docs.netlify.com/configure-builds/build-hooks/
 
 on:
-  push:
-    branches:
-      - main
   schedule:
     - cron: '15 2 * * *'
   workflow_dispatch:
@@ -12,19 +13,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b # v3.2.0
+      - name: Call Netlify build hook
         with:
-          submodules: true
-      - uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c # v3
-        with:
-          node-version: '16'
-          cache: 'npm'
-      - run: npm ci
-      - run: make ANTORAFLAGS=--fetch PLAYBOOK=antora-playbook.yml
-      - name: Publish to GitHub Pages
-        uses: peaceiris/actions-gh-pages@64b46b4226a4a12da2239ba3ea5aa73e3163c75b # v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          cname: docs.stackable.tech
-          publish_dir: build/site
-          publish_branch: docs
+          HOOK_URL: ${{ secrets.NETLIFY_BUILD_TRIGGER_HOOK }}
+      - run: curl -X POST -d '{}' $HOOK_URL
