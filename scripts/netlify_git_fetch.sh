@@ -1,10 +1,12 @@
 #!/usr/bin/bash
 
 # netlify messes with some files, restore everything to how it was
+echo "reset"
 git reset --hard --recurse-submodule
 
 cd ui
 
+echo "diff"
 git diff
 cd -
 
@@ -20,5 +22,5 @@ for remote in $(git branch -r | grep release/); do
 done
 
 # go back to the initial commit to start the build
-git checkout -c advice.detachedHead=false "$current_commit"
+git -c advice.detachedHead=false checkout "$current_commit"
 
