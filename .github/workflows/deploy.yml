@@ -1,4 +1,8 @@
-name: Build and deploy site
+name: Build and deploy production site
+
+# This job simply calls a trigger hook in netlify.
+# The hook is configured in an organization secret.
+# https://docs.netlify.com/configure-builds/build-hooks/
 
 on:
   schedule:
