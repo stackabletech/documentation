@@ -18,5 +18,5 @@ for remote in $(git branch -r | grep release/); do
 done
 
 # go back to the initial commit to start the build
-git -c advice.detachedHead=false checkout "$current_commit"
+git -c advice.detachedHead=false checkout --recurse-submodules "$current_commit"
 
