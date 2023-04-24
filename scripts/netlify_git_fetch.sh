@@ -1,4 +1,9 @@
 #!/usr/bin/bash
+# The netlify repo is checked out without any blobs. This script
+# iterates through the release branches and checks them out one-by-one
+# to fetch all the files.
+# Then we can build directly from here, making it possible to build
+# with antora using the HEAD (enabling branch previews!)
 
 # init submodule
 git submodule update --init --recursive
