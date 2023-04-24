@@ -15,5 +15,5 @@ for remote in $(git branch -r | grep release/); do
 done
 
 # go back to the initial commit to start the build
-git checkout "$current_commit"
+git checkout -c advice.detachedHead=false "$current_commit"
 
