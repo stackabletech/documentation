@@ -3,6 +3,20 @@ ANTORAFLAGS :=
 CURRENT_COMMIT := $(shell git rev-parse HEAD)
 
 
+build:
+	node_modules/.bin/gulp --cwd ui bundle
+	node_modules/.bin/antora generate $(PLAYBOOK) $(ANTORAFLAGS)
+
+.PHONY: build
+
+
+clean:
+	rm -r build
+	# 'cache' is the configured cache dir in the playbook
+	rm -r cache
+.PHONY: clean
+
+
 # The netlify repo is checked out without any blobs. This script
 # iterates through the release branches and checks them out one-by-one
 # to fetch all the files.
@@ -21,18 +35,3 @@ netlify-fetch:
 	# go back to the initial commit to start the build
 	git -c advice.detachedHead=false checkout --recurse-submodules $(CURRENT_COMMIT)
 .PHONY: netlify-fetch
-
-
-build:
-	node_modules/.bin/gulp --cwd ui bundle
-	node_modules/.bin/antora generate $(PLAYBOOK) $(ANTORAFLAGS)
-
-.PHONY: clean
-
-
-clean:
-	rm -r build
-	# 'cache' is the configured cache dir in the playbook
-	rm -r cache
-
-.PHONY: build
