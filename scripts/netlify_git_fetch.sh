@@ -4,18 +4,7 @@
 git submodule update --init --recursive
 
 # netlify messes with some files, restore everything to how it was
-echo "reset"
 git reset --hard --recurse-submodule
-
-echo "diffff"
-git diff
-
-cd ui
-
-echo "diff"
-git diff
-git clean
-cd -
 
 # save current commit for later
 current_commit=$(git rev-parse HEAD)
@@ -25,7 +14,7 @@ git fetch --all
 
 # checkout all release branches once, so we fetch the files
 for remote in $(git branch -r | grep release/); do
-    git switch "${remote#origin/}"
+    git checkout --recurse-submodules "${remote#origin/}"
 done
 
 # go back to the initial commit to start the build
