@@ -1,3 +1,7 @@
+[build]
+  command = "git checkout . && for remote in `git branch -r | grep -v /HEAD`; do git checkout --track $remote ; done && make ANTORAFLAGS=--fetch PLAYBOOK=antora-playbook.yml"
+  publish = "build/site"
+
 [[redirects]]
   from = "/airflow/nightly/*"
   to = "/home/nightly/airflow/:splat"
