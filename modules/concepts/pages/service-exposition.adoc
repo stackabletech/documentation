@@ -1,0 +1,16 @@
+= Service exposition
+
+For some deployed products it is sufficient to be only accessible within the Kubernetes cluster, while others need to be accessible from outside the Kubernetes cluster.
+This can e.g. be from your internal corporate network when running on bare metal, your internal network in your cloud provider or the Internet.
+
+As of the release 23.4, the Stackable Operators create Kubernetes Service objects to expose the deployed product.
+For security reasons, the Services default to the `ClusterIP` type in order to avoid exposing anything to the public.
+You can specify the type within the custom resource field `spec.clusterConfig.listenerClass` by setting it to either:
+
+* `cluster-internal` => Use `ClusterIP` (default)
+* `external-unstable` => Use `NodePort`
+* `external-stable` => Use `LoadBalancer`
+
+Please note that as of the release 23.4 not all operators support all the mentioned `Service` types.
+
+In a future release, the `ListenerClass` provided by the xref:listener-operator:index.adoc[listener-operator] will be supported to make things more flexible.
