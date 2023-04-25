@@ -1,6 +1,6 @@
 * xref:concepts:index.adoc[]
 ** xref:roles-and-role-groups.adoc[]
-** xref:service_exposition.adoc[]
+** xref:service-exposition.adoc[]
 ** xref:service_discovery.adoc[]
 ** xref:logging.adoc[]
 ** xref:authentication.adoc[]
