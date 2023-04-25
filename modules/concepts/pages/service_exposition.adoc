@@ -1,0 +1,16 @@
+= Service exposition
+
+For some deployed products it's sufficient to be only accessible within the Kubernetes cluster, while others need to accessible from outside the Kubernetes cluster.
+This can e.g. be from you internal corporate network when running on bare metal, you internal network in your cloud provider or the Internet.
+
+As of the release 23.4 our operators create a Kubernetes `Service` object to expose the deployed product.
+For security reasons we default to the `ClusterIP` type, with the option to switch to a different type.
+You can specify the type to use using the field `spec.clusterConfig.listenerClass` by setting it to either
+
+* `cluster-internal` => Use `ClusterIP` (default)
+* `external-unstable` => Use `NodePort`
+* `external-stable` => Use `LoadBalancer`
+
+Please note that as of the release 23.4 not every operator supports all the mentioned `Service` types.
+
+In a future release we will support `ListenerClasses` provided by the xref:listener-operator:index.adoc[listener-operator] to make things more flexible.
