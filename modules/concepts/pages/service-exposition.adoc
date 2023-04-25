@@ -1,6 +1,6 @@
 = Service exposition
 
-For some deployed products it's sufficient to be only accessible within the Kubernetes cluster, while others need to accessible from outside the Kubernetes cluster.
+For some deployed products it is sufficient to be only accessible within the Kubernetes cluster, while others need to be accessible from outside the Kubernetes cluster.
 This can e.g. be from you internal corporate network when running on bare metal, you internal network in your cloud provider or the Internet.
 
 As of the release 23.4 our operators create a Kubernetes `Service` object to expose the deployed product.
