@@ -37,6 +37,78 @@ We do support them for *X* months.
 * Maintenance/support effort
 
 === Stackable Release: LTS CRD versions
+Alpha API versions may be removed in any release without prior deprecation notice.
+
+Beta API versions are deprecated at a minimum of *1* platform releases after introduction and removed at a minimum of *1* platform releases after deprecation.
+
+GA (stable) API versions are deprecated at a minimum of *2* platform releases after introduction and removed at a minimum of *1* platform releases after deprecation.
+
+In addition to the CRD versions we support the operators of the last *2* releases, so users have approx. *6* months of time to upgrade the operators.
+
+CRD versions look like, e.g. for ZookeeperCluster:
+
+* v1alpha1
+* v1alpha2
+* v1beta1
+* v1beta2
+* v1
+* >>> Release 23.7 happens
+* v2alpha1
+* >>> Release 24.1 happens
+* We can also skip beta if we want:
+* v2
+* Or go directly to the next GA version:
+* v3
+* >>> Release 24.4 happens
+* >>> Release 24.7 happens
+
+Every release notes for a Stackable platform release contains something similar to the following:
+
+*Release 23.7*
+
+Added CRD versions:
+
+* ZookeeperCluster v1alpha2
+* ZookeeperCluster v1beta2
+* ZookeeperCluster v1
+
+*Release 24.1*
+
+Added CRD versions:
+
+* ZookeeperCluster v2alpha1
+
+Removed CRD versions:
+
+* ZookeeperCluster v1alpha2
+
+Deprecated CRD versions:
+
+* ZookeeperCluster v1beta2
+
+*Release 24.4*
+
+Added CRD versions:
+
+* ZookeeperCluster v2
+* ZookeeperCluster v3
+
+Removed CRD versions:
+
+* ZookeeperCluster v1beta2
+
+Deprecated CRD versions:
+
+* ZookeeperCluster v1
+
+*Release 24.7*
+
+Removed CRD versions:
+
+* ZookeeperCluster v1 => If a customer really needs this version he can pay us to not remove the version in this release. It will stay deprecated and will be removed in a future once the customer does not pay us sufficient money any more.
+
+Open questions: How do we handle support questions for deprecated versions?
+
 
 
 ==== Pros
