@@ -1,0 +1,44 @@
+= ADR9000: LTS version strategy
+Sebastian <sebastian.bernauer@stackable.tech>
+v0.1, 2023-05-08
+:status: draft
+
+* Status: {status}
+* Contributors:
+** TODO
+* Date: 2023-05-08
+
+Technical Story: TODO
+
+== Context and Problem Statement
+
+// Describe the context and problem statement, e.g., in free form using two to three sentences. You may want to articulate the problem in form of a question.
+
+TODO
+
+== Decision Drivers
+
+* Customer requirements for stability
+* Maintenance/support effort
+
+== Considered Options
+
+=== Stackable Release: Introduce TLS versions
+We mark specific Stackable releases (e.g. the first within)
+
+==== Pros
+* If customers stick to an old Kubernetes version and we try to force them to bump the operator version (and keep the product version) the operator might not support the old Kubernetes version
+
+==== Cons
+* Maintenance/support effort
+
+=== Stackable Release: Don't introduce TLS versions
+
+==== Pros
+* Makes our live easy
+
+==== Cons
+
+== Decision Outcome
+
+TODO
