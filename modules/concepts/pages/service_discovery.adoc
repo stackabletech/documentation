@@ -109,8 +109,8 @@ spec:
   ...
 ----
 
-IMPORTANT: It's important that you provide *all* the information in the discovery CM and that they are up-to-date!
-For Stackable managed services the Stackable operators will take care of this, when discovering external services it's your responsibility.
+IMPORTANT: It's important that you provide *all* the information in the discovery ConfigMap and that it is up-to-date!
+For Stackable managed services the Stackable Operators will take care of this, but for external service discovery it's your responsibility.
 
 [#whats-next]
 == Further reading
