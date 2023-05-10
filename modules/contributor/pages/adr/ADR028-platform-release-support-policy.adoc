@@ -35,24 +35,31 @@ Currently we do support the last 3 Kubernetes versions.
 
 == Considered Options
 
+
+
 === No LTS versions
 We don't have any LTS release.
 Instead we support the last *X* releases, so users have approx. *X* months of time to upgrade the operators.
 
 ==== Pros
-* Makes our live easy
+* No maintenance effort
 
 ==== Cons
+* There are no guarantee for users how long their stuff will be supported
+
+
 
 === Time-based LTS versions
-We mark specific Stackable releases (e.g. the first within a year) as LTS release.
+We mark specific Stackable platform releases (e.g. the first within a year) as LTS releases.
 We do support them for *X* months.
 
 ==== Pros
-* If customers stick to an old Kubernetes version and we try to force them to bump the operator version (and keep the product version) the operator might not support the old Kubernetes version
+* There is a guarantee for users how long their stuff will be supported
 
 ==== Cons
 * Maintenance/support effort
+
+
 
 === LTS CRD versions
 Alpha API versions may be removed in any release without prior deprecation notice.
@@ -129,8 +136,11 @@ Open questions: How do we handle support questions for deprecated versions?
 
 
 ==== Pros
+* This mechanism gives us the possibility to try out experimental features in an alpha version to get feedback. Afterwards we can add it as beta or stable feature.
 
 ==== Cons
+* Customers can't switch to newer operators if they have an really old Kubernetes version.
+As we have a similar Kubernetes support cycle than the Kubernetes project itself chances are pretty high they are running on an EOL Kubernetes version already.
 
 == Decision Outcome
 
