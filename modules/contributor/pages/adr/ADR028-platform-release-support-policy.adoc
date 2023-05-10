@@ -1,11 +1,20 @@
-= ADR9000: LTS version strategy
+= ADR028: Platform release support policy
 Sebastian <sebastian.bernauer@stackable.tech>
 v0.1, 2023-05-08
 :status: draft
 
 * Status: {status}
 * Contributors:
-** TODO
+** Andrew Kenworthy
+** Felix Hennig
+** Lars Francke
+** Maximilian Wittich
+** Malte Sander
+** Natalie Klestrup Röijezon
+** Razvan Mihai
+** Sebastian Bernauer
+** Sönke Liebau
+** Vladislav Supalov
 * Date: 2023-05-08
 
 == Context and Problem Statement
@@ -26,7 +35,16 @@ Currently we do support the last 3 Kubernetes versions.
 
 == Considered Options
 
-=== Stackable Release: Time-based LTS versions
+=== No LTS versions
+We don't have any LTS release.
+Instead we support the last *X* releases, so users have approx. *X* months of time to upgrade the operators.
+
+==== Pros
+* Makes our live easy
+
+==== Cons
+
+=== Time-based LTS versions
 We mark specific Stackable releases (e.g. the first within a year) as LTS release.
 We do support them for *X* months.
 
@@ -36,7 +54,7 @@ We do support them for *X* months.
 ==== Cons
 * Maintenance/support effort
 
-=== Stackable Release: LTS CRD versions
+=== LTS CRD versions
 Alpha API versions may be removed in any release without prior deprecation notice.
 
 Beta API versions are deprecated at a minimum of *1* platform releases after introduction and removed at a minimum of *1* platform releases after deprecation.
@@ -110,20 +128,10 @@ Removed CRD versions:
 Open questions: How do we handle support questions for deprecated versions?
 
 
-
 ==== Pros
-
-==== Cons
-
-=== Stackable Release: No LTS versions
-We don't have any LTS release.
-Instead we support the last *X* releases, so users have approx. *X* months of time to upgrade the operators.
-
-==== Pros
-* Makes our live easy
 
 ==== Cons
 
 == Decision Outcome
 
-TODO
+Option <<LTS CRD versions>> was chosen.

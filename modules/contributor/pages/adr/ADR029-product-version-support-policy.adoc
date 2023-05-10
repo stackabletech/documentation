@@ -1,0 +1,69 @@
+= ADR029: Product version support policy
+Sebastian <sebastian.bernauer@stackable.tech>
+v0.1, 2023-05-08
+:status: draft
+
+* Status: {status}
+* Contributors:
+** Andrew Kenworthy
+** Felix Hennig
+** Lars Francke
+** Maximilian Wittich
+** Malte Sander
+** Natalie Klestrup Röijezon
+** Razvan Mihai
+** Sebastian Bernauer
+** Sönke Liebau
+** Vladislav Supalov
+* Date: 2023-05-08
+
+== Context and Problem Statement
+
+// Describe the context and problem statement, e.g., in free form using two to three sentences. You may want to articulate the problem in form of a question.
+
+Users of the Stackable platform often times want to stay on a specific product version - sometime also platform version.
+While staying on a specific set of versions would theoretically work, the customers often want security updates, hence the reason we need to maintain older versions - for operators as well as product versions.
+
+We currently don't have CRD versioning yet, this will be added in the future.
+
+Currently we do support the last 3 Kubernetes versions.
+
+== Decision Drivers
+
+* Customer requirements for stability, but also security updates
+* Maintenance/support effort
+
+== Considered Options
+
+
+
+=== TODO
+Definition of versions:
+|===
+|Product version | Example products | Major version | Minor version | Patch version
+
+|2.5.3
+|HBase
+|2
+|5
+|3
+
+|413
+|Trino
+|0 or 413?
+|0 or 413?
+|0
+|===
+
+// Alpha API versions may be removed in any release without prior deprecation notice.
+//
+// Beta API versions are deprecated at a minimum of *1* platform releases after introduction and removed at a minimum of *1* platform releases after deprecation.
+//
+// GA (stable) API versions are deprecated at a minimum of *2* platform releases after introduction and removed at a minimum of *1* platform releases after deprecation.
+
+
+Patch level versions can be replaced by newer patch level versions in any release without prior deprecation notice.
+
+== Decision Outcome
+
+TODO

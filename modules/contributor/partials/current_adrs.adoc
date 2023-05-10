@@ -24,3 +24,5 @@
 **** xref:adr/ADR025-logging_architecture.adoc[]
 **** xref:adr/ADR026-affinities.adoc[]
 **** xref:adr/ADR027-status.adoc[]
+**** xref:adr/ADR028-platform-release-support-policy.adoc[]
+**** xref:adr/ADR029-product-version-support-policy.adoc[]
