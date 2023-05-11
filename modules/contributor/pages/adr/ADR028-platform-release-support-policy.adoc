@@ -62,11 +62,16 @@ We do support them for *X* months.
 
 
 === LTS CRD versions
+In the future every `CustomResource` of Stackable will be versioned.
+We will make guarantees regarding how long a specific version of the CustomResources will be supported.
+
+We set ourselves the following constraints:
+
 1. Alpha API versions may be removed in any release without prior deprecation notice.
 2. Beta API versions are deprecated at a minimum of *1* platform releases after introduction and removed at a minimum of *1* platform releases after deprecation.
 3. GA (stable) API versions are deprecated at a minimum of *2* platform releases after introduction and removed at a minimum of *1* platform releases after deprecation.
 
-In addition to the CRD versions we support the operators of the last *2* releases, so users have approx. *6* months of time to upgrade the operators.
+In addition to the CRD versions we support the operators of the last *2* Stackable platform release lines (e.g. `23.4.x`).
 
 Image the following CRD version timeline:
 
