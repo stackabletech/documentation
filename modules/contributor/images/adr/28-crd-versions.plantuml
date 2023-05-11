@@ -1,0 +1,32 @@
+@startgantt
+printscale monthly
+Project starts the 2023-04-01
+
+[23.4] happens 2023-04-27
+
+
+[v1alpha1] starts 2023-05-08 and ends 2023-05-14 and is colored in Orange
+[v1alpha2] starts 2023-05-14 and ends 2023-10-01 and is colored in Orange
+[v1beta1]  starts 2023-05-25 and ends 2023-06-02 and is colored in Yellow
+[v1beta2]  starts 2023-06-02 and ends 2023-10-01 and is colored in Yellow
+[v1beta2 ] starts 2023-10-01 and ends 2024-01-01 and is colored in Red
+[v1beta2 ] displays on same row as [v1beta2]
+[v1]       starts 2023-06-21 and ends 2024-01-01 and is colored in Green
+[23.7] happens 2023-07-01
+[v1 ]   starts 2024-01-01 and ends 2024-04-01 and is colored in Red
+[v1 ] displays on same row as [v1]
+[v2alpha1] starts 2023-08-03 and ends 2023-10-01 and is colored in Orange
+[23.10] happens 2023-10-01
+[24.1] happens 2024-01-01
+[v2]       starts 2024-01-01 and ends 2024-07-01 and is colored in Green
+[v2 ]   starts 2024-07-01 and ends 2024-10-01 and is colored in Red
+[v2 ] displays on same row as [v2]
+[v3]       starts 2024-01-01 and ends 2024-10-01 and is colored in Green
+[v3 ]   starts 2024-10-01 and ends 2025-01-01 and is colored in Red
+[v3 ] displays on same row as [v3]
+[24.4] happens 2024-04-01
+[24.7] happens 2024-07-01
+[24.10] happens 2024-10-01
+[25.1] happens 2025-01-01
+
+@endgantt
