@@ -13,10 +13,10 @@ Project starts the 2023-04-01
 
 -- Apache Airflow --
 [2.2.3+4+5]    starts 2023-04-01 and ends 2023-07-01 and is colored in LightGreen
-[2.2.3+4+5 ]   starts 2023-07-01 and ends 2023-10-01 and is colored in Khaki
+[2.2.3+4+5 ]   starts 2023-07-01 and ends 2023-10-01 and is colored in LightSalmon
 [2.2.3+4+5 ]   displays on same row as [2.2.3+4+5]
 [2.4.1]        starts 2023-04-01 and ends 2023-07-01 and is colored in LightGreen
-[2.4.1 ]       starts 2023-07-01 and ends 2023-10-01 and is colored in Khaki
+[2.4.1 ]       starts 2023-07-01 and ends 2023-10-01 and is colored in LightSalmon
 [2.4.1 ]       displays on same row as [2.4.1]
 [2.6.0]        starts 2023-07-01 and ends 2023-10-01 and is colored in LightGreen
 [2.6.x]        starts 2023-10-01 and ends 2024-01-01 and is colored in LightGreen
@@ -28,10 +28,10 @@ Project starts the 2023-04-01
 
 -- Apache Druid --
 [0.23.0]       starts 2023-04-01 and ends 2023-07-01 and is colored in LightGreen
-[0.23.0 ]      starts 2023-07-01 and ends 2023-10-01 and is colored in Khaki
+[0.23.0 ]      starts 2023-07-01 and ends 2023-10-01 and is colored in LightSalmon
 [0.23.0 ]      displays on same row as [0.23.0]
 [24.0.0]       starts 2023-04-01 and ends 2023-07-01 and is colored in LightGreen
-[24.0.0 ]      starts 2023-07-01 and ends 2023-10-01 and is colored in Khaki
+[24.0.0 ]      starts 2023-07-01 and ends 2023-10-01 and is colored in LightSalmon
 [24.0.0 ]      displays on same row as [24.0.0]
 [25.0.0]       starts 2023-07-01 and ends 2023-10-01 and is colored in LightGreen
 [25.0.x]       starts 2023-10-01 and ends 2024-01-01 and is colored in LightGreen
@@ -43,7 +43,7 @@ Project starts the 2023-04-01
 
 -- Apache HBase --
 [2.4.6-12]     starts 2023-04-01 and ends 2023-07-01 and is colored in LightGreen
-[2.4.6-12 ]    starts 2023-07-01 and ends 2023-10-01 and is colored in Khaki
+[2.4.6-12 ]    starts 2023-07-01 and ends 2023-10-01 and is colored in LightSalmon
 [2.4.6-12 ]    displays on same row as [2.4.6-12]
 [2.5.4]        starts 2023-07-01 and ends 2023-10-01 and is colored in LightGreen
 [2.5.x]        starts 2023-10-01 and ends 2024-01-01 and is colored in LightGreen
@@ -55,10 +55,10 @@ Project starts the 2023-04-01
 
 -- Apache HDFS --
 [3.2.2]        starts 2023-04-01 and ends 2023-07-01 and is colored in LightGreen
-[3.2.2 ]       starts 2023-07-01 and ends 2023-10-01 and is colored in Khaki
+[3.2.2 ]       starts 2023-07-01 and ends 2023-10-01 and is colored in LightSalmon
 [3.2.2 ]       displays on same row as [3.2.2]
 [3.3.1+3+4]    starts 2023-04-01 and ends 2023-07-01 and is colored in LightGreen
-[3.3.1+3+4 ]   starts 2023-07-01 and ends 2023-10-01 and is colored in Khaki
+[3.3.1+3+4 ]   starts 2023-07-01 and ends 2023-10-01 and is colored in LightSalmon
 [3.3.1+3+4 ]   displays on same row as [3.3.1+3+4]
 [3.3.5]        starts 2023-07-01 and ends 2023-10-01 and is colored in LightGreen
 [3.3.x]        starts 2023-10-01 and ends 2024-01-01 and is colored in LightGreen
@@ -70,7 +70,7 @@ Project starts the 2023-04-01
 
 -- Apache Hive --
 [2.3.9]        starts 2023-04-01 and ends 2023-07-01 and is colored in LightGreen
-[2.3.9 ]       starts 2023-07-01 and ends 2023-10-01 and is colored in Khaki
+[2.3.9 ]       starts 2023-07-01 and ends 2023-10-01 and is colored in LightSalmon
 [2.3.9 ]       displays on same row as [2.3.9]
 [3.1.3]        starts 2023-04-01 and ends 2023-07-01 and is colored in LightGreen
 [3.1.3 ]       starts 2023-07-01 and ends 2023-10-01 and is colored in LightGreen
@@ -84,19 +84,19 @@ Project starts the 2023-04-01
 
 -- Apache Kafka --
 [2.7.1]        starts 2023-04-01 and ends 2023-07-01 and is colored in LightGreen
-[2.7.1 ]       starts 2023-07-01 and ends 2023-10-01 and is colored in Khaki
+[2.7.1 ]       starts 2023-07-01 and ends 2023-10-01 and is colored in LightSalmon
 [2.7.1 ]       displays on same row as [2.7.1]
 [2.8.1]        starts 2023-04-01 and ends 2023-07-01 and is colored in LightGreen
-[2.8.1 ]       starts 2023-07-01 and ends 2023-10-01 and is colored in Khaki
+[2.8.1 ]       starts 2023-07-01 and ends 2023-10-01 and is colored in LightSalmon
 [2.8.1 ]       displays on same row as [2.8.1]
 [3.1.0]        starts 2023-04-01 and ends 2023-07-01 and is colored in LightGreen
-[3.1.0 ]       starts 2023-07-01 and ends 2023-10-01 and is colored in Khaki
+[3.1.0 ]       starts 2023-07-01 and ends 2023-10-01 and is colored in LightSalmon
 [3.1.0 ]       displays on same row as [3.1.0]
 [3.2.0]        starts 2023-04-01 and ends 2023-07-01 and is colored in LightGreen
-[3.2.0 ]       starts 2023-07-01 and ends 2023-10-01 and is colored in Khaki
+[3.2.0 ]       starts 2023-07-01 and ends 2023-10-01 and is colored in LightSalmon
 [3.2.0 ]       displays on same row as [3.2.0]
 [3.3.1]        starts 2023-04-01 and ends 2023-07-01 and is colored in LightGreen
-[3.3.1 ]       starts 2023-07-01 and ends 2023-10-01 and is colored in Khaki
+[3.3.1 ]       starts 2023-07-01 and ends 2023-10-01 and is colored in LightSalmon
 [3.3.1 ]       displays on same row as [3.3.1]
 [3.3.2]        starts 2023-07-01 and ends 2023-10-01 and is colored in LightGreen
 [3.3.x   ]     starts 2023-10-01 and ends 2024-01-01 and is colored in LightGreen
@@ -108,13 +108,13 @@ Project starts the 2023-04-01
 
 -- Apache NiFi --
 [1.15.0-3]     starts 2023-04-01 and ends 2023-07-01 and is colored in LightGreen
-[1.15.0-3 ]    starts 2023-07-01 and ends 2023-10-01 and is colored in Khaki
+[1.15.0-3 ]    starts 2023-07-01 and ends 2023-10-01 and is colored in LightSalmon
 [1.15.0-3 ]    displays on same row as [1.15.0-3]
 [1.16.0-3]     starts 2023-04-01 and ends 2023-07-01 and is colored in LightGreen
-[1.16.0-3 ]    starts 2023-07-01 and ends 2023-10-01 and is colored in Khaki
+[1.16.0-3 ]    starts 2023-07-01 and ends 2023-10-01 and is colored in LightSalmon
 [1.16.0-3 ]    displays on same row as [1.16.0-3]
 [1.18.0]     starts 2023-04-01 and ends 2023-07-01 and is colored in LightGreen
-[1.18.0 ]    starts 2023-07-01 and ends 2023-10-01 and is colored in Khaki
+[1.18.0 ]    starts 2023-07-01 and ends 2023-10-01 and is colored in LightSalmon
 [1.18.0 ]    displays on same row as [1.18.0]
 [1.21.0]       starts 2023-07-01 and ends 2023-10-01 and is colored in LightGreen
 [1.21.x]       starts 2023-10-01 and ends 2024-01-01 and is colored in LightGreen
@@ -129,19 +129,19 @@ Project starts the 2023-04-01
 -- Apache Zookeeper --
 -- Trino --
 [377]          starts 2023-04-01 and ends 2023-07-01 and is colored in LightGreen
-[377 ]         starts 2023-07-01 and ends 2023-10-01 and is colored in Khaki
+[377 ]         starts 2023-07-01 and ends 2023-10-01 and is colored in LightSalmon
 [377 ]         displays on same row as [377]
 [387]          starts 2023-04-01 and ends 2023-07-01 and is colored in LightGreen
-[387 ]         starts 2023-07-01 and ends 2023-10-01 and is colored in Khaki
+[387 ]         starts 2023-07-01 and ends 2023-10-01 and is colored in LightSalmon
 [387 ]         displays on same row as [387]
 [395]          starts 2023-04-01 and ends 2023-07-01 and is colored in LightGreen
-[395 ]         starts 2023-07-01 and ends 2023-10-01 and is colored in Khaki
+[395 ]         starts 2023-07-01 and ends 2023-10-01 and is colored in LightSalmon
 [395 ]         displays on same row as [395]
 [396]          starts 2023-04-01 and ends 2023-07-01 and is colored in LightGreen
-[396 ]         starts 2023-07-01 and ends 2023-10-01 and is colored in Khaki
+[396 ]         starts 2023-07-01 and ends 2023-10-01 and is colored in LightSalmon
 [396 ]         displays on same row as [396]
 [403]          starts 2023-04-01 and ends 2023-07-01 and is colored in LightGreen
-[403 ]         starts 2023-07-01 and ends 2023-10-01 and is colored in Khaki
+[403 ]         starts 2023-07-01 and ends 2023-10-01 and is colored in LightSalmon
 [403 ]         displays on same row as [403]
 [416]          starts 2023-07-01 and ends 2023-10-01 and is colored in LightGreen
 [416 ]         starts 2023-10-01 and ends 2024-01-01 and is colored in LightGreen
@@ -153,19 +153,19 @@ Project starts the 2023-04-01
 
 -- Open policy agent --
 [0.27.1]       starts 2023-04-01 and ends 2023-07-01 and is colored in LightGreen
-[0.27.1 ]      starts 2023-07-01 and ends 2023-10-01 and is colored in Khaki
+[0.27.1 ]      starts 2023-07-01 and ends 2023-10-01 and is colored in LightSalmon
 [0.27.1 ]      displays on same row as [0.27.1]
 [0.28.0]       starts 2023-04-01 and ends 2023-07-01 and is colored in LightGreen
-[0.28.0 ]      starts 2023-07-01 and ends 2023-10-01 and is colored in Khaki
+[0.28.0 ]      starts 2023-07-01 and ends 2023-10-01 and is colored in LightSalmon
 [0.28.0 ]      displays on same row as [0.28.0]
 [0.37.2]       starts 2023-04-01 and ends 2023-07-01 and is colored in LightGreen
-[0.37.2 ]      starts 2023-07-01 and ends 2023-10-01 and is colored in Khaki
+[0.37.2 ]      starts 2023-07-01 and ends 2023-10-01 and is colored in LightSalmon
 [0.37.2 ]      displays on same row as [0.37.2]
 [0.41.0]       starts 2023-04-01 and ends 2023-07-01 and is colored in LightGreen
-[0.41.0 ]      starts 2023-07-01 and ends 2023-10-01 and is colored in Khaki
+[0.41.0 ]      starts 2023-07-01 and ends 2023-10-01 and is colored in LightSalmon
 [0.41.0 ]      displays on same row as [0.41.0]
 [0.45.0]       starts 2023-04-01 and ends 2023-07-01 and is colored in LightGreen
-[0.45.0 ]      starts 2023-07-01 and ends 2023-10-01 and is colored in Khaki
+[0.45.0 ]      starts 2023-07-01 and ends 2023-10-01 and is colored in LightSalmon
 [0.45.0 ]      displays on same row as [0.45.0]
 [0.51.0]       starts 2023-07-01 and ends 2023-10-01 and is colored in LightGreen
 [0.51.0 ]      starts 2023-10-01 and ends 2024-01-01 and is colored in LightGreen
