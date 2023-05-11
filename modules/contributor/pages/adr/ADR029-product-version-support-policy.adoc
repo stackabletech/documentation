@@ -37,33 +37,24 @@ Currently we do support the last 3 Kubernetes versions.
 
 
 
-=== TODO
-Definition of versions:
-|===
-|Product version | Example products | Major version | Minor version | Patch version
+=== LTS lines per product
+We set ourselves the following constraints:
 
-|2.5.3
-|HBase
-|2
-|5
-|3
+1. Patch level versions can be replaced by newer patch level versions in any release without prior deprecation notice.
+2. Every product version that get's removed needs to be deprecated for at least *1* release before removal.
+This guarantees that users can update the operators (e.g. from 23.1 to 23.4) without the need to simultaneously update the product version as well.
+The flow is to first update the control plane (the operators) and afterwards the product versions if desired (e.g. when the version is now deprecated).
 
-|413
-|Trino
-|0 or 413?
-|0 or 413?
-|0
-|===
+For every product there is always *1* LTS line we support and - in general - recommend to use.
+Normally this is a minor release line of the products containing the latest patch version.
+The exceptions could be e.g. Trino (which just uses a single number as release version), in which case a fixed release would be considered a release line.
+It will be supported for at least *4* consecutive releases.
+After the given number of releases we can deprecate the release line and pick a new one or continue supporting the release line.
 
-// Alpha API versions may be removed in any release without prior deprecation notice.
-//
-// Beta API versions are deprecated at a minimum of *1* platform releases after introduction and removed at a minimum of *1* platform releases after deprecation.
-//
-// GA (stable) API versions are deprecated at a minimum of *2* platform releases after introduction and removed at a minimum of *1* platform releases after deprecation.
+One example flow is shown below:
 
-
-Patch level versions can be replaced by newer patch level versions in any release without prior deprecation notice.
+image::adr/29-product-versions.png[]
 
 == Decision Outcome
 
-TODO
+Option <<LTS lines per product>> was chosen.
