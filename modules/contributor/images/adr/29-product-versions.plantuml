@@ -83,7 +83,47 @@ Project starts the 2023-04-01
 [3.1.x   ]     displays on same row as [3.1.3]
 
 -- Apache Kafka --
+[2.7.1]        starts 2023-04-01 and ends 2023-07-01 and is colored in LightGreen
+[2.7.1 ]       starts 2023-07-01 and ends 2023-10-01 and is colored in Khaki
+[2.7.1 ]       displays on same row as [2.7.1]
+[2.8.1]        starts 2023-04-01 and ends 2023-07-01 and is colored in LightGreen
+[2.8.1 ]       starts 2023-07-01 and ends 2023-10-01 and is colored in Khaki
+[2.8.1 ]       displays on same row as [2.8.1]
+[3.1.0]        starts 2023-04-01 and ends 2023-07-01 and is colored in LightGreen
+[3.1.0 ]       starts 2023-07-01 and ends 2023-10-01 and is colored in Khaki
+[3.1.0 ]       displays on same row as [3.1.0]
+[3.2.0]        starts 2023-04-01 and ends 2023-07-01 and is colored in LightGreen
+[3.2.0 ]       starts 2023-07-01 and ends 2023-10-01 and is colored in Khaki
+[3.2.0 ]       displays on same row as [3.2.0]
+[3.3.1]        starts 2023-04-01 and ends 2023-07-01 and is colored in LightGreen
+[3.3.1 ]       starts 2023-07-01 and ends 2023-10-01 and is colored in Khaki
+[3.3.1 ]       displays on same row as [3.3.1]
+[3.3.2]        starts 2023-07-01 and ends 2023-10-01 and is colored in LightGreen
+[3.3.x   ]     starts 2023-10-01 and ends 2024-01-01 and is colored in LightGreen
+[3.3.x   ]     displays on same row as [3.3.2]
+[3.3.x    ]    starts 2024-01-01 and ends 2024-04-01 and is colored in LightGreen
+[3.3.x    ]    displays on same row as [3.3.2]
+[3.3.x     ]   starts 2024-04-01 and ends 2024-07-01 and is colored in LightGreen
+[3.3.x     ]   displays on same row as [3.3.2]
+
 -- Apache NiFi --
+[1.15.0-3]     starts 2023-04-01 and ends 2023-07-01 and is colored in LightGreen
+[1.15.0-3 ]    starts 2023-07-01 and ends 2023-10-01 and is colored in Khaki
+[1.15.0-3 ]    displays on same row as [1.15.0-3]
+[1.16.0-3]     starts 2023-04-01 and ends 2023-07-01 and is colored in LightGreen
+[1.16.0-3 ]    starts 2023-07-01 and ends 2023-10-01 and is colored in Khaki
+[1.16.0-3 ]    displays on same row as [1.16.0-3]
+[1.18.0]     starts 2023-04-01 and ends 2023-07-01 and is colored in LightGreen
+[1.18.0 ]    starts 2023-07-01 and ends 2023-10-01 and is colored in Khaki
+[1.18.0 ]    displays on same row as [1.18.0]
+[1.21.0]       starts 2023-07-01 and ends 2023-10-01 and is colored in LightGreen
+[1.21.x]       starts 2023-10-01 and ends 2024-01-01 and is colored in LightGreen
+[1.21.x]       displays on same row as [1.21.0]
+[1.21.x ]      starts 2024-01-01 and ends 2024-04-01 and is colored in LightGreen
+[1.21.x ]      displays on same row as [1.21.0]
+[1.21.x  ]     starts 2024-04-01 and ends 2024-07-01 and is colored in LightGreen
+[1.21.x  ]     displays on same row as [1.21.0]
+
 -- Apache Spark on k8s --
 -- Apache Superset --
 -- Apache Zookeeper --
