@@ -88,6 +88,51 @@ Project starts the 2023-04-01
 -- Apache Superset --
 -- Apache Zookeeper --
 -- Trino --
+[377]          starts 2023-04-01 and ends 2023-07-01 and is colored in LightGreen
+[377 ]         starts 2023-07-01 and ends 2023-10-01 and is colored in Khaki
+[377 ]         displays on same row as [377]
+[387]          starts 2023-04-01 and ends 2023-07-01 and is colored in LightGreen
+[387 ]         starts 2023-07-01 and ends 2023-10-01 and is colored in Khaki
+[387 ]         displays on same row as [387]
+[395]          starts 2023-04-01 and ends 2023-07-01 and is colored in LightGreen
+[395 ]         starts 2023-07-01 and ends 2023-10-01 and is colored in Khaki
+[395 ]         displays on same row as [395]
+[396]          starts 2023-04-01 and ends 2023-07-01 and is colored in LightGreen
+[396 ]         starts 2023-07-01 and ends 2023-10-01 and is colored in Khaki
+[396 ]         displays on same row as [396]
+[403]          starts 2023-04-01 and ends 2023-07-01 and is colored in LightGreen
+[403 ]         starts 2023-07-01 and ends 2023-10-01 and is colored in Khaki
+[403 ]         displays on same row as [403]
+[416]          starts 2023-07-01 and ends 2023-10-01 and is colored in LightGreen
+[416 ]         starts 2023-10-01 and ends 2024-01-01 and is colored in LightGreen
+[416 ]         displays on same row as [416]
+[416  ]        starts 2024-01-01 and ends 2024-04-01 and is colored in LightGreen
+[416  ]        displays on same row as [416]
+[416   ]       starts 2024-04-01 and ends 2024-07-01 and is colored in LightGreen
+[416   ]       displays on same row as [416]
+
 -- Open policy agent --
+[0.27.1]       starts 2023-04-01 and ends 2023-07-01 and is colored in LightGreen
+[0.27.1 ]      starts 2023-07-01 and ends 2023-10-01 and is colored in Khaki
+[0.27.1 ]      displays on same row as [0.27.1]
+[0.28.0]       starts 2023-04-01 and ends 2023-07-01 and is colored in LightGreen
+[0.28.0 ]      starts 2023-07-01 and ends 2023-10-01 and is colored in Khaki
+[0.28.0 ]      displays on same row as [0.28.0]
+[0.37.2]       starts 2023-04-01 and ends 2023-07-01 and is colored in LightGreen
+[0.37.2 ]      starts 2023-07-01 and ends 2023-10-01 and is colored in Khaki
+[0.37.2 ]      displays on same row as [0.37.2]
+[0.41.0]       starts 2023-04-01 and ends 2023-07-01 and is colored in LightGreen
+[0.41.0 ]      starts 2023-07-01 and ends 2023-10-01 and is colored in Khaki
+[0.41.0 ]      displays on same row as [0.41.0]
+[0.45.0]       starts 2023-04-01 and ends 2023-07-01 and is colored in LightGreen
+[0.45.0 ]      starts 2023-07-01 and ends 2023-10-01 and is colored in Khaki
+[0.45.0 ]      displays on same row as [0.45.0]
+[0.51.0]       starts 2023-07-01 and ends 2023-10-01 and is colored in LightGreen
+[0.51.0 ]      starts 2023-10-01 and ends 2024-01-01 and is colored in LightGreen
+[0.51.0 ]      displays on same row as [0.51.0]
+[0.51.0  ]     starts 2024-01-01 and ends 2024-04-01 and is colored in LightGreen
+[0.51.0  ]     displays on same row as [0.51.0]
+[0.51.0   ]    starts 2024-04-01 and ends 2024-07-01 and is colored in LightGreen
+[0.51.0   ]    displays on same row as [0.51.0]
 
 @endgantt
