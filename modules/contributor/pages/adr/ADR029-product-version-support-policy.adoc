@@ -51,6 +51,9 @@ The exceptions could be e.g. Trino (which just uses a single number as release v
 It will be supported for at least *4* consecutive releases.
 After the given number of releases we can deprecate the release line and pick a new one or continue supporting the release line.
 
+In addition to the LTS line we also ship the latest version of the product with every release.
+It does not need to always be the latest version, e.g. when the latest version is not mature enough or causes problems, but should be pretty recent.
+
 One example flow is shown below:
 
 image::adr/29-product-versions.png[]
