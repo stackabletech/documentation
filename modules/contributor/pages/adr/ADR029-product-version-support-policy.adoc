@@ -17,6 +17,8 @@ v0.1, 2023-05-08
 ** Vladislav Supalov
 * Date: 2023-05-08
 
+WARNING: TODO: Decide on a policy if users need to go through every platform release line when upgrading, or if they could e.g. go from 23.1 directly to 23.7. We need a decision on how many releases they can skip (e.g. 0).
+
 == Context and Problem Statement
 
 // Describe the context and problem statement, e.g., in free form using two to three sentences. You may want to articulate the problem in form of a question.
