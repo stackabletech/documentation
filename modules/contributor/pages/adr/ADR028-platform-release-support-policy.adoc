@@ -62,32 +62,17 @@ We do support them for *X* months.
 
 
 === LTS CRD versions
-Alpha API versions may be removed in any release without prior deprecation notice.
-
-Beta API versions are deprecated at a minimum of *1* platform releases after introduction and removed at a minimum of *1* platform releases after deprecation.
-
-GA (stable) API versions are deprecated at a minimum of *2* platform releases after introduction and removed at a minimum of *1* platform releases after deprecation.
+1. Alpha API versions may be removed in any release without prior deprecation notice.
+2. Beta API versions are deprecated at a minimum of *1* platform releases after introduction and removed at a minimum of *1* platform releases after deprecation.
+3. GA (stable) API versions are deprecated at a minimum of *2* platform releases after introduction and removed at a minimum of *1* platform releases after deprecation.
 
 In addition to the CRD versions we support the operators of the last *2* releases, so users have approx. *6* months of time to upgrade the operators.
 
-CRD versions look like, e.g. for ZookeeperCluster:
+Image the following CRD version timeline:
 
-* v1alpha1
-* v1alpha2
-* v1beta1
-* v1beta2
-* v1
-* >>> Release 23.7 happens
-* v2alpha1
-* >>> Release 24.1 happens
-* We can also skip beta if we want:
-* v2
-* Or go directly to the next GA version:
-* v3
-* >>> Release 24.4 happens
-* >>> Release 24.7 happens
+image::adr/28-crd-versions.png[]
 
-Every release notes for a Stackable platform release contains something similar to the following:
+For the give timeline every release notes for a Stackable platform release contains something similar to the following:
 
 *Release 23.7*
 
@@ -97,7 +82,7 @@ Added CRD versions:
 * ZookeeperCluster v1beta2
 * ZookeeperCluster v1
 
-*Release 24.1*
+*Release 23.10*
 
 Added CRD versions:
 
@@ -111,7 +96,7 @@ Deprecated CRD versions:
 
 * ZookeeperCluster v1beta2
 
-*Release 24.4*
+*Release 24.1*
 
 Added CRD versions:
 
