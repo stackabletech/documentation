@@ -101,6 +101,12 @@ spec:
 ```
 This is an example for Trino, but the pattern is the same across all operators.
 
+==== Stackable Operator for Apache Airflow
+
+Existing Airflow clusters need to be deleted and recreated.
+
+This is required because the UID of the Airflow user has https://github.com/stackabletech/airflow-operator/pull/219[changed] to be in line with the rest of the platform.
+
 ==== Stackable Operator for Apache HBase
 
 * https://github.com/stackabletech/hbase-operator/issues/329[Consolidated top level configuration to clusterConfig]
