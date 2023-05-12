@@ -103,7 +103,7 @@ This is an example for Trino, but the pattern is the same across all operators.
 
 ==== Stackable Operator for Apache Airflow
 
-Existing Airflow clusters need to be deleted and recreated.
+Existing Airflow clusters need to be deleted and recreated. Airflow metadata held in the database and DAGs saved on disk are not affected.
 
 This is required because the UID of the Airflow user has https://github.com/stackabletech/airflow-operator/pull/219[changed] to be in line with the rest of the platform.
 
