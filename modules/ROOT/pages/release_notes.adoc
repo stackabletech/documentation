@@ -271,39 +271,34 @@ $ stackablectl release uninstall 23.1
 # ...
 ----
 
-Afterwards you will need to delete the CustomResourceDefinitions (CRDs) installed by the Stackable Platform.
-The reason for this is that helm will uninstall the operators but not the CRDs. This can be done in two ways:
-
-* by updating the CRDS with `kubectl apply`: this updates the definitions "in place" and is a less invasive approach. However, this concatenates some of the annotations so as to keep track of cumulative changes, meaning that eventually a field size limit will be reached. Then the CRD has to be deleted and re-created.
-* by deleting the CRDS with `kubectl delete`: this avoids the field size problem, but should be used with care, especially with actively running clusters.
-
-The example below will delete the CRDs before rolling out the new ones that are part of the release.
+Afterwards you will need to upgrade the CustomResourceDefinitions (CRDs) installed by the Stackable Platform.
+The reason for this is that helm will uninstall the operators but not the CRDs. This can be done using `kubectl replace`:
 
 [source]
 ----
-kubectl delete -f https://raw.githubusercontent.com/stackabletech/airflow-operator/23.1.0/deploy/helm/airflow-operator/crds/crds.yaml
-kubectl delete -f https://raw.githubusercontent.com/stackabletech/commons-operator/23.1.0/deploy/helm/commons-operator/crds/crds.yaml
-kubectl delete -f https://raw.githubusercontent.com/stackabletech/druid-operator/23.1.0/deploy/helm/druid-operator/crds/crds.yaml
-kubectl delete -f https://raw.githubusercontent.com/stackabletech/hbase-operator/23.1.0/deploy/helm/hbase-operator/crds/crds.yaml
-kubectl delete -f https://raw.githubusercontent.com/stackabletech/hdfs-operator/23.1.0/deploy/helm/hdfs-operator/crds/crds.yaml
-kubectl delete -f https://raw.githubusercontent.com/stackabletech/hive-operator/23.1.0/deploy/helm/hive-operator/crds/crds.yaml
-kubectl delete -f https://raw.githubusercontent.com/stackabletech/kafka-operator/23.1.0/deploy/helm/kafka-operator/crds/crds.yaml
-kubectl delete -f https://raw.githubusercontent.com/stackabletech/listener-operator/23.1.0/deploy/helm/listener-operator/crds/crds.yaml
-kubectl delete -f https://raw.githubusercontent.com/stackabletech/nifi-operator/23.1.0/deploy/helm/nifi-operator/crds/crds.yaml
-kubectl delete -f https://raw.githubusercontent.com/stackabletech/opa-operator/23.1.0/deploy/helm/opa-operator/crds/crds.yaml
-kubectl delete -f https://raw.githubusercontent.com/stackabletech/secret-operator/23.1.0/deploy/helm/secret-operator/crds/crds.yaml
-kubectl delete -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/23.1.0/deploy/helm/spark-k8s-operator/crds/crds.yaml
-kubectl delete -f https://raw.githubusercontent.com/stackabletech/superset-operator/23.1.0/deploy/helm/superset-operator/crds/crds.yaml
-kubectl delete -f https://raw.githubusercontent.com/stackabletech/trino-operator/23.1.0/deploy/helm/trino-operator/crds/crds.yaml
-kubectl delete -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/23.1.0/deploy/helm/zookeeper-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/airflow-operator/23.4.0/deploy/helm/airflow-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/commons-operator/23.4.0/deploy/helm/commons-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/druid-operator/23.4.0/deploy/helm/druid-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hbase-operator/23.4.0/deploy/helm/hbase-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hdfs-operator/23.4.0/deploy/helm/hdfs-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hive-operator/23.4.0/deploy/helm/hive-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/kafka-operator/23.4.0/deploy/helm/kafka-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/listener-operator/23.4.0/deploy/helm/listener-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/nifi-operator/23.4.0/deploy/helm/nifi-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/opa-operator/23.4.0/deploy/helm/opa-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/secret-operator/23.4.0/deploy/helm/secret-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/23.4.0/deploy/helm/spark-k8s-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/superset-operator/23.4.0/deploy/helm/superset-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/trino-operator/23.4.0/deploy/helm/trino-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/23.4.0/deploy/helm/zookeeper-operator/crds/crds.yaml
 ----
 
 [source,console]
 ----
-customresourcedefinition.apiextensions.k8s.io "airflowclusters.airflow.stackable.tech" deleted
-customresourcedefinition.apiextensions.k8s.io "airflowdbs.airflow.stackable.tech" deleted
-customresourcedefinition.apiextensions.k8s.io "authenticationclasses.authentication.stackable.tech" deleted
-customresourcedefinition.apiextensions.k8s.io "s3connections.s3.stackable.tech" deleted
+customresourcedefinition.apiextensions.k8s.io "airflowclusters.airflow.stackable.tech" replaced
+customresourcedefinition.apiextensions.k8s.io "airflowdbs.airflow.stackable.tech" replaced
+customresourcedefinition.apiextensions.k8s.io "authenticationclasses.authentication.stackable.tech" replaced
+customresourcedefinition.apiextensions.k8s.io "s3connections.s3.stackable.tech" replaced
 ...
 ----
 
@@ -343,26 +338,26 @@ release "commons-operator" uninstalled
 # ...
 ----
 
-Afterwards you will need to delete the CustomResourceDefinitions (CRDs) installed by the Stackable Platform.
-This is because helm will uninstall the operators but not the CRDs.
+Afterwards you will need to upgrade the CustomResourceDefinitions (CRDs) installed by the Stackable Platform.
+The reason for this is that helm will uninstall the operators but not the CRDs. This can be done using `kubectl replace`:
 
 [source,console]
 ----
-kubectl delete -f https://raw.githubusercontent.com/stackabletech/airflow-operator/23.1.0/deploy/helm/airflow-operator/crds/crds.yaml
-kubectl delete -f https://raw.githubusercontent.com/stackabletech/commons-operator/23.1.0/deploy/helm/commons-operator/crds/crds.yaml
-kubectl delete -f https://raw.githubusercontent.com/stackabletech/druid-operator/23.1.0/deploy/helm/druid-operator/crds/crds.yaml
-kubectl delete -f https://raw.githubusercontent.com/stackabletech/hbase-operator/23.1.0/deploy/helm/hbase-operator/crds/crds.yaml
-kubectl delete -f https://raw.githubusercontent.com/stackabletech/hdfs-operator/23.1.0/deploy/helm/hdfs-operator/crds/crds.yaml
-kubectl delete -f https://raw.githubusercontent.com/stackabletech/hive-operator/23.1.0/deploy/helm/hive-operator/crds/crds.yaml
-kubectl delete -f https://raw.githubusercontent.com/stackabletech/kafka-operator/23.1.0/deploy/helm/kafka-operator/crds/crds.yaml
-kubectl delete -f https://raw.githubusercontent.com/stackabletech/listener-operator/23.1.0/deploy/helm/listener-operator/crds/crds.yaml
-kubectl delete -f https://raw.githubusercontent.com/stackabletech/nifi-operator/23.1.0/deploy/helm/nifi-operator/crds/crds.yaml
-kubectl delete -f https://raw.githubusercontent.com/stackabletech/opa-operator/23.1.0/deploy/helm/opa-operator/crds/crds.yaml
-kubectl delete -f https://raw.githubusercontent.com/stackabletech/secret-operator/23.1.0/deploy/helm/secret-operator/crds/crds.yaml
-kubectl delete -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/23.1.0/deploy/helm/spark-k8s-operator/crds/crds.yaml
-kubectl delete -f https://raw.githubusercontent.com/stackabletech/superset-operator/23.1.0/deploy/helm/superset-operator/crds/crds.yaml
-kubectl delete -f https://raw.githubusercontent.com/stackabletech/trino-operator/23.1.0/deploy/helm/trino-operator/crds/crds.yaml
-kubectl delete -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/23.1.0/deploy/helm/zookeeper-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/airflow-operator/23.4.0/deploy/helm/airflow-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/commons-operator/23.4.0/deploy/helm/commons-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/druid-operator/23.4.0/deploy/helm/druid-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hbase-operator/23.4.0/deploy/helm/hbase-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hdfs-operator/23.4.0/deploy/helm/hdfs-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hive-operator/23.4.0/deploy/helm/hive-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/kafka-operator/23.4.0/deploy/helm/kafka-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/listener-operator/23.4.0/deploy/helm/listener-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/nifi-operator/23.4.0/deploy/helm/nifi-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/opa-operator/23.4.0/deploy/helm/opa-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/secret-operator/23.4.0/deploy/helm/secret-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/23.4.0/deploy/helm/spark-k8s-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/superset-operator/23.4.0/deploy/helm/superset-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/trino-operator/23.4.0/deploy/helm/trino-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/23.4.0/deploy/helm/zookeeper-operator/crds/crds.yaml
 ----
 
 To install the `23.4` release run
