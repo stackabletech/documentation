@@ -125,8 +125,60 @@ Project starts the 2023-04-01
 [1.21.x  ]     displays on same row as [1.21.0]
 
 -- Apache Spark on k8s --
+[3.2.1]        starts 2023-04-01 and ends 2023-07-01 and is colored in LightGreen
+[3.2.1 ]       starts 2023-07-01 and ends 2023-10-01 and is colored in LightSalmon
+[3.2.1 ]       displays on same row as [3.2.1]
+[3.3.0]        starts 2023-04-01 and ends 2023-07-01 and is colored in LightGreen
+[3.3.0 ]       starts 2023-07-01 and ends 2023-10-01 and is colored in LightSalmon
+[3.3.0 ]       displays on same row as [3.3.0]
+[3.4.0]        starts 2023-07-01 and ends 2023-10-01 and is colored in LightGreen
+[3.4.x]        starts 2023-10-01 and ends 2024-01-01 and is colored in LightGreen
+[3.4.x]        displays on same row as [3.4.0]
+[3.4.x ]       starts 2024-01-01 and ends 2024-04-01 and is colored in LightGreen
+[3.4.x ]       displays on same row as [3.4.0]
+[3.4.x  ]      starts 2024-04-01 and ends 2024-07-01 and is colored in LightGreen
+[3.4.x  ]      displays on same row as [3.4.0]
+
 -- Apache Superset --
+[1.3.2]        starts 2023-04-01 and ends 2023-07-01 and is colored in LightGreen
+[1.3.2 ]       starts 2023-07-01 and ends 2023-10-01 and is colored in LightSalmon
+[1.3.2 ]       displays on same row as [1.3.2]
+[1.4.1]        starts 2023-04-01 and ends 2023-07-01 and is colored in LightGreen
+[1.4.1 ]       starts 2023-07-01 and ends 2023-10-01 and is colored in LightSalmon
+[1.4.1 ]       displays on same row as [1.4.1]
+[1.5.1]        starts 2023-04-01 and ends 2023-07-01 and is colored in LightGreen
+[1.5.1 ]       starts 2023-07-01 and ends 2023-10-01 and is colored in LightSalmon
+[1.5.1 ]       displays on same row as [1.5.1]
+[2.1.0]        starts 2023-07-01 and ends 2023-10-01 and is colored in LightGreen
+[2.1.x]        starts 2023-10-01 and ends 2024-01-01 and is colored in LightGreen
+[2.1.x]        displays on same row as [2.1.0]
+[2.1.x ]       starts 2024-01-01 and ends 2024-04-01 and is colored in LightGreen
+[2.1.x ]       displays on same row as [2.1.0]
+[2.1.x  ]      starts 2024-04-01 and ends 2024-07-01 and is colored in LightGreen
+[2.1.x  ]      displays on same row as [2.1.0]
+
 -- Apache Zookeeper --
+[3.5.8]        starts 2023-04-01 and ends 2023-07-01 and is colored in LightGreen
+[3.5.8 ]       starts 2023-07-01 and ends 2023-10-01 and is colored in LightSalmon
+[3.5.8 ]       displays on same row as [3.5.8]
+[3.6.3]        starts 2023-04-01 and ends 2023-07-01 and is colored in LightGreen
+[3.6.3 ]       starts 2023-07-01 and ends 2023-10-01 and is colored in LightSalmon
+[3.6.3 ]       displays on same row as [3.6.3]
+[3.7.0]        starts 2023-04-01 and ends 2023-07-01 and is colored in LightGreen
+[3.7.0 ]       starts 2023-07-01 and ends 2023-10-01 and is colored in LightSalmon
+[3.7.0 ]       displays on same row as [3.7.0]
+[3.8.0]        starts 2023-04-01 and ends 2023-07-01 and is colored in LightGreen
+[3.8.0 ]       starts 2023-07-01 and ends 2023-10-01 and is colored in LightSalmon
+[3.8.1 ]       starts 2023-07-01 and ends 2023-10-01 and is colored in LightGreen
+[3.8.1 ]       displays on same row as [3.8.0]
+[3.8.x]        starts 2023-10-01 and ends 2024-01-01 and is colored in LightGreen
+[3.8.x]        displays on same row as [3.8.0]
+[3.8.x ]       starts 2024-01-01 and ends 2024-04-01 and is colored in LightGreen
+[3.8.x ]       displays on same row as [3.8.0]
+[3.8.x  ]      starts 2024-04-01 and ends 2024-07-01 and is colored in LightGreen
+[3.8.x  ]      displays on same row as [3.8.0]
+
+
 -- Trino --
 [377]          starts 2023-04-01 and ends 2023-07-01 and is colored in LightGreen
 [377 ]         starts 2023-07-01 and ends 2023-10-01 and is colored in LightSalmon
@@ -174,5 +226,14 @@ Project starts the 2023-04-01
 [0.51.0  ]     displays on same row as [0.51.0]
 [0.51.0   ]    starts 2024-04-01 and ends 2024-07-01 and is colored in LightGreen
 [0.51.0   ]    displays on same row as [0.51.0]
+
+[23.4 ]  happens 2023-04-01
+[23.7 ]  happens 2023-07-01 and displays on same row as [23.4 ]
+[23.10 ] happens 2023-10-01 and displays on same row as [23.4 ]
+[24.1 ]  happens 2024-01-01 and displays on same row as [23.4 ]
+[24.4 ]  happens 2024-04-01 and displays on same row as [23.4 ]
+[24.7 ]  happens 2024-07-01 and displays on same row as [23.4 ]
+[24.10 ] happens 2024-10-01 and displays on same row as [23.4 ]
+[25.1 ]  happens 2025-01-01 and displays on same row as [23.4 ]
 
 @endgantt
