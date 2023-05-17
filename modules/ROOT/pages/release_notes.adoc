@@ -15,7 +15,7 @@ This is a bugfix/patch-level release that fixes the following issues:
 * Fix missing custom resource defaults that are required for a release update. See https://github.com/stackabletech/issues/issues/388[here].
 * Specify the security context to run as a member of the root group (this has been implemented for the Stackable operators where it had not previously been implemented i.e. Apache HBase, Apache HDFS, Apache ZooKeeper and Apache Spark on Kubernetes). This is required by Openshift clusters so that the product can be run with a random UID. This is a https://airflow.apache.org/docs/docker-stack/entrypoint.html#allowing-arbitrary-user-to-run-the-container[requirement] for at least Airflow, but is Openshift policy as described https://docs.openshift.com/container-platform/4.11/openshift_images/create-images.html#images-create-guide-openshift_create-images[here] and https://developers.redhat.com/blog/2020/10/26/adapting-docker-and-kubernetes-containers-to-run-on-red-hat-openshift-container-platform[here].
 * Automatically migrate the name used for the bundle-builder container for OPA daemonsets. See https://github.com/stackabletech/opa-operator/issues/444[here].
-* Automatically shorten the registration socket path for Microk8s compatibility, migrated during upgrade. See https://github.com/stackabletech/listener-operator/issues/76[here].
+* Automatically shorten the registration socket path used in listener-operator for Microk8s compatibility, migrated during upgrade. See https://github.com/stackabletech/listener-operator/issues/76[here].
 
 === Release 23.4.1
 
