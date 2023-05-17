@@ -3,8 +3,13 @@
 The Stackable platform consists of multiple operators that work together.
 Periodically a platform release is made, including all components of the platform at a specific version.
 
-== Release 23.4.1
+== Release 23.4
 
+IMPORTANT: It is recommended to install <<Release 23.4.1>> and not <<Release 23.4.0>>
+
+The focus in this platform release is on the support of default/custom affinities and the status field, as well as the rollout of log aggregation across the remaining operators. Additionally, all operators have been updated and tested for compatibility with OpenShift clusters (versions 4.10 and 4.11). Several operators from the 23.1 platform release were already certified against OpenShift.
+
+=== Release 23.4.1
 This is a bugfix/patch-level release that fixes the following issues:
 
 * Fix missing custom resource defaults that are required for a release update. See https://github.com/stackabletech/issues/issues/388[here].
@@ -12,9 +17,10 @@ This is a bugfix/patch-level release that fixes the following issues:
 * Automatically migrate the name used for the bundle-builder container for OPA daemonsets. See https://github.com/stackabletech/opa-operator/issues/444[here].
 * Automatically shorten the registration socket path for Microk8s compatibility, migrated during upgrade. See https://github.com/stackabletech/listener-operator/issues/76[here].
 
-== Release 23.4
+=== Release 23.4.1
 
-The focus in this platform release is on the support of default/custom affinities and the status field, as well as the rollout of log aggregation across the remaining operators. Additionally, all operators have been updated and tested for compatibility with OpenShift clusters (versions 4.10 and 4.11). Several operators from the 23.1 platform release were already certified against OpenShift.
+This was the first release in the 23.4 release line.
+It is recommended to install <<Release 23.4.1>> instead, as it contains relevant bugfixes.
 
 === New / extended platform features
 The following new major platform features were added:
@@ -104,7 +110,7 @@ The default value is set to the `cluster-internal` `ListenerClass`: if the clust
 spec:
   image:
     productVersion: "396"
-    stackableVersion: "23.4.0"
+    stackableVersion: "23.4.1"
   clusterConfig:
     listenerClass: external-unstable
 ```
@@ -285,21 +291,21 @@ The reason for this is that helm will uninstall the operators but not the CRDs. 
 
 [source]
 ----
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/airflow-operator/23.4.0/deploy/helm/airflow-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/commons-operator/23.4.0/deploy/helm/commons-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/druid-operator/23.4.0/deploy/helm/druid-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/hbase-operator/23.4.0/deploy/helm/hbase-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/hdfs-operator/23.4.0/deploy/helm/hdfs-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/hive-operator/23.4.0/deploy/helm/hive-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/kafka-operator/23.4.0/deploy/helm/kafka-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/listener-operator/23.4.0/deploy/helm/listener-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/nifi-operator/23.4.0/deploy/helm/nifi-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/opa-operator/23.4.0/deploy/helm/opa-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/secret-operator/23.4.0/deploy/helm/secret-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/23.4.0/deploy/helm/spark-k8s-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/superset-operator/23.4.0/deploy/helm/superset-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/trino-operator/23.4.0/deploy/helm/trino-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/23.4.0/deploy/helm/zookeeper-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/airflow-operator/23.4.1/deploy/helm/airflow-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/commons-operator/23.4.1/deploy/helm/commons-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/druid-operator/23.4.1/deploy/helm/druid-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hbase-operator/23.4.1/deploy/helm/hbase-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hdfs-operator/23.4.1/deploy/helm/hdfs-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hive-operator/23.4.1/deploy/helm/hive-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/kafka-operator/23.4.1/deploy/helm/kafka-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/listener-operator/23.4.1/deploy/helm/listener-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/nifi-operator/23.4.1/deploy/helm/nifi-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/opa-operator/23.4.1/deploy/helm/opa-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/secret-operator/23.4.1/deploy/helm/secret-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/23.4.1/deploy/helm/spark-k8s-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/superset-operator/23.4.1/deploy/helm/superset-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/trino-operator/23.4.1/deploy/helm/trino-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/23.4.1/deploy/helm/zookeeper-operator/crds/crds.yaml
 ----
 
 [source,console]
@@ -317,21 +323,21 @@ To install the `23.4` release run
 ----
 $ stackablectl release install 23.4
 [INFO ] Installing release 23.4
-[INFO ] Installing airflow operator in version 23.4.0
-[INFO ] Installing commons operator in version 23.4.0
-[INFO ] Installing druid operator in version 23.4.0
-[INFO ] Installing hbase operator in version 23.4.0
-[INFO ] Installing hdfs operator in version 23.4.0
-[INFO ] Installing hive operator in version 23.4.0
-[INFO ] Installing kafka operator in version 23.4.0
-[INFO ] Installing listener operator in version 23.4.0
-[INFO ] Installing nifi operator in version 23.4.0
-[INFO ] Installing opa operator in version 23.4.0
-[INFO ] Installing secret operator in version 23.4.0
-[INFO ] Installing spark-k8s operator in version 23.4.0
-[INFO ] Installing superset operator in version 23.4.0
-[INFO ] Installing trino operator in version 23.4.0
-[INFO ] Installing zookeeper operator in version 23.4.0
+[INFO ] Installing airflow operator in version 23.4.1
+[INFO ] Installing commons operator in version 23.4.1
+[INFO ] Installing druid operator in version 23.4.1
+[INFO ] Installing hbase operator in version 23.4.1
+[INFO ] Installing hdfs operator in version 23.4.1
+[INFO ] Installing hive operator in version 23.4.1
+[INFO ] Installing kafka operator in version 23.4.1
+[INFO ] Installing listener operator in version 23.4.1
+[INFO ] Installing nifi operator in version 23.4.1
+[INFO ] Installing opa operator in version 23.4.1
+[INFO ] Installing secret operator in version 23.4.1
+[INFO ] Installing spark-k8s operator in version 23.4.1
+[INFO ] Installing superset operator in version 23.4.1
+[INFO ] Installing trino operator in version 23.4.1
+[INFO ] Installing zookeeper operator in version 23.4.1
 ----
 
 ==== Using helm
@@ -352,21 +358,21 @@ The reason for this is that helm will uninstall the operators but not the CRDs. 
 
 [source,console]
 ----
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/airflow-operator/23.4.0/deploy/helm/airflow-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/commons-operator/23.4.0/deploy/helm/commons-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/druid-operator/23.4.0/deploy/helm/druid-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/hbase-operator/23.4.0/deploy/helm/hbase-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/hdfs-operator/23.4.0/deploy/helm/hdfs-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/hive-operator/23.4.0/deploy/helm/hive-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/kafka-operator/23.4.0/deploy/helm/kafka-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/listener-operator/23.4.0/deploy/helm/listener-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/nifi-operator/23.4.0/deploy/helm/nifi-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/opa-operator/23.4.0/deploy/helm/opa-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/secret-operator/23.4.0/deploy/helm/secret-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/23.4.0/deploy/helm/spark-k8s-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/superset-operator/23.4.0/deploy/helm/superset-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/trino-operator/23.4.0/deploy/helm/trino-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/23.4.0/deploy/helm/zookeeper-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/airflow-operator/23.4.1/deploy/helm/airflow-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/commons-operator/23.4.1/deploy/helm/commons-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/druid-operator/23.4.1/deploy/helm/druid-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hbase-operator/23.4.1/deploy/helm/hbase-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hdfs-operator/23.4.1/deploy/helm/hdfs-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hive-operator/23.4.1/deploy/helm/hive-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/kafka-operator/23.4.1/deploy/helm/kafka-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/listener-operator/23.4.1/deploy/helm/listener-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/nifi-operator/23.4.1/deploy/helm/nifi-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/opa-operator/23.4.1/deploy/helm/opa-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/secret-operator/23.4.1/deploy/helm/secret-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/23.4.1/deploy/helm/spark-k8s-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/superset-operator/23.4.1/deploy/helm/superset-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/trino-operator/23.4.1/deploy/helm/trino-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/23.4.1/deploy/helm/zookeeper-operator/crds/crds.yaml
 ----
 
 To install the `23.4` release run
@@ -375,21 +381,21 @@ To install the `23.4` release run
 ----
 helm repo add stackable-stable https://repo.stackable.tech/repository/helm-stable/
 helm repo update stackable-stable
-helm install --wait airflow-operator stackable-stable/airflow-operator --version 23.4.0
-helm install --wait commons-operator stackable-stable/commons-operator --version 23.4.0
-helm install --wait druid-operator stackable-stable/druid-operator --version 23.4.0
-helm install --wait hbase-operator stackable-stable/hbase-operator --version 23.4.0
-helm install --wait hdfs-operator stackable-stable/hdfs-operator --version 23.4.0
-helm install --wait hive-operator stackable-stable/hive-operator --version 23.4.0
-helm install --wait kafka-operator stackable-stable/kafka-operator --version 23.4.0
-helm install --wait listener-operator stackable-stable/listener-operator --version 23.4.0
-helm install --wait nifi-operator stackable-stable/nifi-operator --version 23.4.0
-helm install --wait opa-operator stackable-stable/opa-operator --version 23.4.0
-helm install --wait secret-operator stackable-stable/secret-operator --version 23.4.0
-helm install --wait spark-k8s-operator stackable-stable/spark-k8s-operator --version 23.4.0
-helm install --wait superset-operator stackable-stable/superset-operator --version 23.4.0
-helm install --wait trino-operator stackable-stable/trino-operator --version 23.4.0
-helm install --wait zookeeper-operator stackable-stable/zookeeper-operator --version 23.4.0
+helm install --wait airflow-operator stackable-stable/airflow-operator --version 23.4.1
+helm install --wait commons-operator stackable-stable/commons-operator --version 23.4.1
+helm install --wait druid-operator stackable-stable/druid-operator --version 23.4.1
+helm install --wait hbase-operator stackable-stable/hbase-operator --version 23.4.1
+helm install --wait hdfs-operator stackable-stable/hdfs-operator --version 23.4.1
+helm install --wait hive-operator stackable-stable/hive-operator --version 23.4.1
+helm install --wait kafka-operator stackable-stable/kafka-operator --version 23.4.1
+helm install --wait listener-operator stackable-stable/listener-operator --version 23.4.1
+helm install --wait nifi-operator stackable-stable/nifi-operator --version 23.4.1
+helm install --wait opa-operator stackable-stable/opa-operator --version 23.4.1
+helm install --wait secret-operator stackable-stable/secret-operator --version 23.4.1
+helm install --wait spark-k8s-operator stackable-stable/spark-k8s-operator --version 23.4.1
+helm install --wait superset-operator stackable-stable/superset-operator --version 23.4.1
+helm install --wait trino-operator stackable-stable/trino-operator --version 23.4.1
+helm install --wait zookeeper-operator stackable-stable/zookeeper-operator --version 23.4.1
 ----
 
 == Release 23.1
@@ -399,7 +405,7 @@ This release marks a major change in the way operator and product images are ver
 On the technical side, a multi-dimensional matrix of versions had to be tested, documentation cross-references had to be maintained and coordinating a platform release was extremely difficult.
 
 Organizationally the biggest challenge was communication and coordination within the teams as well as to and with users.
-As a result, starting with this release, all operator and product images are versioned in lock-step. This platform release is marked `23.1` and all included components are tagged with `23.1.0`. Eventual patch versions of the components that might follow and will be tagged with `23.1.1`, `23.1.2` and so on. 
+As a result, starting with this release, all operator and product images are versioned in lock-step. This platform release is marked `23.1` and all included components are tagged with `23.1.0`. Eventual patch versions of the components that might follow and will be tagged with `23.1.1`, `23.1.2` and so on.
 
 The focus in this platform release is on the support of offline (or on-premise) product images and the partial rollout of logging support.
 
