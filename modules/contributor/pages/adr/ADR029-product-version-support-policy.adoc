@@ -42,8 +42,7 @@ Currently we do support the last 3 Kubernetes versions.
 === LTS lines per product
 We set ourselves the following constraints:
 
-1. Patch level versions can be replaced by newer patch level versions in any release without prior deprecation notice.
-2. Every product version that get's removed needs to be deprecated for at least *1* release before removal.
+1. Every product version that get's removed needs to be deprecated for at least *1* release before removal.
 This guarantees that users can update the operators (e.g. from 23.1 to 23.4) without the need to simultaneously update the product version as well.
 The flow is to first update the control plane (the operators) and afterwards the product versions if desired (e.g. when the version is now deprecated).
 
