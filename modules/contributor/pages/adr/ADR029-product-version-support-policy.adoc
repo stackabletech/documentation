@@ -34,6 +34,7 @@ Currently we do support the last 3 Kubernetes versions.
 
 * Customer requirements for stability, but also security updates
 * Maintenance/support effort
+* Customers need the ability to update the control plane (operator versions) without the need to *simultaneously* update the product version.
 
 == Considered Options
 
@@ -49,11 +50,10 @@ The flow is to first update the control plane (the operators) and afterwards the
 For every product there is always *1* LTS line we support and - in general - recommend to use.
 Normally this is a minor release line of the products containing the latest patch version.
 The exceptions could be e.g. Trino (which just uses a single number as release version), in which case a fixed release would be considered a release line.
-It will be supported for at least *4* consecutive releases - as well as at least for one year (whatever lasts longer).
-After the given number of releases (or months) we can deprecate the release line and pick a new one or continue supporting the release line.
+It will be supported for at least one year.
+After the guaranteed time period we can deprecate the release line and pick a new one or continue supporting the release line.
 
-In addition to the LTS line we also ship the latest version of the product with every release.
-It does not need to always be the latest version, e.g. when the latest version is not mature enough or causes problems, but should be pretty recent.
+In addition to the LTS line we may also ship other versions, e.g. the latest upstream version.
 
 One example flow is shown below:
 
