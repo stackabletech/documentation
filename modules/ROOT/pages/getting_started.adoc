@@ -136,13 +136,15 @@ kind: ZookeeperCluster
 metadata:
   name: simple-zk
 spec:
+  image:
+    productVersion: 3.8.0
+    stackableVersion: 23.4.1
   servers:
     roleGroups:
       primary:
         replicas: 1
         config:
           myidOffset: 10
-  version: 3.8.0-stackable0
 EOF
 ----
 
@@ -158,8 +160,11 @@ kind: KafkaCluster
 metadata:
   name: simple-kafka
 spec:
-  version: 2.8.1-stackable0
-  zookeeperConfigMapName: simple-kafka-znode
+  image:
+    productVersion: 2.8.1
+    stackableVersion: 23.4.1
+  clusterConfig:
+    zookeeperConfigMapName: simple-kafka-znode
   brokers:
     roleGroups:
       brokers:
@@ -204,9 +209,11 @@ kind: NifiCluster
 metadata:
   name: simple-nifi
 spec:
-  version: 1.16.3-stackable0.1.0
-  zookeeperConfigMapName: simple-nifi-znode
-  config:
+  image:
+    productVersion: 1.16.3
+    stackableVersion: 23.4.1
+  clusterConfig:
+    zookeeperConfigMapName: simple-nifi-znode
     authentication:
       method:
         singleUser:
@@ -218,9 +225,6 @@ spec:
   nodes:
     roleGroups:
       default:
-        config:
-          log:
-            rootLogLevel: INFO
         replicas: 1
 EOF
 ----
