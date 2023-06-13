@@ -1,0 +1,35 @@
+= Pod overrides
+
+WARNING: Overriding certain configurations can lead to faulty clusters. User overrides should only be used as a last resort!
+
+For a role or role group, at the same level of `config`, you can specify `podOverrides` for any of the attributes you can configure on a Pod.
+
+An example for an HDFS clusters looks as follows:
+
+[source,yaml]
+----
+apiVersion: hdfs.stackable.tech/v1alpha1
+kind: HdfsCluster
+metadata:
+  name: simple-hdfs
+spec:
+  nameNodes: # change to your your role
+    config: # [..]
+    podOverrides: # on role level
+      spec:
+        tolerations:
+          - key: "key1"
+            operator: "Equal"
+            value: "value1"
+            effect: "NoSchedule"
+    roleGroups:
+      default:
+        config: # [..]
+        podOverrides: # on rolegroup level, takes precedence over the ones specified at role level
+          metadata:
+            labels:
+              my-custom-label: super-important-label
+        replicas: 1
+----
+
+The `podOverrides` can be any valid `PodTemplateSpec` (which basically means everything property that you can set on a Pod).
