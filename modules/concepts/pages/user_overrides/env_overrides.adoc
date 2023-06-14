@@ -1,6 +1,6 @@
-= Env overrides
+= Environment variable overrides
 
-WARNING: Overriding certain configurations can lead to faulty clusters. User overrides should only be used as a last resort!
+WARNING: Overriding certain properties can lead to faulty clusters. Environment variable overrides should only be used as a last resort!
 
 For a role or role group, at the same level of `config`, you can specify `envOverrides` for any env variable
 
@@ -28,5 +28,5 @@ spec:
         replicas: 1
 ----
 
-The env vars you can set dependents on the individual product.
+The environment variables you can set depend on the specific product.
 All override property values must be strings.
