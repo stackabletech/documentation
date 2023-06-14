@@ -27,6 +27,6 @@ spec:
         replicas: 1
 ----
 
-The role, as well as the configuration file and configuration settings dependents on the individual product.
+The role, as well as the configuration file and configuration settings available depend on the specific product.
 All override property values must be strings.
 The properties will be formatted and escaped correctly into the file format used by the product.
