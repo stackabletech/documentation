@@ -32,4 +32,4 @@ spec:
         replicas: 1
 ----
 
-The `podOverrides` can be any valid `PodTemplateSpec` (which basically means everything property that you can set on a Pod).
+The `podOverrides` can be any valid `PodTemplateSpec` (which means every property that you can set on a regular Kubernetes Pod).
