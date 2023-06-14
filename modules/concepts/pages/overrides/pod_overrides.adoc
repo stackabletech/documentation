@@ -1,6 +1,6 @@
 = Pod overrides
 
-WARNING: Overriding certain configurations can lead to faulty clusters. Pod overrides should only be used as a last resort!
+WARNING: Overriding certain aspects of the Pods can lead to faulty clusters. Pod overrides should only be used as a last resort!
 
 For a role or role group, at the same level of `config`, you can specify `podOverrides` for any of the attributes you can configure on a Pod.
 
@@ -33,3 +33,12 @@ spec:
 ----
 
 The `podOverrides` can be any valid `PodTemplateSpec` (which means every property that you can set on a regular Kubernetes Pod).
+
+The priority of how to construct the final Pod submitted to Kubernetes looks as follows (low to high):
+
+1. PodTemplateSpec calculated by operator
+2. PodTemplateSpec given in role level `podOverrides`
+3. PodTemplateSpec given in rolegroup level `podOverrides`
+
+Each of these are combined top to bottom using a deep merge.
+The exact merge algorithm is described in the https://arnavion.github.io/k8s-openapi/v0.18.x/k8s_openapi/trait.DeepMerge.html[k8s-openapi docs], which basically tries to mimic the way Kubernetes merges patches onto objects.
