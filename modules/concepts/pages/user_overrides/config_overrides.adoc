@@ -1,6 +1,6 @@
 = Config overrides
 
-WARNING: Overriding certain configurations can lead to faulty clusters. User overrides should only be used as a last resort!
+WARNING: Overriding certain properties can lead to faulty clusters. User overrides should only be used as a last resort!
 
 For a role or role group, at the same level of `config`, you can specify `configOverrides` for any of the configuration files the product uses.
 
