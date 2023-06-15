@@ -12,7 +12,4 @@
 ** xref:tls_server_verification.adoc[]
 ** xref:pod_placement.adoc[]
 ** xref:cluster_operations.adoc[]
-** xref:overrides/index.adoc[]
-*** xref:overrides/config_overrides.adoc[]
-*** xref:overrides/env_overrides.adoc[]
-*** xref:overrides/pod_overrides.adoc[]
+** xref:overrides.adoc[]

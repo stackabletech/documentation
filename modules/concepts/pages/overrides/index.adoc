@@ -1,5 +1,0 @@
-= Overrides
-
-WARNING: Overriding certain configurations can lead to faulty clusters. Overrides should only be used as a last resort!
-
-The cluster definitions also supports overriding configuration aspects, either per role or per role group, where the more specific override (role group) has precedence over the less specific one (role).
