@@ -1,12 +1,18 @@
 = Overrides
 
+The Stackable Operators configure the products they are operating with sensible defaults, and required settings to enable connectivity and security when enabled.
+Other important settings are usually exposed as settings in the resource definition.
+In some cases however, you might want to set certain settings that are not exposed, or override settings that the operator has set on the product.
+
+The resource definitions of all products support overrides, specifically for the product configuration, environment variables, and the PodSpec the operators generate.
+
 WARNING: Overriding certain configuration properties can lead to faulty clusters. Overrides should only be used as a last resort!
 
-The cluster definitions also supports overriding configuration aspects, either per role or per role group, where the more specific override (role group) has precedence over the less specific one (role).
+The cluster definitions also supports overriding configuration aspects, either per xref:roles-and-role-groups.adoc[role or per role group], where the more specific override (role group) has precedence over the less specific one (role).
 
 == Config overrides
 
-For a role or role group, at the same level of `config`, you can specify `configOverrides` for any of the configuration files the product uses.
+For a xref:roles-and-role-groups.adoc[role or role group], at the same level of `config`, you can specify `configOverrides` for any of the configuration files the product uses.
 
 An example for an HDFS clusters looks as follows:
 
@@ -37,7 +43,7 @@ The properties will be formatted and escaped correctly into the file format used
 
 == Environment variable overrides
 
-For a role or role group, at the same level of `config`, you can specify `envOverrides` for any env variable
+For a xref:roles-and-role-groups.adoc[role or role group], at the same level of `config`, you can specify `envOverrides` for any env variable
 
 An example for an HDFS clusters looks as follows:
 
@@ -63,12 +69,12 @@ spec:
         replicas: 1
 ----
 
-The environment variables you can set depend on the specific product.
+You can any environment variables, but every specific product does support a different set of environment variables.
 All override property values must be strings.
 
 == Pod overrides
 
-For a role or role group, at the same level of `config`, you can specify `podOverrides` for any of the attributes you can configure on a Pod.
+For a xref:roles-and-role-groups.adoc[role or role group], at the same level of `config`, you can specify `podOverrides` for any of the attributes you can configure on a Pod.
 
 An example for an HDFS clusters looks as follows:
 
@@ -108,3 +114,12 @@ The priority of how to construct the final Pod submitted to Kubernetes looks as 
 
 Each of these are combined top to bottom using a deep merge.
 The exact merge algorithm is described in the https://arnavion.github.io/k8s-openapi/v0.18.x/k8s_openapi/trait.DeepMerge.html[k8s-openapi docs], which basically tries to mimic the way Kubernetes merges patches onto objects.
+
+The `podOverrides` will be merged onto the following resources the operators deploy:
+
+* StatefulSets containing the products (most of the products)
+* DaemonSets containing the products (currently only OPA)
+
+They will *not* be applied to:
+
+* Jobs, that are used to setup systems the product depends on e.g. create a database schema for Superset oder Airflow.
