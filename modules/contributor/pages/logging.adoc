@@ -9,7 +9,7 @@ For a conceptual overview of logging aggregation, consult the xref:concepts:logg
 
 === Approach
 
-The Stackable Data Platform (SDP) does _*not*_ implement product logging where none exists, but rather provides a way for the user to interact with whatever logging framework is already in place, and to ensure that the log output can be consolidated and preserved in an output sink (e.g. Opensearch). Products use various logging libraries such as log4j, log4j2, logback, python logging etc. and SDP logging aggregation enables:
+The Stackable Data Platform (SDP) does _*not*_ implement product logging where none exists, but rather provides a way for the user to interact with whatever logging framework is already in place, and to ensure that the log output can be consolidated and preserved in an output sink (e.g. Opensearch). Products use various logging libraries such as Log4j, Log4j2, Logback, Python logging etc. and SDP logging aggregation enables:
 
 - the extension or overriding of the default product logging configuration (so that e.g. the log level can be changed): this assumes knowledge of the product logging library
 - the capture and parsing of stdout and stderr logging statements
