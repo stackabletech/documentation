@@ -78,8 +78,8 @@ If a specific logging configuration is not yet available in the framework this c
 ----
 fn create_java_logging_config(
 ) -> String {
-    format!(
-        r#"handlers=java.util.logging.FileHandler, java.util.logging.ConsoleHandler
+    format!(r#"
+handlers=java.util.logging.FileHandler, java.util.logging.ConsoleHandler
 .level={root_log_level}
 java.util.logging.FileHandler.pattern=/path/to/jul.%g.logger
 java.util.logging.FileHandler.limit=50000
