@@ -14,7 +14,7 @@ The cluster definitions also supports overriding configuration aspects, either p
 
 For a xref:roles-and-role-groups.adoc[role or role group], at the same level of `config`, you can specify `configOverrides` for any of the configuration files the product uses.
 
-An example for an HDFS clusters looks as follows:
+An example for an HDFS cluster looks as follows:
 
 [source,yaml]
 ----
