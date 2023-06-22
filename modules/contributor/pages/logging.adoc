@@ -51,7 +51,7 @@ pub fn extend_config_map<C, K>(
     logging: &Logging<C>,
     ... // other parameters dependent on calling context
     cm_builder: &mut ConfigMapBuilder,
-) -> Result<()>
+) -> Result<()> {
 ----
 
 This function will typically be called from the product controller at the point at which the `RoleGroup` `ConfigMap` is being defined. It issues internal calls to the framework to conditionally retrieve:
@@ -65,7 +65,7 @@ For the first of these, the framework provides pre-configured configurations for
 ----
     config:
       logging:
-        enableVectorAgent: true # indicates vector.toml should be mounted
+        enableVectorAgent: true # deploy a vector container with the log agent and  mount vector.toml
         containers:
           spark-history:
             custom:
