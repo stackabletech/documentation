@@ -1,6 +1,6 @@
 = Overrides
 
-The Stackable Operators configure the products they are operating with sensible defaults, and required settings to enable connectivity and security when enabled.
+The Stackable Operators configure the products they are operating with sensible defaults and required settings to enable connectivity and security.
 Other important settings are usually exposed as settings in the resource definition.
 In some cases however, you might want to set certain settings that are not exposed, or override settings that the operator has set on the product.
 
@@ -45,7 +45,7 @@ The properties will be formatted and escaped correctly into the file format used
 
 For a xref:roles-and-role-groups.adoc[role or role group], at the same level of `config`, you can specify `envOverrides` for any env variable
 
-An example for an HDFS clusters looks as follows:
+An example for an HDFS cluster looks as follows:
 
 [source,yaml]
 ----
@@ -69,14 +69,14 @@ spec:
         replicas: 1
 ----
 
-You can any environment variables, but every specific product does support a different set of environment variables.
+You can set any environment variable, but every specific product does support a different set of environment variables.
 All override property values must be strings.
 
 == Pod overrides
 
 For a xref:roles-and-role-groups.adoc[role or role group], at the same level of `config`, you can specify `podOverrides` for any of the attributes you can configure on a Pod.
 
-An example for an HDFS clusters looks as follows:
+An example for an HDFS cluster looks as follows:
 
 [source,yaml]
 ----
