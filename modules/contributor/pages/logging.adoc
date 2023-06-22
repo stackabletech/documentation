@@ -15,7 +15,7 @@ The Stackable Data Platform (SDP) does _*not*_ implement product logging where n
 - the capture and parsing of stdout and stderr logging statements
 - the consolidation of both of the above into a standard logging format which will be written to the aggregation sink
 
-Implementing logging for a given product will require code:
+Implementing logging for a given operator and product will require code:
 
 - in a logging module specific to the product
 - in the `operator-rs` framework library
