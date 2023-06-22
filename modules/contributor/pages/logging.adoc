@@ -65,7 +65,7 @@ For the first of these, the framework provides pre-configured configurations for
 ----
     config:
       logging:
-        enableVectorAgent: true # deploy a vector container with the log agent and  mount vector.toml
+        enableVectorAgent: true # deploy a vector container with the log agent and mount the vector.toml config
         containers:
           spark-history:
             custom:
