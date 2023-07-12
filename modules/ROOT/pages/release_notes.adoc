@@ -84,15 +84,139 @@ This release supports the following OpenShift versions:
 
 === Breaking changes
 
-You will need to adapt your existing CRDs due to the following breaking changes detailed below.
+The re-structuring of configuration definitions in certain operators will require you to adapt your existing CRDs as shown below.
 
-==== All Stackable Operators
+==== Stackable Operator for Apache Airflow
 
-airflow: [BREAKING] Consolidated remaining top-level config options to clusterConfig (#271).
-superset:       [BREAKING] Moved all top level config options to clusterConfig. Authentication is now provided via an array of AuthenticationClasses and additional properties (#379).
-trino: [BREAKING]: Reworked authentication mechanism: TheclusterConfig.authentication now requires a list of AuthenticationClass references instead of the MultiUser and LDAP separation (#434).
+* https://github.com/stackabletech/airflow-operator/issues/271[Consolidated remaining top level configuration to clusterConfig]
+
+CRDs should be changed from e.g.
+
+```
+spec:
+  ...
+  executor: CeleryExecutor
+  loadExamples: true
+  exposeConfig: false
+  credentialsSecret: test-airflow-credentials
+  ...
+```
+
+to:
+
+```
+spec:
+  ...
+  clusterConfig:
+    executor: CeleryExecutor
+    loadExamples: true
+    exposeConfig: false
+    credentialsSecret: test-airflow-credentials
+    ...
+```
+
+==== Stackable Operator for Apache Superset
+
+* https://github.com/stackabletech/superset-operator/issues/379[Moved all top level config options to clusterConfig. Authentication is now provided via an array of AuthenticationClasses and additional properties]
+
+CRDs should be changed from e.g.
+
+```
+spec:
+  ...
+  credentialsSecret: superset-credentials
+  loadExamplesOnInit: false
+  vectorAggregatorConfigMapName: vector-aggregator-discovery
+  ...
+```
+
+to:
+
+```
+spec:
+  ...
+  clusterConfig:
+    credentialsSecret: superset-credentials
+    loadExamplesOnInit: false
+    vectorAggregatorConfigMapName: vector-aggregator-discovery
+    ...
+```
+
+==== Stackable Operator for Trino
+
+* https://github.com/stackabletech/trino-operator/issues/434[Reworked authentication mechanism: The clusterConfig.authentication now requires a list of AuthenticationClass references instead of the MultiUser and LDAP separation]
+
+CRDs should be changed from e.g.
+
+```
+spec:
+  ...
+  clusterConfig:
+    authentication:
+      method:
+        multiUser:
+          userCredentialsSecret:
+            name: trino-users
+  ...
+```
+
+referencing a Secret with bcrypt-ed data:
+
+```
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: trino-users
+type: kubernetes.io/opaque
+stringData:
+  # admin:admin
+  admin: $2y$10$89xReovvDLacVzRGpjOyAOONnayOgDAyIS2nW9bs5DJT98q17Dy5i
+  # alice:alice
+  alice: $2y$10$HcCa4k9v2DRrD/g7e5vEz.Bk.1xg00YTEHOZjPX7oK3KqMSt2xT8W
+  # bob:bob
+  bob: $2y$10$xVRXtYZnYuQu66SmruijPO8WHFM/UK5QPHTr.Nzf4JMcZSqt3W.2.
+```
+
+to:
+
+```
+spec:
+  ...
+  clusterConfig:
+    authentication:
+      - authenticationClass: trino-users-auth
+    ...
+```
+
+referencing an AuthenticationClass (which references a Secret with plain data):
+
+```
+---
+apiVersion: authentication.stackable.tech/v1alpha1
+kind: AuthenticationClass
+metadata:
+    name: trino-users-auth
+spec:
+  provider:
+    static:
+      userCredentialsSecret:
+        name: trino-users
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: trino-users
+type: kubernetes.io/opaque
+stringData:
+  admin: admin
+  alice: alice
+  bob: bob
+```
 
 === Upgrade from 23.4
+
+TODO
 
 == Release 23.4
 
