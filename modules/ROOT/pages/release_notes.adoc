@@ -18,6 +18,23 @@ Pod Overrides::
 
 It is now possible to add custom settings which specify elements of a pod template (service, stateteful set etc.) on roles or rolegroups, which the operator then merges with the objects it writes before actually applying them. See https://github.com/stackabletech/issues/issues/346[this issue] for more details.
 
+For example, with HDFS:
+
+```
+    roleGroups:
+      default:
+        replicas: 1
+        podOverrides:
+          spec:
+            containers:
+              - name: journalnode
+                resources:
+                  requests:
+                    cpu: 110m
+                  limits:
+                    cpu: 410m
+```
+
 Openshift certification::
 
 OLM bundles - a pre-requisite for the Openshift certification process - have been created for each operator. All 15 SDP operators in release 23.4.1 are now Openshift-certified and deployable directly from within an Openshift cluster.
@@ -68,7 +85,7 @@ Additionally, there are some individual product features that are noteworthy:
 
 === stackablectl
 
-TODO
+There are no new demos in this platform release.
 
 === Supported Kubernetes versions
 
