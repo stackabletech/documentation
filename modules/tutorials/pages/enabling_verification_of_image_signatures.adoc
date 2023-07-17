@@ -1,0 +1,33 @@
+= Enabling verification of image signatures
+
+Image signing is a security measure that can help ensuring the authenticity and integrity of container images. Starting with SDP 23.7, all our operator images are signed https://docs.sigstore.dev/cosign/openid_signing/["keyless"] (signing of product images and Helm charts will follow). By verifying these signatures, cluster administrators can ensure that the operator images pulled from Stackable's container registry are authentic and have not been tampered with.
+Since Kubernetes does not have native support for verifying image signatures yet, we will use a tool called https://kyverno.io/[Kyverno] in this tutorial.
+
+== Installing Kyverno
+Kyverno can be easily installed via Helm:
+
+[source,bash]
+----
+helm repo add kyverno https://kyverno.github.io/kyverno/
+helm repo update
+helm install kyverno kyverno/kyverno -n kyverno --create-namespace
+----
+
+Other installation methods and options to run Kyverno in a highly-available fashion are described in the https://kyverno.io/docs/installation/methods/[Kyverno documentation].
+
+== Creating a policy to verify image signatures
+
+Now that Kyverno is installed, we can create a policy that verifies that all operator images of SDP 23.7 releases are signed by Stackable's CI pipeline (Github Actions):
+
+[source,yaml]
+include::example$verify-signatures/kyverno-policy.yaml[]
+
+Apply this policy to the cluster by saving it as `kyverno-policy.yaml` and running:
+[source,bash]
+----
+kubectl apply -f kyverno-policy.yaml
+----
+
+The policy will be applied to all namespaces in the cluster. It checks all newly created Pods that run any image matching the expression `docker.stackable.tech/*-operator:23.7.*` (all Stackable operators version 23.7.*) and assures these images have been signed by a Stackable Github Action from the release 23.7 (`https://github.com/stackabletech/*-operator/.github/workflows/build.yml@refs/tags/23.7.*`). If the signature of an operator image is invalid or missing, the policy will deny the pod creation.
+For a more detailed explanation of the policy options, please refer to the https://kyverno.io/docs/writing-policies/verify-images/sigstore/#keyless-signing-and-verification[Kyverno documentation].
+If we would change the `subject` field in the policy to something like `https://github.com/test/*`, the policy will deny the creation of operator pods because the signature is not valid anymore.
