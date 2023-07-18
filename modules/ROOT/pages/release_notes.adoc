@@ -16,7 +16,7 @@ Explicit resources are now applied to all containers, for both operators and pro
 
 Pod Overrides::
 
-It is now possible to add custom settings which specify elements of a pod template (service, stateteful set etc.) on roles or rolegroups, which the operator then merges with the objects it writes before actually applying them. Have a look at https://docs.stackable.tech/home/stable/concepts/overrides.html#_pod_overrides[the documentation] for more details.
+It is now possible to add custom settings which specify elements of a pod template (service, stateteful set etc.) on roles or rolegroups, which the operator then merges with the objects it writes before actually applying them. This provides the user with a possibility for specifying any property that can be set on a regular Kubernetes Pod, but which is not directly exposed via the Stackable custom resource definition. Have a look at https://docs.stackable.tech/home/stable/concepts/overrides.html#_pod_overrides[the documentation] for more details.
 
 For example, with HDFS:
 
@@ -80,7 +80,7 @@ Additionally, there are some individual product features that are noteworthy:
 
 * https://github.com/stackabletech/hdfs-operator/issues/334[HDFS: support for enabling secure mode with Kerberos]
 * https://github.com/stackabletech/spark-k8s-operator/issues/247[Spark-k8s: support for using custom certificates when accessing S3 with TLS]
-* https://github.com/stackabletech/trino-operator/issues/436[Trino: support arbitrary connectors using the generic connector for e.g. access to PostgreSQL]
+* https://github.com/stackabletech/trino-operator/issues/436[Trino: support for arbitrary connectors using the generic connector for e.g. access to PostgreSQL]
 * https://github.com/stackabletech/zookeeper-operator/issues/334[ZooKeeper: expose ZOOKEEPER_CLIENT_PORT in discovery CM]
 
 === stackablectl
