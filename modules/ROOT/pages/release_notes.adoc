@@ -16,7 +16,7 @@ Explicit resources are now applied to all containers, for both operators and pro
 
 Pod Overrides::
 
-It is now possible to add custom settings which specify elements of a pod template (service, stateteful set etc.) on roles or rolegroups, which the operator then merges with the objects it writes before actually applying them. Have a look at https://docs.stackable.tech/home/stable/concepts/overrides.html#_pod_overrides[the documenation] for more details.
+It is now possible to add custom settings which specify elements of a pod template (service, stateteful set etc.) on roles or rolegroups, which the operator then merges with the objects it writes before actually applying them. Have a look at https://docs.stackable.tech/home/stable/concepts/overrides.html#_pod_overrides[the documentation] for more details.
 
 For example, with HDFS:
 
