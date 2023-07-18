@@ -14,11 +14,11 @@ The guarantees we give are on multiple levels as detailed below:
 * The SDP itself
 * CustomResourceDefinition (CRD) versions
 * Supported product versions
-* Supported OpenShift & Kubernetes
+* Supported OpenShift & Kubernetes versions
 
 All these policies may evolve as we learn what works best for our customers and for us.
 
-These policies are from *June 2023*.
+These policies are from *July 2023*.
 
 
 == Stackable Data Platform Lifecycle Policy
@@ -26,8 +26,7 @@ These policies are from *June 2023*.
 NOTE: This policy concerns releases of our platform as a whole and how long and to which extent we support each version.
 
 We do releases of our Stackable Data Platform.
-
-These releases get a name based on the date they have been released (e.g. `23.4`, `23.7`). This name does not follow Semantic Versioning (Semver). We may release patches for a release, which then follow the PATCH naming semantics of Semver (e.g. `23.4.1`). See below for our policy on patches for the SDP.
+These releases get a name based on the year and month they have been released in (e.g. `23.4`, `23.7`, also called https://calver.org/[CalVer]). This name does not follow Semantic Versioning (https://semver.org/[SemVer]). We may release patches for a release, which then follow the PATCH naming semantics of SemVer (e.g. `23.4.1`) or the _Micro_ name from CalVer. See below for our policy on patches for the SDP.
 
 We do support an SDP release for a specific time after its release.
 
@@ -44,6 +43,7 @@ The following pictures show both scenarios:
 TODO: Insert diagrams here
 
 We _will_ release new patch releases of a SDP release (e.g. `23.4.1`) for any issues we deem Critical or High (see definition below) once fixes become available.
+We _may_ release new patch releases for other reasons.
 
 === Maintenance Phase
 
@@ -57,8 +57,8 @@ TODO: Insert diagram
 
 We may release patches for other reasons.
 
-Customers are expected to upgrade their SDP environment to the most current supported patch (`23.4.z`) version.
-
+Customers are expected to upgrade their SDP environment to the most current supported patch/micro (`23.4.z`) version.
+Make sure to follow our release notes to learn of valid upgrade paths, some intermediate updates might be necessary.
 
 == CRD Versioning Lifecycle Policy
 
@@ -94,12 +94,13 @@ SDP ships with a lot of different downstream products (e.g. Apache HBase, Apache
 
 All of these products follow their own version semantics and release cadences and lifecycles, which is why we do not define a product lifecycle policy based on version numbers alone.
 
-For every one of the products we ship we always support one LTS (Long Term Support) release line, which we generally recommend to use. A release line usually means that we are going to keep a `major.minor` release stable but will include newer patch versions in later SDP releases.
+For every one of the products we ship we always support one LTS (Long Term Support) release line, which we generally recommend to use.
+A release line usually means that we are going to keep a `major.minor` release stable but will include newer patch versions in later SDP releases.
 
 Some products (e.g. Trino) don't follow Semver rules, for those we will follow separate rules and clearly document what version is considered LTS.
 
 Every LTS release line is shipped for at least one full year.
-After a year we may switch to a new release line.
+After a year we may switch to a new release line - but there will always be at least an overlap of one release in which the old LTS version is deprecated, but a new LTS version is available.
 Which line we chose as our LTS release is at our own discretion and is based on popularity, upstream lifecycle policies, stability, our own experience and other factors.
 
 In addition to the LTS line we may also ship other versions, e.g. the latest upstream version.
@@ -126,12 +127,13 @@ We may ship new versions for existing SDP releases for other issues as well.
 
 For every SDP release we will publish a list of supported Kubernetes versions.
 
-We are aiming to support the last three Kubernetes versions but will make case-by-case decisions by taking into account the currently supported OpenShift versions as published by RedHat where it is our goal to support all versions that are in Full or Maintenance support. As the releases may be overlapping we might not always support the latest Kubernetes or OpenShift versions when we release a SDP version.
+We are aiming to support the last three Kubernetes versions but will make case-by-case decisions by taking into account the currently supported Kubernetes versions.
+We will also take into account currently supported OpenShift versions as published by RedHat. It is our goal to support all versions that are in Full or Maintenance support. As the releases may be overlapping we might not always support the latest Kubernetes or OpenShift versions when we release a SDP version.
 
 
 == Support Policy (Security & Bugs)
 
-Stackable will analyze all published security vulnerabilities (e.g. CVEs but other sources may apply as well) for all the products we support. We take various sources into account when assigning a criticality. Among those sources is the NVD database, but we place higher value on the self-assessments by the projects themselves, and we will additionally evaluate all vulnerabilities in the context of how they are used in the Stackable Data Platform.
+Stackable will analyze published security vulnerabilities (e.g. CVEs but other sources may apply as well) for all the products we support as well components developed by us and their dependencies. We take various sources into account when assigning a criticality. Among those sources is the NVD database, but we place higher value on the self-assessments by the projects themselves, and we will additionally evaluate vulnerabilities in the context of how they are used in the Stackable Data Platform.
 
 We will then assign a criticality to each vulnerability according to similar rating categories that https://access.redhat.com/security/updates/classification[RedHat has established]:
 
