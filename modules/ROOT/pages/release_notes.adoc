@@ -12,7 +12,7 @@ The following new major platform features were added:
 
 Resource Quotas::
 
-Explicit resources are now applied to all containers, both operators and products. This prevents pre-specified resource limits from being violated. Where these are not specified directly, defaults will be used. See https://github.com/stackabletech/issues/issues/368[this issue] for more information.
+Explicit resources are now applied to all containers, for both operators and products. This allows running the Stackable data platform on Kubernetes clusters with a ResourceQuota or LimitRange set. Where these are not specified directly, defaults will be used. See https://github.com/stackabletech/issues/issues/368[this issue] for more information.
 
 Pod Overrides::
 
