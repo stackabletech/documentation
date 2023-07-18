@@ -365,6 +365,25 @@ helm install --wait trino-operator stackable-stable/trino-operator --version 23.
 helm install --wait zookeeper-operator stackable-stable/zookeeper-operator --version 23.7.0
 ----
 
+==== Known upgrade issues
+
+===== Custom PVCs
+
+* All operators
+** If the default PVC size has been changed, then the StatefulSet must be deleted: it is not possible to change the PVC in the StatefulSet specification.
+*** The error message is similar to: `StatefulSet.apps "trino-worker-default" is invalid: spec: Forbidden: updates to statefulset spec for fields other than 'replicas', 'template', 'updateStrategy', [...]`
+* ZooKeeper operator
+** The ZooKeeper operator in this release expects a product image with the same version. An existing ZooKeeper cluster resource should be deleted and re-applied with the corresponding `stackableVersion`e.g.
+
+[source,yaml]
+----
+spec:
+  image:
+    productVersion: 3.8.0
+    stackableVersion: "23.7"
+----
+
+
 == Release 23.4
 
 The focus in this platform release is on the support of default/custom affinities and the status field, as well as the rollout of log aggregation across the remaining operators. Additionally, all operators have been updated and tested for compatibility with OpenShift clusters (versions 4.10 and 4.11). Several operators from the 23.1 platform release were already certified against OpenShift.
