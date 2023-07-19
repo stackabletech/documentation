@@ -17,7 +17,7 @@ Other installation methods and options to run Kyverno in a highly-available fash
 
 == Creating a policy to verify image signatures
 
-Now that Kyverno is installed, we can create a policy that verifies that all operator images of SDP 23.7 releases are signed by Stackable's CI pipeline (Github Actions):
+Now that Kyverno is installed, we can create a policy that verifies that all operator images that are part of the SDP 23.7 releases are signed by Stackable's CI pipeline (Github Actions):
 
 [source,yaml]
 include::example$verify-signatures/kyverno-policy.yaml[]
