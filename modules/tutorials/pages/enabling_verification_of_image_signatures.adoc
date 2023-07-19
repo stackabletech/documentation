@@ -1,6 +1,6 @@
 = Enabling verification of image signatures
 
-Image signing is a security measure that can help ensuring the authenticity and integrity of container images. Starting with SDP 23.7, all our operator images are signed https://docs.sigstore.dev/cosign/openid_signing/["keyless"] (signing of product images and Helm charts will follow). By verifying these signatures, cluster administrators can ensure that the operator images pulled from Stackable's container registry are authentic and have not been tampered with.
+Image signing is a security measure that helps ensure the authenticity and integrity of container images. Starting with SDP 23.7, all our operator images are signed https://docs.sigstore.dev/cosign/openid_signing/["keyless"] (signing of product images and Helm charts will follow). By verifying these signatures, cluster administrators can ensure that the operator images pulled from Stackable's container registry are authentic and have not been tampered with.
 Since Kubernetes does not have native support for verifying image signatures yet, we will use a tool called https://kyverno.io/[Kyverno] in this tutorial.
 
 == Installing Kyverno
