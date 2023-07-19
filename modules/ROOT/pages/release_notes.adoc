@@ -8,6 +8,7 @@ Periodically a platform release is made, including all components of the platfor
 This release introduces the specification of resource quotas and Pod-overrides and updates the product versions supported by SDP.
 
 === New / extended platform features
+
 The following new major platform features were added:
 
 Resource Quotas::
