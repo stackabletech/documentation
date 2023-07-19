@@ -367,13 +367,14 @@ helm install --wait zookeeper-operator stackable-stable/zookeeper-operator --ver
 
 ==== Known upgrade issues
 
-===== Custom PVCs
+In addition to the breaking changes detailed above, please note the following:
 
-* All operators
-** If the default PVC size has been changed, then the StatefulSet must be deleted: it is not possible to change the PVC in the StatefulSet specification.
-*** The error message is similar to: `StatefulSet.apps "trino-worker-default" is invalid: spec: Forbidden: updates to statefulset spec for fields other than 'replicas', 'template', 'updateStrategy', [...]`
-* ZooKeeper operator
-** The ZooKeeper operator in this release expects a product image with the same version. An existing ZooKeeper cluster resource should be deleted and re-applied with the corresponding `stackableVersion`e.g.
+===== All operators
+* If the default PVC size has been changed, then the StatefulSet must be deleted: it is not possible to change the PVC in the StatefulSet specification.
+** The error message is similar to: `StatefulSet.apps "trino-worker-default" is invalid: spec: Forbidden: updates to statefulset spec for fields other than 'replicas', 'template', 'updateStrategy', [...]`
+
+===== ZooKeeper operator
+* The ZooKeeper operator in this release expects a product image with the same version. An existing ZooKeeper cluster resource should be deleted and re-applied with the corresponding `stackableVersion` e.g.
 
 [source,yaml]
 ----
