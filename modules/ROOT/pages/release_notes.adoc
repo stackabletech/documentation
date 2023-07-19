@@ -39,6 +39,10 @@ Openshift certification::
 
 OLM bundles - a pre-requisite for the Openshift certification process - have been created for each operator. All 15 SDP operators in release 23.4.1 are now Openshift-certified and deployable directly from within an Openshift cluster.
 
+Signed SDP operator images::
+
+As of this release all Stackable operator images are signed (this feature will be added to product images in a subsequent release). More information about this, including how to verify the image signatures, can be found in the xref:tutorials:enabling_verification_of_image_signatures[documentation].
+
 New Versions::
 
 The following new product versions are now supported:
