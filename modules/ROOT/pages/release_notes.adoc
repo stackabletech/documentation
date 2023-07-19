@@ -5,7 +5,7 @@ Periodically a platform release is made, including all components of the platfor
 
 == Release 23.7
 
-This release introduces the specification of resource quotas and Pod-overrides and updates the product versions supported by SDP.
+This release introduces the specification of resource quotas and pod overrides and updates the product versions supported by SDP.
 
 === New / extended platform features
 
