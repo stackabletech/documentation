@@ -11,7 +11,7 @@ v0.1, 2022-08-31
 ** Lars Francke
 * Date: 2022-08-31
 
-Note: Parts of this ADR were expanded by xref:adr/ADR023-product-image-selection.adoc[]
+Note: Parts of this ADR were expanded by xref:adr/ADR028-automatic-stackable-version.adoc[]
 
 == Context and Problem Statement
 Currently users have to specify the full image tag in the Products CRD, as described in xref:adr/ADR018-product_image_versioning.adoc[].
