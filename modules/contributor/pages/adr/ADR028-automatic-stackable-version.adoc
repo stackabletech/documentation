@@ -52,6 +52,8 @@ The thing this ADR decides on, is what stackable version operators should use wh
 
 === Default to stackable release line (23.7)
 
+For the changes to take effect we also need to change the default `imagePullPolicy` to `Always`.
+
 ==== Pros
 
 * Customers automatically get security updates (in case the use a custom image registry they need to periodically mirror ours)
