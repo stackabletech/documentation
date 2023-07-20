@@ -372,7 +372,9 @@ helm install --wait zookeeper-operator stackable-stable/zookeeper-operator --ver
 
 ==== Known upgrade issues
 
-In addition to the breaking changes detailed above, please note the following:
+In the case of the breaking changes detailed above it will be necessary to update the custom resources for Airflow, Superset and Trino clusters and re-apply them.
+
+Additionally, please note the following:
 
 ===== All operators
 * If the default PVC size has been changed, then the StatefulSet must be deleted: it is not possible to change the PVC in the StatefulSet specification.
