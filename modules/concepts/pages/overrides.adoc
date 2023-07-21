@@ -41,6 +41,8 @@ The role, as well as the configuration file and configuration settings available
 All override property values must be strings.
 The properties will be formatted and escaped correctly into the file format used by the product.
 
+You can also set the variable to an empty string (`my.property: ""`), which effectively disables the setting the operator would write out normally. In case of a `.properties` file, this will show up as `my.property=` in the `.properties` file.
+
 == Environment variable overrides
 
 For a xref:roles-and-role-groups.adoc[role or role group], at the same level of `config`, you can specify `envOverrides` for any env variable
