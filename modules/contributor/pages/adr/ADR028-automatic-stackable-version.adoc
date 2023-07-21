@@ -60,7 +60,7 @@ For the changes to take effect we also need to change the default `imagePullPoli
 
 ==== Cons
 
-* We need to be **really** careful when releasing a patch product image version. "Will every customer setup out there survive this patch?". This **should** be fine most of the times but the devil lies in the details (e.g. new ubi version brings new version of lib that does not work any more) and the impact can be pretty high. Another example could be stripping Log4Shell classes from jar files and hoping no customer installation relies on them being present.
+* We need to be **really** careful when releasing a patch product image version. "Will every customer setup out there survive this patch?". This **should** be fine most of the time but the devil lies in the details (e.g. new ubi version brings new version of lib that does not work any more) and the impact can be pretty high. Another example could be stripping Log4Shell classes from jar files and hoping no customer installation relies on them being present.
 
 == Decision Outcome
 
