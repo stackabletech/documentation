@@ -23,7 +23,7 @@ As a user I don't want to specify `image.stackableVersion` in every custom resou
 Problems:
 
 1. Tedious: All CRs need to be touched every release. All docs either point to `0.0.0-dev` or a fixed release. Should the user point to `23.7.0` or `23.7`?
-2. Error prone: During the trino (and other products) bump 23.4 -> 23.7 the 23.7 operator did not work with the 23.4 product image, so users were not able to only upgrade the operator to 23.7, as the image was too old for the operator => trino pods crashlooped, stackableVersion needed to be bumped in the CR
+2. Error-prone: During the trino (and other products) bump 23.4 -> 23.7 the 23.7 operator did not work with the 23.4 product image, so users were not able to only upgrade the operator to 23.7, as the image was too old for the operator => trino pods crash-looped, stackableVersion needed to be bumped in the CR.
 3. Does not support only upgrading the operators without the need to touch every CR in the cluster (see 2. trino example)
 
 The proposed solution should fix all this problems. A follow-up task is to default the `image.productVersion` to our LTS line as well, so that users don't need to specify even a single version.
