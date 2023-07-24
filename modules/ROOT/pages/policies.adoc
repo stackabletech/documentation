@@ -40,7 +40,9 @@ This phase begins once a new non-patch SDP version is released and ends after a 
 
 The following pictures show both scenarios:
 
-TODO: Insert diagrams here
+image:full_support_scenario_1.png[Full Support Scenario 1]
+
+image:full_support_scenario_2.png[Full Support Scenario 2]
 
 We _will_ release new patch releases of a SDP release (e.g. `23.4.1`) for any issues we deem Critical or High (see definition below) once fixes become available.
 We _may_ release new patch releases for other reasons.
@@ -51,7 +53,7 @@ This phase commences after the _Full Support_ phase for the respective SDP versi
 
 We _may_ release new patch releases of a SDP release (e.g. `23.4.1`) for any issues we deem Critical or High (see definition below) once fixes become available.
 
-TODO: Insert diagram
+image:maintenance_phase.png[Maintenance Phase]
 
 === General
 
@@ -64,7 +66,7 @@ Make sure to follow our release notes to learn of valid upgrade paths, some inte
 
 IMPORTANT: As of June 2023 all our CRDs are versioned as `alpha1`. We will start introducing other versions later in 2023.
 
-`CustomResourceDefinition`s at Stackable are versioned.
+``CustomResourceDefinition``s at Stackable are versioned.
 
 Our policies around CRD versioning are inspired by the https://kubernetes.io/docs/reference/using-api/deprecation-policy/[Kubernetes Deprecation Policy].
 
@@ -106,6 +108,8 @@ Which line we chose as our LTS release is at our own discretion and is based on 
 In addition to the LTS line we may also ship other versions, e.g. the latest upstream version.
 
 We do honor the same deprecation policy for non-LTS products as for LTS products, but we do not guarantee a long term support for these versions. They may be deprecated faster.
+
+image:product_release_cycle.png[Product Lifecycle Policy]
 
 === Deprecation
 
