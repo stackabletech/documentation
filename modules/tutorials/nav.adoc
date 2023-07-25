@@ -1,4 +1,4 @@
 * xref:tutorials:index.adoc[]
 ** xref:end-to-end_data_pipeline_example.adoc[]
 ** xref:authentication_with_openldap.adoc[]
-** xref:enabling_verification_of_image_signatures[]
+** xref:enabling_verification_of_image_signatures.adoc[]
