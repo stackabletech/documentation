@@ -1,5 +1,5 @@
 name: home
-version: "nightly"
+version: "23.7"
 title: Stackable Documentation
 nav:
   - modules/ROOT/nav.adoc
