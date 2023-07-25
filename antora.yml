@@ -9,4 +9,4 @@ nav:
   - modules/operators/nav.adoc
   - modules/contributor/nav.adoc
   - modules/ROOT/nav2.adoc
-prerelease: true
+prerelease: false
