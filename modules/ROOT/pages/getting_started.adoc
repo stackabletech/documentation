@@ -81,11 +81,11 @@ Install the Stackable command line utility xref:stackablectl::index.adoc[stackab
 === Installing Stackable Operators
 The Stackable operators are components that translate the service definitions deployed via Kubernetes into deploy services on the worker nodes. These can be installed on any node that has access to the Kubernetes control plane. In this example we will install them on the controller node.
 
-Stackable operators can be installed using stackablectl. Run the following commands to install ZooKeeper, Kafka and NiFi from the Stackable 23.4 release.
+Stackable operators can be installed using stackablectl. Run the following commands to install ZooKeeper, Kafka and NiFi from the Stackable 23.7 release.
 
 [source,bash]
 ----
-stackablectl release install -i zookeeper -i kafka -i nifi -i secret 23.4
+stackablectl release install -i zookeeper -i kafka -i nifi -i secret 23.7
 ----
 
 .Using Helm instead
