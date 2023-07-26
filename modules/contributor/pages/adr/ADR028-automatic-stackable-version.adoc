@@ -64,4 +64,4 @@ For the changes to take effect we also need to change the default `imagePullPoli
 
 == Decision Outcome
 
-Option `Default to stackable release line (23.7)` was chosen.
+Option `Default to specific stackable version (23.7.0)` was chosen.
