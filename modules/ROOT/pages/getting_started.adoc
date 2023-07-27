@@ -24,18 +24,11 @@ Kind offers a very quick and easy way to bootstrap your Kubernetes infrastructur
 
 If you don't already have Docker then visit https://docs.docker.com/get-docker/[Docker Website] to find out how to install Docker. Kind is a single executable that performs the tasks of installing and configuring Kubernetes for you within Docker containers. The https://kind.sigs.k8s.io/docs/user/quick-start/[Kind Website] has instructions for installing Kind on your system.
 
-Once you have both of these installed then you can build a Kubernetes cluster in Docker. We're going to create a 2 node cluster to test out Stackable, one node hosting the Kubernetes control plane and the other hosting the Stackable services.
+Once you have both of these installed then you can build a Kubernetes cluster in Docker. We're going to create a simple, single node cluster to test out Stackable, with the one node hosting both the Kubernetes control plane and the Stackable services.
 
 [source, bash]
 ----
-kind create cluster --name quickstart --config - << EOF
----
-kind: Cluster
-apiVersion: kind.x-k8s.io/v1alpha4
-nodes:
-- role: control-plane
-- role: worker
-EOF
+kind create cluster --name quickstart
 ----
 
 === Installing Kubernetes using K3s
@@ -43,7 +36,7 @@ K3s provides a quick way of installing Kubernetes. On your control node run the 
 
 [source,bash]
 ----
-curl -sfL https://get.k3s.io | sh -s - --node-label 'node=quickstart-1' --write-kubeconfig-mode 644
+curl -sfL https://get.k3s.io | sh -s - --write-kubeconfig-mode 644
 ----
 
 So long as you have an Internet connection K3s will download and automatically configure a simple Kubernetes environment.
@@ -64,7 +57,14 @@ To check if everything worked as expected you can use `kubectl cluster-info` to 
 ----
 Kubernetes control plane is running at https://127.0.0.1:6443
 CoreDNS is running at https://127.0.0.1:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
-Metrics-server is running at https://127.0.0.1:6443/api/v1/namespaces/kube-system/services/https:metrics-server:/proxy
+----
+
+If you set up your cluster using K3s you will additionally see the metrics server:
+
+----
+Kubernetes control plane is running at https://127.0.0.1:6443
+CoreDNS is running at https://127.0.0.1:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+Metrics-server is running at https://127.0.0.1:6443/api/v1/namespaces/kube-system/services/https:metrics-server:https/proxy
 ----
 
 == Installing Stackable
@@ -298,15 +298,15 @@ To get the IP address we need to connect to (in this case `172.18.0.2`), run:
 
 [source,bash]
 ----
-kubectl get nodes --selector=kubernetes.io/hostname=quickstart-worker -o wide
+kubectl get nodes -o wide
 ----
 ----
-NAME                STATUS   ROLES    AGE   VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION    CONTAINER-RUNTIME
-quickstart-worker   Ready    <none>   25m   v1.25.3   172.18.0.2    <none>        Ubuntu 22.04.1 LTS   5.14.0-1052-oem   containerd://1.6.9
+NAME                       STATUS   ROLES           AGE     VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION    CONTAINER-RUNTIME
+quickstart-control-plane   Ready    control-plane   9m59s   v1.25.3   172.18.0.2    <none>        Ubuntu 22.04.1 LTS   5.14.0-1052-oem   containerd://1.6.9
 ----
 
 
-With the following command we get the port (in this case `30247`):
+With the following command we get the port (in this case `31931`):
 
 [source,bash]
 ----
@@ -314,15 +314,15 @@ kubectl get svc simple-nifi
 ----
 
 ----
-NAME          TYPE       CLUSTER-IP     EXTERNAL-IP   PORT(S)          AGE
-simple-nifi   NodePort   10.96.88.205   <none>        8443:30166/TCP   8m5s
+NAME          TYPE       CLUSTER-IP    EXTERNAL-IP   PORT(S)          AGE
+simple-nifi   NodePort   10.96.82.80   <none>        8443:31931/TCP   7m51s
 ----
 
-Browse to the address of your Kubernetes node on port `30166` e.g. https://172.18.0.2:30166/nifi and you should see the NiFi login screen.
+Browse to the address of your Kubernetes node on port `31931` e.g. https://172.18.0.2:31931/nifi and you should see the NiFi login screen.
 
 image:nifi_login_screen.png[The Apache NiFi web interface login screen]
 
-The Apache NiFi operator will automatically generate the admin user credentials with a random password and store it as a Kubernetes secret in order to provide some security out of the box. You can retrieve this password for the `admin` user with the following kubectl command.
+If a password has not been specified for the admin user the Apache NiFi operator will automatically generate the admin user credentials with a random password and store it as a Kubernetes secret in order to provide some security out of the box. In the example above we have provided our own secret, but you can retrieve and confirm this password for the `admin` user with the following kubectl command.
 
 [source,bash]
 ----
