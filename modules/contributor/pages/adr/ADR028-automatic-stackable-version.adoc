@@ -1,0 +1,67 @@
+= ADR028: Automatic stackable version selection
+Sebastian bernauer <sebastian.bernauer@stackable.tech>
+v0.1, 2023-07-20
+:status: accepted
+
+* Status: {status}
+* Contributors:
+** Sönke Liebau
+** Lukas Voetmand
+** Sebastian Bernauer
+* Date: 2023-02-28
+
+Technical Story: https://github.com/stackabletech/issues/issues/404
+
+Note: This ADR expands on parts of xref:adr/ADR023-product-image-selection.adoc[]
+
+== Context and Problem Statement
+
+// Describe the context and problem statement, e.g., in free form using two to three sentences. You may want to articulate the problem in form of a question.
+
+As a user I don't want to specify `image.stackableVersion` in every custom resource (CR), as this is tedious and error-prone.
+
+Problems:
+
+1. Tedious: All CRs need to be touched every release. All docs either point to `0.0.0-dev` or a fixed release. Should the user point to `23.7.0` or `23.7`?
+2. Error-prone: During the trino (and other products) bump 23.4 -> 23.7 the 23.7 operator did not work with the 23.4 product image, so users were not able to only upgrade the operator to 23.7, as the image was too old for the operator => trino pods crash-looped, stackableVersion needed to be bumped in the CR.
+3. Does not support only upgrading the operators without the need to touch every CR in the cluster (see 2. trino example)
+
+The proposed solution should fix all these problems. A follow-up task is to default the `image.productVersion` to our LTS line as well, so that users don't need to specify even a single version.
+
+The thing this ADR decides on, is what stackable version operators should use when it is not specified by the user.
+
+== Decision Drivers
+
+* Cluster stability: Customer installations should not start randomly crashing without him changing anything.
+* Security updates: Security updates should propagate to users as fast as possible.
+* Cluster consistency: Ideally clusters should not have 8 Pods running with version a and 2 Pods with a different version b.
+
+== Considered Options
+
+=== Default to specific stackable version (23.7.0)
+
+==== Pros
+
+* Guaranteed stability
+* Guaranteed consistent cluster state
+
+==== Cons
+
+* Operators and product images need to be released in lockstep
+* Customers need to manually update to get security updates
+
+=== Default to stackable release line (23.7)
+
+For the changes to take effect we also need to change the default `imagePullPolicy` to `Always`.
+
+==== Pros
+
+* Customers automatically get security updates (in case the use a custom image registry they need to periodically mirror ours)
+
+==== Cons
+
+* We need to be **really** careful when releasing a patch product image version. "Will every customer setup out there survive this patch?". This **should** be fine most of the time but the devil lies in the details (e.g. new ubi version brings new version of lib that does not work any more) and the impact can be pretty high. Another example could be stripping Log4Shell classes from jar files and hoping no customer installation relies on them being present.
+
+== Decision Outcome
+
+Option `Default to specific stackable version (23.7.0)` was chosen.

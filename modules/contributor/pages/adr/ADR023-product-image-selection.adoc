@@ -11,6 +11,8 @@ v0.1, 2022-08-31
 ** Lars Francke
 * Date: 2022-08-31
 
+Note: Parts of this ADR were expanded by xref:adr/ADR028-automatic-stackable-version.adoc[]
+
 == Context and Problem Statement
 Currently users have to specify the full image tag in the Products CRD, as described in xref:adr/ADR018-product_image_versioning.adoc[].
 
@@ -86,7 +88,7 @@ image:
 ----
 
 * Bad, because it's breaking
-* Bad, because versions can only contain the product version (e.g. `1.4.1`). Having this "hidden" under image may seem like an implementation detail to the user. It can be argued that version is important enough to be a top-level field.  
+* Bad, because versions can only contain the product version (e.g. `1.4.1`). Having this "hidden" under image may seem like an implementation detail to the user. It can be argued that version is important enough to be a top-level field.
 
 === Option 4
 [source,yaml]
@@ -125,7 +127,7 @@ We want to start with the first two variants `stackableImageTag` and `custom`. T
 [[option6]]
 === Option 6
 
-This option is **breaking**. It uses a complex enum, similar to Option 5. Option 5 does not account for the need to specify the product version with a custom image. It is also not possible to just use a custom docker repository and still use the operator recommended version (i.e. just mirroring the stackable repository). This option makes that possible. We first start with implementing `stackableVersion` and `custom`. The `stackable` enum variant will be implemented as soon as we have the magic stackableVersion resolution. 
+This option is **breaking**. It uses a complex enum, similar to Option 5. Option 5 does not account for the need to specify the product version with a custom image. It is also not possible to just use a custom docker repository and still use the operator recommended version (i.e. just mirroring the stackable repository). This option makes that possible. We first start with implementing `stackableVersion` and `custom`. The `stackable` enum variant will be implemented as soon as we have the magic stackableVersion resolution.
 
 [source,yaml]
 ----
@@ -145,7 +147,7 @@ image: # complex enum
 
   pullPolicy: IfNotPresent
   pullSecrets: # Option<Vec<LocalObjectReference>>
-    name: regcred # reference to secret in same namespace 
+    name: regcred # reference to secret in same namespace
 ----
 
 **Known issues**: We will start to implement our own schema since kube-rs is not supporting flatten yet.
