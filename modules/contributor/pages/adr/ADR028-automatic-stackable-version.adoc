@@ -1,7 +1,7 @@
 = ADR028: Automatic stackable version selection
 Sebastian bernauer <sebastian.bernauer@stackable.tech>
 v0.1, 2023-07-20
-:status: draft
+:status: accepted
 
 * Status: {status}
 * Contributors:
