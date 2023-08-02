@@ -14,7 +14,7 @@ There are multiple ways to specify the image used:
 If your Kubernetes cluster has internet access, the easiest way is to use the publicly available Images from the https://docker.stackable.tech/[Image registry hosted by Stackable].
 If the Kubernetes cluster does not have internet access, a xref:_custom_docker_registry[] or xref:_custom_images[] can be used.
 
-Currently, you need to specify at least the product version: The version of the product, as it e.g. can be found on the xref:operators:supported_versions.adoc[list of supported product versions] or on the website of the product itself.
+Currently, you need to specify the product version. This can be found on the xref:operators:supported_versions.adoc[list of supported product versions] or on the website of the product itself.
 This requirement might be relaxed in the future, as every platform release will ship wth a recommended product versions, which will be used by default.
 
 Additionally you can specify the Stackable version: As we need to make changes to the Images from time to time (e.g. security updates), we also have to version them using the Stackable version. An image gets released for every version of the SDP.
