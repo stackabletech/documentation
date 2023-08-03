@@ -134,7 +134,6 @@ metadata:
 spec:
   image:
     productVersion: "3.8.1"
-    stackableVersion: "23.7"
   clusterConfig:
     tls:
       serverSecretClass: null
@@ -169,7 +168,6 @@ metadata:
 spec:
   image:
     productVersion: "3.4.0"
-    stackableVersion: "23.7"
   clusterConfig:
     zookeeperConfigMapName: simple-kafka-znode
     tls:
@@ -220,7 +218,6 @@ metadata:
 spec:
   image:
     productVersion: "1.21.0"
-    stackableVersion: "23.7"
   clusterConfig:
     listenerClass: external-unstable
     zookeeperConfigMapName: simple-nifi-znode
