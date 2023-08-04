@@ -28,6 +28,10 @@ content:
     - url: https://github.com/stackabletech/stackablectl.git
       start_path: docs
       branches: main
+    # cockpit
+    - url: https://github.com/stackabletech/stackable-cockpit.git
+      start_path: docs
+      branches: feature/docs # FIXME: move to main
     # internal operators
     - url: https://github.com/stackabletech/commons-operator.git
       start_path: docs
