@@ -263,7 +263,7 @@ We can test ZooKeeper by running the ZooKeeper CLI shell. The easiest way to do 
 
 [source,bash]
 ----
-kubectl exec -i -t simple-zk-server-primary-0 -- bin/zkCli.sh -server localhost:2282
+kubectl exec -i -t simple-zk-server-primary-0 -- bin/zkCli.sh -server localhost:2181
 ----
 
 The shell should connect automatically to the ZooKeeper server running on the pod. You can run the `ls /` command to see the list of znodes in the root path, which should include those created by Apache Kafka and Apache NiFi.
@@ -287,7 +287,7 @@ Create the topic with the following command:
 [source,bash]
 ----
 kubectl exec -i -t simple-kafka-broker-brokers-0 -c kafka -- bin/kafka-topics.sh \
-  --bootstrap-server simple-kafka-broker-brokers.default.svc.cluster.local:9093 \
+  --bootstrap-server simple-kafka-broker-brokers.default.svc.cluster.local:9092 \
   --create --topic demo --command-config /stackable/config.properties
 ----
 
