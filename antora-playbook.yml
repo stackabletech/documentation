@@ -18,6 +18,7 @@ content:
     - url: .
       branches:
         - HEAD
+        - release/23.7
         - release/23.4
         - release/23.1
         - release/22.11
@@ -32,6 +33,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-23.7
         - release-23.4
         - release-23.1
         - distributed-component-compat  # (required for 0.4 and below)
@@ -42,6 +44,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-23.7
         - release-23.4
         - release-23.1
         - distributed-component-compat  # (required for 0.6 and below)
@@ -52,6 +55,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-23.7
         - release-23.4
         - release-23.1
     # product operators
@@ -59,6 +63,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-23.7
         - release-23.4
         - release-23.1
         - distributed-component-compat  # (required for 0.6 and below)
@@ -70,6 +75,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-23.7
         - release-23.4
         - release-23.1
         - distributed-component-compat
@@ -81,6 +87,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-23.7
         - release-23.4
         - release-23.1
         - distributed-component-compat
@@ -91,6 +98,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-23.7
         - release-23.4
         - release-23.1
         - distributed-component-compat
@@ -102,6 +110,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-23.7
         - release-23.4
         - release-23.1
         - distributed-component-compat
@@ -113,6 +122,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-23.7
         - release-23.4
         - release-23.1
         - distributed-component-compat
@@ -124,6 +134,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-23.7
         - release-23.4
         - release-23.1
         - distributed-component-compat  # (required for 0.8 and below)
@@ -134,6 +145,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-23.7
         - release-23.4
         - release-23.1
         - distributed-component-compat
@@ -145,6 +157,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-23.7
         - release-23.4
         - release-23.1
         - distributed-component-compat
@@ -158,6 +171,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-23.7
         - release-23.4
         - release-23.1
         - distributed-component-compat
@@ -168,6 +182,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-23.7
         - release-23.4
         - release-23.1
         - distributed-component-compat
@@ -181,6 +196,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-23.7
         - release-23.4
         - release-23.1
         - distributed-component-compat

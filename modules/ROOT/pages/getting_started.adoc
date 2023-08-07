@@ -24,24 +24,11 @@ Kind offers a very quick and easy way to bootstrap your Kubernetes infrastructur
 
 If you don't already have Docker then visit https://docs.docker.com/get-docker/[Docker Website] to find out how to install Docker. Kind is a single executable that performs the tasks of installing and configuring Kubernetes for you within Docker containers. The https://kind.sigs.k8s.io/docs/user/quick-start/[Kind Website] has instructions for installing Kind on your system.
 
-Once you have both of these installed then you can build a Kubernetes cluster in Docker. We're going to create a 2 node cluster to test out Stackable, one node hosting the Kubernetes control plane and the other hosting the Stackable services.
+Once you have both of these installed then you can build a Kubernetes cluster in Docker. We're going to create a simple, single node cluster to test out Stackable, with the one node hosting both the Kubernetes control plane and the Stackable services.
 
 [source, bash]
 ----
-kind create cluster --name quickstart --config - << EOF
----
-kind: Cluster
-apiVersion: kind.x-k8s.io/v1alpha4
-nodes:
-- role: control-plane
-- role: worker
-  kubeadmConfigPatches:
-    - |
-      kind: JoinConfiguration
-      nodeRegistration:
-        kubeletExtraArgs:
-          node-labels: node=quickstart-1
-EOF
+kind create cluster --name quickstart
 ----
 
 === Installing Kubernetes using K3s
@@ -49,7 +36,7 @@ K3s provides a quick way of installing Kubernetes. On your control node run the 
 
 [source,bash]
 ----
-curl -sfL https://get.k3s.io | sh -s - --node-label 'node=quickstart-1' --write-kubeconfig-mode 644
+curl -sfL https://get.k3s.io | sh -s - --write-kubeconfig-mode 644
 ----
 
 So long as you have an Internet connection K3s will download and automatically configure a simple Kubernetes environment.
@@ -70,7 +57,14 @@ To check if everything worked as expected you can use `kubectl cluster-info` to 
 ----
 Kubernetes control plane is running at https://127.0.0.1:6443
 CoreDNS is running at https://127.0.0.1:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
-Metrics-server is running at https://127.0.0.1:6443/api/v1/namespaces/kube-system/services/https:metrics-server:/proxy
+----
+
+If you set up your cluster using K3s you will additionally see the metrics server:
+
+----
+Kubernetes control plane is running at https://127.0.0.1:6443
+CoreDNS is running at https://127.0.0.1:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+Metrics-server is running at https://127.0.0.1:6443/api/v1/namespaces/kube-system/services/https:metrics-server:https/proxy
 ----
 
 == Installing Stackable
@@ -81,11 +75,11 @@ Install the Stackable command line utility xref:stackablectl::index.adoc[stackab
 === Installing Stackable Operators
 The Stackable operators are components that translate the service definitions deployed via Kubernetes into deploy services on the worker nodes. These can be installed on any node that has access to the Kubernetes control plane. In this example we will install them on the controller node.
 
-Stackable operators can be installed using stackablectl. Run the following commands to install ZooKeeper, Kafka and NiFi from the Stackable 23.4 release.
+Stackable operators can be installed using stackablectl. Run the following commands to install ZooKeeper, Kafka and NiFi from the Stackable 23.7 release.
 
 [source,bash]
 ----
-stackablectl release install -i zookeeper -i kafka -i nifi -i secret 23.4
+stackablectl release install -i commons -i secret -i zookeeper -i kafka -i nifi 23.7
 ----
 
 .Using Helm instead
@@ -104,10 +98,11 @@ Install the operators:
 
 [source,bash]
 ----
-helm install zookeeper-operator stackable-stable/zookeeper-operator --version=0.10.0
-helm install kafka-operator stackable-stable/kafka-operator --version=0.6.0
-helm install secret-operator stackable-stable/secret-operator --version=0.5.0
-helm install nifi-operator stackable-stable/nifi-operator --version=0.6.0
+helm install zookeeper-operator stackable-stable/zookeeper-operator --version=23.7
+helm install kafka-operator stackable-stable/kafka-operator --version=23.7
+helm install secret-operator stackable-stable/secret-operator --version=23.7
+helm install commons-operator stackable-stable/commons-operator --version=23.7
+helm install nifi-operator stackable-stable/nifi-operator --version=23.7
 ----
 ====
 
@@ -115,10 +110,11 @@ You can check which operators are installed using `stackablectl operator install
 
 ----
 OPERATOR              VERSION         NAMESPACE                      STATUS           LAST UPDATED
-kafka                 0.6.0           default                        deployed         2022-06-30 17:01:17.552606 +0100 BST
-nifi                  0.6.0           default                        deployed         2022-06-30 17:01:31.895733 +0100 BST
-secret                0.5.0           default                        deployed         2022-06-30 17:07:48.542761 +0100 BST
-zookeeper             0.10.0          default                        deployed         2022-06-30 17:01:47.032154 +0100 BST
+commons               23.7.0          default                        deployed         2023-07-27 09:41:05.769685041 +0200 CEST
+kafka                 23.7.0          default                        deployed         2023-07-27 09:41:27.685845379 +0200 CEST
+nifi                  23.7.0          default                        deployed         2023-07-27 09:41:40.928558978 +0200 CEST
+secret                23.7.0          default                        deployed         2023-07-27 09:41:51.820834174 +0200 CEST
+zookeeper             23.7.0          default                        deployed         2023-07-27 09:41:54.972145417 +0200 CEST
 ----
 
 == Deploying Stackable Services
@@ -137,14 +133,24 @@ metadata:
   name: simple-zk
 spec:
   image:
-    productVersion: 3.8.0
-    stackableVersion: 23.4.1
+    productVersion: "3.8.1"
+  clusterConfig:
+    tls:
+      serverSecretClass: null
   servers:
     roleGroups:
       primary:
         replicas: 1
         config:
           myidOffset: 10
+---
+apiVersion: zookeeper.stackable.tech/v1alpha1
+kind: ZookeeperZnode
+metadata:
+  name: simple-zk-znode
+spec:
+  clusterRef:
+    name: simple-zk
 EOF
 ----
 
@@ -161,10 +167,11 @@ metadata:
   name: simple-kafka
 spec:
   image:
-    productVersion: 3.3.1
-    stackableVersion: 23.4.1
+    productVersion: "3.4.0"
   clusterConfig:
     zookeeperConfigMapName: simple-kafka-znode
+    tls:
+      serverSecretClass: null
   brokers:
     roleGroups:
       brokers:
@@ -210,15 +217,14 @@ metadata:
   name: simple-nifi
 spec:
   image:
-    productVersion: 1.18.0
-    stackableVersion: 23.4.1
+    productVersion: "1.21.0"
   clusterConfig:
+    listenerClass: external-unstable
     zookeeperConfigMapName: simple-nifi-znode
     authentication:
       method:
         singleUser:
           adminCredentialsSecret: nifi-admin-credentials-simple
-          autoGenerate: true
     sensitiveProperties:
       keySecret: nifi-sensitive-property-key
       autoGenerate: true
@@ -232,17 +238,19 @@ EOF
 You can check the status of the services using `kubectl get pods`. This will retrieve the status of all pods running in the default namespace.
 
 ----
-NAME                                             READY   STATUS    RESTARTS   AGE
-nifi-operator-deployment-64c98c779c-nw6h8        1/1     Running   0          24m
-kafka-operator-deployment-54df9f86c7-psqgd       1/1     Running   0          24m
-zookeeper-operator-deployment-767458d4f5-2czb9   1/1     Running   0          24m
-secret-operator-daemonset-pddkv                  2/2     Running   0          24m
-simple-zk-server-primary-0                       1/1     Running   0          23m
-simple-kafka-broker-brokers-0                    2/2     Running   0          21m
-simple-nifi-node-default-0                       1/1     Running   0          22m
+NAME                                             READY   STATUS      RESTARTS   AGE
+commons-operator-deployment-598c744f6f-gfj2h     1/1     Running     0          15m
+kafka-operator-deployment-7c4bd694d5-xjwsj       1/1     Running     0          15m
+nifi-operator-deployment-748d748487-qg885        1/1     Running     0          15m
+secret-operator-daemonset-wr57f                  3/3     Running     0          14m
+simple-kafka-broker-brokers-0                    2/2     Running     0          7m50s
+simple-nifi-create-reporting-task-1-21-0-jltpv   0/1     Completed   4          5m13s
+simple-nifi-node-default-0                       1/1     Running     0          5m13s
+simple-zk-server-primary-0                       1/1     Running     0          14m
+zookeeper-operator-deployment-64fcccc797-pckhf   1/1     Running     0          14m
 ----
 
-Since this is the first time that each of these services has been deployed to these nodes, it will take some time to download the software from the Stackable repository and deploy the services. Once all of the pods are in the running state your cluster is ready to use.
+Since this is the first time that each of these services has been deployed to these nodes, it will take some time to download the software from the Stackable repository and deploy the services. Once all the pods are in the running state your cluster is ready to use.
 
 == Testing your cluster
 If all has gone well then you will have successfully deployed a Stackable cluster and used it to start three services that should now be ready for you.
@@ -259,7 +267,7 @@ The shell should connect automatically to the ZooKeeper server running on the po
 
 ----
 [zk: localhost:2181(CONNECTED) 0] ls /
-[nifi, znode-17b28a7e-0d45-450b-8209-871225c6efa1, zookeeper]
+[znode-81484420-e097-4b13-a121-84f0211b99db, znode-9076785e-39d0-49cc-b067-30be25bf4faa, znode-a4b12f66-48c2-40dc-91d8-a42135eaf371, zookeeper]
 ----
 
 === Apache Kafka
@@ -296,15 +304,15 @@ To get the IP address we need to connect to (in this case `172.18.0.2`), run:
 
 [source,bash]
 ----
-kubectl get nodes --selector=node=quickstart-1 -o wide
+kubectl get nodes -o wide
 ----
 ----
-NAME                STATUS   ROLES    AGE   VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE       KERNEL-VERSION      CONTAINER-RUNTIME
-quickstart-worker   Ready    <none>   45m   v1.21.1   172.18.0.2    <none>        Ubuntu 21.04   5.15.0-25-generic   containerd://1.5.2
+NAME                       STATUS   ROLES           AGE     VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION    CONTAINER-RUNTIME
+quickstart-control-plane   Ready    control-plane   9m59s   v1.25.3   172.18.0.2    <none>        Ubuntu 22.04.1 LTS   5.14.0-1052-oem   containerd://1.6.9
 ----
 
 
-With the following command we get the port (in this case `30247`):
+With the following command we get the port (in this case `31931`):
 
 [source,bash]
 ----
@@ -313,14 +321,14 @@ kubectl get svc simple-nifi
 
 ----
 NAME          TYPE       CLUSTER-IP    EXTERNAL-IP   PORT(S)          AGE
-simple-nifi   NodePort   10.43.75.25   <none>        8443:30247/TCP   49m
+simple-nifi   NodePort   10.96.82.80   <none>        8443:31931/TCP   7m51s
 ----
 
-Browse to the address of your Kubernetes node on port `30247` e.g. https://172.18.0.2:30247/nifi and you should see the NiFi login screen.
+Browse to the address of your Kubernetes node on port `31931` e.g. https://172.18.0.2:31931/nifi and you should see the NiFi login screen.
 
 image:nifi_login_screen.png[The Apache NiFi web interface login screen]
 
-The Apache NiFi operator will automatically generate the admin user credentials with a random password and store it as a Kubernetes secret in order to provide some security out of the box. You can retrieve this password for the `admin` user with the following kubectl command.
+If a password has not been specified for the admin user the Apache NiFi operator will automatically generate the admin user credentials with a random password and store it as a Kubernetes secret in order to provide some security out of the box. In the example above we have provided our own secret, but you can retrieve and confirm this password for the `admin` user with the following kubectl command.
 
 [source,bash]
 ----
