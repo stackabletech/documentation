@@ -30,7 +30,7 @@ content:
     # cockpit
     - url: https://github.com/stackabletech/stackable-cockpit.git
       start_path: docs
-      branches: feature/docs # FIXME: move to main
+      branches: main
     # internal operators
     - url: https://github.com/stackabletech/commons-operator.git
       start_path: docs
