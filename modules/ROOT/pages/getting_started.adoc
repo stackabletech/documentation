@@ -12,60 +12,10 @@ Firstly, let’s cover whether this *Getting Started* guide is right for you. Th
 == Overview
 Stackable is based on Kubernetes and uses this as the control plane to manage clusters. In this guide we will build a simple cluster with 3 services; Apache ZooKeeper, Apache Kafka and Apache NiFi.
 
-== Installing Kubernetes
-Stackable’s control plane is built around Kubernetes, and we'll give some brief examples of how to install Kubernetes on your machine.
+== Installing Kubernetes and kubectl
+Stackable’s control plane is built around Kubernetes. Follow the xref:kubernetes.adoc#local-installation[instructions] on how to set up a local Kubernetes instance if you do not have access to a cluster and install kubectl.
 
-=== Installing kubectl
-
-Stackable operators and their services are managed by applying manifest files to the Kubernetes cluster. For this purpose, you need to have the `kubectl` tool installed. Follow the instructions https://kubernetes.io/docs/tasks/tools/#kubectl[here] for your platform.
-
-=== Installing Kubernetes using Kind
-Kind offers a very quick and easy way to bootstrap your Kubernetes infrastructure in Docker. The big advantage of this is that you can simply remove the Docker containers when you're finished and clean up easily, making it great for testing and development.
-
-If you don't already have Docker then visit https://docs.docker.com/get-docker/[Docker Website] to find out how to install Docker. Kind is a single executable that performs the tasks of installing and configuring Kubernetes for you within Docker containers. The https://kind.sigs.k8s.io/docs/user/quick-start/[Kind Website] has instructions for installing Kind on your system.
-
-Once you have both of these installed then you can build a Kubernetes cluster in Docker. We're going to create a simple, single node cluster to test out Stackable, with the one node hosting both the Kubernetes control plane and the Stackable services.
-
-[source, bash]
-----
-kind create cluster --name quickstart
-----
-
-=== Installing Kubernetes using K3s
-K3s provides a quick way of installing Kubernetes. On your control node run the following command to install K3s:
-
-[source,bash]
-----
-curl -sfL https://get.k3s.io | sh -s - --write-kubeconfig-mode 644
-----
-
-So long as you have an Internet connection K3s will download and automatically configure a simple Kubernetes environment.
-
-Create a symlink to the Kubernetes configuration from your home directory to allow tools like Helm to find the correct configuration.
-
-[source,bash]
-----
-mkdir ~/.kube
-ln -s /etc/rancher/k3s/k3s.yaml ~/.kube/config
-----
-
-
-=== Testing your Kubernetes installation
-
-To check if everything worked as expected you can use `kubectl cluster-info` to retrieve the cluster information. The output should look similar to:
-
-----
-Kubernetes control plane is running at https://127.0.0.1:6443
-CoreDNS is running at https://127.0.0.1:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
-----
-
-If you set up your cluster using K3s you will additionally see the metrics server:
-
-----
-Kubernetes control plane is running at https://127.0.0.1:6443
-CoreDNS is running at https://127.0.0.1:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
-Metrics-server is running at https://127.0.0.1:6443/api/v1/namespaces/kube-system/services/https:metrics-server:https/proxy
-----
+If you already have kubectl installed, and have access to a Kubernetes cluster, you can skip this step.
 
 == Installing Stackable
 === Install stackablectl
