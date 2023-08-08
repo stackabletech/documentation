@@ -27,7 +27,7 @@ content:
     # stackablectl
     - url: https://github.com/stackabletech/stackablectl.git
       start_path: docs
-      branches: main
+      branches: docs/add-requirements
     # internal operators
     - url: https://github.com/stackabletech/commons-operator.git
       start_path: docs
