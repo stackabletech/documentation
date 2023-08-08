@@ -1,3 +1,4 @@
 // This second nav file is for another menu entry at the end of the navigation menu
 // see: https://docs.antora.org/antora/3.0/navigation/organize-files/#multiple-files-per-module
 * xref:release_notes.adoc[Release Notes]
+* licenses.adoc[Licenses]

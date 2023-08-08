@@ -1,0 +1,16 @@
+= Platform Components
+
+The Stackable Platform is made up of multiple components. Operators for data products, Operators for additional functionality to facilitate easy integration between the different products. Auxilary software to interact with the platform, as well as software to ease the deployment of platform components.
+
+This page is meant to give a detailed, somewhat dry but complete overview of all the components.
+
+== Product Operators
+
+
+== Containers
+
+All operators are supplied in container images. The products are also deployed in container images.
+
+
+
+== Limits
