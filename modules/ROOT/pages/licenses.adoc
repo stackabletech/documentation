@@ -6,28 +6,28 @@ The Stackable Data Platform is open source, and the source code of all the compo
 
 Product Operators
 
-* [License](https://github.com/stackabletech/airflow-operator/blob/main/LICENSE) for the Stackable Operator for Apache Airflow.
-* [License](https://github.com/stackabletech/druid-operator/blob/main/LICENSE) for the Stackable Operator for Apache Druid.
-* [License](https://github.com/stackabletech/hbase-operator/blob/main/LICENSE) for the Stackable Operator for Apache HBase.
-* [License](https://github.com/stackabletech/hdfs-operator/blob/main/LICENSE) for the Stackable Operator for Apache Hadoop HDFS.
-* [License](https://github.com/stackabletech/hive-operator/blob/main/LICENSE) for the Stackable Operator for Apache Hive.
-* [License](https://github.com/stackabletech/kafka-operator/blob/main/LICENSE) for the Stackable Operator for Apache Kafka.
-* [License](https://github.com/stackabletech/nifi-operator/blob/main/LICENSE) for the Stackable Operator for Apache NiFi.
-* [License](https://github.com/stackabletech/spark-k8s-operator/blob/main/LICENSE) for the Stackable Operator for Apache Spark.
-* [License](https://github.com/stackabletech/trino-operator/blob/main/LICENSE) for the Stackable Operator for Trino.
-* [License](https://github.com/stackabletech/zookeeper-operator/blob/main/LICENSE) for the Stackable Operator for Apache ZooKeeper.
-* [License](https://github.com/stackabletech/opa-operator/blob/main/LICENSE) for the Stackable Operator for OpenPolicyAgent.
+* https://github.com/stackabletech/airflow-operator/blob/main/LICENSE[License] for the Stackable Operator for Apache Airflow.
+* https://github.com/stackabletech/druid-operator/blob/main/LICENSE[License] for the Stackable Operator for Apache Druid.
+* https://github.com/stackabletech/hbase-operator/blob/main/LICENSE[License] for the Stackable Operator for Apache HBase.
+* https://github.com/stackabletech/hdfs-operator/blob/main/LICENSE[License] for the Stackable Operator for Apache Hadoop HDFS.
+* https://github.com/stackabletech/hive-operator/blob/main/LICENSE[License] for the Stackable Operator for Apache Hive.
+* https://github.com/stackabletech/kafka-operator/blob/main/LICENSE[License] for the Stackable Operator for Apache Kafka.
+* https://github.com/stackabletech/nifi-operator/blob/main/LICENSE[License] for the Stackable Operator for Apache NiFi.
+* https://github.com/stackabletech/spark-k8s-operator/blob/main/LICENSE[License] for the Stackable Operator for Apache Spark.
+* https://github.com/stackabletech/trino-operator/blob/main/LICENSE[License] for the Stackable Operator for Trino.
+* https://github.com/stackabletech/zookeeper-operator/blob/main/LICENSE[License] for the Stackable Operator for Apache ZooKeeper.
+* https://github.com/stackabletech/opa-operator/blob/main/LICENSE[License] for the Stackable Operator for OpenPolicyAgent.
 
 Additional Stackable Operators
 
-* [License](https://github.com/stackabletech/commons-operator/blob/main/LICENSE) for the Stackable Commons Operator.
-* [License](https://github.com/stackabletech/secret-operator/blob/main/LICENSE) for the Stackable Secret Operator.
-* [License](https://github.com/stackabletech/listener-operator/blob/main/LICENSE) for the Stackable Listener Operator.
+* https://github.com/stackabletech/commons-operator/blob/main/LICENSE[License] for the Stackable Commons Operator.
+* https://github.com/stackabletech/secret-operator/blob/main/LICENSE[License] for the Stackable Secret Operator.
+* https://github.com/stackabletech/listener-operator/blob/main/LICENSE[License] for the Stackable Listener Operator.
 
 == stackablectl
 
-[License](https://github.com/stackabletech/stackablectl/blob/main/LICENSE) for stackablectl.
+https://github.com/stackabletech/stackablectl/blob/main/LICENSE[License] for stackablectl.
 
 == Product images
 
-[License](https://github.com/stackabletech/docker-images/blob/main/LICENSE) for the product Docker images.
+https://github.com/stackabletech/docker-images/blob/main/LICENSE[License] for the product Docker images.

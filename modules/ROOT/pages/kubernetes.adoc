@@ -5,7 +5,7 @@ The Stackable Data Platform runs on Kubernetes, a Kubernetes cluster is a prereq
 [#supported-production-distributions]
 == Supported production distributions
 
- The Stackable Data Platform requires a Kubernetes cluster to be present, where you can install things into. How to set up Kubernetes as well as a cluster depends on the distribution you chose. 
+The Stackable Data Platform requires a Kubernetes cluster to be present, where you can install things into. How to set up Kubernetes as well as a cluster depends on the distribution you chose. 
 
 The following distributions are supported for a production setup of the Stackable Data Platform:
 
