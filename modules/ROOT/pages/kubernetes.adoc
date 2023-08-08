@@ -1,0 +1,15 @@
+= Kubernetes
+
+You need kubernetes to run the SDP.
+
+supported distributions are:
+
+* Amazon Elastic Kubernetes Service
+* Microsoft Azure Kubernetes Service
+* Google Kubernetes Engine
+* IONOS Managed Kubernetes
+* SUSE Rancher
+* SUSE K3S
+* Red Hat OpenShift
+
+Consult the xref:release_notes.adoc[release notes] to find out which specific versions are supported for the Stackable Data Platform you are using.
