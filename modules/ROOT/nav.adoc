@@ -1,4 +1,3 @@
 * xref:quickstart.adoc[]
-* xref:platform-components.adoc[]
 * xref:kubernetes.adoc[]
 * xref:getting_started.adoc[]

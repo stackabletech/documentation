@@ -1,0 +1,43 @@
+= Product information
+
+This page contains contrete specifications about the Stackable Data Platform (SDP) as a product, which components are included, how they are supplied and which external dependencies exist that you as a customer need to take care of.
+
+== Platform components
+
+The Stackable Platform is made up of multiple components. Operators for data products, Operators for additional functionality to facilitate easy integration between the different products. Auxilary software to interact with the platform, as well as software to ease the deployment of platform components.
+
+=== Kubernetes Operators
+
+The main components of the SDP are Kubernetes Operators. Each Operator is supplied in a Docker <<containers, container>> image. For every Operator there is also a Helm Chart to facilitate installation via Helm. Operators for Products supported by the Platform deploy these products as <<containers, containers>> in Kubernetes.
+
+=== stackablectl
+
+
+== Installation
+
+[#containers]
+=== Containers
+
+All operators are supplied in container images. The products are also deployed in container images.
+
+
+=== stackablectl
+
+== External dependencies
+
+External dependencies are components that are required for the platform or parts of it to operate, but are not part of the Stackable Data Platform.
+
+=== Kubernetes
+
+A Kubernetes cluster is required to install the Stackable Data Platform. The following Kubernetes distributions are supported:
+
+include::partial$supported-kubernetes-distributions.adoc[]
+
+
+== Limits
+
+
+
+... system requirements
+
+... blablabla

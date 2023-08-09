@@ -1,0 +1,7 @@
+* Amazon Elastic Kubernetes Service
+* Microsoft Azure Kubernetes Service
+* Google Kubernetes Engine
+* IONOS Managed Kubernetes
+* SUSE Rancher
+* SUSE K3S
+* Red Hat OpenShift

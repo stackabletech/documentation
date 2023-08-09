@@ -9,13 +9,11 @@ The Stackable Data Platform requires a Kubernetes cluster to be present, where y
 
 The following distributions are supported for a production setup of the Stackable Data Platform:
 
-* Amazon Elastic Kubernetes Service
-* Microsoft Azure Kubernetes Service
-* Google Kubernetes Engine
-* IONOS Managed Kubernetes
-* SUSE Rancher
-* SUSE K3S
-* Red Hat OpenShift
+include::partial$supported-kubernetes-distributions.adoc[]
+
+In this version of the SDP, the following Kubernetes versions are supported:
+
+include::partial$supported-kubernetes-versions.adoc[]
 
 Consult the xref:release_notes.adoc[release notes] to find out which specific versions are supported for the Stackable Data Platform you are using.
 
