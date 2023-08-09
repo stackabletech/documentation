@@ -62,7 +62,7 @@ content:
     - url: https://github.com/stackabletech/airflow-operator.git
       start_path: docs
       branches:
-        - main
+        - docs/add-external-dependencies
         - release-23.7
         - release-23.4
         - release-23.1

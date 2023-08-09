@@ -10,22 +10,72 @@ The Stackable Platform is made up of multiple components. Operators for data pro
 
 The main components of the SDP are Kubernetes Operators. Each Operator is supplied in a Docker <<containers, container>> image. For every Operator there is also a Helm Chart to facilitate installation via Helm. Operators for Products supported by the Platform deploy these products as <<containers, containers>> in Kubernetes.
 
+Supported products:
+
+* Apache Airflow
+* Apache Druid
+* Apache HBase (including Apache Phoenix)
+* Apache Hive Metastore
+* Apache Hadoop HDFS
+* Apache Kafka
+* Apache Nifi
+* Apache Spark (including Spark History Server)
+* Apache Superset
+* Trino
+* Apache Zookeeper
+* Open Policy Agent
+
+Refer to the xref:operators:supported_versions.adoc[list of supported product versions] to find out which product versions are supported.
+
+The product also includes the Commons, Secret and Listner Operators.
+
+==== Helm Charts
+
+https://repo.stackable.tech/#browse/browse:helm-stable
+
+[#stackablectl]
 === stackablectl
 
 
-== Installation
+== Supported installation methods
 
 [#containers]
-=== Containers
+=== Operators and products
 
 All operators are supplied in container images. The products are also deployed in container images.
+Stackable supports installing the Operators via https://helm.sh/[Helm] or with <<stackablectl>>.
 
+
+
+[#stackablectl-installation]
+=== stackablectl
+
+stackablectl is available for download. Follow the xref:stackablectl::installation.adoc[installation steps] outlined in the stackablectl documentation.
+
+== System requirements
+
+=== Operators
+
+Every Operator needs:
+
+* 0.2 cores (i.e. i5 or similar)
+* 256MB RAM
 
 === stackablectl
+
+Hardware requirements and supported operating systems can be found in the xref:stackablectl::installation.adoc#system-requirements[system requirements section] of the stackablectl documentation.
+
+=== Stackable Data Platform Open Source Products
+
+The system requirements of each open source product depend on usage.
+
+TODO
 
 == External dependencies
 
-External dependencies are components that are required for the platform or parts of it to operate, but are not part of the Stackable Data Platform.
+External dependencies are components that are required for the platform or parts of it to operate, but are not part of the Stackable Data Platform. Note that Stackable does not offer support for the external dependencies.
+
+* Apache Airflow: 
 
 === Kubernetes
 
@@ -33,11 +83,6 @@ A Kubernetes cluster is required to install the Stackable Data Platform. The fol
 
 include::partial$supported-kubernetes-distributions.adoc[]
 
-
-== Limits
-
+=== Product specific dependencies
 
 
-... system requirements
-
-... blablabla
