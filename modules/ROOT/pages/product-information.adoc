@@ -83,7 +83,7 @@ include::partial$supported-kubernetes-distributions.adoc[]
 
 === Product specific dependencies
 
- The following products have required external components to run:
+The following products have required external components to run:
 
 * xref:airflow:required-external-components.adoc[Apache Airflow]
 * xref:druid:required-external-components.adoc[Apache Druid]
