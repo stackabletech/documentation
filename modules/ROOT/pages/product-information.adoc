@@ -71,11 +71,14 @@ The system requirements of each open source product depend on usage.
 
 TODO
 
-== External dependencies
+== Required external components
 
-External dependencies are components that are required for the platform or parts of it to operate, but are not part of the Stackable Data Platform. Note that Stackable does not offer support for the external dependencies.
+Required external components are components that are required for the platform or parts of it to operate, but are not part of the Stackable Data Platform. Note that Stackable does not offer support for the external components. The following products have required external components:
 
-* Apache Airflow: 
+* xref:airflow:required-external-components.adoc[Apache Airflow]
+* xref:druid:required-external-components.adoc[Apache Druid]
+* xref:hive:required-external-components.adoc[Apache Hive]
+* xref:superset:required-external-components.adoc[Apache Superset]
 
 === Kubernetes
 
