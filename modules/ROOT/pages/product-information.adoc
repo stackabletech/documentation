@@ -42,7 +42,7 @@ xref:stackablectl::index.adoc[stackablectl] is a commandline utility that makes 
 === Operators and products
 
 All operators are supplied in container images. The products are also deployed in container images.
-The docker images can be found here: https://repo.stackable.tech/#browse/browse:docker
+The docker images are available for download here: https://repo.stackable.tech/#browse/browse:docker
 
 Stackable supports installing the Operators via https://helm.sh/[Helm] or with <<stackablectl>>.
 Every Operator includes installation instructions in the Getting started guide.
