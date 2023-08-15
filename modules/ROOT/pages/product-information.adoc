@@ -27,11 +27,7 @@ Supported products:
 
 Refer to the xref:operators:supported_versions.adoc[list of supported product versions] to find out which product versions are supported.
 
-The product also includes the Commons, Secret and Listner Operators.
-
-==== Helm Charts
-
-https://repo.stackable.tech/#browse/browse:helm-stable
+The product also includes the Commons, Secret and Listener Operators.
 
 [#stackablectl]
 === stackablectl
@@ -43,14 +39,20 @@ https://repo.stackable.tech/#browse/browse:helm-stable
 === Operators and products
 
 All operators are supplied in container images. The products are also deployed in container images.
-Stackable supports installing the Operators via https://helm.sh/[Helm] or with <<stackablectl>>.
+The docker images can be found here: https://repo.stackable.tech/#browse/browse:docker
 
+Stackable supports installing the Operators via https://helm.sh/[Helm] or with <<stackablectl>>.
+Every Operator includes installation instructions in the Getting started guide.
+
+==== Helm Charts
+
+The Helm Charts can be found here: https://repo.stackable.tech/#browse/browse:helm-stable
 
 
 [#stackablectl-installation]
 === stackablectl
 
-stackablectl is available for download. Follow the xref:stackablectl::installation.adoc[installation steps] outlined in the stackablectl documentation.
+stackablectl is available for download, pre-built binaries are available on GitHub. The download link and installation steps are provided in the xref:stackablectl::installation.adoc[installation documentation].
 
 == System requirements
 
