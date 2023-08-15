@@ -1,7 +1,7 @@
-* Amazon Elastic Kubernetes Service
-* Microsoft Azure Kubernetes Service
-* Google Kubernetes Engine
-* IONOS Managed Kubernetes
-* SUSE Rancher
-* SUSE K3S
-* Red Hat OpenShift 4.10, 4.11
+* https://aws.amazon.com/eks/[Amazon Elastic Kubernetes Service]
+* https://azure.microsoft.com/en-gb/products/kubernetes-service[Microsoft Azure Kubernetes Service]
+* https://cloud.google.com/kubernetes-engine[Google Kubernetes Engine]
+* https://cloud.ionos.com/managed/kubernetes[IONOS Managed Kubernetes]
+* https://www.rancher.com/products/rancher[SUSE Rancher]
+* https://www.suse.com/products/k3s/[SUSE K3S]
+* https://www.redhat.com/en/technologies/cloud-computing/openshift[Red Hat OpenShift] 4.10, 4.11
