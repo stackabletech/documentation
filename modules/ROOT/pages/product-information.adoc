@@ -9,7 +9,7 @@ The Stackable Platform is made up of multiple components. Operators for data pro
 
 === Kubernetes Operators
 
-The main components of the SDP are Kubernetes Operators. Each Operator is supplied in a Docker <<containers, container>> image. For every Operator there is also a Helm Chart to facilitate installation via Helm. Operators for Products supported by the Platform deploy these products as <<containers, containers>> in Kubernetes.
+The main components of the SDP are a set of open source data products. The SDP control plane consists of corresponding Kubernetes Operators. Each Operator is supplied in a Docker <<containers, container>> image. For every Operator there is also a Helm Chart to facilitate installation via Helm. Operators for Products supported by the Platform deploy these products as <<containers, containers>> in Kubernetes.
 
 Supported products:
 
