@@ -12,26 +12,27 @@ The main components of the SDP are Kubernetes Operators. Each Operator is suppli
 
 Supported products:
 
-* Apache Airflow
-* Apache Druid
-* Apache HBase (including Apache Phoenix)
-* Apache Hive Metastore
-* Apache Hadoop HDFS
-* Apache Kafka
-* Apache Nifi
-* Apache Spark (including Spark History Server)
-* Apache Superset
-* Trino
-* Apache Zookeeper
-* Open Policy Agent
+* xref:airflow:index.adoc[Apache Airflow]
+* xref:druid:index.adoc[Apache Druid]
+* xref:hbase:index.adoc[Apache HBase] (including xref:hbase:usage-guide/phoenix.adoc[Apache Phoenix])
+* xref:hive:index.adoc[Apache Hive Metastore]
+* xref:hdfs:index.adoc[Apache Hadoop HDFS]
+* xref:kafka:index.adoc[Apache Kafka]
+* xref:nifi:index.adoc[Apache Nifi]
+* xref:spark-k8s:index.adoc[Apache Spark] (including xref:spark-k8s:usage-guide/history-server.adoc[Spark History Server])
+* xref:superset:index.adoc[Apache Superset]
+* xref:trino:index.adoc[Trino]
+* xref:zookeeper:index.adoc[Apache Zookeeper]
+* xref:opa:index.adoc[Open Policy Agent]
 
 Refer to the xref:operators:supported_versions.adoc[list of supported product versions] to find out which product versions are supported.
 
-The product also includes the Commons, Secret and Listener Operators.
+The product also includes the xref:commons-operator:index.adoc[Commons], xref:secret-operator:index.adoc[Secret] and xref:listener-operator:index.adoc[Listener] Operators.
 
 [#stackablectl]
 === stackablectl
 
+xref:stackablectl::index.adoc[stackablectl] is a commandline utility that makes it easier to install and interact with stackable components.
 
 == Supported installation methods
 
@@ -70,8 +71,6 @@ Hardware requirements and supported operating systems can be found in the xref:s
 === Stackable Data Platform Open Source Products
 
 The system requirements of each open source product depend on usage.
-
-TODO
 
 == Prerequisites and required external components
 
