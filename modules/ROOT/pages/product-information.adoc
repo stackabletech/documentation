@@ -1,6 +1,6 @@
 = Product information
 
-This page contains contrete specifications about the Stackable Data Platform (SDP) as a product, which components are included, how they are supplied and which external dependencies exist that you as a customer need to take care of.
+This page contains concrete specifications about the Stackable Data Platform (SDP) as a product, which components are included, how they are supplied and which external dependencies exist that you as a customer need to take care of.
 
 [#platform-components]
 == Platform components
