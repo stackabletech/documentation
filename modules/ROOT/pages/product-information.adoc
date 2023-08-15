@@ -7,7 +7,7 @@ This page contains concrete specifications about the Stackable Data Platform (SD
 
 The Stackable Platform is made up of multiple components. Operators for data products, Operators for additional functionality to facilitate easy integration between the different products, as well as the data products themselves. Auxiliary software to interact with the platform, as well as software to ease the deployment of platform components.
 
-=== Kubernetes Operators
+=== Data products and Kubernetes Operators
 
 The main components of the SDP are a set of open source data products. The SDP control plane consists of corresponding Kubernetes Operators. Each Operator is supplied in a Docker <<containers, container>> image. For every Operator there is also a Helm Chart to facilitate installation via Helm. Operators for Products supported by the Platform deploy these products as <<containers, containers>> in Kubernetes.
 
@@ -24,9 +24,8 @@ Supported products:
 * xref:superset:index.adoc[Apache Superset]
 * xref:trino:index.adoc[Trino]
 * xref:zookeeper:index.adoc[Apache Zookeeper]
-* xref:opa:index.adoc[Open Policy Agent]
 
-The product also includes the xref:commons-operator:index.adoc[Commons], xref:secret-operator:index.adoc[Secret] and xref:listener-operator:index.adoc[Listener] Operators.
+The product also includes the xref:opa:index.adoc[Open Policy Agent], xref:commons-operator:index.adoc[Commons], xref:secret-operator:index.adoc[Secret] and xref:listener-operator:index.adoc[Listener] Operators.
 
 The pages linked above also detail the use cases and features supported by each component. You can find additional information in the xref:release_notes.adoc[release notes]. Refer to the xref:operators:supported_versions.adoc[list of supported product versions] to find out which product versions are supported.
 
