@@ -76,7 +76,7 @@ The system requirements of each open source product depend on your specific use 
 
 == Prerequisites and required external components
 
-Required external components are components that are required for the platform or parts of it to operate, but are not part of the Stackable Data Platform. Note that Stackable does not distribute or offer support for the external components.
+Required external components are components that are required for the platform or parts of it to operate, but are not part of the Stackable Data Platform. Note that Stackable does neither distribute nor offer support for the external components.
 
 === Kubernetes
 
