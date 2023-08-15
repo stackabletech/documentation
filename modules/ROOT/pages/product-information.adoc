@@ -79,13 +79,13 @@ Required external components are components that are required for the platform o
 
 === Kubernetes
 
-A Kubernetes cluster is required to install the Stackable Data Platform. The following Kubernetes distributions are supported:
-
-include::partial$supported-kubernetes-distributions.adoc[]
-
-and the following versions are supported:
+A Kubernetes cluster is required to install the Stackable Data Platform. The supported Kubernetes versions are:
 
 include::partial$supported-kubernetes-versions.adoc[]
+
+There are various Kubernetes distributions. Stackable supports:
+
+include::partial$supported-kubernetes-distributions.adoc[]
 
 === Product specific dependencies
 
