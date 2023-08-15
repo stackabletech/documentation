@@ -4,4 +4,4 @@
 * IONOS Managed Kubernetes
 * SUSE Rancher
 * SUSE K3S
-* Red Hat OpenShift
+* Red Hat OpenShift 4.10, 4.11

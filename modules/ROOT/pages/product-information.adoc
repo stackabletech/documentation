@@ -5,7 +5,7 @@ This page contains concrete specifications about the Stackable Data Platform (SD
 [#platform-components]
 == Platform components
 
-The Stackable Platform is made up of multiple components. Operators for data products, Operators for additional functionality to facilitate easy integration between the different products. Auxilary software to interact with the platform, as well as software to ease the deployment of platform components.
+The Stackable Platform is made up of multiple components. Operators for data products, Operators for additional functionality to facilitate easy integration between the different products, as well as the data products themselves. Auxiliary software to interact with the platform, as well as software to ease the deployment of platform components.
 
 === Kubernetes Operators
 
@@ -83,6 +83,10 @@ Required external components are components that are required for the platform o
 A Kubernetes cluster is required to install the Stackable Data Platform. The following Kubernetes distributions are supported:
 
 include::partial$supported-kubernetes-distributions.adoc[]
+
+and the following versions are supported:
+
+include::partial$supported-kubernetes-versions.adoc[]
 
 === Product specific dependencies
 
