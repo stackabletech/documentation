@@ -98,3 +98,18 @@ In this case, the role group `resources-from-role` will inherit the resources sp
 The role group `resources-from-role-group` has maximum of `4Gi` storage space for `data` (which overrides the role resources).
 
 IMPORTANT: Stackable operators use different names (`data` in this example) for their storage specification. This is documented in the operator specific documentation.
+
+==== Storage class
+
+A Kubernetes cluster is configured with a https://kubernetes.io/docs/concepts/storage/storage-classes/#default-storageclass[default StorageClass], which gets used if no other StorageClass is specified. The storage configuration also supports configuring a non-default StorageClass:
+
+[source,yaml]
+----
+...
+          resources:
+            storage:
+              data: # name of the storage
+                capacity: 4Gi
+                storageClass: my-storage-class
+...
+----
