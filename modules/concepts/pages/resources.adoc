@@ -106,10 +106,9 @@ A Kubernetes cluster is configured with a https://kubernetes.io/docs/concepts/st
 [source,yaml]
 ----
 ...
-          resources:
-            storage:
-              data: # name of the storage
-                capacity: 4Gi
-                storageClass: my-storage-class
-...
+resources:
+  storage:
+    data: # name of the storage
+      capacity: 4Gi
+      storageClass: my-storage-class
 ----
