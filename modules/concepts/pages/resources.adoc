@@ -102,11 +102,11 @@ IMPORTANT: Stackable operators use different names (`data` in this example) for 
 [#storageclass]
 ==== StorageClass
 
-From the https://kubernetes.io/docs/concepts/storage/storage-classes/[Kubernetes documentation]:
+A StorageClass defines a type of storage with certain properties.
+The StorageClasses that are available on a Kubernetes cluster are configured by the cluster administrator.
+Different classes can be configured to provide different levels of reliability or speed, or be configured to be more suited for read or write heavy loads, based on the underlying storage technology (SSD, HDD, NAS) or by adjusing Kubernetes settings for different classes (Find more information in the https://kubernetes.io/docs/concepts/storage/storage-classes/[Kubernetes documentation]).
 
-> A StorageClass provides a way for administrators to describe the "classes" of storage they offer. Different classes might map to quality-of-service levels, or to backup policies, or to arbitrary policies determined by the cluster administrators.
-
-A Kubernetes cluster is configured with a https://kubernetes.io/docs/concepts/storage/storage-classes/#default-storageclass[default StorageClass], which gets used if no other StorageClass is specified. The storage configuration also supports configuring a non-default StorageClass:
+For Stackable resources, setting a storageClass is not mandatory; if not storageClass is set, the https://kubernetes.io/docs/concepts/storage/storage-classes/#default-storageclass[default StorageClass] will be used. If you want to use a specific StorageClass for a particular storage, the StorageClass can be set on the resource:
 
 [source,yaml]
 ----
