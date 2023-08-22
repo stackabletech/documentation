@@ -1,0 +1,9 @@
+---
+apiVersion: mycluster.stackable.tech/v1alpha1
+kind: MyCluster
+metadata:
+  name: my-cluster
+spec:
+  clusterOperation:
+    reconcilePaused: false # <1>
+    stopped: false # <2>

@@ -1,0 +1,27 @@
+allowmixing
+
+database LDAP
+
+map "Secret openldap-simple-bind" as secret_openldap_simple_bind {
+    user => cn=admin,dc=example,dc=org
+    password => admin
+}
+
+map "Secret openldap-simple-ca" as secret_openldap_simple_ca {
+    caCert => <ca certificate content>
+}
+
+map "SecretClass openldap-simple-bind" as secret_class_openldap_simple_bind {
+    k8sSearch *-> secret_openldap_simple_bind
+}
+
+map "SecretClass openldap-simple-ca" as secret_class_openldap_simple_ca {
+    k8sSearch *-> secret_openldap_simple_ca
+}
+
+map "AuthenticationClass openldap-simple" as authentication_class_openldap_simple {
+    ldapHost *--> LDAP
+    tlsServerVerification *--> secret_class_openldap_simple_ca
+    bindCredentials *--> secret_class_openldap_simple_bind
+    ldapSearchBase => ou=users,dc=example,dc=org
+}

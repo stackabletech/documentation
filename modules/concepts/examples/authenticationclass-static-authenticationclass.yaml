@@ -1,0 +1,9 @@
+apiVersion: authentication.stackable.tech/v1alpha1
+kind: AuthenticationClass
+metadata:
+  name: simple-users
+spec:
+  provider:
+    static:
+      userCredentialsSecret:
+        name: simple-users-credentials # <1>

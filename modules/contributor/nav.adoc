@@ -1,9 +1,11 @@
 * xref:index.adoc[]
 
 ** xref:steps.adoc[]
+** xref:testing_on_kubernetes.adoc[]
 ** xref:development_dashboard.adoc[]
 ** xref:style_guide.adoc[]
 ** Implementation guidelines
+*** xref:logging.adoc[]
 *** xref:service_discovery.adoc[]
 *** xref:opa_configuration.adoc[]
 include::partial$adr-nav.adoc[]

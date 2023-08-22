@@ -1,0 +1,248 @@
+= ADR027: Resource Status
+Razvan Mihai <razvan.mihai@stackable.tech>
+v0.1, 2023-02-28
+:status: accepted
+
+* Status: {status}
+* Contributors:
+** Felix Hennig
+** Malte Sander
+** Razvan Mihai
+** Sebastian Bernauer
+* Date: 2023-02-28
+
+Technical Story: https://github.com/stackabletech/issues/issues/343
+
+== Context and Problem Statement
+
+// Describe the context and problem statement, e.g., in free form using two to three sentences. You may want to articulate the problem in form of a question.
+
+Operators of the Stackable Data Platform create, manage and delete Kubernetes resources. These resources describe how products are installed and configured, how they interact with each other and with clients. To ensure this interaction works reliably and to enable users to recognize and react to exceptional situations, Kubernetes resources must publish the health status of the products behind them. Users and processes should be ably to easily query the health state of the products and react accordingly. Processes that set up stacks or demos for example, should be able to use the product health information to decide whether a particular milestone in the pipeline has been successful and if sequential steps can be started or not.
+
+Often times it's impossible to summarize the health status of a product in a single variable because Stackable managed products are usually distributed systems made up of multiple services, each with a different purpose. In such architectures, parts of the system might function properly while others might be suspended for maintenance. Deciding on the health status of the entire system, becomes a matter of interpretation and usage scenarios.
+
+Thus, the health status should be able to capture different aspects of product's availability. Kubernetes status conditions offer a flexible mechanism for this purpose. This document recommends that Stackable Operators use the following predefined condition types:
+
+1. Available
+2. Progressing 
+3. Degraded 
+4. Upgradable 
+5. Paused
+6. Stopped
+
+The first four condition types (Available, Progressing, Degraded and Upgradable) are inspired by https://github.com/openshift/api/blob/b1bcdbc3/config/v1/types_cluster_operator.go#L123-L140[OpenShift's recommended types], while the last two (Paused and Stopped) are needed by Stackable operators for advanced operational purposes.
+
+Each of the condition types defined should take one of the following states:
+
+* True
+* False
+* Unknown
+
+== Decision Drivers
+
+All Stackable Operators should update the health status of cluster resources and sub-resources they manage (where this makes sense). For example, The Stackable Operator for Apache Zookeeper should manage the health status of `ZookeeperCluster` as well as `ZNode` resources.
+
+Must-haves for cluster resources and sub-resources:
+
+* Status conditions as a generic and easy way to check the availability of the cluster and transition history.
+
+Must-have for cluster resources:
+
+* Deployed product version. Used for in-place product upgrades/downgrades/migrations.
+  
+Nice to have based on product functionality:
+
+* task/query load status (ram, cpu)
+* disk pressure
+* security status (tls on/off)
+* accessibility (external, internal k8s cluster only, hybrid)
+
+
+== Considered Options
+
+=== Set Status Conditions Only
+
+Cluster resources created by Stackable Operators usually own an entire batch of sub-resources such as: StatefulSets, DaemonSets, Pods, ConfigMaps, Services and so on and Kubernetes itself maintains status fields for many of these objects. The idea of this proposal is to aggregate all these fields into the status field of the cluster resource.
+
+For example, the Superset operator should query the StatefulSets, database jobs, etc. and aggregate them into cluster conditions of the `SupersetCluster`.
+
+In the simplest case, if all sub-resources have a health type of "Ready" (as usually defined by Kubernetes) with status the `True`, then these will be aggregated into a condition of type "Available" with the status "True" at the product cluster level.
+
+In often times however, sub-resources might be transitioning from one phase to another. In such cases, the product cluster state might still have a condition "Available" set to true but also an additional "Degraded" condition with the status "True". This might reflect that even if the product and it's services are available and running, the entire cluster setup does not correspond to the requested custom resource.
+
+
+QUESTION: should dependent services be considered for status checks? For example, should the Superset operator check that Druid services function properly?
+ANSWER: It was decided that this is not a "must have" but a "nice to have". The first implementation of this ADR will only take cluster owned resources into consideration.
+
+==== Pros
+
+* Implementation detail: reuse `ClusterResources` from the `operator-rs` framework as much as possible and have a generic way to update cluster status.
+* Non-breaking CRD changes needed to add conditions.
+* Transparent and easy to understand. Failure messages can be propagated from sub-resources hat have problems.
+
+
+==== Cons
+
+* It completely relies on Kubernetes resource status fields without querying the actual products. This assumes that liveliness probes and other checks that Kubernetes performs, mirror the true product status.
+* It requires that all resource dependencies run inside the Kubernetes cluster. For example, if a Superset cluster is configured with a Druid connection outside the Kubernetes cluster, the `Available` condition of the connection will have a status of `Unknown`. The Superset cluster itself, might have a "Degraded" condition with status "True" and a message informing the user that the Druid connection cannot be queried.
+
+Here is an example of a status field with various conditions. The managed product here is assumed to be Superset:
+
+[source,yaml]
+----
+status:
+  conditions:
+    - type: Available
+      status: "True"
+      lastProbeTime: 2023-02-28T14:02:00Z
+      lastTransitionTime: 2023-02-28T12:00:00Z
+      message: "UI and Postgres DB running"
+    - type: Degraded
+      status: "True"
+      lastProbeTime: 2023-02-28T14:02:00Z
+      lastTransitionTime: 2023-02-28T12:00:00Z
+      reason: "DruidConnection failed. <Optional: Druid degraded message>"
+    - type: Progressing
+      status: "True"
+      lastProbeTime: 2023-02-28T14:02:00Z
+      lastTransitionTime: 2023-02-28T12:00:00Z
+      message: "New replicas starting."
+    - type: Upgradable
+      status: "Unknown"
+      lastProbeTime: 2023-02-28T14:02:00Z
+      lastTransitionTime: 2023-02-28T12:00:00Z
+    - type: Paused
+      status: "True"
+      lastProbeTime: 2023-02-28T14:02:00Z
+      lastTransitionTime: 2023-02-28T12:00:00Z
+      message: "User requested reconcile pause."
+----
+
+Another example, also for a Superset cluster, where the user requested a cluster stop operation to be performed. After this operation, no Superset Pod should be running anymore and thus the entire cluster is not available.
+
+[source,yaml]
+----
+status:
+  conditions:
+    - type: Available
+      status: "False"
+      lastProbeTime: 2023-02-28T14:02:00Z
+      lastTransitionTime: 2018-01-01T00:00:00Z
+      message: "No Pods running."
+    - type: Stopped
+      status: "True"
+      lastProbeTime: 2023-02-28T14:02:00Z
+      lastTransitionTime: 2023-02-28T12:00:00Z
+      reason: "User requested reconcile stop."
+----
+
+=== Set Status Custom Fields and Conditions
+
+Most custom fields are set by querying the products directly. One exception is the deployed product version.
+
+==== Pros
+
+* Fine-grained status information
+* More reliable status information that is queried directly from the operated product and dependencies
+* Products can run inside and outside the Kubernetes cluster
+
+==== Cons
+
+* Complexity and specificity of the implementation. Operators must implement product network protocols and metadata structures to be able to communicate with the products.
+* Hard to maintain across product versions.
+* Each new sub-resource requires additional code and dependencies.
+
+
+Example:
+
+[source,yaml]
+----
+status:
+  deployedVersion: 1.2.3
+  authentication: mtls
+  conditions:
+    - type: Available
+      status: "True"
+      lastProbeTime: 2023-02-28T14:02:00Z
+      lastTransitionTime: 2023-02-28T12:00:00Z
+      message: "UI and Postgres DB running"
+    - type: Degraded
+      status: "True"
+      lastProbeTime: 2023-02-28T14:02:00Z
+      lastTransitionTime: 2023-02-28T12:00:00Z
+      message: "Druid connection failed. Druid client message: Unauthorized."
+----
+
+
+== Decision Outcome
+
+The first iteration will implement the first proposal: "Set Status Conditions Only".
+
+
+== Implementation details
+
+- Precondition - Reconcile without errors
+
+|===
+|ConditionType |ConditionStatus | Description | Example Message
+
+|Available
+|True
+|availableReplicas == replicas
+|The cluster has the desired amount of replicas.
+
+|Available
+|False
+|availableReplicas != replicas && all_pods has phase != Unknown
+|The cluster does not have the desired amount of replicas.
+
+|Available
+|Unknown
+|availableReplicas != replicas && any_pod has phase == Unknown
+|The cluster has not the desired amount of replicas. At least one Pod [Pod1,Pod2] has phase Unknown.
+
+|Progressing
+|True
+|availableReplicas != replicas && any_pod has phase != Failed
+|The cluster does not have the desired amount of replicas. No Pod has phase Unknown.
+
+|Progressing
+|False
+|availableReplicas == replicas
+|The cluster has the desired amount of replicas.
+
+|Progressing
+|False
+|availableReplicas != replicas && any_pod has phase == Failed
+|The cluster does not have the desired amount of replicas. At least one Pod [Pod1,Pod2] has Phase Failed.
+
+|Degraded
+|True
+|availableReplicas < replicas && any_pod has phase IN [Unknown, Failed]
+|The cluster has less than the desired amount of replicas. At least one Pod [Pod1,Pod2] has Phase [Unknown,Failed].
+
+|Degraded
+|False
+|StatefulSet / DaemonSet / Deployment: availableReplicas == replicas
+|The cluster has the desired amount of replicas.
+
+|Paused
+|True
+|Annotation "operator-command" == "Paused"
+|The cluster is currently not reconciled by the operator.
+
+|Paused
+|False
+|Annotation "operator-command" != "Paused"
+|The cluster is currently reconciled by the operator.
+
+|Stopped
+|True
+|Annotation "operator-command" == "Stopped"
+|The cluster is currently stopped. All replicas are set to 0.
+
+|Stopped
+|False
+|Annotation "operator-command" != "Stopped"
+|The cluster is currently not stopped.
+|===

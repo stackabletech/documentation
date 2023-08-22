@@ -11,78 +11,198 @@ urls:
   # This replaces the component version in the URL of the latest stable version with 'stable'
   # i.e. /commons-operator/stable/index.html instead of /commons-operator/0.3/index.html
   latest_version_segment: stable
+  redirect_facility: netlify
 
 content:
   sources: 
-    - url: https://github.com/stackabletech/documentation.git
-      branches: [main, release/*]
-
+    - url: .
+      branches:
+        - HEAD
+        - release/23.7
+        - release/23.4
+        - release/23.1
+        - release/22.11
+        - release/22.09
+        - release/22.06
+    # stackablectl
     - url: https://github.com/stackabletech/stackablectl.git
-      branches: main
-      tags: docs/*
       start_path: docs
-
+      branches: main
+    # internal operators
     - url: https://github.com/stackabletech/commons-operator.git
-      branches: main
-      tags: docs/*
       start_path: docs
+      branches:
+        - main
+        - release-23.7
+        - release-23.4
+        - release-23.1
+        - distributed-component-compat  # (required for 0.4 and below)
+        - old-release-docs/0.4
+        - old-release-docs/0.3
+        - old-release-docs/0.2
     - url: https://github.com/stackabletech/secret-operator.git
-      branches: main
-      tags: docs/*
       start_path: docs
+      branches:
+        - main
+        - release-23.7
+        - release-23.4
+        - release-23.1
+        - distributed-component-compat  # (required for 0.6 and below)
+      tags:
+        - docs/0.6
+        - docs/0.5
     - url: https://github.com/stackabletech/listener-operator.git
-      branches: main
-      tags: docs/*
       start_path: docs
-
+      branches:
+        - main
+        - release-23.7
+        - release-23.4
+        - release-23.1
+    # product operators
     - url: https://github.com/stackabletech/airflow-operator.git
-      branches: main
-      tags: docs/*
       start_path: docs
+      branches:
+        - main
+        - release-23.7
+        - release-23.4
+        - release-23.1
+        - distributed-component-compat  # (required for 0.6 and below)
+        - old-release-docs/0.6
+        - old-release-docs/0.5
+      tags:
+        - docs/0.4
     - url: https://github.com/stackabletech/druid-operator.git
-      branches: main
-      tags: docs/*
       start_path: docs
+      branches:
+        - main
+        - release-23.7
+        - release-23.4
+        - release-23.1
+        - distributed-component-compat
+        - old-release-docs/0.8
+        - old-release-docs/0.7
+      tags:
+        - docs/0.6
     - url: https://github.com/stackabletech/hbase-operator.git
-      branches: main
-      tags: docs/*
       start_path: docs
+      branches:
+        - main
+        - release-23.7
+        - release-23.4
+        - release-23.1
+        - distributed-component-compat
+        - old-release-docs/0.5
+        - old-release-docs/0.4
+        - old-release-docs/0.3
     - url: https://github.com/stackabletech/hdfs-operator.git
-      branches: main
-      tags: docs/*
       start_path: docs
+      branches:
+        - main
+        - release-23.7
+        - release-23.4
+        - release-23.1
+        - distributed-component-compat
+        - old-release-docs/0.6
+        - old-release-docs/0.5
+      tags:
+        - docs/0.4
     - url: https://github.com/stackabletech/hive-operator.git
-      branches: main
-      tags: docs/*
       start_path: docs
+      branches:
+        - main
+        - release-23.7
+        - release-23.4
+        - release-23.1
+        - distributed-component-compat
+      tags:
+        - docs/0.8
+        - docs/0.7
+        - docs/0.6
     - url: https://github.com/stackabletech/kafka-operator.git
-      branches: main
-      tags: docs/*
       start_path: docs
+      branches:
+        - main
+        - release-23.7
+        - release-23.4
+        - release-23.1
+        - distributed-component-compat
+      tags:
+        - docs/0.8
+        - docs/0.7
+        - docs/0.6
     - url: https://github.com/stackabletech/nifi-operator.git
-      branches: main
-      tags: docs/*
       start_path: docs
+      branches:
+        - main
+        - release-23.7
+        - release-23.4
+        - release-23.1
+        - distributed-component-compat  # (required for 0.8 and below)
+        - old-release-docs/0.8
+        - old-release-docs/0.7
+        - old-release-docs/0.6
     - url: https://github.com/stackabletech/opa-operator.git
-      branches: main
-      tags: docs/*
       start_path: docs
+      branches:
+        - main
+        - release-23.7
+        - release-23.4
+        - release-23.1
+        - distributed-component-compat
+      tags:
+        - docs/0.11
+        - docs/0.10
+        - docs/0.9
     - url: https://github.com/stackabletech/spark-k8s-operator.git
-      branches: main
-      tags: docs/*
       start_path: docs
+      branches:
+        - main
+        - release-23.7
+        - release-23.4
+        - release-23.1
+        - distributed-component-compat
+      tags:
+        - docs/0.6
+        - docs/0.5
+        - docs/0.4
+        - docs/0.3
+        - docs/0.2
     - url: https://github.com/stackabletech/superset-operator.git
-      branches: main
-      tags: docs/*
       start_path: docs
+      branches:
+        - main
+        - release-23.7
+        - release-23.4
+        - release-23.1
+        - distributed-component-compat
+        - old-release-docs/0.7
+        - old-release-docs/0.6
+        - old-release-docs/0.5
     - url: https://github.com/stackabletech/trino-operator.git
-      branches: main
-      tags: docs/*
       start_path: docs
+      branches:
+        - main
+        - release-23.7
+        - release-23.4
+        - release-23.1
+        - distributed-component-compat
+        - old-release-docs/0.8
+        - old-release-docs/0.7
+      tags:
+        - docs/0.6
+        - docs/0.5
+        - docs/0.4
     - url: https://github.com/stackabletech/zookeeper-operator.git
-      branches: main
-      tags: docs/*
       start_path: docs
+      branches:
+        - main
+        - release-23.7
+        - release-23.4
+        - release-23.1
+        - distributed-component-compat
+        - old-release-docs/0.12
+        - old-release-docs/0.11
+        - old-release-docs/0.10
 
 ui:
   bundle:
@@ -107,3 +227,5 @@ asciidoc:
 # use 'make clean' to remove the build and cache directory
 runtime:
   cache_dir: ./cache
+  log:
+    failure_level: warn

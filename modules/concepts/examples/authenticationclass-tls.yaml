@@ -1,0 +1,8 @@
+apiVersion: authentication.stackable.tech/v1alpha1
+kind: AuthenticationClass
+metadata:
+  name: client-auth-tls
+spec:
+  provider:
+    tls:
+      clientCertSecretClass: client-auth-tls
