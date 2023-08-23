@@ -15,11 +15,13 @@ v0.1, 2023-03-30
 
 // Describe the context and problem statement, e.g., in free form using two to three sentences. You may want to articulate the problem in form of a question.
 
-This ADR is written with a specific problems in mind, but the goal is to reach a generic mechanism for the discovery of products.
+This ADR is written with specific problems in mind, but the goal is to reach a generic mechanism for the discovery of products.
 The current discovery mechanism is described https://docs.stackable.tech/home/stable/concepts/service_discovery.html[in our docs] (make sure to pick the 23.1 version).
 
 Basically when clients connect to products managed by Stackable, they need to have certain information about how to connect to these products.
 Currently we expose some of these information, but not all (e.g. which ca cert the exposed product uses).
+On the other hand it could be the case that users have external services which Stackable services should use, e.g.
+an non-stackable HDFS where an Stackable Trino should connect to.
 
 == Decision Drivers
 We have some common use-cases that we need to express via the discovery mechanism:
@@ -35,11 +37,11 @@ We have some common use-cases that we need to express via the discovery mechanis
 *** In case of https: The SecretClass that provided the cert for the *server*
 ** What AuthenticationClass must be used to authenticate
 *** null (no SecretClass): Means no authentication at all
-*** (future) static: One of these plain credentials
+*** static: One of these plain credentials
 *** tls: provides ca.crt that needs to have signed the *client* certificate
 *** ldap: <whatever>
 *** (future) kerberos: kdc where you can get a ticket from (together with the realm)
-*** (future) oauth: <whatever>
+*** (future) oauth/oidc: <whatever>
 *** (future) jwt: <whatever>
 
 2. HDFS cluster
@@ -48,9 +50,9 @@ We have some common use-cases that we need to express via the discovery mechanis
 ** hdfs-site
 ** core-site
 ** What AuthenticationClass must be used to authenticate
-*** (future) kerberos: kdc where you can get a ticket from (together with the realm)
-** The information about rpc encryption is already in the core-site, so need to expose it explicitly
-** The information about data encryption is already in the hdfs-site, so need to expose it explicitly
+*** kerberos: kdc where you can get a ticket from (together with the realm)
+** The information about rpc encryption is already in the core-site, so no need to expose it explicitly
+** The information about data encryption is already in the hdfs-site, so no need to expose it explicitly
 
 == Considered Options
 
@@ -84,11 +86,13 @@ spec:
 
 * Easier to use for consuming applications outside of Stackable, as they can simply mount the CM or download it to a file.
   On the other hand when we start to put in yaml objects that need to be parsed we would loose the benefit.
+* Single API call to retrieve all running products
 
 ==== Cons
 
 * No complex structure such as enums (we can mitigate this by sticking in custom yaml into the CM).
   Users don't have any form of validation when creating their own discovery CM e.g. pointing to their existing HDFS.
+* Cannot have two products with the same name, as the discovery CM name clashes. One solution could be to prefix the product name (e.g. trino-simple), This can impose other problems such as too long CM names.
 
 === [1] Discovery Object: Use dedicated CRD object for every product
 
@@ -111,17 +115,65 @@ spec:
         === BEGIN CERTIFICATE ===
         XXX
         === END CERTIFICATE ===
-  authentication: |
+  authentication:
     kerberos:
       secretClass: client-tls # Use this SecretClass to obtain a keytab
 ----
 
 ==== Pros
 
+* Validation by using e.g. complex enums
+* Commons structure can be shared between all operators, such as `Listener` endpoints or tls server certificate information
+
 ==== Cons
 
 * Operator A needs to compile against operator b to have access to it's discovery struct. An alternative would be to put the Discovery CRDs in operator-rs.
 * Operator versioning hell. On the other hand we have the same problem with ConfigMaps, as e.g. a newly introduced key is missing because of an older hdfs operator version.
+* Dependant Pods (such as hbase on hdfs) can not simply mount a CM containing the hdfs-site and core-site. Instead the hbase-operator needs to read the HdfsClusterDiscovery, copy the hdfs-site and core-site into a CM and than mount that into the hbase Pods. This can be solved by the HdfsClusterDiscovery to point to a CM that contains hdfs-site and core-site xmls.
+* Multiple API calls need to retrieve all running Stackable service (in stackablectl or cockpit). This would be a single API call in case of discovery CM or a shared CRD for all product discoveries.
+* Side-Note: `stackablectl stacklet list` should *not* look at discovery objects, as they can come from a user and are external systems, where we don't know anything about.
+
+=== [1] Discovery Object: Use dedicated CRD object for every product - in combination with ConfigMap
+
+Or use a dedicated HdfsClusterDiscovery crd:
+
+[source,yaml]
+----
+# This struct should *not* contain any information than any client possible wants to mount
+# Instead put these kind of information into the CM
+#
+# This struct resides in a new repo stackable-discovery and is pulled in as a dependency in (possibly) operator-rs and all operators.
+apiVersion: hdfs.stackable.tech/v1alpha1
+kind: HdfsClusterDiscovery
+metadata:
+  name: simple-hdfs
+spec:
+  hdfsSitesConfigMap: hdfs-simple-hdfs
+  productVersion: 3.3.4
+  httpProtocol:
+    http: {}
+    # OR
+    https:
+      caSecretClass: tls
+  authentication:
+    kerberos:
+      keytabSecretClass: client-tls # Use this SecretClass to obtain a keytab
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hdfs-simple-hdfs # prefix to avoid naming collisions
+spec:
+  data:
+    hdfs-site.xml: <xml>
+    core-site.xml: <xml>
+----
+
+==== Pros
+
+* Fixes mount problem from `Discovery Object: Use dedicated CRD object for every product`
+
+==== Cons
 
 === [1] Discovery Object: Use dedicated CRD object shared between all products
 
@@ -134,16 +186,34 @@ kind: ClusterDiscovery
 metadata:
   name: simple-hdfs
 spec:
-  # Whatever
+  productVersion: 3.3.4
+  hdfs: # same structure as in HdfsClusterDiscovery example
+    hdfsSitesConfigMap: hdfs-simple-hdfs
+    httpProtocol:
+      http: {}
+      # OR
+      https:
+        caSecretClass: tls
+    authentication:
+      kerberos:
+        keytabSecretClass: client-tls # Use this SecretClass to obtain a keytab
+  # OR
+  hbase: # Whatever
+  # OR
+  zookeeper: # Whatever
+  # ...
 ----
 
 ==== Pros
 
-* Only one struct in operator-rs -> No cross-operator dependencies.
+* Only one struct in operator-rs => No cross-operator dependencies.
+* Single API call to retrieve all stackable products. Question is if this really helps a lot, as callers probably also are interested in the status of the product, which needs further API calls (irrelevant - see Cons).
 
 ==== Cons
 
-* It does not seem like it's possible to find a common struct all products can agree upon
+* All product discoveries are versioned together. E.g. a new mandatory field for hdfs requires all operators to bump the Discovery CRD to `v2`. We hope that this does not happen too often.
+* Names can collide
+* `stackablectl stacklet list` should *not* look at discovery objects, as they can come from a user and are external systems, where we don't know anything about. So in case we want to introduce a `Stacklet` object listing anyway, so the `Pro` regarding the API calls is irrelevant.
 
 === [1] Discovery Object: Write the discovery to Product CR status
 
