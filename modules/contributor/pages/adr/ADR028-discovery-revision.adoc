@@ -359,6 +359,45 @@ endpoint:
 ** The secret-op could e.g. offer an HTTP api to fetch the ca.crt of a given SecretClass or e.g. write the ca.crt into the status of a SecretClass
 
 
+=== [2] TLS: Include SecretClass in discovery, user can override it
+
+Trino discovery:
+[source,yaml]
+----
+apiVersion: trino.stackable.tech/v1alpha1
+kind: TrinoClusterDiscovery
+metadata:
+  name: simple-trino
+spec:
+  coordinatorEndpoint:
+    host: trino-coordinator.ns.svc.cluster.local
+    port: 8443
+    protocol:
+      http: {}
+      # OR
+      https:
+        caCertSecretClass: tls # gives ca.crt used to verify the server cert
+---
+# superset config
+security:
+  tls: # server tls cert
+    secretClassName: tls
+backends: # Don't look at the Superset CRD structure, we are only interested in the tls stuff here
+  - name: my-trino
+    trino:
+      discovery: my-trino
+      # OPTIONALLY override the spec.coordinatorEndpoint.protocol.https.caCertSecretClass coming from TrinoClusterDiscovery
+      tlsSecretClass: my-second-pki
+----
+
+==== Pros
+
+* Compromise with all usability and flexibility
+
+==== Cons
+
+* Less secure by default
+
 === [3] Authentication: Add AuthenticationClass to Discovery Config
 
 Trino discovery:
