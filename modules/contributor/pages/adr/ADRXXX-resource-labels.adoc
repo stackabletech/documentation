@@ -88,6 +88,12 @@ The following options are available:
 * `stackable.tech/managed-by=stackablectl|stackable-cockpit`: Doesn't collide with Helm
 * `stackable.tech/deployed-by=stackablectl|stackable-cockpit`: Alternative to above
 
+Alternatives are:
+
+* `management.stackable.tech/managed-by=stackablectl|stackable-cockpit`
+* `tools.stackable.tech/managed-by=stackablectl|stackable-cockpit`
+* `mgmt.stackable.tech/managed-by=stackablectl|stackable-cockpit`
+
 == Thoughts on the Implementation
 
 === General Notes
