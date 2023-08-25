@@ -1,0 +1,67 @@
+= ADRXXX: Resource Labels and Namespacing
+Sascha Lautenschläger <sascha.lautenschlaeger@stackable.tech>
+v0.1, 2023-08-25
+:status: draft
+
+* Status: {status}
+* Contributors:
+** Malte Sander
+** Sebastian Bernauer
+** Sascha Lautenschläger
+* Date: 2023-08-25
+
+== Context and Problem Statement
+
+This ADR tries to solve a common issue within the SDP. When `stackablectl` (and in the future our Cockpit) deploys
+resources into a Kubernetes cluster, we are currently unable to properly identify them afterwards. Adding a common set
+of labels to the resources we deploy will solve this issue. Additionally we will use namespaces to track resources
+deployed together. The following use-cases are then possible:
+
+* Use-case 1: Uninstalling a demo and stack
+* Use-case 2: Remove/purge all resources deployed by Stackable at once
+* Use-case 3: Stacklet dependency tree (Only needed when decide against a discovery operator, see ...)
+
+== Decision Drivers
+
+We want to introduce these common labels, as there is currently no reliable and correct way to determine which resources
+where deployed by one of our management tools. Deciding on a common and structured set of labels will help us to more
+easily manage resources deployed by us. This includes reading, listing, changing and deleting those resources. The
+addition of labels will resolve several long-standing issues in various repositories.
+
+== Considered Options
+
+Kubernetes reserves all labels and annotations in the kubernetes.io and k8s.io namespaces. See
+https://kubernetes.io/docs/reference/labels-annotations-taints/[here] and
+https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#syntax-and-character-set[here].
+
+=== Labeling all Resources with a Vendor Label
+
+* `app.kubernetes.io/vendor=Stackable`: This is no official well-known label and also violates the reserved namespaces
+  above
+* `stackable.tech/vendor=Stackable`: Custom label key prefix, duplicate data
+
+=== Labeling Resources deployed within a Demo or Stack
+
+* `stackable.tech/stack=<stack-name>`: Attached to all resources deployed by `stackablectl stack install`
+* `stackable.tech/demo=<demo-name>`: Attached to all resources deployed by `stackablectl demo install`
+
+Both `<stack-name>` and `<demo-name>` will be replaced by the selected stack or demo name. We need to make sure that
+this value doesn't exceed the maximum length of 63 characters. If the name is too long, we have three options:
+
+* Hard error out, the installation is canceled (Not recommended because stack and demo names are chosen by us)
+* We automatically truncate the name to the maximum length: `a-way-too-long-name` becomes `a-way-too-lo<EOL>`
+* We automatically truncate the name and add a random suffix: `a-way-too-long-name` becomes `a-way-a1b2c3<EOL>`
+
+=== Namespacing Stacks and Demos
+
+Considered default values for above labels are:
+
+* `stackable-<demo|stack>-<demo-name|stack-name>(-suffix)`: Contains duplicate data when used in combination with
+  `stackable.tech/...`
+* `<demo|stack>-<demo-name|stack-name>(-suffix)`: Contains no duplicate data
+
+We need to perform length and character validation for these values. If the user doesn't provide a custom namespace,
+we need to make sure, that the value doesn't exceed it's maximum length when the stack or demo names are inserted. When
+the user chooses to use a custom namespace
+
+The maximum length is 63 characters.
