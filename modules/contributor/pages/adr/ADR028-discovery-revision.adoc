@@ -112,6 +112,7 @@ spec:
   form of validation when creating their own discovery CM e.g. pointing to their existing HDFS.
 * Cannot have two products with the same name, as the discovery CM name clashes. One solution could be to prefix the
   product name (e.g. trino-simple), This can impose other problems such as too long CM names.
+* Cannot be mounted across namespaces, would need to be copied.
 
 ==== Discovery Object: Option 2 - Dedicated CRD Object for every Product
 
@@ -141,7 +142,8 @@ spec:
 
 * Validation by using e.g. complex enums
 * Commons structure can be shared between all operators, such as `Listener` endpoints or tls server certificate
-  information
+  information. One possible repository for such code would be either in `operator-rs` directly, as a separate workspace
+  member or in a completely separate repo. One possible name could be `stackable_discovery`.
 
 ===== *Cons*
 
@@ -157,6 +159,9 @@ spec:
   API call in case of discovery CM or a shared CRD for all product discoveries.
 * Side-Note: `stackablectl stacklet list` should *not* look at discovery objects, as they can come from a user and are
   external systems, where we don't know anything about.
+
+Many of above cons could be solved/mitigated by the introduction of a Discovery controller/operator. See
+xref:#discovery-op[here] how this operator/controller would work.
 
 ==== Discovery Object: Option 3 - Dedicated CRD Object + ConfigMap for every Product
 
@@ -523,13 +528,70 @@ Trino discovery does not provide any information on how to authenticate
 * Not viable, as users need to know how to connect, and are not expected to try 50 different auth methods. We need to
   give them a AuthenticationClass, that says them e.g. what LDAP or PKI is used.
 
+[#discovery-op]
+=== Discovery Operator/Controller
+
+[source]
+----
+          NS 1            ||                   NS 2
+     -----------          ||            ------------
+     | HDFS-Op |          ||        --- | Trino-Op | <--------
+     -----------          ||        |   ------------         |
+          |               ||        |    |       |           |
+       deploys            ||        |     deploys            |
+          |               ||        |    |       |           |
+          v               ||        |    v       v           |
+------------------------  ||        |   ------   ----------  |
+| HDFSClusterDiscovery |  ||        |   | CM |   | STS(s) |  |
+|                      |  ||        |   ------   ----------  |
+| - hdfs-site.xml      |  ||        |                        |
+| - core-site.xml      |  ||        |                        |
+| - auth: ...          |  ||    wants to                     |
+------------------------  ||    connect and                 uses
+          ^               ||    creates                      |
+          |               ||        |                        |
+          |               ||        v                        |
+          |               ||   ------------  --------------  |
+       watches            ||   | Request* |  | Response** | --
+          |               ||   ------------  --------------
+          |               ||          ^            ^
+          |               ||          |            |
+          |               ||       watches      creates
+          |               ||          |            |
+          |        ----------------   |            |
+          -------- | Discovery-Op | ----------------
+                   ----------------
+                          ||
+----
+
+The Discovery Operator/Controller handles cross-namespace discovery between products. Each product operator creates a
+namespace-scoped Discovery object (See `HDFSClusterDiscovery`). However some Discovery objects may need additional
+ConfigMaps. These ConfigMaps cannot be mounted across namespaces, which would prevent products from being deployed into
+separate namespaces. To solve this issue, the Discovery Operator would handle cross-namespace discovery. An example
+discovery flow would look like this:
+
+. The Trino-Op (the Product/Client to be exact) located in `NS 2` wants to connect to the HDFS cluster in `NS 1`
+. The Trino-Op then creates a `Request*` object for which the Discovery-Op watches
+. When the Discovery-Op encounters a new `Request*`, it will lookup the requested endpoint
+. Gathered information from the endpoints Discovery data will by forwarded by the Discovery-Op by creating a
+  `Response**` in the target namespace `NS 2`
+. The Trino-Op then uses the `Response**` to fill out local ConfigMaps. The change in a ConfigMap/STS triggers an
+  automatic restart of the product. This immediately propagates changes in the endpoints Discovery.
+
+pass:[*] Exact type to be determined.
+
+pass:[**] Exact type to be determined, re-using the Discovery type might be a solution, but will entangle types across
+operators. One possible solution might by to create one repository named `stackable_discovery`, which includes the
+Discovery-Op and all request and response types. Product operators then only need to depend on one additional crate
+`stackable_discovery` to enable them to use the request and response types.
+
 == Decision Outcome
 
 * *Discovery Object:* Option 3
 * *Server TLS:* TBD, but leaning towards Option 2
 * *Authentication:* Option 1
 
-=== Appendix A
+== Appendix A
 
 Let's model a kerberos secured HDFS with the Options "TLS: Include caCert in Discovery config" and "Authentication:
 Add needed details"
