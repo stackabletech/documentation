@@ -41,6 +41,7 @@ https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#syntax
 * `stackable.tech/vendor=Stackable`: Custom label key prefix, duplicate data
 * `meta.stackable.tech/vendor=Stackable`: Alternative to above, scoped, still duplicated data
 
+[#ns-labels]
 === Labeling Resources deployed within a Demo or Stack
 
 * `stackable.tech/stack=<stack-name>`: Attached to all resources deployed by `stackablectl stack install`
@@ -89,6 +90,59 @@ The following options are available:
 
 == Thoughts on the Implementation
 
+=== General Notes
 
+* Each stack/demo will be deployed into its own namespace. This enables `stackablectl demo installed`
+* Each namespace has a label attached, see xref:#ns-labels[above].
+
+=== `stackablectl demo install <name>`
+
+[source]
+----
+if -n set {
+  if ns exists -> Error or propose different ns
+} else {
+  if ns exists {
+    echo "Already installed. Install again?"
+    ns += suffix
+  }
+}
+
+if demo/stack not supports ns {
+  return Error
+}
+
+if ns not exists {
+  create_ns_with_label()
+}
+
+template_plain_yaml_cluster_scope()
+
+install_demo()
+----
+
+=== `stackablectl demo uninstall <name>`
+
+[source]
+----
+for chart in helmCharts.reverse() {
+  chart.uninstall()
+}
+
+// AuthClass, SecretClass, ClusterRole, ClusterRoleBinding, etc...
+delete_resources_with_label()
+
+// Also deletes PVCs, operators are not uninstalled
+delete_ns_with_label()
+----
+
+=== `stackablectl demo installed`
+
+[source]
+----
+for demo in demos_with_label("demo-*") {
+  echo demo
+}
+----
 
 == Results
