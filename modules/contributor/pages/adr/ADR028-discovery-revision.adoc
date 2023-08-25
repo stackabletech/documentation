@@ -29,9 +29,9 @@ connect to these products. Currently we expose some of these information, but no
 product uses). On the other hand it could be the case that users have external services which Stackable services should
 use, e.g. an non-stackable HDFS where an Stackable Trino should connect to.
 
-*Question 1:* How do we want to make products discoverable?
-*Question 2:* How should clients verify the identity of the server (e.g. the cert of the server)
-*Question 3:* How should clients authenticate themselves against the server?
+* *Question 1:* How do we want to make products discoverable?
+* *Question 2:* How should clients verify the identity of the server (e.g. the cert of the server)
+* *Question 3:* How should clients authenticate themselves against the server?
 
 == Decision Drivers
 
@@ -100,13 +100,13 @@ spec:
     authenticationSecretClass: client-kerberos
 ----
 
-===== Pros
+===== *Pros*
 
 * Easier to use for consuming applications outside of Stackable, as they can simply mount the CM or download it to a
   file. On the other hand when we start to put in yaml objects that need to be parsed we would loose the benefit.
 * Single API call to retrieve all running products
 
-===== Cons
+===== *Cons*
 
 * No complex structure such as enums (we can mitigate this by sticking in custom yaml into the CM). Users don't have any
   form of validation when creating their own discovery CM e.g. pointing to their existing HDFS.
@@ -137,13 +137,13 @@ spec:
       secretClass: client-tls # Use this SecretClass to obtain a keytab
 ----
 
-===== Pros
+===== *Pros*
 
 * Validation by using e.g. complex enums
 * Commons structure can be shared between all operators, such as `Listener` endpoints or tls server certificate
   information
 
-===== Cons
+===== *Cons*
 
 * Operator A needs to compile against operator B to have access to it's discovery struct. An alternative would be to put
   the Discovery CRDs in operator-rs.
@@ -212,11 +212,13 @@ spec:
 # No CM needed
 ----
 
-===== Pros
+===== *Pros*
 
 * Fixes mount problem from `Discovery Object: Use dedicated CRD object for every product`
 
-===== Cons
+===== *Cons*
+
+* Currently none
 
 ==== Discovery Object: Option 4 - Dedicated CRD Object shared between all Products
 
@@ -245,13 +247,13 @@ spec:
   # ...
 ----
 
-===== Pros
+===== *Pros*
 
 * Only one struct in operator-rs => No cross-operator dependencies.
 * Single API call to retrieve all stackable products. Question is if this really helps a lot, as callers probably also
   are interested in the status of the product, which needs further API calls (irrelevant - see Cons).
 
-===== Cons
+===== *Cons*
 
 * All product discoveries are versioned together. E.g. a new mandatory field for hdfs requires all operators to bump the
   Discovery CRD to `v2`. We hope that this does not happen too often.
@@ -265,11 +267,11 @@ spec:
 Instead of writing discovery information to dedicated objects - such as CM or custom CR - we "simply" write the
 discovery information to the status of the Cluster CR.
 
-===== Pros
+===== *Pros*
 
 * None currently
 
-===== Cons
+===== *Cons*
 
 * It does not enable users to bring their own product and talk to it from Stackable, e.g. a user-provided HDFS.
 * It does not allow things such as a ZNode for Zookeeper as we either use the Zookeeper CR for discovery or we use a
@@ -310,11 +312,11 @@ backends: # Don't look at the Superset CRD structure, we are only interested in 
       discovery: my-trino
 ----
 
-===== Pros
+===== *Pros*
 
 * Currently none
 
-===== Cons
+===== *Cons*
 
 * Currently none
 
@@ -350,14 +352,14 @@ backends: # Don't look at the Superset CRD structure, we are only interested in 
       tlsSecretClass: my-second-pki
 ----
 
-===== Pros
+===== *Pros*
 
 * Operator does not need to read/look at the DiscoveryConfig (as we can statically set up the secret-op tls secretClass
   volumes rather than retrieving them from the DiscoveryConfig).
 * Some clients only support a single pki, in that case we could not give the ability to overwrite the secretClass coming
   from the product itself.
 
-===== Cons
+===== *Cons*
 
 * The client has to know what pki/secretClass the server is using.
 * Superset TrinoConnection could not only say "Connect this Superset and this Trino", but need to say "using this ca.crt
@@ -382,13 +384,13 @@ endpoint:
         === END CERTIFICATE ===
 ----
 
-===== Pros
+===== *Pros*
 
 * Easier for external clients to use as they don't need to know the concept of SecretClasses and don't even need to run
   withing k8s.
 * The client has to *not* know what pki/secretClass the server is using.
 
-===== Cons
+===== *Cons*
 
 * BIG QUESTION: How should the product operator get the CA cert from the SecretClass it uses to get the *server* cert
   from?
@@ -426,11 +428,11 @@ backends: # Don't look at the Superset CRD structure, we are only interested in 
       tlsSecretClass: my-second-pki
 ----
 
-===== Pros
+===== *Pros*
 
 * Compromise with all usability and flexibility
 
-===== Cons
+===== *Cons*
 
 * Less secure by default
 
@@ -448,14 +450,14 @@ authentication:
   authenticationClass: my-class
 ----
 
-===== Pros
+===== *Pros*
 
-* IMPORTANT: This is the only thing the server can know (how he is verifying client identities). He can not recommend an
-  SecretClass used to obtain the client credentials. E.g. he uses an LDAP AuthenticationClass, there is no way it can
+* *IMPORTANT:* This is the only thing the server can know (how he is verifying client identities). He can not recommend
+  an SecretClass used to obtain the client credentials. E.g. he uses an LDAP AuthenticationClass, there is no way it can
   now what SecretClass provides credentials accepted by LDAP. (Most cases it will be a user logging into a WebUI and the
   LDAP credentials of the user are not even stored anywhere but just remembered by the user)
 
-===== Cons
+===== *Cons*
 
 * Operator has to read the AuthenticationClass to determine its type (pw/tls/keytab) and set up the needed volumes and
   commands.
@@ -473,11 +475,11 @@ authentication:
   secretClass: client-tls # Use this SecretClass to obtain your credentials (regardless of type of SecretClass)
 ----
 
-===== Pros
+===== *Pros*
 
 * Currently none
 
-===== Cons
+===== *Cons*
 
 * Operator has to read the SecretClass to determine its type (pw/tls/keytab) and set up the needed volumes and commands.
 * Image then SecretClass is of type `k8sSearch`. The connection client (e.g. controlled via superset-operator) than has
@@ -499,12 +501,12 @@ authentication:
     secretClass: client-kerberos # Use this SecretClass to obtain a keytab
 ----
 
-===== Pros
+===== *Pros*
 
 * Operator has *not* to read the SecretClass to determine its type (pw/tls/keytab), as the type is already encoded in
   the Discovery config.
 
-===== Cons
+===== *Cons*
 
 * Currently none
 
@@ -512,11 +514,11 @@ authentication:
 
 Trino discovery does not provide any information on how to authenticate
 
-===== Pros
+===== *Pros*
 
 * Currently none
 
-===== Cons
+===== *Cons*
 
 * Not viable, as users need to know how to connect, and are not expected to try 50 different auth methods. We need to
   give them a AuthenticationClass, that says them e.g. what LDAP or PKI is used.
