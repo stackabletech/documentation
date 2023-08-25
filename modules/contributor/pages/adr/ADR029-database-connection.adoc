@@ -1,0 +1,384 @@
+= ADR029: Standardize database connections
+Razvan Mihai <razvan.mihai@stackable.tech>
+v0.1, 2022-12-08
+:status: accepted
+
+* Status: {status}
+* Deciders:
+** Felix Hennig
+** Lukas Voetmand
+** Malte Sander
+** Razvan Mihai
+** Sascha Lautenschläger
+** Sebastian Bernauer
+* Date: 2022-12-08
+
+Technical Story: https://github.com/stackabletech/issues/issues/238
+
+== Context and Problem Statement
+
+Many products supported by the Stackable Data Platform require databases to store metadata. Currently there is no uniform, consistent way to define database connections. In addition, some Stackable operators define database credentials to be provided inline and in plain text in the cluster definitions.
+
+A quick analysis of the status-quo regarding database connection definitions shows how different operators handle them:
+
+* Apache Hive: the cluster custom resource defined a field called "database" with access credentials in clear text.
+* Apache Airflow and Apache Superset: uses a field called "credentialSecret" that contains multiple different database connection definitions. Even worse, it contains credentials not related to a database, such as a secret to encrypt the cookies. In case of Airflow, this secret only supports the Celery executor.
+* Apache Druid: uses a field called "metadataStorageDatabase" where access credentials are expected to be inline and in plain text.
+
+== Decision Drivers
+
+Here we attempt to standardize the way database connections are defined across the Stackable platform in such a way that:
+
+* Different database systems are supported.
+* Access credentials are defined in Kubernetes `Secret`` objects.
+* Product configuration only allows (product) supported databases ...
+* But there is a generic way to configure additional database systems.
+* Misconfigured connections should be rejected as early as possible in the product lifecycle.
+* Generated CRD documentation is easy to follow by users.
+
+Initially we thought that database connections should be implemented as stand-alone Kubernetes resources and should be referenced in cluster definitions. This idea was thrown away mostly because sharing database connections across products is not good practice and we shouldn't encourage it.
+
+== Considered Options
+
+1. (rejected) `DatabaseConnection` A generic resource definition.
+2. (rejected) Database driver specific resource definition.
+3. (accepted) Product supported and a generic DB specifications.
+
+=== 1. (rejected) `DatabaseConnection` A generic resource definition
+
+The first idea was to introduce a new Kubernetes resource called `DatabaseConnection` with the following fields:
+
+[cols="1,1"]
+|===
+|Field name | Description
+|credentials
+|A string with name of a `Secret` containing at least a user name and a password field. Additional fields are allowed.
+|driver
+|A string with the database driver named. This is a generic field that identifies the type of the database used.
+|protocol
+|The protocol prefix of the final connection string. Most Java based products will use `jdbc:`.
+|host
+|A string with the host name to connect to.
+|instance
+|A string with the database instance to connect to. Optional.
+|port
+|A positive integer with the TCP port used for the connection. Optional.
+|properties
+|A dictionary of additional properties for driver tuning like number of client threads, various buffer sizes and so on. Some drivers, like `derby` use this to define the database name and whether the DB should by automatically created or not. Optional
+|===
+
+The `Secret` object referenced by `credentials` must contain two fields named `USER_NAME` and `PASSWORD` but can contain additional fields like first name, last name, email, user role and so on.
+
+=== Examples
+
+These examples showcase the spec change required from the current status:
+
+The current Druid metadata database connection
+
+[source,yaml]
+---
+metadataStorageDatabase:
+    dbType: postgresql
+    connString: jdbc:postgresql://druid-postgresql/druid
+    host: druid-postgresql
+    port: 5432
+    user: druid
+    password: druid
+
+becomes
+
+[source,yaml]
+---
+metadataStorageDatabase: druid-metadata-connection
+
+where `druid-metadata-connection` is a standalone `DatabaseConnection` resource defined as follows
+
+[source,yaml]
+---
+apiVersion: db.stackable.tech/v1alpha1
+kind: DatabaseConnection
+metadata:
+    name: druid-metadata-connection
+spec:
+    driver: postgresql
+    host: druid-postgresql
+    port: 5432
+    protocol: jdbc:postgresql
+    instance: druid
+    credentials: druid-metadata-credentials
+
+and the credentials field contains the name of a Kubernetes `Secret` defined as:
+
+[source,yaml]
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: druid-metadata-credentials
+type: Opaque
+data:
+  USER_NAME: druid
+  PASSWORD: druid
+
+NOTE: This idea was discarded because it didn't satisfy all acceptance criteria. In particular it wouldn't be possible to catch misconfigurations at cluster creation time.
+
+=== (rejected) 2. Database driver specific resource definition.
+
+In an attempt to address the issues of the first option above, a more detailed specification was necessary. Here, database generic configurations are possible that can be better validated, as in the example below.
+
+[source,yaml]
+---
+apiVersion: databaseconnection.stackable.tech/v1alpha1
+kind: DatabaseConnection
+metadata:
+    name: druid-metadata-connection
+    namespace: default
+spec:
+  database:
+    postgresql:
+      host: druid-postgresql # mandatory
+      port: 5432 # defaults to some port number - depending on wether tls is enabled
+      schema: druid # defaults to druid
+      credentials: druid-postgresql-credentials # mandatory. key username and password
+      parameters: {} # optional
+    redis:
+      host: airflow-redis-master # mandatory
+      port: 6379 # defaults to some port number - depending on wether tls is enabled
+      schema: druid # defaults to druid
+      credentials: airflow-redis-credentials # optional. key password
+      parameters: {} # optional
+    derby:
+      location: /tmp/derby/ # optional, defaults to /tmp/derby-{metadata.name}/derby.db
+      parameters: # optional
+        create: "true"
+    genericConnectionString:
+      driver: postgresql
+      format: postgresql://$SUPERSET_DB_USER:$SUPERSET_DB_PASS@postgres.default.svc.local:$SUPERSET_DB_PORT/superset&param1=value1&param2=value2
+      secret: ... # optional
+         SUPERSET_DB_USER: ...
+         SUPERSET_DB_PASS: ...
+         SUPERSET_DB_PORT: ...
+    generic:
+      driver: postgresql
+      host: superset-postgresql.default.svc.cluster.local # optional
+      port: 5432 # optional
+      protocol: pgsql123 # optional
+      instance: superset # optional
+      credentials: name-of-secret-with-credentials #optional
+      parameters: {...} # optional
+      connectionStringFormat: "{protocol}://{credentials.user_name}:{credentials.credentials}@{host}:{port}/{instance}&[parameters,;]"
+      tls: # optional
+        verification:
+          ca_cert:
+            ...
+In addition, a second generic DB type (`genericConnectionString`) is introduced. This specification allows templating connection URLs with variables defined in secrets and it's not restricted only to user credentials.
+
+NOTE: This proposal was rejected because for the same reason as the first proposal. In addition, it fails to make possible DB configurations product specific.
+
+=== (accepted) Product supported and a generic DB specifications.
+
+It seems that an unique, platform wide mechanism to describe database connections that also fulfills all acceptance criteria is not feasable. Database drivers and product configurations are too diverse and cannot be forced into a type safe specification.
+
+Thus the single, global connection manifest needs to split into two different categories, each covering a subset of the acceptance criteria:
+
+1. A database specific mechanism. This allows to catch misconfigurations early, it promotes good documentation and uniformity inside the platform.
+2. An operator specific mechanism. This is a wildcard that can be used to configure database connections that are not officially supported by the products but that can still be partially validated early.
+
+The first mechanism requires the operator framwork to provide predefined structures and supporting functions for widely available database systems such as: PostgreSQL, MySQL, MariaDB, Oracle, SQLite, Derby, Redis and so on. This doesn't mean that all products can be configured with all DB implementations. The product definitions will only allow the subset that is officially supported by the products.
+
+The second mechanism is operator/product specific and it contains mostly a pass-through list of relevant **product properties**. There is at least one exception, and that is the handling of user credentials which still need to be provisioned in a secure way (as long as the product supports it).
+
+==== Database specific manifests
+
+Support for the following database systems is planned. Additional systems may be added in the future.
+
+1. PostgreSQL
+
+[source,yaml]
+postgresql:
+  host: postgresql # mandatory
+  port: 5432 # optional, default is 5432
+  instance: my-database # mandatory
+  credentials: my-application-credentials # mandatory. key username and password
+  parameters: {} # optional
+  tls: secure-connection-class-name # optional
+  auth: authentication-class-name # optional. authentication class to use.
+
+PostgreSQL supports multiple authentication mechanisms as described https://www.postgresql.org/docs/9.1/auth-pg-hba-conf.html[here].
+
+2.) MySQL
+
+[source,yaml]
+mysql:
+  host: mysql # mandatory
+  port: 3306 # optional, default is 3306
+  instance: my-database # mandatory
+  credentials: my-application-credentials # mandatory. key username and password
+  parameters: {} # optional
+  tls: secure-connection-class-name # optional
+  auth: authentication-class-name # optional. authentication class to use.
+
+MySQL supports multiple authentication mechanisms as described https://dev.mysql.com/doc/refman/8.0/en/socket-pluggable-authentication.html[here].
+
+3.) Derby
+
+Derby is used often as an embedded database for testing and prototyping ideas and implementations. It's not recommended for production use-cases.
+
+[source,yaml]
+derby:
+  location: /tmp/my-database/ # optional, defaults to /tmp/derby-<some-suffix>/derby.db
+
+
+==== Product specific manifests
+
+1.) Apache Druid
+
+Apache Druid clusters can be configured any of the DB specific manifests from above. In addition, a DB generic configuration can pe specified:
+
+The following example shows how to configure the metadata storage for a Druid cluster using either one of the supported back-ends or a generic system. In a production setting only the PostgreSQL or MySQL manifests should be used.
+
+[source,yaml]
+generic:
+  driver: postgresql # mandatory
+  uri: jdbc:postgresql://<host>/druid?foo;bar # mandatory
+  credentialsSecret: my-secret # mandatory. key username + password
+
+The above is translated into the following Java properties:
+
+[source]
+druid.metadata.storage.type=postgresql
+druid.metadata.storage.connector.connectURI=jdbc:postgresql://<host>/druid?foo;bar
+druid.metadata.storage.connector.user=druid
+druid.metadata.storage.connector.password=druid
+
+2.) Apache Superset
+
+NOTE: Superset supports a very wide range of database systems as described https://superset.apache.org/docs/databases/installing-database-drivers[here]. Not all of them are suitable for metadata storage.
+
+Connections to Apache Hive, Apache Druid and Trino clusters deployed as part of the SDP platform can be automated by using discovery configuration maps. In this case, the only attribute to configure is the name of the discovery config map of the appropriate system.
+
+In addition, a generic way to configure a database connection looks as follows:
+
+[source,yaml]
+generic:
+  secret: superset-metadata-secret # mandatory. A secret naming with one entry called "key". Used to encrypt metadata and session cookies.
+  template: postgresql://{{SUPERSET_DB_USER}}:{{SUPERSET_DB_PASS}}@postgres.default.svc.local/superset&param1=value1&param2=value2 # mandatory
+  templateSecret: my-secret # optional
+      SUPERSET_DB_USER: ...
+      SUPERSET_DB_PASS: ...
+
+The template attribute allows to specify the full connection string as required by Superset (and the underlying SQLAlchemy framework). Variables in the template are specified within `{{` and `}}` markers and their contents is replaced with the corresponding field in the `templateSecret` object.
+
+3.) Apache Hive
+
+For production environments, we recommend PostgreSQL back-end and for development, Derby.
+
+A generic connection can be configured as follows:
+
+[source,yaml]
+generic:
+  driver: org.postgresql.Driver # mandatory
+  uri: jdbc:postgresql://postgresql.us-west-2.rds.amazonaws.com:5432/mypgdb # mandatory
+  credentialsSecret: my-secret # mandatory (?). key username + password
+
+4.) Apache Airflow
+
+A generic Airflow database connection can be configured in a similar fashion with Superset:
+
+[source,yaml]
+generic:
+  template: postgresql://{{AIRFLOW_DB_USER}}:{{AIRFLOW_DB_PASS}}@postgres.default.svc.local/superset&param1=value1&param2=value2 # mandatory
+  templateSecret: my-secret # optional
+      AIRFLOW_DB_USER: ...
+      AIRFLOW_DB_PASS: ...
+
+The resulting CRDs look like:
+
+[source,yaml]
+----
+kind: DruidCluster
+spec:
+  clusterConfig:
+    metadataDatabase:
+      postgresql:
+        host: postgresql # mandatory
+        port: 5432 # defaults to some port number - depending on wether tls is enabled
+        database: druid # mandatory
+        credentials: postgresql-credentials # mandatory. key username and password
+        parameters: {} # optional BTreeMap<String, String>
+      mysql:
+        host: mysql # mandatory
+        port: XXXX # defaults to some port number - depending on wether tls is enabled
+        database: druid # mandatory
+        credentials: mysql-credentials # mandatory. key username and password
+        parameters: {} # optional BTreeMap<String, String>
+      derby:
+        location: /tmp/derby/ # optional, defaults to /tmp/derby-<some-suffix>/derby.db
+      generic:
+        driver: postgresql # mandatory
+        uri: jdbc:postgresql://<host>/druid?foo;bar # mandatory
+        credentialsSecret: my-secret # mandatory. key username + password
+# druid.metadata.storage.type=postgresql
+# druid.metadata.storage.connector.connectURI=jdbc:postgresql://<host>/druid
+# druid.metadata.storage.connector.user=druid
+# druid.metadata.storage.connector.password=druid
+---
+kind: SupersetCluster
+spec:
+  clusterConfig:
+    metadataDatabase:
+      postgresql:
+        host: postgresql # mandatory
+        port: 5432 # defaults to some port number - depending on wether tls is enabled
+        database: superset # mandatory
+        credentials: postgresql-credentials # mandatory. key username and password
+        parameters: {} # optional BTreeMap<String, String>
+      mysql:
+        host: mysql # mandatory
+        port: XXXX # defaults to some port number - depending on wether tls is enabled
+        database: superset # mandatory
+        credentials: mysql-credentials # mandatory. key username and password
+        parameters: {} # optional BTreeMap<String, String>
+      sqlite:
+        location: /tmp/sqlite/ # optional, defaults to /tmp/sqlite-<some-suffix>/derby.db
+      generic:
+        uriSecret: my-secret # mandatory. key uri
+# postgresql://{username}:{password}@{host}:{port}/{database}?sslmode=require
+kind: HiveCluster
+spec:
+  clusterConfig:
+    metadataDatabase:
+      postgresql:
+        host: postgresql # mandatory
+        port: 5432 # defaults to some port number - depending on wether tls is enabled
+        database: druid # mandatory
+        credentials: postgresql-credentials # mandatory. key username and password
+        parameters: {} # optional BTreeMap<String, String>
+      derby:
+        location: /tmp/derby/ # optional, defaults to /tmp/derby-<some-suffix>/derby.db
+      # Missing: MS-SQL server, Oracle
+      generic:
+        driver: org.postgresql.Driver # mandatory
+        uri: jdbc:postgresql://postgresql.us-west-2.rds.amazonaws.com:5432/mypgdb # mandatory
+        credentialsSecret: my-secret # mandatory (?). key username + password
+  # <property>
+  #   <name>javax.jdo.option.ConnectionURL</name>
+  #   <value>jdbc:postgresql://postgresql.us-west-2.rds.amazonaws.com:5432/mypgdb</value>
+  #   <description>PostgreSQL JDBC driver connection URL</description>
+  # </property>
+  # <property>
+  #   <name>javax.jdo.option.ConnectionDriverName</name>
+  #   <value>org.postgresql.Driver</value>
+  #   <description>PostgreSQL metastore driver class name</description>
+  # </property>
+  # <property>
+  #   <name>javax.jdo.option.ConnectionUserName</name>
+  #   <value>database_username</value>
+  #   <description>the username for the DB instance</description>
+  # </property>
+  # <property>
+  #   <name>javax.jdo.option.ConnectionPassword</name>
+  #   <value>database_password</value>
+  #   <description>the password for the DB instance</description>
+  # </property>
+----
