@@ -1,0 +1,551 @@
+= ADR028: Service Discovery (Revision)
+Sebastian Bernauer <sebastian.bernauer@stackable.tech>
+v0.1, 2023-03-30
+:status: draft
+
+* Status: {status}
+* Contributors:
+** Felix Hennig
+** Malte Sander
+** Natalie Klestrup Röijezon
+** Sebastian Bernauer
+** Andrew Kenworthy
+** Lukas Voetmand
+** Sascha Lautenschläger
+* Date: 2023-02-28
+
+== Context and Problem Statement
+
+// Describe the context and problem statement, e.g., in free form using two to three sentences. You may want to
+// articulate the problem in form of a question.
+
+This ADR is written with specific problems in mind, but the goal is to reach a generic mechanism for the discovery of
+products. The current discovery mechanism is described
+https://docs.stackable.tech/home/stable/concepts/service_discovery.html[in our docs] (make sure to pick the 23.1
+version).
+
+Basically when clients connect to products managed by Stackable, they need to have certain information about how to
+connect to these products. Currently we expose some of these information, but not all (e.g. which ca cert the exposed
+product uses). On the other hand it could be the case that users have external services which Stackable services should
+use, e.g. an non-stackable HDFS where an Stackable Trino should connect to.
+
+*Question 1:* How do we want to make products discoverable?
+*Question 2:* How should clients verify the identity of the server (e.g. the cert of the server)
+*Question 3:* How should clients authenticate themselves against the server?
+
+== Decision Drivers
+
+We have some common use-cases that we need to express via the discovery mechanism:
+
+1. Trino cluster
+* Currently we don't write any discovery CM
+* We need at least
+** Coordinator address (currently only single coordinator is supported)
+*** Ideally split it into the following attributes, so that clients can construct the URI. (trino python client e.g.
+    needs all of these attributes separately and I don't want to rely on parsing and extracting the URI)
+**** protocol (http/https)
+**** host
+**** port
+*** In case of https: The SecretClass that provided the cert for the *server*
+** What AuthenticationClass must be used to authenticate
+*** null (no SecretClass): Means no authentication at all
+*** static: One of these plain credentials
+*** tls: provides ca.crt that needs to have signed the *client* certificate
+*** ldap: <whatever>
+*** (future) kerberos: kdc where you can get a ticket from (together with the realm)
+*** (future) oauth/oidc: <whatever>
+*** (future) jwt: <whatever>
+
+2. HDFS cluster
+* Currently we expose hdfs-site and core-site
+* We need at least
+** hdfs-site
+** core-site
+** What AuthenticationClass must be used to authenticate
+*** kerberos: kdc where you can get a ticket from (together with the realm)
+** The information about rpc encryption is already in the core-site, so no need to expose it explicitly
+** The information about data encryption is already in the hdfs-site, so no need to expose it explicitly
+
+== Considered Options
+
+=== Discovery Object
+
+This Discovery Object is written by the Product Operator. It describes how the product can be accessed by other
+connecting entities (clients). These clients can be inside the same Kubernetes cluster, in an external Kubernetes
+cluster or deployed using a different approach like running inside a VM or on bare metal hardware. The discovery object
+is used both internally by the SDP and by other actors (for example users). Each Discovery Object is created in the same
+namespace the product runs in. This means cross-namespace discovery needs special attention.
+
+==== Discovery Object: Option 1 - ConfigMap
+
+[source,yaml]
+----
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: simple-hdfs
+spec:
+  data:
+    hdfs-site.xml:
+    core-site.xml:
+    ca.crt: | # Containing a PEM certificate
+      === BEGIN CERTIFICATE ===
+      XXX
+      === END CERTIFICATE ===
+    authentication: |
+      kerberos:
+        secretClass: client-tls # Use this SecretClass to obtain a keytab
+    # Alternative solution without yaml enum:
+    authenticationType: Kerberos
+    authenticationSecretClass: client-kerberos
+----
+
+===== Pros
+
+* Easier to use for consuming applications outside of Stackable, as they can simply mount the CM or download it to a
+  file. On the other hand when we start to put in yaml objects that need to be parsed we would loose the benefit.
+* Single API call to retrieve all running products
+
+===== Cons
+
+* No complex structure such as enums (we can mitigate this by sticking in custom yaml into the CM). Users don't have any
+  form of validation when creating their own discovery CM e.g. pointing to their existing HDFS.
+* Cannot have two products with the same name, as the discovery CM name clashes. One solution could be to prefix the
+  product name (e.g. trino-simple), This can impose other problems such as too long CM names.
+
+==== Discovery Object: Option 2 - Dedicated CRD Object for every Product
+
+[source,yaml]
+----
+apiVersion: hdfs.stackable.tech/v1alpha1
+kind: HdfsClusterDiscovery
+metadata:
+  name: simple-hdfs
+spec:
+  hdfs-site.xml: # xml
+  core-site.xml: # xml
+  httpProtocol:
+    http: {}
+    # OR
+    https:
+      caBundle: | # Containing a PEM certificate
+        === BEGIN CERTIFICATE ===
+        XXX
+        === END CERTIFICATE ===
+  authentication:
+    kerberos:
+      secretClass: client-tls # Use this SecretClass to obtain a keytab
+----
+
+===== Pros
+
+* Validation by using e.g. complex enums
+* Commons structure can be shared between all operators, such as `Listener` endpoints or tls server certificate
+  information
+
+===== Cons
+
+* Operator A needs to compile against operator B to have access to it's discovery struct. An alternative would be to put
+  the Discovery CRDs in operator-rs.
+* Operator versioning hell. On the other hand we have the same problem with ConfigMaps, as e.g. a newly introduced key
+  is missing because of an older hdfs operator version.
+* Dependant Pods (such as hbase on hdfs) can not simply mount a CM containing the hdfs-site and core-site. Instead the
+  hbase-operator needs to read the HdfsClusterDiscovery, copy the hdfs-site and core-site into a CM and than mount that
+  into the hbase Pods. This can be solved by the HdfsClusterDiscovery to point to a CM that contains hdfs-site and
+  core-site XML files.
+* Multiple API calls need to retrieve all running Stackable service (in stackablectl or cockpit). This would be a single
+  API call in case of discovery CM or a shared CRD for all product discoveries.
+* Side-Note: `stackablectl stacklet list` should *not* look at discovery objects, as they can come from a user and are
+  external systems, where we don't know anything about.
+
+==== Discovery Object: Option 3 - Dedicated CRD Object + ConfigMap for every Product
+
+[source,yaml]
+----
+# This struct should *not* contain any information than any client possible wants to mount
+# Instead put these kind of information into the CM
+#
+# This struct resides in a new repo stackable-discovery and is pulled in as a dependency in (possibly) operator-rs and all operators.
+apiVersion: hdfs.stackable.tech/v1alpha1
+kind: HdfsClusterDiscovery
+metadata:
+  name: simple-hdfs
+spec:
+  productVersion: 3.3.4 # *could* be put in common struct and #[serde(flattened)]
+  hdfsSitesConfigMap: hdfs-simple-hdfs
+  httpProtocol:
+    http: {}
+    # OR
+    https:
+      caSecretClass: tls
+  authentication:
+    kerberos:
+      keytabSecretClass: client-tls # Use this SecretClass to obtain a keytab
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hdfs-simple-hdfs # prefix to avoid naming collisions
+spec:
+  data:
+    hdfs-site.xml: <xml>
+    core-site.xml: <xml>
+----
+
+[source,yaml]
+----
+apiVersion: trino.stackable.tech/v1alpha1
+kind: TrinoClusterDiscovery
+metadata:
+  name: simple-trino
+spec:
+  productVersion: "414"
+  coordinatorEndpoint:
+    host: trino-coordinator.ns.svc.cluster.local
+    port: 8443
+    protocol:
+      http: {}
+      # OR
+      https:
+        caCertSecretClass: tls
+  authentication: <whatever>, see below
+# No CM needed
+----
+
+===== Pros
+
+* Fixes mount problem from `Discovery Object: Use dedicated CRD object for every product`
+
+===== Cons
+
+==== Discovery Object: Option 4 - Dedicated CRD Object shared between all Products
+
+[source,yaml]
+----
+apiVersion: discovery.stackable.tech/v1alpha1
+kind: ClusterDiscovery
+metadata:
+  name: simple-hdfs
+spec:
+  productVersion: 3.3.4
+  hdfs: # same structure as in HdfsClusterDiscovery example
+    hdfsSitesConfigMap: hdfs-simple-hdfs
+    httpProtocol:
+      http: {}
+      # OR
+      https:
+        caSecretClass: tls
+    authentication:
+      kerberos:
+        keytabSecretClass: client-tls # Use this SecretClass to obtain a keytab
+  # OR
+  hbase: # Whatever
+  # OR
+  zookeeper: # Whatever
+  # ...
+----
+
+===== Pros
+
+* Only one struct in operator-rs => No cross-operator dependencies.
+* Single API call to retrieve all stackable products. Question is if this really helps a lot, as callers probably also
+  are interested in the status of the product, which needs further API calls (irrelevant - see Cons).
+
+===== Cons
+
+* All product discoveries are versioned together. E.g. a new mandatory field for hdfs requires all operators to bump the
+  Discovery CRD to `v2`. We hope that this does not happen too often.
+* Names can collide
+* `stackablectl stacklet list` should *not* look at discovery objects, as they can come from a user and are external
+  systems, where we don't know anything about. So in case we want to introduce a `Stacklet` object listing anyway, so
+  the `Pro` regarding the API calls is irrelevant.
+
+==== Discovery Object: Option 5 - Write Discovery to Product CR Status
+
+Instead of writing discovery information to dedicated objects - such as CM or custom CR - we "simply" write the
+discovery information to the status of the Cluster CR.
+
+===== Pros
+
+* None currently
+
+===== Cons
+
+* It does not enable users to bring their own product and talk to it from Stackable, e.g. a user-provided HDFS.
+* It does not allow things such as a ZNode for Zookeeper as we either use the Zookeeper CR for discovery or we use a
+  ZNode but than can't use a Zookeeper CR. Currently we have the freedom of either connection to a Zookeeper root dir or
+  a ZNode transparently.
+
+'''
+
+=== TLS
+
+==== TLS: Option 1 - Discovery Config contains SecretClass
+
+The discovery includes the SecretClass used to obtain the ca.crt used to validate the *server* certificate.
+
+[source,yaml]
+----
+apiVersion: trino.stackable.tech/v1alpha1
+kind: TrinoClusterDiscovery
+metadata:
+  name: simple-trino
+spec:
+  coordinatorEndpoint:
+    host: trino-coordinator.ns.svc.cluster.local
+    port: 8443
+    protocol:
+      http: {}
+      # OR
+      https:
+        caCertSecretClass: tls # gives ca.crt used to verify the server cert
+---
+# superset config
+security:
+  tls: # server tls cert
+    secretClassName: tls
+backends: # Don't look at the Superset CRD structure, we are only interested in the tls stuff here
+  - name: my-trino
+    trino:
+      discovery: my-trino
+----
+
+===== Pros
+
+* Currently none
+
+===== Cons
+
+* Currently none
+
+==== TLS: Option 2 - Client specifies SecretClass
+
+The discovery does *not* include the SecretClass used to obtain the *server* certificate. Instead the client must
+specify which SecretClass should be used to verify the *server* certificate. For usability reasons it can be omitted and
+defaults to the SecretClass the client uses for itself.
+
+[source,yaml]
+----
+apiVersion: trino.stackable.tech/v1alpha1
+kind: TrinoClusterDiscovery
+metadata:
+  name: simple-trino
+spec:
+  coordinatorEndpoint:
+    host: trino-coordinator.ns.svc.cluster.local
+    port: 8443
+    protocol:
+      http: {}
+      # OR
+      https: {} # NO! cert information
+# superset config
+security:
+  tls:
+    secretClassName: tls
+backends: # Don't look at the Superset CRD structure, we are only interested in the tls stuff here
+  - name: my-trino
+    trino:
+      discovery: my-trino
+      # override tls from the global config, OPTIONALLY
+      tlsSecretClass: my-second-pki
+----
+
+===== Pros
+
+* Operator does not need to read/look at the DiscoveryConfig (as we can statically set up the secret-op tls secretClass
+  volumes rather than retrieving them from the DiscoveryConfig).
+* Some clients only support a single pki, in that case we could not give the ability to overwrite the secretClass coming
+  from the product itself.
+
+===== Cons
+
+* The client has to know what pki/secretClass the server is using.
+* Superset TrinoConnection could not only say "Connect this Superset and this Trino", but need to say "using this ca.crt
+  to validate the Trino server"
+
+==== TLS: Option 3 - Include caCert in Discovery Config
+
+[source,yaml]
+----
+metadata:
+  name: my-trino
+endpoint:
+  host: trino-coordinator.ns.svc.cluster.local
+  port: 8443
+  protocol:
+    http: {}
+    # OR
+    https:
+      caBundle: | # Containing a PEM certificate
+        === BEGIN CERTIFICATE ===
+        XXX
+        === END CERTIFICATE ===
+----
+
+===== Pros
+
+* Easier for external clients to use as they don't need to know the concept of SecretClasses and don't even need to run
+  withing k8s.
+* The client has to *not* know what pki/secretClass the server is using.
+
+===== Cons
+
+* BIG QUESTION: How should the product operator get the CA cert from the SecretClass it uses to get the *server* cert
+  from?
+** The secret-op could e.g. offer an HTTP api to fetch the ca.crt of a given SecretClass or e.g. write the ca.crt into
+   the status of a SecretClass
+
+
+==== TLS: Option 4 - Include SecretClass in Discovery (User can override it)
+
+[source,yaml]
+----
+apiVersion: trino.stackable.tech/v1alpha1
+kind: TrinoClusterDiscovery
+metadata:
+  name: simple-trino
+spec:
+  coordinatorEndpoint:
+    host: trino-coordinator.ns.svc.cluster.local
+    port: 8443
+    protocol:
+      http: {}
+      # OR
+      https:
+        caCertSecretClass: tls # gives ca.crt used to verify the server cert
+---
+# superset config
+security:
+  tls: # server tls cert
+    secretClassName: tls
+backends: # Don't look at the Superset CRD structure, we are only interested in the tls stuff here
+  - name: my-trino
+    trino:
+      discovery: my-trino
+      # OPTIONALLY override the spec.coordinatorEndpoint.protocol.https.caCertSecretClass coming from TrinoClusterDiscovery
+      tlsSecretClass: my-second-pki
+----
+
+===== Pros
+
+* Compromise with all usability and flexibility
+
+===== Cons
+
+* Less secure by default
+
+'''
+
+=== Authentication
+
+==== Authentication: Option 1 - Add AuthenticationClass to Discovery Config
+
+[source,yaml]
+----
+metadata:
+  name: my-trino
+authentication:
+  authenticationClass: my-class
+----
+
+===== Pros
+
+* IMPORTANT: This is the only thing the server can know (how he is verifying client identities). He can not recommend an
+  SecretClass used to obtain the client credentials. E.g. he uses an LDAP AuthenticationClass, there is no way it can
+  now what SecretClass provides credentials accepted by LDAP. (Most cases it will be a user logging into a WebUI and the
+  LDAP credentials of the user are not even stored anywhere but just remembered by the user)
+
+===== Cons
+
+* Operator has to read the AuthenticationClass to determine its type (pw/tls/keytab) and set up the needed volumes and
+  commands.
+// * The AuthenticationClass is meant to describe "how should a server verify connecting clients" and re-purpose it to 
+//   mean "how a client should authenticate itself". Image a user creates a Secret `trino-users` with *only* a ca.crt
+//   and a SecretClass `trino-users` on top. The connecting client than has no way of knowing how to get a client cert.
+
+==== Authentication: Option 2 - Add SecretClass to Discovery Config
+
+[source,yaml]
+----
+metadata:
+  name: my-trino
+authentication:
+  secretClass: client-tls # Use this SecretClass to obtain your credentials (regardless of type of SecretClass)
+----
+
+===== Pros
+
+* Currently none
+
+===== Cons
+
+* Operator has to read the SecretClass to determine its type (pw/tls/keytab) and set up the needed volumes and commands.
+* Image then SecretClass is of type `k8sSearch`. The connection client (e.g. controlled via superset-operator) than has
+  no idea if he should expect a tls.crd or a keytab when mounting the SecretClass.
+
+==== Authentication: Option 3 - Add needed Details
+
+Trino discovery:
+[source,yaml]
+----
+metadata:
+  name: my-trino
+authentication:
+  none: {}
+  password: {}
+  tls:
+    secretClass: client-tls # Use this SecretClass to obtain a *client* cert tls.crt
+  kerberos:
+    secretClass: client-kerberos # Use this SecretClass to obtain a keytab
+----
+
+===== Pros
+
+* Operator has *not* to read the SecretClass to determine its type (pw/tls/keytab), as the type is already encoded in
+  the Discovery config.
+
+===== Cons
+
+* Currently none
+
+==== Authentication: Option 4 - Provide no Authentication Information
+
+Trino discovery does not provide any information on how to authenticate
+
+===== Pros
+
+* Currently none
+
+===== Cons
+
+* Not viable, as users need to know how to connect, and are not expected to try 50 different auth methods. We need to
+  give them a AuthenticationClass, that says them e.g. what LDAP or PKI is used.
+
+== Decision Outcome
+
+* *Discovery Object:* Option 3
+* *Server TLS:* TBD, but leaning towards Option 2
+* *Authentication:* Option 1
+
+=== Appendix A
+
+Let's model a kerberos secured HDFS with the Options "TLS: Include caCert in Discovery config" and "Authentication:
+Add needed details"
+
+[source,yaml]
+----
+apiVersion: hdfs.stackable.tech/v1alpha1
+kind: HdfsCluster
+metadata:
+  name: simple-hdfs
+spec:
+  zookeeperConfigMapName: simple-hdfs-znode
+  nameNodes: {}
+  dataNodes: {}
+  journalNodes: {}
+  # TODO Refine CRD
+  kerberos:
+    tlsSecretClass: tls
+    kerberosSecretClass: kerberos
+    wireEncryption: Privacy
+----
