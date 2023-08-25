@@ -39,11 +39,18 @@ https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#syntax
 * `app.kubernetes.io/vendor=Stackable`: This is no official well-known label and also violates the reserved namespaces
   above
 * `stackable.tech/vendor=Stackable`: Custom label key prefix, duplicate data
+* `meta.stackable.tech/vendor=Stackable`: Alternative to above, scoped, still duplicated data
 
 === Labeling Resources deployed within a Demo or Stack
 
 * `stackable.tech/stack=<stack-name>`: Attached to all resources deployed by `stackablectl stack install`
 * `stackable.tech/demo=<demo-name>`: Attached to all resources deployed by `stackablectl demo install`
+
+Alternatives to above are:
+
+* `resources.stackable.tech/<stack|demo>=<stack-name|demo-name>`
+* `meta.stackable.tech/<stack|demo>=<stack-name|demo-name>`
+* `res.stackable.tech/<stack|demo>=<stack-name|demo-name>`
 
 Both `<stack-name>` and `<demo-name>` will be replaced by the selected stack or demo name. We need to make sure that
 this value doesn't exceed the maximum length of 63 characters. If the name is too long, we have three options:
@@ -56,12 +63,32 @@ this value doesn't exceed the maximum length of 63 characters. If the name is to
 
 Considered default values for above labels are:
 
-* `stackable-<demo|stack>-<demo-name|stack-name>(-suffix)`: Contains duplicate data when used in combination with
-  `stackable.tech/...`
-* `<demo|stack>-<demo-name|stack-name>(-suffix)`: Contains no duplicate data
+* `stackable-<demo|stack>-<demo-name|stack-name>(-suffix)`: Clearly indicates this namespace belongs to the SDP, we
+  might run into length limits
+* `<demo|stack>-<demo-name|stack-name>(-suffix)`: Less likely we will run into length limits, but we loose the clear
+  indication this namespace belongs to the SDP.
 
-We need to perform length and character validation for these values. If the user doesn't provide a custom namespace,
-we need to make sure, that the value doesn't exceed it's maximum length when the stack or demo names are inserted. When
-the user chooses to use a custom namespace
+We need to perform length and character validation for these namespace names. There are two possible paths:
 
-The maximum length is 63 characters.
+* If the user *doesn't* provide a custom namespace, we need to make sure that the value doesn't exceed it's maximum
+length when the stack or demo names are inserted.
+* If the user *does* provide a custom , we need to make sure that the custom namespace length doesn't exceed it's
+  maximum length.
+
+The maximum length for both cases is 63 characters.
+
+=== Adding Label to indicate which Management Tool was used
+
+The following options are available:
+
+* `app.kubernetes.io/managed-by=stackablectl|stackable-cockpit`: Well-known label, however not recommended because Helm
+  already uses this label to track which resources are managed by Helm. As we use Helm in the background to install some
+  of our manifests, we would potentially break Helms (uninstall) behavior.
+* `stackable.tech/managed-by=stackablectl|stackable-cockpit`: Doesn't collide with Helm
+* `stackable.tech/deployed-by=stackablectl|stackable-cockpit`: Alternative to above
+
+== Thoughts on the Implementation
+
+
+
+== Results
