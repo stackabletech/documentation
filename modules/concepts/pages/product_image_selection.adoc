@@ -7,7 +7,26 @@ Containers require images (e.g. Docker) to run of.
 These images contain different tools for initialization jobs and/or the actual product itself.
 Images are prepared for different architectures and different product versions.
 
-There are multiple ways to specify the image used:
+Stackable uses two separate versions to describe the images that are provided as part of the platform:
+
+
+**Product Version** +
+This is the version of the product which this image provides, so this could for example be Kafka 3.3.1
+
+**Stackable Version** +
+This version is used to track changes to the structure of the image containing the product (in the version specified by _product version_).
+Stackable operators expect to find a very specific structure in the images they use to roll out the products.
+This can be things like startup scripts being present, parameters these startup scripts expect, presence or location of extra libraries and similar things.
+In order for our operators to work as intended every operator has to be used with images from the same release line as this operator.
+
+What this means is, that for example the Stackable Operator for Apache HBase 23.4.0 will by default try to use images with the same stackable version.
+
+However, since the last digit of the Stackable version is considered to be a patchlevel indicator, operators will be compatible with all images from the same release line.
+So an operator of version _23.4.x_ will be compatible with all images of version _23.4.y_.
+This is intended to allow shorter update cycles for users, when new image versions are released that may contain security fixes - should the user so choose.
+
+
+Please find more details on the various ways this can be configured below.
 
 == Stackable provided images
 
@@ -74,3 +93,22 @@ The Stackable Operators configure their respective products based on the product
 This affects e.g. configuration properties or available features.
 Therefore, the operators are dependent on the product and its product version contained in the custom image.
 It's your responsibility to put in the correct product version.
+
+[WARNING]
+====
+Using custom images has a few limitations that users should be aware of.
+
+* The images will *have* to have the same structures that Stackable operators expect.
+This should usually be ensured by specifying a Stackable image in the `FROM` clause of the Dockerfile.
+
+* Images will have to be upgraded for every new Stackable release to follow structural changes that Stackable may have made to their images.
+
+* It is not possible to update the Stackable Platform to a new version without changing the deployed cluster definitions when using custom images.
+The recommended process here is:
+
+** Tag clusters as "do not reconcile"
+** Update Stackable plattform
+** Change custom images in cluster specifications
+** Remove "do not reconcile flag"
+
+====
