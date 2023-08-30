@@ -26,7 +26,9 @@ So an operator of version _23.4.x_ will be compatible with all images of version
 This is intended to allow shorter update cycles for users, when new image versions are released that may contain security fixes - should the user so choose.
 
 
-Please find more details on the various ways this can be configured below.
+The following paragraphs explain  the available settings and how they work.
+
+At the bottom of this page in the xref:_common_scenarios[] section some common update scenarios are explained as examples.
 
 == Stackable provided images
 
@@ -102,6 +104,7 @@ Using custom images has a few limitations that users should be aware of.
 This should usually be ensured by specifying a Stackable image in the `FROM` clause of the Dockerfile.
 
 * Images will have to be upgraded for every new Stackable release to follow structural changes that Stackable may have made to their images.
+When deriving images from official Stackable images this will mean updating the version of the image in the `FROM` clause to the correct Stackable release.
 
 * It is not possible to update the Stackable Platform to a new version without changing the deployed cluster definitions when using custom images.
 The recommended process here is:
@@ -112,3 +115,60 @@ The recommended process here is:
 ** Remove "do not reconcile flag"
 
 ====
+
+## Common Scenarios
+
+### Planned Plattform Updates
+This is probably the most common scenario, users do not specify a Stackable version, and thus the operators always pick the image from their exact release.
+Updates happen by updating Stackable Operators, which will in turn restart the products with the new images.
+
+#### Config
+
+[source,yaml]
+----
+spec:
+  image:
+    productVersion: 3.3.1
+----
+
+### Quick Updates of Images
+Sometimes it can be useful to decouple operators upgrades from the image versions to allow using updated images as soons as Stackable releases them.
+This can significantly shorten turnaround times when reacting to security vulnerabilities for example.
+
+For this scenario the Stackable Version can be set to the release line, without including the patchlevel indicator.
+This will cause the operator to always use the most current image that it is compatible with when starting products.
+
+[CAUTION]
+====
+This behavior can result in _mixed_ clusters running on different image versions of the product.
+This should not create any issues, since the contained product binaries are exactly the same, but is worth knowing.
+
+A rolling restart of the product would clean this mixed state up.
+====
+
+#### Config
+[source,yaml]
+----
+spec:
+  image:
+    productVersion: 3.3.1
+    stackableVersion: 23.4
+----
+
+
+
+#### Custom Images / Pinned Images
+When a setup requires the utmost stability and it is preferrable for things to break, rather than run with a different image version that for example has not been certified.
+Or when a user requires custom libraries / code in the images they run and build their own images derived from official Stackable images, this is the only possible way to do this.
+
+Please see the warnings in xref:_custom_images for how to upgrade in this scenario.
+
+#### Config
+[source,yaml]
+----
+spec:
+  image:
+    custom: my.corp/myteam/stackable/kafka:latest-and-greatest
+    productVersion: 3.3.1
+----
+
