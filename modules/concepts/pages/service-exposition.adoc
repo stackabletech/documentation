@@ -11,7 +11,7 @@ The service offered by a data product is the utility it is used for, but https:/
 * NodePort
 * LoadBalancer
 
-Every data product cluster supports configuring this through the custom resource field `spec.clusterConfig.listenerClass`. There are three ListenerClasses, named after the goal for which they are used (more on this in the <<when-to-choose-which-option, next section>>):
+All custom resources for data products provide a  resource field named `spec.clusterConfig.listenerClass` which determines how the product can be accessed . There are three ListenerClasses, named after the goal for which they are used (more on this in the <<when-to-choose-which-option, next section>>):
 
 * `cluster-internal` => Use ClusterIP (default)
 * `external-unstable` => Use NodePort
