@@ -27,7 +27,7 @@ There are three options, one for internal traffic and two for external access, w
 
 === Internal
 
-The `cluster-internal` setting is the default class and, the Service is only exposed inside the Kubernetes cluster. This is useful for internal dependencies such as xref:zookeeper:index.adoc[Apache ZooKeeper] or the xref:hive:index.adoc[Apache Hive metastore] or a xref:kafka:index.adoc[Apache Kafka] cluster used for internal data flow. All requests are coming from inside the Kubernetes cluster.
+`cluster-internal`  is the default class and, the Service behind it is only exposed within Kubernetes. This is useful for middleware products such as xref:zookeeper:index.adoc[Apache ZooKeeper], the xref:hive:index.adoc[Apache Hive metastore] or a xref:kafka:index.adoc[Apache Kafka] cluster used for internal data flow. Products using this ListenerClass are not accessible from outside Kubernetes.
 
 === External
 
