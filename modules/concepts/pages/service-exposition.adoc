@@ -17,7 +17,7 @@ All custom resources for data products provide a  resource field named `spec.clu
 * `external-unstable` => Use NodePort
 * `external-stable` => Use LoadBalancer
 
-The `cluster-internal` class exposes a Service inside the cluster by using a ClusterIP Service. The service is only reachable from inside the cluster and not accessible from the outside. This setting is the most secure and was chosen as the default for that reason.
+The `cluster-internal` class exposes the interface of a product by using a ClusterIP Service. This service is only reachable from within the Kubernetes cluster. This setting is the most secure and was chosen as the default for that reason.
 
 NOTE: Not all Operators support all classes. Consult the Operator specific documentation to find out about the supported service types.
 
