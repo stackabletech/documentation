@@ -1,11 +1,11 @@
 = Service exposition
 
-Most data products expose a service, either to be used by other tools running in the same cluster, or an API or web interface to be used by a user outside of the cluster. For example, ZooKeeper is a service that is required as a dependency by other tools, and needs to expose its service in the cluster only, while Superset is an analysis tool used by end user which need to access it from the outside, which can either mean the local network of your company, or exposed on the internet if the Kubernetes cluster is running in the cloud.
+Most data products expose a service, either to be used by other tools running in the same cluster, or an API or web interface to be used by a user outside of the cluster. For example, ZooKeeper is a service that is required as a dependency by other tools, and needs to expose its service in the cluster only, while Superset is an analysis tool used by end users which need to access it from the outside, which can either mean the local network of your company, or exposed on the internet if the Kubernetes cluster is running in the cloud.
 This page gives an overview over the different options for service exposition, when to chose which option and how these options are configured.
 
 == Service exposition options
 
-The service offered by a data product is the utility it is used for, but https://kubernetes.io/docs/concepts/services-networking/service/[Service] also means the Kubernetes resource. The Stackable Data Platform supports three types of Service:
+The service offered by a data product is the utility it is used for, but https://kubernetes.io/docs/concepts/services-networking/service/[Service] also means the Kubernetes resource. The Stackable Data Platform supports three https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types[types of Service]:
 
 * ClusterIP
 * NodePort
@@ -17,7 +17,7 @@ Every data product cluster supports configuring this through the custom resource
 * `external-unstable` => Use NodePort
 * `external-stable` => Use LoadBalancer
 
-The `cluster-internal` class only exposes a Service inside the cluster by using a ClusterIP Service. This setting is the default and it was chosen for security reasons: By default, no Service is exposed to the public.
+The `cluster-internal` class exposes a Service inside the cluster by using a ClusterIP Service. The service is only reachable from inside the cluster and not accessible from the outside. This setting is the most secure and was chosen as the default for that reason.
 
 NOTE: Not all Operators support all classes. Consult the Operator specific documentation to find out about the supported service types.
 
