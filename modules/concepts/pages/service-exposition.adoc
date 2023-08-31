@@ -33,7 +33,9 @@ There are three options, one for internal traffic and two for external access, w
 
 External access is needed when a product needs to be accessed from _outside_ of Kubernetes. This is necessary for all end user products such as xref:superset:index.adoc[Apache Superset]. Some tools can expose APIs for data ingestion like xref:kafka:index.adoc[Apache Kafka] or xref:nifi:index.adoc[Apache NiFi]. If data needs to be ingested from outside of the cluster, one of the external listener classes should be chosen.
 
-When to use `stable` and when to use `unstable`? The `external-unstable` setting exposes a NodePort. This settings is always available, it means that the service will be exposed at a port on the node that the Pod is running on. This has the disadvantage that the port is not stable across service restarts, and depending on the cluster topology the service might also be scheduled on a different node, meaning that the IP is also changing. The `external-stable` setting uses a LoadBalancer. The LoadBalancer is running at a fixed adress and is therefore `stable`. Managed Kubernetes services in the cloud usually offer a LoadBalancer, but for an on premise cluster you have to configure a LoadBalancer yourself. For a production setup, it is recommended to use a LoadBalancer or `external-stable` ListenerClass.
+When to use `stable` and when to use `unstable`? The `external-unstable` setting exposes a product interface via a Kuberneres NodePort. In this case the service's IP address and port can change if Kubernetes needs to restart or reschedule the Pod to another node.
+
+The `external-stable` class uses a LoadBalancer. The LoadBalancer is running at a fixed address and is therefore `stable`. Managed Kubernetes services in the cloud usually offer a LoadBalancer, but for an on premise cluster you have to configure a LoadBalancer yourself. For a production setup, it is recommended to use a LoadBalancer or `external-stable` ListenerClass.
 
 == Outlook
 
