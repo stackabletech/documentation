@@ -3,6 +3,21 @@
 The Stackable platform consists of multiple operators that work together.
 Periodically a platform release is made, including all components of the platform at a specific version.
 
+== Release 23.11
+
+...
+
+=== Breaking changes
+
+The `loadExamplesOnInit` option was removed from the `SupersetCluster` CRD. Loading examples is still supported, the process is now described in the https://docs.stackable.tech/home/stable/superset/getting_started/first_steps[documentation].
+
+==== Stackable Operator for Apache Superset
+
+* https://github.com/stackabletech/superset-operator/pull/396[Remove SupersetDB]
+
+`.spec.clusterConfig.loadExamplesOnInit` was removed from the CRD. Already loaded examples in Superset will not be removed by this change.
+Additionally, the `SupersetDB` custom resource is not used anymore. Those CRs should be deleted.
+
 == Release 23.7
 
 This release introduces the specification of resource quotas and pod overrides and updates the product versions supported by SDP.
