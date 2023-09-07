@@ -73,8 +73,8 @@ We need to perform length and character validation for these namespace names. Th
 
 * If the user *doesn't* provide a custom namespace, we need to make sure that the value doesn't exceed it's maximum
 length when the stack or demo names are inserted.
-* If the user *does* provide a custom , we need to make sure that the custom namespace length doesn't exceed it's
-  maximum length.
+* If the user *does* provide a custom namespace, we need to make sure that the custom namespace length doesn't exceed
+  it's maximum length.
 
 The maximum length for both cases is 63 characters.
 
