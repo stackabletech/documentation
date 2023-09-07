@@ -1,0 +1,154 @@
+= Lifecycle Policies
+
+This page details our current lifecycle policies around various parts of our product - the Stackable Data Platform (SDP).
+
+We define multiple lifecycle policies for different parts of our platform, but all these policies follow some common goals:
+
+* It should always be possible to upgrade to a new version of SDP without also changing any of your Kubernetes resources as long as you are not currently using anything that has already been marked as deprecated
+** This means you can upgrade the control plane independently of the user-facing products
+
+* All deprecations follow a predictable lifecycle that allows planning of upgrades ahead of time
+
+The guarantees we give are on multiple levels as detailed below:
+
+* The SDP itself
+* CustomResourceDefinition (CRD) versions
+* Supported product versions
+* Supported OpenShift & Kubernetes versions
+
+All these policies may evolve as we learn what works best for our customers and for us.
+
+These policies are from *July 2023*.
+
+
+== Stackable Data Platform Lifecycle Policy
+
+NOTE: This policy concerns releases of our platform as a whole and how long and to which extent we support each version.
+
+We do releases of our Stackable Data Platform.
+These releases get a name based on the year and month they have been released in (e.g. `23.4`, `23.7`, also called https://calver.org/[CalVer]). This name does not follow Semantic Versioning (https://semver.org/[SemVer]). We may release patches for a release, which then follow the PATCH naming semantics of SemVer (e.g. `23.4.1`) or the _Micro_ name from CalVer. See below for our policy on patches for the SDP.
+
+We do support an SDP release for a specific time after its release.
+
+An SDP release contains our operators and other code developed at Stackable as well as the product docker images.
+
+TIP: Our policy is inspired by the https://kubernetes.io/releases/patch-releases/[Kubernetes] and the https://access.redhat.com/support/policy/updates/openshift#ocp4[OpenShift] policies.
+
+=== Full Support Phase
+
+This phase begins once a new non-patch SDP version is released and ends after a 6-month period OR 3 months after the general availability of the superseding non-patch release, whichever is later.
+
+The following pictures show both scenarios:
+
+image:full_support_scenario_1.png[Full Support Scenario 1]
+
+image:full_support_scenario_2.png[Full Support Scenario 2]
+
+We _will_ release new patch releases of a SDP release (e.g. `23.4.1`) for any issues we deem Critical or High (see definition below) once fixes become available.
+We _may_ release new patch releases for other reasons.
+
+=== Maintenance Phase
+
+This phase commences after the _Full Support_ phase for the respective SDP version and ends 12 months after general availability of the SDP release.
+
+We _may_ release new patch releases of a SDP release (e.g. `23.4.1`) for any issues we deem Critical or High (see definition below) once fixes become available.
+
+image:maintenance_phase.png[Maintenance Phase]
+
+=== General
+
+We may release patches for other reasons.
+
+Customers are expected to upgrade their SDP environment to the most current supported patch/micro (`23.4.z`) version.
+Make sure to follow our release notes to learn of valid upgrade paths, some intermediate updates might be necessary.
+
+== CRD Versioning Lifecycle Policy
+
+IMPORTANT: As of June 2023 all our CRDs are versioned as `alpha1`. We will start introducing other versions later in 2023.
+
+``CustomResourceDefinition``s at Stackable are versioned.
+
+Our policies around CRD versioning are inspired by the https://kubernetes.io/docs/reference/using-api/deprecation-policy/[Kubernetes Deprecation Policy].
+
+Specifically we try to follow these rules:
+
+* API elements may only be removed by incrementing the version of the API group.
+
+* API objects must be able to round-trip between API versions in a given release without information loss, except for whole REST resources that do not exist in some versions.
+
+* An API version in a given track may not be deprecated in favor of a less stable API version.
+
+* API lifetime is determined by the API stability level
+** Alpha API versions may be removed in any release without prior deprecation notice.
+
+** Beta API versions are deprecated at a minimum of 1 platform releases after introduction and removed at a minimum of 1 platform releases after deprecation.
+
+** GA (stable) API versions are deprecated at a minimum of 2 platform releases after introduction and removed at a minimum of 1 platform releases after deprecation.
+
+Similar to the Exception noted by the Kubernetes project itself, we will also evolve these policies as we go along and find that one of the rules doesn't fit a situation.
+
+NOTE: According to these rules it is legal to _add_ fields to a CRD without increasing the version as long as there is a default for this field.
+
+
+== Product Lifecycle Policy
+
+SDP ships with a lot of different downstream products (e.g. Apache HBase, Apache Superset).
+
+All of these products follow their own version semantics and release cadences and lifecycles, which is why we do not define a product lifecycle policy based on version numbers alone.
+
+For every one of the products we ship we always support one LTS (Long Term Support) release line, which we generally recommend to use.
+A release line usually means that we are going to keep a `major.minor` release stable but will include newer patch versions in later SDP releases.
+
+Some products (e.g. Trino) don't follow Semver rules, for those we will follow separate rules and clearly document what version is considered LTS.
+
+Every LTS release line is shipped for at least one full year.
+After a year we may switch to a new release line - but there will always be at least an overlap of one release in which the old LTS version is deprecated, but a new LTS version is available.
+Which line we chose as our LTS release is at our own discretion and is based on popularity, upstream lifecycle policies, stability, our own experience and other factors.
+
+In addition to the LTS line we may also ship other versions, e.g. the latest upstream version.
+
+We do honor the same deprecation policy for non-LTS products as for LTS products, but we do not guarantee a long term support for these versions. They may be deprecated faster.
+
+image:product_release_cycle.png[Product Lifecycle Policy]
+
+=== Deprecation
+
+Every product version that gets removed will be deprecated for at least 1 SDP release before removal.
+This guarantees that users can update the operators (e.g. from 23.1 to 23.4) without the need to simultaneously update the product version as well. The flow is to first update the control plane (the operators) and afterward the product versions if desired (e.g. when the currently used version is now deprecated).
+
+=== Definition of "support"
+
+We will ship new versions of the LTS release line in our currently supported SDP releases (see above) for any issues we deem Critical or High in severity when they become available.
+
+We will also engage with the upstream projects to try and solve issues.
+
+It is our explicit goal to limit the amount of times we have to ship a version of the products that deviates from the original upstream source.
+
+We may ship new versions for existing SDP releases for other issues as well.
+
+
+== OpenShift & Kubernetes Support Policy
+
+For every SDP release we will publish a list of supported Kubernetes versions.
+
+We are aiming to support the last three Kubernetes versions but will make case-by-case decisions by taking into account the currently supported Kubernetes versions.
+We will also take into account currently supported OpenShift versions as published by RedHat. It is our goal to support all versions that are in Full or Maintenance support. As the releases may be overlapping we might not always support the latest Kubernetes or OpenShift versions when we release a SDP version.
+
+
+== Support Policy (Security & Bugs)
+
+Stackable will analyze published security vulnerabilities (e.g. CVEs but other sources may apply as well) for all the products we support as well components developed by us and their dependencies. We take various sources into account when assigning a criticality. Among those sources is the NVD database, but we place higher value on the self-assessments by the projects themselves, and we will additionally evaluate vulnerabilities in the context of how they are used in the Stackable Data Platform.
+
+We will then assign a criticality to each vulnerability according to similar rating categories that https://access.redhat.com/security/updates/classification[RedHat has established]:
+
+Critical::
+This rating is given to flaws that could be easily exploited by a remote unauthenticated attacker and lead to system compromise (arbitrary code execution) without requiring user interaction. Flaws that require authentication, local or physical access to a system, or an unlikely configuration are not classified as Critical impact. These are the types of vulnerabilities that can be exploited by worms.
+
+High::
+This rating is given to flaws that can easily compromise the confidentiality, integrity or availability of resources. These are the types of vulnerabilities that allow local or authenticated users to gain additional privileges, allow unauthenticated remote users to view resources that should otherwise be protected by authentication or other controls, allow authenticated remote users to execute arbitrary code, or allow remote users to cause a denial of service.
+
+Medium::
+This rating is given to flaws that may be more difficult to exploit but could still lead to some compromise of the confidentiality, integrity or availability of resources under certain circumstances. These are the types of vulnerabilities that could have had a Critical or Important impact but are less easily exploited based on a technical evaluation of the flaw, and/or affect unlikely configurations.
+
+Low::
+This rating is given to all other issues that may have a security impact. These are the types of vulnerabilities that are believed to require unlikely circumstances to be able to be exploited, or where a successful exploit would give minimal consequences. This includes flaws that are present in a program’s source code but to which no current or theoretically possible, but unproven, exploitation vectors exist or were found during the technical analysis of the flaw.
