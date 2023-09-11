@@ -48,7 +48,7 @@ So an operator of version _23.4.x_ will be compatible with all images of version
 This is intended to allow shorter update cycles for users, when new image versions are released that may contain security fixes - should the user so choose.
 
 
-The following paragraphs explain  the available settings and how they work.
+The following paragraphs explain the available settings and how they work.
 
 At the bottom of this page in the <<_common_scenarios, common scenarios>> section some common update scenarios are explained as examples.
 
@@ -129,7 +129,7 @@ When deriving images from official Stackable images this will mean updating the 
 * It is not possible to update the Stackable Platform to a new version without changing the deployed cluster definitions when using custom images.
 The recommended process here is:
 
-** Tag clusters as "do not reconcile"
+** Tag clusters as "do not reconcile" (see xref:cluster_operations.adoc[])
 ** Update Stackable plattform
 ** Change custom images in cluster specifications
 ** Remove "do not reconcile flag"
