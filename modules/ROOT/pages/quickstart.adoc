@@ -1,6 +1,9 @@
 = Quickstart
 
-This is the super-short getting started guide that should enable you to get something up and running in less than three minutes (excluding download times).
+:cockpit-releases: https://github.com/stackabletech/stackable-cockpit/releases
+
+This is the super-short getting started guide that should enable you to get something up and running in less than three
+minutes (excluding download times).
 
 == Setup
 
@@ -10,7 +13,7 @@ On Linux (Windows and MacOS instructions below):
 
 [source,console]
 ----
-$ curl -L -o stackablectl https://github.com/stackabletech/stackablectl/releases/latest/download/stackablectl-x86_64-unknown-linux-gnu
+$ curl -L -o stackablectl https://github.com/stackabletech/stackable-cockpit/releases/latest/download/stackablectl-x86_64-unknown-linux-gnu
 ----
 
 and mark it as executable:
@@ -23,9 +26,9 @@ $ chmod +x stackablectl
 .Instruction for Windows and MacOS
 [%collapsible]
 ====
-Download `stackablectl-x86_64-pc-windows-gnu.exe` (for Windows) or `stackablectl-x86_64-apple-darwin` (Mac OS Intel) or `stackablectl-aarch64-apple-darwin` (MacOS ARM) from the https://github.com/stackabletech/stackablectl/releases/latest[latest release] and save it as `stackablectl`.
-
-For windows, you can simply execute it. For MacOS mark it as executable:
+Download `stackablectl-x86_64-pc-windows-gnu.exe` (for Windows) or `stackablectl-x86_64-apple-darwin` (Mac OS Intel) or
+`stackablectl-aarch64-apple-darwin` (MacOS ARM) from the {cockpit-releases}[latest release] and save it as
+`stackablectl`. For Windows, you can simply execute it. For MacOS mark it as executable:
 
 [source,console]
 ----
@@ -34,19 +37,22 @@ $ chmod +x stackablectl
 
 If you want to execute it from anywhere in your system, you need to add it to the system `PATH`.
 
-NOTE: If macOS denies the execution of stackablectl go to `Settings` -> `Security & Privacy` -> `General`. Here you will see a pop up asking if you want to allow access for `stackablectl`. You must allow access.
+NOTE: If macOS denies the execution of stackablectl go to `Settings` -> `Security & Privacy` -> `General`. Here you will
+see a pop up asking if you want to allow access for `stackablectl`. You must allow access.
 ====
 
 == Install the Taxi data demo
 
-The xref:stackablectl::demos/trino-taxi-data.adoc[`trino-taxi-data`] Demo installs the latest Stackable platform release and a visualization of https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page[New York City Taxi Data] using Trino and Superset:
+The xref:demos::trino-taxi-data.adoc[`trino-taxi-data`] Demo installs the latest Stackable platform release and a
+visualization of https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page[New York City Taxi Data] using Trino and
+Superset:
 
 [source,console]
 ----
 ./stackablectl demo install trino-taxi-data
 ----
 
-TIP: Learn more about this demo in the demo docs: xref:stackablectl::demos/trino-taxi-data.adoc[]
+TIP: Learn more about this demo in the demo docs: xref:demos::trino-taxi-data.adoc[]
 
 == Connect
 
@@ -78,4 +84,5 @@ It will output something like:
                                    console-http        http://172.18.0.3:30503   Admin user: admin, password: adminadmin
 ----
 
-To connect to Superset, open the listed endpoint in your browser and log in with the username `admin` and the password `adminadmin`.
+To connect to Superset, open the listed endpoint in your browser and log in with the username `admin` and the password
+`adminadmin`.
