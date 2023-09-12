@@ -42,7 +42,7 @@ See the output of `build_product_images.py` to retrieve the image tag for `<imag
 
 1. Most code changes should also be tested with integration tests. The tests for every operator can be found in the operator repository in the `tests` directory. Follow the steps in <<Preparation>> for the integration tests as well.
 2. Create or adapt the tests. Try to mimic the style of the other tests. They are written with https://kuttl.dev/[KUTTL] and using a jinja2 templating mechanism to test multiple product versions at once.
-3. Start a test cluster using https://kind.sigs.k8s.io/[kind]. You can also use xref:stackablectl::commands/operator.adoc#_install_operator[stackablectl] to install a kind cluster.
+3. Start a test cluster using https://kind.sigs.k8s.io/[kind]. You can also use xref:management::stackablectl/commands/operator.adoc#_install_operator[stackablectl] to install a kind cluster.
 4. If changes in an operator are tested then the according version of the operator must be started. The operator can be started outside the cluster with `cargo run -- crd | kubectl apply -f - && cargo run -- run`. This approach allows a fast test develop cycle but has the downside that the RBAC rules are not tested. So a proper Helm installation should be tested before creating a pull request. First a Docker image of the operator must be built locally and uploaded to the kind cluster and then the Helm chart must be installed. This can be achieved in the operator directory with the following commands:
 +
 [source,bash]

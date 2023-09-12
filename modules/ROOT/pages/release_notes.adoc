@@ -1772,9 +1772,7 @@ All our operators reuse the same CRD structure as well.
 [#stackablectl]
 === stackablectl
 
-`stackablectl` is used to install and interact with the operators, either individually or with multiple at once.
-//
-xref:stackablectl::index.adoc[Learn more]
+xref:management::stackablectl/index.adoc[stackablectl] is used to install and interact with the operators, either individually or with multiple at once.
 
 [#operators]
 === Operators

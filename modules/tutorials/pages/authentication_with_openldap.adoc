@@ -5,12 +5,12 @@ The Stackable platform supports user authentication with LDAP in multiple produc
 Prerequisites:
 
 * a k8s cluster available, or https://kind.sigs.k8s.io/[kind] installed
-* xref:stackablectl::index.adoc[] installed
+* xref:management::stackablectl/index.adoc installed
 * basic knowledge of how to create resources in Kubernetes (i.e. `kubectl apply -f <filename>.yaml`) and inspect them (`kubectl get` or a tool like https://k9scli.io/[k9s])
 
 == Setup
 
-Before configuring LDAP you need to set up some services to configure, as well as an LDAP server to use for authentication. This tutorial is about learning how to configure LDAP, so there won't be detailed instructions on how to set up all of this, instead the tutorial uses xref:stackablectl::commands/stack.adoc[stackablectl Stacks]. 
+Before configuring LDAP you need to set up some services to configure, as well as an LDAP server to use for authentication. This tutorial is about learning how to configure LDAP, so there won't be detailed instructions on how to set up all of this, instead the tutorial uses xref:stackablectl::commands/stack.adoc[stackablectl Stacks].
 
 === Superset and Trino Stack
 
@@ -116,7 +116,7 @@ Remember the name of the AuthenticationClass (`openldap`), you will use it in th
 [#superset]
 === Add LDAP authentication to Superset
 
-To make Superset use your new LDAP AuthenticationClass, you have to update the SupersetCluster definition. A SupersetCluster named `superset` is already installed by the stack. 
+To make Superset use your new LDAP AuthenticationClass, you have to update the SupersetCluster definition. A SupersetCluster named `superset` is already installed by the stack.
 
 Fetch the existing SupersetCluster defintion from the Kubernetes API server and save it into a `superset.yaml` file:
 

@@ -33,7 +33,7 @@ The pages linked above also detail the use cases and features supported by each 
 [#stackablectl]
 === stackablectl
 
-xref:stackablectl::index.adoc[stackablectl] is a commandline utility that makes it easier to install and interact with stackable components.
+xref:management:stackablectl:index.adoc[] is a commandline utility that makes it easier to install and interact with stackable components.
 
 == Supported installation methods
 
@@ -54,7 +54,7 @@ The Helm Charts can be found here: https://repo.stackable.tech/#browse/browse:he
 [#stackablectl-installation]
 === stackablectl
 
-stackablectl is available for download, pre-built binaries are available on GitHub. The download link and installation steps are provided in the xref:stackablectl::installation.adoc[installation documentation].
+stackablectl is available for download, pre-built binaries are available on GitHub. The download link and installation steps are provided in the xref:management:stackablectl:installation.adoc[installation].
 
 == System requirements
 
@@ -67,11 +67,11 @@ Every Operator needs:
 
 === stackablectl
 
-Hardware requirements and supported operating systems can be found in the xref:stackablectl::installation.adoc#system-requirements[system requirements section] of the stackablectl documentation.
+Hardware requirements and supported operating systems can be found in the xref:management:stackablectl:installation.adoc#system-requirements[system requirements section] of the stackablectl documentation.
 
 === Stackable Data Platform Open Source Products
 
-The system requirements of each open source product depend on your specific use case. In the xref:stackablectl::demos/index.adoc[demos] you can find example use cases; every demo also has a _System requirements_ section which can provide a guideline for system sizing. Further example sizings can be found at https://ci.stackable.tech/job/<product>-operator-it-summary/ (where `<product>` is i.e. _druid_, _hbase_, etc.) in the `cluster-info.txt` file. These are the cluster sizes used for integration tests, and can be regarded as working cluster configurations.
+The system requirements of each open source product depend on your specific use case. In the xref:demos:ROOT:index.adoc[demos] you can find example use cases; every demo also has a _System requirements_ section which can provide a guideline for system sizing. Further example sizings can be found at https://ci.stackable.tech/job/<product>-operator-it-summary/ (where `<product>` is i.e. _druid_, _hbase_, etc.) in the `cluster-info.txt` file. These are the cluster sizes used for integration tests, and can be regarded as working cluster configurations.
 
 == Prerequisites and required external components
 
