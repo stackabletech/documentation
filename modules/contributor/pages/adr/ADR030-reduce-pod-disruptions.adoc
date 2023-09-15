@@ -8,6 +8,8 @@ v0.1, 2023-09-15
 ** Sebastian Bernauer
 * Date: 2023-09-15
 
+TODO (sbernauer): Document setting minUnavailable to 0 and doing node drainage manually .
+
 == Context and Problem Statement
 
 Downtime of products is always bad.
