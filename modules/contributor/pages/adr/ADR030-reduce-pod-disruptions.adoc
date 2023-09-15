@@ -1,5 +1,5 @@
 = ADR032: Reduce Pod disruptions
-Razvan Mihai <razvan.mihai@stackable.tech>
+Sebastian Bernauer <sebastian.bernauer.tech>
 v0.1, 2023-09-15
 :status: accepted
 
