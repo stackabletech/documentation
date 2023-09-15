@@ -20,7 +20,7 @@ Kubernetes has a a concepts called https://kubernetes.io/docs/tasks/run-applicat
 
 We have the following constraints:
 
-1. If we use https://kubernetes.io/docs/tasks/run-application/configure-pdb/#arbitrary-controllers-and-selectors[arbitrary workloads and arbitrary selectors} we have the following constraints:
+1. If we use https://kubernetes.io/docs/tasks/run-application/configure-pdb/#arbitrary-controllers-and-selectors[arbitrary workloads and arbitrary selectors] we have the following constraints:
   * only `.spec.minAvailable` can be used, not `.spec.maxUnavailable`.
   * only an integer value can be used with `.spec.minAvailable`, not a percentage.
 2. You can use a selector which selects a subset or superset of the pods belonging to a workload resource. The eviction API will disallow eviction of any pod covered by multiple PDBs, so most users will want to avoid overlapping selectors
