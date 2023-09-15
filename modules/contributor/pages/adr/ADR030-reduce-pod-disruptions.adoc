@@ -1,0 +1,116 @@
+= ADR032: Reduce Pod disruptions
+Razvan Mihai <razvan.mihai@stackable.tech>
+v0.1, 2023-09-15
+:status: accepted
+
+* Status: {status}
+* Deciders:
+** Sebastian Bernauer
+* Date: 2023-09-15
+
+== Context and Problem Statement
+
+Downtime of products is always bad.
+Kubernetes has a multiple concepts to try to reduce this to a minimum.
+
+== Considered Options
+
+1. Use PodDisruptionBudget
+
+=== 1. Use PodDisruptionBudget
+
+1. We must deploy a https://kubernetes.io/docs/tasks/run-application/configure-pdb/[PodDisruptionBudgets] alongside all the StatefulSets (and Deployments in the future) to restrict pod disruptions.
+2. Also users need to ability to override the numbers we default to, as they need to make a tradeoff between availability and rollout times e.g. in rolling redeployment. Context: I have operated Trino clusters that could take more than 6 hours to rolling redeploy, as the graceful shutdown of Trino workers takes a considerable amount of time - depended on the queries getting executed.
+
+We have the following constraints:
+
+1. If we use https://kubernetes.io/docs/tasks/run-application/configure-pdb/#arbitrary-controllers-and-selectors[arbitrary workloads and arbitrary selectors} we have the following constraints:
+  * only `.spec.minAvailable` can be used, not `.spec.maxUnavailable`.
+  * only an integer value can be used with `.spec.minAvailable`, not a percentage.
+2. You can use a selector which selects a subset or superset of the pods belonging to a workload resource. The eviction API will disallow eviction of any pod covered by multiple PDBs, so most users will want to avoid overlapping selectors
+
+Because of the mentioned constraints we have the following implications:
+
+1. Use `.spec.maxUnavailable` everywhere
+2. Have `.spec.maxUnavailable` configurable on the product CRD.
+3. Create PodDisruptionBudget over the role and not over the rolegroups, as e.g. the Zookeeper quorum does not care about rolegroups. As of the docs we can not add a PDB for the role and the rolegroup at the same time.
+4. Users must be able to disable our PDB creation in the case they want to define their own, as otherwise the Pods would have multiple PDBs, which is not supported.
+5. We try to have a PDB per role, as this makes things much easier than e.g. saying "out of the namenodes and journalnodes only one can be down". Otherwise we can not make it "simply" configurable on the role.
+
+Taking the implications into account we end up with the following CRD structure:
+
+[source,yaml]
+----
+apiVersion: hdfs.stackable.tech/v1alpha1
+kind: HdfsCluster
+metadata:
+  name: simple-hdfs
+spec:
+  image:
+    productVersion: 3.3.4
+  clusterConfig:
+    zookeeperConfigMapName: simple-hdfs-znode
+  nameNodes:
+    # optional, only supported on role, *not* on rolegroup
+    pdb:
+      enabled: true # optional, defaults to true
+      maxUnavailable: 1 # optional, defaults to our "smart" calculation
+    roleGroups:
+      default:
+        replicas: 2
+  dataNodes:
+    pdb:
+      enabled: true
+      maxUnavailable: 1
+    roleGroups:
+      default:
+        replicas: 1
+  journalNodes:
+    pdb:
+      enabled: true
+      maxUnavailable: 1
+    roleGroups:
+      default:
+        replicas: 10
+----
+
+and end up with the following PDBs when the default values are used:
+
+[source,yaml]
+----
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: simple-hdfs-journalnodes
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: hdfs
+      app.kubernetes.io/instance: simple-hdfs
+      app.kubernetes.io/component: journalnode
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: simple-hdfs-namenodes
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: hdfs
+      app.kubernetes.io/instance: simple-hdfs
+      app.kubernetes.io/component: namenode
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: simple-hdfs-datanodes
+spec:
+  maxUnavailable: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: hdfs
+      app.kubernetes.io/instance: simple-hdfs
+      app.kubernetes.io/component: datanode
+----
