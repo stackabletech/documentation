@@ -11,15 +11,11 @@ v0.1, 2023-09-15
 == Context and Problem Statement
 
 Downtime of products is always bad.
-Kubernetes has a multiple concepts to try to reduce this to a minimum.
+Kubernetes has a a concepts called https://kubernetes.io/docs/tasks/run-application/configure-pdb/[PodDisruptionBudget] (PDB) to try to reduce this to an absolute minimum.
 
-== Considered Options
+*Requirements:*
 
-1. Use PodDisruptionBudget
-
-=== 1. Use PodDisruptionBudget
-
-1. We must deploy a https://kubernetes.io/docs/tasks/run-application/configure-pdb/[PodDisruptionBudgets] alongside all the StatefulSets (and Deployments in the future) to restrict pod disruptions.
+1. We must deploy a PDB alongside all the StatefulSets (and Deployments in the future) to restrict pod disruptions.
 2. Also users need to ability to override the numbers we default to, as they need to make a tradeoff between availability and rollout times e.g. in rolling redeployment. Context: I have operated Trino clusters that could take more than 6 hours to rolling redeploy, as the graceful shutdown of Trino workers takes a considerable amount of time - depended on the queries getting executed.
 
 We have the following constraints:
@@ -59,16 +55,12 @@ spec:
       default:
         replicas: 2
   dataNodes:
-    pdb:
-      enabled: true
-      maxUnavailable: 1
+    # use pdb defaults
     roleGroups:
       default:
         replicas: 1
   journalNodes:
-    pdb:
-      enabled: true
-      maxUnavailable: 1
+    # use pdb defaults
     roleGroups:
       default:
         replicas: 10
