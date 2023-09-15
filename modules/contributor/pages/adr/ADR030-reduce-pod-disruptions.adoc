@@ -1,4 +1,4 @@
-= ADR032: Reduce Pod disruptions
+= ADR030: Reduce Pod disruptions
 Sebastian Bernauer <sebastian.bernauer.tech>
 v0.1, 2023-09-15
 :status: accepted
