@@ -24,8 +24,12 @@ content:
         - release/22.11
         - release/22.09
         - release/22.06
-    # stackablectl
-    - url: https://github.com/stackabletech/stackablectl.git
+    # management tools
+    - url: https://github.com/stackabletech/stackable-cockpit.git
+      start_path: docs
+      branches: docs/stackablectl
+    # demos
+    - url: https://github.com/stackabletech/demos.git
       start_path: docs
       branches: main
     # internal operators
