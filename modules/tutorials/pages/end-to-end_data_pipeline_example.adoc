@@ -121,9 +121,6 @@ spec:
   servers:
     roleGroups:
       default:
-        selector:
-          matchLabels:
-            kubernetes.io/os: linux
         replicas: 1
         config: {}
 EOF
@@ -218,9 +215,6 @@ spec:
             capacity: "20Gi"
     roleGroups:
       default:
-        selector:
-          matchLabels:
-            kubernetes.io/os: linux
         config:
           log:
             rootLogLevel: INFO
@@ -448,9 +442,6 @@ spec:
         druid.s3.enablePathStyleAccess: "true"
     roleGroups:
       default:
-        selector:
-          matchLabels:
-            kubernetes.io/os: linux
         config: {}
         replicas: 1
   coordinators:
@@ -459,9 +450,6 @@ spec:
         druid.s3.enablePathStyleAccess: "true"
     roleGroups:
       default:
-        selector:
-          matchLabels:
-            kubernetes.io/os: linux
         config: {}
         replicas: 1
   historicals:
@@ -470,9 +458,6 @@ spec:
         druid.s3.enablePathStyleAccess: "true"
     roleGroups:
       default:
-        selector:
-          matchLabels:
-            kubernetes.io/os: linux
         config: {}
         replicas: 1
   middleManagers:
@@ -481,9 +466,6 @@ spec:
         druid.s3.enablePathStyleAccess: "true"
     roleGroups:
       default:
-        selector:
-          matchLabels:
-            kubernetes.io/os: linux
         config: {}
         replicas: 1
   routers:
@@ -492,9 +474,6 @@ spec:
         druid.s3.enablePathStyleAccess: "true"
     roleGroups:
       default:
-        selector:
-          matchLabels:
-            kubernetes.io/os: linux
         config: {}
         replicas: 1
 EOF

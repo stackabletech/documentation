@@ -49,19 +49,16 @@ spec:
     roleGroups:
       default:
         replicas: 3
-        selector:
-          matchLabels:
-            kubernetes.io/os: linux  # <2>
   dataNodes:
     config:
       resources:
         storage:
           data:
-            capacity: 1Gi  # <3>
+            capacity: 1Gi  # <2>
     roleGroups:
       default:
         replicas: 2
-      hiCapacity:  # <4>
+      hiCapacity:  # <3>
         config:
           resources:
             storage:
@@ -71,9 +68,8 @@ spec:
 ----
 
 <1> The JournalNode role with only a single default role group. For the role group 3 replicas are specified, specifying a replica count is optional, the default is 1.
-<2> For the NameNodes default role group, a label selector is given, the pods should only be specified on nodes where the `kubernetes.io/os` label has the value `linux`.
-<3> A common config setting for the DataNodes role. This configuration setting applies only to pods for this role.
-<4> The DataNode role has two role groups, the default group and the hiCapacity group. In it the config setting for the group is overridden with a higher value of 2Gi. This role group has only one replica.
+<2> A common config setting for the DataNodes role. This configuration setting applies only to pods for this role.
+<3> The DataNode role has two role groups, the default group and the hiCapacity group. In it the config setting for the group is overridden with a higher value of 2Gi. This role group has only one replica.
 
 == Further Reading
 
