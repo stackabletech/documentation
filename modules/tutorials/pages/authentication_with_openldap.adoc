@@ -32,7 +32,7 @@ include::example$ldap-auth/10-install-base.sh[tag=stackablectl-install]
 
 This command will take a few minutes to complete.
 
-NOTE: The stack installed here is used in the xref:demos::trino-taxi-data.adoc[`trino-taxi-data` demo]. Click the link
+NOTE: The stack installed here is used in the xref:demos:trino-taxi-data.adoc[`trino-taxi-data` demo]. Click the link
 to learn more.
 
 [#setup_login]

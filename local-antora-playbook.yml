@@ -50,13 +50,13 @@ content:
     - url: https://github.com/stackabletech/airflow-operator.git
       start_path: docs
       branches:
-        - main
+        - docs/update-xrefs
         - release-23.7
         - release-23.4
     - url: https://github.com/stackabletech/druid-operator.git
       start_path: docs
       branches:
-        - main
+        - docs/update-xrefs
         - release-23.7
         - release-23.4
       tags:
@@ -64,13 +64,13 @@ content:
     - url: https://github.com/stackabletech/hbase-operator.git
       start_path: docs
       branches:
-        - main
+        - docs/update-xrefs
         - release-23.7
         - release-23.4
     - url: https://github.com/stackabletech/hdfs-operator.git
       start_path: docs
       branches:
-        - main
+        - docs/update-xrefs
         - release-23.7
         - release-23.4
       tags:
@@ -78,49 +78,49 @@ content:
     - url: https://github.com/stackabletech/hive-operator.git
       start_path: docs
       branches:
-        - main
+        - docs/update-xrefs
         - release-23.7
         - release-23.4
     - url: https://github.com/stackabletech/kafka-operator.git
       start_path: docs
       branches:
-        - main
+        - docs/update-xrefs
         - release-23.7
         - release-23.4
     - url: https://github.com/stackabletech/nifi-operator.git
       start_path: docs
       branches:
-        - main
+        - docs/update-xrefs
         - release-23.7
         - release-23.4
     - url: https://github.com/stackabletech/opa-operator.git
       start_path: docs
       branches:
-        - main
+        - docs/update-xrefs
         - release-23.7
         - release-23.4
     - url: https://github.com/stackabletech/spark-k8s-operator.git
       start_path: docs
       branches:
-        - main
+        - docs/update-xrefs
         - release-23.7
         - release-23.4
     - url: https://github.com/stackabletech/superset-operator.git
       start_path: docs
       branches:
-        - main
+        - docs/update-xrefs
         - release-23.7
         - release-23.4
     - url: https://github.com/stackabletech/trino-operator.git
       start_path: docs
       branches:
-        - main
+        - docs/update-xrefs
         - release-23.7
         - release-23.4
     - url: https://github.com/stackabletech/zookeeper-operator.git
       start_path: docs
       branches:
-        - main
+        - docs/update-xrefs
         - release-23.7
         - release-23.4
 

@@ -512,7 +512,7 @@ The following have been added to `stackablectl`:
 
 ==== Trino-iceberg demo
 
-This is a condensed form of the xref:demos::data-lakehouse-iceberg-trino-spark.adoc[] demo focusing on using the
+This is a condensed form of the xref:demos:data-lakehouse-iceberg-trino-spark.adoc[] demo focusing on using the
 lakehouse to store and modify data. It demonstrates how to integrate Trino and Iceberg and should run on a local
 workstation.
 
@@ -524,7 +524,7 @@ reasonably provisioned laptop.
 
 
 The xref:management:stackablectl:quickstart.adoc[quickstart guide] shows how to get started with `stackablectl`. This
-link lists the xref:demos::index.adoc[available demos].
+link lists the xref:demos:index.adoc[available demos].
 
 
 === Supported Kubernetes versions
@@ -924,7 +924,7 @@ xref:tutorials:authentication_with_openldap.adoc[tutorial] has been added that u
 xref:management:stackablectl:commands/stack.adoc[stack] for OpenLDAP and shows its usage.
 
 The xref:management:stackablectl:quickstart.adoc[quickstart guide] shows how to get started with `stackablectl`. This
-link lists the xref:demos::index.adoc[available demos].
+link lists the xref:demos:index.adoc[available demos].
 
 === Supported Kubernetes versions
 
@@ -1574,7 +1574,7 @@ The following operators added support for LDAP authentication:
 
 `stackablectl` now supports deploying ready-to-use demos, which give an end-to-end demonstration of the usage of the
 Stackable Data Platform. The xref:management:stackablectl:quickstart.adoc[quickstart guide] shows how to get started
-with `stackablectl`. Here you can see the xref:demos::index.adoc[available demos].
+with `stackablectl`. Here you can see the xref:demos:index.adoc[available demos].
 
 === Supported Kubernetes versions
 This release supports the following Kubernetes versions:

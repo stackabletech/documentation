@@ -43,7 +43,7 @@ see a pop up asking if you want to allow access for `stackablectl`. You must all
 
 == Install the Taxi data demo
 
-The xref:demos::trino-taxi-data.adoc[`trino-taxi-data`] Demo installs the latest Stackable platform release and a
+The xref:demos:trino-taxi-data.adoc[`trino-taxi-data`] Demo installs the latest Stackable platform release and a
 visualization of https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page[New York City Taxi Data] using Trino and
 Superset:
 
@@ -52,7 +52,7 @@ Superset:
 ./stackablectl demo install trino-taxi-data
 ----
 
-TIP: Learn more about this demo in the demo docs: xref:demos::trino-taxi-data.adoc[]
+TIP: Learn more about this demo in the demo docs: xref:demos:trino-taxi-data.adoc[]
 
 == Connect
 

@@ -87,4 +87,4 @@ logging:
 
 == Further Reading
 
-To get some hands on experience and see logging in action, try out the xref:demos::logging.adoc[logging demo].
+To get some hands on experience and see logging in action, try out the xref:demos:logging.adoc[logging demo].

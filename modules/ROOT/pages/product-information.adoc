@@ -86,7 +86,7 @@ documentation.
 
 === Stackable Data Platform Open Source Products
 
-The system requirements of each open source product depend on your specific use case. In the xref:demos::index.adoc[demos]
+The system requirements of each open source product depend on your specific use case. In the xref:demos:index.adoc[demos]
 you can find example use cases; every demo also has a _System requirements_ section which can provide a guideline for
 system sizing. Further example sizings can be found at https://ci.stackable.tech/job/<product>-operator-it-summary/
 (where `<product>` is i.e. _druid_, _hbase_, etc.) in the `cluster-info.txt` file. These are the cluster sizes used for
@@ -121,7 +121,7 @@ The following products have required external components to run:
 
 === Optional components
 
-Stackable software can be used with xref:demos::index.adoc[sample configurations] and third-party components, as
+Stackable software can be used with xref:demos:index.adoc[sample configurations] and third-party components, as
 outlined in the relevant documentation. These external components are not part of of the stackable products and can be
 used by the customer at their own risk. Stackable does not distribute these components and does not offer support for
 them. (See <<platform-components,Platform components>> above for a list of the supported components that are part of the
