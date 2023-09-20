@@ -19,6 +19,7 @@ content:
         - HEAD
         - release/23.7
         - release/23.4
+        - release-23.1
     # management tools
     - url: https://github.com/stackabletech/stackable-cockpit.git
       start_path: docs
@@ -34,18 +35,21 @@ content:
         - main
         - release-23.7
         - release-23.4
+        - release-23.1
     - url: https://github.com/stackabletech/secret-operator.git
       start_path: docs
       branches:
         - main
         - release-23.7
         - release-23.4
+        - release-23.1
     - url: https://github.com/stackabletech/listener-operator.git
       start_path: docs
       branches:
         - main
         - release-23.7
         - release-23.4
+        - release-23.1
     # product operators
     - url: https://github.com/stackabletech/airflow-operator.git
       start_path: docs
@@ -53,12 +57,14 @@ content:
         - docs/update-xrefs
         - release-23.7
         - release-23.4
+        - release-23.1
     - url: https://github.com/stackabletech/druid-operator.git
       start_path: docs
       branches:
         - docs/update-xrefs
         - release-23.7
         - release-23.4
+        - release-23.1
       tags:
         - docs/0.6
     - url: https://github.com/stackabletech/hbase-operator.git
@@ -67,12 +73,14 @@ content:
         - docs/update-xrefs
         - release-23.7
         - release-23.4
+        - release-23.1
     - url: https://github.com/stackabletech/hdfs-operator.git
       start_path: docs
       branches:
         - docs/update-xrefs
         - release-23.7
         - release-23.4
+        - release-23.1
       tags:
         - docs/0.4
     - url: https://github.com/stackabletech/hive-operator.git
@@ -81,48 +89,56 @@ content:
         - docs/update-xrefs
         - release-23.7
         - release-23.4
+        - release-23.1
     - url: https://github.com/stackabletech/kafka-operator.git
       start_path: docs
       branches:
         - docs/update-xrefs
         - release-23.7
         - release-23.4
+        - release-23.1
     - url: https://github.com/stackabletech/nifi-operator.git
       start_path: docs
       branches:
         - docs/update-xrefs
         - release-23.7
         - release-23.4
+        - release-23.1
     - url: https://github.com/stackabletech/opa-operator.git
       start_path: docs
       branches:
         - docs/update-xrefs
         - release-23.7
         - release-23.4
+        - release-23.1
     - url: https://github.com/stackabletech/spark-k8s-operator.git
       start_path: docs
       branches:
         - docs/update-xrefs
         - release-23.7
         - release-23.4
+        - release-23.1
     - url: https://github.com/stackabletech/superset-operator.git
       start_path: docs
       branches:
         - docs/update-xrefs
         - release-23.7
         - release-23.4
+        - release-23.1
     - url: https://github.com/stackabletech/trino-operator.git
       start_path: docs
       branches:
         - docs/update-xrefs
         - release-23.7
         - release-23.4
+        - release-23.1
     - url: https://github.com/stackabletech/zookeeper-operator.git
       start_path: docs
       branches:
         - docs/update-xrefs
         - release-23.7
         - release-23.4
+        - release-23.1
 
 ui:
   bundle:
