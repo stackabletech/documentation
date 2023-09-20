@@ -1,0 +1,5 @@
+* xref:demos:index.adoc[Demos]
++
+--
+include::demos:partial$demos.adoc[]
+--
