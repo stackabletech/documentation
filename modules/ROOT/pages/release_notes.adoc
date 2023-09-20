@@ -1864,7 +1864,7 @@ This is the list of all operators in this current release, with their versions f
 .*Products*
 * xref:home:airflow:index.adoc[] (0.4.0)
 ** Load DAGs from ConfigMaps or PersistentVolumeClaims
-* xref:druid::index.adoc[] (0.6.0)
+* xref:druid:index.adoc[] (0.6.0)
 ** S3 and HDFS as deep storage options
 ** ingestion from S3 buckets
 ** authorization using OPA
