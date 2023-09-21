@@ -14,7 +14,23 @@ Downtime of products is always bad.
 Kubernetes has a a concepts called https://kubernetes.io/docs/tasks/run-application/configure-pdb/[PodDisruptionBudget] (PDB) to prevent this.
 We want to use this functionary to try to reduce the downtime to an absolute minimum.
 
-*Requirements:*
+== Decision Drivers
+
+* Ease of use and comprehensibility for the user
+** Principle of least surprise
+* Easy implementation (far less important)
+* Extendable design, so that we can later non-breaking add new functionality, such as giving the chance to configure PDBs on roleGroup level as well.
+
+== Example use-cases
+
+1. As a user I want an HDFS and it (or parts) should not be disturbed by planned pod evictions.
+2. As a user I want to configure maxUnavailable on the role (e.g. datanode) across all rolegroups (e.g. dfs replicas 3 and only a single datanode is allowed to go down - regardless of the number of rolegroups), so that no datanode is a single point of failure.
+3. As a user I want to configure maxUnavailable on the rolegroups individually, as I e.g. have some fast datanodes using SSDs and some slow datanodes using HDDs. I want to have always X number of fast datanodes online for performance reasons.
+4. As a user I want a Superset/NiFi/Kafka and they (or parts) should not be disturbed by planned pod evictions.
+
+Most of the users probably either don't know what PDBs are or are fine with the default values our operators deploy based upon our knowledge of the products.
+
+== Requirements
 
 1. We must deploy a PDB alongside all the product StatefulSets (and Deployments in the future) to restrict pod disruptions.
 2. Also users need the ability to override the numbers we default to, as they need to make a tradeoff between availability and rollout times e.g. in rolling redeployment. Context: I have operated Trino clusters that could take more than 6 hours to rolling redeploy, as the graceful shutdown of Trino workers takes a considerable amount of time - depended on the queries getting executed.
@@ -34,8 +50,19 @@ Because of the mentioned constraints we have the following implications:
 4. Users must be able to disable our PDB creation in the case they want to define their own, as otherwise the Pods would have multiple PDBs, which is not supported.
 5. We try to have a PDB per role, as this makes things much easier than e.g. saying "out of the namenodes and journalnodes only one can be down". Otherwise we can not make it "simply" configurable on the role.
 
-Taking the implications into account we end up with the following CRD structure:
+== Question 1: Do we want to support configuring PDBs on role or role and rolegroup?
 
+=== Option 1: Configurable on role level
+
+=== Option 2: Configurable on role + rolegroup level
+
+Cons:
+
+* It's really really complicated for the user and the implementation.
+
+.Explanation
+[%collapsible]
+====
 [source,yaml]
 ----
 apiVersion: hdfs.stackable.tech/v1alpha1
@@ -48,8 +75,80 @@ spec:
   clusterConfig:
     zookeeperConfigMapName: simple-hdfs-znode
   nameNodes:
-    # optional, only supported on role, *not* on rolegroup
-    pdb:
+    config:
+      podDisruptionBudget:
+        enabled: true
+        maxUnavailable: 2
+    roleGroups:
+      hdd:
+        replicas: 16
+        config:
+          podDisruptionBudget:
+            maxUnavailable: 4
+      ssd:
+        replicas: 8
+        config:
+          podDisruptionBudget:
+            enabled: false
+      in-memory:
+        replicas: 4
+----
+
+would end up with something like
+
+[source,yaml]
+----
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: simple-hdfs-datanodes-hdds
+spec:
+  maxUnavailable: 4
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: hdfs
+      app.kubernetes.io/instance: simple-hdfs
+      app.kubernetes.io/component: datanode
+      app.kubernetes.io/rolegroup: hdd
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: simple-hdfs-datanodes-not-hdds
+spec:
+  maxUnavailable: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: hdfs
+      app.kubernetes.io/instance: simple-hdfs
+      app.kubernetes.io/component: datanode
+    matchExpressions:
+      - key: app.kubernetes.io/rolegroup
+        operator: NotIn
+        values:
+          - hdd
+      - key: app.kubernetes.io/rolegroup
+        operator: NotIn
+        values:
+          - in-memory
+----
+====
+
+Chosen option: *Option 1: Configurable on role level*
+
+== Question 2: How dows the CRD structure look like?
+
+=== Option 1
+
+[source,yaml]
+----
+apiVersion: hdfs.stackable.tech/v1alpha1
+kind: HdfsCluster
+metadata:
+  name: simple-hdfs
+spec:
+  nameNodes:
+    podDisruptionBudget: # optional
       enabled: true # optional, defaults to true
       maxUnavailable: 1 # optional, defaults to our "smart" calculation
     roleGroups:
@@ -59,15 +158,202 @@ spec:
     # use pdb defaults
     roleGroups:
       default:
-        replicas: 1
-  journalNodes:
-    # use pdb defaults
-    roleGroups:
-      default:
-        replicas: 10
+        replicas: 2
 ----
 
-and end up with the following PDBs when the default values are used:
+==== Pros
+
+* Everything below `config` can be merged, everything below `clusterConfig` has applied to the whole cluster (no exceptions)
+
+==== Cons
+
+* Bloating `spec.namenodes`
+
+=== Option 2
+
+[source,yaml]
+----
+spec:
+  nameNodes:
+    config: # <<<
+      podDisruptionBudget:
+        enabled: true
+        maxUnavailable: 1
+    roleGroups:
+      default:
+        replicas: 2
+        config: {}
+          # no such field as podDisruptionBudget
+----
+
+==== Pros
+
+* Everything configurable is below `config` - some attributes of it can be merged - or `clusterConfig`.
+
+==== Cons
+
+* `spec.nameNodes.config` is *not* similar to `spec.nameNodes.roleGroups.default.config` => Confusing to the user
+
+=== Option 3
+
+[source,yaml]
+----
+spec:
+  nameNodes:
+    roleConfig: # <<<
+      podDisruptionBudget:
+        enabled: true
+        maxUnavailable: 1
+    roleGroups:
+      default:
+        replicas: 2
+----
+
+==== Pros
+
+* Not bloating `spec.namenodes`
+
+==== Cons
+
+* Yet another "config" (config, clusterConfig and now roleConfig as well)
+** That's kind of the way the real world is: There are some thing you can configure on cluster level (e.g. ldap), role level (pdbs) and role group level (resources). This models this the closest.
+
+=== Option 4
+
+[source,yaml]
+----
+spec:
+  dataNodes:
+    config:
+      podDisruptionBudget:
+        maxUnavailable: 2
+    roleGroups:
+      hdd:
+        replicas: 16
+      ssd:
+        replicas: 8
+      in-memory:
+        replicas: 4
+----
+
+would end up with
+
+[source,yaml]
+----
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: simple-hdfs-datanodes-hdds
+spec:
+  maxUnavailable: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: hdfs
+      app.kubernetes.io/instance: simple-hdfs
+      app.kubernetes.io/component: datanode
+      app.kubernetes.io/rolegroup: hdd
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: simple-hdfs-datanodes-hdds
+spec:
+  maxUnavailable: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: hdfs
+      app.kubernetes.io/instance: simple-hdfs
+      app.kubernetes.io/component: datanode
+      app.kubernetes.io/rolegroup: ssd
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: simple-hdfs-datanodes-hdds
+spec:
+  maxUnavailable: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: hdfs
+      app.kubernetes.io/instance: simple-hdfs
+      app.kubernetes.io/component: datanode
+      app.kubernetes.io/rolegroup: in-memory
+----
+
+[source,yaml]
+----
+spec:
+  nameNodes:
+    config:
+      podDisruptionBudget:
+        enabled: true
+        maxUnavailable: 2
+    roleGroups:
+      hdd:
+        replicas: 16
+        config:
+          podDisruptionBudget:
+            maxUnavailable: 4
+      ssd:
+        replicas: 8
+        config:
+          podDisruptionBudget:
+            enabled: false
+      in-memory:
+        replicas: 4
+----
+
+would end up with
+
+[source,yaml]
+----
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: simple-hdfs-datanodes-hdds
+spec:
+  maxUnavailable: 4
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: hdfs
+      app.kubernetes.io/instance: simple-hdfs
+      app.kubernetes.io/component: datanode
+      app.kubernetes.io/rolegroup: hdd
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: simple-hdfs-datanodes-hdds
+spec:
+  maxUnavailable: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: hdfs
+      app.kubernetes.io/instance: simple-hdfs
+      app.kubernetes.io/component: datanode
+      app.kubernetes.io/rolegroup: in-memory
+----
+
+
+
+==== Pros
+
+*
+
+==== Cons
+
+*
+
+
+
+
+
+
+
+
+
+
+We end up with the following PDBs when the default values are used:
 
 [source,yaml]
 ----
@@ -100,7 +386,7 @@ kind: PodDisruptionBudget
 metadata:
   name: simple-hdfs-datanodes
 spec:
-  maxUnavailable: 2
+  maxUnavailable: 2 # assuming dfs replication 3
   selector:
     matchLabels:
       app.kubernetes.io/name: hdfs
