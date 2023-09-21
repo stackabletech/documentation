@@ -15,7 +15,6 @@ The defaults depend on the individual product and can be find below the "Operati
 They are based upon our knowledge about the products fault tolerance.
 In some case they can be a bit pessimistic, thus they can be adjusted as documented in the following sections.
 
-[#configure-pdbs]
 == Influencing and disabling PDBs
 
 You can configure
@@ -63,7 +62,9 @@ spec:
 == Using you own custom PDBs
 In case you are not satisfied with the PDBs that are written by the operators, you can deploy you own ones.
 
-It is important to disable the PDBs created by the operators as described in <configure-pdbs> before creating your own PDBs, as this is a https://github.com/kubernetes/kubernetes/issues/75957[limitation of Kubernetes].
+WARNING: In case you write custom PDBs, it is your responsibility to take care of the availability of the products
+
+IMPORTANT: It is important to disable the PDBs created by the operators as described above before creating your own PDBs, as this is a https://github.com/kubernetes/kubernetes/issues/75957[limitation of Kubernetes].
 
 *After disabling the Stackable PDBs*, you can deploy you own PDB such as
 
