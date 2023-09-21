@@ -37,24 +37,27 @@ metadata:
   name: hdfs
 spec:
   nameNodes:
-    pdb: # optional, only supported on role level, *not* on rolegroup
-      enabled: true # optional, defaults to true
-      maxUnavailable: 1 # optional, defaults to our "smart" calculation
+    roleConfig: # optional, only supported on role level, *not* on rolegroup
+      podDisruptionBudget: # optional
+        enabled: true # optional, defaults to true
+        maxUnavailable: 1 # optional, defaults to our "smart" calculation
     roleGroups:
       default:
         replicas: 3
   dataNodes:
-    pdb:
-      maxUnavailable: 10
+    roleConfig:
+      podDisruptionBudget:
+        maxUnavailable: 10
     roleGroups:
       default:
         replicas: 100
   journalnodes:
-    pdb:
-      enabled: false
+    roleConfig:
+      podDisruptionBudget:
+        enabled: false
     roleGroups:
       default:
-        replicas: 1
+        replicas: 3
 ----
 
 == Using you own custom PDBs
