@@ -14,4 +14,4 @@
 ** xref:overrides.adoc[]
 ** Operations
 *** xref:operations/cluster_operations.adoc[]
-*** xref:operations/pdbs.adoc[]
+*** xref:operations/pod_disruptions.adoc[]
