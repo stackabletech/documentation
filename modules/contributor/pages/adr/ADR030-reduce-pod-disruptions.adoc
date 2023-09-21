@@ -217,6 +217,7 @@ spec:
 
 * Yet another "config" (config, clusterConfig and now roleConfig as well)
 ** That's kind of the way the real world is: There are some thing you can configure on cluster level (e.g. ldap), role level (pdbs) and role group level (resources). This models this the closest.
+* Its not possible to define PDBs on rolegroups without the user deploying it's own PDBs.
 
 === Option 4
 
