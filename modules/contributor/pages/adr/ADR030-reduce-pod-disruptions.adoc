@@ -8,59 +8,127 @@ v0.1, 2023-09-15
 ** Sebastian Bernauer
 * Date: 2023-09-15
 
-== Context and Problem Statement
+== Context and problem statement
 
-Downtime of products is always bad.
-Kubernetes has a a concepts called https://kubernetes.io/docs/tasks/run-application/configure-pdb/[PodDisruptionBudget] (PDB) to prevent this.
-We want to use this functionary to try to reduce the downtime to an absolute minimum.
+Downtime of products is always bad, but sometimes Pods need to be restarted to roll out updates or renew certificates.
+To prevent services from becoming unavailable we need to make sure that there is always a certain number of Pods still online when restarting Pods.
+Kubernetes has a concept called https://kubernetes.io/docs/tasks/run-application/configure-pdb/[PodDisruptionBudget] (PDB) to define the number of Pods
+that need to be kept online or the number of Pods that can safely be taken offline.
+We want to use this functionary to either prevent services outages entirely or try to keep them to a minimum.
+PDBs are defined not on a StatefulSet or Deployment, but with a selector over labels, so they can also span Pods from multiple StatefulSets.
 
-== Decision Drivers
+=== Example use-cases
 
-* Ease of use and comprehensibility for the user
-** Principle of least surprise
-* Easy implementation (far less important)
-* Extendable design, so that we can later non-breaking add new functionality, such as giving the chance to configure PDBs on roleGroup level as well.
+1. As a user I want an HDFS and it (or parts) should not be disturbed by planned pod evictions (for example for a certificate renewal). I expect this to be the default behaviour.
+2. As a user I want to configure maxUnavailable on the role (e.g. datanode) across all rolegroups (e.g. dfs replicas 3 and only a single datanode is allowed to go down - regardless of the number of rolegroups), so that no datanode is a single point of failure. Similarly for ZooKeeper, I want to define PDBs at role level as ZK quorum is independent of role groups.
+3. As a user I want to override defaults to maybe have less availability but faster rollout times in rolling redeployments; for example a Trino cluster that could take more than 6 hours to rolling redeploy, as the graceful shutdown of Trino workers takes a considerable amount of time - depended on the queries getting executed.
+4. As a user I want to configure maxUnavailable on rolegroups individually, as I e.g. have some fast datanodes using SSDs and some slow datanodes using HDDs. I want to have always X number of fast datanodes online for performance reasons.
+5. As a user I want a Superset/NiFi/Kafka and they (or parts) should not be disturbed by planned pod evictions.
+6. As a user I might want to define PDBs across roles or on other specific Pod selections, in that case I want to be able to disable the Stackable generated PDBs.
 
-== Example use-cases
+We expect the majority of users to either use default PDB settings or define PDBs at a role level. Role group configuration like in use-case 4 has merit but seems like a more niche usage scenario.
 
-1. As a user I want an HDFS and it (or parts) should not be disturbed by planned pod evictions.
-2. As a user I want to configure maxUnavailable on the role (e.g. datanode) across all rolegroups (e.g. dfs replicas 3 and only a single datanode is allowed to go down - regardless of the number of rolegroups), so that no datanode is a single point of failure.
-3. As a user I want to configure maxUnavailable on the rolegroups individually, as I e.g. have some fast datanodes using SSDs and some slow datanodes using HDDs. I want to have always X number of fast datanodes online for performance reasons.
-4. As a user I want a Superset/NiFi/Kafka and they (or parts) should not be disturbed by planned pod evictions.
-
-Most of the users probably either don't know what PDBs are or are fine with the default values our operators deploy based upon our knowledge of the products.
-
-== Requirements
-
-1. We must deploy a PDB alongside all the product StatefulSets (and Deployments in the future) to restrict pod disruptions.
-2. Also users need the ability to override the numbers we default to, as they need to make a tradeoff between availability and rollout times e.g. in rolling redeployment. Context: I have operated Trino clusters that could take more than 6 hours to rolling redeploy, as the graceful shutdown of Trino workers takes a considerable amount of time - depended on the queries getting executed.
+=== Technical considerations
 
 We have the following constraints:
 
-1. If we use https://kubernetes.io/docs/tasks/run-application/configure-pdb/#arbitrary-controllers-and-selectors[arbitrary workloads and arbitrary selectors] we have the following constraints:
+If we use https://kubernetes.io/docs/tasks/run-application/configure-pdb/#arbitrary-controllers-and-selectors[arbitrary workloads and arbitrary selectors] (for example when selecting Pods from multiple StatefulSets) we have the following constraints:
   * only `.spec.minAvailable` can be used, not `.spec.maxUnavailable`.
   * only an integer value can be used with `.spec.minAvailable`, not a percentage.
-2. You can use a selector which selects a subset or superset of the pods belonging to a workload resource. The eviction API will disallow eviction of any pod covered by multiple PDBs, so most users will want to avoid overlapping selectors
 
-Because of the mentioned constraints we have the following implications:
+This means that if we select any Pods that are not part of a StatefulSet or Deployment etc. then we are bound by these constraints. Preliminary testing showed that `.spec.maxUnavailable` works with multiple StatefulSets.
 
-1. Use `.spec.maxUnavailable` everywhere
-2. Have `.spec.maxUnavailable` configurable on the product CRD.
-3. Create PodDisruptionBudget over the role and not over the rolegroups, as e.g. the Zookeeper quorum does not care about rolegroups. As of the docs we can not add a PDB for the role and the rolegroup at the same time.
-4. Users must be able to disable our PDB creation in the case they want to define their own, as otherwise the Pods would have multiple PDBs, which is not supported.
-5. We try to have a PDB per role, as this makes things much easier than e.g. saying "out of the namenodes and journalnodes only one can be down". Otherwise we can not make it "simply" configurable on the role.
+You can use a selector which selects a subset or superset of the pods belonging to a workload resource. The eviction API will disallow eviction of any pod covered by multiple PDBs, so most users will want to avoid overlapping selectors.
 
-== Question 1: Do we want to support configuring PDBs on role or role and rolegroup?
+We need to create PDBs in such a way that every Pod is only selected once. This is easiest if a selector is defined per role or for all role groups individually. Excluding certain labels is also possible my using match expressions, but we did not test whether is conflicts with the first constraint about arbitrary selectors.
+To support the user creating their own custom PDBs we need to support disabling PDB generation to prevent overlapping selectors.
 
-=== Option 1: Configurable on role level
+== Decision drivers
 
-=== Option 2: Configurable on role + rolegroup level
+* Common use-cases should be easy to configure.
+* Principle of least surprise: CRD configuration settings and their interactions in case of multiple settings need to be easy to comprehend to prevent user error.
+* Extendable design, so that we can later non-breaking add new functionality, such as giving the chance to configure PDBs on roleGroup level as well.
+* Simple implementation (far less important)
 
-Cons:
+== Decision outcome
 
-* It's really really complicated for the user and the implementation.
+Option 1 was picked.
 
-.Explanation
+== Considered options
+
+=== Option 1
+
+Introduce a new `roleConfig` at role level and put PDBs in there. Only role level PDBs are supported, for role group level the PDBs should be disabled and the user needs to create PDBs manually. The `roleConfig` is put in place to not put the PDB setting directly in the role.
+
+[source,yaml]
+----
+spec:
+  nameNodes:
+    roleConfig: # <<<
+      podDisruptionBudget: # optional
+        enabled: true # optional, defaults to true
+        maxUnavailable: 1 # optional, defaults to our "smart" calculation
+    roleGroups:
+      default:
+        replicas: 2
+  dataNodes:
+    # use pdb defaults
+    roleGroups:
+      default:
+        replicas: 2
+----
+
+==== Pros
+
+* simple to understand
+* covers the majority of use cases
+* still leaves the option to disable and roll your own
+
+==== Cons
+
+* Yet another "config" (config, clusterConfig and now roleConfig as well)
+** That's kind of the way the real world is: There are some thing you can configure on cluster level (e.g. ldap), role level (pdbs) and role group level (resources). This models this the closest.
+* Its not possible to define PDBs on rolegroups without the user deploying it's own PDBs.
+
+NOTE: In the discussion the option of having the PDB directly in the role without a `roleConfig` was briefly discussed but not considered as an option due to being too messy, so it is not listed as an explicit option here.
+
+=== Option 2a - PDB in `config`, but only at role level
+
+Instead of inventing a new `roleConfig` setting, put the PDB in the `config`. This might seem better at first, but usually settings in `config` can also be set at role group level, and in this case, that would not be true.
+
+[source,yaml]
+----
+spec:
+  nameNodes:
+    config: # <<<
+      podDisruptionBudget:
+        enabled: true
+        maxUnavailable: 1
+    roleGroups:
+      default:
+        replicas: 2
+        config: {}
+          # no such field as podDisruptionBudget
+----
+
+==== Pros
+
+* Everything configurable is below `config`, no new `roleConfig`
+* Like Option 1, covers configuration of the most important use cases
+
+==== Cons
+
+* `spec.nameNodes.config` is *not* similar to `spec.nameNodes.roleGroups.default.config` => Confusing to the user
+** thinking more about it, it might be confusing that the setting is not "copied" to all role groups like other settings like resources or affinities.
+* Still no option to configure role group level PDBs
+* Possibly complicated to implement, due to `config` usually being identical at role and role group level
+
+=== Option 2b: PDB in config with elaborate merge mechanism
+
+Similar to Option 2a, the PDB setting is located in the `config` but it is actually possible to use it at both role and role group level.
+We develop a semantic merge mechanism that would prevent overlapping PDBs.
+
+.CRD Example
 [%collapsible]
 ====
 [source,yaml]
@@ -134,93 +202,25 @@ spec:
 ----
 ====
 
-Chosen option: *Option 1: Configurable on role level*
-
-== Question 2: How dows the CRD structure look like?
-
-=== Option 1
-
-[source,yaml]
-----
-apiVersion: hdfs.stackable.tech/v1alpha1
-kind: HdfsCluster
-metadata:
-  name: simple-hdfs
-spec:
-  nameNodes:
-    podDisruptionBudget: # optional
-      enabled: true # optional, defaults to true
-      maxUnavailable: 1 # optional, defaults to our "smart" calculation
-    roleGroups:
-      default:
-        replicas: 2
-  dataNodes:
-    # use pdb defaults
-    roleGroups:
-      default:
-        replicas: 2
-----
-
 ==== Pros
 
-* Everything below `config` can be merged, everything below `clusterConfig` has applied to the whole cluster (no exceptions)
+* Fits into the existing config structure
+* Allows configuring role config level PDBs and even hybrid configs
 
 ==== Cons
 
-* Bloating `spec.namenodes`
+* Complex merge mechanism possibly difficult to understand and therefore easy to use the wrong way
+* Complex mechanism also not trivial to implement 
 
-=== Option 2
+=== Option 2c - PDB in config with normal "shared role group config" behaviour
 
-[source,yaml]
-----
-spec:
-  nameNodes:
-    config: # <<<
-      podDisruptionBudget:
-        enabled: true
-        maxUnavailable: 1
-    roleGroups:
-      default:
-        replicas: 2
-        config: {}
-          # no such field as podDisruptionBudget
-----
+Again we put the PDB in the `config` section but simply use the normal "copy" behaviour for this setting.
+This would be simple and easy to understand, but does not allow for true role level PDBs.
 
-==== Pros
 
-* Everything configurable is below `config` - some attributes of it can be merged - or `clusterConfig`.
-
-==== Cons
-
-* `spec.nameNodes.config` is *not* similar to `spec.nameNodes.roleGroups.default.config` => Confusing to the user
-
-=== Option 3
-
-[source,yaml]
-----
-spec:
-  nameNodes:
-    roleConfig: # <<<
-      podDisruptionBudget:
-        enabled: true
-        maxUnavailable: 1
-    roleGroups:
-      default:
-        replicas: 2
-----
-
-==== Pros
-
-* Not bloating `spec.namenodes`
-
-==== Cons
-
-* Yet another "config" (config, clusterConfig and now roleConfig as well)
-** That's kind of the way the real world is: There are some thing you can configure on cluster level (e.g. ldap), role level (pdbs) and role group level (resources). This models this the closest.
-* Its not possible to define PDBs on rolegroups without the user deploying it's own PDBs.
-
-=== Option 4
-
+.CRD Example
+[%collapsible]
+====
 [source,yaml]
 ----
 spec:
@@ -334,63 +334,14 @@ spec:
       app.kubernetes.io/component: datanode
       app.kubernetes.io/rolegroup: in-memory
 ----
-
-
+====
 
 ==== Pros
 
-*
+* easy to understand
+* easy to implement
+* works the same as all other config
 
 ==== Cons
 
-*
-
-
-
-
-
-
-
-
-
-
-We end up with the following PDBs when the default values are used:
-
-[source,yaml]
-----
-apiVersion: policy/v1
-kind: PodDisruptionBudget
-metadata:
-  name: simple-hdfs-journalnodes
-spec:
-  maxUnavailable: 1
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: hdfs
-      app.kubernetes.io/instance: simple-hdfs
-      app.kubernetes.io/component: journalnode
----
-apiVersion: policy/v1
-kind: PodDisruptionBudget
-metadata:
-  name: simple-hdfs-namenodes
-spec:
-  maxUnavailable: 1
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: hdfs
-      app.kubernetes.io/instance: simple-hdfs
-      app.kubernetes.io/component: namenode
----
-apiVersion: policy/v1
-kind: PodDisruptionBudget
-metadata:
-  name: simple-hdfs-datanodes
-spec:
-  maxUnavailable: 2 # assuming dfs replication 3
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: hdfs
-      app.kubernetes.io/instance: simple-hdfs
-      app.kubernetes.io/component: datanode
-----
+* Does not support the common use case of role level PDBs
