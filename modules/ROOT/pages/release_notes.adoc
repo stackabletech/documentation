@@ -413,7 +413,7 @@ The following new major platform features were added:
 
 Cluster Operation::
 
-The first part of xref:concepts:operations/cluster_operations.adoc[Cluster operations] was rolled out in every applicable Stackable Operator. This supports pausing the cluster reconciliation and stopping the cluster completely. Pausing reconciliation will not apply any changes to the Kubernetes resources (e.g. when changing the custom resource). Stopping the cluster will set all replicas of StatefulSets, Deployments or DaemonSets to zero and therefore deleting all Pods belonging to that cluster (not the PVCs).
+The first part of xref:concepts:operations/cluster_operations.adoc[Cluster operations] was rolled out in every applicable Stackable Operator. This supports pausing the cluster reconciliation and stopping the cluster completely. Pausing reconciliation will not apply any changes to the Kubernetes resources (e.g. when changing the custom resource). Stopping the cluster will set all replicas of StatefulSets, Deployments or DaemonSets to zero and will therefore result in the deletion of all Pods belonging to that cluster (not the PVCs).
 
 Status Field::
 

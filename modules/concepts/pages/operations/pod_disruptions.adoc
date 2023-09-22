@@ -1,25 +1,25 @@
 = Pod disruptions
 
-Downtime of our products are generally considered bad.
-Although downtime can't be prevent 100% of the time - especially if the product does not support High Availability - we can try to do our best to reduce them to an absolute minimum.
+Any downtime of our products is generally considered to be bad.
+Although downtime can't be prevented 100% of the time - especially if the product does not support High Availability - we can try to do our best to reduce it to an absolute minimum.
 
 Kubernetes has mechanisms to ensure minimal *planned* downtime.
 Please keep in mind, that this only affects planned (voluntary) downtime of Pods - multiple simulations Kubernetes node crashes can always occur!
 
-Our product operator will always deploy so-called https://kubernetes.io/docs/tasks/run-application/configure-pdb/[PodDisruptionBudget (PDB)] alongside the products.
-For every role that you specify (e.g. HDFS namenodes or Trino workers) a PDB get's created.
+Our product operator will always deploy so-called https://kubernetes.io/docs/tasks/run-application/configure-pdb/[PodDisruptionBudget (PDB)] resources alongside the products.
+For every role that you specify (e.g. HDFS namenodes or Trino workers) a PDB is created.
 
 == Default values
-The defaults depend on the individual product and can be find below the "Operations" usage guide.
+The defaults depend on the individual product and can be found below the "Operations" usage guide.
 
-They are based upon our knowledge about the products fault tolerance.
-In some case they can be a bit pessimistic, thus they can be adjusted as documented in the following sections.
+They are based on our knowledge of each product's fault tolerance.
+In some cases they may be a little pessimistic, but they can be adjusted as documented in the following sections.
 
 == Influencing and disabling PDBs
 
 You can configure
 
-1. Wether PDBs are written at all
+1. Whether PDBs are written at all
 2. The `maxUnavailable` replicas for this role PDB
 
 The following example
@@ -60,7 +60,7 @@ spec:
 ----
 
 == Using you own custom PDBs
-In case you are not satisfied with the PDBs that are written by the operators, you can deploy you own ones.
+In case you are not satisfied with the PDBs that are written by the operators, you can deploy your own.
 
 WARNING: In case you write custom PDBs, it is your responsibility to take care of the availability of the products
 
@@ -88,7 +88,7 @@ spec:
           - namenode
 ----
 
-This PDB allows only on Pod out of all the Namenodes and Journalnodes to be down at a time.
+This PDB allows only one Pod out of all the Namenodes and Journalnodes to be down at one time.
 
 == Details
 Have a look at <<< TODO: link ADR on Pod Disruptions once merged >>> for the implementation details.
