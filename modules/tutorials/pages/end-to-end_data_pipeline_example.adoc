@@ -1,11 +1,15 @@
 = Setting up an end-to-end data pipeline
 
-In this tutorial you will set up a data pipeline, from raw data to visualization. You read data from S3 using NiFi, send it to Kafka, from there it is ingested into Druid, and lastly you visualize the data using Superset.
+In this tutorial you will set up a data pipeline, from raw data to visualization. You read data from S3 using NiFi, send
+it to Kafka, from there it is ingested into Druid, and lastly you visualize the data using Superset.
 
 == About this tutorial
-The purpose of this tutorial is a deeper exploration of the Stackable platform and its features. It is not a guide to building a robust data pipeline.
+The purpose of this tutorial is a deeper exploration of the Stackable platform and its features. It is not a guide to
+building a robust data pipeline.
 
-This tutorial is intended to run in a private network or lab; it does not enable many security features such as authentication or encryption and should not be directly connected to the Internet. Be careful if you are deploying in the cloud as your instances may default to using public IPs.
+This tutorial is intended to run in a private network or lab; it does not enable many security features such as
+authentication or encryption and should not be directly connected to the Internet. Be careful if you are deploying in
+the cloud as your instances may default to using public IPs.
 
 == Before you begin
 
@@ -14,7 +18,7 @@ You should make sure that you have everything you need:
 * A running Kubernetes cluster
 * https://kubernetes.io/docs/tasks/tools/#kubectl[kubectl] to interact with the cluster
 * https://helm.sh/[Helm] to deploy third-party dependencies
-* xref:stackablectl::installation.adoc[stackablectl] to install and interact with Stackable operators
+* xref:management:stackablectl:installation.adoc[stackablectl] to install and interact with Stackable operators
 +
 [NOTE]
 ====
@@ -32,16 +36,19 @@ Instructions for installing via Helm are also provided throughout the tutorial.
 
 == Nifi and Kafka
 
-This section shows how to instantiate the first part of the entire processing chain, which will ingest CSV files from an S3 bucket, split the files into individual records and send these records to a Kafka topic.
+This section shows how to instantiate the first part of the entire processing chain, which will ingest CSV files from an
+S3 bucket, split the files into individual records and send these records to a Kafka topic.
 
 === Deploy the Operators
 
-The resource definitions rolled out in this section need their respective Operators to be installed in the K8s cluster. I.e. to run a Kafka instance, the Kafka Operator needs to be installed.
+The resource definitions rolled out in this section need their respective Operators to be installed in the K8s cluster.
+For example, running a Kafka instance requires the Kafka Operator.
 
 ==== Secret Operator
 
-The xref:secret-operator::index.adoc[Secret Operator] is needed by the Stackable Operator for Apache NiFi, as NiFi requires the UI to be served via HTTPS.
-The necessary certificates and keys for this are provided by the Secret Operator to the NiFi Pods.
+The xref:home:secret-operator:index.adoc[Secret Operator] is needed by the Stackable Operator for Apache NiFi, as NiFi
+requires the UI to be served via HTTPS. The necessary certificates and keys for this are provided by the Secret Operator
+to the NiFi Pods.
 
 [source,bash]
 stackablectl operator install secret
@@ -57,8 +64,10 @@ helm install secret-operator stackable-stable/secret-operator
 
 ==== ZooKeeper Operator
 
-Apache NiFi and Apache Kafka both use Apache ZooKeeper as backing config storage, so the xref:zookeeper::index.adoc[Stackable Operator for Apache ZooKeeper] has to be installed in order to make sure that a ZooKeeper cluster can be rolled out.
-There is no need to install multiple ZooKeeper clusters, as NiFi, Kafka and Druid can share the same cluster via provisioning a ZNode per backed service.
+Apache NiFi and Apache Kafka both use Apache ZooKeeper as backing config storage, so the
+xref:home:zookeeper:index.adoc[Stackable Operator for Apache ZooKeeper] has to be installed in order to make sure that a
+ZooKeeper cluster can be rolled out. There is no need to install multiple ZooKeeper clusters, as NiFi, Kafka and Druid
+can share the same cluster via provisioning a ZNode per backed service.
 
 [source,bash]
 stackablectl operator install zookeeper
@@ -90,8 +99,8 @@ helm install kafka-operator stackable-stable/kafka-operator
 
 ==== NiFi Operator
 
-NiFi is an ETL tool which will be used to model the dataflow of downloading and splitting files from S3.
-It will also be used to convert the file content from CSV to JSON.
+NiFi is an ETL tool which will be used to model the dataflow of downloading and splitting files from S3. It will also be
+used to convert the file content from CSV to JSON.
 
 [source,bash]
 stackablectl operator install nifi
@@ -130,7 +139,8 @@ EOF
 
 === Deploying Kafka and NiFi
 
-To deploy Kafka and NiFi you can now apply the cluster configuration. Run the following command in the console to deploy and configure all three services.
+To deploy Kafka and NiFi you can now apply the cluster configuration. Run the following command in the console to deploy
+and configure all three services.
 
 [source,bash]
 kubectl apply -f - <<EOF
@@ -656,7 +666,8 @@ spec:
         config:
 EOF
 
-<1> This is the version of Superset used for this instance. You can find the Superset versions supported by Stackable in the xref:superset::index.adoc[Superset Operator documentation].
+<1> This is the version of Superset used for this instance. You can find the Superset versions supported by Stackable in
+    the xref:home:superset:index.adoc[Superset Operator documentation].
 <2> This is the reference to the Secret you created earlier.
 
 On the first deployment of the Superset cluster, the Operator will also initialize the database. Once the database is initialized, you can connect to the cluster.

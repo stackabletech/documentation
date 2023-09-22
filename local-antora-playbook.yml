@@ -20,7 +20,10 @@ content:
       tags: []
       branches: [HEAD, release/*]
     # stackablectl
-    - url: https://github.com/stackabletech/stackablectl.git
+    - url: https://github.com/stackabletech/stackable-cockpit.git
+      start_path: docs
+    # demos
+    - url: https://github.com/stackabletech/demos.git
       start_path: docs
     # internal operators
     - url: https://github.com/stackabletech/commons-operator.git
