@@ -7,8 +7,8 @@ build:
 
 .PHONY: clean
 clean:
-	rm -r build
+	rm -rf build
 	# 'cache' is the configured cache dir in the playbook
-	rm -r cache
+	rm -rf cache
 
 .PHONY: build
