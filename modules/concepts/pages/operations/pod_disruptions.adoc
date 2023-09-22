@@ -4,7 +4,7 @@ Any downtime of our products is generally considered to be bad.
 Although downtime can't be prevented 100% of the time - especially if the product does not support High Availability - we can try to do our best to reduce it to an absolute minimum.
 
 Kubernetes has mechanisms to ensure minimal *planned* downtime.
-Please keep in mind, that this only affects planned (voluntary) downtime of Pods - multiple simulations Kubernetes node crashes can always occur!
+Please keep in mind, that this only affects planned (voluntary) downtime of Pods - unplanned Kubernetes node crashes can always occur.
 
 Our product operator will always deploy so-called https://kubernetes.io/docs/tasks/run-application/configure-pdb/[PodDisruptionBudget (PDB)] resources alongside the products.
 For every role that you specify (e.g. HDFS namenodes or Trino workers) a PDB is created.
