@@ -1862,39 +1862,39 @@ individually or with multiple at once.
 This is the list of all operators in this current release, with their versions for this release.
 
 .*Products*
-* xref:home:airflow:index.adoc[] (0.4.0)
+* xref:airflow:index.adoc[] (0.4.0)
 ** Load DAGs from ConfigMaps or PersistentVolumeClaims
 * xref:druid:index.adoc[] (0.6.0)
 ** S3 and HDFS as deep storage options
 ** ingestion from S3 buckets
 ** authorization using OPA
-* xref:home:hbase:index.adoc[] (0.3.0)
-* xref:home:hdfs:index.adoc[] (0.4.0)
-* xref:home:hive:index.adoc[] (0.6.0)
+* xref:hbase:index.adoc[] (0.3.0)
+* xref:hdfs:index.adoc[] (0.4.0)
+* xref:hive:index.adoc[] (0.6.0)
 ** Hive Metastore can index S3
-* xref:home:kafka:index.adoc[] (0.6.0)
+* xref:kafka:index.adoc[] (0.6.0)
 ** Seamless integration with NiFi and Druid
 ** Supports OPA authorization
-* xref:home:nifi:index.adoc[] (0.6.0)
-* xref:home:spark-k8s:index.adoc[] (0.3.0)
-* xref:home:superset:index.adoc[] (0.5.0)
+* xref:nifi:index.adoc[] (0.6.0)
+* xref:spark-k8s:index.adoc[] (0.3.0)
+* xref:superset:index.adoc[] (0.5.0)
 ** connects to Druid as a backend
 ** Supports LDAP authentication
-* xref:home:trino:index.adoc[] (0.4.0)
+* xref:trino:index.adoc[] (0.4.0)
 ** Supports OPA and file-based authorization
 ** Connects to the Hive Metastore
 ** Query data from S3
 ** TLS support
-* xref:home:zookeeper:index.adoc[] (0.10.0)
+* xref:zookeeper:index.adoc[] (0.10.0)
 ** Supports creating ZNodes with CRDs
 
 Read up on the xref:operators:supported_versions.adoc[supported versions] for each of these products.
 
 .*Supporting operators*
-* xref:home:opa:index.adoc[] (0.9.0)
+* xref:opa:index.adoc[] (0.9.0)
 ** Create RegoRules in ConfigMaps
-* xref:home:commons-operator:index.adoc[] (0.2.0)
-* xref:home:secret-operator:index.adoc[] (0.5.0)
+* xref:commons-operator:index.adoc[] (0.2.0)
+* xref:secret-operator:index.adoc[] (0.5.0)
 
 === Supported Kubernetes versions
 This release supports the following Kubernetes versions:

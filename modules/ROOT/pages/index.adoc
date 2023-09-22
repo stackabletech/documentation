@@ -89,7 +89,7 @@ products we support. The Stackable Data Platform supports the following products
 
 Airflow is a workflow engine and your replacement should you be using Apache Oozie.
 
-xref:home:airflow:index.adoc[Read more]
+xref:airflow:index.adoc[Read more]
 
 ++++
 </div>
@@ -105,7 +105,7 @@ xref:home:airflow:index.adoc[Read more]
 
 Apache Druid is a real-time database to power modern analytics applications.
 
-xref:home:druid:index.adoc[Read more]
+xref:druid:index.adoc[Read more]
 
 ++++
 </div>
@@ -121,7 +121,7 @@ xref:home:druid:index.adoc[Read more]
 
 HBase is a distributed, scalable, big data store.
 
-xref:home:hbase:index.adoc[Read more]
+xref:hbase:index.adoc[Read more]
 
 ++++
 </div>
@@ -137,7 +137,7 @@ xref:home:hbase:index.adoc[Read more]
 
 HDFS is a distributed file system that provides high-throughput access to application data.
 
-xref:home:hdfs:index.adoc[Read more]
+xref:hdfs:index.adoc[Read more]
 
 ++++
 </div>
@@ -154,7 +154,7 @@ xref:home:hdfs:index.adoc[Read more]
 The Apache Hive data warehouse software facilitates reading, writing, and managing large datasets residing in
 distributed storage using SQL. We support the Hive Metastore.
 
-xref:home:hive:index.adoc[Read more]
+xref:hive:index.adoc[Read more]
 
 ++++
 </div>
@@ -171,7 +171,7 @@ xref:home:hive:index.adoc[Read more]
 Apache Kafka is an open-source distributed event streaming platform used by thousands of companies for high-performance
 data pipelines, streaming analytics, data integration, and mission-critical applications.
 
-xref:home:kafka:index.adoc[Read more]
+xref:kafka:index.adoc[Read more]
 
 ++++
 </div>
@@ -187,7 +187,7 @@ xref:home:kafka:index.adoc[Read more]
 
 An easy to use, powerful, and reliable system to process and distribute data.
 
-xref:home:nifi:index.adoc[Read more]
+xref:nifi:index.adoc[Read more]
 
 ++++
 </div>
@@ -204,7 +204,7 @@ xref:home:nifi:index.adoc[Read more]
 Apache Spark is a multi-language engine for executing data engineering, data science, and machine learning on
 single-node machines or clusters.
 
-xref:home:spark-k8s:index.adoc[Read more]
+xref:spark-k8s:index.adoc[Read more]
 
 ++++
 </div>
@@ -220,7 +220,7 @@ xref:home:spark-k8s:index.adoc[Read more]
 
 Apache Superset is a modern data exploration and visualization platform.
 
-xref:home:superset:index.adoc[Read more]
+xref:superset:index.adoc[Read more]
 
 ++++
 </div>
@@ -236,7 +236,7 @@ xref:home:superset:index.adoc[Read more]
 
 Fast distributed SQL query engine for big data analytics that helps you explore your data universe.
 
-xref:home:trino:index.adoc[Read more]
+xref:trino:index.adoc[Read more]
 
 ++++
 </div>
@@ -253,7 +253,7 @@ xref:home:trino:index.adoc[Read more]
 ZooKeeper is a centralized service for maintaining configuration information, naming, providing distributed
 synchronization, and providing group services.
 
-xref:home:zookeeper:index.adoc[Read more]
+xref:zookeeper:index.adoc[Read more]
 
 ++++
 </div>
