@@ -5,7 +5,11 @@ v0.1, 2023-09-15
 
 * Status: {status}
 * Deciders:
+** Felix Hennig
+** Lars Francke
+** Sascha Lautenschläger
 ** Sebastian Bernauer
+** Sönke Liebau
 * Date: 2023-09-15
 
 == Context and problem statement
