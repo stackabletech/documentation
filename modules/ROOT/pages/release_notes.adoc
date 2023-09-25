@@ -9,7 +9,15 @@ Periodically a platform release is made, including all components of the platfor
 
 === Breaking changes
 
-The `loadExamplesOnInit` option was removed from the `SupersetCluster` CRD. Loading examples is still supported, the process is now described in the https://docs.stackable.tech/home/stable/superset/getting_started/first_steps[documentation].
+The `.spec.clusterConfig.loadExamplesOnInit` option was removed from the `SupersetCluster` CRD. Loading examples is still supported, the process is now described in the https://docs.stackable.tech/home/stable/superset/getting_started/first_steps[documentation].
+The `.spec.clusterConfig.databaseInitialization` option was removed from the `AirflowCluster` CRD.
+
+==== Stackable Operator for Apache Airflow
+
+* https://github.com/stackabletech/airflow-operator/pull/322[Removed AirflowDB]
+
+`.spec.clusterConfig.databaseInitialization` was removed from the CRD. This allowed configuring logging for the database initialization job, which does not exist anymore. Instead, database initialization is done by the scheduler pod, which has its own logging configuration. This was necessary to get rid of the `AirflowDB` Custom Resource, which caused problems when upgrading or reinstalling Airflow clusters.
+Additionally, the `AirflowDB` custom resource is not used anymore. Those CRs should be deleted.
 
 ==== Stackable Operator for Apache Superset
 
