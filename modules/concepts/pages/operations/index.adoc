@@ -9,7 +9,7 @@ Make sure to go throw the following checklist to make sure you achieve the maxim
 
 1. Make setup highly available (HA): In case the product supports running in an HA fashion, our operators will automatically
    configure it for you. You only need to take sure that you deploy a sufficient number of replicas. Please note, that
-   some products don't support HA, there is nothing we can do about that.
+   some products don't support HA.
 2. Reduce the number of simultaneous pod disruptions (unavailable replicas). The Stackable operators write defaults
    based upon knowledge about the fault tolerance of the product, which should cover most of the use-cases. For details
    have a look at xref:operations/pod_disruptions.adoc[].
