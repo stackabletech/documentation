@@ -10,6 +10,7 @@ WARNING: Overriding certain configuration properties can lead to faulty clusters
 
 The cluster definitions also supports overriding configuration aspects, either per xref:roles-and-role-groups.adoc[role or per role group], where the more specific override (role group) has precedence over the less specific one (role).
 
+[#config-overrides]
 == Config overrides
 
 For a xref:roles-and-role-groups.adoc[role or role group], at the same level of `config`, you can specify `configOverrides` for any of the configuration files the product uses.
@@ -44,6 +45,7 @@ The properties will be formatted and escaped correctly into the file format used
 You can also set the property to an empty string (`my.property: ""`), which effectively disables the property the operator would write out normally.
 In case of a `.properties` file, this will show up as `my.property=` in the `.properties` file.
 
+[#env-overrides]
 == Environment variable overrides
 
 For a xref:roles-and-role-groups.adoc[role or role group], at the same level of `config`, you can specify `envOverrides` for any env variable
@@ -75,6 +77,7 @@ spec:
 You can set any environment variable, but every specific product does support a different set of environment variables.
 All override property values must be strings.
 
+[#pod-overrides]
 == Pod overrides
 
 For a xref:roles-and-role-groups.adoc[role or role group], at the same level of `config`, you can specify `podOverrides` for any of the attributes you can configure on a Pod.
