@@ -30,7 +30,7 @@ addition of labels will resolve several long-standing issues in various reposito
 
 == Considered Options
 
-Kubernetes reserves all labels and annotations in the kubernetes.io and k8s.io namespaces. See
+Kubernetes reserves all labels and annotations in the `kubernetes.io` and `k8s.io` namespaces. See
 https://kubernetes.io/docs/reference/labels-annotations-taints/[here] and
 https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#syntax-and-character-set[here].
 
@@ -40,6 +40,22 @@ https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#syntax
   above
 * `stackable.tech/vendor=Stackable`: Custom label key prefix, duplicate data
 * `meta.stackable.tech/vendor=Stackable`: Alternative to above, scoped, still duplicated data
+
+'''
+
+A deployed ConfigMap could look like this:
+
+[source,yaml]
+----
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: superset-node-default
+labels:
+  app.kubernetes.io/name: superset # reduced set of common labels
+  stackable.tech/vendor: Stackable # new vendor label
+data:
+----
 
 [#ns-labels]
 === Labeling Resources deployed within a Demo or Stack
@@ -59,6 +75,25 @@ this value doesn't exceed the maximum length of 63 characters. If the name is to
 * Hard error out, the installation is canceled (Not recommended because stack and demo names are chosen by us)
 * We automatically truncate the name to the maximum length: `a-way-too-long-name` becomes `a-way-too-lo<EOL>`
 * We automatically truncate the name and add a random suffix: `a-way-too-long-name` becomes `a-way-a1b2c3<EOL>`
+
+'''
+
+A deployed ConfigMap (by running `stackablectl demo install`) could look like this. Notice that resources part of a demo
+**and** a stack include labels for both of these scopes.
+
+[source,yaml]
+----
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: superset-node-default
+labels:
+  app.kubernetes.io/name: superset # reduced set of common labels
+  stackable.tech/vendor: Stackable
+  stackable.tech/stack: nifi-kafka-druid-superset-s3 # new stack label
+  stackable.tech/demo: nifi-kafka-druid-water-level-data # new demo label
+data:
+----
 
 === Namespacing Stacks and Demos
 
