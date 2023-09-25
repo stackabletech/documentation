@@ -1,4 +1,4 @@
-= Pod disruptions
+= Allowed Pod disruptions
 
 Any downtime of our products is generally considered to be bad.
 Although downtime can't be prevented 100% of the time - especially if the product does not support High Availability - we can try to do our best to reduce it to an absolute minimum.
