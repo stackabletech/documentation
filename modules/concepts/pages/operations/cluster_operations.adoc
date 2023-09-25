@@ -1,5 +1,5 @@
-
 = Cluster operations
+:page-aliases: ../cluster_operations.adoc
 
 Stackable operators offer different cluster operations to control the reconciliation process. This is useful when updating operators, debugging or testing of new settings:
 
