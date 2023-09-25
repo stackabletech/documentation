@@ -28,7 +28,11 @@ content:
     # demos
     - url: https://github.com/stackabletech/demos.git
       start_path: docs
-      branches: main
+      branches:
+        - main
+        - release-23.7
+        - release-23.4
+        - release-23.1
     # internal operators
     - url: https://github.com/stackabletech/commons-operator.git
       start_path: docs
