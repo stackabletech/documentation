@@ -1,5 +1,6 @@
 = Quickstart
 
+:latest-release: https://github.com/stackabletech/stackable-cockpit/releases/tag/stackablectl-1.0.0-rc1
 :cockpit-releases: https://github.com/stackabletech/stackable-cockpit/releases
 
 This is the super-short getting started guide that should enable you to get something up and running in less than three
@@ -9,37 +10,30 @@ minutes (excluding download times).
 
 Install `stackablectl`, the Stackable CLI utility.
 
-On Linux (Windows and MacOS instructions below):
+=== Installation on Linux
+
+Download the `stackablectl-x86_64-unknown-linux-gnu` binary file from the link:{latest-release}[latest release], then
+rename the file to `stackablectl`. You can also use the following command:
 
 [source,console]
 ----
-$ curl -L -o stackablectl https://github.com/stackabletech/stackable-cockpit/releases/latest/download/stackablectl-x86_64-unknown-linux-gnu
+wget -O stackablectl https://github.com/stackabletech/stackable-cockpit/releases/download/stackablectl-1.0.0-rc1/stackablectl-x86_64-unknown-linux-gnu
+# or
+curl -L -o stackablectl https://github.com/stackabletech/stackable-cockpit/releases/download/stackablectl-1.0.0-rc1/stackablectl-x86_64-unknown-linux-gnu
 ----
 
-and mark it as executable:
+Mark the binary as executable:
 
 [source,console]
 ----
-$ chmod +x stackablectl
+chmod +x stackablectl
 ----
 
-.Instruction for Windows and MacOS
-[%collapsible]
-====
-Download `stackablectl-x86_64-pc-windows-gnu.exe` (for Windows) or `stackablectl-x86_64-apple-darwin` (Mac OS Intel) or
-`stackablectl-aarch64-apple-darwin` (MacOS ARM) from the {cockpit-releases}[latest release] and save it as
-`stackablectl`. For Windows, you can simply execute it. For MacOS mark it as executable:
+Then, make sure it is present in your `$PATH`, like `/usr/local/bin`.
 
-[source,console]
-----
-$ chmod +x stackablectl
-----
+=== Installation on macOS and Windows
 
-If you want to execute it from anywhere in your system, you need to add it to the system `PATH`.
-
-NOTE: If macOS denies the execution of stackablectl go to `Settings` -> `Security & Privacy` -> `General`. Here you will
-see a pop up asking if you want to allow access for `stackablectl`. You must allow access.
-====
+See the xref:management:stackablectl:installation.adoc[guide] for detailed information about the installation process on macOS and Windows.
 
 == Install the Taxi data demo
 
@@ -60,29 +54,29 @@ To list the installed installed Stackable services run the following command:
 
 [source,console]
 ----
-./stackablectl services list --all-namespaces
+./stackablectl stacklet list
 ----
 
 It will output something like:
 
 [source]
 ----
- PRODUCT   NAME         NAMESPACE  ENDPOINTS                                     EXTRA INFOS                          
-                                                                                                                      
- hive      hive         default    hive                172.18.0.5:30298                                               
-                                   metrics             172.18.0.5:31633                                               
-                                                                                                                      
- opa       opa          default    http                http://172.18.0.5:30316                                        
-                                                                                                                      
- superset  superset     default    external-superset   http://172.18.0.4:32295   Admin user: admin, password: adminadmin   
-                                                                                                                      
- trino     trino        default    coordinator-http    http://172.18.0.3:30167                                        
-                                   coordinator-metrics 172.18.0.3:31818                                               
-                                   coordinator-https   https://172.18.0.3:30141                                       
-                                                                                                                      
- minio     minio-trino  default    http                http://172.18.0.3:31062   Third party service                  
-                                   console-http        http://172.18.0.3:30503   Admin user: admin, password: adminadmin
+ PRODUCT   NAME         NAMESPACE  ENDPOINTS                                  
+                                                                              
+ hive      hive         default    hive                172.18.0.5:30298       
+                                   metrics             172.18.0.5:31633       
+                                                                              
+ opa       opa          default    http                http://172.18.0.5:30316
+                                                                              
+ superset  superset     default    external-superset   http://172.18.0.4:32295
+                                                                              
+ trino     trino        default    coordinator-http    http://172.18.0.3:30167
+                                   coordinator-metrics 172.18.0.3:31818       
+                                   coordinator-https   https://172.18.0.3:3014
+                                                                              
+ minio     minio-trino  default    http                http://172.18.0.3:31062
+                                   console-http        http://172.18.0.3:30503
 ----
 
 To connect to Superset, open the listed endpoint in your browser and log in with the username `admin` and the password
-`adminadmin`.
+`adminadmin`. Use the `stackablectl stacklet credentials` command to retrieve credentials for various stacklets.

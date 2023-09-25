@@ -4,20 +4,23 @@ One of the best ways of getting started with a new platform is to try it out. An
 
 == About this guide
 
-Firstly, let’s cover whether this *Getting Started* guide is right for you. This is intended as a learning tool to discover more about Stackable, its deployment and architecture.
+Firstly, let#s cover whether this *Getting Started* guide is right for you. This is intended as a learning tool to discover more about Stackable, its deployment and architecture.
 
 * If you want to build a production cluster then this is not for you. This tutorial is to familiarize you with the Stackable architecture and is not a guide for building robust clusters.
 * This is intended for use in a private network or lab; it doesn't enable many security features such as authentication or encryption and should not be directly connected to the Internet. Be careful if you're deploying in the cloud as your instances may default to using public IPs.
 
 == Overview
+
 Stackable is based on Kubernetes and uses this as the control plane to manage clusters. In this guide we will build a simple cluster with 3 services; Apache ZooKeeper, Apache Kafka and Apache NiFi.
 
 == Installing Kubernetes and kubectl
+
 Stackable’s control plane is built around Kubernetes. Follow the xref:kubernetes.adoc#local-installation[instructions] on how to set up a local Kubernetes instance if you do not have access to a cluster and install kubectl.
 
 If you already have kubectl installed, and have access to a Kubernetes cluster, you can skip this step.
 
 == Installing Stackable
+
 === Install stackablectl
 
 Install the Stackable command line utility xref:management:stackablectl:index.adoc[stackablectl] by following the installation steps for your platform on the xref:management:stackablectl:installation.adoc[installation] page.
@@ -68,9 +71,11 @@ zookeeper             23.7.0          default                        deployed   
 ----
 
 == Deploying Stackable Services
-At this point you’ve successfully deployed Kubernetes and the Stackable operators we need and are ready to deploy services to the cluster. To do this we provide service descriptions to Kubernetes for each of the services we wish to deploy.
+
+At this point you've successfully deployed Kubernetes and the Stackable operators we need and are ready to deploy services to the cluster. To do this we provide service descriptions to Kubernetes for each of the services we wish to deploy.
 
 === Apache ZooKeeper
+
 We will deploy an Apache ZooKeeper instance to our cluster.
 
 [source,bash]
@@ -105,6 +110,7 @@ EOF
 ----
 
 === Apache Kafka
+
 We will deploy an Apache Kafka broker that depends on the ZooKeeper service we just deployed. The zookeeperReference property below points to the namespace and name we gave to the ZooKeeper service deployed previously.
 
 [source,bash]
@@ -139,6 +145,7 @@ EOF
 ----
 
 === Apache NiFi
+
 We will next deploy an Apache NiFi server.
 
 [source,bash]
@@ -203,9 +210,11 @@ zookeeper-operator-deployment-64fcccc797-pckhf   1/1     Running     0          
 Since this is the first time that each of these services has been deployed to these nodes, it will take some time to download the software from the Stackable repository and deploy the services. Once all the pods are in the running state your cluster is ready to use.
 
 == Testing your cluster
+
 If all has gone well then you will have successfully deployed a Stackable cluster and used it to start three services that should now be ready for you.
 
 === Apache ZooKeeper
+
 We can test ZooKeeper by running the ZooKeeper CLI shell. The easiest way to do this is to run the CLI shell on the pod that is running ZooKeeper.
 
 [source,bash]
@@ -221,6 +230,7 @@ The shell should connect automatically to the ZooKeeper server running on the po
 ----
 
 === Apache Kafka
+
 To test Kafka we'll create a topic, and verify that it was created.
 First create the topic with the following command:
 
@@ -239,6 +249,7 @@ kubectl exec -i -t simple-kafka-broker-brokers-0 -c kafka -- \
 ----
 
 === Apache NiFi
+
 Apache NiFi provides a web interface and the easiest way to test it is to view this in a web browser.
 To access the web interface we first need to get the ip address and port Nifi is listening on.
 To get the IP address we need to connect to (in this case `172.18.0.2`), run:
