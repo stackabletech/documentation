@@ -64,7 +64,7 @@ In case you are not satisfied with the PDBs that are written by the operators, y
 
 WARNING: In case you write custom PDBs, it is your responsibility to take care of the availability of the products
 
-IMPORTANT: It is important to disable the PDBs creating of the Stackable operators as described above before creating your own PDBs, as this is a https://github.com/kubernetes/kubernetes/issues/75957[limitation of Kubernetes].
+IMPORTANT: It is important to disable the PDBs created by the Stackable operators as described above before creating your own PDBs, as this is a https://github.com/kubernetes/kubernetes/issues/75957[limitation of Kubernetes].
 
 *After disabling the Stackable PDBs*, you can deploy you own PDB such as
 
