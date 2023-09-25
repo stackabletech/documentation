@@ -24,7 +24,7 @@ content:
     # management tools
     - url: https://github.com/stackabletech/stackable-cockpit.git
       start_path: docs
-      branches: docs/stackablectl
+      branches: main
     # demos
     - url: https://github.com/stackabletech/demos.git
       start_path: docs
