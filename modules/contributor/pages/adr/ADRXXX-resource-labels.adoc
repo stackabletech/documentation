@@ -8,6 +8,7 @@ v0.1, 2023-08-25
 ** Malte Sander
 ** Sebastian Bernauer
 ** Sascha Lautenschläger
+** Razvan Mihai
 * Date: 2023-08-25
 
 == Context and Problem Statement
@@ -20,6 +21,7 @@ deployed together. The following use-cases are then possible:
 * Use-case 1: Uninstalling a demo and stack
 * Use-case 2: Remove/purge all resources deployed by Stackable at once
 * Use-case 3: Stacklet dependency tree (Only needed when decide against a discovery operator, see ...)
+* Use-case 4: Offer users to provide their own custom labels
 
 == Decision Drivers
 
@@ -129,6 +131,88 @@ Alternatives are:
 * `tools.stackable.tech/managed-by=stackablectl|stackable-cockpit`
 * `mgmt.stackable.tech/managed-by=stackablectl|stackable-cockpit`
 
+'''
+
+A deployed ConfigMap could look like this.:
+
+[source,yaml]
+----
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: superset-node-default
+labels:
+  app.kubernetes.io/name: superset # reduced set of common labels
+  stackable.tech/vendor: Stackable
+  stackable.tech/managed-by: stackablectl # new management tool label
+data:
+----
+
+=== Enabling Custom Labels provided by Users
+
+When providing support for user-controlled custom labels, we need to think about the degree of freedom we want to
+support. Possible levels where custom labels could be attached are: cluster, role, and role group level. We also need
+to make sure the custom user-provided labels don't collide with our labels. We can either:
+
+* print out a warning and don't apply the invalid label(s)
+* hard-error and bail
+
+==== Option 1 - Cluster Level Labels
+
+[source,yaml]
+----
+---
+apiVersion: example.stackable.tech/v1alpha1
+kind: ExampleCluster
+metadata:
+  name: example
+spec:
+  clusterConfig:
+    labels:
+      foo: bar
+      baz: foo
+----
+
+==== Option 2 - Role (and Role Group) Level Labels
+
+[source,yaml]
+----
+---
+apiVersion: example.stackable.tech/v1alpha1
+kind: ExampleCluster
+metadata:
+  name: example
+spec:
+  workers: # role-level
+    labels:
+      foo: bar
+      baz: foo
+    roleGroups:
+      worker-1: # role-group-level
+        labels:
+          foo: bar
+          baz: foo
+----
+
+==== Option 3 - Only Role Level Labels
+
+This option is highly dependant on the outcome of the PodDisruptionBudget ADR. This options requires the introduction
+of `roleGroup` discussed in the mentioned ADR.
+
+[source,yaml]
+----
+---
+apiVersion: example.stackable.tech/v1alpha1
+kind: ExampleCluster
+metadata:
+  name: example
+spec:
+  roleConfig:
+    labels:
+      foo: bar
+      baz: foo
+----
+
 == Thoughts on the Implementation
 
 === General Notes
@@ -192,3 +276,4 @@ for demo in demos_with_label("demo-*") {
 * Labeling Resources deployed within a Demo or Stack: TBD
 * Namespacing Stacks and Demos: TBD
 * Adding Label to indicate which Management Tool was used: TBD
+* Enabling Custom Labels provided by Users: TBD
