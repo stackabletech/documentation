@@ -1,4 +1,4 @@
-= ADR030: Reduce Pod disruptions
+= ADR030: Allowed Pod disruptions
 Sebastian Bernauer <sebastian.bernauer.tech>
 v0.1, 2023-09-15
 :status: accepted
@@ -214,7 +214,7 @@ spec:
 ==== Cons
 
 * Complex merge mechanism possibly difficult to understand and therefore easy to use the wrong way
-* Complex mechanism also not trivial to implement 
+* Complex mechanism also not trivial to implement
 
 === Option 4 - PDB in config with normal "shared role group config" behaviour
 
