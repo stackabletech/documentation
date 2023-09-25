@@ -1,11 +1,12 @@
 = Release notes for the Stackable Data Platform
 
-The Stackable platform consists of multiple operators that work together.
-Periodically a platform release is made, including all components of the platform at a specific version.
+The Stackable platform consists of multiple operators that work together. Periodically a platform release is made,
+including all components of the platform at a specific version.
 
 == Release 23.7
 
-This release introduces the specification of resource quotas and pod overrides and updates the product versions supported by SDP.
+This release introduces the specification of resource quotas and pod overrides and updates the product versions
+supported by SDP.
 
 === New / extended platform features
 
@@ -13,11 +14,17 @@ The following new major platform features were added:
 
 Resource Quotas::
 
-Explicit resources are now applied to all containers, for both operators and products. This allows running the Stackable data platform on Kubernetes clusters with a ResourceQuota or LimitRange set. Where these are not specified directly, defaults will be used. See https://github.com/stackabletech/issues/issues/368[this issue] for more information.
+Explicit resources are now applied to all containers, for both operators and products. This allows running the Stackable
+Data Platform on Kubernetes clusters with a ResourceQuota or LimitRange set. Where these are not specified directly,
+defaults will be used. See https://github.com/stackabletech/issues/issues/368[this issue] for more information.
 
 Pod Overrides::
 
-It is now possible to add custom settings which specify elements of a pod template (Service, StatefulSet etc.) on roles or rolegroups, which the operator then merges with the objects it writes before actually applying them. This provides the user with a possibility for specifying any property that can be set on a regular Kubernetes Pod, but which is not directly exposed via the Stackable custom resource definition. Have a look at xref:concepts:overrides.adoc[the documentation] for more details.
+It is now possible to add custom settings which specify elements of a pod template (Service, StatefulSet etc.) on roles
+or rolegroups, which the operator then merges with the objects it writes before actually applying them. This provides
+the user with a possibility for specifying any property that can be set on a regular Kubernetes Pod, but which is not
+directly exposed via the Stackable custom resource definition. Have a look at xref:concepts:overrides.adoc[the
+documentation] for more details.
 
 For example, with HDFS:
 
@@ -38,11 +45,14 @@ For example, with HDFS:
 
 Openshift certification::
 
-OLM bundles - a pre-requisite for the Openshift certification process - have been created for each operator. All 15 SDP operators in release 23.4.1 are now Openshift-certified and deployable directly from within an Openshift cluster.
+OLM bundles - a pre-requisite for the Openshift certification process - have been created for each operator. All 15 SDP
+operators in release 23.4.1 are now Openshift-certified and deployable directly from within an Openshift cluster.
 
 Signed SDP operator images::
 
-As of this release all Stackable operator images are signed (this feature will be added to product images in a subsequent release). More information about this, including how to verify the image signatures, can be found in this xref:tutorials:enabling_verification_of_image_signatures.adoc[tutorial].
+As of this release all Stackable operator images are signed (this feature will be added to product images in a
+subsequent release). More information about this, including how to verify the image signatures, can be found in this
+xref:tutorials:enabling_verification_of_image_signatures.adoc[tutorial].
 
 New Versions::
 
@@ -84,8 +94,10 @@ Product features::
 Additionally, there are some individual product features that are noteworthy:
 
 * https://github.com/stackabletech/hdfs-operator/issues/334[HDFS: support for enabling secure mode with Kerberos]
-* https://github.com/stackabletech/spark-k8s-operator/issues/247[Spark-k8s: support for using custom certificates when accessing S3 with TLS]
-* https://github.com/stackabletech/trino-operator/issues/436[Trino: support for arbitrary connectors using the generic connector for e.g. access to PostgreSQL]
+* https://github.com/stackabletech/spark-k8s-operator/issues/247[Spark-k8s: support for using custom certificates when
+  accessing S3 with TLS]
+* https://github.com/stackabletech/trino-operator/issues/436[Trino: support for arbitrary connectors using the generic
+  connector for e.g. access to PostgreSQL]
 * https://github.com/stackabletech/zookeeper-operator/issues/334[ZooKeeper: expose ZOOKEEPER_CLIENT_PORT in discovery CM]
 
 === stackablectl
@@ -113,11 +125,13 @@ This release supports the following OpenShift versions:
 
 === Breaking changes
 
-The re-structuring of configuration definitions in certain operators will require you to adapt your existing CRDs as shown below.
+The re-structuring of configuration definitions in certain operators will require you to adapt your existing CRDs as
+shown below.
 
 ==== Stackable Operator for Apache Airflow
 
-* https://github.com/stackabletech/airflow-operator/issues/271[Consolidated remaining top level configuration to clusterConfig]
+* https://github.com/stackabletech/airflow-operator/issues/271[Consolidated remaining top level configuration to
+  clusterConfig]
 
 CRDs should be changed from e.g.
 
@@ -146,7 +160,8 @@ spec:
 
 ==== Stackable Operator for Apache Superset
 
-* https://github.com/stackabletech/superset-operator/issues/379[Moved all top level config options to clusterConfig. Authentication is now provided via an array of AuthenticationClasses and additional properties]
+* https://github.com/stackabletech/superset-operator/issues/379[Moved all top level config options to clusterConfig.
+  Authentication is now provided via an array of AuthenticationClasses and additional properties]
 
 CRDs should be changed from e.g.
 
@@ -173,7 +188,9 @@ spec:
 
 ==== Stackable Operator for Trino
 
-* https://github.com/stackabletech/trino-operator/issues/434[Reworked authentication mechanism: The clusterConfig.authentication now requires a list of AuthenticationClass references instead of the MultiUser and LDAP separation]
+* https://github.com/stackabletech/trino-operator/issues/434[Reworked authentication mechanism: The
+  `clusterConfig.authentication` now requires a list of AuthenticationClass references instead of the MultiUser and
+  LDAP separation]
 
 CRDs should be changed from e.g.
 
@@ -372,16 +389,22 @@ helm install --wait zookeeper-operator stackable-stable/zookeeper-operator --ver
 
 ==== Known upgrade issues
 
-In the case of the breaking changes detailed above it will be necessary to update the custom resources for Airflow, Superset and Trino clusters and re-apply them.
+In the case of the breaking changes detailed above it will be necessary to update the custom resources for Airflow,
+Superset and Trino clusters and re-apply them.
 
 Additionally, please note the following:
 
 ===== All operators
-* If the default PVC size has been changed, then the StatefulSet must be deleted: it is not possible to change the PVC in the StatefulSet specification.
-** The error message is similar to: `StatefulSet.apps "trino-worker-default" is invalid: spec: Forbidden: updates to statefulset spec for fields other than 'replicas', 'template', 'updateStrategy', [...]`
+
+* If the default PVC size has been changed, then the StatefulSet must be deleted: it is not possible to change the PVC
+  in the StatefulSet specification.
+** The error message is similar to: `StatefulSet.apps "trino-worker-default" is invalid: spec: Forbidden: updates to
+   `StatefulSet` spec for fields other than 'replicas', 'template', 'updateStrategy', [...]`
 
 ===== ZooKeeper operator
-* The ZooKeeper operator in this release expects a product image with the same version. An existing ZooKeeper cluster resource should be deleted and re-applied with the corresponding `stackableVersion` e.g.
+
+* The ZooKeeper operator in this release expects a product image with the same version. An existing ZooKeeper cluster
+  resource should be deleted and re-applied with the corresponding `stackableVersion` e.g.:
 
 [source,yaml]
 ----
@@ -391,45 +414,78 @@ spec:
     stackableVersion: "23.7"
 ----
 
-
 == Release 23.4
 
-The focus in this platform release is on the support of default/custom affinities and the status field, as well as the rollout of log aggregation across the remaining operators. Additionally, all operators have been updated and tested for compatibility with OpenShift clusters (versions 4.10 and 4.11). Several operators from the 23.1 platform release were already certified against OpenShift.
+The focus in this platform release is on the support of default/custom affinities and the status field, as well as the
+rollout of log aggregation across the remaining operators. Additionally, all operators have been updated and tested for
+compatibility with OpenShift clusters (versions 4.10 and 4.11). Several operators from the 23.1 platform release were
+already certified against OpenShift.
 
 === Release 23.4.0
-This was the first release in the 23.4 release line.
-It is recommended to install <<Release 23.4.1>> instead, as it contains relevant bugfixes.
+
+This was the first release in the 23.4 release line. It is recommended to install <<Release 23.4.1>> instead, as it
+contains relevant bugfixes.
 
 === Release 23.4.1
+
 This is a bugfix/patch-level release that fixes the following issues:
 
-* Fix missing custom resource defaults that are required for a release update. See https://github.com/stackabletech/issues/issues/388[here].
-* Specify the security context to run as a member of the root group (this has been implemented for the Stackable operators where it had not previously been implemented i.e. Apache HBase, Apache HDFS, Apache ZooKeeper and Apache Spark on Kubernetes). This is required by Openshift clusters so that the product can be run with a random UID. This is a https://airflow.apache.org/docs/docker-stack/entrypoint.html#allowing-arbitrary-user-to-run-the-container[requirement] for at least Airflow, but is Openshift policy as described https://docs.openshift.com/container-platform/4.11/openshift_images/create-images.html#images-create-guide-openshift_create-images[here] and https://developers.redhat.com/blog/2020/10/26/adapting-docker-and-kubernetes-containers-to-run-on-red-hat-openshift-container-platform[here].
-* Automatically migrate the name used for the bundle-builder container for OPA daemonsets. See https://github.com/stackabletech/opa-operator/issues/444[here].
-* Automatically shorten the registration socket path used in listener-operator for Microk8s compatibility, migrated during upgrade. See https://github.com/stackabletech/listener-operator/issues/76[here].
+* Fix missing custom resource defaults that are required for a release update. See
+  https://github.com/stackabletech/issues/issues/388[here].
+* Specify the security context to run as a member of the root group (this has been implemented for the Stackable
+  operators where it had not previously been implemented i.e. Apache HBase, Apache HDFS, Apache ZooKeeper and Apache
+  Spark on Kubernetes). This is required by Openshift clusters so that the product can be run with a random UID. This is
+  a https://airflow.apache.org/docs/docker-stack/entrypoint.html#allowing-arbitrary-user-to-run-the-container[requirement]
+  for at least Airflow, but is Openshift policy as described https://docs.openshift.com/container-platform/4.11/openshift_images/create-images.html#images-create-guide-openshift_create-images[here]
+  and https://developers.redhat.com/blog/2020/10/26/adapting-docker-and-kubernetes-containers-to-run-on-red-hat-openshift-container-platform[here].
+* Automatically migrate the name used for the bundle-builder container for OPA daemonsets. See
+  https://github.com/stackabletech/opa-operator/issues/444[here].
+* Automatically shorten the registration socket path used in listener-operator for Microk8s compatibility, migrated
+  during upgrade. See https://github.com/stackabletech/listener-operator/issues/76[here].
 
 === New / extended platform features
 The following new major platform features were added:
 
 Cluster Operation::
 
-The first part of xref:concepts:cluster_operations.adoc[Cluster operations] was rolled out in every applicable Stackable Operator. This supports pausing the cluster reconciliation and stopping the cluster completely. Pausing reconciliation will not apply any changes to the Kubernetes resources (e.g. when changing the custom resource). Stopping the cluster will set all replicas of StatefulSets, Deployments or DaemonSets to zero and therefore deleting all Pods belonging to that cluster (not the PVCs).
+The first part of xref:concepts:cluster_operations.adoc[Cluster operations] was rolled out in every applicable Stackable
+Operator. This supports pausing the cluster reconciliation and stopping the cluster completely. Pausing reconciliation
+will not apply any changes to the Kubernetes resources (e.g. when changing the custom resource). Stopping the cluster
+will set all replicas of StatefulSets, Deployments or DaemonSets to zero and therefore deleting all Pods belonging to
+that cluster (not the PVCs).
 
 Status Field::
 
-Operators of the Stackable Data Platform create, manage and delete Kubernetes resources: in order to easily query the health state of the products - and react accordingly - Stackable Operators use several predefined condition types to capture different aspects of a product's availability. See this xref:contributor:adr/ADR027-status[ADR] for more information.
+Operators of the Stackable Data Platform create, manage and delete Kubernetes resources: in order to easily query the
+health state of the products - and react accordingly - Stackable Operators use several predefined condition types to
+capture different aspects of a product's availability. See this xref:contributor:adr/ADR027-status[ADR] for more
+information.
 
 Default / Custom Affinities::
 
-In Kubernetes there are different ways to influence how Pods are assigned to Nodes. In some cases it makes sense to co-locate certain services that communicate a lot with each other, such as HBase regionservers with HDFS datanodes. In other cases it makes sense to distribute the Pods among as many Nodes as possible. There may also be additional requirements e.g. placing important services - such as HDFS namenodes - in different racks, datacenter rooms or even datacenters. This release implements default affinities that should suffice for many scenarios out-of-the box, while also allowing for custom affinity rules at a role and/or role-group level. See this xref:contributor:adr/ADR026-affinities.adoc[ADR] for more information.
+In Kubernetes there are different ways to influence how Pods are assigned to Nodes. In some cases it makes sense to
+co-locate certain services that communicate a lot with each other, such as HBase regionservers with HDFS datanodes. In
+other cases it makes sense to distribute the Pods among as many Nodes as possible. There may also be additional
+requirements e.g. placing important services - such as HDFS namenodes - in different racks, datacenter rooms or even
+datacenters. This release implements default affinities that should suffice for many scenarios out-of-the box, while
+also allowing for custom affinity rules at a role and/or role-group level. See this
+xref:contributor:adr/ADR026-affinities.adoc[ADR] for more information.
 
 Log Aggregation::
 
-The logging framework (added to the platform in Release 23.1) offers a consistent custom resource configuration and a separate, persisted sink (defaulting to OpenSearch). This has now been rolled out across all products. See this xref:contributor:adr/adr025-logging_architecture[ADR] and this xref:concepts:logging.adoc[concepts page] for more information.
+The logging framework (added to the platform in Release 23.1) offers a consistent custom resource configuration and a
+separate, persisted sink (defaulting to OpenSearch). This has now been rolled out across all products. See this
+xref:contributor:adr/adr025-logging_architecture[ADR] and this xref:concepts:logging.adoc[concepts page] for more
+information.
 
 Service Type::
 
-The Service type can now be specified in all products. This currently differentiates between the internal ClusterIP and the external NodePort and is forward compatible with the xref:listener-operator:listenerclass.adoc[ListenerClass] for the automatic exposure of Services via the Listener Operator. This change is not backwards compatible with older platform releases. For security reasons, the default is set to the cluster-internal (ClusterIP) ListenerClass. A cluster can be exposed outside of Kubernetes by setting clusterConfig.listenerClass to external-unstable (NodePort) or external-stable (LoadBalancer).
+The Service type can now be specified in all products. This currently differentiates between the internal ClusterIP and
+the external NodePort and is forward compatible with the xref:listener-operator:listenerclass.adoc[ListenerClass] for
+the automatic exposure of Services via the Listener Operator. This change is not backwards compatible with older
+platform releases. For security reasons, the default is set to the cluster-internal (ClusterIP) ListenerClass. A cluster
+can be exposed outside of Kubernetes by setting clusterConfig.listenerClass to external-unstable (NodePort) or
+external-stable (LoadBalancer).
 
 New Versions::
 
@@ -456,14 +512,19 @@ The following have been added to `stackablectl`:
 
 ==== Trino-iceberg demo
 
-This is a condensed form of the xref:stackablectl::demos/data-lakehouse-iceberg-trino-spark.adoc[] demo focusing on using the lakehouse to store and modify data. It demonstrates how to integrate Trino and Iceberg and should run on a local workstation.
+This is a condensed form of the xref:demos:data-lakehouse-iceberg-trino-spark.adoc[] demo focusing on using the
+lakehouse to store and modify data. It demonstrates how to integrate Trino and Iceberg and should run on a local
+workstation.
 
 ==== Jupyterhub/Spark demo
 
-This demo showcases the integration between Jupyter and Apache Hadoop deployed on the Stackable Data Platform (SDP) Kubernetes cluster. This demo can be installed on most cloud managed Kubernetes clusters as well as on premise or on a reasonably provisioned laptop.
+This demo showcases the integration between Jupyter and Apache Hadoop deployed on the Stackable Data Platform (SDP)
+Kubernetes cluster. This demo can be installed on most cloud managed Kubernetes clusters as well as on premise or on a
+reasonably provisioned laptop.
 
 
-The xref:stackablectl::quickstart.adoc[quickstart guide] shows how to get started with `stackablectl`. This link lists the xref:stackablectl::demos/index.adoc[available demos].
+The xref:management:stackablectl:quickstart.adoc[quickstart guide] shows how to get started with `stackablectl`. This
+link lists the xref:demos:index.adoc[available demos].
 
 
 === Supported Kubernetes versions
@@ -488,9 +549,9 @@ You will need to adapt your existing CRDs due to the following breaking changes 
 
 ==== All Stackable Operators
 
-As mentioned above, specifying the service type is a breaking change for all operators.
-The default value is set to the `cluster-internal` `ListenerClass`: if the cluster requires external access outside of Kubernetes then set `clusterConfig.listenerClass`
-  to `external-unstable` or `external-stable`:
+As mentioned above, specifying the service type is a breaking change for all operators. The default value is set to the
+`cluster-internal` `ListenerClass`: if the cluster requires external access outside of Kubernetes then set
+`clusterConfig.listenerClass` to `external-unstable` or `external-stable`:
 
 ```
 spec:
@@ -504,9 +565,11 @@ This is an example for Trino, but the pattern is the same across all operators.
 
 ==== Stackable Operator for Apache Airflow
 
-Existing Airflow clusters need to be deleted and recreated. Airflow metadata held in the database and DAGs saved on disk are not affected.
+Existing Airflow clusters need to be deleted and recreated. Airflow metadata held in the database and DAGs saved on disk
+are not affected.
 
-This is required because the UID of the Airflow user has https://github.com/stackabletech/airflow-operator/pull/219[changed] to be in line with the rest of the platform.
+This is required because the UID of the Airflow user has
+https://github.com/stackabletech/airflow-operator/pull/219[changed] to be in line with the rest of the platform.
 
 ==== Stackable Operator for Apache HBase
 
@@ -850,17 +913,21 @@ The following have been added to `stackablectl`:
 
 ==== Logging demo
 
-This illustrates how to set up logging for Zookeeper and browse the results in an Open Search dashboard. This has been implemented for HBase, Hadoop and Zookeeper and will eventually be available for all Stackable operators.
+This illustrates how to set up logging for Zookeeper and browse the results in an Open Search dashboard. This has been
+implemented for HBase, Hadoop and Zookeeper and will eventually be available for all Stackable operators.
 
 ==== LDAP stack and tutorial
 
-LDAP support has now been added to multiple products. An explanation of the overall approach is given xref:concepts:authentication.adoc[here] but in order to make the configuration steps a little clearer a xref:tutorials:authentication_with_openldap.adoc[tutorial] has been added that uses a dedicated Stackable xref:stackablectl::commands/stack.adoc[stack] for OpenLDAP and shows its usage.
+LDAP support has now been added to multiple products. An explanation of the overall approach is given
+xref:concepts:authentication.adoc[here] but in order to make the configuration steps a little clearer a
+xref:tutorials:authentication_with_openldap.adoc[tutorial] has been added that uses a dedicated Stackable
+xref:management:stackablectl:commands/stack.adoc[stack] for OpenLDAP and shows its usage.
 
-
-The xref:stackablectl::quickstart.adoc[quickstart guide] shows how to get started with `stackablectl`. This link lists the xref:stackablectl::demos/index.adoc[available demos].
-
+The xref:management:stackablectl:quickstart.adoc[quickstart guide] shows how to get started with `stackablectl`. This
+link lists the xref:demos:index.adoc[available demos].
 
 === Supported Kubernetes versions
+
 This release supports the following Kubernetes versions:
 
 * `1.25`
@@ -869,11 +936,14 @@ This release supports the following Kubernetes versions:
 * `1.22`
 
 === Breaking changes
-This release brings with it several breaking changes needed to future-proof the platform. You will need to adapt your existing CRDs due to the following breaking changes:
+
+This release brings with it several breaking changes needed to future-proof the platform. You will need to adapt your
+existing CRDs due to the following breaking changes:
 
 ==== All Stackable Operators
-As mentioned above, product image selection is a breaking for all operators. Previously the product image was declared using `spec.version`:
 
+As mentioned above, product image selection is a breaking for all operators. Previously the product image was declared
+using `spec.version`:
 
 ```
 spec:
@@ -914,7 +984,8 @@ This means a stackable version >= 23.1 has to be used for the product image.
 
 * https://github.com/stackabletech/druid-operator/pull/333[Reworked top level configuration to support TLS changes]
 
-Deep storage, Ingestion spec, discovery config maps, authentication etc. are now subfields of spec.clusterConfig instead of being top level under spec. Change the resource from e.g.
+Deep storage, Ingestion spec, discovery config maps, authentication etc. are now subfields of spec.clusterConfig instead
+of being top level under spec. Change the resource from e.g.:
 
 ```
   zookeeperConfigMapName: simple-druid-znode
@@ -945,11 +1016,12 @@ to
 ```
 
 ==== Stackable Operator for Apache Hadoop
+
 * https://github.com/stackabletech/hdfs-operator/issues/290[Enable Log Aggregation for HDFS]
 
-As part of the change mentioned above we also did some code cleanup that allowed us to remove arbitrary hard-coded values from the operator.
-
-This change affects the directory structure the operator creates inside of the PersistentVolumes used for permanent storage.
+As part of the change mentioned above we also did some code cleanup that allowed us to remove arbitrary hard-coded
+values from the operator. This change affects the directory structure the operator creates inside of the
+`PersistentVolumes` used for permanent storage.
 
 The old folder naming was:
 
@@ -964,11 +1036,14 @@ which has now been adopted to match the actual rolename:
 - NameNode -> `namenode`
 
 
-Unfortunately, this means that for cluster that where initially rolled out with an older operator version, a one-time migration step becomes necessary to rename these directories.
+Unfortunately, this means that for cluster that where initially rolled out with an older operator version, a one-time
+migration step becomes necessary to rename these directories.
 
-You can either do this manually by attaching the PVs to a pod and performing the rename (cluster needs to be stopped for this) or use the script provided below.
+You can either do this manually by attaching the PVs to a pod and performing the rename (cluster needs to be stopped for
+this) or use the script provided below.
 
-WARNING: Please be aware that if this script runs after the cluster was already restarted with the newer operator version it will delete any data that was written to the empty post-upgrade HDFS that was stood up by the new operator.
+WARNING: Please be aware that if this script runs after the cluster was already restarted with the newer operator
+version it will delete any data that was written to the empty post-upgrade HDFS that was stood up by the new operator.
 
 [source,bash]
 ----
@@ -983,6 +1058,7 @@ The migration process for this now becomes:
 * Install newer version of Stackable Operator for Apache Hadoop
 
 ==== Stackable Operator for Apache Hive
+
 * https://github.com/stackabletech/hive-operator/pull/292[Moved database specification from role/role-group level to top-level clusterConfig]
 * https://github.com/stackabletech/hive-operator/pull/292[Moved s3, serviceType and hdfs discovery to top-level clusterConfig]
 
@@ -1018,6 +1094,7 @@ will now be defined like this:
 ```
 
 ==== Stackable Operator for Apache Kafka
+
 * https://github.com/stackabletech/kafka-operator/pull/527[Remove the tools image and add kcat to the product image]
 
 This means a stackable version >= 23.1 has to be used for the product image.
@@ -1052,16 +1129,19 @@ spec:
 ```
 
 ==== Stackable Operator for Apache Nifi
+
 * https://github.com/stackabletech/nifi-operator/pull/397[Removed tools image]
 
 This means a stackable version >= 23.1 has to be used for the product image.
 
 ==== Stackable Operator for Trino
+
 * https://github.com/stackabletech/trino-operator/pull/357[Removed tools image]
 
 This means a stackable version >= 23.1 has to be used for the product image.
 
-* https://github.com/stackabletech/trino-operator/pull/362[Use user and password Secret keys for LDAP bind credentials Secrets, instead of env var names]
+* https://github.com/stackabletech/trino-operator/pull/362[Use user and password Secret keys for LDAP bind credentials
+  Secrets, instead of env var names]
 
 This changes the secret definition from:
 ```
@@ -1492,8 +1572,9 @@ The following operators added support for LDAP authentication:
 
 === stackablectl
 
-`stackablectl` now supports deploying ready-to-use demos, which give an end-to-end demonstration of the usage of the Stackable Data Platform.
-The xref:stackablectl::quickstart.adoc[quickstart guide] shows how to get started with `stackablectl`. Here you can see the xref:stackablectl::demos/index.adoc[available demos].
+`stackablectl` now supports deploying ready-to-use demos, which give an end-to-end demonstration of the usage of the
+Stackable Data Platform. The xref:management:stackablectl:quickstart.adoc[quickstart guide] shows how to get started
+with `stackablectl`. Here you can see the xref:demos:index.adoc[available demos].
 
 === Supported Kubernetes versions
 This release supports the following Kubernetes versions:
@@ -1772,9 +1853,8 @@ All our operators reuse the same CRD structure as well.
 [#stackablectl]
 === stackablectl
 
-`stackablectl` is used to install and interact with the operators, either individually or with multiple at once.
-//
-xref:stackablectl::index.adoc[Learn more]
+xref:management:stackablectl:index.adoc[stackablectl] is used to install and interact with the operators, either
+individually or with multiple at once.
 
 [#operators]
 === Operators
@@ -1782,39 +1862,39 @@ xref:stackablectl::index.adoc[Learn more]
 This is the list of all operators in this current release, with their versions for this release.
 
 .*Products*
-* xref:airflow::index.adoc[] (0.4.0)
+* xref:airflow:index.adoc[] (0.4.0)
 ** Load DAGs from ConfigMaps or PersistentVolumeClaims
-* xref:druid::index.adoc[] (0.6.0)
+* xref:druid:index.adoc[] (0.6.0)
 ** S3 and HDFS as deep storage options
 ** ingestion from S3 buckets
 ** authorization using OPA
-* xref:hbase::index.adoc[] (0.3.0)
-* xref:hdfs::index.adoc[] (0.4.0)
-* xref:hive::index.adoc[] (0.6.0)
+* xref:hbase:index.adoc[] (0.3.0)
+* xref:hdfs:index.adoc[] (0.4.0)
+* xref:hive:index.adoc[] (0.6.0)
 ** Hive Metastore can index S3
-* xref:kafka::index.adoc[] (0.6.0)
+* xref:kafka:index.adoc[] (0.6.0)
 ** Seamless integration with NiFi and Druid
 ** Supports OPA authorization
-* xref:nifi::index.adoc[] (0.6.0)
-* xref:spark-k8s::index.adoc[] (0.3.0)
-* xref:superset::index.adoc[] (0.5.0)
+* xref:nifi:index.adoc[] (0.6.0)
+* xref:spark-k8s:index.adoc[] (0.3.0)
+* xref:superset:index.adoc[] (0.5.0)
 ** connects to Druid as a backend
 ** Supports LDAP authentication
-* xref:trino::index.adoc[] (0.4.0)
+* xref:trino:index.adoc[] (0.4.0)
 ** Supports OPA and file-based authorization
 ** Connects to the Hive Metastore
 ** Query data from S3
 ** TLS support
-* xref:zookeeper::index.adoc[] (0.10.0)
+* xref:zookeeper:index.adoc[] (0.10.0)
 ** Supports creating ZNodes with CRDs
 
 Read up on the xref:operators:supported_versions.adoc[supported versions] for each of these products.
 
 .*Supporting operators*
-* xref:opa::index.adoc[] (0.9.0)
+* xref:opa:index.adoc[] (0.9.0)
 ** Create RegoRules in ConfigMaps
-* xref:commons-operator::index.adoc[] (0.2.0)
-* xref:secret-operator::index.adoc[] (0.5.0)
+* xref:commons-operator:index.adoc[] (0.2.0)
+* xref:secret-operator:index.adoc[] (0.5.0)
 
 === Supported Kubernetes versions
 This release supports the following Kubernetes versions:
