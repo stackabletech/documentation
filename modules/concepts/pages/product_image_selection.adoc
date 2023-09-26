@@ -129,7 +129,7 @@ When deriving images from official Stackable images this will mean updating the 
 * It is not possible to update the Stackable Platform to a new version without changing the deployed cluster definitions when using custom images.
 The recommended process here is:
 
-** Tag clusters as "do not reconcile" (see xref:cluster_operations.adoc[])
+** Tag clusters as "do not reconcile" (see xref:operations/cluster_operations.adoc[])
 ** Update Stackable plattform
 ** Change custom images in cluster specifications
 ** Remove "do not reconcile flag"
