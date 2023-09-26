@@ -182,16 +182,10 @@ apiVersion: example.stackable.tech/v1alpha1
 kind: ExampleCluster
 metadata:
   name: example
+  labels:
+    foo: bar
+    baz: foo
 spec:
-  workers: # role-level
-    labels:
-      foo: bar
-      baz: foo
-    roleGroups:
-      worker-1: # role-group-level
-        labels:
-          foo: bar
-          baz: foo
 ----
 
 ==== Option 3 - Only Role Level Labels
