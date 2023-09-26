@@ -64,9 +64,9 @@ requires Helm version 3 or above.
 
 
 [#stackablectl-installation]
-=== stackablectl
+==== stackablectl
 
-stackablectl is available for download, pre-built binaries are available on GitHub. The download link and installation
+`stackablectl` is available for download, pre-built binaries are available on GitHub. The download link and installation
 steps are provided in the xref:management:stackablectl:installation.adoc[installation].
 
 == System requirements
