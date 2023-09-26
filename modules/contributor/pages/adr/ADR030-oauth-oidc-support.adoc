@@ -1,0 +1,117 @@
+= ADR0XX: 
+Felix Hennig <felix.hennig@stackable.tech>
+v0.1, 2023-09-19
+:status: draft
+
+* Status: {status}
+* Deciders: TBD
+* Date: 2023-09-19
+
+Technical Story: https://github.com/stackabletech/issues/issues/431
+
+== Context and Problem Statement
+
+OIDC is a widespread authentication mechanism. Keycloak is also widespread as a self-hosted, internal identity provider. Gaia-X also uses OIDC internally to authenticate users.
+
+How can we support OIDC on the Stackable Data Platform? Probably with an AuthenticationClass, like with LDAP.
+
+Problem: Which settings to we want to have in an authenticationclass? Do we want a generic "OIDC" authenticationclass? Maybe we can habe a "Keycloak" class which would be easier for the user but not as generic.
+
+=== Context: Product configs we need to support with the AuthenticationClass
+
+We built a demo that works with Superset, Trino and Druid. From there we know about the relevant config settings.
+
+==== Trino
+
+```
+web-ui.authentication.type: oauth2
+http-server.authentication.oauth2.client-id: trino
+http-server.authentication.oauth2.client-secret: ${ENV:TRINO_CLIENT_SECRET}
+http-server.authentication.oauth2.issuer: http://${ENV:KEYCLOAK_ADDRESS}/realms/master
+http-server.authentication.oauth2.scopes: openid
+```
+
+==== Druid
+
+```
+# pac4j authenticator
+druid.auth.authenticator.pac4j.type: pac4j
+druid.auth.authenticator.pac4j.authorizerName: OpaAuthorizer
+# pa4j common config
+druid.auth.pac4j.cookiePassphrase: '${env:DRUID_COOKIE_PASSPHRASE}'
+# OIDC common config
+druid.auth.pac4j.oidc.clientID: druid
+druid.auth.pac4j.oidc.clientSecret: '{"type":"environment","variable":"DRUID_CLIENT_SECRET"}'
+druid.auth.pac4j.oidc.discoveryURI: '${env:KEYCLOAK_DISCOVERY_URL}'
+```
+
+==== Superset
+
+Does not support reading an OIDC discovery URL but needs: API base URL, auth URL, token URL. Also the Superset client wants the _email_, _profile_ and _oidc_ scope. We _could_ also implement fab-oidc support for Superset, so it has proper OIDC support. Needs to be maintained though.
+
+```
+{ 
+    'name': 'keycloak',
+    'icon': 'fa-key',
+    'token_key': 'access_token',
+    'remote_app': {
+    'client_id': 'superset',
+    'client_secret': f'{os.environ.get("SUPERSET_CLIENT_SECRET")}',
+    'api_base_url': f'http://{os.environ.get("KEYCLOAK_ADDRESS")}/realms/master/protocol/openid-connect',
+    'client_kwargs': {
+        'scope': 'email profile openid'
+    },
+    'access_token_url': f'http://{os.environ.get("KEYCLOAK_ADDRESS")}/realms/master/protocol/openid-connect/token',
+    'authorize_url': f'http://{os.environ.get("KEYCLOAK_ADDRESS")}/realms/master/protocol/openid-connect/auth',
+    'request_token_url': None,
+    },
+}
+```
+
+=== Context: Common authentication servers that users might want to connect to
+
+These are some authentication servers that users might be using.
+
+* Keycloak
+* Auth0
+* ADFS
+* Dex
+* Okta
+
+In general it can be expected that this service would already be running at the user.
+
+== Decision Drivers
+
+... ?
+
+* Different OIDC providers supported?
+* Configuration should be simple, with minimal info required by the user.
+* Every connecting product should have its own client ID and client secret. The client secret should be stored in a k8s secret.
+* An AuthenticationClass should be defined
+
+== Considered Options
+
+=== 1. Make an OIDC config
+
+Does that include the cookie passphrase?
+OIDC just uses the single .well-known URL, what do we do about Superset in that case? Do we try to calculate the relevant settings from the well known URL? can we do this generically, or only on a per-service basis?
+
+=== 2. make an OIDC and OAuth2 class
+
+For Superset, use OAuth2, for the rest use OIDC. Annoying for the user because the have to maintain both.
+
+=== 3. Auth-server specific configs
+
+i.e. for Keycloak. We just ask the user to provide the address and version of their keycloak. And then based on that we can calculate all the relevant settings.
+
+This is nice, because we need different settings for different products. For example, superset needs three different URLs. Trino needs to base URL auf the realm. Druid needs the discovery URL.
+
+The AuthenticationClass should reference a SecretClass "oauth-client-secret" and then in these secrets the client IDs and secrets for each client can be defined.
+
+This is a bit similar to how we treat SQL databases.
+
+=== 4. generic configs
+
+We ask the user for all the stuff we might need. They need to fill out a bunch of stuff.
+
+Not as nice, because more work for them. Less work for us, because we just have one generic OAuth/OIDC auth class.
