@@ -284,6 +284,7 @@ for demo in demos_with_label("demo-*") {
 
 == Results
 
+* Scope: TBD
 * Labeling all Resources with a Vendor Label: TBD
 * Labeling Resources deployed within a Demo or Stack: TBD
 * Namespacing Stacks and Demos: TBD
