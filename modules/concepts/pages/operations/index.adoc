@@ -41,11 +41,11 @@ restarting at the same time. You can achieve this using the following methods:
    https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale[HorizontalPodAutoscaler] to autoscale the number of Pods
    running for a given rolegroup dynamically based upon resource usage. To achieve this you need to *not* configure any replicas on the rolegroup.
    Afterwards you can deploy a HorizontalPodAutoscaler as usual. Please note that doing so is experimental and not officially support by the
-   platform. Later platform versions will add autoscaling natively with sensible defaults and make it easy to enable and configure.
+   platform. Later platform versions will support autoscaling natively with sensible defaults and make it easy to enable and configure.
 3. *Co-location*: You can not only use xref:operations/pod_placement.adoc[] to achieve more resilience, but also to co-locate products
    that communicate frequently with each other. One example is placing HBase regionservers on the same Kubernetes node
    as the HDFS datanodes. Our operators already take this into account and co-locate connected services. However, if
-   you are not satisfied with the automatically created affinities you can use ref:operations/pod_placement.adoc[] to
+   you are not satisfied with the automatically created affinities you can use xref:operations/pod_placement.adoc[] to
    configure your own.
 4. *Dedicated nodes*: If you want to have certain services running on dedicated nodes you can also use xref:operations/pod_placement.adoc[]
    to force the Pods to be scheduled on certain nodes. This is especially helpful if you e.g. have Kubernetes nodes with

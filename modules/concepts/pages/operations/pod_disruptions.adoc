@@ -15,11 +15,13 @@ The defaults depend on the individual product and can be found below the "Operat
 They are based on our knowledge of each product's fault tolerance.
 In some cases they may be a little pessimistic, but they can be adjusted as documented in the following sections.
 
-IMPORTANT: The operators calculate the number of pods for a give role by adding the number of replicas of every rolegroup that is part of that role.
-In case their are no replicas defined on a rolegroup one pod will be assumed, as the created Kubernetes objects (StatefulSets or Deployments) will default to a single replica as well.
-However, in case there are https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/[HorizontalPodAutoscaler] in place, the number of replicas of the rolegroup can change dynamically.
-In this case the operators might think that rolegroups have less Pods than they actually have.
-Gladly this is a pessimistic approach, as the number of allowed disruption stays the same or even increases when the number of Pods increases.
+IMPORTANT: The operators calculate the number of Pods for a give role by adding the number of replicas of every rolegroup that is part of that role.
+In case their are no replicas defined on a rolegroup, one Pod will be assumed for this rolegroup, as the created Kubernetes objects
+(StatefulSets or Deployments) will default to a single replica as well. However, in case there are
+https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/[HorizontalPodAutoscaler] in place, the number of replicas of the rolegroup
+can change dynamically. In this case the operators might falsely assume that rolegroups have less Pods than they actually have. This is a pessimistic approach,
+as the number of allowed disruption normally stays the same or even increases when the number of Pods increases. So this should be save, but in some cases
+more Pods *could* have been allowed to be unavailable, so rolling re-deployments can take a bit longer than needed.
 
 == Influencing and disabling PDBs
 
