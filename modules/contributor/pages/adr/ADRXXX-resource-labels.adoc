@@ -36,12 +36,25 @@ Kubernetes reserves all labels and annotations in the `kubernetes.io` and `k8s.i
 https://kubernetes.io/docs/reference/labels-annotations-taints/[here] and
 https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#syntax-and-character-set[here].
 
+=== Preamble
+
+One general decision we have to make is if we ant to introduce scopes for our label keys. In this context, scope refers
+to one (or more) domain name labels, otherwise known as subdomains. Scopes would allow us to introduce more granular
+(and also grouped) labels. On the other side, we need to consider if we need the added granularity based on the number
+and kind of labels we want to add. In general there are two options:
+
+- `<scope>.stackable.tech/<key>=<value>`, with scope being **one** subdomain
+- `stackable.tech/<key>=<value>`, no scope
+
 === Labeling all Resources with a Vendor Label
 
 * `app.kubernetes.io/vendor=Stackable`: This is no official well-known label and also violates the reserved namespaces
   above
 * `stackable.tech/vendor=Stackable`: Custom label key prefix, duplicate data
 * `meta.stackable.tech/vendor=Stackable`: Alternative to above, scoped, still duplicated data
+
+It's hard (or impossible) to use a label without any duplicated data. So `stackable.tech/vendor=Stackable` seems like
+a straight-forward and concise option.
 
 '''
 
@@ -109,9 +122,10 @@ Considered default values for above labels are:
 We need to perform length and character validation for these namespace names. There are two possible paths:
 
 * If the user *doesn't* provide a custom namespace, we need to make sure that the value doesn't exceed it's maximum
-length when the stack or demo names are inserted.
+  length when the stack or demo names are inserted. Truncate the name if needed.
 * If the user *does* provide a custom namespace, we need to make sure that the custom namespace length doesn't exceed
-  it's maximum length.
+  it's maximum length. Don't automatically truncate, instead return an error explaining the user needs to shorten the
+  namespace name.
 
 The maximum length for both cases is 63 characters.
 
