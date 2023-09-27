@@ -35,14 +35,19 @@ restarting at the same time. You can achieve this using the following methods:
 
 == Performance
 
-1. You can configure the available resource every product has using xref:concepts:resources.adoc[]. The defaults are
+1. *Compute resources*: You can configure the available resource every product has using xref:concepts:resources.adoc[]. The defaults are
    very restrained, as you should be able to spin up multiple products running on your Laptop.
-2. You can not only use xref:operations/pod_placement.adoc[] to achieve more resilience, but also to co-locate products
+2. *Autoscaling*: Although not supported by the platform natively yet, you can use
+   https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale[HorizontalPodAutoscaler] to autoscale the number of Pods
+   running for a given rolegroup dynamically based upon resource usage. To achieve this you need to *not* configure any replicas on the rolegroup.
+   Afterwards you can deploy a HorizontalPodAutoscaler as usual. Please note that doing so is experimental and not officially support by the
+   platform. Later platform versions will add autoscaling natively with sensible defaults and make it easy to enable and configure.
+3. *Co-location*: You can not only use xref:operations/pod_placement.adoc[] to achieve more resilience, but also to co-locate products
    that communicate frequently with each other. One example is placing HBase regionservers on the same Kubernetes node
    as the HDFS datanodes. Our operators already take this into account and co-locate connected services. However, if
    you are not satisfied with the automatically created affinities you can use ref:operations/pod_placement.adoc[] to
    configure your own.
-3. If you want to have certain services running on dedicated nodes you can also use xref:operations/pod_placement.adoc[]
+4. *Dedicated nodes*: If you want to have certain services running on dedicated nodes you can also use xref:operations/pod_placement.adoc[]
    to force the Pods to be scheduled on certain nodes. This is especially helpful if you e.g. have Kubernetes nodes with
    16 cores and 64 GB, as you could allocate nearly 100% of these node resources to your Spark executors or Trino workers.
    In this case it is important that you https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/[taint]
