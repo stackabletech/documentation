@@ -80,11 +80,11 @@ Of course you are free to use whatever works for you best. No editor is perfect 
 
 For `VisualStudio Code` we also recommend the following extensions:
 
-* Better Toml
-* CodeLLDB (for debugging)
-* Error Lens (inline error messages)
-* AsciiDoc
-* GitHub Pull requests and Issues
-* GitLens
-* Python
-* Docker
+* https://marketplace.visualstudio.com/items?itemName=tamasfe.even-better-toml[Even Better TOML]
+* https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb[CodeLLDB] (for debugging)
+* https://marketplace.visualstudio.com/items?itemName=usernamehw.errorlens[Error Lens] (inline error messages)
+* https://marketplace.visualstudio.com/items?itemName=asciidoctor.asciidoctor-vscode[AsciiDoc]
+* https://marketplace.visualstudio.com/items?itemName=GitHub.vscode-pull-request-github[GitHub Pull requests and Issues]
+* https://marketplace.visualstudio.com/items?itemName=eamodio.gitlens[GitLens]
+* https://marketplace.visualstudio.com/items?itemName=ms-python.python[Python]
+* https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker[Docker]
