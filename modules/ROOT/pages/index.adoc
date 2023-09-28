@@ -66,6 +66,12 @@ which often do not play nicely together out-of-the-box.
 </div>
 ++++
 
+== Release Notes
+
+The Stackable platform consists of multiple operators that work together. Periodically a platform release is made,
+including all components of the platform at a specific version. See the latest release notes for 23.7
+xref:release_notes.adoc[here].
+
 == Components
 
 We are using Kubernetes as our deployment platform. And we're building {k8s-operators}[Operators] for each of the
