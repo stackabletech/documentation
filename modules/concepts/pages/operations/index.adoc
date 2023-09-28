@@ -31,7 +31,7 @@ Sometimes you want to quickly shut down a product or update the Stackable operat
 restarting at the same time. You can achieve this using the following methods:
 
 1. Quickly stop and start a whole product using `stopped` as described in xref:operations/cluster_operations.adoc[].
-2. Prevent any changes to your deployed product using `reconcilePaused` as described in xref:operations/cluster_operations.adoc[].
+2. Prevent any changes to your deployed product using `reconciliationPaused` as described in xref:operations/cluster_operations.adoc[].
 
 == Performance
 
