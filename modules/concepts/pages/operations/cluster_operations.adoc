@@ -1,0 +1,22 @@
+= Cluster operations
+:page-aliases: ../cluster_operations.adoc
+
+Stackable operators offer different cluster operations to control the reconciliation process. This is useful when updating operators, debugging or testing of new settings:
+
+* `reconciliationPaused` - Stop the operator from reconciling the cluster spec. The status will still be updated.
+* `stopped` - Stop all running pods but keep updating all deployed resources like `ConfigMaps`, `Services` and the cluster status.
+
+== Example
+
+[source,yaml]
+----
+include::example$cluster-operations.yaml[]
+----
+<1> The `clusterOperation.reconciliationPaused` flag set to `true` stops the operator from reconciling any changes to the cluster spec. The cluster status is still updated.
+<2> The `clusterOperation.stopped` flag set to `true` stops all pods in the cluster. This is done by setting all deployed `StatefulSet` replicas to 0.
+
+== Notes
+
+If not specified, `clusterOperation.reconciliationPaused` and `clusterOperation.stopped` default to `false`.
+
+IMPORTANT: When setting `clusterOperation.reconciliationPaused` and `clusterOperation.stopped` to true in the same step, `clusterOperation.reconciliationPaused` will take precedence. This means the cluster will stop reconciling immediately and the `stopped` field is ignored. To avoid this, the cluster should first be stopped and then paused.

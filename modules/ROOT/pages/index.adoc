@@ -1,8 +1,14 @@
 = Stackable Documentation
 :page-layout: landing
 
+:k8s-operators: https://kubernetes.io/docs/concepts/extend-kubernetes/operator/
+:docs-discussion: https://github.com/stackabletech/community/discussions
+:docs-issues: https://github.com/stackabletech/documentation/issues
+:docs-repo: https://github.com/stackabletech/documentation
+
 Welcome to Stackable!
-This documentation gives you an overview of the Stackable Data Platform, how to install and manage it as well as some tutorials.
+This documentation gives you an overview of the Stackable Data Platform, how to install and manage it as well as some
+tutorials.
 
 ++++
 <div class="boxes two-column">
@@ -16,11 +22,14 @@ This documentation gives you an overview of the Stackable Data Platform, how to 
 <h3>Introduction</h3>
 ++++
 
-The Stackable Data Platform allows you to deploy, scale and manage Data infrastructure in any environment running https://kubernetes.io/[Kubernetes].
+The Stackable Data Platform allows you to deploy, scale and manage Data infrastructure in any environment running
+https://kubernetes.io/[Kubernetes].
 
-You can find an overview of the supported components <<Components,below>>, as well as a full list of all supported product versions xref:operators:supported_versions.adoc[here].
+You can find an overview of the supported components <<Components,below>>, as well as a full list of all supported
+product versions xref:operators:supported_versions.adoc[here].
 
-If you have any feedback regarding the documentation please either open an https://github.com/stackabletech/documentation/issues[issue], ask a https://github.com/stackabletech/documentation/discussions[question] or look at the source for this documentation in its https://github.com/stackabletech/documentation[repository].
+If you have any feedback regarding the documentation please either open an {docs-issues}[issue], ask a
+{docs-discussion}[question] or look at the source for this documentation in its {docs-repo}[repository].
 
 ++++
 </div>
@@ -34,16 +43,20 @@ If you have any feedback regarding the documentation please either open an https
 <h3>Goal of the project</h3>
 ++++
 
-We are building a distribution of existing Open Source tools that together comprise the components of a modern data platform.
+We are building a distribution of existing Open Source tools that together comprise the components of a modern data
+platform.
 
-There are components to ingest data, to store data, to process and visualize and much more.
-While the platform got started in the _Big Data_ ecosystem we are in no way limited to big data workloads.
+There are components to ingest data, to store data, to process and visualize and much more. While the platform got
+started in the _Big Data_ ecosystem we are in no way limited to big data workloads.
 
-You can declaratively build these environments, and we don't stop at the tool level as we also provide ways for the users to interact with the platform in the "as Code"-approach.
+You can declaratively build these environments, and we don't stop at the tool level as we also provide ways for the
+users to interact with the platform in the "as Code"-approach.
 
 We are leveraging the https://www.openpolicyagent.org/[Open Policy Agent] to provide Security-as-Code.
 
-We are building a distribution that includes the “best of breed” of existing Open Source tools, but bundles them in a way, so it is easy to deploy a fully working stack of software. Most of the existing tools are “single purpose” tools, which often do not play nicely together out-of-the-box.
+We are building a distribution that includes the “best of breed” of existing Open Source tools, but bundles them in a
+way, so it is easy to deploy a fully working stack of software. Most of the existing tools are “single purpose” tools,
+which often do not play nicely together out-of-the-box.
 
 ++++
 </div>
@@ -52,13 +65,17 @@ We are building a distribution that includes the “best of breed” of existing
 ++++
 </div>
 ++++
+
+== Release Notes
+
+The Stackable platform consists of multiple operators that work together. Periodically a platform release is made,
+including all components of the platform at a specific version. See the latest release notes for 23.7
+xref:release_notes.adoc[here].
 
 == Components
 
-We are using Kubernetes as our deployment platform.
-And we're building https://kubernetes.io/docs/concepts/extend-kubernetes/operator/[Operators] for each of the products we support.
-
-The Stackable Data Platform supports the following products:
+We are using Kubernetes as our deployment platform. And we're building {k8s-operators}[Operators] for each of the
+products we support. The Stackable Data Platform supports the following products:
 
 ++++
 <br>
@@ -78,7 +95,7 @@ The Stackable Data Platform supports the following products:
 
 Airflow is a workflow engine and your replacement should you be using Apache Oozie.
 
-xref:airflow::index.adoc[Read more]
+xref:airflow:index.adoc[Read more]
 
 ++++
 </div>
@@ -94,7 +111,7 @@ xref:airflow::index.adoc[Read more]
 
 Apache Druid is a real-time database to power modern analytics applications.
 
-xref:druid::index.adoc[Read more]
+xref:druid:index.adoc[Read more]
 
 ++++
 </div>
@@ -110,7 +127,7 @@ xref:druid::index.adoc[Read more]
 
 HBase is a distributed, scalable, big data store.
 
-xref:hbase::index.adoc[Read more]
+xref:hbase:index.adoc[Read more]
 
 ++++
 </div>
@@ -126,7 +143,7 @@ xref:hbase::index.adoc[Read more]
 
 HDFS is a distributed file system that provides high-throughput access to application data.
 
-xref:hdfs::index.adoc[Read more]
+xref:hdfs:index.adoc[Read more]
 
 ++++
 </div>
@@ -140,9 +157,10 @@ xref:hdfs::index.adoc[Read more]
 <h3 id="hive"><a class="anchor" href="#hive"></a>Apache Hive</h3>
 ++++
 
-The Apache Hive data warehouse software facilitates reading, writing, and managing large datasets residing in distributed storage using SQL. We support the Hive Metastore.
+The Apache Hive data warehouse software facilitates reading, writing, and managing large datasets residing in
+distributed storage using SQL. We support the Hive Metastore.
 
-xref:hive::index.adoc[Read more]
+xref:hive:index.adoc[Read more]
 
 ++++
 </div>
@@ -156,9 +174,10 @@ xref:hive::index.adoc[Read more]
 <h3 id="kafka"><a class="anchor" href="#kafka"></a>Apache Kafka</h3>
 ++++
 
-Apache Kafka is an open-source distributed event streaming platform used by thousands of companies for high-performance data pipelines, streaming analytics, data integration, and mission-critical applications.
+Apache Kafka is an open-source distributed event streaming platform used by thousands of companies for high-performance
+data pipelines, streaming analytics, data integration, and mission-critical applications.
 
-xref:kafka::index.adoc[Read more]
+xref:kafka:index.adoc[Read more]
 
 ++++
 </div>
@@ -174,7 +193,7 @@ xref:kafka::index.adoc[Read more]
 
 An easy to use, powerful, and reliable system to process and distribute data.
 
-xref:nifi::index.adoc[Read more]
+xref:nifi:index.adoc[Read more]
 
 ++++
 </div>
@@ -188,9 +207,10 @@ xref:nifi::index.adoc[Read more]
 <h3 id="spark"><a class="anchor" href="#spark"></a>Apache Spark</h3>
 ++++
 
-Apache Spark is a multi-language engine for executing data engineering, data science, and machine learning on single-node machines or clusters.
+Apache Spark is a multi-language engine for executing data engineering, data science, and machine learning on
+single-node machines or clusters.
 
-xref:spark-k8s::index.adoc[Read more]
+xref:spark-k8s:index.adoc[Read more]
 
 ++++
 </div>
@@ -206,7 +226,7 @@ xref:spark-k8s::index.adoc[Read more]
 
 Apache Superset is a modern data exploration and visualization platform.
 
-xref:superset::index.adoc[Read more]
+xref:superset:index.adoc[Read more]
 
 ++++
 </div>
@@ -222,7 +242,7 @@ xref:superset::index.adoc[Read more]
 
 Fast distributed SQL query engine for big data analytics that helps you explore your data universe.
 
-xref:trino::index.adoc[Read more]
+xref:trino:index.adoc[Read more]
 
 ++++
 </div>
@@ -236,9 +256,10 @@ xref:trino::index.adoc[Read more]
 <h3 id="zookeeper"><a class="anchor" href="#zookeeper"></a>Apache ZooKeeper</h3>
 ++++
 
-ZooKeeper is a centralized service for maintaining configuration information, naming, providing distributed synchronization, and providing group services.
+ZooKeeper is a centralized service for maintaining configuration information, naming, providing distributed
+synchronization, and providing group services.
 
-xref:zookeeper::index.adoc[Read more]
+xref:zookeeper:index.adoc[Read more]
 
 ++++
 </div>

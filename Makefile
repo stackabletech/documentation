@@ -10,9 +10,9 @@ build-ui:
 	node_modules/.bin/gulp --cwd ui bundle
 
 clean:
-	rm -r build
+	rm -rf build
 	# 'cache' is the configured cache dir in the playbook
-	rm -r cache
+	rm -rf cache
 
 # The netlify repo is checked out without any blobs. This script
 # iterates through the release branches and checks them out one-by-one
