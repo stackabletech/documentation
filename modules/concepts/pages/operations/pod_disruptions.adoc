@@ -15,7 +15,7 @@ The defaults depend on the individual product and can be found below the "Operat
 They are based on our knowledge of each product's fault tolerance.
 In some cases they may be a little pessimistic, but they can be adjusted as documented in the following sections.
 
-In general we split product roles into the following two categories, which serve as guidelines for the default values we apply:
+In general, we split product roles into the following two categories, which serve as guidelines for the default values we apply:
 
 === Multiple replicas to increase availability
 
