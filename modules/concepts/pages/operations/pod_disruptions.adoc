@@ -29,7 +29,7 @@ is not what you are trying to achieve when you increase the replicas to increase
 For these roles (e.g. HDFS datanodes, HBase regionservers or Trino workers) we allow more than a single Pod to be unavailable, as otherwise rolling re-deployments could take very long.
 
 IMPORTANT: The operators calculate the number of Pods for a give role by adding the number of replicas of every rolegroup that is part of that role.
-In case their are no replicas defined on a rolegroup, one Pod will be assumed for this rolegroup, as the created Kubernetes objects
+In case there are no replicas defined on a rolegroup, one Pod will be assumed for this rolegroup, as the created Kubernetes objects
 (StatefulSets or Deployments) will default to a single replica as well. However, in case there are
 https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/[HorizontalPodAutoscaler] in place, the number of replicas of the rolegroup
 can change dynamically. In this case the operators might falsely assume that rolegroups have less Pods than they actually have. This is a pessimistic approach,
