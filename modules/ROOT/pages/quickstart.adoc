@@ -1,6 +1,6 @@
 = Quickstart
 
-:latest-release: https://github.com/stackabletech/stackable-cockpit/releases/tag/stackablectl-1.0.0-rc1
+:latest-release: https://github.com/stackabletech/stackable-cockpit/releases/tag/stackablectl-1.0.0-rc2
 :cockpit-releases: https://github.com/stackabletech/stackable-cockpit/releases
 
 This is the super-short getting started guide that should enable you to get something up and running in less than three
@@ -17,9 +17,9 @@ rename the file to `stackablectl`. You can also use the following command:
 
 [source,console]
 ----
-wget -O stackablectl https://github.com/stackabletech/stackable-cockpit/releases/download/stackablectl-1.0.0-rc1/stackablectl-x86_64-unknown-linux-gnu
+wget -O stackablectl https://github.com/stackabletech/stackable-cockpit/releases/download/stackablectl-1.0.0-rc2/stackablectl-x86_64-unknown-linux-gnu
 # or
-curl -L -o stackablectl https://github.com/stackabletech/stackable-cockpit/releases/download/stackablectl-1.0.0-rc1/stackablectl-x86_64-unknown-linux-gnu
+curl -L -o stackablectl https://github.com/stackabletech/stackable-cockpit/releases/download/stackablectl-1.0.0-rc2/stackablectl-x86_64-unknown-linux-gnu
 ----
 
 Mark the binary as executable:
