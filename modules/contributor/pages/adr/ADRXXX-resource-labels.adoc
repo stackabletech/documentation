@@ -284,9 +284,11 @@ for demo in demos_with_label("demo-*") {
 
 == Results
 
-* Scope: TBD
-* Labeling all Resources with a Vendor Label: TBD
-* Labeling Resources deployed within a Demo or Stack: TBD
-* Namespacing Stacks and Demos: TBD
-* Adding Label to indicate which Management Tool was used: TBD
-* Enabling Custom Labels provided by Users: TBD
+* **Scope:** Do not use scopes for now. Add it in the future if needed.
+* **Labeling all Resources with a Vendor Label:** Yes, use `stackable.tech/vendor=Stackable`
+* **Labeling Resources deployed within a Demo or Stack:** Yes, use `stackable-<demo|stack>-<demo-name|stack-name>(-suffix)`
+  with `suffix` being optional and the implementation not yet decided on.
+* **Namespacing Stacks and Demos:** Yes, use `stackable-<demo|stack>-<demo-name|stack-name>(-suffix)`
+* **Adding Label to indicate which Management Tool was used:** Yes, use
+  `stackable.tech/managed-by=stackablectl|stackable-cockpit`
+* **Enabling Custom Labels provided by Users:** No support for now. Add it in the future if this feature is requested.
