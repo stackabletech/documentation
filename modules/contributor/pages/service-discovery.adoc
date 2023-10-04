@@ -1,7 +1,7 @@
+= Service discovery implementation guidelines
+:page-aliases: service_discovery.adoc
 :source-highlighter: highlight.js
 :highlightjs-languages: rust
-
-= Service discovery implementation guidelines
 
 For a conceptual overview of service discovery, consult the xref:concepts:service_discovery.adoc[service discovery concept page].
 
