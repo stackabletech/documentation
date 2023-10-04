@@ -1,4 +1,5 @@
 = Testing your Code on Kubernetes
+:page-aliases: testing_on_kubernetes.adoc
 
 == Description
 It can sometimes be a bit cumbersome to actually test your code on Kubernetes proper, as there are many moving parts involved.

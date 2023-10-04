@@ -1,7 +1,7 @@
+= OPA connection implementation guidelines
+:page-aliases: opa_configuration.adoc
 :source-highlighter: highlight.js
 :highlightjs-languages: rust
-
-= OPA connection implementation guidelines
 
 == Introduction
 
