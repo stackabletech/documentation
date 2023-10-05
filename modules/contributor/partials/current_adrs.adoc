@@ -27,4 +27,4 @@
 **** xref:adr/ADR028-automatic-stackable-version.adoc[]
 **** xref:adr/ADR029-database-connection.adoc[]
 **** xref:adr/ADR030-allowed-pod-disruptions.adoc[]
-**** xref:adr/ADRXXX-resource-labels.adoc[]
+**** xref:adr/ADR031-resource-labels.adoc[]
