@@ -15,26 +15,19 @@ The defaults depend on the individual product and can be found below the "Operat
 They are based on our knowledge of each product's fault tolerance.
 In some cases they may be a little pessimistic, but they can be adjusted as documented in the following sections.
 
-In general, we split product roles into the following two categories, which serve as guidelines for the default values we apply:
+In general, product roles are split into the following two categories, which serve as guidelines for the default values we apply:
 
 === Multiple replicas to increase availability
 
-For these roles (e.g. Zookeeper servers, HDFS journal + namenodes or HBase masters) we only allow a single Pod to be unavailable. One example would be 7 Zookeeper Nodes, you need 4 to form a quorum. If we would allow 2 to be unavailable,
-there is no single point of failure (as we have at least 5 nodes available), but also we only have a single spare node left. The reason why you did choose 7 instead of 5
-Zookeeper replicas might be, that you always want at least 2 spares. So by increasing the number of allowed disruptions when you increase the number of replicas probably
-is not what you are trying to achieve when you increase the replicas to increase availability.
+For these roles (e.g. ZooKeeper servers, HDFS journal + namenodes or HBase masters), only a single Pod is allowed to be unavailable. For example, imagine a cluster with 7 ZooKeeper servers, where 4 servers are required to form a quorum and healthy ensemble. By allowing 2 servers to be unavailable, there is no single point of failure (as there are at least 5 servers available). But there is only a single spare server left. The reason to choose 7 instead of e.g. 5 ZooKeeper servers might be, that there are always at least 2 spare servers. Increasing the number of allowed disruptions and increasing the number of replicas is not improving the general availability.
 
 === Multiple replicas to increase performance
 
-For these roles (e.g. HDFS datanodes, HBase regionservers or Trino workers) we allow more than a single Pod to be unavailable, as otherwise rolling re-deployments could take very long.
+For these roles (e.g. HDFS datanodes, HBase regionservers or Trino workers), more than a single Pod is allowed to be unavailable. Otherwise, rolling re-deployments may take very long.
 
-IMPORTANT: The operators calculate the number of Pods for a give role by adding the number of replicas of every rolegroup that is part of that role.
-In case there are no replicas defined on a rolegroup, one Pod will be assumed for this rolegroup, as the created Kubernetes objects
-(StatefulSets or Deployments) will default to a single replica as well. However, in case there are
-https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/[HorizontalPodAutoscaler] in place, the number of replicas of the rolegroup
-can change dynamically. In this case the operators might falsely assume that rolegroups have fewer Pods than they actually have. This is a pessimistic approach,
-as the number of allowed disruption normally stays the same or even increases when the number of Pods increases. So this should be save, but in some cases
-more Pods *could* have been allowed to be unavailable, so rolling re-deployments can take a bit longer than needed.
+IMPORTANT: The operators calculate the number of Pods for a given role by adding the number of replicas of every rolegroup that is part of that role.
+
+In case there are no replicas defined on a rolegroup, one Pod will be assumed for this rolegroup, as the created Kubernetes objects (StatefulSets or Deployments) will default to a single replica as well. However, in case there are https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/[HorizontalPodAutoscaler] in place, the number of replicas of a rolegroup can change dynamically. In this case the operators might falsely assume that rolegroups have fewer Pods than they actually have. This is a pessimistic approach, as the number of allowed disruptions normally stays the same or even increases when the number of Pods increases. This should be safe, but in some cases more Pods *could* have been allowed to be unavailable which may increase the duration of rolling re-deployments.
 
 == Influencing and disabling PDBs
 

@@ -15,7 +15,7 @@ Make sure to go through the following checklist to achieve the maximum level of 
    For details have a look at xref:operations/pod_disruptions.adoc[].
 3. Reduce impact of pod disruptions:
    Many HA capable products offer a way to gracefully shut down the service running within the Pod.
-   The flow is as follows: Kubernetes wants to shut down the Pod and calls a hook into the Pod, which in turn interacts with the product, telling it to gracefully shut down.
+   The flow is as follows: Kubernetes wants to shut down the Pod and calls a hook into the Pod, which in turn interacts with the product, signaling it to gracefully shut down.
    The final deletion of the Pod is then blocked until the product has successfully migrated running workloads away from the Pod that is to be shut down.
    Details covering the graceful shutdown mechanism are described in the actual operator documentation.
 +
@@ -42,7 +42,7 @@ You can achieve this using the following methods:
    https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale[HorizontalPodAutoscaler] to autoscale the number of Pods running for a given rolegroup dynamically based upon resource usage.
    To achieve this you need to omit the number of replicas on the rolegroup to be scaled, which in turn results in the created StatefulSet not having any replicas set as well.
    Afterwards you can deploy a HorizontalPodAutoscaler as usual.
-   Please note that not all product-operators have implemented graceful shutdown, so product might be disturbed during scale down.
+   Please note that not all product-operators have implemented graceful shutdown, so the product might be disturbed during scale down.
    Later platform versions will support autoscaling natively with sensible defaults and will deploy HorizontalPodAutoscaler objects for you.
 3. *Co-location*: You can not only use xref:operations/pod_placement.adoc[] to achieve more resilience, but also to co-locate products that communicate frequently with each other.
    One example is placing HBase regionservers on the same Kubernetes node as the HDFS datanodes.
