@@ -105,4 +105,4 @@ spec:
 This PDB allows only one Pod out of all the Namenodes and Journalnodes to be down at one time.
 
 == Details
-Have a look at <<< TODO: link ADR on Pod Disruptions once merged >>> for the implementation details.
+Have a look at the xref:contributor:adr/ADR030-allowed-pod-disruptions.adoc[ADR on Allowed Pod disruptions] for the implementation details.

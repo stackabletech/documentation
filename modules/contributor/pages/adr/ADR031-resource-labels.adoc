@@ -1,0 +1,294 @@
+= ADRXXX: Resource Labels and Namespacing
+Sascha Lautenschläger <sascha.lautenschlaeger@stackable.tech>
+v0.1, 2023-08-25
+:status: accepted
+
+* Status: {status}
+* Contributors:
+** Malte Sander
+** Sebastian Bernauer
+** Sascha Lautenschläger
+** Razvan Mihai
+* Date: 2023-08-25
+
+== Context and Problem Statement
+
+This ADR tries to solve a common issue within the SDP. When `stackablectl` (and in the future our Cockpit) deploys
+resources into a Kubernetes cluster, we are currently unable to properly identify them afterwards. Adding a common set
+of labels to the resources we deploy will solve this issue. Additionally we will use namespaces to track resources
+deployed together. The following use-cases are then possible:
+
+* Use-case 1: Uninstalling a demo and stack
+* Use-case 2: Remove/purge all resources deployed by Stackable at once
+* Use-case 3: Stacklet dependency tree (Only needed when decide against a discovery operator, see ...)
+* Use-case 4: Offer users to provide their own custom labels
+
+== Decision Drivers
+
+We want to introduce these common labels, as there is currently no reliable and correct way to determine which resources
+where deployed by one of our management tools. Deciding on a common and structured set of labels will help us to more
+easily manage resources deployed by us. This includes reading, listing, changing and deleting those resources. The
+addition of labels will resolve several long-standing issues in various repositories.
+
+== Considered Options
+
+Kubernetes reserves all labels and annotations in the `kubernetes.io` and `k8s.io` namespaces. See
+https://kubernetes.io/docs/reference/labels-annotations-taints/[here] and
+https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#syntax-and-character-set[here].
+
+=== Preamble
+
+One general decision we have to make is if we ant to introduce scopes for our label keys. In this context, scope refers
+to one (or more) domain name labels, otherwise known as subdomains. Scopes would allow us to introduce more granular
+(and also grouped) labels. On the other side, we need to consider if we need the added granularity based on the number
+and kind of labels we want to add. In general there are two options:
+
+- `<scope>.stackable.tech/<key>=<value>`, with scope being **one** subdomain
+- `stackable.tech/<key>=<value>`, no scope
+
+=== Labeling all Resources with a Vendor Label
+
+* `app.kubernetes.io/vendor=Stackable`: This is no official well-known label and also violates the reserved namespaces
+  above
+* `stackable.tech/vendor=Stackable`: Custom label key prefix, duplicate data
+* `meta.stackable.tech/vendor=Stackable`: Alternative to above, scoped, still duplicated data
+
+It's hard (or impossible) to use a label without any duplicated data. So `stackable.tech/vendor=Stackable` seems like
+a straight-forward and concise option.
+
+'''
+
+A deployed ConfigMap could look like this:
+
+[source,yaml]
+----
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: superset-node-default
+labels:
+  app.kubernetes.io/name: superset # reduced set of common labels
+  stackable.tech/vendor: Stackable # new vendor label
+data:
+----
+
+[#ns-labels]
+=== Labeling Resources deployed within a Demo or Stack
+
+* `stackable.tech/stack=<stack-name>`: Attached to all resources deployed by `stackablectl stack install`
+* `stackable.tech/demo=<demo-name>`: Attached to all resources deployed by `stackablectl demo install`
+
+Alternatives to above are:
+
+* `resources.stackable.tech/<stack|demo>=<stack-name|demo-name>`
+* `meta.stackable.tech/<stack|demo>=<stack-name|demo-name>`
+* `res.stackable.tech/<stack|demo>=<stack-name|demo-name>`
+
+Both `<stack-name>` and `<demo-name>` will be replaced by the selected stack or demo name. We need to make sure that
+this value doesn't exceed the maximum length of 63 characters. If the name is too long, we have three options:
+
+* Hard error out, the installation is canceled (Not recommended because stack and demo names are chosen by us)
+* We automatically truncate the name to the maximum length: `a-way-too-long-name` becomes `a-way-too-lo<EOL>`
+* We automatically truncate the name and add a random suffix: `a-way-too-long-name` becomes `a-way-a1b2c3<EOL>`
+
+'''
+
+A deployed ConfigMap (by running `stackablectl demo install`) could look like this. Notice that resources part of a demo
+**and** a stack include labels for both of these scopes.
+
+[source,yaml]
+----
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: superset-node-default
+labels:
+  app.kubernetes.io/name: superset # reduced set of common labels
+  stackable.tech/vendor: Stackable
+  stackable.tech/stack: nifi-kafka-druid-superset-s3 # new stack label
+  stackable.tech/demo: nifi-kafka-druid-water-level-data # new demo label
+data:
+----
+
+=== Namespacing Stacks and Demos
+
+Considered default values for above labels are:
+
+* `stackable-<demo|stack>-<demo-name|stack-name>(-suffix)`: Clearly indicates this namespace belongs to the SDP, we
+  might run into length limits
+* `<demo|stack>-<demo-name|stack-name>(-suffix)`: Less likely we will run into length limits, but we loose the clear
+  indication this namespace belongs to the SDP.
+
+We need to perform length and character validation for these namespace names. There are two possible paths:
+
+* If the user *doesn't* provide a custom namespace, we need to make sure that the value doesn't exceed it's maximum
+  length when the stack or demo names are inserted. Truncate the name if needed.
+* If the user *does* provide a custom namespace, we need to make sure that the custom namespace length doesn't exceed
+  it's maximum length. Don't automatically truncate, instead return an error explaining the user needs to shorten the
+  namespace name.
+
+The maximum length for both cases is 63 characters.
+
+=== Adding Label to indicate which Management Tool was used
+
+The following options are available:
+
+* `app.kubernetes.io/managed-by=stackablectl|stackable-cockpit`: Well-known label, however not recommended because Helm
+  already uses this label to track which resources are managed by Helm. As we use Helm in the background to install some
+  of our manifests, we would potentially break Helms (uninstall) behavior.
+* `stackable.tech/managed-by=stackablectl|stackable-cockpit`: Doesn't collide with Helm
+* `stackable.tech/deployed-by=stackablectl|stackable-cockpit`: Alternative to above
+
+Alternatives are:
+
+* `management.stackable.tech/managed-by=stackablectl|stackable-cockpit`
+* `tools.stackable.tech/managed-by=stackablectl|stackable-cockpit`
+* `mgmt.stackable.tech/managed-by=stackablectl|stackable-cockpit`
+
+'''
+
+A deployed ConfigMap could look like this.:
+
+[source,yaml]
+----
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: superset-node-default
+labels:
+  app.kubernetes.io/name: superset # reduced set of common labels
+  stackable.tech/vendor: Stackable
+  stackable.tech/managed-by: stackablectl # new management tool label
+data:
+----
+
+=== Enabling Custom Labels provided by Users
+
+When providing support for user-controlled custom labels, we need to think about the degree of freedom we want to
+support. Possible levels where custom labels could be attached are: cluster, role, and role group level. We also need
+to make sure the custom user-provided labels don't collide with our labels. We can either:
+
+* print out a warning and don't apply the invalid label(s)
+* hard-error and bail
+
+==== Option 1 - Cluster Level Labels
+
+[source,yaml]
+----
+---
+apiVersion: example.stackable.tech/v1alpha1
+kind: ExampleCluster
+metadata:
+  name: example
+spec:
+  clusterConfig:
+    labels:
+      foo: bar
+      baz: foo
+----
+
+==== Option 2 - Role (and Role Group) Level Labels
+
+[source,yaml]
+----
+---
+apiVersion: example.stackable.tech/v1alpha1
+kind: ExampleCluster
+metadata:
+  name: example
+  labels:
+    foo: bar
+    baz: foo
+spec:
+----
+
+==== Option 3 - Only Role Level Labels
+
+This option is highly dependant on the outcome of the PodDisruptionBudget ADR. This options requires the introduction
+of `roleGroup` discussed in the mentioned ADR.
+
+[source,yaml]
+----
+---
+apiVersion: example.stackable.tech/v1alpha1
+kind: ExampleCluster
+metadata:
+  name: example
+spec:
+  roleConfig:
+    labels:
+      foo: bar
+      baz: foo
+----
+
+==== Option 4 - Leave as is
+
+Continue to use `podOverrides`. Don't introduce dedicated support for labels using above mentioned options 1-3.
+
+== Thoughts on the Implementation
+
+=== General Notes
+
+* Each stack/demo will be deployed into its own namespace. This enables `stackablectl demo installed`
+* Each namespace has a label attached, see xref:#ns-labels[above].
+
+=== `stackablectl demo install <name>`
+
+[source]
+----
+if -n set {
+  if ns exists -> Error or propose different ns
+} else {
+  if ns exists {
+    echo "Already installed. Install again?"
+    ns += suffix
+  }
+}
+
+if demo/stack not supports ns {
+  return Error
+}
+
+if ns not exists {
+  create_ns_with_label()
+}
+
+template_plain_yaml_cluster_scope()
+
+install_demo()
+----
+
+=== `stackablectl demo uninstall <name>`
+
+[source]
+----
+for chart in helmCharts.reverse() {
+  chart.uninstall()
+}
+
+// AuthClass, SecretClass, ClusterRole, ClusterRoleBinding, etc...
+delete_resources_with_label()
+
+// Also deletes PVCs, operators are not uninstalled
+delete_ns_with_label()
+----
+
+=== `stackablectl demo installed`
+
+[source]
+----
+for demo in demos_with_label("demo-*") {
+  echo demo
+}
+----
+
+== Results
+
+* **Scope:** Do not use scopes for now. Add it in the future if needed.
+* **Labeling all Resources with a Vendor Label:** Yes, use `stackable.tech/vendor=Stackable`
+* **Labeling Resources deployed within a Demo or Stack:** Yes, use `stackable-<demo|stack>-<demo-name|stack-name>(-suffix)`
+  with `suffix` being optional and the implementation not yet decided on.
+* **Namespacing Stacks and Demos:** Yes, use `stackable-<demo|stack>-<demo-name|stack-name>(-suffix)`
+* **Adding Label to indicate which Management Tool was used:** Yes, use
+  `stackable.tech/managed-by=stackablectl|stackable-cockpit`
+* **Enabling Custom Labels provided by Users:** No support for now. Add it in the future if this feature is requested.
