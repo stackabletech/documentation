@@ -19,7 +19,7 @@ Make sure to go through the following checklist to achieve the maximum level of 
    The final deletion of the Pod is then blocked until the product has successfully migrated running workloads away from the Pod that is to be shut down.
    Details covering the graceful shutdown mechanism are described in the actual operator documentation.
 +
-WARNING: Graceful shutdown is not implemented for all products yet. Please check the documentation specific to the product operator to see if it is supported (such as e.g. xref:trino:usage_guide/operations/graceful-shutdown.adoc[the documentation for Trino].
+WARNING: Graceful shutdown is not implemented for all products yet. Please check the documentation specific to the product operator to see if it is supported (such as e.g. xref:trino:usage-guide/operations/graceful-shutdown.adoc[the documentation for Trino].
 
 4. Spread workload across multiple Kubernetes nodes, racks, datacenter rooms or datacenters to guarantee availability
    in the case of e.g. power outages or fire in parts of the datacenter. All of this is supported by
