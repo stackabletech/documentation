@@ -7,18 +7,19 @@ It provides you with the necessary details to operate it in a production environ
 
 Make sure to go through the following checklist to achieve the maximum level of availability for your services.
 
-1. Make setup highly available (HA): In case the product supports running in an HA fashion, our operators will automatically
-   configure it for you. You only need to make sure that you deploy a sufficient number of replicas. Please note that
-   some products don't support HA.
-2. Reduce the number of simultaneous pod disruptions (unavailable replicas). The Stackable operators write defaults
-   based upon knowledge about the fault tolerance of the product, which should cover most of the use-cases. For details
-   have a look at xref:operations/pod_disruptions.adoc[].
-3. Reduce impact of pod disruption: Many HA capable products offer a way to gracefully shut down the service running
-   within the Pod. The flow is as follows: Kubernetes wants to shut down the Pod and calls a hook into the Pod, which in turn
-   interacts with the product, telling it to gracefully shut down. The final deletion of the Pod is then blocked until
-   the product has successfully migrated running workloads away from the Pod that is to be shut down. Details covering the graceful shutdown mechanism are described in the actual operator documentation.
+1. Make setup highly available (HA): In case the product supports running in an HA fashion, our operators will automatically configure it for you.
+   You only need to make sure that you deploy a sufficient number of replicas.
+   Please note that some products don't support HA.
+2. Reduce the number of simultaneous pod disruptions (unavailable replicas).
+   The Stackable operators write defaults based upon knowledge about the fault tolerance of the product, which should cover most of the use-cases.
+   For details have a look at xref:operations/pod_disruptions.adoc[].
+3. Reduce impact of pod disruptions:
+   Many HA capable products offer a way to gracefully shut down the service running within the Pod.
+   The flow is as follows: Kubernetes wants to shut down the Pod and calls a hook into the Pod, which in turn interacts with the product, signaling it to gracefully shut down.
+   The final deletion of the Pod is then blocked until the product has successfully migrated running workloads away from the Pod that is to be shut down.
+   Details covering the graceful shutdown mechanism are described in the actual operator documentation.
 +
-WARNING: Graceful shutdown is not implemented for all products yet. Please check the documentation specific to the product operator to see if it is supported (such as e.g. xref:trino:usage_guide/operations/graceful-shutdown.adoc[the documentation for Trino].
+WARNING: Graceful shutdown is not implemented for all products yet. Please check the documentation specific to the product operator to see if it is supported (such as e.g. xref:trino:usage-guide/operations/graceful-shutdown.adoc[the documentation for Trino].
 
 4. Spread workload across multiple Kubernetes nodes, racks, datacenter rooms or datacenters to guarantee availability
    in the case of e.g. power outages or fire in parts of the datacenter. All of this is supported by
@@ -27,23 +28,26 @@ WARNING: Graceful shutdown is not implemented for all products yet. Please check
 
 == Maintenance actions
 
-Sometimes you want to quickly shut down a product or update the Stackable operators without all the managed products
-restarting at the same time. You can achieve this using the following methods:
+Sometimes you want to quickly shut down a product or update the Stackable operators without all the managed products restarting at the same time.
+You can achieve this using the following methods:
 
 1. Quickly stop and start a whole product using `stopped` as described in xref:operations/cluster_operations.adoc[].
-2. Prevent any changes to your deployed product using `reconcilePaused` as described in xref:operations/cluster_operations.adoc[].
+2. Prevent any changes to your deployed product using `reconciliationPaused` as described in xref:operations/cluster_operations.adoc[].
 
 == Performance
 
-1. You can configure the available resource every product has using xref:concepts:resources.adoc[]. The defaults are
-   very restrained, as you should be able to spin up multiple products running on your Laptop.
-2. You can not only use xref:operations/pod_placement.adoc[] to achieve more resilience, but also to co-locate products
-   that communicate frequently with each other. One example is placing HBase regionservers on the same Kubernetes node
-   as the HDFS datanodes. Our operators already take this into account and co-locate connected services. However, if
-   you are not satisfied with the automatically created affinities you can use ref:operations/pod_placement.adoc[] to
-   configure your own.
-3. If you want to have certain services running on dedicated nodes you can also use xref:operations/pod_placement.adoc[]
-   to force the Pods to be scheduled on certain nodes. This is especially helpful if you e.g. have Kubernetes nodes with
-   16 cores and 64 GB, as you could allocate nearly 100% of these node resources to your Spark executors or Trino workers.
-   In this case it is important that you https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/[taint]
-   your Kubernetes nodes and use xref:overrides.adoc#pod-overrides[podOverrides] to add a `toleration` for the taint.
+1. *Compute resources*: You can configure the available resource every product has using xref:concepts:resources.adoc[].
+   The defaults are very restrained, as you should be able to spin up multiple products running on your Laptop.
+2. *Autoscaling*: Although not supported by the platform natively yet, you can use
+   https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale[HorizontalPodAutoscaler] to autoscale the number of Pods running for a given rolegroup dynamically based upon resource usage.
+   To achieve this you need to omit the number of replicas on the rolegroup to be scaled, which in turn results in the created StatefulSet not having any replicas set as well.
+   Afterwards you can deploy a HorizontalPodAutoscaler as usual.
+   Please note that not all product-operators have implemented graceful shutdown, so the product might be disturbed during scale down.
+   Later platform versions will support autoscaling natively with sensible defaults and will deploy HorizontalPodAutoscaler objects for you.
+3. *Co-location*: You can not only use xref:operations/pod_placement.adoc[] to achieve more resilience, but also to co-locate products that communicate frequently with each other.
+   One example is placing HBase regionservers on the same Kubernetes node as the HDFS datanodes.
+   Our operators take this into account and co-locate connected services by default.
+   If you are not satisfied with the automatically created affinities you can use xref:operations/pod_placement.adoc[] to configure your own.
+4. *Dedicated nodes*: If you want to have certain services running on dedicated nodes you can also use xref:operations/pod_placement.adoc[] to force the Pods to be scheduled on certain nodes.
+   This is especially helpful if you e.g. have Kubernetes nodes with 16 cores and 64 GB, as you could allocate nearly 100% of these node resources to your Spark executors or Trino workers.
+   In this case it is important that you https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/[taint] your Kubernetes nodes and use xref:overrides.adoc#pod-overrides[podOverrides] to add a `toleration` for the taint.
