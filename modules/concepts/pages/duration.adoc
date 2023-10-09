@@ -6,10 +6,11 @@
 :go: https://go.dev/
 
 All Stackable operators use a human-readable duration format. It very closely resembles the format used by the {go}[Go] programming language - which Kubernetes uses internally.
-Every duration field of a {k8s-cr}[CustomResource], for example the xref:trino:usage-guide/operations/graceful-shutdown.adoc[`spec.workers.roleConfig.gracefulShutdownTimeout`] field, supports this format.
+Every duration field of a {k8s-cr}[CustomResource], for example, the xref:trino:usage-guide/operations/graceful-shutdown.adoc[`spec.workers.roleConfig.gracefulShutdownTimeout`] field, supports this format.
 There is no official format specification, but the source code of {go-std-time}[`time.ParseDuration`] in the Go standard library can be used as an implementation reference.
+
 The format looks like this: `15d18h34m42s`.
-xref:trino:index.adoc[Trino], for example, uses the format like this:
+xref:trino:index.adoc[Trino], for example, uses it in the following way:
 
 [source,yaml]
 ----
