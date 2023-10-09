@@ -1,0 +1,24 @@
+= Duration format
+
+:rust-duration-max: https://doc.rust-lang.org/std/time/struct.Duration.html#associatedconstant.MAX
+:go-std-time: https://cs.opensource.google/go/go/+/refs/tags/go1.21.2:src/time/format.go;l=1589
+:k8s-cr: https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/
+:go: https://go.dev/
+
+All Stackable operators use a human-readable duration format. It very closely resembles the format used by the {go}[Go] programming language.
+Every duration field of a {k8s-cr}[CustomResource], for example the xref:trino:usage-guide/operations/graceful-shutdown.adoc[`spec.clusterConfig.gracefulShutdownTimeout`] field, supports this format.
+There is no official format specification, but the source code of {go-std-time}[`time.ParseDuration`] in the Go standard library can be used as an implementation reference.
+The format looks like this:
+
+[source,yaml]
+----
+# ...
+spec:
+  clusterConfig:
+    gracefulShutdownTimeout: 15d18h34m42s
+----
+
+Valid time units are: `d`, `h`, `m`, `s`, and `ms`.
+Separating the duration fragments, which is a tuple of time value and time unit (`15d`), by spaces is **not** supported and will result in an error.
+The maximum amount of time which can safely be represented without precision loss or integer overflow is 584,942,417,355 years.
+See {rust-duration-max}[here] for more information.
