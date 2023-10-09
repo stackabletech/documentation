@@ -12,6 +12,7 @@
 ** xref:tls_server_verification.adoc[]
 ** xref:pod_placement.adoc[]
 ** xref:overrides.adoc[]
+** xref:duration.adoc[]
 ** xref:operations/index.adoc[]
 *** xref:operations/cluster_operations.adoc[]
 *** xref:operations/pod_placement.adoc[]
