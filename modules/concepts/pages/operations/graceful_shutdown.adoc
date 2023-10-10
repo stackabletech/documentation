@@ -28,8 +28,8 @@ The individual default timeouts are documented in the specific operators at the 
 Pods need to have the ability to take as long as they need to gracefully shut down without getting killed.
 
 Imagine the situation that you set the graceful shutdown period to 24 hours.
-In case of e.g. an on-prem Kubernetes cluster the Kubernetes infrastructure team wants to drain the Kubernetes node, so that they can do regular maintenance, such as rebooting the node.
-They will have some upper limit on how long they will wait for Pods on the Node to terminate, until they will reboot the Kubernetes node regardless of still running Pods.
+In the case of e.g. an on-premise Kubernetes cluster the Kubernetes infrastructure team may want to drain the Kubernetes node so that they can do regular maintenance, such as rebooting the node.
+They will have some upper limit on how long they will wait for Pods on the Node to terminate before they reboot the Kubernetes node, regardless of any Pods that are still running.
 
 When setting up a production cluster, you need to check with your Kubernetes administrator (or cloud provider) what time period your Pods have to terminate gracefully.
 It is not sufficient to have a look at the `spec.terminationGracePeriodSeconds` and come to the conclusion that the Pods have e.g. 24 hours to gracefully shut down, as e.g. an administrator can reboot the Kubernetes node before the time period is reached.
