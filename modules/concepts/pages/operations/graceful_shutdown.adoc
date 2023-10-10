@@ -1,11 +1,11 @@
 = Graceful shutdown
 
-The article https://cloud.google.com/blog/products/containers-kubernetes/kubernetes-best-practices-terminating-with-grace[Kubernetes best practices: terminating with grace] describes very well, how graceful shutdown works in Kubernetes.
+The article https://cloud.google.com/blog/products/containers-kubernetes/kubernetes-best-practices-terminating-with-grace[Kubernetes best practices: terminating with grace] describes how a graceful shutdown works in Kubernetes.
 
-Our operators add the needed shutdown-mechanism for all the products that support graceful shutdown.
+Our operators add the needed shutdown mechanism for their products that support graceful shutdown.
 
 They also configure a sensible amount of time Pods are granted to properly shut down without disrupting the availability of the product.
-If you are not satisfied with the default values, you can set the graceful shutdown timeout as follow:
+If you are not satisfied with the default values, you can set the graceful shutdown timeout as follows:
 
 [source,yaml]
 ----
