@@ -17,7 +17,7 @@ Make sure to go through the following checklist to achieve the maximum level of 
    Many HA capable products offer a way to gracefully shut down the service running within the Pod.
    The flow is as follows: Kubernetes wants to shut down the Pod and calls a hook into the Pod, which in turn interacts with the product, signaling it to gracefully shut down.
    The final deletion of the Pod is then blocked until the product has successfully migrated running workloads away from the Pod that is to be shut down.
-   Details covering the graceful shutdown mechanism are described in the actual operator documentation.
+   Details covering the graceful shutdown mechanism are described in xref:operations/graceful_shutdown.adoc[] as well as the actual operator documentation.
 +
 WARNING: Graceful shutdown is not implemented for all products yet. Please check the documentation specific to the product operator to see if it is supported (such as e.g. xref:trino:usage-guide/operations/graceful-shutdown.adoc[the documentation for Trino].
 
