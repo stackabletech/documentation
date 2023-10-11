@@ -1,0 +1,35 @@
+= Graceful shutdown
+
+The article https://cloud.google.com/blog/products/containers-kubernetes/kubernetes-best-practices-terminating-with-grace[Kubernetes best practices: terminating with grace] describes how a graceful shutdown works in Kubernetes.
+
+Our operators add the needed shutdown mechanism for their products that support graceful shutdown.
+
+They also configure a sensible amount of time Pods are granted to properly shut down without disrupting the availability of the product.
+If you are not satisfied with the default values, you can set the graceful shutdown timeout as follows:
+
+[source,yaml]
+----
+spec:
+  workers:
+    config:
+      gracefulShutdownTimeout: 1h # Set it for all worker roleGroups
+    roleGroups:
+      normal: # Will use 1h from the worker role config
+        replicas: 1
+      long: # Will use 6h from the roleGroup config below
+        replicas: 1
+        config:
+          gracefulShutdownTimeout: 6h # Set it only for this specific roleGroup
+----
+
+The individual default timeouts are documented in the specific operators at the `Operations -> Graceful shutdown` usage-guide.
+
+== Kubernetes cluster requirements
+Pods need to have the ability to take as long as they need to gracefully shut down without getting killed.
+
+Imagine the situation that you set the graceful shutdown period to 24 hours.
+In the case of e.g. an on-premise Kubernetes cluster the Kubernetes infrastructure team may want to drain the Kubernetes node so that they can do regular maintenance, such as rebooting the node.
+They will have some upper limit on how long they will wait for Pods on the Node to terminate before they reboot the Kubernetes node, regardless of any Pods that are still running.
+
+When setting up a production cluster, you need to check with your Kubernetes administrator (or cloud provider) what time period your Pods have to terminate gracefully.
+It is not sufficient to have a look at the `spec.terminationGracePeriodSeconds` and come to the conclusion that the Pods have e.g. 24 hours to gracefully shut down, as e.g. an administrator can reboot the Kubernetes node before the time period is reached.
