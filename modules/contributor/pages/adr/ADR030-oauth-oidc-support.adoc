@@ -13,13 +13,19 @@ Technical Story: https://github.com/stackabletech/issues/issues/431
 
 OIDC is a widespread authentication mechanism. Keycloak is also widespread as a self-hosted, internal identity provider. Gaia-X also uses OIDC internally to authenticate users.
 
-How can we support OIDC on the Stackable Data Platform? Probably with an AuthenticationClass, like with LDAP.
+How can we support OIDC on the Stackable Data Platform, to integrate with existing OIDC identity providers that clients may be running?
+
+For LDAP, we wrote an AuthenticationClass, it would make sense to develop one or multiple AuthenticationClasses for OIDC in general, or specific providers.
 
 Problem: Which settings to we want to have in an authenticationclass? Do we want a generic "OIDC" authenticationclass? Maybe we can habe a "Keycloak" class which would be easier for the user but not as generic.
 
 === Context: Product configs we need to support with the AuthenticationClass
 
 We built a demo that works with Superset, Trino and Druid. From there we know about the relevant config settings.
+
+The OIDC spec defines a discovery endpoint at which all further configuration can be read.
+
+Additionally, every client needs to be registered and gets its own client ID and secret.
 
 ==== Trino
 
@@ -48,6 +54,8 @@ druid.auth.pac4j.oidc.discoveryURI: '${env:KEYCLOAK_DISCOVERY_URL}'
 ==== Superset
 
 Does not support reading an OIDC discovery URL but needs: API base URL, auth URL, token URL. Also the Superset client wants the _email_, _profile_ and _oidc_ scope. We _could_ also implement fab-oidc support for Superset, so it has proper OIDC support. Needs to be maintained though.
+
+The auth and token URL are supplied at the `.well-known` endoint, but the base URL is not. Could maybe be guessed from the other endpoints?
 
 ```
 { 
@@ -91,10 +99,22 @@ In general it can be expected that this service would already be running at the 
 
 == Considered Options
 
-=== 1. Make an OIDC config
+Every software that wants to use an OIDC provider for logging in needs to be registered as a client with the identity provider. How is this managed? can we even do a generic config like that?
 
-Does that include the cookie passphrase?
-OIDC just uses the single .well-known URL, what do we do about Superset in that case? Do we try to calculate the relevant settings from the well known URL? can we do this generically, or only on a per-service basis?
+=== 1. Make a generic OIDC config
+
+The AuthenticationClass should contain the root/issuer URL. From there with the `<issuer-url>/.well-known/configuration-configuration`, relevant configuration can either be derived or additional information retrieved.
+
+For the client ID and client secret, additional information needs to be set in the ProductCluster resource (where?)
+
+Pro:
+
+* This is the way it is intended to work
+
+Con:
+
+* For i.e. Superset we first need to make an API call and maybe even guess some information
+
 
 === 2. make an OIDC and OAuth2 class
 
@@ -106,12 +126,4 @@ i.e. for Keycloak. We just ask the user to provide the address and version of th
 
 This is nice, because we need different settings for different products. For example, superset needs three different URLs. Trino needs to base URL auf the realm. Druid needs the discovery URL.
 
-The AuthenticationClass should reference a SecretClass "oauth-client-secret" and then in these secrets the client IDs and secrets for each client can be defined.
-
 This is a bit similar to how we treat SQL databases.
-
-=== 4. generic configs
-
-We ask the user for all the stuff we might need. They need to fill out a bunch of stuff.
-
-Not as nice, because more work for them. Less work for us, because we just have one generic OAuth/OIDC auth class.
