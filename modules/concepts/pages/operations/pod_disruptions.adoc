@@ -15,6 +15,28 @@ The defaults depend on the individual product and can be found below the "Operat
 They are based on our knowledge of each product's fault tolerance.
 In some cases they may be a little pessimistic, but they can be adjusted as documented in the following sections.
 
+In general, product roles are split into the following two categories, which serve as guidelines for the default values we apply:
+
+=== Multiple replicas to increase availability
+
+For these roles (e.g. ZooKeeper servers, HDFS journal + namenodes or HBase masters), only a single Pod is allowed to be unavailable.
+For example, imagine a cluster with 7 ZooKeeper servers, where 4 servers are required to form a quorum and healthy ensemble.
+By allowing 2 servers to be unavailable, there is no single point of failure (as there are at least 5 servers available).
+But there is only a single spare server left. The reason to choose 7 instead of e.g. 5 ZooKeeper servers might be, that there are always at least 2 spare servers.
+Increasing the number of allowed disruptions and increasing the number of replicas is not improving the general availability.
+
+=== Multiple replicas to increase performance
+
+For these roles (e.g. HDFS datanodes, HBase regionservers or Trino workers), more than a single Pod is allowed to be unavailable. Otherwise, rolling re-deployments may take very long.
+
+IMPORTANT: The operators calculate the number of Pods for a given role by adding the number of replicas of every rolegroup that is part of that role.
+
+In case there are no replicas defined on a rolegroup, one Pod will be assumed for this rolegroup, as the created Kubernetes objects (StatefulSets or Deployments) will default to a single replica as well.
+However, in case there are https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/[HorizontalPodAutoscaler] in place, the number of replicas of a rolegroup can change dynamically.
+In this case the operators might falsely assume that rolegroups have fewer Pods than they actually have.
+This is a pessimistic approach, as the number of allowed disruptions normally stays the same or even increases when the number of Pods increases.
+This should be safe, but in some cases more Pods *could* have been allowed to be unavailable which may increase the duration of rolling re-deployments.
+
 == Influencing and disabling PDBs
 
 You can configure
@@ -91,4 +113,4 @@ spec:
 This PDB allows only one Pod out of all the Namenodes and Journalnodes to be down at one time.
 
 == Details
-Have a look at <<< TODO: link ADR on Pod Disruptions once merged >>> for the implementation details.
+Have a look at the xref:contributor:adr/ADR030-allowed-pod-disruptions.adoc[ADR on Allowed Pod disruptions] for the implementation details.
