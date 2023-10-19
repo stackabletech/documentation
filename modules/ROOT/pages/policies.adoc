@@ -57,7 +57,7 @@ image:maintenance_phase.png[Maintenance Phase]
 == Upgrade policy
 
 Customers are expected to upgrade their SDP environment to the most current supported patch/micro (`23.4.z`) version.
-Skipping SDP releases while upgrading is not currently supported.
+Skipping SDP releases while upgrading is currently not supported.
 The only upgrade path we support is from one version to the next.
 
 == CRD Versioning lifecycle policy
