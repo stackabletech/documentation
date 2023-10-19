@@ -1,4 +1,5 @@
 = Getting Started
+:page-aliases: getting_started.adoc
 
 One of the best ways of getting started with a new platform is to try it out. Any big data platform has a lot of moving parts and getting some hands on keyboard time with it helps reinforce learning.
 
