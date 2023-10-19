@@ -1,10 +1,16 @@
 = Graceful shutdown
 
-The article https://cloud.google.com/blog/products/containers-kubernetes/kubernetes-best-practices-terminating-with-grace[Kubernetes best practices: terminating with grace] describes how a graceful shutdown works in Kubernetes.
+Graceful shutdown refers to the managed, controlled shutdown of service instances in the manner intended by the software authors.
+Typically, an instance will receive a signal indicating the intent for the server to shut down, and it will initiate a controlled shutdown.
+This could include closing open file handles, updating the instance state in the cluster and emitting a message that the server is closing down.
+This contrasts with an uncontrolled shutdown where a process is terminated immediately and is unable to perform any of its normal shutdown activities.
+
+In the event that a service instance is unable to shut down in a reasonable amount of time, a timeout is set after which the process will be forcibly terminated to prevent a stuck server from remaining in the shutting down state indefinitely.
+The article https://cloud.google.com/blog/products/containers-kubernetes/kubernetes-best-practices-terminating-with-grace[Kubernetes best practices: terminating with grace] describes how a graceful shutdown on Kubernetes works in detail.
 
 Our operators add the needed shutdown mechanism for their products that support graceful shutdown.
-
 They also configure a sensible amount of time Pods are granted to properly shut down without disrupting the availability of the product.
+
 If you are not satisfied with the default values, you can set the graceful shutdown timeout as follows:
 
 [source,yaml]
