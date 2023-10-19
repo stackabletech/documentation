@@ -45,7 +45,9 @@ If a sink is unavailable, it will buffer the log messages.
 It is also the single point where the sinks are configured, so the sinks are decoupled from the individual product configurations and only needs to be configured in this single location for the whole platform.
 
 [#configuration]
-== Identical configuration in each product
+== Configuration
+
+=== Identical configuration structure in each product
 
 Logging configuration usually requires configuration what to log, where to log it and in which format.
 Usually you want to persist logs but also view them on the fly in a console, and possibly both of these in different formats.
@@ -95,6 +97,11 @@ A typical use case is that the log level for the console is set to a more detail
 Also the log levels per module are container specific.
 
 Following the Stackable xref::roles-and-role-groups.adoc[roles and role groups] concept, this configuration fragment can be set either at role or role group level.
+
+=== Configuring the Aggregator
+
+Follow the https://vector.dev/docs/setup/installation/package-managers/helm/#aggregator[installation instructions] for the aggregator.
+Configure a https://vector.dev/docs/reference/configuration/sources/vector/[Vector source] at adress `0.0.0.0:6000` and configure sinks and additional settings according to your needs.
 
 === Configuring the aggregator location
 
