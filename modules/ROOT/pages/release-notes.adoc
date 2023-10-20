@@ -1,4 +1,5 @@
 = Release notes for the Stackable Data Platform
+:page-aliases: release_notes.adoc
 
 The Stackable platform consists of multiple operators that work together. Periodically a platform release is made,
 including all components of the platform at a specific version.
