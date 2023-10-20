@@ -26,7 +26,7 @@ NOTE: This policy concerns releases of our platform as a whole and how long and 
 We do releases of our Stackable Data Platform.
 These releases get a name based on the year and month they have been released in (e.g. `23.4`, `23.7`, also called https://calver.org/[CalVer]). This name does not follow Semantic Versioning (https://semver.org/[SemVer]). We may release patches for a release, which then follow the PATCH naming semantics of SemVer (e.g. `23.4.1`) or the _Micro_ name from CalVer. See below for our policy on patches for the SDP.
 
-We support an SDP release for a specific time after its release.
+We support an SDP release for a specific amount of time after its initial release.
 
 An SDP release contains our operators and other code developed at Stackable as well as the product docker images.
 
