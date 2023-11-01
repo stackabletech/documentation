@@ -28,45 +28,45 @@ Sometimes it is necessary to restart services deployed in Kubernetes. A service 
 
 Most operators create StatefulSet objects for the products they manage and Kubernetes offers a rollout mechanism to restart them. You can use `kubectl rollout restart statefulset` to restart a StatefulSet previously created by an operator.
 
-For example, an Airflow stack will have three ServiceSets created for it: `scheduler`, `webserver` and `worker`. So given the following stateful sets deployed for an Airflow stacklet:
+To illustrate how to use the command line to restart one or more Pods, we will assume you used the Stackable Airflow Operator to deploy an Airflow stacklet called `myairflow`.
+
+This stacklet will consist, among other things, of three ServiceSets created for each Airflow role: `scheduler`, `webserver` and `worker`. Let's list them:
 
 [source,shell]
 ----
 ❯ kubectl get sts 
 NAME                        READY   AGE
-airflow-scheduler-default   1/1     61m
-airflow-webserver-default   1/1     61m
-airflow-worker-default      2/2     61m
+myairflow-scheduler-default   1/1     61m
+myairflow-webserver-default   1/1     61m
+myairflow-worker-default      2/2     61m
 postgresql-airflow          1/1     64m
 redis-airflow-master        1/1     64m
 redis-airflow-replicas      1/1     64m
 ----
 
-To restart the Airflow scheduler, run:
+To restart the Airflow scheduler Pod, run:
 
 [source,shell]
 ----
-❯ kubectl rollout restart statefulset airflow-scheduler-default 
-statefulset.apps/airflow-scheduler-default restarted
+❯ kubectl rollout restart statefulset myairflow-scheduler-default 
+statefulset.apps/myairflow-scheduler-default restarted
 ----
 
-Sometimes you want to restart all Pods of stack and not just individual roles. This can be achieved in a similar manner by using labels instead of StatefulSet names. Continuing with the example above, to restart all Airflow Pods you would have to run:
+Sometimes you want to restart all Pods of stacklet and not just individual roles. This can be achieved in a similar manner by using labels instead of StatefulSet names. Continuing with the example above, to restart all Airflow Pods you would have to run:
 
 [source,shell]
 ----
-❯ kubectl rollout restart statefulset --selector app.kubernetes.io/instance=airflow
+❯ kubectl rollout restart statefulset --selector app.kubernetes.io/instance=myairflow
 ----
 
 To wait for all Pods to be running again you run:
 
 [source,shell]
 ----
-❯ kubectl rollout status statefulset --selector app.kubernetes.io/instance=airflow
+❯ kubectl rollout status statefulset --selector app.kubernetes.io/instance=myairflow
 ----
 
-Here we used the label `app.kubernetes.io/instance=airflow` to select all Pods that belong to a specific Airflow stacklet. This label is created by the operator and `airflow` is the name of the Airflow stacklet as specified in the custom resource. You can add more labels to make finer grained restarts.
-
-NOTE: When using Airflow's https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/executor/kubernetes.html[Kubernetes executor], `worker` Pods are created dynamically by DAGs when needed, this in general it's not necessary to restart them.
+Here we used the label `app.kubernetes.io/instance=myairflow` to select all Pods that belong to a specific Airflow stacklet. This label is created by the operator and `myairflow` is the name of the Airflow stacklet as specified in the custom resource. You can add more labels to make finer grained restarts.
 
 == Automatic Restarts
 
