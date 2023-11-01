@@ -6,6 +6,8 @@ Stackable operators offer different cluster operations to control the reconcilia
 * `reconciliationPaused` - Stop the operator from reconciling the cluster spec. The status will still be updated.
 * `stopped` - Stop all running pods but keep updating all deployed resources like `ConfigMaps`, `Services` and the cluster status.
 
+If not specified, `clusterOperation.reconciliationPaused` and `clusterOperation.stopped` default to `false`.
+
 == Example
 
 [source,yaml]
@@ -15,8 +17,57 @@ include::example$cluster-operations.yaml[]
 <1> The `clusterOperation.reconciliationPaused` flag set to `true` stops the operator from reconciling any changes to the cluster spec. The cluster status is still updated.
 <2> The `clusterOperation.stopped` flag set to `true` stops all pods in the cluster. This is done by setting all deployed `StatefulSet` replicas to 0.
 
-== Notes
-
-If not specified, `clusterOperation.reconciliationPaused` and `clusterOperation.stopped` default to `false`.
 
 IMPORTANT: When setting `clusterOperation.reconciliationPaused` and `clusterOperation.stopped` to true in the same step, `clusterOperation.reconciliationPaused` will take precedence. This means the cluster will stop reconciling immediately and the `stopped` field is ignored. To avoid this, the cluster should first be stopped and then paused.
+
+== Service Restarts
+
+=== Manual Restarts
+
+Sometimes it is necessary to restart services deployed in Kubernetes. A service restart should induce as little disruption as possible, ideally none.
+
+Most operators create StatefulSet objects for the products they manage and Kubernetes offers rollout mechanism for this purpose. You can use `kubectl rollout restart statefulset` to restart a StatefulSet previously created by an operator.
+
+For example, an Airflow stack will have three ServiceSets created for it: `scheduler`, `webserver` and `worker`. So given the following stateful sets deployed for an Airflow stack:
+
+[source,shell]
+----
+❯ kubectl get sts 
+NAME                        READY   AGE
+airflow-scheduler-default   1/1     61m
+airflow-webserver-default   1/1     61m
+airflow-worker-default      2/2     61m
+postgresql-airflow          1/1     64m
+redis-airflow-master        1/1     64m
+redis-airflow-replicas      1/1     64m
+----
+
+To restart the Airflow scheduler, run:
+
+[source,shell]
+----
+❯ kubectl rollout restart statefulset airflow-scheduler-default 
+statefulset.apps/airflow-scheduler-default restarted
+----
+
+Sometimes you want to restart all Pods of stack and not just individual roles. This can be achieved in a similar manner by using labels instead of StatefulSet names. Continuing with the example above, to restart all Airflow Pods you would have to run:
+
+[source,shell]
+----
+❯ kubectl rollout restart statefulset --selector app.kubernetes.io/instance=airflow
+----
+
+To wait for all Pods to be running again you run:
+
+[source,shell]
+----
+❯ kubectl rollout status statefulset --selector app.kubernetes.io/instance=airflow
+----
+
+Here we used the label `app.kubernetes.io/instance=airflow` to select all Pods that belong to a specific Airflow stack. This label is created by the operator and `airflow` is the name of the Airflow stack as specified in the custom resource. You can add more labels to make finer grained restarts.
+
+NOTE: When using Airflow's https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/executor/kubernetes.html[Kubernetes executor], `worker` Pods are created dynamically by DAGs when needed, this in general it's not necessary to restart them.
+
+== Automatic Restarts
+
+The Commons Operator of the Stackable Platform might restart Pods automatically, for example to ensure that security certificates are up-to-date. For details, see the xref:commons:index.adoc[Commons Operator documentation].
