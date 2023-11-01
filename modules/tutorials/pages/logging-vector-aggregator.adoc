@@ -1,0 +1,90 @@
+= Logging with a Vector log aggregator
+:description: A tutorial on how to set up a Vector log aggregator to use with the Stackable Data Platform.
+:keywords: logging, observability, log aggregation, Kubernetes, k8s, Vector, ZooKeeper
+
+This tutorial teaches you how to deploy a Vector aggregator together with a product - in this case ZooKeeper - and how to configure both of them so the logs are sent from the product to the aggregator.
+Logging on the Stackable Data Platform is always configured in the same way, so you can use this knowledge to configure logging in any product that you want to deploy.
+
+Prerequisites:
+
+* a k8s cluster available, or https://kind.sigs.k8s.io/[kind] installed
+* xref:management:stackablectl:index.adoc[] installed
+* https://helm.sh/[Helm] installed to deploy Vector
+* basic knowledge of how to create resources in Kubernetes (i.e. `kubectl apply -f <filename>.yaml`) and inspect them
+  (`kubectl get` or a tool like https://k9scli.io/[k9s])
+
+== Install the ZooKeeper operator
+
+Install the Stackable Operator for Apache ZooKeeper and its dependencies, so you can deploy a ZooKeeper instance later.
+
+[source,bash]
+include::example$logging-aggregator/main.sh[tag=zk-op]
+
+== Install the Vector aggregator
+
+Install the Vector aggregator using Helm.
+First, create a `vector-aggregator-values.yaml` file with the Helm values:
+
+[source,yaml]
+include::example$logging-aggregator/vector-aggregator-values.yaml[]
+
+<1> define a source of `type` `vector` which listens to incoming log messages at port 6000.
+<2> define a `console` sink, logging all received logs to `stderr`.
+
+Deploy Vector with these values using Helm:
+
+[source,bash]
+include::example$logging-aggregator/main.sh[tag=vector-agg]
+
+This is a minimal working configuration. The source should be defined in this way, but you can configure different sinks, depending on your needs.
+You can find an https://vector.dev/docs/reference/configuration/sinks/[overview] of all sinks in the Vector documentation, specifically the https://vector.dev/docs/reference/configuration/sinks/elasticsearch/[Elasticsearch] sink might be useful, it also works when configured with OpenSearch.
+
+To make the Vector aggregator discoverable to ZooKeeper, deploy a xref:concepts:service_discovery.adoc[discovery ConfigMap] called `vector-aggregator-discovery`.
+Create a file called `vector-aggregator-discovery.yaml`:
+
+[source,yaml]
+include::example$logging-aggregator/vector-aggregator-discovery.yaml[]
+
+and apply it:
+
+[source,bash]
+include::example$logging-aggregator/main.sh[tag=vector-discovery]
+
+== Install ZooKeeper
+
+Now that the aggregator is running, you can install a ZooKeeper cluster which is configured to send logs to the aggregator.
+
+Create a file called `zookeeper.yaml` with the following ZookeeperCluster definition:
+
+[source,yaml]
+include::example$logging-aggregator/zookeeper.yaml[]
+
+<1> This is the reference to the discovery ConfigMap created in the previous step.
+<2> This is the logging configuration, where logging is first enabled and then a few settings are made.
+
+and apply it:
+
+[source,bash]
+include::example$logging-aggregator/main.sh[tag=zk]
+
+TIP: You can learn more about how to configure logging in a product at the xref:concepts:logging.adoc[logging concept documentation].
+
+== Watch the logs
+
+During startup, ZooKeeper already prints out log messages.
+Vector was configured to print the aggregated logs to `stderr`, so if you look at the logs of the Vector pod, you will see the ZooKeeper logs:
+
+
+[source,bash]
+include::example$logging-aggregator/main.sh[tag=grep]
+
+You should see a line printed that looks like
+
+[source]
+Server environment:zookeeper.version=3.8.0-5a02a05eddb59aee6ac762f7ea82e92a68eb9c0f, built on 2022-02-25 08:49 UTC
+
+Congratulations, this concludes the tutorial!
+
+== What's next?
+
+Look into different sink configurations which are more suited to production use in the https://vector.dev/docs/reference/configuration/sinks/[sinks overview documetation] or learn more about how logging works on the platform in the xref:concepts:logging.adoc[concepts documentation].

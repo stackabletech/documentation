@@ -1,0 +1,15 @@
+role: Aggregator
+customConfig:
+  sources:
+    vector:  # <1>
+      address: 0.0.0.0:6000
+      type: vector
+      version: "2"
+  sinks:
+    console:  # <2>
+      type: console
+      inputs:
+        - vector
+      encoding:
+        codec: text
+      target: stderr
