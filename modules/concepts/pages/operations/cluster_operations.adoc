@@ -30,7 +30,7 @@ Most operators create StatefulSet objects for the products they manage and Kuber
 
 To illustrate how to use the command line to restart one or more Pods, we will assume you used the Stackable Airflow Operator to deploy an Airflow stacklet called `myairflow`.
 
-This stacklet will consist, among other things, of three ServiceSets created for each Airflow role: `scheduler`, `webserver` and `worker`. Let's list them:
+This stacklet will consist, among other things, of three StatefulSets created for each Airflow role: `scheduler`, `webserver` and `worker`. Let's list them:
 
 [source,shell]
 ----
