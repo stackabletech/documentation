@@ -70,4 +70,4 @@ NOTE: When using Airflow's https://airflow.apache.org/docs/apache-airflow/stable
 
 == Automatic Restarts
 
-The Commons Operator of the Stackable Platform might restart Pods automatically, for example to ensure that security certificates are up-to-date. For details, see the xref:commons-operator:index.adoc[Commons Operator documentation].
+The Commons Operator of the Stackable Platform may restart Pods automatically, for purposes such as ensuring that security certificates are up-to-date. For details, see the xref:commons-operator:index.adoc[Commons Operator documentation].
