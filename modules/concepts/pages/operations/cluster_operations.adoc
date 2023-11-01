@@ -28,45 +28,42 @@ Sometimes it is necessary to restart services deployed in Kubernetes. A service 
 
 Most operators create StatefulSet objects for the products they manage and Kubernetes offers a rollout mechanism to restart them. You can use `kubectl rollout restart statefulset` to restart a StatefulSet previously created by an operator.
 
-To illustrate how to use the command line to restart one or more Pods, we will assume you used the Stackable Airflow Operator to deploy an Airflow stacklet called `myairflow`.
+To illustrate how to use the command line to restart one or more Pods, we will assume you used the Stackable HDFS Operator to deploy an HDFS stacklet called `dumbo`.
 
-This stacklet will consist, among other things, of three StatefulSets created for each Airflow role: `scheduler`, `webserver` and `worker`. Let's list them:
+This stacklet will consist, among other things, of three StatefulSets created for each HDFS role: `namenode`, `datanode` and `journalnode`. Let's list them:
 
 [source,shell]
 ----
-❯ kubectl get sts 
+❯ kubectl get sts -l app.kubernetes.io/instance=dumbo
 NAME                        READY   AGE
-myairflow-scheduler-default   1/1     61m
-myairflow-webserver-default   1/1     61m
-myairflow-worker-default      2/2     61m
-postgresql-airflow          1/1     64m
-redis-airflow-master        1/1     64m
-redis-airflow-replicas      1/1     64m
+dumbo-datanode-default      2/2     4m41s
+dumbo-journalnode-default   1/1     4m41s
+dumbo-namenode-default      2/2     4m41s
 ----
 
-To restart the Airflow scheduler Pod, run:
+To restart the HDFS data node Pods, run:
 
 [source,shell]
 ----
-❯ kubectl rollout restart statefulset myairflow-scheduler-default 
-statefulset.apps/myairflow-scheduler-default restarted
+❯ kubectl rollout restart statefulset dumbo-datanode-default 
+statefulset.apps/dumbo-datanode-default restarted
 ----
 
-Sometimes you want to restart all Pods of stacklet and not just individual roles. This can be achieved in a similar manner by using labels instead of StatefulSet names. Continuing with the example above, to restart all Airflow Pods you would have to run:
-
-[source,shell]
-----
-❯ kubectl rollout restart statefulset --selector app.kubernetes.io/instance=myairflow
-----
-
-To wait for all Pods to be running again you run:
+Sometimes you want to restart all Pods of a stacklet and not just individual roles. This can be achieved in a similar manner by using labels instead of StatefulSet names. Continuing with the example above, to restart all HDFS Pods you would have to run:
 
 [source,shell]
 ----
-❯ kubectl rollout status statefulset --selector app.kubernetes.io/instance=myairflow
+❯ kubectl rollout restart statefulset --selector app.kubernetes.io/instance=dumbo
 ----
 
-Here we used the label `app.kubernetes.io/instance=myairflow` to select all Pods that belong to a specific Airflow stacklet. This label is created by the operator and `myairflow` is the name of the Airflow stacklet as specified in the custom resource. You can add more labels to make finer grained restarts.
+To wait for all Pods to be running again:
+
+[source,shell]
+----
+❯ kubectl rollout status statefulset --selector app.kubernetes.io/instance=dumbo
+----
+
+Here we used the label `app.kubernetes.io/instance=dumbo` to select all Pods that belong to a specific HDFS stacklet. This label is created by the operator and `dumbo` is the name of the HDFS stacklet as specified in the custom resource. You can add more labels to make finer grained restarts.
 
 == Automatic Restarts
 
