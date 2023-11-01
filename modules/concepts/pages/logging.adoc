@@ -1,6 +1,6 @@
 = Logging
 :description: A conceptual explanation of the logging architecture of the Stackable Data Platform, and how it is configured.
-:keywords: logging, observability, log aggregation, Kubernetes, k8s, Vector, Elasticsearch, OpenSearch, HDFS
+:keywords: logging, observability, log aggregation, Kubernetes, k8s, Vector, Elasticsearch, OpenSearch
 
 // Abstract
 Logging is important for observability of the platform.
@@ -40,7 +40,7 @@ All logs get written into a shared mounted directory, from which the Vector agen
 
 === Aggregator and sinks
 
-The aggregator is configured to use one or multiple https://vector.dev/docs/reference/configuration/sinks/[sinks] (for example OpenSearch, Elasticsearch, WebHDFS), it sends all logs to all sinks.
+The aggregator is configured to use one or multiple https://vector.dev/docs/reference/configuration/sinks/[sinks] (for example OpenSearch, Elasticsearch), it sends all logs to all sinks.
 If a sink is unavailable, it will buffer the log messages.
 It is also the single point where the sinks are configured, so the sinks are decoupled from the individual product configurations and only needs to be configured in this single location for the whole platform.
 
