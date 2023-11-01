@@ -26,9 +26,9 @@ IMPORTANT: When setting `clusterOperation.reconciliationPaused` and `clusterOper
 
 Sometimes it is necessary to restart services deployed in Kubernetes. A service restart should induce as little disruption as possible, ideally none.
 
-Most operators create StatefulSet objects for the products they manage and Kubernetes offers rollout mechanism for this purpose. You can use `kubectl rollout restart statefulset` to restart a StatefulSet previously created by an operator.
+Most operators create `StatefulSet` objects for the products they manage and Kubernetes offers a rollout mechanism to restart them. You can use `kubectl rollout restart statefulset` to restart a StatefulSet previously created by an operator.
 
-For example, an Airflow stack will have three ServiceSets created for it: `scheduler`, `webserver` and `worker`. So given the following stateful sets deployed for an Airflow stack:
+For example, an Airflow stack will have three `ServiceSets` created for it: `scheduler`, `webserver` and `worker`. So given the following stateful sets deployed for an Airflow stack:
 
 [source,shell]
 ----
@@ -50,7 +50,7 @@ To restart the Airflow scheduler, run:
 statefulset.apps/airflow-scheduler-default restarted
 ----
 
-Sometimes you want to restart all Pods of stack and not just individual roles. This can be achieved in a similar manner by using labels instead of StatefulSet names. Continuing with the example above, to restart all Airflow Pods you would have to run:
+Sometimes you want to restart all `Pods` of stack and not just individual roles. This can be achieved in a similar manner by using labels instead of `StatefulSet` names. Continuing with the example above, to restart all Airflow `Pods` you would have to run:
 
 [source,shell]
 ----
@@ -70,4 +70,4 @@ NOTE: When using Airflow's https://airflow.apache.org/docs/apache-airflow/stable
 
 == Automatic Restarts
 
-The Commons Operator of the Stackable Platform might restart Pods automatically, for example to ensure that security certificates are up-to-date. For details, see the xref:commons:index.adoc[Commons Operator documentation].
+The Commons Operator of the Stackable Platform might restart Pods automatically, for example to ensure that security certificates are up-to-date. For details, see the xref:commons-operator:index.adoc[Commons Operator documentation].
