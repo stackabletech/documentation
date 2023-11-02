@@ -41,7 +41,7 @@ dumbo-journalnode-default   1/1     4m41s
 dumbo-namenode-default      2/2     4m41s
 ----
 
-To restart the HDFS data node Pods, run:
+To restart the HDFS DataNode Pods, run:
 
 [source,shell]
 ----
