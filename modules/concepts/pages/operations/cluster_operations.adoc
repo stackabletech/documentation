@@ -34,7 +34,7 @@ This stacklet will consist, among other things, of three StatefulSets created fo
 
 [source,shell]
 ----
-❯ kubectl get sts -l app.kubernetes.io/instance=dumbo
+❯ kubectl get statefulset -l app.kubernetes.io/instance=dumbo
 NAME                        READY   AGE
 dumbo-datanode-default      2/2     4m41s
 dumbo-journalnode-default   1/1     4m41s
