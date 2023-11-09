@@ -108,6 +108,29 @@ html.is-clipped--nav {
   color: var(--nav-font-color);
 }
 
+.nav-menu-toggle {
+  background: transparent url(../img/octicons-16.svg#view-unfold) no-repeat center / 100% 100%;
+  border: none;
+  float: right;
+  height: 1em;
+  margin-right: -0.5rem;
+  opacity: 0.75;
+  outline: none;
+  padding: 0;
+  position: sticky;
+  top: calc((var(--nav-line-height) - 1 + 0.5) * 1rem);
+  visibility: hidden;
+  width: 1em;
+}
+
+.nav-menu-toggle.is-active {
+  background-image: url(../img/octicons-16.svg#view-fold);
+}
+
+.nav-panel-menu.is-active:hover .nav-menu-toggle {
+  visibility: visible;
+}
+
 .nav-menu h3.title {
   color: var(--nav-heading-font-color);
   font-size: inherit;
