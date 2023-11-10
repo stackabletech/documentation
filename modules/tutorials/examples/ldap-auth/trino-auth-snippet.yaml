@@ -1,8 +1,7 @@
 ---
 # tag::snippet[]
 spec:
-  authentication:
-    method:
-      ldap:                            # <1>
-        authenticationClass: openldap  # <2>
+  clusterConfig:
+    authentication:
+    - authenticationClass: openldap  # <1>
 # end::snippet[]

@@ -136,8 +136,8 @@ metadata:
   ...
 spec:
   version: ...
-  statsdExporterVersion: ...
-  credentialsSecret: superset-credentials
+  clusterConfig:
+    credentialsSecret: superset-credentials
   nodes:
     roleGroups:
       default:
@@ -156,7 +156,7 @@ Modify your `superset.yaml` to include this new `authenticationConfig` property 
 [source,yaml]
 include::example$ldap-auth/superset-auth-snippet.yaml[tag=snippet]
 
-<1> The new `authenticationConfig` section which configures how Superset is authenticating users
+<1> The new `authentication` section which configures how Superset is authenticating users
 <2> The `authenticationClass` property is referencing the AuthenticationClass `openldap` you created earlier
 <3> The default Superset role that users should be assigned to when they log in. Any user will be an Admin
 
@@ -172,12 +172,11 @@ metadata:
   name: superset
   ...
 spec:
-  version: ...
-  statsdExporterVersion: ...
-  credentialsSecret: superset-credentials
-  authenticationConfig:
-    authenticationClass: openldap
-    userRegistrationRole: Admin
+  clusterConfig:
+    credentialsSecret: superset-credentials
+    authentication:
+      - authenticationClass: openldap
+        userRegistrationRole: Admin
   nodes:
     roleGroups:
       default:
@@ -199,7 +198,7 @@ Connect to superset as before, and try logging in again with username _admin_ an
 
 Trino is configured very similarly to Superset.
 
-Fetch the existing TrinoCluster defintion from the Kubernetes API server and save it into a `trino.yaml` file:
+Fetch the existing TrinoCluster definition from the Kubernetes API server and save it into a `trino.yaml` file:
 
 [source,bash]
 include::example$ldap-auth/60-modify-trino.sh[tag=get-yaml]
@@ -216,16 +215,17 @@ metadata:
   name: trino
   ...
 spec:
-  version: 396-stackable0.1.0
-  authentication:
-    method:
-      multiUser:
+  clusterConfig:
+    authentication:
+    - authenticationClass: trino-users
+    authorization:
+      opa:
+        configMapName: opa
+        package: trino
+    catalogLabelSelector:
+      matchLabels:
+        trino: trino
         ...
-  opa:
-    configMapName: opa
-    package: trino
-  catalogLabelSelector:
-    ...
   workers:
     ...
   coordinators:
@@ -244,8 +244,7 @@ Replace the `multiUser` authentication method in your `trino.yaml` with an `ldap
 [source,yaml]
 include::example$ldap-auth/trino-auth-snippet.yaml[tag=snippet]
 
-<1> The new `ldap` authentication method replaces the previous `multiUser` authentication method
-<2> The `authenticationClass` property is referencing the AuthenticationClass `openldap` you created earlier
+<1> The `authenticationClass` property is referencing the AuthenticationClass `openldap` you created earlier
 
 .Your `trino.yaml` should now look similar to this
 [%collapsible]
@@ -259,15 +258,13 @@ metadata:
   name: trino
   ...
 spec:
-  version: 396-stackable0.1.0
-  authentication:
-    method:
-      ldap:
-        authenticationClass: openldap
-  opa:
-    configMapName: opa
-    package: trino
-  catalogLabelSelector:
+  clusterConfig:
+    authentication:
+    - authenticationClass: openldap
+    authorization:
+      opa:
+        configMapName: opa
+        package: trino
     ...
   workers:
     ...
