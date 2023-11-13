@@ -6,7 +6,7 @@ metadata:
 spec:
   image:
     productVersion: 3.8.0
-    stackableVersion: "23.7"
+    stackableVersion: "0.0.0-dev"
   clusterConfig:
     vectorAggregatorConfigMapName: vector-aggregator-discovery  # <1>
   servers:

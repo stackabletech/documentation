@@ -11,5 +11,5 @@ customConfig:
       inputs:
         - vector
       encoding:
-        codec: text
+        codec: json
       target: stderr

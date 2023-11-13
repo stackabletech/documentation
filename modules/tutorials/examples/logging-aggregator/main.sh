@@ -2,7 +2,8 @@
 
 echo "Installing ZooKeeper Operator"
 # tag::zk-op[]
-stackablectl release install -i secret -i commons -i zookeeper 23.7
+#stackablectl release install -i secret -i commons -i zookeeper 23.7
+stackablectl op in secret commons zookeeper
 # end::zk-op[]
 
 # tag::vector-agg[]
@@ -17,6 +18,7 @@ kubectl apply -f vector-aggregator-discovery.yaml
 kubectl apply -f zookeeper.yaml
 # end::zk[]
 
+sleep 10
 kubectl rollout status statefulset simple-zk-server-default --timeout=5m
 kubectl wait \
     --for=jsonpath='.status.readyReplicas'=3 \
@@ -24,10 +26,10 @@ kubectl wait \
     statefulsets.apps/simple-zk-server-default
 
 # tag::grep[]
-kubectl logs vector-aggregator-0 | grep "zookeeper.version="
+kubectl logs vector-aggregator-0 | grep "zookeeper.version=" | jq
 # end::grep[]
 
-if [ "$?" -eq 0 ]
+if [ "${PIPESTATUS[1]}" -eq 0 ]
 then
     echo "it worked"
 else
