@@ -17,8 +17,11 @@ kubectl apply -f vector-aggregator-discovery.yaml
 kubectl apply -f zookeeper.yaml
 # end::zk[]
 
-# TODO make this somehow a testable thing
-# maybe get the logs from the agg. and grep for a specific line?
+kubectl rollout status statefulset simple-zk-server-default --timeout=5m
+kubectl wait \
+    --for=jsonpath='.status.readyReplicas'=3 \
+    --timeout=5m \
+    statefulsets.apps/simple-zk-server-default
 
 # tag::grep[]
 kubectl logs vector-aggregator-0 | grep "zookeeper.version="
