@@ -6,7 +6,7 @@ stackablectl release install -i secret -i commons -i zookeeper 23.7
 # end::zk-op[]
 
 # tag::vector-agg[]
-helm install -f vector-aggregator-values.yaml vector-aggregator vector/vector
+helm install --wait -f vector-aggregator-values.yaml vector-aggregator vector/vector
 # end::vector-agg[]
 
 # tag::vector-discovery[]
