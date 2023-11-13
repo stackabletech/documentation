@@ -8,8 +8,7 @@ spec:
     productVersion: 3.8.0
     stackableVersion: "23.7"
   clusterConfig:
-    logging:
-      vectorAggregatorConfigMapName: vector-aggregator-discovery  # <1>
+    vectorAggregatorConfigMapName: vector-aggregator-discovery  # <1>
   servers:
     roleGroups:
       default:
