@@ -21,7 +21,7 @@ tests need not to be adapted. Please skip the steps which are not applicable.
 == Changes in Rust projects
 
 . Make your desired changes in the according repository and test them manually. Ensure that the code compiles without
-  warnings (`cargo clippy --all-targets`) and that the code is formatted with cargo fmt`.
+  warnings (`cargo clippy --all-targets`) and that the code is formatted with `cargo fmt`.
 . If code was added or adapted then please create or adapt the unit tests in the same file as well as the integration
   tests in the `tests` directory. Ensure that all unit tests run successfully `cargo test`) and all integration tests
   run successfully (`./scripts/run_tests.sh`). See also <<_changes_in_the_integration_tests>>.
