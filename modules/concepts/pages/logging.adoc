@@ -36,7 +36,7 @@ You configure your logging settings in the resource describing the cluster (Zook
 The operator reads this resource and creates the appropriate log configuration files in the ConfigMap which also holds other product configuration.
 The ConfigMap is then mounted into the containers.
 The ZooKeeper Pod has three containers: The `prepare` sidecar container, the `zookeeper` container and the `vector` https://vector.dev/docs/setup/deployment/roles/#sidecar[sidecar container].
-All logs get written into a shared mounted directory, from which the Vector agent reads them and sends them to the vector https://vector.dev/docs/setup/deployment/roles/#aggregator[aggregator].
+All logs get written into a shared mounted directory, from which the Vector agent reads them and sends them to the Vector https://vector.dev/docs/setup/deployment/roles/#aggregator[aggregator].
 
 === Aggregator and sinks
 
