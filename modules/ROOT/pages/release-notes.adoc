@@ -20,6 +20,12 @@ Graceful shutdown::
 Graceful shutdown refers to the managed, controlled shutdown of service instances in the manner intended by the software authors. Typically, an instance will receive a signal indicating the intent for the server to shut down, and it will initiate a controlled shutdown. Our operators configure a sensible amount of time Pods are granted to properly shut down without disrupting the availability of the product. See xref:concepts:operations/graceful_shutdown.adoc[the
 documentation] for more details.
 
+Signed SDP product images::
+As of this release all Stackable product images are signed (the signing of operator images was delivered in SDP 23.7).
+
+Overridable Java security settings::
+For JVM-based products (i.e. Druid, HBase, HDFS, Hive, Kafka, Nifi, Spark, Trno and Zookeeper) it is now possible to provide custom security settings that override the default values. This allows the user to control things such as DNS lookup caches.
+
 Stackable Cockpit::
 This release includes a preview version of Stackable Cockpit, a browser-based management tool which interacts with the Stackable data platform to display e.g. deployed stacklets and their status.
 
