@@ -123,62 +123,49 @@ You will need to adapt your existing CRDs due to the following breaking changes 
 
 ==== Stackable Operator for Apache Airflow
 
-* https://github.com/stackabletech/airflow-operator/pull/322[Removed AirflowDB]
-
-`.spec.clusterConfig.databaseInitialization` was removed from the CRD. This allowed configuring logging for the database initialization job, which does not exist anymore. Instead, database initialization is done by the scheduler pod, which has its own logging configuration. This was necessary to remove the `AirflowDB` Custom Resource, which caused problems when upgrading or reinstalling Airflow clusters.
+* https://github.com/stackabletech/airflow-operator/pull/322[Removed AirflowDB] `.spec.clusterConfig.databaseInitialization` was removed from the CRD. This allowed configuring logging for the database initialization job, which does not exist anymore. Instead, database initialization is done by the scheduler pod, which has its own logging configuration. This was necessary to remove the `AirflowDB` Custom Resource, which caused problems when upgrading or reinstalling Airflow clusters.
 Additionally, the `AirflowDB` custom resource is not used anymore. Those CRs should be deleted.
 
-* https://github.com/stackabletech/airflow-operator/pull/311[Implement KubernetesExecutor]
+* https://github.com/stackabletech/airflow-operator/pull/311[Implement KubernetesExecutor] As an alternative to the CeleryExecutor we now also support the KubernetesExecutor, whereby pods are spun up for job tasks and are terminated afterwards. This removes the need a Redis job queue and offers an alternative approach to resource management.
 
-As an alternative to the CeleryExecutor we now also support the KubernetesExecutor, whereby pods are spun up for job tasks and are terminated afterwards. This removes the need a Redis job queue and offers an alternative approach to resource management.
-
-* https://github.com/stackabletech/airflow-operator/pull/316[Rename service port name]
-
-The service port name has been renamed from airflow to http for consistency reasons. This change should normally not be breaking as only name has been changed, not the port. However, there might be some e.g. Ingresses that rely on the port name and need to be updated
+* https://github.com/stackabletech/airflow-operator/pull/316[Rename service port name] The service port name has been renamed from airflow to http for consistency reasons. This change should normally not be breaking as only name has been changed, not the port. However, there might be some e.g. Ingresses that rely on the port name and need to be updated
 
 * https://github.com/stackabletech/airflow-operator/pull/303[AuthenticationClass references]
 `spec.clusterConfig.authenticationConfig` has been consolidated to `spec.clusterConfig.authentication` which takes a vector of AuthenticationClass references
 
 ==== Stackable Operator for Apache Superset
 
-* https://github.com/stackabletech/superset-operator/pull/396[Remove SupersetDB]
+* https://github.com/stackabletech/superset-operator/pull/396[Remove SupersetDB] `.spec.clusterConfig.loadExamplesOnInit` was removed from the CRD. Already loaded examples in Superset will not be removed by this change. Additionally, the `SupersetDB` custom resource is not used anymore. Those CRs should be deleted. Loading examples is still supported, the process is now described in the https://docs.stackable.tech/home/stable/superset/getting_started/first_steps[documentation].
 
-`.spec.clusterConfig.loadExamplesOnInit` was removed from the CRD. Already loaded examples in Superset will not be removed by this change.
-Additionally, the `SupersetDB` custom resource is not used anymore. Those CRs should be deleted. Loading examples is still supported, the process is now described in the https://docs.stackable.tech/home/stable/superset/getting_started/first_steps[documentation].
+* https://github.com/stackabletech/superset-operator/pull/394[Rename service port name]
+ The service port name has been renamed from superset to http for consistency reasons. This change should normally not be breaking, as we only change the name, not the port. However, there might be some e.g. Ingresses that rely on the port name and need to be updated.
 
-Rename Service port name from superset to http for consistency reasons. This change should normally not be breaking, as we only change the name, not the port. However, there might be some e.g. Ingresses that rely on the port name and need to be updated
-https://github.com/stackabletech/superset-operator/pull/394
+==== Stackable Operator for Apache Kafka
 
+* https://github.com/stackabletech/kafka-operator/pull/621[Certificate conversion] The secret-operator now handles certificate conversion. This allows for the removal of the prepare init container but means that you can't configure the log level for this container anymore. You will need to remove the field `spec.brokers.config.logging.container.prepare` in case it is specified.
 
-Kafka:
-Let secret-operator handle certificate conversion. Doing so we were able to remove the prepare init container with the effect, that you can't configure the log level for this container anymore. You need to remove the field spec.brokers.config.logging.container.prepare in case you have specified it
-https://github.com/stackabletech/kafka-operator/pull/621
+==== Stackable Operator for Apache HDFS
 
-HDFS:
-Removed field autoFormatFs, which was never read
-https://github.com/stackabletech/hdfs-operator/pull/422
+* https://github.com/stackabletech/hdfs-operator/pull/422[Removed field autoFormatFs] This field was not used.
 
-Nifi:
-Consolidated authentication config to a list of AuthenticationClasses
-https://github.com/stackabletech/nifi-operator/pull/498
+==== Stackable Operator for Apache Nifi
 
-Removed crd support for the auto generation of admin credentials
-https://github.com/stackabletech/nifi-operator/pull/498
+* https://github.com/stackabletech/nifi-operator/pull/498[AuthenticationClass references] Consolidated authentication config to a list of AuthenticationClasses
 
-Removed crd support for nifi.security.allow.anonymous.authentication that was never actually used
-https://github.com/stackabletech/nifi-operator/pull/498
+* https://github.com/stackabletech/nifi-operator/pull/498[Remove credential generation] Removed crd support for the auto generation of admin credentials
 
-Spark:
-use product image selection instead of version
-https://github.com/stackabletech/spark-k8s-operator/pull/275
+* https://github.com/stackabletech/nifi-operator/pull/498[Remove redundant authenticaiton field] Removed crd support for `nifi.security.allow.anonymous.authentication` that was never used.
 
-refactored application roles to use CommonConfiguration structures from the operator framework
-https://github.com/stackabletech/spark-k8s-operator/pull/277
+==== Stackable Operator for Apache Spark
 
-Trino:
-Version 428 uses the new OPA authorizer from https://github.com/bloomberg/trino/tree/add-open-policy-agent which requires existing rego rules to be changed
+* https://github.com/stackabletech/spark-k8s-operator/pull/275[Image specification] Use product image selection instead of version.
 
+* https://github.com/stackabletech/spark-k8s-operator/pull/277[Configuration structure]
+Refactored application roles to use CommonConfiguration structures from the operator framework.
 
+==== Stackable Operator for Trino
+
+* https://github.com/stackabletech/trino-operator/pull/491[New OPA Authorizer] Version 428 uses the https://github.com/bloomberg/trino/tree/add-open-policy-agent[new OPA authorizer] which requires changes to existing rego rules.
 
 
 === Upgrade from 23.7
