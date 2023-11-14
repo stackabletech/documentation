@@ -6,26 +6,183 @@ including all components of the platform at a specific version.
 
 == Release 23.11
 
+This release introduces two further elements of platform stability - pod disruption budgets and graceful shutdown specifications - as well as a new management tool and updated product version support.
+
+=== New / extended platform features
+
+The following new major platform features were added:
+
+PodDisruptionBudgets::
+Kubernetes has mechanisms to ensure minimal planned downtime. Our product operators deploy so-called PodDisruptionBudget (PDB) resources alongside the products. For every role that you specify (e.g. HDFS namenodes or Trino workers) a PDB is created. This will determine the extent to which roles for a given application may be inactive at any given time. See xref:concepts:operations/pod_disruptions.adoc[the
+documentation] for more details.
+
+Graceful shutdown::
+Graceful shutdown refers to the managed, controlled shutdown of service instances in the manner intended by the software authors. Typically, an instance will receive a signal indicating the intent for the server to shut down, and it will initiate a controlled shutdown. Our operators configure a sensible amount of time Pods are granted to properly shut down without disrupting the availability of the product. See xref:concepts:operations/graceful_shutdown.adoc[the
+documentation] for more details.
+
+Stackable Cockpit::
+This release includes a preview version of Stackable Cockpit, a browser-based management tool which interacts with the Stackable data platform to display e.g. deployed stacklets and their status.
+
+stackablectl 1.0.0?::
+...
+
+Listener operator?::
+...
+
+New Versions::
+
+The following new product versions are now supported:
+
+* https://github.com/stackabletech/airflow-operator/pull/334[Airflow: 2.6.3, 2.7.2]
+* https://github.com/stackabletech/druid-operator/pull/480[Druid: 27.0.0]
+* https://github.com/stackabletech/hbase-operator/pull/403[HBase: 2.4.17]
+* https://github.com/stackabletech/hdfs-operator/pull/409[HDFS: 3.2.4, 3.3.6]
+* https://github.com/stackabletech/kafka-operator/pull/627[Kafka: 2.8.2, 3.4.1, 3.5.1]
+* https://github.com/stackabletech/nifi-operator/pull/513[Nifi: 1.23.2]
+* https://github.com/stackabletech/opa-operator/pull/482[Opa: 0.57]
+* https://github.com/stackabletech/spark-k8s-operator/pull/291[Spark: 3.4.1, 3.5.0]
+* https://github.com/stackabletech/superset-operator/pull/415[Superset: 2.1.1, 3.0.1]
+* https://github.com/stackabletech/trino-operator/pull/491[Trino: 428]
+* https://github.com/stackabletech/zookeeper-operator/pull/732[ZooKeeper: 3.8.3]
+
+Deprecated Versions::
+
+The following product versions are deprecated and will be removed in a later release:
+
+* Airflow: 2.6.1
+* HBase: 2.4.12
+* HDFS: 3.2.4, 3.3.4
+* Kafka: 2.8.2, 3.4.0
+* Opa: 0.51.0
+* Spark: 3.4.0
+* Superset: 2.1.0
+* Zookeeper: 381
+
+N.B. in some cases a newly supported version is also immediately marked as deprecated. This is done to allow an update path from the latest patch of a minor version (e.g. Kafka 2.8.2 --> 3.4.1).
+
+Removed Versions::
+
+The following product versions are no longer supported (although images for released product versions remain available https://repo.stackable.tech/#browse/browse:docker:v2%2Fstackable[here]):
+
+* Airflow: 2.2.3, 2.2.4, 2.2.5, 2.4.1
+* Druid: 0.23.0, 24.0.0
+* HBase: 2.4.6, 2.4.8, 2.4.9, 2.4.11
+* HDFS: 3.3.1, 3.3.3
+* Hive: 2.3.9
+* Kafka: 2.7.1, 3.1.0, 3.2.0, 3.3.1
+* Nifi: 1.15.x, 1.16.x, 1.18.0, 1.20.0
+* Opa: 0.27.1, 0.28.0, 0.37.2, 0.41.0, 0.45.0
+* Spark: 3.2.1, 3.3.0
+* Superset: 1.3.2, 1.4.1, 1.4.2, 1.5.1, 1.5.3, 2.0.1
+* Trino: 377, 387, 395, 396, 403
+* Zookeeper: 3.5.8, 3.6.3, 3.7.0, 3.8.0
+
+Product features::
+
+Additionally, there are some individual product features that are noteworthy:
+
+* https://github.com/stackabletech/airflow-operator/issues/311[Airflow: implement KubernetesExecutor]
+* https://github.com/stackabletech/trino-operator/issues/491[Trino: support for the new OPA authorizer]
+* https://github.com/stackabletech/docker-images/pull/494[HBase: support for Hadoop native compression]
+* https://github.com/stackabletech/docker-images/pull/400[HDFS: support for FUSE]
+
+=== stackablectl
+
+The following demo has been added to `stackablectl`:
+
+==== Signal processing demo
+
+This demonstrates the ingestion of streamed data into a Timescale time-series database, augmented by a moving window of anomaly detection measurements that are plotted alongside the raw data in Grafana.
+
+This link lists the xref:demos:index.adoc[available demos].
+
+=== Supported Kubernetes versions
+
+This release supports the following Kubernetes versions:
+
+* `1.28` _*CHECK*_
+* `1.27`
+* `1.26`
+
+This Kubernetes version is no longer supported:
+
+* `1.25`
+* `1.24`
+
+=== Supported OpenShift versions
+
+This release supports the following OpenShift versions:
+
+* `4.xx` _*TODO*_
+
 ...
 
 === Breaking changes
 
-The `.spec.clusterConfig.loadExamplesOnInit` option was removed from the `SupersetCluster` CRD. Loading examples is still supported, the process is now described in the https://docs.stackable.tech/home/stable/superset/getting_started/first_steps[documentation].
-The `.spec.clusterConfig.databaseInitialization` option was removed from the `AirflowCluster` CRD.
+You will need to adapt your existing CRDs due to the following breaking changes detailed below.
 
 ==== Stackable Operator for Apache Airflow
 
 * https://github.com/stackabletech/airflow-operator/pull/322[Removed AirflowDB]
 
-`.spec.clusterConfig.databaseInitialization` was removed from the CRD. This allowed configuring logging for the database initialization job, which does not exist anymore. Instead, database initialization is done by the scheduler pod, which has its own logging configuration. This was necessary to get rid of the `AirflowDB` Custom Resource, which caused problems when upgrading or reinstalling Airflow clusters.
+`.spec.clusterConfig.databaseInitialization` was removed from the CRD. This allowed configuring logging for the database initialization job, which does not exist anymore. Instead, database initialization is done by the scheduler pod, which has its own logging configuration. This was necessary to remove the `AirflowDB` Custom Resource, which caused problems when upgrading or reinstalling Airflow clusters.
 Additionally, the `AirflowDB` custom resource is not used anymore. Those CRs should be deleted.
+
+* https://github.com/stackabletech/airflow-operator/pull/311[Implement KubernetesExecutor]
+
+As an alternative to the CeleryExecutor we now also support the KubernetesExecutor, whereby pods are spun up for job tasks and are terminated afterwards. This removes the need a Redis job queue and offers an alternative approach to resource management.
+
+* https://github.com/stackabletech/airflow-operator/pull/316[Rename service port name]
+
+The service port name has been renamed from airflow to http for consistency reasons. This change should normally not be breaking as only name has been changed, not the port. However, there might be some e.g. Ingresses that rely on the port name and need to be updated
+
+* https://github.com/stackabletech/airflow-operator/pull/303[AuthenticationClass references]
+`spec.clusterConfig.authenticationConfig` has been consolidated to `spec.clusterConfig.authentication` which takes a vector of AuthenticationClass references
 
 ==== Stackable Operator for Apache Superset
 
 * https://github.com/stackabletech/superset-operator/pull/396[Remove SupersetDB]
 
 `.spec.clusterConfig.loadExamplesOnInit` was removed from the CRD. Already loaded examples in Superset will not be removed by this change.
-Additionally, the `SupersetDB` custom resource is not used anymore. Those CRs should be deleted.
+Additionally, the `SupersetDB` custom resource is not used anymore. Those CRs should be deleted. Loading examples is still supported, the process is now described in the https://docs.stackable.tech/home/stable/superset/getting_started/first_steps[documentation].
+
+Rename Service port name from superset to http for consistency reasons. This change should normally not be breaking, as we only change the name, not the port. However, there might be some e.g. Ingresses that rely on the port name and need to be updated
+https://github.com/stackabletech/superset-operator/pull/394
+
+
+Kafka:
+Let secret-operator handle certificate conversion. Doing so we were able to remove the prepare init container with the effect, that you can't configure the log level for this container anymore. You need to remove the field spec.brokers.config.logging.container.prepare in case you have specified it
+https://github.com/stackabletech/kafka-operator/pull/621
+
+HDFS:
+Removed field autoFormatFs, which was never read
+https://github.com/stackabletech/hdfs-operator/pull/422
+
+Nifi:
+Consolidated authentication config to a list of AuthenticationClasses
+https://github.com/stackabletech/nifi-operator/pull/498
+
+Removed crd support for the auto generation of admin credentials
+https://github.com/stackabletech/nifi-operator/pull/498
+
+Removed crd support for nifi.security.allow.anonymous.authentication that was never actually used
+https://github.com/stackabletech/nifi-operator/pull/498
+
+Spark:
+use product image selection instead of version
+https://github.com/stackabletech/spark-k8s-operator/pull/275
+
+refactored application roles to use CommonConfiguration structures from the operator framework
+https://github.com/stackabletech/spark-k8s-operator/pull/277
+
+Trino:
+Version 428 uses the new OPA authorizer from https://github.com/bloomberg/trino/tree/add-open-policy-agent which requires existing rego rules to be changed
+
+
+
+
+=== Upgrade from 23.7
+_*TODO*_
 
 == Release 23.7
 
