@@ -5,5 +5,5 @@ metadata:
   name: my-cluster
 spec:
   clusterOperation:
-    reconcilePaused: false # <1>
+    reconciliationPaused: false # <1>
     stopped: false # <2>

@@ -1,4 +1,5 @@
-= Development Dashboard
+= Development dashboard
+:page-aliases: development_dashboard.adoc
 
 This page contains information about our products and relevant links you might need during development.
 

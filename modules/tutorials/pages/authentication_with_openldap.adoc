@@ -1,40 +1,54 @@
 = Authentication with OpenLDAP
 
-The Stackable platform supports user authentication with LDAP in multiple products. This page guides you through setting up the configuration necessary to use an exising LDAP installation with Stackable supported products. You can learn more about authentication in the Stackable Platform on the xref:concepts:authentication.adoc[concepts page].
+The Stackable platform supports user authentication with LDAP in multiple products. This page guides you through setting
+up the configuration necessary to use an existing LDAP installation with Stackable supported products. You can learn
+more about authentication in the Stackable Platform on the xref:concepts:authentication.adoc[concepts page].
 
 Prerequisites:
 
 * a k8s cluster available, or https://kind.sigs.k8s.io/[kind] installed
-* xref:stackablectl::index.adoc[] installed
-* basic knowledge of how to create resources in Kubernetes (i.e. `kubectl apply -f <filename>.yaml`) and inspect them (`kubectl get` or a tool like https://k9scli.io/[k9s])
+* xref:management::stackablectl/index.adoc installed
+* basic knowledge of how to create resources in Kubernetes (i.e. `kubectl apply -f <filename>.yaml`) and inspect them
+  (`kubectl get` or a tool like https://k9scli.io/[k9s])
 
 == Setup
 
-Before configuring LDAP you need to set up some services to configure, as well as an LDAP server to use for authentication. This tutorial is about learning how to configure LDAP, so there won't be detailed instructions on how to set up all of this, instead the tutorial uses xref:stackablectl::commands/stack.adoc[stackablectl Stacks]. 
+Before configuring LDAP you need to set up some services to configure, as well as an LDAP server to use for
+authentication. This tutorial is about learning how to configure LDAP, so there won't be detailed instructions on how to
+set up all of this, instead the tutorial uses the xref:management:stackablectl:commands/stack.adoc[`stackablectl stacks`]
+command.
 
 === Superset and Trino Stack
 
-This command will install the latest Stackable release for you, and set up the `trino-superset-s3` Stack. It contains a Superset instance connected to a Trino instance, and all their dependencies (Minio S3, PostgreSQL). Later in this guide, a Superset and Trino instance will be configured to use LDAP.
+This command will install the latest Stackable release for you, and set up the `trino-superset-s3` Stack. It contains a
+Superset instance connected to a Trino instance, and all their dependencies (Minio S3, PostgreSQL). Later in this guide,
+a Superset and Trino instance will be configured to use LDAP.
 
-If you do not have a Kubernetes cluster already, add the `--kind-cluster` (or `-k`) flag to let stackablectl deploy one for you.
+If you do not have a Kubernetes cluster already, add the `--cluster kind` (or `-c kind`) flag to let stackablectl deploy
+one for you.
 
 [source,bash]
 include::example$ldap-auth/10-install-base.sh[tag=stackablectl-install]
 
 This command will take a few minutes to complete.
 
-NOTE: The stack installed here is used in the xref:stackablectl::demos/trino-taxi-data.adoc[`trino-taxi-data` demo]. Click the link to learn more.
+NOTE: The stack installed here is used in the xref:demos:trino-taxi-data.adoc[`trino-taxi-data` demo]. Click the link
+to learn more.
 
 [#setup_login]
 ==== Inspect
 
-Before starting to add configuration to your Stackable cluster, inspect what the command above has set up in your Kubernetes cluster.
+Before starting to add configuration to your Stackable cluster, inspect what the command above has set up in your
+Kubernetes cluster.
 
-Use `stackablectl svc list` to find the endpoints of Superset and Trino and open their web interfaces in the Browser.
+Use `stackablectl stacklets list` to find the endpoints of Superset and Trino and open their web interfaces in the
+browser.
 
-You can log into Superset with user _admin_ and password _adminadmin_, and into Trino with user _admin_ and password _adminadmin_.
+You can log into Superset with user _admin_ and password _adminadmin_, and into Trino with user _admin_ and password
+_adminadmin_.
 
-These are the current users defined in Superset's and Trino's internal user management. Later you will see that these users cannot be used for authentication anymore after LDAP authentication has been enabled.
+These are the current users defined in Superset's and Trino's internal user management. Later you will see that these
+users cannot be used for authentication anymore after LDAP authentication has been enabled.
 
 === OpenLDAP Stack
 
@@ -116,7 +130,7 @@ Remember the name of the AuthenticationClass (`openldap`), you will use it in th
 [#superset]
 === Add LDAP authentication to Superset
 
-To make Superset use your new LDAP AuthenticationClass, you have to update the SupersetCluster definition. A SupersetCluster named `superset` is already installed by the stack. 
+To make Superset use your new LDAP AuthenticationClass, you have to update the SupersetCluster definition. A SupersetCluster named `superset` is already installed by the stack.
 
 Fetch the existing SupersetCluster defintion from the Kubernetes API server and save it into a `superset.yaml` file:
 
