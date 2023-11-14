@@ -115,33 +115,107 @@ As mentioned before, we expect the user to already operate the identity provider
 * comprehensive: supporting all our existing products (if they support ODIC) as well as all (or most) OIDC providers listed above.
 * principle of least surprise: OIDC should be configured in a similar way to LDAP.
 
-== Considered Options
+== Currently considered design
 
-Every software that wants to use an OIDC provider for logging in needs to be registered as a client with the identity provider. How is this managed? can we even do a generic config like that?
+During a Hackathon we came up with a design, showcased in this sample configuration:
 
-=== 1. Make a generic OIDC config
+[source,yaml]
+----
+apiVersion: authentication.stackable.tech/v1alpha1
+kind: AuthenticationClass
+metadata:
+  name: keycloak
+spec:
+  provider:
+    oidc:
+      hostname: "$KEYCLOAK_HOSTNAME"
+      port: $KEYCLOAK_PORT
+      rootPath: /realms/master
+      scopes: [openid]
+      # docs:
+      # This is a hint for the products on a best-effort base, most of the products will ignore this value.
+      # E.g. Superset Superset uses this to configure the correct claims to extract from the userinfo endpoint as well as a nice icon
+      # => We only start with Keycloak and Custom in v1, but might extend it in the future
+      provider: Keycloak / Google / Github / Azure / Openshift / Okta / Custom # mandatory enum, defaults to Custom
+      tls:
+        verification:
+          none: {}
+---
+apiVersion: trino.stackable.tech/v1alpha1
+kind: TrinoCluster
+metadata:
+  name: trino
+spec:
+  image:
+    productVersion: "414"
+    stackableVersion: 23.7.0
+  clusterConfig:
+    listenerClass: external-unstable
+    tls:
+      serverSecretClass: tls
+    catalogLabelSelector:
+      matchLabels:
+        trino: trino
+    authentication:
+      - authenticationClass: keycloak
+### CHOSEN
+        oidc: # Option<>
+          clientCredentialsSecret: trino-keycloak-client # mandatory (% anonymous client connection), error when AuthClass provider is oidc and this is not set
+          extraPath: /.well-know/foo # FIELD IS ONLY FOR SUPERSET: optional and we infer it based upon the spec.provider.oidc.provider of the AuthClass.
+                                     # We error out in case AuthClass provider is oidc and oidc.provider is Custom and and this is not set
+        ldap: # Option<>
+          bindCredentialsSecretClass: trino-openldap-bind # optional for some products, mandatory for others
+### CHOSEN
 
-The AuthenticationClass should contain the root/issuer URL. From there with the `<issuer-url>/.well-known/configuration-configuration`, relevant configuration can either be derived or additional information retrieved.
 
-For the client ID and client secret, additional information needs to be set in the ProductCluster resource (where?)
+        # OR
+        oidcClientCredentialsSecret: trino-keycloak-client # mandatory (% anonymous client connection)
+        oidcExtraPath: /.well/know/foo # mandatory
 
-Pro:
+        # OR
+      - oidc:
+          authenticationClass: keycloak # snafu error when types do not match
+          clientCredentialsSecret: trino-keycloak-client
+          extraPath: /.well/know/foo
 
-* This is the way it is intended to work
+        # OR (discarded)
+        secret:
+          oidc: trino-keycloak-client
+        oidcExtraPath: /.well/know/foo
 
-Con:
+        # OR (discarded)
+        secret: trino-keycloak-client
+        oidcExtraPath: /.well/know/foo
+        # Might cause problems when users switch from LDAP to OIDC
+        /stackable/secret/trino-keycloak-client/bindUser
+        # vs
+        /stackable/secret/trino-keycloak-client/clientId
 
-* For i.e. Superset we first need to make an API call and maybe even guess some information
+        # In the future
+        ldapBindUserSecret: trino-openldap-bind
+    authorization:
+      opa:
+        configMapName: opa
+        package: trino
+  coordinators:
+    roleGroups:
+      default:
+        replicas: 1
+  workers:
+    roleGroups:
+      default:
+        replicas: 1
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: trino-keycloak-client
+stringData:
+  clientId: trino
+  clientSecret: "{{ keycloakTrinoClientSecret }}"
+----
 
+== Considered alternatives
 
-=== 2. make an OIDC and OAuth2 class
-
-For Superset, use OAuth2, for the rest use OIDC. Annoying for the user because the have to maintain both.
-
-=== 3. Auth-server specific configs
-
-i.e. for Keycloak. We just ask the user to provide the address and version of their keycloak. And then based on that we can calculate all the relevant settings.
-
-This is nice, because we need different settings for different products. For example, superset needs three different URLs. Trino needs to base URL auf the realm. Druid needs the discovery URL.
-
-This is a bit similar to how we treat SQL databases.
+* A distinct OAuth2 AuthenticationClass: This was considered to make it easier to configure Superset and Airflow, as they do not support ODIC out-of-the-box, but during a spike we found that it was feasible to generate OAuth2 configuration from the OIDC AuthenticationClass.
+* Identity provider specific AuthenticationClasses: The idea of having a "Keycloak" class instead of a generic ODIC class was floated, but discarded as it seemed to not have any benefits.
