@@ -1,31 +1,50 @@
 = ADR0XX: 
 Felix Hennig <felix.hennig@stackable.tech>
-v0.1, 2023-09-19
+v0.2, 2023-11-14
 :status: draft
 
 * Status: {status}
-* Deciders: TBD
-* Date: 2023-09-19
+* Deciders:
+** Sebastian Bernauer
+** Malte Sander
+** Sascha Lautenschläger
+** Natalie Röijezon
+** Razvan Mihai
+** Felix Hennig
+* Date: 2023-11-14
 
 Technical Story: https://github.com/stackabletech/issues/issues/431
 
-== Context and Problem Statement
+== Problem Statement
 
-OIDC is a widespread authentication mechanism. Keycloak is also widespread as a self-hosted, internal identity provider. Gaia-X also uses OIDC internally to authenticate users.
+OIDC is a widespread authentication mechanism, supported by most modern data products as well as identity providers. OIDC is also used inside the Gaia-X ecosystem. Keycloak is also widespread as a self-hosted, internal identity provider. Just as with LDAP, we expect users to already have an identiy provider running; deploying an identity provider is out of scope of the design.
 
-How can we support OIDC on the Stackable Data Platform, to integrate with existing OIDC identity providers that clients may be running?
+We want to support OIDC as an authentication mechanism on the Stackable Data Platform, allowing users to configure their already existing identity provider in our AuthenticationClass mechanism.
 
-For LDAP, we wrote an AuthenticationClass, it would make sense to develop one or multiple AuthenticationClasses for OIDC in general, or specific providers.
+Problems include the slightly different ways of configuring products; deciding on how OIDC clients are configured and how to provide client credentials.
 
-Problem: Which settings to we want to have in an authenticationclass? Do we want a generic "OIDC" authenticationclass? Maybe we can habe a "Keycloak" class which would be easier for the user but not as generic.
+== Context
+
+Useful information to consider in the decision.
+
+=== OIDC Clients and product-client-mappings
+
+To configure a product to use ODIC, it needs information about where to find the OIDC provider (typically the URL of the discovery endpoint), as well as client credentials to authenticate with the provider.
+The connection information is generic and shared between all clients, but the crendentials are product specific.
+
+It is best practice to have one client per connecting product.
+This allows the user to define exactly from which hosts the client can be used, as well as valid redirect URLs.
+Sometimes a separate client per product is also technically required, because a product might require specific configuration for a particular product, i.e. rewriting claims.
+
+This leaves multiple different mappings from products and product instances to configured clients; making these use cases easy to configure is an important consideration.
+
+* One single client for all product connections (useful for debugging, or as an initial test setup; might not always be technically feasible depending on the products)
+* One client per _product_ but not per _instance_ - i.e. running 5 NiFi instances and 5 Trinos, but with 2 clients: one for NiFi and one for Trino. This might be a good setup in larger teams, where new product instances get spun up all the time and the team managing the OIDC provider (and clients) is different from the team running the data products.
+* One client per _product instance_: The finest granularity, every instance gets its own client.
 
 === Context: Product configs we need to support with the AuthenticationClass
 
-We built a demo that works with Superset, Trino and Druid. From there we know about the relevant config settings.
-
-The OIDC spec defines a discovery endpoint at which all further configuration can be read.
-
-Additionally, every client needs to be registered and gets its own client ID and secret.
+Below are example configurations for Superset, Trino and Druid, which we built for the `keycloak-opa-poc` Stack. The AuthenticationClass needs to contain information to generate these configs.
 
 ==== Trino
 
@@ -76,26 +95,25 @@ The auth and token URL are supplied at the `.well-known` endoint, but the base U
 }
 ```
 
-=== Context: Common authentication servers that users might want to connect to
+=== Common authentication servers that users might want to connect to
 
-These are some authentication servers that users might be using.
+For testing (and also in the Gaia-X context) we use _Keycloak_ as the identity provider, but our design should not be Keycloak specific; it should work with -- ideally -- all OIDC providers.
+Other common (and not so common) providers are:
 
-* Keycloak
 * Auth0
 * ADFS
 * Dex
 * Okta
 
-In general it can be expected that this service would already be running at the user.
+As mentioned before, we expect the user to already operate the identity provider.
 
 == Decision Drivers
 
-... ?
-
-* Different OIDC providers supported?
-* Configuration should be simple, with minimal info required by the user.
-* Every connecting product should have its own client ID and client secret. The client secret should be stored in a k8s secret.
-* An AuthenticationClass should be defined
+* DRY - don't repeat yourself: information should ideally only be configured in one spot.
+* flexible: Different variants of client and product instance mapping should be supported.
+* comprehensible: It not require too much documentation to explain how a product configuration is assembled based on the manifests that the user deploys.
+* comprehensive: supporting all our existing products (if they support ODIC) as well as all (or most) OIDC providers listed above.
+* principle of least surprise: OIDC should be configured in a similar way to LDAP.
 
 == Considered Options
 
