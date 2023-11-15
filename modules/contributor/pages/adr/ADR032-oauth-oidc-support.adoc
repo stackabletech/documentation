@@ -113,7 +113,7 @@ As mentioned before, we expect the user to already operate the identity provider
 * flexible: Different variants of client and product instance mapping should be supported.
 * comprehensible: It not require too much documentation to explain how a product configuration is assembled based on the manifests that the user deploys.
 * comprehensive: supporting all our existing products (if they support ODIC) as well as all (or most) OIDC providers listed above.
-* principle of least surprise: OIDC should be configured in a similar way to LDAP.
+* We have previously designed the AuthenticationClass mechanism and how it integrates into product CRDs, at the time to support LDAP authentication. The OIDC configuration should have similar ergonomics so users are not surprised and we get a coherent platform.
 
 == Currently considered design
 
