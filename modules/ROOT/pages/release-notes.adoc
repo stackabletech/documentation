@@ -162,7 +162,7 @@ Additionally, the `AirflowDB` custom resource is not used anymore. Those CRs sho
 
 * https://github.com/stackabletech/hdfs-operator/pull/422[Removed field autoFormatFs] This field was not used.
 
-==== Stackable Operator for Apache Nifi
+==== Stackable Operator for Apache NiFi
 
 * https://github.com/stackabletech/nifi-operator/pull/498[AuthenticationClass references] Consolidated authentication config to a list of AuthenticationClasses
 
