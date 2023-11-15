@@ -23,16 +23,21 @@ documentation] for more details.
 Signed SDP product images::
 As of this release all Stackable product images are signed (the signing of operator images was delivered in SDP 23.7).
 
+Airflow KubernetesExecutor::
+Airflow clusters can now be configured to use Kubernetes executors, whereby pods are spun up for job tasks and terminated when complete, thus offering an alternative way to use resources without the need for job queuing.
+
 Overridable Java security settings::
-For JVM-based products (i.e. Druid, HBase, HDFS, Hive, Kafka, Nifi, Spark, Trno and Zookeeper) it is now possible to provide custom security settings that override the default values. This allows the user to control things such as DNS lookup caches.
+For JVM-based products (i.e. Druid, HBase, HDFS, Hive, Kafka, Nifi, Spark, Trino and Zookeeper) it is now possible to provide custom security settings that override the default values. This allows the user to control things such as DNS lookup caches.
 
 Stackable Cockpit::
-This release includes a preview version of Stackable Cockpit, a browser-based management tool which interacts with the Stackable data platform to display e.g. deployed stacklets and their status.
+This release includes a very early preview version of Stackable Cockpit, a browser-based management tool which interacts with the Stackable data platform to display e.g. deployed stacklets and their status.
 
-stackablectl 1.0.0?::
-...
+stackablectl::
+Our command line tool has been re-worked as it is now the backbone for Stackable Cockpit: you can find out about the recent enhancements by visiting the online https://docs.stackable.tech/management/stable/stackablectl/[documentation] (TODO check link).
 
 Listener operator?::
+
+SBOMs?::
 ...
 
 New Versions::
@@ -85,12 +90,15 @@ The following product versions are no longer supported (although images for rele
 
 Product features::
 
-Additionally, there are some individual product features that are noteworthy:
+Additionally, there are some other individual product features that are noteworthy:
 
-* https://github.com/stackabletech/airflow-operator/issues/311[Airflow: implement KubernetesExecutor]
-* https://github.com/stackabletech/trino-operator/issues/491[Trino: support for the new OPA authorizer]
 * https://github.com/stackabletech/docker-images/pull/494[HBase: support for Hadoop native compression]
+* https://github.com/stackabletech/docker-images/pull/497[HBase: add operator tools to product image]
 * https://github.com/stackabletech/docker-images/pull/400[HDFS: support for FUSE]
+* https://github.com/stackabletech/docker-images/pull/505[Hive: update postgresql driver to support SCRAM authentication]
+* https://github.com/stackabletech/docker-images/pull/436[Spark: all product images contain pyspark]
+* https://github.com/stackabletech/trino-operator/issues/491[Trino: support for the new OPA authorizer]
+* https://github.com/stackabletech/issues/issues/444[Vector: upgrade to 0.33]
 
 === stackablectl
 
