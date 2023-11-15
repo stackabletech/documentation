@@ -1,4 +1,4 @@
-= ADR0XX: 
+= ADR0XX: OIDC Support
 Felix Hennig <felix.hennig@stackable.tech>
 v0.2, 2023-11-14
 :status: draft
