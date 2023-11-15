@@ -195,7 +195,6 @@ metadata:
 spec:
   image:
     productVersion: "2.7.2"
-    #stackableVersion: "0.0.0-dev"
   clusterConfig:
     authentication:  # <4>
       - authenticationClass: server-tls
@@ -222,6 +221,8 @@ spec:
 <3> section removed
 <4> `authenticationConfig` replaced with a list of authentication classes
 <5> workers replaced with either `celeryExecutors` or `kubernetesExecutors`
+
+N.B. the StatefulSets belonging to the Airflow cluster will need to be deleted before patching the Airflow resource and any existing AirflowDB job should be deleted as well. This will allow a database update to be followed through where necessary.
 
 ==== Stackable Operator for Apache Superset
 
