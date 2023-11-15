@@ -131,12 +131,12 @@ spec:
       hostname: "$KEYCLOAK_HOSTNAME"
       port: $KEYCLOAK_PORT
       rootPath: /realms/master
-      scopes: [openid]
+      scopes: [ openid, email, profile ] # User can specify whatever scopes they want, these 3 are recommended for OIDC
       # docs:
       # This is a hint for the products on a best-effort base, most of the products will ignore this value.
       # E.g. Superset Superset uses this to configure the correct claims to extract from the userinfo endpoint as well as a nice icon
-      # => We only start with Keycloak and Custom in v1, but might extend it in the future
-      provider: Keycloak / Google / Github / Azure / Openshift / Okta / Custom # mandatory enum, defaults to Custom
+      # => We only start with Keycloak in v1, but might extend it in the future
+      providerHint: Keycloak # Option<ProviderHint>, None means no hint, just use OIDC as is
       tls:
         verification:
           none: {}
@@ -157,42 +157,16 @@ spec:
       matchLabels:
         trino: trino
     authentication:
-      - authenticationClass: keycloak
-### CHOSEN
+      - authenticationClass: keycloak / open-ldap
         oidc: # Option<>
           clientCredentialsSecret: trino-keycloak-client # mandatory (% anonymous client connection), error when AuthClass provider is oidc and this is not set
+          extraScopes: [ groups ] # Extra scopes which get merged with the above scopes
           extraPath: /.well-know/foo # FIELD IS ONLY FOR SUPERSET: optional and we infer it based upon the spec.provider.oidc.provider of the AuthClass.
                                      # We error out in case AuthClass provider is oidc and oidc.provider is Custom and and this is not set
         ldap: # Option<>
           bindCredentialsSecretClass: trino-openldap-bind # optional for some products, mandatory for others
-### CHOSEN
-
-
-        # OR
-        oidcClientCredentialsSecret: trino-keycloak-client # mandatory (% anonymous client connection)
-        oidcExtraPath: /.well/know/foo # mandatory
-
-        # OR
-      - oidc:
-          authenticationClass: keycloak # snafu error when types do not match
-          clientCredentialsSecret: trino-keycloak-client
-          extraPath: /.well/know/foo
-
-        # OR (discarded)
-        secret:
-          oidc: trino-keycloak-client
-        oidcExtraPath: /.well/know/foo
-
-        # OR (discarded)
-        secret: trino-keycloak-client
-        oidcExtraPath: /.well/know/foo
-        # Might cause problems when users switch from LDAP to OIDC
-        /stackable/secret/trino-keycloak-client/bindUser
-        # vs
-        /stackable/secret/trino-keycloak-client/clientId
-
-        # In the future
-        ldapBindUserSecret: trino-openldap-bind
+          # In the future
+          ldapBindUserSecret: trino-openldap-bind
     authorization:
       opa:
         configMapName: opa
