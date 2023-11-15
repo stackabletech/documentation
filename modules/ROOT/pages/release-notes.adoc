@@ -67,7 +67,7 @@ The following product versions are deprecated and will be removed in a later rel
 * OpenPolicyAgent: 0.51.0
 * Spark: 3.4.0
 * Superset: 2.1.0
-* Zookeeper: 381
+* ZooKeeper: 381
 
 N.B. in some cases a newly supported version is also immediately marked as deprecated. This is done to allow an update path from the latest patch of a minor version (e.g. Kafka 2.8.2 --> 3.4.1).
 
