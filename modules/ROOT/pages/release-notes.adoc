@@ -33,7 +33,7 @@ Stackable Cockpit::
 This release includes a very early preview version of Stackable Cockpit, a browser-based management tool which interacts with the Stackable data platform to display e.g. deployed stacklets and their status.
 
 stackablectl::
-Our command line tool has been re-worked as it is now the backbone for Stackable Cockpit: you can find out about the recent enhancements by visiting the online xref:management:stackablectl:index.adoc[documentation].
+Our command line tool has been re-worked to use the same backbone as Stackable Cockpit: you can find out about the recent enhancements by visiting the online xref:management:stackablectl:index.adoc[documentation].
 
 Listener operator?::
 
@@ -151,8 +151,77 @@ Additionally, the `AirflowDB` custom resource is not used anymore. Those CRs sho
 
 These consolidated changes would require a change from e.g.
 
+```
+---
+apiVersion: airflow.stackable.tech/v1alpha1
+kind: AirflowCluster
+metadata:
+  name: airflow
+spec:
+  image:
+    productVersion: "2.6.1"
+    stackableVersion: "23.7" # <1>
+  clusterConfig:
+    executor: CeleryExecutor # <2>
+    ...
+    databaseInitialization: # <3>
+      logging:
+        enableVectorAgent: false
+        containers:
+          ...
+    authenticationConfig:  # <4>
+      authenticationClass: server-tls
+      userRegistrationRole: Admin
+  webservers:
+    ...
+  workers:  # <5>
+    config:
+      logging:
+        enableVectorAgent: False
+    roleGroups:
+      default:
+        replicas: 1
+...
+```
+
 to:
 
+```
+---
+apiVersion: airflow.stackable.tech/v1alpha1
+kind: AirflowCluster
+metadata:
+  name: airflow
+spec:
+  image:
+    productVersion: "2.7.2"
+    #stackableVersion: "0.0.0-dev"
+  clusterConfig:
+    authentication:  # <4>
+      - authenticationClass: server-tls
+        userRegistrationRole: Admin
+  webservers:
+    config:
+      logging:
+        enableVectorAgent: False
+    roleGroups:
+      default:
+        replicas: 1
+  celeryExecutors:  # <5>
+    config:
+      logging:
+        enableVectorAgent: False
+    roleGroups:
+      default:
+        replicas: 1
+...
+```
+
+<1> this field is no longer needed
+<2> field removed
+<3> section removed
+<4> `authenticationConfig` replaced with a list of authentication classes
+<5> workers replaced with either `celeryExecutors` or `kubernetesExecutors`
 
 ==== Stackable Operator for Apache Superset
 
