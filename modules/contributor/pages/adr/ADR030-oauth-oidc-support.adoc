@@ -161,8 +161,6 @@ spec:
         oidc: # Option<>
           clientCredentialsSecret: trino-keycloak-client # mandatory (% anonymous client connection), error when AuthClass provider is oidc and this is not set
           extraScopes: [ groups ] # Extra scopes which get merged with the above scopes
-          extraPath: /.well-know/foo # FIELD IS ONLY FOR SUPERSET: optional and we infer it based upon the spec.provider.oidc.provider of the AuthClass.
-                                     # We error out in case AuthClass provider is oidc and oidc.provider is Custom and and this is not set
         ldap: # Option<>
           bindCredentialsSecretClass: trino-openldap-bind # optional for some products, mandatory for others
           # In the future
