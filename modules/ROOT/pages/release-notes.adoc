@@ -27,7 +27,7 @@ Airflow KubernetesExecutor::
 Airflow clusters can now be configured to use Kubernetes executors, whereby pods are spun up for job tasks and terminated when complete, thus offering an alternative way to use resources without the need for job queuing.
 
 Overridable Java security settings::
-For JVM-based products (i.e. Druid, HBase, HDFS, Hive, Kafka, Nifi, Spark, Trino and Zookeeper) it is now possible to provide custom security settings that override the default values. This allows the user to control things such as DNS lookup caches.
+For JVM-based products (i.e. Druid, HBase, HDFS, Hive, Kafka, NiFi, Spark, Trino and ZooKeeper) it is now possible to provide custom security settings that override the default values. This allows the user to control things such as DNS lookup caches.
 
 Stackable Cockpit::
 This release includes a very early preview version of Stackable Cockpit, a browser-based management tool which interacts with the Stackable data platform to display e.g. deployed stacklets and their status.
