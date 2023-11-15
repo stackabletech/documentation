@@ -265,16 +265,57 @@ spec:
 <1> this field is no longer needed if the product and operator image versions match
 <2> field removed
 
-==== Stackable Operator for Apache Superset
-
-* https://github.com/stackabletech/superset-operator/pull/396[Remove SupersetDB] `.spec.clusterConfig.loadExamplesOnInit` was removed from the CRD. Already loaded examples in Superset will not be removed by this change. Additionally, the `SupersetDB` custom resource is not used anymore. Those CRs should be deleted. Loading examples is still supported, the process is now described in the https://docs.stackable.tech/home/stable/superset/getting_started/first_steps[documentation].
-
-* https://github.com/stackabletech/superset-operator/pull/394[Rename service port name]
- The service port name has been renamed from superset to http for consistency reasons. This change should normally not be breaking, as we only change the name, not the port. However, there might be some e.g. Ingresses that rely on the port name and need to be updated.
-
 ==== Stackable Operator for Apache Kafka
 
 * https://github.com/stackabletech/kafka-operator/pull/621[Certificate conversion] The secret-operator now handles certificate conversion. This allows for the removal of the prepare init container but means that you can't configure the log level for this container anymore. You will need to remove the field `spec.brokers.config.logging.container.prepare` in case it is specified.
+
+This requires a change from e.g.
+
+```
+---
+apiVersion: kafka.stackable.tech/v1alpha1
+kind: KafkaCluster
+metadata:
+  name: kafka
+spec:
+  image:
+    productVersion: "3.4.0"
+    stackableVersion: "23.7" # <1>
+  clusterConfig:
+    ...
+  brokers:
+    config:
+      logging:
+        containers:
+          prepare: # <2>
+            console:
+              level: INFO
+        ...
+...
+```
+
+to:
+
+```
+---
+apiVersion: kafka.stackable.tech/v1alpha1
+kind: KafkaCluster
+metadata:
+  name: kafka
+spec:
+  image:
+    productVersion: "3.4.0"
+  clusterConfig:
+    ...
+  brokers:
+    config:
+      logging:
+        ...
+...
+```
+
+<1> this field is no longer needed if the product and operator image versions match
+<2> section removed for `prepare` container
 
 ==== Stackable Operator for Apache NiFi
 
@@ -290,6 +331,13 @@ spec:
 
 * https://github.com/stackabletech/spark-k8s-operator/pull/277[Configuration structure]
 Refactored application roles to use CommonConfiguration structures from the operator framework.
+
+==== Stackable Operator for Apache Superset
+
+* https://github.com/stackabletech/superset-operator/pull/396[Remove SupersetDB] `.spec.clusterConfig.loadExamplesOnInit` was removed from the CRD. Already loaded examples in Superset will not be removed by this change. Additionally, the `SupersetDB` custom resource is not used anymore. Those CRs should be deleted. Loading examples is still supported, the process is now described in the https://docs.stackable.tech/home/stable/superset/getting_started/first_steps[documentation].
+
+* https://github.com/stackabletech/superset-operator/pull/394[Rename service port name]
+ The service port name has been renamed from superset to http for consistency reasons. This change should normally not be breaking, as we only change the name, not the port. However, there might be some e.g. Ingresses that rely on the port name and need to be updated.
 
 ==== Stackable Operator for Trino
 
