@@ -133,6 +133,8 @@ This release supports the following OpenShift versions:
 
 === Breaking changes
 
+_*TODO*_: add before-and-after yamls to make this transparent
+
 You will need to adapt your existing CRDs due to the following breaking changes detailed below.
 
 ==== Stackable Operator for Apache Airflow
