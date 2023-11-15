@@ -216,13 +216,54 @@ spec:
 ...
 ```
 
-<1> this field is no longer needed
+<1> this field is no longer needed if the product and operator image versions match
 <2> field removed
 <3> section removed
 <4> `authenticationConfig` replaced with a list of authentication classes
 <5> workers replaced with either `celeryExecutors` or `kubernetesExecutors`
 
 N.B. the StatefulSets belonging to the Airflow cluster will need to be deleted before patching the Airflow resource and any existing AirflowDB job should be deleted as well. This will allow a database update to be followed through where necessary.
+
+==== Stackable Operator for Apache HDFS
+
+* https://github.com/stackabletech/hdfs-operator/pull/422[Removed field autoFormatFs] This field was not used.
+
+This requires a change from e.g.
+
+```
+---
+apiVersion: hdfs.stackable.tech/v1alpha1
+kind: HdfsCluster
+metadata:
+  name: hdfs
+spec:
+  image:
+    productVersion: "3.3.4"
+    stackableVersion: "23.7" # <1>
+  clusterConfig:
+    zookeeperConfigMapName: hdfs-zk
+    autoFormatFs: False # <2>
+    ...
+```
+
+to:
+
+```
+---
+apiVersion: hdfs.stackable.tech/v1alpha1
+kind: HdfsCluster
+metadata:
+  name: hdfs
+spec:
+  image:
+    productVersion: "3.3.4"
+  clusterConfig:
+    zookeeperConfigMapName: hdfs-zk
+    ...
+```
+
+<1> this field is no longer needed if the product and operator image versions match
+<2> field removed
 
 ==== Stackable Operator for Apache Superset
 
@@ -234,10 +275,6 @@ N.B. the StatefulSets belonging to the Airflow cluster will need to be deleted b
 ==== Stackable Operator for Apache Kafka
 
 * https://github.com/stackabletech/kafka-operator/pull/621[Certificate conversion] The secret-operator now handles certificate conversion. This allows for the removal of the prepare init container but means that you can't configure the log level for this container anymore. You will need to remove the field `spec.brokers.config.logging.container.prepare` in case it is specified.
-
-==== Stackable Operator for Apache HDFS
-
-* https://github.com/stackabletech/hdfs-operator/pull/422[Removed field autoFormatFs] This field was not used.
 
 ==== Stackable Operator for Apache NiFi
 
