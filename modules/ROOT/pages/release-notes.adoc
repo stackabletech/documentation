@@ -64,7 +64,7 @@ The following product versions are deprecated and will be removed in a later rel
 * HBase: 2.4.12
 * HDFS: 3.2.4, 3.3.4
 * Kafka: 2.8.2, 3.4.0
-* Opa: 0.51.0
+* OpenPolicyAgent: 0.51.0
 * Spark: 3.4.0
 * Superset: 2.1.0
 * Zookeeper: 381
