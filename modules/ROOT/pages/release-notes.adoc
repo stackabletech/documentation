@@ -133,9 +133,9 @@ This release supports the following OpenShift versions:
 
 === Breaking changes
 
-_*TODO*_: add before-and-after yamls to make this transparent
-
 You will need to adapt your existing CRDs due to the following breaking changes detailed below.
+
+NOTE: For all operators: the field `spec.image.stackableVersion` is no longer needed when the operator and product stackable versions match e.g. both are `23.7`. However, if the operator has been upgraded from e.g. `23.7` to `23.11`, and if the product image should _also_ be upgraded to the same _stackable_ version, then this field must be specified (otherwise the patched resource will not prompt for this).
 
 ==== Stackable Operator for Apache Airflow
 
@@ -151,8 +151,11 @@ Additionally, the `AirflowDB` custom resource is not used anymore. Those CRs sho
 
 These consolidated changes would require a change from e.g.
 
-```
----
+.Breaking changes details
+[%collapsible]
+====
+[source,yaml]
+----
 apiVersion: airflow.stackable.tech/v1alpha1
 kind: AirflowCluster
 metadata:
@@ -181,20 +184,20 @@ spec:
     roleGroups:
       default:
         replicas: 1
-...
-```
+    ...
+----
 
 to:
 
-```
----
+[source,yaml]
+----
 apiVersion: airflow.stackable.tech/v1alpha1
 kind: AirflowCluster
 metadata:
   name: airflow
 spec:
   image:
-    productVersion: "2.7.2"
+    productVersion: "2.6.1"
   clusterConfig:
     authentication:  # <4>
       - authenticationClass: server-tls
@@ -213,8 +216,8 @@ spec:
     roleGroups:
       default:
         replicas: 1
-...
-```
+    ...
+----
 
 <1> this field is no longer needed if the product and operator image versions match
 <2> field removed
@@ -223,15 +226,19 @@ spec:
 <5> workers replaced with either `celeryExecutors` or `kubernetesExecutors`
 
 N.B. the StatefulSets belonging to the Airflow cluster will need to be deleted before patching the Airflow resource and any existing AirflowDB job should be deleted as well. This will allow a database update to be followed through where necessary.
+====
 
 ==== Stackable Operator for Apache HDFS
 
 * https://github.com/stackabletech/hdfs-operator/pull/422[Removed field autoFormatFs] This field was not used.
 
+.Breaking changes details
+[%collapsible]
+====
 This requires a change from e.g.
 
-```
----
+[source,yaml]
+----
 apiVersion: hdfs.stackable.tech/v1alpha1
 kind: HdfsCluster
 metadata:
@@ -244,12 +251,12 @@ spec:
     zookeeperConfigMapName: hdfs-zk
     autoFormatFs: False # <2>
     ...
-```
+----
 
 to:
 
-```
----
+[source,yaml]
+----
 apiVersion: hdfs.stackable.tech/v1alpha1
 kind: HdfsCluster
 metadata:
@@ -260,19 +267,23 @@ spec:
   clusterConfig:
     zookeeperConfigMapName: hdfs-zk
     ...
-```
+----
 
 <1> this field is no longer needed if the product and operator image versions match
 <2> field removed
+====
 
 ==== Stackable Operator for Apache Kafka
 
 * https://github.com/stackabletech/kafka-operator/pull/621[Certificate conversion] The secret-operator now handles certificate conversion. This allows for the removal of the prepare init container but means that you can't configure the log level for this container anymore. You will need to remove the field `spec.brokers.config.logging.container.prepare` in case it is specified.
 
+.Breaking changes details
+[%collapsible]
+====
 This requires a change from e.g.
 
-```
----
+[source,yaml]
+----
 apiVersion: kafka.stackable.tech/v1alpha1
 kind: KafkaCluster
 metadata:
@@ -291,13 +302,12 @@ spec:
             console:
               level: INFO
         ...
-...
-```
+----
 
 to:
 
-```
----
+[source,yaml]
+----
 apiVersion: kafka.stackable.tech/v1alpha1
 kind: KafkaCluster
 metadata:
@@ -305,17 +315,19 @@ metadata:
 spec:
   image:
     productVersion: "3.4.0"
+    stackableVersion: "23.11" # <1>
   clusterConfig:
     ...
   brokers:
     config:
       logging:
         ...
-...
-```
-
-<1> this field is no longer needed if the product and operator image versions match
+----
+<1> this field is no longer needed if the product and operator image versions match: it is included here to illustrate how to force an update of the product image to `stackable23.11`.
 <2> section removed for `prepare` container
+
+NOTE: for details about how Kafka uses a PVC to persist a reference to its ZNode, and how this may be relevant to upgrade scenarios, please read the documentation xref:kafka:usage-guide:operations:znode-id.adoc[here].
+====
 
 ==== Stackable Operator for Apache NiFi
 
