@@ -531,6 +531,103 @@ NOTE: it will be necessary to remove the stateful sets before updating the Super
 
 * https://github.com/stackabletech/trino-operator/pull/491[New OPA Authorizer] Version 428 uses the https://github.com/bloomberg/trino/tree/add-open-policy-agent[new OPA authorizer] which requires changes to existing rego rules.
 
+.Breaking changes details
+[%collapsible]
+====
+This requires a change from e.g.
+
+[source,yaml]
+----
+apiVersion: trino.stackable.tech/v1alpha1
+kind: TrinoCluster
+metadata:
+  name: trino
+spec:
+  image:
+    productVersion: "414"
+    stackableVersion: "23.7"
+  clusterConfig:
+    ...
+----
+
+to:
+
+[source,yaml]
+----
+---
+apiVersion: trino.stackable.tech/v1alpha1
+kind: TrinoCluster
+metadata:
+  name: trino
+spec:
+  image:
+    productVersion: "428"
+    stackableVersion: 23.11
+  clusterConfig:
+    ...
+---
+----
+
+To adapt the rego rules to work with the new authorizer visit the documentation xref:trino:usage-guide/security.adoc[here], detailed under the section on "Authorization". For example, you can upgrade to the last version of Open Policy Agent and enter the relevant syntax in a ConfigMap like this:
+
+[source,yaml]
+----
+---
+apiVersion: opa.stackable.tech/v1alpha1
+kind: OpaCluster
+metadata:
+  name: opa
+spec:
+  image:
+    productVersion: "0.57.0"
+    stackableVersion: 23.11
+  servers:
+    roleGroups:
+      default: {}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: simple-trino-opa-bundle
+  labels:
+    opa.stackable.tech/bundle: "trino"
+data:
+  trino.rego: |
+    package trino
+
+    import future.keywords.in
+
+    default allow = false
+
+    allow {
+        is_admin
+    }
+    extended[i] {
+        some i
+        input.action.filterResources[i]
+        is_admin
+    }
+
+    allow {
+        input.action.operation in ["ExecuteQuery", "AccessCatalog"]
+        is_bob
+    }
+    extended[i] {
+        input.action.operation in ["FilterCatalogs"]
+        some i
+        input.action.filterResources[i]
+        is_bob
+    }
+
+    is_admin() {
+      input.context.identity.user == "admin"
+    }
+
+    is_bob() {
+      input.context.identity.user == "bob"
+    }
+----
+====
 
 === Upgrade from 23.7
 
