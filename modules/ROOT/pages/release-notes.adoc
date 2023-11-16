@@ -269,8 +269,8 @@ spec:
     ...
 ----
 
-<1> this field is no longer needed if the product and operator image versions match
-<2> field removed
+<1> this field is no longer needed if the product and operator image versions match.
+<2> field removed.
 ====
 
 ==== Stackable Operator for Apache Kafka
@@ -323,7 +323,7 @@ spec:
         ...
 ----
 <1> this field is no longer needed if the product and operator image versions match.
-<2> section removed for `prepare` container
+<2> section removed for `prepare` container.
 
 NOTE: for details about how Kafka uses a PVC to persist a reference to its ZNode, and how this may be relevant to upgrade scenarios, please read the documentation xref:kafka:usage-guide/operations/znode-id.adoc[here].
 ====
@@ -392,9 +392,9 @@ spec:
         replicas: 1
 ----
 <1> this field is no longer needed if the product and operator image versions match.
-<2> this section has been changed to take a list of authentication classes
-<3> functionality has been removed
-<4> functionality has been removed
+<2> this section has been changed to take a list of authentication classes.
+<3> functionality has been removed.
+<4> functionality has been removed.
 ====
 
 ==== Stackable Operator for Apache Spark
@@ -411,13 +411,59 @@ This requires a change from e.g.
 
 [source,yaml]
 ----
+apiVersion: spark.stackable.tech/v1alpha1
+kind: SparkApplication
+metadata:
+  name: spark-examples
+spec:
+  version: "1.0"
+  sparkImage: "docker.stackable.tech/stackable/spark-k8s:3.4.0-stackable23.7" # <1>
+  mode: cluster
+  mainClass: org.apache.spark.examples.SparkALS
+  mainApplicationFile: "local:///stackable/spark/examples/jars/spark-examples.jar"
+  job: # <2>
+    logging:
+      enableVectorAgent: False
+  driver: # <2>
+    logging:
+      enableVectorAgent: False
+  executor: # <2>
+    instances: 1
+    logging:
+      enableVectorAgent: False
 ----
 
 to:
 
 [source,yaml]
 ----
+apiVersion: spark.stackable.tech/v1alpha1
+kind: SparkApplication
+metadata:
+  name: spark-examples-2
+spec:
+  version: "1.0"
+  sparkImage: # <1>
+    productVersion: "3.5.0"
+  mode: cluster
+  mainClass: org.apache.spark.examples.SparkALS
+  mainApplicationFile: "local:///stackable/spark/examples/jars/spark-examples.jar"
+  job:
+    config: # <2>
+      logging:
+        enableVectorAgent: False
+  driver:
+    config: # <2>
+      logging:
+        enableVectorAgent: False
+  executor:
+    replicas: 1
+    config: # <2>
+      logging:
+        enableVectorAgent: False
 ----
+<1> this field has been changed to be consistent with product image selection, documented xref:concepts:product_image_selection.adoc[here].
+<2> this section has been changed to be consistent with common configuration definitions used for other operators.
 ====
 
 ==== Stackable Operator for Apache Superset
