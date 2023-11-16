@@ -334,8 +334,68 @@ NOTE: for details about how Kafka uses a PVC to persist a reference to its ZNode
 
 * https://github.com/stackabletech/nifi-operator/pull/498[Remove credential generation] Removed crd support for the auto generation of admin credentials
 
-* https://github.com/stackabletech/nifi-operator/pull/498[Remove redundant authenticaiton field] Removed crd support for `nifi.security.allow.anonymous.authentication` that was never used.
+* https://github.com/stackabletech/nifi-operator/pull/498[Remove redundant authentication field] Removed crd support for the `nifi.security.allow.anonymous.authentication` property that was never used.
 
+.Breaking changes details
+[%collapsible]
+====
+This requires a change from e.g.
+
+[source,yaml]
+----
+---
+apiVersion: nifi.stackable.tech/v1alpha1
+kind: NifiCluster
+metadata:
+  name: test-nifi
+spec:
+  image:
+    productVersion: "1.21.0"
+    stackableVersion: "23.7" # <1>
+  clusterConfig:
+    zookeeperConfigMapName: test-zk
+    authentication: # <2>
+      allowAnonymousAccess: False  # <3>
+      method:
+        singleUser:
+          adminCredentialsSecret: nifi-admin-credentials-simple
+          autoGenerate: False  # <4>
+    sensitiveProperties:
+      keySecret: nifi-sensitive-property-key
+  nodes:
+    roleGroups:
+      default:
+        replicas: 1
+----
+
+to:
+
+[source,yaml]
+----
+---
+apiVersion: nifi.stackable.tech/v1alpha1
+kind: NifiCluster
+metadata:
+  name: test-nifi
+spec:
+  image:
+    productVersion: "1.23.2"
+  clusterConfig:
+    zookeeperConfigMapName: test-zk
+    authentication: # <2>
+      - authenticationClass: simple-nifi-users
+    sensitiveProperties:
+      keySecret: nifi-sensitive-property-key
+  nodes:
+    roleGroups:
+      default:
+        replicas: 1
+----
+<1> this field is no longer needed if the product and operator image versions match.
+<2> this section has been changed to take a list of authentication classes
+<3> functionality has been removed
+<4> functionality has been removed
+====
 
 ==== Stackable Operator for Apache Spark
 
@@ -343,6 +403,22 @@ NOTE: for details about how Kafka uses a PVC to persist a reference to its ZNode
 
 * https://github.com/stackabletech/spark-k8s-operator/pull/277[Configuration structure]
 Refactored application roles to use CommonConfiguration structures from the operator framework.
+
+.Breaking changes details
+[%collapsible]
+====
+This requires a change from e.g.
+
+[source,yaml]
+----
+----
+
+to:
+
+[source,yaml]
+----
+----
+====
 
 ==== Stackable Operator for Apache Superset
 
