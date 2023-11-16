@@ -144,7 +144,7 @@ Additionally, the `AirflowDB` custom resource is not used anymore. Those CRs sho
 
 * https://github.com/stackabletech/airflow-operator/pull/311[Implement KubernetesExecutor] As an alternative to the CeleryExecutor we now also support the KubernetesExecutor, whereby pods are spun up for job tasks and are terminated afterwards. This removes the need a Redis job queue and offers an alternative approach to resource management.
 
-* https://github.com/stackabletech/airflow-operator/pull/316[Rename service port name] The service port name has been renamed from airflow to http for consistency reasons. This change should normally not be breaking as only name has been changed, not the port. However, there might be some e.g. Ingresses that rely on the port name and need to be updated
+* https://github.com/stackabletech/airflow-operator/pull/316[Rename service port name] The service port name has been renamed from airflow to http for consistency reasons. This change requires that the statefulset be removed before upgrading. There might also be some e.g. Ingresses that rely on the port name that will need to be updated.
 
 * https://github.com/stackabletech/airflow-operator/pull/303[AuthenticationClass references]
 `spec.clusterConfig.authenticationConfig` has been consolidated to `spec.clusterConfig.authentication` which takes a vector of AuthenticationClass references
@@ -225,7 +225,7 @@ spec:
 <4> `authenticationConfig` replaced with a list of authentication classes
 <5> workers replaced with either `celeryExecutors` or `kubernetesExecutors`
 
-N.B. the StatefulSets belonging to the Airflow cluster will need to be deleted before patching the Airflow resource and any existing AirflowDB job should be deleted as well. This will allow a database update to be followed through where necessary.
+NOTE: it will be necessary to remove the stateful sets before updating the Airflow resource due to the change to the name of container port. Any existing AirflowDB jobs should be deleted as well. This will allow a database update to be followed through where necessary.
 ====
 
 ==== Stackable Operator for Apache HDFS
@@ -471,7 +471,7 @@ spec:
 * https://github.com/stackabletech/superset-operator/pull/396[Remove SupersetDB] `.spec.clusterConfig.loadExamplesOnInit` was removed from the CRD. Already loaded examples in Superset will not be removed by this change. Additionally, the `SupersetDB` custom resource is not used anymore. Those CRs should be deleted. Loading examples is still supported, the process is now described in the https://docs.stackable.tech/home/stable/superset/getting_started/first_steps[documentation].
 
 * https://github.com/stackabletech/superset-operator/pull/394[Rename service port name]
- The service port name has been renamed from superset to http for consistency reasons. This change should normally not be breaking, as we only change the name, not the port. However, there might be some e.g. Ingresses that rely on the port name and need to be updated.
+ The service port name has been renamed from superset to http for consistency reasons. This change requires that the statefulset be removed before upgrading. There might also be some e.g. Ingresses that rely on the port name that will need to be updated.
 
 .Breaking changes details
 [%collapsible]
@@ -524,7 +524,7 @@ spec:
 <1> this field is no longer needed if the product and operator image versions match.
 <2> this field has been removed.
 
-NOTE: it will be necessary to remove the stateful sets before updating the Superset resource.
+NOTE: it will be necessary to remove the stateful sets before updating the Superset resource due to the change to the name of container port.
 ====
 
 ==== Stackable Operator for Trino
