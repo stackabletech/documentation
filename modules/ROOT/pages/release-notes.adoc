@@ -326,7 +326,6 @@ spec:
 <2> section removed for `prepare` container
 
 NOTE: for details about how Kafka uses a PVC to persist a reference to its ZNode, and how this may be relevant to upgrade scenarios, please read the documentation xref:kafka:usage-guide/operations/znode-id.adoc[here].
-xref:operators:ka
 ====
 
 ==== Stackable Operator for Apache NiFi
@@ -336,6 +335,7 @@ xref:operators:ka
 * https://github.com/stackabletech/nifi-operator/pull/498[Remove credential generation] Removed crd support for the auto generation of admin credentials
 
 * https://github.com/stackabletech/nifi-operator/pull/498[Remove redundant authenticaiton field] Removed crd support for `nifi.security.allow.anonymous.authentication` that was never used.
+
 
 ==== Stackable Operator for Apache Spark
 
