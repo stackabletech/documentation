@@ -473,6 +473,60 @@ spec:
 * https://github.com/stackabletech/superset-operator/pull/394[Rename service port name]
  The service port name has been renamed from superset to http for consistency reasons. This change should normally not be breaking, as we only change the name, not the port. However, there might be some e.g. Ingresses that rely on the port name and need to be updated.
 
+.Breaking changes details
+[%collapsible]
+====
+This requires a change from e.g.
+
+[source,yaml]
+----
+apiVersion: superset.stackable.tech/v1alpha1
+kind: SupersetCluster
+metadata:
+  name: superset
+spec:
+  image:
+    productVersion: "2.1.0"
+    stackableVersion: "23.7" # <1>
+  clusterConfig:
+    credentialsSecret: superset-credentials
+    loadExamplesOnInit: false # <2>
+  nodes:
+    config:
+      logging:
+        enableVectorAgent: False
+    roleGroups:
+      default:
+        replicas: 1
+----
+
+to:
+
+[source,yaml]
+----
+apiVersion: superset.stackable.tech/v1alpha1
+kind: SupersetCluster
+metadata:
+  name: superset
+spec:
+  image:
+    productVersion: "2.1.0"
+  clusterConfig:
+    credentialsSecret: superset-credentials
+  nodes:
+    config:
+      logging:
+        enableVectorAgent: False
+    roleGroups:
+      default:
+        replicas: 1
+----
+<1> this field is no longer needed if the product and operator image versions match.
+<2> this field has been removed.
+
+NOTE: it will be necessary to remove the stateful sets before updating the Superset resource.
+====
+
 ==== Stackable Operator for Trino
 
 * https://github.com/stackabletech/trino-operator/pull/491[New OPA Authorizer] Version 428 uses the https://github.com/bloomberg/trino/tree/add-open-policy-agent[new OPA authorizer] which requires changes to existing rego rules.
