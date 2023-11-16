@@ -11,15 +11,20 @@ v0.2, 2023-11-14
 ** Natalie Röijezon
 ** Razvan Mihai
 ** Felix Hennig
+** Lukas Voetmand
+** Nick Larsen
 * Date: 2023-11-14
 
 Technical Story: https://github.com/stackabletech/issues/issues/431
 
-== Problem Statement
+== Problem statement
 
-OIDC is a widespread authentication mechanism, supported by most modern data products as well as identity providers. OIDC is also used inside the Gaia-X ecosystem. Keycloak is also widespread as a self-hosted, internal identity provider. Just as with LDAP, we expect users to already have an identiy provider running; deploying an identity provider is out of scope of the design.
+OIDC is a widespread authentication mechanism, supported by most modern data products as well as identity providers.
+OIDC is also used inside the Gaia-X ecosystem.
+Keycloak is also widespread as a self-hosted, internal identity provider.
+Just as with LDAP, we expect users to already have an identiy provider running; deploying an identity provider is out of scope of the design.
 
-We want to support OIDC as an authentication mechanism on the Stackable Data Platform, allowing users to configure their already existing identity provider in our AuthenticationClass mechanism.
+We want to support OIDC as an authentication mechanism on the Stackable Data Platform, allowing users to configure their already existing identity provider via our AuthenticationClass mechanism.
 
 Problems include the slightly different ways of configuring products; deciding on how OIDC clients are configured and how to provide client credentials.
 
@@ -27,7 +32,7 @@ Problems include the slightly different ways of configuring products; deciding o
 
 Useful information to consider in the decision.
 
-=== OIDC Clients and product-client-mappings
+=== OIDC clients and product-client-mappings
 
 To configure a product to use ODIC, it needs information about where to find the OIDC provider (typically the URL of the discovery endpoint), as well as client credentials to authenticate with the provider.
 The connection information is generic and shared between all clients, but the crendentials are product specific.
@@ -36,15 +41,16 @@ It is best practice to have one client per connecting product.
 This allows the user to define exactly from which hosts the client can be used, as well as valid redirect URLs.
 Sometimes a separate client per product is also technically required, because a product might require specific configuration for a particular product, i.e. rewriting claims.
 
-This leaves multiple different mappings from products and product instances to configured clients; making these use cases easy to configure is an important consideration.
+Configuring multiple different mappings from products and product instances needs to take place at the client level; making these use cases easy to configure is an important consideration.
 
 * One single client for all product connections (useful for debugging, or as an initial test setup; might not always be technically feasible depending on the products)
 * One client per _product_ but not per _instance_ - i.e. running 5 NiFi instances and 5 Trinos, but with 2 clients: one for NiFi and one for Trino. This might be a good setup in larger teams, where new product instances get spun up all the time and the team managing the OIDC provider (and clients) is different from the team running the data products.
 * One client per _product instance_: The finest granularity, every instance gets its own client.
 
-=== Context: Product configs we need to support with the AuthenticationClass
+=== Product configs we need to support with the AuthenticationClass
 
-Below are example configurations for Superset, Trino and Druid, which we built for the `keycloak-opa-poc` Stack. The AuthenticationClass needs to contain information to generate these configs.
+Below are example configurations for Superset, Trino and Druid, which we built for the `keycloak-opa-poc` Stack.
+The AuthenticationClass needs to contain information to generate these configs.
 
 ==== Trino
 
@@ -52,7 +58,7 @@ Below are example configurations for Superset, Trino and Druid, which we built f
 web-ui.authentication.type: oauth2
 http-server.authentication.oauth2.client-id: trino
 http-server.authentication.oauth2.client-secret: ${ENV:TRINO_CLIENT_SECRET}
-http-server.authentication.oauth2.issuer: http://${ENV:KEYCLOAK_ADDRESS}/realms/master
+http-server.authentication.oauth2.issuer: https://${ENV:KEYCLOAK_ADDRESS}/realms/master
 http-server.authentication.oauth2.scopes: openid
 ```
 
@@ -72,7 +78,10 @@ druid.auth.pac4j.oidc.discoveryURI: '${env:KEYCLOAK_DISCOVERY_URL}'
 
 ==== Superset
 
-Does not support reading an OIDC discovery URL but needs: API base URL, auth URL, token URL. Also the Superset client wants the _email_, _profile_ and _oidc_ scope. We _could_ also implement fab-oidc support for Superset, so it has proper OIDC support. Needs to be maintained though.
+Does not support reading an OIDC discovery URL but needs: API base URL, auth URL, token URL.
+Also the Superset client wants the _email_, _profile_ and _oidc_ scope.
+We _could_ also implement fab-oidc support for Superset, so it has proper OIDC support.
+This however needs maintenance work from us.
 
 The auth and token URL are supplied at the `.well-known` endoint, but the base URL is not. Could maybe be guessed from the other endpoints?
 
@@ -95,10 +104,10 @@ The auth and token URL are supplied at the `.well-known` endoint, but the base U
 }
 ```
 
-=== Common authentication servers that users might want to connect to
+=== Common authentication servers
 
 For testing (and also in the Gaia-X context) we use _Keycloak_ as the identity provider, but our design should not be Keycloak specific; it should work with -- ideally -- all OIDC providers.
-Other common (and not so common) providers are:
+Other common providers are:
 
 * Auth0
 * ADFS
@@ -107,17 +116,21 @@ Other common (and not so common) providers are:
 
 As mentioned before, we expect the user to already operate the identity provider.
 
-== Decision Drivers
+== Decision drivers
 
-* DRY - don't repeat yourself: information should ideally only be configured in one spot.
-* flexible: Different variants of client and product instance mapping should be supported.
-* comprehensible: It not require too much documentation to explain how a product configuration is assembled based on the manifests that the user deploys.
-* comprehensive: supporting all our existing products (if they support ODIC) as well as all (or most) OIDC providers listed above.
-* We have previously designed the AuthenticationClass mechanism and how it integrates into product CRDs, at the time to support LDAP authentication. The OIDC configuration should have similar ergonomics so users are not surprised and we get a coherent platform.
+* Don't repeat yourself: Information should ideally only be configured in one spot.
+* Flexible: Different variants of client and product instance mappings should be supported.
+* Comprehensible: Users should not be overwhelmed by complicated documentation. After seeting up one product, users should be able to fairly easily setup other products as well.
+* High level of support across SDP: All products supporting OIDC should work. Furthermore, most OIDC providers listed above should work.
+* No surprises:  We have previously designed the AuthenticationClass mechanism and how it integrates into product CRDs, at the time to support LDAP authentication. The OIDC configuration should have similar ergonomics so users are not surprised and we get a coherent platform.
 
-== Currently considered design
+== AuthenticationClass & product cluster configuration design
 
-During a Hackathon we came up with a design, showcased in this sample configuration:
+=== AuthenticationClass design
+
+During a Hackathon we came up with an initial design.
+This design was improved upon during the on-site meeting from 2023-11-13 to 2023-11-17.
+The final design looks like this:
 
 [source,yaml]
 ----
@@ -128,19 +141,29 @@ metadata:
 spec:
   provider:
     oidc:
+      # Hostname of the IdP. Like "idp.mycompany.corp"
       hostname: "$KEYCLOAK_HOSTNAME"
+
+      # Optional port number to use. If unspecified, this will default to 80 if TLS is disabled, 443 otherwise.
       port: $KEYCLOAK_PORT
+
+      # Optional root path appended to the hostname. This defaults to "/".
       rootPath: /realms/master
-      scopes: [ openid, email, profile ] # User can specify whatever scopes they want, these 3 are recommended for OIDC
-      # docs:
-      # This is a hint for the products on a best-effort base, most of the products will ignore this value.
-      # E.g. Superset Superset uses this to configure the correct claims to extract from the userinfo endpoint as well as a nice icon
-      # => We only start with Keycloak in v1, but might extend it in the future
-      providerHint: Keycloak # Option<ProviderHint>, None means no hint, just use OIDC as is
+
+      # User can specify whatever scopes they want, these three are recommended for OIDC.
+      scopes: [ openid, email, profile ]
+
+      # Optional provider hint. If unspecified, the product will not enable any known quirks and will assume OIDC works as it is intended to work.
+      providerHint: Keycloak
       tls:
         verification:
           none: {}
----
+----
+
+=== Product cluster configuration design
+
+[source,yaml]
+----
 apiVersion: trino.stackable.tech/v1alpha1
 kind: TrinoCluster
 metadata:
@@ -150,33 +173,15 @@ spec:
     productVersion: "414"
     stackableVersion: 23.7.0
   clusterConfig:
-    listenerClass: external-unstable
-    tls:
-      serverSecretClass: tls
-    catalogLabelSelector:
-      matchLabels:
-        trino: trino
+    # Other required config options omitted for brevity
     authentication:
       - authenticationClass: keycloak / open-ldap
-        oidc: # Option<>
-          clientCredentialsSecret: trino-keycloak-client # mandatory (% anonymous client connection), error when AuthClass provider is oidc and this is not set
-          extraScopes: [ groups ] # Extra scopes which get merged with the above scopes
-        ldap: # Option<>
-          bindCredentialsSecretClass: trino-openldap-bind # optional for some products, mandatory for others
-          # In the future
-          ldapBindUserSecret: trino-openldap-bind
-    authorization:
-      opa:
-        configMapName: opa
-        package: trino
-  coordinators:
-    roleGroups:
-      default:
-        replicas: 1
-  workers:
-    roleGroups:
-      default:
-        replicas: 1
+        oidc:
+          # A reference to the OIDC client credentials secret, which consists of a client id and secret
+          clientCredentialsSecret: trino-keycloak-client
+
+          # Additional scopes required for this specific product. It will get merged with the above configured scopes
+          extraScopes: [ groups ]
 ---
 apiVersion: v1
 kind: Secret
@@ -185,6 +190,38 @@ metadata:
 stringData:
   clientId: trino
   clientSecret: "{{ keycloakTrinoClientSecret }}"
+----
+
+'''
+
+In the future we want to nest LDAP related config options under the `authenticationClass` key the same way `oidc` is in this ADR.
+The design looks like this:
+
+[source,yaml]
+----
+apiVersion: trino.stackable.tech/v1alpha1
+kind: TrinoCluster
+metadata:
+  name: trino
+spec:
+  image:
+    productVersion: "414"
+    stackableVersion: 23.7.0
+  clusterConfig:
+    # Other required config options omitted for brevity
+    authentication:
+      - authenticationClass: open-ldap
+        ldap:
+          # Optional. Only required for some products. In the future this will be replaced by the key "bindUserSecret".
+          bindCredentialsSecretClass: trino-openldap-bind
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: trino-openldap-bind
+stringData:
+  username: admin
+  password: "{{ ldapTrinoPassword }}"
 ----
 
 == Considered alternatives
