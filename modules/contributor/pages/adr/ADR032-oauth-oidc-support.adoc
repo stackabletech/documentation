@@ -78,12 +78,13 @@ druid.auth.pac4j.oidc.discoveryURI: '${env:KEYCLOAK_DISCOVERY_URL}'
 
 ==== Superset
 
-Does not support reading an OIDC discovery URL but needs: API base URL, auth URL, token URL.
-Also the Superset client wants the _email_, _profile_ and _oidc_ scope.
-We _could_ also implement fab-oidc support for Superset, so it has proper OIDC support.
-This however needs maintenance work from us.
+Does not support reading an OIDC discovery URL but requires:
 
-The auth and token URL are supplied at the `.well-known` endoint, but the base URL is not. Could maybe be guessed from the other endpoints?
+* separate API base URL, auth URL, token URL
+* the `email`, `profile` and `openid` scopes
+* that the auth and token URL are supplied at the `.well-known` endoint, but the base URL is not
+
+We could opt to implement proper OIDC support using fab-oidc. This however needs maintenance work from us.
 
 ```
 { 
