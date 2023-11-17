@@ -180,9 +180,6 @@ spec:
   webservers:
     ...
   workers:  # <5>
-    config:
-      logging:
-        enableVectorAgent: False
     roleGroups:
       default:
         replicas: 1
@@ -205,16 +202,10 @@ spec:
       - authenticationClass: server-tls
         userRegistrationRole: Admin
   webservers:
-    config:
-      logging:
-        enableVectorAgent: False
     roleGroups:
       default:
         replicas: 1
   celeryExecutors:  # <5>
-    config:
-      logging:
-        enableVectorAgent: False
     roleGroups:
       default:
         replicas: 1
@@ -494,12 +485,10 @@ spec:
     credentialsSecret: superset-credentials
     loadExamplesOnInit: false # <2>
   nodes:
-    config:
-      logging:
-        enableVectorAgent: False
     roleGroups:
       default:
         replicas: 1
+    ...
 ----
 
 to:
@@ -516,12 +505,10 @@ spec:
   clusterConfig:
     credentialsSecret: superset-credentials
   nodes:
-    config:
-      logging:
-        enableVectorAgent: False
     roleGroups:
       default:
         replicas: 1
+    ...
 ----
 <1> this field is no longer needed if the product and operator image versions match.
 <2> this field has been removed.
