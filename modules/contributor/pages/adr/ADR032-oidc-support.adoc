@@ -42,6 +42,8 @@ This allows the user to define exactly from which hosts the client can be used, 
 Sometimes a separate client per product is also technically required, because a product might require specific configuration for a particular product, i.e. rewriting claims.
 
 Configuring multiple different mappings from products and product instances needs to take place at the client level; making these use cases easy to configure is an important consideration.
+These mapping can be configuration option mapping or even JWT claim mapping.
+Executing these mappings takes place at the operator / product level.
 
 * One single client for all product connections (useful for debugging, or as an initial test setup; might not always be technically feasible depending on the products)
 * One client per _product_ but not per _instance_ - i.e. running 5 NiFi instances and 5 Trinos, but with 2 clients: one for NiFi and one for Trino. This might be a good setup in larger teams, where new product instances get spun up all the time and the team managing the OIDC provider (and clients) is different from the team running the data products.
