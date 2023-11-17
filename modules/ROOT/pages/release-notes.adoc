@@ -376,18 +376,36 @@ spec:
   clusterConfig:
     zookeeperConfigMapName: test-zk
     authentication: # <2>
-      - authenticationClass: simple-nifi-users
+      - authenticationClass: nifi-users  # <5>
     sensitiveProperties:
       keySecret: nifi-sensitive-property-key
   nodes:
     roleGroups:
       default:
         replicas: 1
+---
+apiVersion: authentication.stackable.tech/v1alpha1
+kind: AuthenticationClass
+metadata:
+  name: nifi-users  # <5>
+spec:
+  provider:
+    static:
+      userCredentialsSecret:
+        name: nifi-admin-credentials
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: nifi-admin-credentials
+stringData:
+  admin: supersecretpassword
 ----
 <1> this field is no longer needed if the product and operator image versions match.
 <2> this section has been changed to take a list of authentication classes.
 <3> functionality has been removed.
 <4> functionality has been removed.
+<5> the authentication class referenced by the NiFi cluster.
 ====
 
 ==== Stackable Operator for Apache Spark
