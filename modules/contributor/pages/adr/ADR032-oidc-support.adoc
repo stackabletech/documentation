@@ -185,7 +185,7 @@ spec:
       - authenticationClass: keycloak / open-ldap
         oidc:
           # A reference to the OIDC client credentials secret, which
-          # consists of a client id and secret.
+          # consists of a client_id and client_secret.
           clientCredentialsSecret: trino-keycloak-client
 
           # Additional scopes required for this specific product. It
