@@ -100,7 +100,7 @@ Additionally, there are some other individual product features that are notewort
 * https://github.com/stackabletech/docker-images/pull/505[Hive: update postgresql driver to support SCRAM authentication]
 * https://github.com/stackabletech/docker-images/pull/436[Spark: all product images contain pyspark]
 * https://github.com/stackabletech/trino-operator/issues/491[Trino: support for the new OPA authorizer]
-* https://github.com/stackabletech/issues/issues/444[Vector: upgrade to 0.33]
+* https://github.com/stackabletech/issues/issues/444[Vector: upgrade to 0.33.0]
 
 === stackablectl
 
