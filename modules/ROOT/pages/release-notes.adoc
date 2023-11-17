@@ -35,7 +35,9 @@ This release includes a very early preview version of Stackable Cockpit, a brows
 stackablectl::
 Our command line tool has been re-worked to use the same backbone as Stackable Cockpit: you can find out about the recent enhancements by visiting the online xref:management:stackablectl:index.adoc[documentation].
 
-Listener operator?::
+Listener operator::
+The listener-operator was introduced in release 23.1 and the associated ServiceType field in 23.4. In this release we introduce configurable ListenerClass _presets_ that map to the service types appropriate for different environments. This is discussed in more detail in the xref:listener:concepts/listenerclass.adoc[documentation].
+
 
 SBOMs?::
 ...
