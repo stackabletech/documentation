@@ -131,9 +131,8 @@ This Kubernetes version is no longer supported:
 
 This release supports the following OpenShift versions:
 
-* `4.xx` _*TODO*_
-
-...
+* `4.13` _*CHECK*_
+* `4.12`
 
 === Breaking changes
 
