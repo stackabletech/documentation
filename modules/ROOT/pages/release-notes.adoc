@@ -42,7 +42,9 @@ The listener-operator was introduced in release 23.1 and the associated ServiceT
 SBOMs?::
 ...
 
-New Versions::
+=== Product Versions
+
+==== New Versions
 
 The following new product versions are now supported:
 
@@ -58,7 +60,7 @@ The following new product versions are now supported:
 * https://github.com/stackabletech/trino-operator/pull/491[Trino: 428]
 * https://github.com/stackabletech/zookeeper-operator/pull/732[ZooKeeper: 3.8.3]
 
-Deprecated Versions::
+==== Deprecated Versions
 
 The following product versions are deprecated and will be removed in a later release:
 
@@ -73,7 +75,7 @@ The following product versions are deprecated and will be removed in a later rel
 
 N.B. in some cases a newly supported version is also immediately marked as deprecated. This is done to allow an update path from the latest patch of a minor version (e.g. Kafka 2.8.2 --> 3.4.1).
 
-Removed Versions::
+==== Removed Versions
 
 The following product versions are no longer supported (although images for released product versions remain available https://repo.stackable.tech/#browse/browse:docker:v2%2Fstackable[here]):
 
