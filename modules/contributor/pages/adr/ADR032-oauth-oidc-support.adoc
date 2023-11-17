@@ -145,20 +145,22 @@ spec:
       # Hostname of the IdP. Like "idp.mycompany.corp"
       hostname: "$KEYCLOAK_HOSTNAME"
 
-      # Optional port number to use. If unspecified, connections will use the
-      # default port for the HTTP scheme (ie: 443 for when TLS is enabled, or
-      # 80 if TLS is disabled).
+      # Optional port number to use. If unspecified, connections will
+      # use the default port for the HTTP scheme (ie: 443 for when TLS
+      # is enabled, or 80 if TLS is disabled).
       port: $KEYCLOAK_PORT
 
-      # Optional root path appended to the hostname. This defaults to "/".
+      # Optional root path appended to the hostname. This defaults
+      # to "/".
       rootPath: /realms/master
 
-      # User can specify whatever scopes they want, these three are recommended
-      # for OIDC.
+      # User can specify whatever scopes they want, these three are
+      # recommended for OIDC.
       scopes: [ openid, email, profile ]
 
-      # Optional provider hint. If unspecified, the product will not enable any
-      # known quirks and will assume OIDC works as it is intended to work.
+      # Optional provider hint. If unspecified, the product will not
+      # enable any known quirks and will assume OIDC works as it is
+      # intended to work.
       providerHint: Keycloak
       tls:
         verification:
@@ -182,12 +184,12 @@ spec:
     authentication:
       - authenticationClass: keycloak / open-ldap
         oidc:
-          # A reference to the OIDC client credentials secret, which consists
-          # of a client id and secret.
+          # A reference to the OIDC client credentials secret, which
+          # consists of a client id and secret.
           clientCredentialsSecret: trino-keycloak-client
 
-          # Additional scopes required for this specific product. It will get
-          # merged with the above configured scopes.
+          # Additional scopes required for this specific product. It
+          # will get merged with the above configured scopes.
           extraScopes: [ groups ]
 ---
 apiVersion: v1
@@ -219,7 +221,8 @@ spec:
     authentication:
       - authenticationClass: open-ldap
         ldap:
-          # Optional. Only required for some products. In the future this will be replaced by the key "bindUserSecret".
+          # Optional. Only required for some products. In the future
+          # this will be replaced by the key "bindUserSecret".
           bindCredentialsSecretClass: trino-openldap-bind
 ---
 apiVersion: v1
