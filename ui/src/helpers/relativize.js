@@ -11,8 +11,8 @@ module.exports = (to, from, ctx) => {
   let hash = ''
   const hashIdx = to.indexOf('#')
   if (~hashIdx) {
-    hash = to.substr(hashIdx)
-    to = to.substr(0, hashIdx)
+    hash = to.slice(hashIdx)
+    to = to.slice(0, hashIdx)
   }
   return to === from
     ? hash || (isDir(to) ? './' : path.basename(to))
