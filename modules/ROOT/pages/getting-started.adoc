@@ -34,7 +34,7 @@ Stackable operators can be installed using `stackablectl`. Run the following com
 
 [source,bash]
 ----
-stackablectl release install -i commons -i secret -i zookeeper -i kafka -i nifi 23.7
+stackablectl release install -i commons -i secret -i listener -i zookeeper -i kafka -i nifi 23.7
 ----
 
 .Using Helm instead
@@ -56,6 +56,7 @@ Install the operators:
 helm install zookeeper-operator stackable-stable/zookeeper-operator --version=23.7
 helm install kafka-operator stackable-stable/kafka-operator --version=23.7
 helm install secret-operator stackable-stable/secret-operator --version=23.7
+helm install listener-operator stackable-stable/listener-operator --version=23.7
 helm install commons-operator stackable-stable/commons-operator --version=23.7
 helm install nifi-operator stackable-stable/nifi-operator --version=23.7
 ----
@@ -71,6 +72,8 @@ You can check which operators are installed using `stackablectl operator install
 │ commons-operator   ┆ 23.7.0  ┆ stackable-operators ┆ deployed ┆ 2023-09-26 14:59:10.447836367 +0200 CEST │
 ├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┤
 │ kafka-operator     ┆ 23.7.0  ┆ stackable-operators ┆ deployed ┆ 2023-09-26 14:59:25.162058457 +0200 CEST │
+├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┤
+│ listener-operator  ┆ 23.7.0  ┆ stackable-operators ┆ deployed ┆ 2023-09-26 14:59:30.40162331 +0200 CEST  │
 ├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┤
 │ nifi-operator      ┆ 23.7.0  ┆ stackable-operators ┆ deployed ┆ 2023-09-26 14:59:35.881227443 +0200 CEST │
 ├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┤
@@ -205,16 +208,18 @@ EOF
 You can check the status of the services using `kubectl get pods`. This will retrieve the status of all pods running in the default namespace.
 
 ----
-NAME                                             READY   STATUS      RESTARTS   AGE
-commons-operator-deployment-598c744f6f-gfj2h     1/1     Running     0          15m
-kafka-operator-deployment-7c4bd694d5-xjwsj       1/1     Running     0          15m
-nifi-operator-deployment-748d748487-qg885        1/1     Running     0          15m
-secret-operator-daemonset-wr57f                  3/3     Running     0          14m
-simple-kafka-broker-brokers-0                    2/2     Running     0          7m50s
-simple-nifi-create-reporting-task-1-21-0-jltpv   0/1     Completed   4          5m13s
-simple-nifi-node-default-0                       1/1     Running     0          5m13s
-simple-zk-server-primary-0                       1/1     Running     0          14m
-zookeeper-operator-deployment-64fcccc797-pckhf   1/1     Running     0          14m
+NAME                                                       READY   STATUS      RESTARTS   AGE
+commons-operator-deployment-598c744f6f-gfj2h               1/1     Running     0          15m
+kafka-operator-deployment-7c4bd694d5-xjwsj                 1/1     Running     0          15m
+listener-operator-controller-deployment-5f59496965-4c2xq   2/2     Running     0          14m
+listener-operator-node-daemonset-xlcwg                     2/2     Running     0          14m
+nifi-operator-deployment-748d748487-qg885                  1/1     Running     0          15m
+secret-operator-daemonset-wr57f                            3/3     Running     0          14m
+simple-kafka-broker-brokers-0                              2/2     Running     0          7m50s
+simple-nifi-create-reporting-task-1-21-0-jltpv             0/1     Completed   4          5m13s
+simple-nifi-node-default-0                                 1/1     Running     0          5m13s
+simple-zk-server-primary-0                                 1/1     Running     0          14m
+zookeeper-operator-deployment-64fcccc797-pckhf             1/1     Running     0          14m
 ----
 
 Since this is the first time that each of these services has been deployed to these nodes, it will take some time to download the software from the Stackable repository and deploy the services. Once all the pods are in the running state your cluster is ready to use.
