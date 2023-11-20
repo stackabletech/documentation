@@ -4,9 +4,9 @@ const { posix: path } = require('path')
 
 module.exports = (to, from, ctx) => {
   if (!to) return '#'
+  if (to.charAt() !== '/') return to
   // NOTE only legacy invocation provides both to and from
   if (!ctx) from = (ctx = from).data.root.page.url
-  if (to.charAt() !== '/') return to
   if (!from) return (ctx.data.root.site.path || '') + to
   let hash = ''
   const hashIdx = to.indexOf('#')
