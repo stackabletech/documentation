@@ -38,10 +38,6 @@ Our command line tool has been re-worked to use the same backbone as Stackable C
 Listener operator::
 The listener-operator was introduced in release 23.1 and the associated ServiceType field in 23.4. In this release we introduce configurable ListenerClass _presets_ that map to the service types appropriate for different environments. This is discussed in more detail in the xref:listener-operator:listenerclass.adoc[documentation].
 
-
-SBOMs?::
-...
-
 Product features::
 
 Additionally, there are some other individual product features that are noteworthy:
