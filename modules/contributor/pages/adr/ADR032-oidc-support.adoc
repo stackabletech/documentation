@@ -22,7 +22,7 @@ Technical Story: https://github.com/stackabletech/issues/issues/431
 OIDC is a widespread authentication mechanism, supported by most modern data products as well as identity providers.
 OIDC is also used inside the Gaia-X ecosystem.
 Keycloak is also widespread as a self-hosted, internal identity provider.
-Just as with LDAP, we expect users to already have an identiy provider running; deploying an identity provider is out of scope of the design.
+Just as with LDAP, we expect users to already have an identity provider running; deploying an identity provider is out of scope of the design.
 
 We want to support OIDC as an authentication mechanism on the Stackable Data Platform, allowing users to configure their already existing identity provider via our AuthenticationClass mechanism.
 
