@@ -123,7 +123,7 @@ As mentioned before, we expect the user to already operate the identity provider
 
 * Don't repeat yourself: Information should ideally only be configured in one spot.
 * Flexible: Different variants of client and product instance mappings should be supported.
-* Comprehensible: Users should not be overwhelmed by complicated documentation. After seeting up one product, users should be able to fairly easily setup other products as well.
+* Comprehensible: Users should not be overwhelmed by complicated documentation. After setting up one product, users should be able to fairly easily setup other products as well.
 * High level of support across SDP: All products supporting OIDC should work. Furthermore, most OIDC providers listed above should work.
 * No surprises:  We have previously designed the AuthenticationClass mechanism and how it integrates into product CRDs, at the time to support LDAP authentication. The OIDC configuration should have similar ergonomics so users are not surprised and we get a coherent platform.
 
