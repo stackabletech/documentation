@@ -34,7 +34,7 @@ Useful information to consider in the decision.
 
 === OIDC clients and product-client-mappings
 
-To configure a product to use ODIC, it needs information about where to find the OIDC provider (typically the URL of the discovery endpoint), as well as client credentials to authenticate with the provider.
+To configure a product to use OIDC, it needs information about where to find the OIDC provider (typically the URL of the discovery endpoint), as well as client credentials to authenticate with the provider.
 The connection information is generic and shared between all clients, but the crendentials are product specific.
 
 It is best practice to have one client per connecting product.
