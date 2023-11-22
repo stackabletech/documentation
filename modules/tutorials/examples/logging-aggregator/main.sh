@@ -13,14 +13,13 @@ helm install \
 # end::vector-agg[]
 
 # tag::vector-discovery[]
-kubectl apply -f vector-aggregator-discovery.yaml
+kubectl apply --server-side -f vector-aggregator-discovery.yaml
 # end::vector-discovery[]
 
 # tag::zk[]
-kubectl apply -f zookeeper.yaml
+kubectl apply --server-side -f zookeeper.yaml
 # end::zk[]
 
-sleep 10
 kubectl rollout status statefulset simple-zk-server-default --timeout=5m
 kubectl wait \
     --for=jsonpath='.status.readyReplicas'=3 \
