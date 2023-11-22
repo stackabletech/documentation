@@ -101,7 +101,9 @@ The JSON object contains a timestamp, the log message, log level and some additi
 You can see the same log line in the log output of the ZooKeeper container:
 
 [source]
-kubectl logs --container=zookeeper simple-zk-server-default-0 | grep "zookeeper.version="
+kubectl logs \
+  --container=zookeeper simple-zk-server-default-0 \
+  | grep "zookeeper.version="
 
 [source]
 2023-11-06 10:30:40,223 [myid:1] - INFO  [main:o.a.z.Environment@98] - Server environment:zookeeper.version=3.8.0-5a02a05eddb59aee6ac762f7ea82e92a68eb9c0f, built on 2022-02-25 08:49 UTC
