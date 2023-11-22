@@ -3,7 +3,7 @@
 echo "Installing ZooKeeper Operator"
 # tag::zk-op[]
 #stackablectl release install -i secret -i commons -i zookeeper 23.7
-stackablectl op in secret commons zookeeper
+stackablectl operator install secret commons zookeeper
 # end::zk-op[]
 
 # tag::vector-agg[]
