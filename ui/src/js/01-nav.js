@@ -25,7 +25,18 @@
     menuPanel.scrollTop = 0
   }
 
-  if (navMenuToggle) {
+  find(menuPanel, '.nav-item-toggle').forEach(function (btn) {
+    var li = btn.parentElement
+    btn.addEventListener('click', toggleActive.bind(li))
+    var navItemSpan = findNextElement(btn, '.nav-text')
+    if (navItemSpan) {
+      navItemSpan.style.cursor = 'pointer'
+      navItemSpan.addEventListener('click', toggleActive.bind(li))
+    }
+  })
+
+  if (navMenuToggle && menuPanel.querySelector('.nav-item-toggle')) {
+    navMenuToggle.style.display = ''
     navMenuToggle.addEventListener('click', function () {
       var collapse = !this.classList.toggle('is-active')
       find(menuPanel, '.nav-item > .nav-item-toggle').forEach(function (btn) {
@@ -39,16 +50,6 @@
       }
     })
   }
-
-  find(menuPanel, '.nav-item-toggle').forEach(function (btn) {
-    var li = btn.parentElement
-    btn.addEventListener('click', toggleActive.bind(li))
-    var navItemSpan = findNextElement(btn, '.nav-text')
-    if (navItemSpan) {
-      navItemSpan.style.cursor = 'pointer'
-      navItemSpan.addEventListener('click', toggleActive.bind(li))
-    }
-  })
 
   if (explorePanel) {
     explorePanel.querySelector('.context').addEventListener('click', function () {
