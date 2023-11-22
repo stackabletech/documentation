@@ -78,7 +78,7 @@ Vector was configured to print the aggregated logs to `stderr`, so if you look a
 [source,bash]
 include::example$logging-aggregator/main.sh[tag=grep]
 
-You should see a JSON oject per ZooKeeper replica printed that look like
+You should see a JSON object per ZooKeeper replica printed that looks like
 
 [source,json]
 {
