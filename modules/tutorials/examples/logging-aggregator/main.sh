@@ -7,7 +7,10 @@ stackablectl op in secret commons zookeeper
 # end::zk-op[]
 
 # tag::vector-agg[]
-helm install --wait -f vector-aggregator-values.yaml vector-aggregator vector/vector
+helm install \
+  --wait \
+  --values vector-aggregator-values.yaml \
+  vector-aggregator vector/vector
 # end::vector-agg[]
 
 # tag::vector-discovery[]
