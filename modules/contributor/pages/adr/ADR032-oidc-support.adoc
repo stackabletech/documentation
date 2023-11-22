@@ -156,11 +156,11 @@ spec:
       # to "/".
       rootPath: /realms/master
 
-      # User configurable scopes depending on the product requirements.
-      # The following three scopes are usually required, and might even
-      # be hard-coded in the product. Scopes defined here are probably
-      # merged by the product into any default scopes it sets
-      # out-of-the-box.
+      # User configurable scopes depending on the Identity provider
+      # requirements.
+      # The following three scopes are usually required, but depending
+      # on the Identity Provider requirements, you might need to add or
+      # remove some from this list.
       scopes: [ openid, email, profile ]
 
       # Optional provider hint. If unspecified, the product will not
