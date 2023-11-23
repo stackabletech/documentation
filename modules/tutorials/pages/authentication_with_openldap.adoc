@@ -7,7 +7,7 @@ more about authentication in the Stackable Platform on the xref:concepts:authent
 Prerequisites:
 
 * a k8s cluster available, or https://kind.sigs.k8s.io/[kind] installed
-* xref:management::stackablectl/index.adoc installed
+* xref:management:stackablectl:index.adoc[] installed
 * basic knowledge of how to create resources in Kubernetes (i.e. `kubectl apply -f <filename>.yaml`) and inspect them
   (`kubectl get` or a tool like https://k9scli.io/[k9s])
 
