@@ -1,0 +1,32 @@
+---
+apiVersion: zookeeper.stackable.tech/v1alpha1
+kind: ZookeeperCluster
+metadata:
+  name: simple-zk
+spec:
+  image:
+    productVersion: 3.8.0
+    stackableVersion: "0.0.0-dev"
+  clusterConfig:
+    vectorAggregatorConfigMapName: vector-aggregator-discovery  # <1>
+  servers:
+    roleGroups:
+      default:
+        replicas: 3
+        config:
+          logging:  # <2>
+            enableVectorAgent: true
+            containers:
+              vector:
+                file:
+                  level: WARN
+              zookeeper:
+                console:
+                  level: INFO
+                file:
+                  level: INFO
+                loggers:
+                  ROOT:
+                    level: INFO
+                  org.apache.zookeeper.server.NettyServerCnxn:
+                    level: NONE
