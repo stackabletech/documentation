@@ -13,18 +13,18 @@ helm install \
 # end::vector-agg[]
 
 # tag::vector-discovery[]
-kubectl apply --server-side -f vector-aggregator-discovery.yaml
+kubectl apply --f vector-aggregator-discovery.yaml
 # end::vector-discovery[]
 
 # tag::zk[]
-kubectl apply --server-side -f zookeeper.yaml
+kubectl apply -f zookeeper.yaml
 # end::zk[]
 
-kubectl rollout status statefulset simple-zk-server-default --timeout=5m
+# Wait until the zookeeper-operator deployed the StatefulSet
 kubectl wait \
-    --for=jsonpath='.status.readyReplicas'=3 \
-    --timeout=5m \
-    statefulsets.apps/simple-zk-server-default
+  --for=condition=available \
+  --timeout=5m \
+  zookeeperclusters.zookeeper.stackable.tech/simple-zk
 
 # tag::grep[]
 kubectl logs vector-aggregator-0 | grep "zookeeper.version=" | jq
@@ -32,7 +32,7 @@ kubectl logs vector-aggregator-0 | grep "zookeeper.version=" | jq
 
 if [ "${PIPESTATUS[1]}" -eq 0 ]
 then
-    echo "it worked"
+  echo "it worked"
 else
-    echo "it didn't work :("
+  echo "it didn't work"
 fi
