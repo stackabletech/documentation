@@ -13,7 +13,7 @@ helm install \
 # end::vector-agg[]
 
 # tag::vector-discovery[]
-kubectl apply --f vector-aggregator-discovery.yaml
+kubectl apply -f vector-aggregator-discovery.yaml
 # end::vector-discovery[]
 
 # tag::zk[]
