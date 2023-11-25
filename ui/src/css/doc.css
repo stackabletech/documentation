@@ -705,8 +705,8 @@
   text-align: left;
 }
 
-.doc .ulist .title,
-.doc .olist .title {
+.doc .olist .title,
+.doc .ulist .title {
   font-style: var(--caption-font-style);
   font-weight: var(--caption-font-weight);
   margin-bottom: 0.25rem;
