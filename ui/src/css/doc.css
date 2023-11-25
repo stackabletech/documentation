@@ -425,50 +425,54 @@
 }
 
 .doc .admonitionblock td.icon {
+  font-size: calc(15 / var(--rem-base) * 1rem);
+  left: 0;
+  line-height: 1;
+  padding: 0;
   position: absolute;
   top: 0;
-  left: 0;
-  font-size: calc(15 / var(--rem-base) * 1rem);
-  padding: 0 0.5rem;
-  height: 1.25rem;
-  line-height: 1;
-  font-weight: var(--admonition-label-font-weight);
-  text-transform: uppercase;
-  border-radius: 0.45rem;
   transform: translate(-0.5rem, -50%);
 }
 
 .doc .admonitionblock td.icon i {
-  display: inline-flex;
   align-items: center;
-  height: 100%;
+  border-radius: 0.45rem;
+  display: inline-flex;
+  filter: initial;
+  height: 1.25rem;
+  padding: 0 0.5rem;
+  vertical-align: initial;
+  width: fit-content;
 }
 
 .doc .admonitionblock td.icon i::after {
   content: attr(title);
+  font-weight: var(--admonition-label-font-weight);
+  font-style: normal;
+  text-transform: uppercase;
 }
 
-.doc .admonitionblock.caution td.icon {
+.doc .admonitionblock td.icon i.icon-caution {
   background-color: var(--caution-color);
   color: var(--caution-on-color);
 }
 
-.doc .admonitionblock.important td.icon {
+.doc .admonitionblock td.icon i.icon-important {
   background-color: var(--important-color);
   color: var(--important-on-color);
 }
 
-.doc .admonitionblock.note td.icon {
+.doc .admonitionblock td.icon i.icon-note {
   background-color: var(--note-color);
   color: var(--note-on-color);
 }
 
-.doc .admonitionblock.tip td.icon {
+.doc .admonitionblock td.icon i.icon-tip {
   background-color: var(--tip-color);
   color: var(--tip-on-color);
 }
 
-.doc .admonitionblock.warning td.icon {
+.doc .admonitionblock td.icon i.icon-warning {
   background-color: var(--warning-color);
   color: var(--warning-on-color);
 }
