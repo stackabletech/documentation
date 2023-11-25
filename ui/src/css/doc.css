@@ -280,14 +280,16 @@
   margin-top: 1.5rem;
 }
 
-.doc table.tableblock,
-.doc table.tableblock pre,
-.doc .admonitionblock pre {
+.doc table.tableblock {
   font-size: calc(15 / var(--rem-base) * 1rem);
 }
 
 .doc p.tableblock + p.tableblock {
   margin-top: 0.5rem;
+}
+
+.doc table.tableblock pre {
+  font-size: inherit;
 }
 
 .doc td.tableblock > .content {
@@ -404,6 +406,10 @@
 .doc .admonitionblock td.content > :not(.title):first-child,
 .doc .admonitionblock td.content > .title + * {
   margin-top: 0;
+}
+
+.doc .admonitionblock td.content pre {
+  font-size: calc(15 / var(--rem-base) * 1rem);
 }
 
 .doc .admonitionblock > table {
