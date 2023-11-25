@@ -518,7 +518,8 @@
   margin-top: -0.2em;
 }
 
-.doc .videoblock iframe {
+.doc .videoblock iframe,
+.doc .videoblock video {
   max-width: 100%;
   vertical-align: middle;
 }
@@ -712,8 +713,8 @@
   margin-bottom: 0.25rem;
 }
 
-.doc .videoblock .title,
-.doc .imageblock .title {
+.doc .imageblock .title,
+.doc .videoblock .title {
   margin-top: 0.5rem;
   padding-bottom: 0;
 }
