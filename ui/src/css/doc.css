@@ -424,7 +424,7 @@
   word-wrap: anywhere;
 }
 
-.doc .admonitionblock .icon {
+.doc .admonitionblock td.icon {
   position: absolute;
   top: 0;
   left: 0;
@@ -438,39 +438,39 @@
   transform: translate(-0.5rem, -50%);
 }
 
-.doc .admonitionblock.caution .icon {
-  background-color: var(--caution-color);
-  color: var(--caution-on-color);
-}
-
-.doc .admonitionblock.important .icon {
-  background-color: var(--important-color);
-  color: var(--important-on-color);
-}
-
-.doc .admonitionblock.note .icon {
-  background-color: var(--note-color);
-  color: var(--note-on-color);
-}
-
-.doc .admonitionblock.tip .icon {
-  background-color: var(--tip-color);
-  color: var(--tip-on-color);
-}
-
-.doc .admonitionblock.warning .icon {
-  background-color: var(--warning-color);
-  color: var(--warning-on-color);
-}
-
-.doc .admonitionblock .icon i {
+.doc .admonitionblock td.icon i {
   display: inline-flex;
   align-items: center;
   height: 100%;
 }
 
-.doc .admonitionblock .icon i::after {
+.doc .admonitionblock td.icon i::after {
   content: attr(title);
+}
+
+.doc .admonitionblock.caution td.icon {
+  background-color: var(--caution-color);
+  color: var(--caution-on-color);
+}
+
+.doc .admonitionblock.important td.icon {
+  background-color: var(--important-color);
+  color: var(--important-on-color);
+}
+
+.doc .admonitionblock.note td.icon {
+  background-color: var(--note-color);
+  color: var(--note-on-color);
+}
+
+.doc .admonitionblock.tip td.icon {
+  background-color: var(--tip-color);
+  color: var(--tip-on-color);
+}
+
+.doc .admonitionblock.warning td.icon {
+  background-color: var(--warning-color);
+  color: var(--warning-on-color);
 }
 
 .doc .imageblock,
