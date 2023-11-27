@@ -8,9 +8,13 @@ site:
     enable_tracking: true
 
 urls:
-  # This replaces the component version in the URL of the latest stable version with 'stable'
-  # i.e. /commons-operator/stable/index.html instead of /commons-operator/0.3/index.html
+  # The symbolic name of the latest stable version. This is used to generate redirects to the latest version.
   latest_version_segment: stable
+  # This configures stable version links to be redirects, i.e.
+  # /commons-operator/stable/index.html redirects to /commons-operator/23.11/index.html
+  # if 23.11 is the latest version.
+  latest_version_segment_strategy: redirect:from
+  # We deploy our site on netlify, so we use their redirect config mechanism
   redirect_facility: netlify
 
 content:
