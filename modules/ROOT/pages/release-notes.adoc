@@ -549,7 +549,6 @@ metadata:
 spec:
   image:
     productVersion: "414"
-    stackableVersion: "23.7"
   clusterConfig:
     ...
 ----
@@ -566,7 +565,6 @@ metadata:
 spec:
   image:
     productVersion: "428"
-    stackableVersion: 23.11
   clusterConfig:
     ...
 ---
