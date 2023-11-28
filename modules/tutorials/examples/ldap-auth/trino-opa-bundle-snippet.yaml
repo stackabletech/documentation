@@ -18,16 +18,3 @@ data:
     is_alice() {
       input.context.identity.user == "alice"
     }
-
-    allow {
-      is_bob
-    }
-    extended[i] {
-      some i
-      input.action.filterResources[i]
-      is_bob
-    }
-
-    is_bob() {
-      input.context.identity.user == "bob"
-    }

@@ -3,5 +3,5 @@
 spec:
   clusterConfig:
     authentication:
-    - authenticationClass: openldap  # <1>
+      - authenticationClass: openldap # <1>
 # end::snippet[]

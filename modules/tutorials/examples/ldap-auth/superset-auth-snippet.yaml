@@ -2,7 +2,7 @@
 # tag::snippet[]
 spec:
   clusterConfig:
-    authentication:                    # <1>
-      - authenticationClass: openldap  # <2>
-        userRegistrationRole: Admin    # <3>
+    authentication:                   # <1>
+      - authenticationClass: openldap # <2>
+        userRegistrationRole: Admin   # <3>
 # end::snippet[]

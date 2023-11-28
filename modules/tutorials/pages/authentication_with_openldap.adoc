@@ -20,12 +20,10 @@ command.
 
 === Superset and Trino Stack
 
-This command will install the latest Stackable release for you, and set up the `trino-superset-s3` Stack. It contains a
-Superset instance connected to a Trino instance, and all their dependencies (Minio S3, PostgreSQL). Later in this guide,
+This command will install the latest Stackable release for you, and set up the `trino-superset-s3` Stack. It contains a Superset instance connected to a Trino instance, and all their dependencies (Minio S3, PostgreSQL). Later in this guide,
 a Superset and Trino instance will be configured to use LDAP.
 
-If you do not have a Kubernetes cluster already, add the `--cluster kind` (or `-c kind`) flag to let stackablectl deploy
-one for you.
+If you do not have a Kubernetes cluster already, add the `--cluster kind` (or `-c kind`) flag to let stackablectl deploy one for you.
 
 [source,bash]
 include::example$ldap-auth/10-install-base.sh[tag=stackablectl-install]
@@ -47,8 +45,7 @@ browser.
 You can log into Superset with user _admin_ and password _adminadmin_, and into Trino with user _admin_ and password
 _adminadmin_.
 
-These are the current users defined in Superset's and Trino's internal user management. Later you will see that these
-users cannot be used for authentication anymore after LDAP authentication has been enabled.
+These are the current users defined in Superset's and Trino's internal user management. Later you will see that these users cannot be used for authentication anymore after LDAP authentication has been enabled.
 
 === OpenLDAP Stack
 
@@ -72,7 +69,7 @@ LDAP_PASSWORDS:           alice,bob
 
 == Steps
 
-Now that you have a couple of data products installed as well as an LDAP server, you can start configuring the products to use LDAP. The following image shows the parts that are already there in blue and the parts you will add in green:
+Now that you have a couple of data products as well as the LDAP server installed, you can start configuring the products to use LDAP. The following image shows the parts that are already there in blue and the parts you will add in green:
 
 image::image$openldap-tutorial.drawio.svg[]
 
@@ -149,13 +146,16 @@ metadata:
   name: superset
   ...
 spec:
-  version: ...
+  image:
+    productVersion: ...
   clusterConfig:
+    listenerClass: ...
     credentialsSecret: superset-credentials
+    mapboxSecret: ...
   nodes:
     roleGroups:
       default:
-        config:
+        replicas: 1
   ...
 ----
 ====
@@ -165,12 +165,12 @@ You can now delete the SupersetCluster, you recreate it later with the new confi
 [source,bash]
 include::example$ldap-auth/40-modify-superset.sh[tag=delete-superset]
 
-Modify your `superset.yaml` to include this new `authenticationConfig` property under the `spec`:
+Modify your `superset.yaml` to include this new `authentication` property under the `spec.clusterConfig`:
 
 [source,yaml]
 include::example$ldap-auth/superset-auth-snippet.yaml[tag=snippet]
 
-<1> The new `authentication` section which configures how Superset is authenticating users
+<1> The new `authentication` configuration section which configures how Superset is authenticating users
 <2> The `authenticationClass` property is referencing the AuthenticationClass `openldap` you created earlier
 <3> The default Superset role that users should be assigned to when they log in. Any user will be an Admin
 
@@ -186,11 +186,15 @@ metadata:
   name: superset
   ...
 spec:
+  image:
+    productVersion: ...
   clusterConfig:
-    credentialsSecret: superset-credentials
     authentication:
       - authenticationClass: openldap
         userRegistrationRole: Admin
+    listenerClass: ...
+    credentialsSecret: superset-credentials
+    mapboxSecret: ...
   nodes:
     roleGroups:
       default:
@@ -203,7 +207,6 @@ Now deploy the updated superset cluster:
 
 [source,bash]
 include::example$ldap-auth/40-modify-superset.sh[tag=apply-superset-cluster]
-
 
 Connect to superset as before, and try logging in again with username _admin_ and password _adminadmin_, Superset will not accept these credentials anymore. You now have to use LDAP credentials to log in. The OpenLDAP you installed earlier comes with two users, _alice_ (password _alice_) and _bob_ (password _bob_). Log in with any of these users and Superset will accept.
 
@@ -229,17 +232,17 @@ metadata:
   name: trino
   ...
 spec:
+  image:
+    productVersion: ...
   clusterConfig:
     authentication:
-    - authenticationClass: trino-users
+      - authenticationClass: trino-users
     authorization:
       opa:
         configMapName: opa
         package: trino
     catalogLabelSelector:
-      matchLabels:
-        trino: trino
-        ...
+    ...
   workers:
     ...
   coordinators:
@@ -253,12 +256,12 @@ You can now delete the TrinoCluster. you recreate it later with the new configur
 [source,bash]
 include::example$ldap-auth/60-modify-trino.sh[tag=delete]
 
-Replace the `multiUser` authentication method in your `trino.yaml` with an `ldap` method that references the `openldap` AuthenticationClass:
+Replace the `trino-users` AuthenticationClass in your `trino.yaml` with the `openldap` AuthenticationClass:
 
 [source,yaml]
 include::example$ldap-auth/trino-auth-snippet.yaml[tag=snippet]
 
-<1> The `authenticationClass` property is referencing the AuthenticationClass `openldap` you created earlier
+<1> Switch the `authenticationClass` to the AuthenticationClass `openldap` you created earlier
 
 .Your `trino.yaml` should now look similar to this
 [%collapsible]
@@ -272,13 +275,16 @@ metadata:
   name: trino
   ...
 spec:
+  image:
+    productVersion: ...
   clusterConfig:
     authentication:
-    - authenticationClass: openldap
+      - authenticationClass: openldap
     authorization:
       opa:
         configMapName: opa
         package: trino
+    catalogLabelSelector:
     ...
   workers:
     ...
@@ -313,7 +319,7 @@ Apply this patch:
 include::example$ldap-auth/trino-opa-bundle-snippet.yaml[]
 ----
 
-And apply the new bundle:
+And apply the new bundle that lets `alice` do everything and denies `bob` everything:
 
 [source,bash]
 include::example$ldap-auth/70-modify-trino-opa-bundle.sh[tag=apply]
