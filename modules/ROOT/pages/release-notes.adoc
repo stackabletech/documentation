@@ -572,7 +572,7 @@ spec:
 ---
 ----
 
-To adapt the rego rules to work with the new authorizer visit the documentation xref:trino:usage-guide/security.adoc[here], detailed under the section on "Authorization". For example, you can upgrade to the last version of Open Policy Agent and enter the relevant syntax in a ConfigMap like this:
+To adapt the rego rules to work with the new authorizer visit the documentation xref:trino:usage-guide/security.adoc#_authorization [here]. For example, you can upgrade to the last version of Open Policy Agent and enter the relevant syntax in a ConfigMap like this:
 
 [source,yaml]
 ----
@@ -598,8 +598,6 @@ metadata:
 data:
   trino.rego: |
     package trino
-
-    import future.keywords.in
 
     default allow = false
 
