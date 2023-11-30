@@ -17,6 +17,7 @@ content:
     - url: ./
       branches:
         - HEAD
+        - release/23.11
         - release/23.7
         - release/23.4
         - release/23.1
@@ -29,6 +30,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-23.11
         - release-23.7
         - release-23.4
         - release-23.1
@@ -37,6 +39,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-23.11
         - release-23.7
         - release-23.4
         - release-23.1
@@ -44,6 +47,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-23.11
         - release-23.7
         - release-23.4
         - release-23.1
@@ -51,6 +55,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-23.11
         - release-23.7
         - release-23.4
         - release-23.1
@@ -59,6 +64,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-23.11
         - release-23.7
         - release-23.4
         - release-23.1
@@ -66,6 +72,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-23.11
         - release-23.7
         - release-23.4
         - release-23.1
@@ -73,6 +80,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-23.11
         - release-23.7
         - release-23.4
         - release-23.1
@@ -80,6 +88,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-23.11
         - release-23.7
         - release-23.4
         - release-23.1
@@ -87,6 +96,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-23.11
         - release-23.7
         - release-23.4
         - release-23.1
@@ -94,6 +104,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-23.11
         - release-23.7
         - release-23.4
         - release-23.1
@@ -101,6 +112,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-23.11
         - release-23.7
         - release-23.4
         - release-23.1
@@ -108,6 +120,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-23.11
         - release-23.7
         - release-23.4
         - release-23.1
@@ -115,6 +128,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-23.11
         - release-23.7
         - release-23.4
         - release-23.1
@@ -122,6 +136,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-23.11
         - release-23.7
         - release-23.4
         - release-23.1
@@ -129,6 +144,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-23.11
         - release-23.7
         - release-23.4
         - release-23.1
@@ -136,6 +152,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-23.11
         - release-23.7
         - release-23.4
         - release-23.1
