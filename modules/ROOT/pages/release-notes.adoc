@@ -143,7 +143,7 @@ NOTE: For all operators: the field `spec.image.stackableVersion` is no longer ne
 * https://github.com/stackabletech/airflow-operator/pull/322[Removed AirflowDB] `.spec.clusterConfig.databaseInitialization` was removed from the CRD. This allowed configuring logging for the database initialization job, which does not exist anymore. Instead, database initialization is done by the scheduler pod, which has its own logging configuration. This was necessary to remove the `AirflowDB` Custom Resource, which caused problems when upgrading or reinstalling Airflow clusters.
 Additionally, the `AirflowDB` custom resource is not used anymore. Those CRs should be deleted.
 
-* https://github.com/stackabletech/airflow-operator/pull/311[Implement KubernetesExecutor] As an alternative to the CeleryExecutor we now also support the KubernetesExecutor, whereby pods are spun up for job tasks and are terminated afterwards. This removes the need a Redis job queue and offers an alternative approach to resource management.
+* https://github.com/stackabletech/airflow-operator/pull/311[Implement KubernetesExecutor] As an alternative to the CeleryExecutor we now also support the KubernetesExecutor, whereby pods are spun up for job tasks and are terminated afterwards. This removes the need for a Redis job queue and offers an alternative approach to resource management.
 
 * https://github.com/stackabletech/airflow-operator/pull/316[Rename service port name] The service port name has been renamed from airflow to http for consistency reasons. This change requires that the statefulset be removed before upgrading. There might also be some e.g. Ingresses that rely on the port name that will need to be updated.
 
