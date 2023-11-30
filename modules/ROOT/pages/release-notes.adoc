@@ -148,7 +148,7 @@ Additionally, the `AirflowDB` custom resource is not used anymore. Those CRs sho
 * https://github.com/stackabletech/airflow-operator/pull/316[Rename service port name] The service port name has been renamed from airflow to http for consistency reasons. This change requires that the statefulset be removed before upgrading. There might also be some e.g. Ingresses that rely on the port name that will need to be updated.
 
 * https://github.com/stackabletech/airflow-operator/pull/303[AuthenticationClass references]
-`spec.clusterConfig.authenticationConfig` has been consolidated to `spec.clusterConfig.authentication` which takes a vector of AuthenticationClass references
+`spec.clusterConfig.authenticationConfig` has been consolidated to `spec.clusterConfig.authentication` which takes a vector of AuthenticationClass references.
 
 These consolidated changes would require a change from e.g.
 
