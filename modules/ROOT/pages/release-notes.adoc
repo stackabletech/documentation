@@ -115,7 +115,7 @@ This link lists the xref:demos:index.adoc[available demos].
 
 This release supports the following Kubernetes versions:
 
-* `1.28` _*CHECK*_
+* `1.28`
 * `1.27`
 * `1.26`
 
@@ -128,8 +128,9 @@ This Kubernetes version is no longer supported:
 
 This release supports the following OpenShift versions:
 
-* `4.13` _*CHECK*_
+* `4.13`
 * `4.12`
+* `4.11`
 
 === Breaking changes
 
