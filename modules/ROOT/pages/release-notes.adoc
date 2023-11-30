@@ -599,6 +599,8 @@ data:
   trino.rego: |
     package trino
 
+    import future.keywords.in
+
     default allow = false
 
     allow {
