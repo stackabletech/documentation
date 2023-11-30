@@ -1,3 +1,26 @@
 = Tutorials
 
-In this section you'll find tutorials that take you through a series of steps to complete a concrete project.
+Tutorials help you learn about a specific aspect of the Stackable Data Platform in a hands-on way.
+
+== [[features]]Tutorials for specific features
+
+The pages in this section are about specific features such as authentication with LDAP or log aggregation.
+The tutorials guide you through setting up LDAP or log aggregation for a particular product, but the same mechanism applies to other operators too.
+
+== [[getting-started]]Getting started guides per product operator
+
+For every product operator there is a getting started guide that takes you through installing the operator and its dependencies, running the product and making sure that it is working.
+Follow any of these guides to get started with a specific product.
+
+* xref:airflow:getting_started/index.adoc[Stackable Operator for Apache Airflow]
+* xref:druid:getting_started/index.adoc[Stackable Operator for Apache Druid]
+* xref:hbase:getting_started/index.adoc[Stackable Operator for Apache HBase]
+* xref:hdfs:getting_started/index.adoc[Stackable Operator for Apache HDFS]
+* xref:druid:getting_started/index.adoc[Stackable Operator for Apache Druid]
+* xref:hive:getting_started/index.adoc[Stackable Operator for Apache Hive]
+* xref:kafka:getting_started/index.adoc[Stackable Operator for Apache Kafka]
+* xref:nifi:getting_started/index.adoc[Stackable Operator for Apache NiFi]
+* xref:spark-k8s:getting_started/index.adoc[Stackable Operator for Apache Spark]
+* xref:superset:getting_started/index.adoc[Stackable Operator for Apache Superset]
+* xref:trino:getting_started/index.adoc[Stackable Operator for Trino]
+* xref:zookeeper:getting_started/index.adoc[Stackable Operator for Apache ZooKeeper]

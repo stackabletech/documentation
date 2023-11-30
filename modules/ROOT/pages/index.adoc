@@ -6,33 +6,19 @@
 :docs-issues: https://github.com/stackabletech/documentation/issues
 :docs-repo: https://github.com/stackabletech/documentation
 
-Welcome to Stackable!
-This documentation gives you an overview of the Stackable Data Platform, how to install and manage it as well as some
-tutorials.
+++++
+<style>
+h1 {
+    display: none; // hide the default title
+}
 
-++++
-<div class="boxes two-column">
-++++
-
-++++
-<div class="box">
-++++
-
-++++
-<h3>Introduction</h3>
+#que
+</style>
+<span id="intro-action">What are you looking for?</span>
 ++++
 
-The Stackable Data Platform allows you to deploy, scale and manage Data infrastructure in any environment running
-https://kubernetes.io/[Kubernetes].
-
-You can find an overview of the supported components <<Components,below>>, as well as a full list of all supported
-product versions xref:operators:supported_versions.adoc[here].
-
-If you have any feedback regarding the documentation please either open an {docs-issues}[issue], ask a
-{docs-discussion}[question] or look at the source for this documentation in its {docs-repo}[repository].
-
 ++++
-</div>
+<div class="boxes">
 ++++
 
 ++++
@@ -40,23 +26,97 @@ If you have any feedback regarding the documentation please either open an {docs
 ++++
 
 ++++
-<h3>Goal of the project</h3>
+<h3>Getting started</h3>
 ++++
 
-We are building a distribution of existing Open Source tools that together comprise the components of a modern data
-platform.
+Get started with the Stackable Data Platform or a specific operator.
 
-There are components to ingest data, to store data, to process and visualize and much more. While the platform got
-started in the _Big Data_ ecosystem we are in no way limited to big data workloads.
+* xref:quickstart.adoc[]
+* xref:tutorials:index.adoc#getting-started[Getting started per operator]
 
-You can declaratively build these environments, and we don't stop at the tool level as we also provide ways for the
-users to interact with the platform in the "as Code"-approach.
+++++
+</div>
+++++
 
-We are leveraging the https://www.openpolicyagent.org/[Open Policy Agent] to provide Security-as-Code.
+++++
+<div class="box">
+++++
 
-We are building a distribution that includes the “best of breed” of existing Open Source tools, but bundles them in a
-way, so it is easy to deploy a fully working stack of software. Most of the existing tools are “single purpose” tools,
-which often do not play nicely together out-of-the-box.
+++++
+<h3>Demos and Tutorials</h3>
+++++
+
+Run a demo data processing pipeline or follow a tutorial to learn about the platform hands-on!
+
+* xref:demos:index.adoc[]
+* xref:tutorials:index.adoc[]
+
+++++
+</div>
+++++
+
+++++
+<div class="box">
+++++
+
+++++
+<h3>Concept explanation</h3>
+++++
+
+Read concept explanation to gain a better understanding of how the Stackable Data platform works, 
+or how a specific feature works.
+
+xref:concepts:index.adoc[]
+
+++++
+</div>
+++++
+
+++++
+<div class="box">
+++++
+
+++++
+<h3>Product operator docs</h3>
+++++
+
+Read documentation for a specific product operator.
+This includes a general overview, a getting started guide and specific feature usage guides.
+
+xref:operators:index.adoc[Operator overview]
+
+++++
+</div>
+++++
+
+++++
+<div class="box">
+++++
+
+++++
+<h3>CRD Reference</h3>
+++++
+
+Read the CustomResourceDefinition (CRD) reference for all CRDs that are deployed by any Stackable operator.
+
+https://crds.stackable.tech/[CRD Reference]
+
+++++
+</div>
+++++
+
+++++
+<div class="box">
+++++
+
+++++
+<h3>Tooling</h3>
+++++
+
+Learn more about the tooling that supports the Stackable Data Platform; the `stackablectl` CLI utility and the Stackable Cockpit Web UI.
+
+* xref:management:stackablectl:index.adoc[`stackablectl`]
+* xref:management:cockpit:index.adoc[Cockpit UI]
 
 ++++
 </div>
@@ -66,8 +126,6 @@ which often do not play nicely together out-of-the-box.
 </div>
 ++++
 
-== Release Notes
-
-The Stackable platform consists of multiple operators that work together. Periodically a platform release is made,
-including all components of the platform at a specific version. See the latest release notes for 23.7
-xref:release_notes.adoc[here].
+++++
+<span class="help-action">Still need help? ... </span>
+++++
