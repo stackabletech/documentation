@@ -1,8 +1,286 @@
-# Operators
+= Operators
+:description: The overview over all the operators that make up the Stackable Data Platform.
+:keywords: Stackable Operator, Kubernetes, operator
+:k8s-operators: https://kubernetes.io/docs/concepts/extend-kubernetes/operator/
 
-This section of the Stackable documentation contains information about the individual Operators, as well as related information such as an overview over the xref:supported_versions.adoc[supported product versions] and how to enable xref:monitoring.adoc[monitoring] in all Operators.
+This section of the Stackable documentation contains information about the individual {k8s-operators}[operators] that make up the Stackable Data Platform.
+You can find an overview over the <<product, product operators>> as well as <<internal, internal operators>> below.
+
+This section also contains an overview over the xref:supported_versions.adoc[supported product versions] and how to enable xref:monitoring.adoc[monitoring] in all operators.
+
+++++
+<h2 id="products"><a class="anchor" href="#products"></a>Products</h2>
+++++
+
+++++
+<br>
+++++
+
+++++
+<div class="boxes">
+++++
+
+++++
+<div class="box">
+++++
+
+++++
+<h3 id="airflow"><a class="anchor" href="#airflow"></a>Apache Airflow</h3>
+++++
+
+Airflow is a workflow engine and your replacement should you be using Apache Oozie.
+
+xref:airflow:index.adoc[Read more]
+
+++++
+</div>
+++++
+
+++++
+<div class="box">
+++++
+
+++++
+<h3 id="druid"><a class="anchor" href="#druid"></a>Apache Druid</h3>
+++++
+
+Apache Druid is a real-time database to power modern analytics applications.
+
+xref:druid:index.adoc[Read more]
+
+++++
+</div>
+++++
+
+++++
+<div class="box">
+++++
+
+++++
+<h3 id="hbase"><a class="anchor" href="#hbase"></a>Apache HBase</h3>
+++++
+
+HBase is a distributed, scalable, big data store.
+
+xref:hbase:index.adoc[Read more]
+
+++++
+</div>
+++++
+
+++++
+<div class="box">
+++++
+
+++++
+<h3 id="hdfs"><a class="anchor" href="#hdfs"></a>Apache Hadoop HDFS</h3>
+++++
+
+HDFS is a distributed file system that provides high-throughput access to application data.
+
+xref:hdfs:index.adoc[Read more]
+
+++++
+</div>
+++++
+
+++++
+<div class="box">
+++++
+
+++++
+<h3 id="hive"><a class="anchor" href="#hive"></a>Apache Hive</h3>
+++++
+
+The Apache Hive data warehouse software facilitates reading, writing, and managing large datasets residing in
+distributed storage using SQL. We support the Hive Metastore.
+
+xref:hive:index.adoc[Read more]
+
+++++
+</div>
+++++
+
+++++
+<div class="box">
+++++
+
+++++
+<h3 id="kafka"><a class="anchor" href="#kafka"></a>Apache Kafka</h3>
+++++
+
+Apache Kafka is an open-source distributed event streaming platform used by thousands of companies for high-performance
+data pipelines, streaming analytics, data integration, and mission-critical applications.
+
+xref:kafka:index.adoc[Read more]
+
+++++
+</div>
+++++
+
+++++
+<div class="box">
+++++
+
+++++
+<h3 id="nifi"><a class="anchor" href="#nifi"></a>Apache NiFi</h3>
+++++
+
+An easy to use, powerful, and reliable system to process and distribute data.
+
+xref:nifi:index.adoc[Read more]
+
+++++
+</div>
+++++
+
+++++
+<div class="box">
+++++
+
+++++
+<h3 id="spark"><a class="anchor" href="#spark"></a>Apache Spark</h3>
+++++
+
+Apache Spark is a multi-language engine for executing data engineering, data science, and machine learning on
+single-node machines or clusters.
+
+xref:spark-k8s:index.adoc[Read more]
+
+++++
+</div>
+++++
+
+++++
+<div class="box">
+++++
+
+++++
+<h3 id="superset"><a class="anchor" href="#superset"></a>Apache Superset</h3>
+++++
+
+Apache Superset is a modern data exploration and visualization platform.
+
+xref:superset:index.adoc[Read more]
+
+++++
+</div>
+++++
+
+++++
+<div class="box">
+++++
+
+++++
+<h3 id="trino"><a class="anchor" href="#trino"></a>Trino</h3>
+++++
+
+Fast distributed SQL query engine for big data analytics that helps you explore your data universe.
+
+xref:trino:index.adoc[Read more]
+
+++++
+</div>
+++++
+
+++++
+<div class="box">
+++++
+
+++++
+<h3 id="zookeeper"><a class="anchor" href="#zookeeper"></a>Apache ZooKeeper</h3>
+++++
+
+ZooKeeper is a centralized service for maintaining configuration information, naming, providing distributed
+synchronization, and providing group services.
+
+xref:zookeeper:index.adoc[Read more]
+
+++++
+</div>
+++++
 
 
-Find a list of all Operators below:
+++++
+</div>
+++++
 
-include::partial$operator_doc_links.adoc[]
+++++
+<h2 id="internal"><a class="anchor" href="#internal"></a>Internal</h2>
+++++
+
+++++
+<br>
+++++
+
+++++
+<div class="boxes">
+++++
+
+++++
+<div class="box">
+++++
+
+++++
+<h3 id="opa"><a class="anchor" href="#opa"></a>OpenPolicyAgent</h3>
+++++
+
+The OpenPolicyAgent is a rule based authorization engine.
+
+xref:opa:index.adoc[Read more]
+
+++++
+</div>
+++++
+
+++++
+<div class="box">
+++++
+
+++++
+<h3 id="commons-operator"><a class="anchor" href="#commons-operator"></a>Commons</h3>
+++++
+
+The commons operator supplies shared CustomResourceDefinitions for all other operators.
+
+xref:commons-operator:index.adoc[Read more]
+
+++++
+</div>
+++++
+
+++++
+<div class="box">
+++++
+
+++++
+<h3 id="secret-operator"><a class="anchor" href="#secret-operator"></a>Secret</h3>
+++++
+
+The secret operator is responsible for handling secrets as well as certificates and auto-renewing them.
+
+xref:secret-operator:index.adoc[Read more]
+
+++++
+</div>
+++++
+
+++++
+<div class="box">
+++++
+
+++++
+<h3 id="listener-operator"><a class="anchor" href="#listener-operator"></a>Listener</h3>
+++++
+
+The listener operator is reponsible for making services available outside of the Kubernetes cluster.
+
+xref:listener-operator:index.adoc[Read more]
+
+++++
+</div>
+++++
+
+++++
+</div>
+++++
