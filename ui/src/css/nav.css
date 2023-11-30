@@ -261,18 +261,19 @@ html.is-clipped--nav {
 }
 
 .nav-panel-explore .component .version a {
-  border: 1px solid var(--nav-border-color);
+  background: var(--nav-border-color);
   border-radius: 0.25rem;
-  opacity: 0.75;
   white-space: nowrap;
-  padding: 0.125em 0.25em;
+  padding: 0.25em 0.5em;
   display: inherit;
+  opacity: 0.75;
 }
 
 .nav-panel-explore .component .is-current a {
-  border-color: currentColor;
-  opacity: 0.9;
+  background: var(--nav-heading-font-color);
+  color: var(--nav-secondary-background);
   font-weight: var(--body-font-weight-bold);
+  opacity: 1;
 }
 
 .nav-menu .title-wrapper {
