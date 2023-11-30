@@ -322,9 +322,9 @@ NOTE: for details about how Kafka uses a PVC to persist a reference to its ZNode
 
 ==== Stackable Operator for Apache NiFi
 
-* https://github.com/stackabletech/nifi-operator/pull/498[AuthenticationClass references] Consolidated authentication config to a list of AuthenticationClasses
+* https://github.com/stackabletech/nifi-operator/pull/498[AuthenticationClass references] Consolidated authentication config to a list of AuthenticationClasses.
 
-* https://github.com/stackabletech/nifi-operator/pull/498[Remove credential generation] Removed crd support for the auto generation of admin credentials
+* https://github.com/stackabletech/nifi-operator/pull/498[Remove credential generation] Removed crd support for the auto generation of admin credentials.
 
 * https://github.com/stackabletech/nifi-operator/pull/498[Remove redundant authentication field] Removed crd support for the `nifi.security.allow.anonymous.authentication` property that was never used.
 
