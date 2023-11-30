@@ -21,7 +21,8 @@ Graceful shutdown refers to the managed, controlled shutdown of service instance
 documentation] for more details.
 
 Signed SDP product images::
-As of this release all Stackable product images are signed (the signing of operator images was delivered in SDP 23.7).
+As of this release all Stackable product images are signed (the signing of operator images was delivered in SDP 23.7). Please see this
+xref:tutorials:enabling_verification_of_image_signatures.adoc[tutorial] for more information.
 
 Airflow KubernetesExecutor::
 Airflow clusters can now be configured to use Kubernetes executors, whereby pods are spun up for job tasks and terminated when complete, thus offering an alternative way to use resources without the need for job queuing.
