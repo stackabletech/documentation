@@ -136,7 +136,7 @@ This release supports the following OpenShift versions:
 
 You will need to adapt your existing CRDs due to the following breaking changes detailed below.
 
-NOTE: For all operators: the field `spec.image.stackableVersion` is no longer needed when the operator and product stackable versions match e.g. both are `23.7`. If the operator has been upgraded from e.g. `23.7` to `23.11`, and if the product image should _also_ be upgraded to the same _stackable_ version, then this field can be omitted.
+NOTE: For all operators: the field `spec.image.stackableVersion` is no longer needed when the operator and product stackable versions match e.g. both are `23.11`. If this field has been _previously_ set this will *not* happen: in such cases `spec.image.stackableVersion` should be set explicitly, either to a release version or to `null`.
 
 ==== Stackable Operator for Apache Airflow
 
