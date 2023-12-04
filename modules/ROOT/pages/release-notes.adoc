@@ -6,7 +6,7 @@ including all components of the platform at a specific version.
 
 == Release 23.11
 
-This release introduces two further elements of platform stability - pod disruption budgets and graceful shutdown specifications - as well as a new management tool and updated product version support.
+This release introduces two further elements of platform stability - pod disruption budgets and graceful shutdown specifications - as well as a new management tool and updated product version support. Any known issues related to this release are listed in the <<KI_2311>> section below.
 
 === New / extended platform features
 
@@ -38,6 +38,9 @@ Our command line tool has been re-worked to use the same backbone as Stackable C
 
 Listener operator::
 The listener-operator was introduced in release 23.1 and the associated ServiceType field in 23.4. In this release we introduce configurable ListenerClass _presets_ that map to the service types appropriate for different environments. This is discussed in more detail in the xref:listener-operator:listenerclass.adoc[documentation].
+
+Openshift certification::
+All Stackable operators in the 23.11 release have been certified for Openshift versions 4.11-4.13 and can be installed directly from the OperatorHub UI: image:openshift_operatorhub.png[OperatorHub in Openshift portal]
 
 Product features::
 
@@ -774,6 +777,10 @@ Additionally, please note the following:
 
 * If the default PVC size has been changed, then the StatefulSet must be deleted: it is not possible to change the PVC
 in the StatefulSet specification.
+
+=== Known issues [[KI_2311]]
+
+* https://github.com/stackabletech/spark-k8s-operator/pull/313[Spark-k8s: missing RBAC permission]. This has been fixed in the nightly build of the operator.
 
 == Release 23.7
 
