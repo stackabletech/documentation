@@ -164,20 +164,22 @@ spec:
       # remove some from this list.
       scopes: [ openid, email, profile ]
 
-      # If a product extracts some sort of "effective user" that is represented by a
-      # string internally, this config determines with claim is used to extract that
-      # string. It is desirable to use `sub` in here (or some other stable identifier),
-      # but in many cases you might need to use `preferred_username` (e.g. in case of Keycloak)
-      # or a different claim instead.
+      # If a product extracts some sort of "effective user" that is
+      # represented by a string internally, this config determines with
+      # claim is used to extract that string. It is desirable to use
+      # `sub` in here (or some other stable identifier), but in many
+      # cases you might need to use `preferred_username` (e.g. in case
+      # of Keycloak) or a different claim instead.
       #
-      # Please note that some products hard-coded the claim in their implementation,
-      # so some product operators might error out if the product hardcodes a different
-      # claim than configured here.
+      # Please note that some products hard-coded the claim in their
+      # implementation, so some product operators might error out if
+      # the product hardcodes a different claim than configured here.
       #
-      # We don't provide any default value, as there is no correct way of doing it
-      # that works in all setups. Most demos will probably use `preferred_username`,
-      # although `sub` being more desirable, but technically impossible with the current
-      # behavior of the products.
+      # We don't provide any default value, as there is no correct way
+      # of doing it that works in all setups. Most demos will probably
+      # use `preferred_username`, although `sub` being more desirable,
+      # but technically impossible with the current behavior of the
+      # products.
       principalClaim: preferred_username
 
       # Optional provider hint. If unspecified, the product will not
