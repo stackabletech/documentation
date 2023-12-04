@@ -62,6 +62,7 @@ http-server.authentication.oauth2.client-id: trino
 http-server.authentication.oauth2.client-secret: ${ENV:TRINO_CLIENT_SECRET}
 http-server.authentication.oauth2.issuer: https://${ENV:KEYCLOAK_ADDRESS}/realms/master
 http-server.authentication.oauth2.scopes: openid
+http-server.authentication.oauth2.principal-field: preferred_username
 ```
 
 ==== Druid
@@ -89,7 +90,7 @@ Does not support reading an OIDC discovery URL but requires:
 We could opt to implement proper OIDC support using fab-oidc. This however needs maintenance work from us.
 
 ```
-{ 
+{
     'name': 'keycloak',
     'icon': 'fa-key',
     'token_key': 'access_token',
@@ -162,6 +163,24 @@ spec:
       # on the Identity Provider requirements, you might need to add or
       # remove some from this list.
       scopes: [ openid, email, profile ]
+
+      # If a product extracts some sort of "effective user" that is
+      # represented by a string internally, this config determines with
+      # claim is used to extract that string. It is desirable to use
+      # `sub` in here (or some other stable identifier), but in many
+      # cases you might need to use `preferred_username` (e.g. in case
+      # of Keycloak) or a different claim instead.
+      #
+      # Please note that some products hard-coded the claim in their
+      # implementation, so some product operators might error out if
+      # the product hardcodes a different claim than configured here.
+      #
+      # We don't provide any default value, as there is no correct way
+      # of doing it that works in all setups. Most demos will probably
+      # use `preferred_username`, although `sub` being more desirable,
+      # but technically impossible with the current behavior of the
+      # products.
+      principalClaim: preferred_username
 
       # Optional provider hint. If unspecified, the product will not
       # enable any known quirks and will assume OIDC works as it is
