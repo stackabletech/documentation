@@ -30,11 +30,11 @@ Install the Stackable command line utility xref:management:stackablectl:index.ad
 
 The Stackable operators are components that translate the service definitions deployed via Kubernetes into deploy services on the worker nodes. These can be installed on any node that has access to the Kubernetes control plane. In this example we will install them on the controller node.
 
-Stackable operators can be installed using `stackablectl`. Run the following commands to install ZooKeeper, Kafka and NiFi from the Stackable 23.7 release.
+Stackable operators can be installed using `stackablectl`. Run the following commands to install ZooKeeper, Kafka and NiFi from the Stackable 23.11 release.
 
 [source,bash]
 ----
-stackablectl release install -i commons -i secret -i listener -i zookeeper -i kafka -i nifi 23.7
+stackablectl release install -i commons -i secret -i listener -i zookeeper -i kafka -i nifi 23.11
 ----
 
 .Using Helm instead
@@ -53,12 +53,12 @@ Install the operators:
 
 [source,bash]
 ----
-helm install zookeeper-operator stackable-stable/zookeeper-operator --version=23.7
-helm install kafka-operator stackable-stable/kafka-operator --version=23.7
-helm install secret-operator stackable-stable/secret-operator --version=23.7
-helm install listener-operator stackable-stable/listener-operator --version=23.7
-helm install commons-operator stackable-stable/commons-operator --version=23.7
-helm install nifi-operator stackable-stable/nifi-operator --version=23.7
+helm install zookeeper-operator stackable-stable/zookeeper-operator --version=23.11.0
+helm install kafka-operator stackable-stable/kafka-operator --version=23.11.0
+helm install secret-operator stackable-stable/secret-operator --version=23.11.0
+helm install listener-operator stackable-stable/listener-operator --version=23.11.0
+helm install commons-operator stackable-stable/commons-operator --version=23.11.0
+helm install nifi-operator stackable-stable/nifi-operator --version=23.11.0
 ----
 ====
 
@@ -66,21 +66,13 @@ You can check which operators are installed using `stackablectl operator install
 
 [source,console]
 ----
-┌────────────────────┬─────────┬─────────────────────┬──────────┬──────────────────────────────────────────┐
-│ OPERATOR           ┆ VERSION ┆ NAMESPACE           ┆ STATUS   ┆ LAST UPDATED                             │
-╞════════════════════╪═════════╪═════════════════════╪══════════╪══════════════════════════════════════════╡
-│ commons-operator   ┆ 23.7.0  ┆ stackable-operators ┆ deployed ┆ 2023-09-26 14:59:10.447836367 +0200 CEST │
-├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┤
-│ kafka-operator     ┆ 23.7.0  ┆ stackable-operators ┆ deployed ┆ 2023-09-26 14:59:25.162058457 +0200 CEST │
-├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┤
-│ listener-operator  ┆ 23.7.0  ┆ stackable-operators ┆ deployed ┆ 2023-09-26 14:59:30.40162331 +0200 CEST  │
-├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┤
-│ nifi-operator      ┆ 23.7.0  ┆ stackable-operators ┆ deployed ┆ 2023-09-26 14:59:35.881227443 +0200 CEST │
-├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┤
-│ secret-operator    ┆ 23.7.0  ┆ stackable-operators ┆ deployed ┆ 2023-09-26 14:59:44.51273442 +0200 CEST  │
-├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┤
-│ zookeeper-operator ┆ 23.7.0  ┆ stackable-operators ┆ deployed ┆ 2023-09-26 14:59:58.196949027 +0200 CEST │
-└────────────────────┴─────────┴─────────────────────┴──────────┴──────────────────────────────────────────┘
+OPERATOR              VERSION         NAMESPACE                      STATUS           LAST UPDATED
+commons               23.11.0         default                        deployed         2023-11-30 17:58:32.916032854 +0100 CET
+kafka                 23.11.0         default                        deployed         2023-11-30 17:58:55.036115353 +0100 CET
+listener              23.11.0         default                        deployed         2023-11-30 17:59:18.136775259 +0100 CET
+nifi                  23.11.0         default                        deployed         2023-11-30 17:59:51.927081648 +0100 CET
+secret                23.11.0         default                        deployed         2023-11-30 18:00:05.060241771 +0100 CET
+zookeeper             23.11.0         default                        deployed         2023-11-30 18:00:08.425686918 +0100 CET
 ----
 
 == Deploying Stackable Services
@@ -101,7 +93,7 @@ metadata:
   name: simple-zk
 spec:
   image:
-    productVersion: "3.8.1"
+    productVersion: 3.8.3
   clusterConfig:
     tls:
       serverSecretClass: null
@@ -136,7 +128,7 @@ metadata:
   name: simple-kafka
 spec:
   image:
-    productVersion: "3.4.0"
+    productVersion: 3.5.1
   clusterConfig:
     zookeeperConfigMapName: simple-kafka-znode
     tls:
@@ -173,53 +165,69 @@ spec:
   clusterRef:
     name: simple-zk
 ---
-apiVersion: v1
-kind: Secret
-metadata:
-  name: nifi-admin-credentials-simple
-stringData:
-  username: admin
-  password: AdminPassword
----
 apiVersion: nifi.stackable.tech/v1alpha1
 kind: NifiCluster
 metadata:
   name: simple-nifi
 spec:
   image:
-    productVersion: "1.21.0"
+    productVersion: 1.23.2
   clusterConfig:
     listenerClass: external-unstable
     zookeeperConfigMapName: simple-nifi-znode
     authentication:
-      method:
-        singleUser:
-          adminCredentialsSecret: nifi-admin-credentials-simple
+      - authenticationClass: nifi-users
     sensitiveProperties:
       keySecret: nifi-sensitive-property-key
-      autoGenerate: true
   nodes:
     roleGroups:
       default:
         replicas: 1
+---
+apiVersion: authentication.stackable.tech/v1alpha1
+kind: AuthenticationClass
+metadata:
+  name: nifi-users
+spec:
+  provider:
+    static:
+      userCredentialsSecret:
+        name: nifi-admin-credentials
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: nifi-admin-credentials
+stringData:
+  admin: AdminPassword
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: nifi-sensitive-property-key
+stringData:
+  nifiSensitivePropsKey: mYsUp3rS3cr3tk3y
 EOF
 ----
 
 You can check the status of the services using `kubectl get pods`. This will retrieve the status of all pods running in the default namespace.
 
 ----
-NAME                                                       READY   STATUS      RESTARTS   AGE
-commons-operator-deployment-598c744f6f-gfj2h               1/1     Running     0          15m
-kafka-operator-deployment-7c4bd694d5-xjwsj                 1/1     Running     0          15m
-listener-operator-controller-deployment-5f59496965-4c2xq   2/2     Running     0          14m
-listener-operator-node-daemonset-xlcwg                     2/2     Running     0          14m
-nifi-operator-deployment-748d748487-qg885                  1/1     Running     0          15m
-secret-operator-daemonset-wr57f                            3/3     Running     0          14m
-simple-kafka-broker-brokers-0                              2/2     Running     0          7m50s
-simple-nifi-create-reporting-task-1-21-0-jltpv             0/1     Completed   4          5m13s
-simple-nifi-node-default-0                                 1/1     Running     0          5m13s
-simple-zk-server-primary-0                                 1/1     Running     0          14m
-zookeeper-operator-deployment-64fcccc797-pckhf             1/1     Running     0          14m
+NAME                                                       READY   STATUS    RESTARTS   AGE
+commons-operator-deployment-5b589f4494-slqx7               1/1     Running   0          14m
+kafka-operator-deployment-5db5d8c846-564pd                 1/1     Running   0          14m
+listener-operator-controller-deployment-65f8bbdff4-fz9fh   2/2     Running   0          14m
+listener-operator-node-daemonset-ffjdx                     2/2     Running   0          14m
+listener-operator-node-daemonset-rfd6k                     2/2     Running   0          14m
+listener-operator-node-daemonset-wtw8j                     2/2     Running   0          14m
+nifi-operator-deployment-546fdb6bf8-6zptt                  1/1     Running   0          13m
+secret-operator-daemonset-4cqfl                            3/3     Running   0          13m
+secret-operator-daemonset-p9579                            3/3     Running   0          13m
+secret-operator-daemonset-wktz8                            3/3     Running   0          13m
+simple-kafka-broker-brokers-0                              2/2     Running   0          12m
+simple-nifi-node-default-0                                 1/1     Running   0          11m
+simple-zk-server-primary-0                                 1/1     Running   0          13m
+zookeeper-operator-deployment-7bcdcbb558-xc77h             1/1     Running   0          13m
 ----
 
 Since this is the first time that each of these services has been deployed to these nodes, it will take some time to download the software from the Stackable repository and deploy the services. Once all the pods are in the running state your cluster is ready to use.
@@ -241,7 +249,7 @@ The shell should connect automatically to the ZooKeeper server running on the po
 
 ----
 [zk: localhost:2181(CONNECTED) 0] ls /
-[znode-81484420-e097-4b13-a121-84f0211b99db, znode-9076785e-39d0-49cc-b067-30be25bf4faa, znode-a4b12f66-48c2-40dc-91d8-a42135eaf371, zookeeper]
+[znode-17951052-3ffd-4e7a-9cfe-6865f827752d, znode-2d752976-f37c-4baf-a3af-2eed96ba57f5, znode-f946b36f-a0bc-4d11-93d6-8ac6a321c836, zookeeper]
 ----
 
 === Apache Kafka
@@ -299,8 +307,8 @@ If a password has not been specified for the admin user the Apache NiFi operator
 
 [source,bash]
 ----
-kubectl get secrets nifi-admin-credentials-simple \
--o jsonpath="{.data.password}" | base64 -d && echo
+kubectl get secrets nifi-admin-credentials \
+-o jsonpath="{.data.admin}" | base64 -d && echo
 ----
 
 Once you have these credentials you can log in and you should see a blank NiFi canvas.

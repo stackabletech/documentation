@@ -6,7 +6,8 @@ name: Build and deploy production site
 
 on:
   schedule:
-    - cron: '15 2 * * *'
+    # Monday to Friday, 2:15 in the night
+    - cron: '15 2 * * 1-5'
   workflow_dispatch:
 
 jobs:

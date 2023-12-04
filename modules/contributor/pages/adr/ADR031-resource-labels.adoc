@@ -1,4 +1,4 @@
-= ADRXXX: Resource Labels and Namespacing
+= ADR031: Resource Labels and Namespacing
 Sascha Lautenschläger <sascha.lautenschlaeger@stackable.tech>
 v0.1, 2023-08-25
 :status: accepted
