@@ -6,7 +6,7 @@ including all components of the platform at a specific version.
 
 == Release 23.11
 
-This release introduces two further elements of platform stability - pod disruption budgets and graceful shutdown specifications - as well as a new management tool and updated product version support. Known issues are listed at end of this section for 23.11.
+This release introduces two further elements of platform stability - pod disruption budgets and graceful shutdown specifications - as well as a new management tool and updated product version support. Any known issues related to this release are listed below in a separate section.
 
 === New / extended platform features
 
