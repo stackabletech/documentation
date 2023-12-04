@@ -12,9 +12,28 @@ h1 {
     display: none; // hide the default title
 }
 
-#que
+.landing ul {
+  list-style-type: none; /* Remove bullets */
+  padding: 0; /* Remove padding */
+  margin: 0; /* Remove margins */
+}
+
+#intro-action {
+    margin-top: 5rem;
+    margin-bottom: 2rem;
+    font-size: 36px;
+    text-align: center;
+}
+
+#help-action {
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+    font-size: 26px;
+    text-align: center;
+}
+
 </style>
-<span id="intro-action">What are you looking for?</span>
+<div id="intro-action">What are you looking for?</div>
 ++++
 
 ++++
@@ -115,7 +134,7 @@ https://crds.stackable.tech/[CRD Reference]
 
 Learn more about the tooling that supports the Stackable Data Platform; the `stackablectl` CLI utility and the Stackable Cockpit Web UI.
 
-* xref:management:stackablectl:index.adoc[`stackablectl`]
+* xref:management:stackablectl:index.adoc[stackablectl]
 * xref:management:cockpit:index.adoc[Cockpit UI]
 
 ++++
@@ -127,5 +146,5 @@ Learn more about the tooling that supports the Stackable Data Platform; the `sta
 ++++
 
 ++++
-<span class="help-action">Still need help? ... </span>
+<div id="help-action">Still need help? Ask a question on <a href="https://github.com/orgs/stackabletech/discussions">GitHub</a> or <a href="https://discord.com/invite/7kZ3BNnCAF">Discord</a>.</div>
 ++++
