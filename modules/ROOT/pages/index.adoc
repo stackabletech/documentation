@@ -62,10 +62,10 @@ Get started with the Stackable Data Platform or a specific operator.
 ++++
 
 ++++
-<h3>Demos and Tutorials</h3>
+<h3>Demos and tutorials</h3>
 ++++
 
-Run a demo data processing pipeline or follow a tutorial to learn about the platform hands-on!
+Run a demo data processing pipeline or follow a tutorial to learn about the platform hands-on.
 
 * xref:demos:index.adoc[]
 * xref:tutorials:index.adoc[]
@@ -113,7 +113,7 @@ xref:operators:index.adoc[Operator overview]
 ++++
 
 ++++
-<h3>CRD Reference</h3>
+<h3>CRD reference</h3>
 ++++
 
 Read the CustomResourceDefinition (CRD) reference for all CRDs that are deployed by any Stackable operator.
