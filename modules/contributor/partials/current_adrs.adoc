@@ -28,3 +28,4 @@
 **** xref:adr/ADR029-database-connection.adoc[]
 **** xref:adr/ADR030-allowed-pod-disruptions.adoc[]
 **** xref:adr/ADR031-resource-labels.adoc[]
+**** xref:adr/ADR032-oidc-support.adoc[]

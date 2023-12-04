@@ -27,7 +27,7 @@ netlify-fetch:
 	git fetch --all
 	# checkout all release branches once, so we fetch the files
 	for remote in $(shell git branch -r | grep release/); do \
-		git checkout --recurse-submodules "$${remote#origin/}" ;\
+		git checkout --recurse-submodules "$${remote#origin/}" ; git pull; \
 	done
 	# go back to the initial commit to start the build
 	git -c advice.detachedHead=false checkout --recurse-submodules $(CURRENT_COMMIT)

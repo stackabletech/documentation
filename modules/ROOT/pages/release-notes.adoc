@@ -4,6 +4,777 @@
 The Stackable platform consists of multiple operators that work together. Periodically a platform release is made,
 including all components of the platform at a specific version.
 
+== Release 23.11
+
+This release introduces two further elements of platform stability - pod disruption budgets and graceful shutdown specifications - as well as a new management tool and updated product version support.
+
+=== New / extended platform features
+
+The following new major platform features were added:
+
+PodDisruptionBudgets::
+Kubernetes has mechanisms to ensure minimal planned downtime. Our product operators deploy so-called PodDisruptionBudget (PDB) resources alongside the products. For every role that you specify (e.g. HDFS namenodes or Trino workers) a PDB is created. This will determine the extent to which roles for a given application may be inactive at any given time. See xref:concepts:operations/pod_disruptions.adoc[the
+documentation] for more details.
+
+Graceful shutdown::
+Graceful shutdown refers to the managed, controlled shutdown of service instances in the manner intended by the software authors. Typically, an instance will receive a signal indicating the intent for the server to shut down, and it will initiate a controlled shutdown. Our operators configure a sensible amount of time Pods are granted to properly shut down without disrupting the availability of the product. See xref:concepts:operations/graceful_shutdown.adoc[the
+documentation] for more details.
+
+Signed SDP product images::
+As of this release all Stackable product images are signed (the signing of operator images was delivered in SDP 23.7). Please see this
+xref:tutorials:enabling_verification_of_image_signatures.adoc[tutorial] for more information.
+
+Airflow KubernetesExecutor::
+Airflow clusters can now be configured to use Kubernetes executors, whereby pods are spun up for job tasks and terminated when complete, thus offering an alternative way to use resources without the need for job queuing.
+
+Overridable Java security settings::
+For JVM-based products (i.e. Druid, HBase, HDFS, Hive, Kafka, NiFi, Spark, Trino and ZooKeeper) it is now possible to provide custom security settings that override the default values. This allows the user to control things such as DNS lookup caches.
+
+Stackable Cockpit::
+This release includes a very early preview version of Stackable Cockpit, a browser-based management tool which interacts with the Stackable data platform to display e.g. deployed stacklets and their status.
+
+stackablectl::
+Our command line tool has been re-worked to use the same backbone as Stackable Cockpit: you can find out about the recent enhancements by visiting the online xref:management:stackablectl:index.adoc[documentation].
+
+Listener operator::
+The listener-operator was introduced in release 23.1 and the associated ServiceType field in 23.4. In this release we introduce configurable ListenerClass _presets_ that map to the service types appropriate for different environments. This is discussed in more detail in the xref:listener-operator:listenerclass.adoc[documentation].
+
+Product features::
+
+Additionally, there are some other individual product features that are noteworthy:
+
+* https://github.com/stackabletech/docker-images/pull/494[HBase: support for Hadoop native compression]
+* https://github.com/stackabletech/docker-images/pull/497[HBase: add operator tools to product image]
+* https://github.com/stackabletech/docker-images/pull/400[HDFS: support for FUSE]
+* https://github.com/stackabletech/docker-images/pull/505[Hive: update postgresql driver to support SCRAM authentication]
+* https://github.com/stackabletech/docker-images/pull/436[Spark: all product images contain pyspark]
+* https://github.com/stackabletech/trino-operator/issues/491[Trino: support for the new OPA authorizer]
+* https://github.com/stackabletech/issues/issues/444[Vector: upgrade to 0.33.0]
+
+=== Product Versions
+
+==== New Versions
+
+The following new product versions are now supported:
+
+* https://github.com/stackabletech/airflow-operator/pull/334[Airflow: 2.6.3, 2.7.2]
+* https://github.com/stackabletech/druid-operator/pull/480[Druid: 27.0.0]
+* https://github.com/stackabletech/hbase-operator/pull/403[HBase: 2.4.17]
+* https://github.com/stackabletech/hdfs-operator/pull/409[HDFS: 3.2.4, 3.3.6]
+* https://github.com/stackabletech/kafka-operator/pull/627[Kafka: 2.8.2, 3.4.1, 3.5.1]
+* https://github.com/stackabletech/nifi-operator/pull/513[NiFi: 1.23.2]
+* https://github.com/stackabletech/opa-operator/pull/482[OpenPolicyAgent: 0.57.0]
+* https://github.com/stackabletech/spark-k8s-operator/pull/291[Spark: 3.4.1, 3.5.0]
+* https://github.com/stackabletech/superset-operator/pull/415[Superset: 2.1.1, 3.0.1]
+* https://github.com/stackabletech/trino-operator/pull/491[Trino: 428]
+* https://github.com/stackabletech/zookeeper-operator/pull/732[ZooKeeper: 3.8.3]
+
+==== Deprecated Versions
+
+The following product versions are deprecated and will be removed in a later release:
+
+* Airflow: 2.6.1
+* HBase: 2.4.12
+* HDFS: 3.2.4, 3.3.4
+* Kafka: 2.8.2, 3.4.0
+* OpenPolicyAgent: 0.51.0
+* Spark: 3.4.0
+* Superset: 2.1.0
+* ZooKeeper: 3.8.1
+
+N.B. in some cases a newly supported version is also immediately marked as deprecated. This is done to allow an update path from the latest patch of a minor version (e.g. Kafka 2.8.2 --> 3.4.1).
+
+==== Removed Versions
+
+The following product versions are no longer supported (although images for released product versions remain available https://repo.stackable.tech/#browse/browse:docker:v2%2Fstackable[here]):
+
+* Airflow: 2.2.3, 2.2.4, 2.2.5, 2.4.1
+* Druid: 0.23.0, 24.0.0
+* HBase: 2.4.6, 2.4.8, 2.4.9, 2.4.11
+* HDFS: 3.3.1, 3.3.3
+* Hive: 2.3.9
+* Kafka: 2.7.1, 3.1.0, 3.2.0, 3.3.1
+* NiFi: 1.15.x, 1.16.x, 1.18.0, 1.20.0
+* Opa: 0.27.1, 0.28.0, 0.37.2, 0.41.0, 0.45.0
+* Spark: 3.2.1, 3.3.0
+* Superset: 1.3.2, 1.4.1, 1.4.2, 1.5.1, 1.5.3, 2.0.1
+* Trino: 377, 387, 395, 396, 403
+* ZooKeeper: 3.5.8, 3.6.3, 3.7.0, 3.8.0
+
+=== stackablectl
+
+The following demo has been added to `stackablectl`:
+
+==== Signal processing demo
+
+This demonstrates the ingestion of streamed data into a Timescale time-series database, augmented by a moving window of anomaly detection measurements that are plotted alongside the raw data in Grafana.
+
+This link lists the xref:demos:index.adoc[available demos].
+
+=== Supported Kubernetes versions
+
+This release supports the following Kubernetes versions:
+
+* `1.28`
+* `1.27`
+* `1.26`
+
+These Kubernetes versions are no longer supported:
+
+* `1.25`
+* `1.24`
+
+=== Supported OpenShift versions
+
+This release supports the following OpenShift versions:
+
+* `4.13`
+* `4.12`
+* `4.11`
+
+=== Breaking changes
+
+You will need to adapt your existing CRDs due to the following breaking changes detailed below.
+
+NOTE: For all operators: the field `spec.image.stackableVersion` is no longer needed when the operator and product stackable versions match e.g. both are `23.11`. If this field has been _previously_ set this will *not* happen: in such cases `spec.image.stackableVersion` should be set explicitly, either to a release version or to `null`.
+
+==== Stackable Operator for Apache Airflow
+
+* https://github.com/stackabletech/airflow-operator/pull/322[Removed AirflowDB] `.spec.clusterConfig.databaseInitialization` was removed from the CRD. This allowed configuring logging for the database initialization job, which does not exist anymore. Instead, database initialization is done by the scheduler pod, which has its own logging configuration. This was necessary to remove the `AirflowDB` Custom Resource, which caused problems when upgrading or reinstalling Airflow clusters.
+Additionally, the `AirflowDB` custom resource is not used anymore. Those CRs should be deleted.
+
+* https://github.com/stackabletech/airflow-operator/pull/311[Implement KubernetesExecutor] As an alternative to the CeleryExecutor we now also support the KubernetesExecutor, whereby pods are spun up for job tasks and are terminated afterwards. This removes the need for a Redis job queue and offers an alternative approach to resource management.
+
+* https://github.com/stackabletech/airflow-operator/pull/316[Rename service port name] The service port name has been renamed from airflow to http for consistency reasons. This change requires that the statefulset be removed before upgrading. There might also be some e.g. Ingresses that rely on the port name that will need to be updated.
+
+* https://github.com/stackabletech/airflow-operator/pull/303[AuthenticationClass references]
+`spec.clusterConfig.authenticationConfig` has been consolidated to `spec.clusterConfig.authentication` which takes a vector of AuthenticationClass references.
+
+These consolidated changes would require a change from e.g.
+
+.Breaking changes details
+[%collapsible]
+====
+[source,yaml]
+----
+apiVersion: airflow.stackable.tech/v1alpha1
+kind: AirflowCluster
+metadata:
+  name: airflow
+spec:
+  image:
+    productVersion: "2.6.1"
+    stackableVersion: "23.7" # <1>
+  clusterConfig:
+    executor: CeleryExecutor # <2>
+    ...
+    databaseInitialization: # <3>
+      logging:
+        enableVectorAgent: false
+        containers:
+          ...
+    authenticationConfig:  # <4>
+      authenticationClass: server-tls
+      userRegistrationRole: Admin
+  webservers:
+    ...
+  workers:  # <5>
+    roleGroups:
+      default:
+        replicas: 1
+    ...
+----
+
+to:
+
+[source,yaml]
+----
+apiVersion: airflow.stackable.tech/v1alpha1
+kind: AirflowCluster
+metadata:
+  name: airflow
+spec:
+  image:
+    productVersion: "2.6.1"
+  clusterConfig:
+    authentication:  # <4>
+      - authenticationClass: server-tls
+        userRegistrationRole: Admin
+  webservers:
+    roleGroups:
+      default:
+        replicas: 1
+  celeryExecutors:  # <5>
+    roleGroups:
+      default:
+        replicas: 1
+    ...
+----
+
+<1> this field is no longer needed if the product and operator image versions match
+<2> field removed
+<3> section removed
+<4> `authenticationConfig` replaced with a list of authentication classes
+<5> workers replaced with either `celeryExecutors` or `kubernetesExecutors`
+
+NOTE: it will be necessary to remove the stateful sets before updating the Airflow resource due to the change to the name of container port. Any existing AirflowDB jobs should be deleted as well. This will allow a database update to be followed through where necessary.
+====
+
+==== Stackable Operator for Apache HDFS
+
+* https://github.com/stackabletech/hdfs-operator/pull/422[Removed field autoFormatFs] This field was not used.
+
+.Breaking changes details
+[%collapsible]
+====
+This requires a change from e.g.
+
+[source,yaml]
+----
+apiVersion: hdfs.stackable.tech/v1alpha1
+kind: HdfsCluster
+metadata:
+  name: hdfs
+spec:
+  image:
+    productVersion: "3.3.4"
+    stackableVersion: "23.7" # <1>
+  clusterConfig:
+    zookeeperConfigMapName: hdfs-zk
+    autoFormatFs: False # <2>
+    ...
+----
+
+to:
+
+[source,yaml]
+----
+apiVersion: hdfs.stackable.tech/v1alpha1
+kind: HdfsCluster
+metadata:
+  name: hdfs
+spec:
+  image:
+    productVersion: "3.3.4"
+  clusterConfig:
+    zookeeperConfigMapName: hdfs-zk
+    ...
+----
+
+<1> this field is no longer needed if the product and operator image versions match.
+<2> field removed.
+====
+
+==== Stackable Operator for Apache Kafka
+
+* https://github.com/stackabletech/kafka-operator/pull/621[Certificate conversion] The secret-operator now handles certificate conversion. This allows for the removal of the prepare init container but means that you can't configure the log level for this container anymore. You will need to remove the field `spec.brokers.config.logging.container.prepare` in case it is specified.
+
+.Breaking changes details
+[%collapsible]
+====
+This requires a change from e.g.
+
+[source,yaml]
+----
+apiVersion: kafka.stackable.tech/v1alpha1
+kind: KafkaCluster
+metadata:
+  name: kafka
+spec:
+  image:
+    productVersion: "3.4.0"
+    stackableVersion: "23.7" # <1>
+  clusterConfig:
+    ...
+  brokers:
+    config:
+      logging:
+        containers:
+          prepare: # <2>
+            console:
+              level: INFO
+        ...
+----
+
+to:
+
+[source,yaml]
+----
+apiVersion: kafka.stackable.tech/v1alpha1
+kind: KafkaCluster
+metadata:
+  name: kafka
+spec:
+  image:
+    productVersion: "3.4.0"
+  clusterConfig:
+    ...
+  brokers:
+    config:
+      logging:
+        ...
+----
+<1> this field is no longer needed if the product and operator image versions match.
+<2> section removed for `prepare` container.
+
+NOTE: for details about how Kafka uses a PVC to persist a reference to its ZNode, and how this may be relevant to upgrade scenarios, please read the documentation xref:kafka:usage-guide/operations/znode-id.adoc[here].
+====
+
+==== Stackable Operator for Apache NiFi
+
+* https://github.com/stackabletech/nifi-operator/pull/498[AuthenticationClass references] Consolidated authentication config to a list of AuthenticationClasses.
+
+* https://github.com/stackabletech/nifi-operator/pull/498[Remove credential generation] Removed crd support for the auto generation of admin credentials.
+
+* https://github.com/stackabletech/nifi-operator/pull/498[Remove redundant authentication field] Removed crd support for the `nifi.security.allow.anonymous.authentication` property that was never used.
+
+.Breaking changes details
+[%collapsible]
+====
+This requires a change from e.g.
+
+[source,yaml]
+----
+---
+apiVersion: nifi.stackable.tech/v1alpha1
+kind: NifiCluster
+metadata:
+  name: test-nifi
+spec:
+  image:
+    productVersion: "1.21.0"
+    stackableVersion: "23.7" # <1>
+  clusterConfig:
+    zookeeperConfigMapName: test-zk
+    authentication: # <2>
+      allowAnonymousAccess: False  # <3>
+      method:
+        singleUser:
+          adminCredentialsSecret: nifi-admin-credentials-simple
+          autoGenerate: False  # <4>
+    sensitiveProperties:
+      keySecret: nifi-sensitive-property-key
+  nodes:
+    roleGroups:
+      default:
+        replicas: 1
+----
+
+to:
+
+[source,yaml]
+----
+---
+apiVersion: nifi.stackable.tech/v1alpha1
+kind: NifiCluster
+metadata:
+  name: test-nifi
+spec:
+  image:
+    productVersion: "1.23.2"
+  clusterConfig:
+    zookeeperConfigMapName: test-zk
+    authentication: # <2>
+      - authenticationClass: nifi-users  # <5>
+    sensitiveProperties:
+      keySecret: nifi-sensitive-property-key
+  nodes:
+    roleGroups:
+      default:
+        replicas: 1
+---
+apiVersion: authentication.stackable.tech/v1alpha1
+kind: AuthenticationClass
+metadata:
+  name: nifi-users  # <5>
+spec:
+  provider:
+    static:
+      userCredentialsSecret:
+        name: nifi-admin-credentials
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: nifi-admin-credentials
+stringData:
+  admin: supersecretpassword
+----
+<1> this field is no longer needed if the product and operator image versions match.
+<2> this section has been changed to take a list of authentication classes.
+<3> functionality has been removed.
+<4> functionality has been removed.
+<5> the authentication class referenced by the NiFi cluster.
+====
+
+==== Stackable Operator for Apache Spark
+
+* https://github.com/stackabletech/spark-k8s-operator/pull/275[Image specification] Use product image selection instead of version.
+
+* https://github.com/stackabletech/spark-k8s-operator/pull/277[Configuration structure]
+Refactored application roles to use CommonConfiguration structures from the operator framework.
+
+.Breaking changes details
+[%collapsible]
+====
+This requires a change from e.g.
+
+[source,yaml]
+----
+apiVersion: spark.stackable.tech/v1alpha1
+kind: SparkApplication
+metadata:
+  name: spark-examples
+spec:
+  version: "1.0"
+  sparkImage: "docker.stackable.tech/stackable/spark-k8s:3.4.0-stackable23.7" # <1>
+  mode: cluster
+  mainClass: org.apache.spark.examples.SparkALS
+  mainApplicationFile: "local:///stackable/spark/examples/jars/spark-examples.jar"
+  job: # <2>
+    logging:
+      enableVectorAgent: False
+  driver: # <2>
+    logging:
+      enableVectorAgent: False
+  executor: # <2>
+    instances: 1
+    logging:
+      enableVectorAgent: False
+----
+
+to:
+
+[source,yaml]
+----
+apiVersion: spark.stackable.tech/v1alpha1
+kind: SparkApplication
+metadata:
+  name: spark-examples-2
+spec:
+  version: "1.0"
+  sparkImage: # <1>
+    productVersion: "3.5.0"
+  mode: cluster
+  mainClass: org.apache.spark.examples.SparkALS
+  mainApplicationFile: "local:///stackable/spark/examples/jars/spark-examples.jar"
+  job:
+    config: # <2>
+      logging:
+        enableVectorAgent: False
+  driver:
+    config: # <2>
+      logging:
+        enableVectorAgent: False
+  executor:
+    replicas: 1
+    config: # <2>
+      logging:
+        enableVectorAgent: False
+----
+<1> this field has been changed to be consistent with product image selection, documented xref:concepts:product_image_selection.adoc[here].
+<2> this section has been changed to be consistent with common configuration definitions used for other operators.
+====
+
+==== Stackable Operator for Apache Superset
+
+* https://github.com/stackabletech/superset-operator/pull/396[Remove SupersetDB] `.spec.clusterConfig.loadExamplesOnInit` was removed from the CRD. Already loaded examples in Superset will not be removed by this change. Additionally, the `SupersetDB` custom resource is not used anymore. Those CRs should be deleted. Loading examples is still supported, the process is now described in the https://docs.stackable.tech/home/stable/superset/getting_started/first_steps[documentation].
+
+* https://github.com/stackabletech/superset-operator/pull/394[Rename service port name]
+ The service port name has been renamed from superset to http for consistency reasons. This change requires that the statefulset be removed before upgrading. There might also be some e.g. Ingresses that rely on the port name that will need to be updated.
+
+.Breaking changes details
+[%collapsible]
+====
+This requires a change from e.g.
+
+[source,yaml]
+----
+apiVersion: superset.stackable.tech/v1alpha1
+kind: SupersetCluster
+metadata:
+  name: superset
+spec:
+  image:
+    productVersion: "2.1.0"
+    stackableVersion: "23.7" # <1>
+  clusterConfig:
+    credentialsSecret: superset-credentials
+    loadExamplesOnInit: false # <2>
+  nodes:
+    roleGroups:
+      default:
+        replicas: 1
+    ...
+----
+
+to:
+
+[source,yaml]
+----
+apiVersion: superset.stackable.tech/v1alpha1
+kind: SupersetCluster
+metadata:
+  name: superset
+spec:
+  image:
+    productVersion: "2.1.0"
+  clusterConfig:
+    credentialsSecret: superset-credentials
+  nodes:
+    roleGroups:
+      default:
+        replicas: 1
+    ...
+----
+<1> this field is no longer needed if the product and operator image versions match.
+<2> this field has been removed.
+
+NOTE: it will be necessary to remove the stateful sets before updating the Superset resource due to the change to the name of container port.
+====
+
+==== Stackable Operator for Trino
+
+* https://github.com/stackabletech/trino-operator/pull/491[New OPA Authorizer] Version 428 uses the https://github.com/bloomberg/trino/tree/add-open-policy-agent[new OPA authorizer] which requires changes to existing rego rules.
+
+.Breaking changes details
+[%collapsible]
+====
+This requires a change from e.g.
+
+[source,yaml]
+----
+apiVersion: trino.stackable.tech/v1alpha1
+kind: TrinoCluster
+metadata:
+  name: trino
+spec:
+  image:
+    productVersion: "414"
+  clusterConfig:
+    ...
+----
+
+to:
+
+[source,yaml]
+----
+---
+apiVersion: trino.stackable.tech/v1alpha1
+kind: TrinoCluster
+metadata:
+  name: trino
+spec:
+  image:
+    productVersion: "428"
+  clusterConfig:
+    ...
+---
+----
+
+To adapt the rego rules to work with the new authorizer visit the documentation xref:trino:usage-guide/security.adoc#_authorization [here]. For example, you can upgrade to the last version of Open Policy Agent and enter the relevant syntax in a ConfigMap like this:
+
+[source,yaml]
+----
+---
+apiVersion: opa.stackable.tech/v1alpha1
+kind: OpaCluster
+metadata:
+  name: opa
+spec:
+  image:
+    productVersion: "0.57.0"
+    stackableVersion: 23.11
+  servers:
+    roleGroups:
+      default: {}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: simple-trino-opa-bundle
+  labels:
+    opa.stackable.tech/bundle: "trino"
+data:
+  trino.rego: |
+    package trino
+
+    import future.keywords.in
+
+    default allow = false
+
+    allow {
+        is_admin
+    }
+    extended[i] {
+        some i
+        input.action.filterResources[i]
+        is_admin
+    }
+
+    allow {
+        input.action.operation in ["ExecuteQuery", "AccessCatalog"]
+        is_bob
+    }
+    extended[i] {
+        input.action.operation in ["FilterCatalogs"]
+        some i
+        input.action.filterResources[i]
+        is_bob
+    }
+
+    is_admin() {
+      input.context.identity.user == "admin"
+    }
+
+    is_bob() {
+      input.context.identity.user == "bob"
+    }
+----
+====
+
+=== Upgrade from 23.7
+
+==== Using stackablectl
+
+To uninstall the `23.7` release run
+
+[source,console]
+----
+$ stackablectl release uninstall 23.7
+[INFO ] Uninstalling release 23.7
+[INFO ] Uninstalling airflow operator
+[INFO ] Uninstalling commons operator
+# ...
+----
+
+Afterwards you will need to upgrade the CustomResourceDefinitions (CRDs) installed by the Stackable Platform.
+The reason for this is that helm will uninstall the operators but not the CRDs. This can be done using `kubectl replace`:
+
+[source]
+----
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/airflow-operator/23.11.0/deploy/helm/airflow-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/commons-operator/23.11.0/deploy/helm/commons-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/druid-operator/23.11.0/deploy/helm/druid-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hbase-operator/23.11.0/deploy/helm/hbase-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hdfs-operator/23.11.0/deploy/helm/hdfs-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hello-world-operator/23.11.0/deploy/helm/hello-world-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hive-operator/23.11.0/deploy/helm/hive-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/kafka-operator/23.11.0/deploy/helm/kafka-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/listener-operator/23.11.0/deploy/helm/listener-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/nifi-operator/23.11.0/deploy/helm/nifi-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/opa-operator/23.11.0/deploy/helm/opa-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/secret-operator/23.11.0/deploy/helm/secret-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/23.11.0/deploy/helm/spark-k8s-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/superset-operator/23.11.0/deploy/helm/superset-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/trino-operator/23.11.0/deploy/helm/trino-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/23.11.0/deploy/helm/zookeeper-operator/crds/crds.yaml
+----
+
+[source,console]
+----
+customresourcedefinition.apiextensions.k8s.io "airflowclusters.airflow.stackable.tech" replaced
+customresourcedefinition.apiextensions.k8s.io "airflowdbs.airflow.stackable.tech" replaced
+customresourcedefinition.apiextensions.k8s.io "authenticationclasses.authentication.stackable.tech" replaced
+customresourcedefinition.apiextensions.k8s.io "s3connections.s3.stackable.tech" replaced
+...
+----
+
+To install the `23.11` release run
+
+[source,console]
+----
+$ stackablectl release install 23.11
+[INFO ] Installing release 23.11
+[INFO ] Installing airflow operator in version 23.11.0
+[INFO ] Installing commons operator in version 23.11.0
+[INFO ] Installing druid operator in version 23.11.0
+[INFO ] Installing hbase operator in version 23.11.0
+[INFO ] Installing hdfs operator in version 23.11.0
+[INFO ] Installing hive operator in version 23.11.0
+[INFO ] Installing kafka operator in version 23.11.0
+[INFO ] Installing listener operator in version 23.11.0
+[INFO ] Installing hello-world operator in version 23.11.0
+[INFO ] Installing nifi operator in version 23.11.0
+[INFO ] Installing opa operator in version 23.11.0
+[INFO ] Installing secret operator in version 23.11.0
+[INFO ] Installing spark-k8s operator in version 23.11.0
+[INFO ] Installing superset operator in version 23.11.0
+[INFO ] Installing trino operator in version 23.11.0
+[INFO ] Installing zookeeper operator in version 23.11.0
+----
+
+==== Using helm
+Use `helm list` to list the currently installed operators.
+
+You can use the following command to uninstall all operators that are part of the `23.7` release:
+
+[source,console]
+----
+$ helm uninstall airflow-operator commons-operator druid-operator hbase-operator hdfs-operator hive-operator kafka-operator listener-operator nifi-operator opa-operator secret-operator spark-k8s-operator superset-operator trino-operator zookeeper-operator
+release "airflow-operator" uninstalled
+release "commons-operator" uninstalled
+# ...
+----
+
+Afterwards you will need to upgrade the CustomResourceDefinitions (CRDs) installed by the Stackable Platform.
+The reason for this is that helm will uninstall the operators but not the CRDs. This can be done using `kubectl replace`:
+
+[source,console]
+----
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/airflow-operator/23.11.0/deploy/helm/airflow-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/commons-operator/23.11.0/deploy/helm/commons-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/druid-operator/23.11.0/deploy/helm/druid-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hbase-operator/23.11.0/deploy/helm/hbase-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hdfs-operator/23.11.0/deploy/helm/hdfs-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hello-world-operator/23.11.0/deploy/helm/hello-world-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hive-operator/23.11.0/deploy/helm/hive-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/kafka-operator/23.11.0/deploy/helm/kafka-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/listener-operator/23.11.0/deploy/helm/listener-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/nifi-operator/23.11.0/deploy/helm/nifi-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/opa-operator/23.11.0/deploy/helm/opa-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/secret-operator/23.11.0/deploy/helm/secret-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/23.11.0/deploy/helm/spark-k8s-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/superset-operator/23.11.0/deploy/helm/superset-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/trino-operator/23.11.0/deploy/helm/trino-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/23.11.0/deploy/helm/zookeeper-operator/crds/crds.yaml
+----
+
+To install the `23.11` release run
+
+[source,console]
+----
+helm repo add stackable-stable https://repo.stackable.tech/repository/helm-stable/
+helm repo update stackable-stable
+helm install --wait airflow-operator stackable-stable/airflow-operator --version 23.11.0
+helm install --wait commons-operator stackable-stable/commons-operator --version 23.11.0
+helm install --wait druid-operator stackable-stable/druid-operator --version 23.11.0
+helm install --wait hbase-operator stackable-stable/hbase-operator --version 23.11.0
+helm install --wait hdfs-operator stackable-stable/hdfs-operator --version 23.11.0
+helm install --wait hive-operator stackable-stable/hive-operator --version 23.11.0
+helm install --wait kafka-operator stackable-stable/kafka-operator --version 23.11.0
+helm install --wait listener-operator stackable-stable/listener-operator --version 23.11.0
+helm install --wait hello-world-operator stackable-stable/hello-world-operator --version 23.11.0
+helm install --wait nifi-operator stackable-stable/nifi-operator --version 23.11.0
+helm install --wait opa-operator stackable-stable/opa-operator --version 23.11.0
+helm install --wait secret-operator stackable-stable/secret-operator --version 23.11.0
+helm install --wait spark-k8s-operator stackable-stable/spark-k8s-operator --version 23.11.0
+helm install --wait superset-operator stackable-stable/superset-operator --version 23.11.0
+helm install --wait trino-operator stackable-stable/trino-operator --version 23.11.0
+helm install --wait zookeeper-operator stackable-stable/zookeeper-operator --version 23.11.0
+----
+
+==== Known upgrade issues
+
+In the case of the breaking changes detailed above it will be necessary to update the custom resources and re-apply them.
+
+Additionally, please note the following:
+
+===== All operators
+
+* If the default PVC size has been changed, then the StatefulSet must be deleted: it is not possible to change the PVC
+in the StatefulSet specification.
+
 == Release 23.7
 
 This release introduces the specification of resource quotas and pod overrides and updates the product versions

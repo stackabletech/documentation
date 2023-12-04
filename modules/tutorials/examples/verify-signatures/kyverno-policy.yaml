@@ -16,11 +16,11 @@ spec:
                 - Pod
       verifyImages:
         - imageReferences:
-            - docker.stackable.tech/*-operator:23.7.*
+            - docker.stackable.tech/*
           attestors:
             - entries:
                 - keyless:
                     issuer: "https://token.actions.githubusercontent.com"
-                    subject: "https://github.com/stackabletech/*-operator/.github/workflows/build.yml@refs/tags/23.7.*"
+                    subject: "https://github.com/stackabletech/*/.github/workflows/build.yml@refs/*"
                     rekor:
                       url: https://rekor.sigstore.dev
