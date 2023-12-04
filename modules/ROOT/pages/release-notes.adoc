@@ -6,7 +6,7 @@ including all components of the platform at a specific version.
 
 == Release 23.11
 
-This release introduces two further elements of platform stability - pod disruption budgets and graceful shutdown specifications - as well as a new management tool and updated product version support. Any known issues related to this release are listed below in a separate section.
+This release introduces two further elements of platform stability - pod disruption budgets and graceful shutdown specifications - as well as a new management tool and updated product version support. Any known issues related to this release are listed in the <<KI_2311>> section below.
 
 === New / extended platform features
 
@@ -778,7 +778,7 @@ Additionally, please note the following:
 * If the default PVC size has been changed, then the StatefulSet must be deleted: it is not possible to change the PVC
 in the StatefulSet specification.
 
-=== Known issues
+=== Known issues [[KI_2311]]
 
 * https://github.com/stackabletech/spark-k8s-operator/pull/313[Spark-k8s: missing RBAC permission]. This has been fixed in the nightly build of the operator.
 
