@@ -148,3 +148,9 @@ Learn more about the tooling that supports the Stackable Data Platform; the `sta
 ++++
 <div id="help-action">Still need help? Ask a question on <a href="https://github.com/orgs/stackabletech/discussions">GitHub</a> or <a href="https://discord.com/invite/7kZ3BNnCAF">Discord</a>.</div>
 ++++
+
+== Release Notes
+
+The Stackable platform consists of multiple operators that work together. Periodically a platform release is made,
+including all components of the platform at a specific version. See the latest release notes for 23.7
+xref:release_notes.adoc[here].
