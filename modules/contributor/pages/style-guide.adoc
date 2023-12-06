@@ -60,6 +60,12 @@ The Google guide also includes it's own list of https://developers.google.com/st
 
 Lastly, these are guidelines and not strict rules to follow. Use your own judgement to clearly communicate and explain - after all this is what documentation is about.
 
+== Scripts
+
+- Use 
+
+== CRD documentation
+
 == Bonus: Google search URL structure best practices
 
 Google recommends a https://developers.google.com/search/docs/crawling-indexing/url-structure[URL structure], which is to use hyphens (`-`) instead of underscores (`_`) in URLs.
