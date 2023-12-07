@@ -29,7 +29,7 @@ We rely on the AsciiDoc recommended practices for the overall layout and formatt
 * https://asciidoctor.org/docs/asciidoc-recommended-practices/#document-attributes-i-e-variables[Use document attributes (variables) to improve text flow], especially for URLs.
 * https://asciidoctor.org/docs/asciidoc-recommended-practices/#lists[Use asterisks for unordered lists].
 
-Also - but these recommendations are fairly obvious - https://asciidoctor.org/docs/asciidoc-recommended-practices/#document-extension[use the `.adoc` extension for AsciiDoc files], https://asciidoctor.org/docs/asciidoc-recommended-practices/#section-titles[use asymmetric Atx-style for section headings] (i.e. `==` - not the `##` syntax known from Markdown), https://asciidoctor.org/docs/asciidoc-recommended-practices/#delimited-blocks[use only four characters for block delimiters].
+Also - but these recommendations are fairly obvious - https://asciidoctor.org/docs/asciidoc-recommended-practices/#document-extension[use the `.adoc` extension for AsciiDoc files], https://asciidoctor.org/docs/asciidoc-recommended-practices/#section-titles[use asymmetric Atx-style for section headings], https://asciidoctor.org/docs/asciidoc-recommended-practices/#delimited-blocks[use only four characters for block delimiters].
 
 Read the {asciidoc-recommended-practices} for more.
 
