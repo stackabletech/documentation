@@ -71,6 +71,16 @@ Lastly, these are guidelines and not strict rules to follow. Use your own judgem
 In general, follow the other guidelines. In particular, use PascalCase for API objects and `code style` for object properties.
 Start doc strings with an uppercase letter and finish with a period.
 
+If you want to link to a page like this one: 
+
+    https://docs.stackable.tech/home/stable/concepts/authentication
+
+use the placeholder:
+
+    DOCS_BASE_URL_PLACEHOLDER/concepts/authentication
+
+When the CRD gets generated, the placeholder will be replaced with a correctly versioned link to the docs.
+
 == Bonus: Google search URL structure best practices
 
 Google recommends a https://developers.google.com/search/docs/crawling-indexing/url-structure[URL structure], which is to use hyphens (`-`) instead of underscores (`_`) in URLs.
