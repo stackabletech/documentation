@@ -1,4 +1,5 @@
 = TLS server verification
+:page-aliases: tls_server_verification.adoc
 
 A TLS section is part of Stackable CRDs and describes how to connect to a TLS enabled system like LDAP or S3.
 

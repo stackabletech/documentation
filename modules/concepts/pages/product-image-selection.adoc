@@ -1,4 +1,7 @@
 = Product image selection
+:page-aliases: product_image_selection.adoc
+:description: This page describes the different ways of specifying a product image to use in your product deployment.
+:keywords: Kubernetes, operator, docker, image, tags
 
 All products of the Stackable Data Platform run on Kubernetes and are managed by Stackable Operators.
 One operator is responsible for exactly one product like Apache Spark.
@@ -12,6 +15,10 @@ Stackable uses two separate versions to describe the images that are provided as
 
 **Product version** +
 This is the version of the product which this image provides, so this could for example be Kafka 3.3.1
+
+TIP: You can find all products and their supported versions in the xref:operators:supported_versions.adoc[supported versions overview].
+You can also find the supported versions per product on each operator page, for example for xref:kafka:index.adoc#_supported_versions[Apache Kafka].
+New versions, deprecations and removals are announced in the xref:ROOT:release-notes.adoc[release notes].
 
 **Stackable version** +
 This version is used to track changes to the structure of the image containing the product (in the version specified by _product version_).
@@ -189,4 +196,3 @@ spec:
     custom: my.corp/myteam/stackable/kafka:latest-and-greatest
     productVersion: 3.3.1
 ----
-
