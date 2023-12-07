@@ -17,6 +17,7 @@ The following authentication providers are supported:
 * <<TLS>>: Authenticate users with client TLS certificates.
 * <<Static>>: Authenticate users against a static list of users and passwords in a simple Kubernetes Secret.
 
+[#ldap]
 === LDAP
 A very simple AuthenticationClass with LDAP Authentication looks like this:
 
@@ -35,6 +36,7 @@ image::image$authentication-overview.drawio.svg[]
 
 NOTE: For more details, look at the xref:reference:authenticationclass.adoc[AuthenticationClass reference] as well as the xref:tutorials:authentication_with_openldap.adoc[OpenLDAP tutorial].
 
+[#tls]
 === TLS
 The `TLS` provider configures a product to authenticate users using TLS certificates.
 When establishing a connection the client will first validate the certificate of the server.
@@ -50,6 +52,7 @@ A sample TLS provider looks as follows:
 include::example$authenticationclass-tls.yaml[]
 ----
 
+[#static]
 === Static
 The `static` provider is used to represent a simple - static - set of users.
 Users are identified by a username and a password.
@@ -71,6 +74,7 @@ include::example$authenticationclass-static-secret.yaml[]
 <1> The name of the `Secret`, which needs to match the `Secret` name specified in the `AuthenticationClass` above
 <2> The namespace of the `Secret`. The `Secret` needs to be in the same namespace as the product that tries to use the static `AuthenticationClass`
 
+[#further-reading]
 == Further Reading
 
 * xref:tutorials:authentication_with_openldap.adoc[] tutorial
