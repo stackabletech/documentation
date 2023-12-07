@@ -60,13 +60,13 @@ The Google guide also includes it's own list of https://developers.google.com/st
 
 Lastly, these are guidelines and not strict rules to follow. Use your own judgement to clearly communicate and explain - after all this is what documentation is about.
 
-== [[code]]Scripts and code blocks
+== [#code]#Scripts and code blocks#
 
 * Indent using 2 spaces to save horizontal space.
 * Do not use a `$` prefix for commandline examples.
 * Use long options for shell script flags, as they are easier to understand. Use your own judgment; common ones like `rm -rf` can still be short flags.
 
-== [[crd]]CRD documentation
+== [#crd]#CRD documentation#
 
 In general, follow the other guidelines. In particular, use PascalCase for API objects and `code style` for object properties.
 Start doc strings with an uppercase letter and finish with a period.
