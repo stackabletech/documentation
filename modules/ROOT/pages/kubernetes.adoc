@@ -5,7 +5,7 @@ The Stackable Data Platform runs on Kubernetes, a Kubernetes cluster is a prereq
 [#supported-production-distributions]
 == Supported production distributions
 
-The Stackable Data Platform requires a Kubernetes cluster to be present, where you can install things into. How to set up Kubernetes as well as a cluster depends on the distribution you chose. 
+The Stackable Data Platform requires a Kubernetes cluster to be present, where you can install things into. How to set up Kubernetes as well as a cluster depends on the distribution you chose.
 
 The following distributions are supported for a production setup of the Stackable Data Platform:
 
@@ -16,6 +16,49 @@ In this version of the SDP, the following Kubernetes versions are supported:
 include::partial$supported-kubernetes-versions.adoc[]
 
 Consult the xref:release_notes.adoc[release notes] to find out which specific versions are supported for the Stackable Data Platform you are using.
+
+[#openshift-notes]
+== Notes on OpenShift
+SDP operators are certified for the OpenShift platform ans can be installed from the OperatorHub.
+
+NOTE: Install the SDP operators in a namespace/project called `stackable-operators`. Installing the operators anywhere else may lead to unwanted efects of even faulty installations. This restriction is caused by limitations in the Operator Bundle Format (OPM) used by OpenShift.
+
+=== Customizing operator installations
+Depending on the cluster size, you may need to customize the resources requested by the SDP operator Pods. This is possible when installing the operators from the command line. For example, to assign `256Mi` of memory to the Apache Kafka operator, you need to create a custom Subscription as follows:
+
+[source,yaml]
+----
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: stackable-kafka-operator
+  namespace: stackable-operators
+spec:
+  channel: stable
+  installPlanApproval: Automatic
+  name: stackable-kafka-operator
+  source: certified-operators
+  sourceNamespace: openshift-marketplace
+  startingCSV: kafka-operator.v23.11.0
+  config:
+    resources:
+      limits:
+        memory: 256Mi
+      requests:
+        memory: 256Mi
+----
+
+In addition, You can restrict the operator to watch a specific namespace. By default, the operator watch all namespaces. For example, to restrict the Kafka operator to watching only a namespace called `kafka-namespace` you add the following properties to the Subscription manifest:
+
+[source,yaml]
+----
+spec:
+  config:
+    env:
+      - name: WATCH_NAMESPACE
+        value: kafka-namespace
+----
 
 [#local-installation]
 == Installing a testinging/development Kubernetes instance locally
