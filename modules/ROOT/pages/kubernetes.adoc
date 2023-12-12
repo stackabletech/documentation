@@ -49,7 +49,8 @@ spec:
         memory: 256Mi
 ----
 
-In addition, You can restrict the operator to watch a specific namespace. By default, the operator watch all namespaces. For example, to restrict the Kafka operator to watching only a namespace called `kafka-namespace` you add the following properties to the Subscription manifest:
+In addition, You can restrict the operator to watch a specific namespace. By default, the operator watches all namespaces.
+For example, to restrict the Kafka operator to watching only a namespace called `kafka-namespace` you add the following properties to the Subscription manifest:
 
 [source,yaml]
 ----
