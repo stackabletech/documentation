@@ -19,7 +19,7 @@ Consult the xref:release_notes.adoc[release notes] to find out which specific ve
 
 [#openshift-notes]
 == Notes on OpenShift
-SDP operators are certified for the OpenShift platform ans can be installed from the OperatorHub.
+SDP operators are certified for the OpenShift platform and can be installed from the OperatorHub.
 
 NOTE: Install the SDP operators in a namespace/project called `stackable-operators`. Installing the operators anywhere else may lead to unwanted efects of even faulty installations. This restriction is caused by limitations in the Operator Bundle Format (OPM) used by OpenShift.
 
