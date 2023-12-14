@@ -34,7 +34,7 @@ In a diagram it would look like this:
 
 image::image$authentication-overview.drawio.svg[]
 
-NOTE: For more details, look at the xref:reference:authenticationclass.adoc[AuthenticationClass reference] as well as the xref:tutorials:authentication_with_openldap.adoc[OpenLDAP tutorial].
+NOTE: Learn more in the xref:tutorials:authentication_with_openldap.adoc[OpenLDAP tutorial] and get a full overview of all the properties in the {crd-docs}/authentication.stackable.tech/authenticationclass/v1alpha1/#spec-provider-ldap[AuthenticationClass LDAP provider CRD reference].
 
 [#tls]
 === TLS
@@ -78,4 +78,4 @@ include::example$authenticationclass-static-secret.yaml[]
 == Further Reading
 
 * xref:tutorials:authentication_with_openldap.adoc[] tutorial
-* xref:reference:authenticationclass.adoc[] reference
+* {crd-docs}/authentication.stackable.tech/authenticationclass/v1alpha1/[AuthenticationClass CRD reference]

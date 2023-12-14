@@ -351,7 +351,7 @@ The LDAP connection details only need to be written down once, in the Authentica
 == Further Reading
 
 - xref:concepts:authentication.adoc[Authentication concepts page]
-- xref:reference:authenticationclass.adoc[AuthenticationClass reference]
+* {crd-docs}/authentication.stackable.tech/authenticationclass/v1alpha1/[AuthenticationClass CRD reference]
 - xref:superset:getting_started/index.adoc[Getting started with the Stackable Operator for Apache Superset]
 - xref:trino:getting_started/index.adoc[Getting started with the Stackable Operator for Trino]
 // TODO Operator docs for LDAP

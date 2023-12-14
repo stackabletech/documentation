@@ -10,4 +10,16 @@ nav:
   - modules/operators/nav.adoc
   - modules/contributor/nav.adoc
   - modules/ROOT/nav2.adoc
+# The prerelease setting affects version sorting.
+# Set to 'true' for nightly and false otherwise.
 prerelease: true
+# The attributes below are specific to this component and version
+# https://docs.antora.org/antora/latest/component-attributes/#hard-set
+asciidoc:
+  attributes:
+    # Keep this version in line with the 'version' key above
+    # The versions for the CRD docs are either 'nightly' or
+    # a full major.minor.patch version like 23.7.1
+    crd-docs-version: "nightly"
+    # use the attribute below to link to the CRD docs
+    crd-docs: https://crds.stackable.tech/{crd-docs-version}
