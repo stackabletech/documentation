@@ -21,5 +21,6 @@ asciidoc:
     # The versions for the CRD docs are either 'nightly' or
     # a full major.minor.patch version like 23.7.1
     crd-docs-version: "nightly"
-    # use the attribute below to link to the CRD docs
-    crd-docs: https://crds.stackable.tech/{crd-docs-version}
+    # use the attributes below to link to the CRD docs
+    crd-docs-base-url: "https://crds.stackable.tech"
+    crd-docs: "{crd-docs-base-url}/{crd-docs-version}"
