@@ -69,7 +69,7 @@ which often do not play nicely together out-of-the-box.
 == Release Notes
 
 The Stackable platform consists of multiple operators that work together. Periodically a platform release is made,
-including all components of the platform at a specific version. See the latest release notes for 23.7
+including all components of the platform at a specific version. See the latest release notes for 23.11
 xref:release_notes.adoc[here].
 
 == Components
