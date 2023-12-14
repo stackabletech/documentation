@@ -118,7 +118,7 @@ xref:operators:index.adoc[Operator overview]
 
 Read the CustomResourceDefinition (CRD) reference for all CRDs that are deployed by any Stackable operator.
 
-https://crds.stackable.tech/[CRD Reference]
+{crd-docs}[CRD Reference]
 
 ++++
 </div>
