@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
-set -euox pipefail
+set -euo pipefail
 
 # This script updates all the playbook files with the new branches for a given version.
-# The version should be given as major.minor
+# The version should be given as major.minor.
+# All the release branches in the operators as well as the docs release branch should already be there.
 
 # Check if yq is installed
 if ! command -v yq &> /dev/null; then
@@ -18,9 +19,9 @@ if [ -z "$1" ]; then
     exit 1
 fi
 
-# Validate the version format (major.minor.patch)
+# Validate the version format (major.minor)
 if [[ ! "$1" =~ ^[0-9]+\.[0-9]$ ]]; then
-    echo "Invalid version format. Please use the major.minor.patch format."
+    echo "Invalid version format. Please use the major.minor format."
     exit 1
 fi
 
@@ -76,7 +77,8 @@ docs_branch="release/$docs_version"
 operator_branch="release-$docs_version"
 insert_position=1
 
-playbook_files=("antora-playbook.yml" "local-antora-playbook.yml")
+docs_dir="$(dirname "$0")/.."
+playbook_files=("$docs_dir/antora-playbook.yml" "$docs_dir/local-antora-playbook.yml")
 
 # Loop through each playbook file
 for yaml_file in "${playbook_files[@]}"; do
