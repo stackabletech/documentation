@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# This script ... TODO
+# This script updates all the playbook files with the new branches for a given version.
+# The version should be given as major.minor
 
 # Check if yq is installed
 if ! command -v yq &> /dev/null; then
@@ -12,31 +13,30 @@ fi
 
 # Check if a version argument is provided
 if [ -z "$1" ]; then
-    echo "Please provide a version as a command-line argument (major.minor.patch)."
+    echo "Please provide a version as a command-line argument (major.minor)."
     exit 1
 fi
 
 # Validate the version format (major.minor.patch)
-if [[ ! "$1" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+if [[ ! "$1" =~ ^[0-9]+\.[0-9]$ ]]; then
     echo "Invalid version format. Please use the major.minor.patch format."
     exit 1
 fi
 
-version="$1"
+docs_version="$1"
 
-# Extract major.minor part of the version
-docs_version=$(echo "$version" | cut -d. -f1,2)
-release_branch_name="release/$docs_version"
+# Define the branches to add. The documentation repo uses a '/' while the operators use a '-'
+docs_branch="release/$docs_version"
+operator_branch="release-$docs_version"
 
 # Check if the release branch exists upstream
-if ! git rev-parse --quiet --verify "$release_branch_name" > /dev/null; then
-    echo "Release branch '$release_branch_name' is missing upstream."
-    echo "Please create the $release_branch_name branch first using the make-release-branch.sh script."
+if ! git rev-parse --quiet --verify "$docs_branch" > /dev/null; then
+    echo "Release branch '$docs_branch' is missing upstream in the documentation repository."
+    echo "Please create the $docs_branch branch first using the make-release-branch.sh script."
     echo "Aborting."
     exit 1
 fi
 
-# Ask additional questions
 read -p "Did you create all the release branches in the operators? (yes/no): " operators_branches_answer
 
 # Convert the user input to lowercase for case-insensitive comparison
