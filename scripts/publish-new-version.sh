@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -euox pipefail
 
 # This script updates all the playbook files with the new branches for a given version.
 # The version should be given as major.minor
 
 # Check if yq is installed
 if ! command -v yq &> /dev/null; then
-    echo "Error: 'yq' is not installed. It's needed to update yaml files later in the script."
+    echo "Error: 'yq' is not installed. It is needed to update yaml files later in the script."
+    echo "This script was tested with yq v4.40.5"
     echo "Please install 'yq' from https://github.com/mikefarah/yq and then run the script again."
     exit 1
 fi
@@ -76,15 +77,15 @@ operator_branch="release-$docs_version"
 insert_position=1
 
 # List of YAML files to modify
-playbook_files=("antora-playbook.yml" "local-antora-playbook.yml" "gitpod-antora-playbook.yml")
+playbook_files=("antora-playbook.yml" "local-antora-playbook.yml")
 
 # Loop through each playbook file
 for yaml_file in "${playbook_files[@]}"; do
     # Insert the docs_branch
-    yq eval ".content.sources[0].branches = .content.sources[0].branches[:$insert_position] + [\"$docs_branch\"] + .content.sources[0].branches[$insert_position:]" -i "$yaml_file"
+    yq ".content.sources[0].branches |= (.[:$insert_position] + [\"$docs_branch\"] + .[$insert_position:])" -i "$yaml_file"
 
-    # Update all the operator sources
-    yq eval ".content.sources[2:] |= map(.branches = .branches[:$insert_position] + [\"$operator_branch\"] + .branches[$insert_position:])" -i "$yaml_file"
+    # Update all the operator sources. The first 2 sources are the docs and stackable-cockpit, they are skipped.
+    yq "with(.content.sources.[]; select(.url == \"*operator*\") | .branches |= .[:$insert_position] + [\"$operator_branch\"] + .[$insert_position:])" -i "$yaml_file"
 done
 
 # Display changes using git diff
