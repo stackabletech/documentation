@@ -76,7 +76,6 @@ docs_branch="release/$docs_version"
 operator_branch="release-$docs_version"
 insert_position=1
 
-# List of YAML files to modify
 playbook_files=("antora-playbook.yml" "local-antora-playbook.yml")
 
 # Loop through each playbook file
@@ -84,14 +83,12 @@ for yaml_file in "${playbook_files[@]}"; do
     # Insert the docs_branch
     yq ".content.sources[0].branches |= (.[:$insert_position] + [\"$docs_branch\"] + .[$insert_position:])" -i "$yaml_file"
 
-    # Update all the operator sources. The first 2 sources are the docs and stackable-cockpit, they are skipped.
+    # Update all the operator sources.
     yq "with(.content.sources.[]; select(.url == \"*operator*\") | .branches |= .[:$insert_position] + [\"$operator_branch\"] + .[$insert_position:])" -i "$yaml_file"
 done
 
-# Display changes using git diff
+# Display changes and ask for user confirmation
 git diff
-
-# Ask the user whether to proceed
 read -p "Do you want to proceed with these changes? (yes/no): " proceed_answer
 
 # Convert the user input to lowercase for case-insensitive comparison
