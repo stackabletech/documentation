@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -eo pipefail
 
 # This script updates all the playbook files with the new branches for a given version.
 # The version should be given as major.minor.

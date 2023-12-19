@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -eo pipefail
 
 # This script takes a major.minor.patch version and
 # - updates the antora.yml file accordingly
