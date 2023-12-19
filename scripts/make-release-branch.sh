@@ -1,30 +1,51 @@
 #!/usr/bin/env bash
-set -eo pipefail
+set -euo pipefail
 
 # This script takes a major.minor.patch version and
 # - updates the antora.yml file accordingly
 # - creates a release branch
 # - pushes the release branch
 
-# Check if a version argument is provided
-if [ -z "$1" ]; then
-    echo "Please provide a version as a command-line argument (major.minor.patch)."
-    exit 1
+# ------------------------------
+# Args parsing
+# ------------------------------
+
+version=""
+push=false
+
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        -v|--version) version="$2"; shift ;;
+        -p|--push) push=true ;;
+        *) echo "Unknown parameter passed: $1"; exit 1 ;;
+    esac
+    shift
+done
+
+# Check if the required version argument is provided
+if [ -z "$version" ]; then
+echo "Usage: your_script.sh -v <version> [-p]"
+echo "The version needs to be provided as major.minor.patch."
+exit 1
 fi
 
 # Validate the version format (major.minor.patch)
-if [[ ! "$1" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
     echo "Invalid version format. Please use the major.minor.patch format."
     exit 1
 fi
 
+echo "Settings: Version: $version, Push: $push"
+
 docs_dir="$(dirname "$0")/.."
 antora_yaml=$docs_dir/antora.yml
 
-version="$1"
-
 # Extract major.minor part of the version
 docs_version=$(echo "$version" | cut -d. -f1,2)
+
+# ------------------------------
+# Checking prerequisites
+# ------------------------------
 
 # Ask the user if they have written release notes and merged them into main
 echo "Release notes for the new version should already be written and commited to the main branch,"
@@ -63,6 +84,10 @@ fi
 
 echo "All checks passed. You are on the main branch, up to date with the origin, and the working directory is clean."
 
+# ------------------------------
+# Updating the antora.yaml
+# ------------------------------
+
 # Set version key to docs_version
 sed -i "s/^version:.*/version: \"$docs_version\"/" "$antora_yaml"
 
@@ -74,6 +99,10 @@ sed -i "s/^\(\s*\)crd-docs-version:.*/\1crd-docs-version: \"$version\"/" "$antor
 
 # Display changes using git diff
 git diff "$antora_yaml"
+
+# ------------------------------
+# Wrap up: commit and push
+# ------------------------------
 
 # Ask the user whether to proceed
 read -p "Do you want to proceed with these changes? (yes/no): " proceed_answer
@@ -96,5 +125,10 @@ git checkout -b "$branch_name"
 git add "$antora_yaml"
 git commit -m "Update version in antora.yml to $version"
 
-# Push the branch
-git push origin "$branch_name"
+# Push the branch if requested
+if [ "$push" = true ]; then
+    echo "Pushing changes to origin ..."
+    git push origin "$branch_name"
+else
+    echo "Skipping push to origin."
+fi

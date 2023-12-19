@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -eo pipefail
+set -euo pipefail
 
 # This script updates all the playbook files with the new branches for a given version.
 # The version should be given as major.minor.
@@ -13,23 +13,42 @@ if ! command -v yq &> /dev/null; then
     exit 1
 fi
 
-# Check if a version argument is provided
-if [ -z "$1" ]; then
-    echo "Please provide a version as a command-line argument (major.minor)."
-    exit 1
+# ------------------------------
+# Args parsing
+# ------------------------------
+
+docs_version=""
+push=false
+
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        -v|--version) docs_version="$2"; shift ;;
+        -p|--push) push=true ;;
+        *) echo "Unknown parameter passed: $1"; exit 1 ;;
+    esac
+    shift
+done
+
+# Check if the required version argument is provided
+if [ -z "$docs_version" ]; then
+echo "Usage: your_script.sh -v <version> [-p]"
+echo "The version needs to be provided as major.minor."
+exit 1
 fi
 
-# Validate the version format (major.minor)
-if [[ ! "$1" =~ ^[0-9]+\.[0-9]$ ]]; then
+# Validate the version format (major.minor.patch)
+if [[ ! "$docs_version" =~ ^[0-9]+\.[0-9]+$ ]]; then
     echo "Invalid version format. Please use the major.minor format."
     exit 1
 fi
 
-docs_version="$1"
-
 # Define the branches to add. The documentation repo uses a '/' while the operators use a '-'
 docs_branch="release/$docs_version"
 operator_branch="release-$docs_version"
+
+# ------------------------------
+# Checking prerequisites
+# ------------------------------
 
 # Check if the release branch exists upstream
 if ! git rev-parse --quiet --verify "$docs_branch" > /dev/null; then
@@ -70,6 +89,11 @@ if [ -n "$(git status --porcelain)" ]; then
 fi
 
 echo "All checks passed."
+
+# ------------------------------
+# Updating playbooks
+# ------------------------------
+
 echo "Updating playbooks."
 
 # Define the branches to add. The documentation repo uses a '/' while the operators use a '-'
@@ -88,6 +112,10 @@ for yaml_file in "${playbook_files[@]}"; do
     # Update all the operator sources.
     yq "with(.content.sources.[]; select(.url == \"*operator*\") | .branches |= .[:$insert_position] + [\"$operator_branch\"] + .[$insert_position:])" -i "$yaml_file"
 done
+
+# ------------------------------
+# Wrap up: commit and push
+# ------------------------------
 
 # Display changes and ask for user confirmation
 git diff
@@ -109,8 +137,13 @@ git checkout -b "$publish_branch"
 git add .
 git commit -m "Add release branches to the playbooks for release $docs_version."
 
-# Push the branch upstream
-git push -u origin "$publish_branch"
+# Push the branch if requested
+if [ "$push" = true ]; then
+    echo "Pushing changes to origin ..."
+    git push -u origin "$publish_branch"
+else
+    echo "Skipping push to origin."
+fi
 
 echo "The changes have been pushed to GitHub!"
 echo "Click the link above to create the PR in GitHub, and then verify that the build works with Netlify previews."
