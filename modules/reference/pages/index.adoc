@@ -1,7 +1,0 @@
-# CRD reference
-:page-aliases: s3.adoc, authenticationclass.adoc
-
-// Let's not link individual CRDs etc. here, just point to the landing page of the CRD docs and that's it.
-You can find CRD reference documentation at {crd-docs}.
-
-There you will find documentation on all properties of all the CRDs that are deployed by the Stackable operators.

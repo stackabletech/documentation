@@ -118,7 +118,7 @@ xref:operators:index.adoc[Operator overview]
 
 Read the CustomResourceDefinition (CRD) reference for all CRDs that are deployed by any Stackable operator.
 
-{crd-docs}[CRD Reference]
+{crd-docs}[CRD Reference pass:[<i class="fa-solid fa-arrow-up-right-from-square fa-xs" style="margin-left: 5px; vertical-align: baseline;"></i>]]
 
 ++++
 </div>
