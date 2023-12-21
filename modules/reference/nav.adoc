@@ -1,1 +1,1 @@
-- {crd-docs}[CRD Reference pass:[<i class="fa-solid fa-arrow-up-right-from-square fa-xs" style="margin-left: 5px; vertical-align: baseline;"></i>]]
+- {crd-docs}[CRD Reference {external-link-icon}^]
