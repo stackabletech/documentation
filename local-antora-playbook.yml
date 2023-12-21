@@ -172,6 +172,8 @@ asciidoc:
     base-repo: https://github.com/stackabletech
     plantuml-server-url: http://www.plantuml.com/plantuml
     kroki-fetch-diagram: true
+    # an external icon. Create a link opening in a new tab like this: http://my-url.com[Text {external-link-icon}^]
+    external-link-icon: "<i class=\"fa-solid fa-arrow-up-right-from-square fa-xs\" style=\"margin-left: 3px; vertical-align: baseline;\"></i>"
   extensions:
     - asciidoctor-kroki
 

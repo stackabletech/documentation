@@ -205,4 +205,4 @@ credentials:
 
 == What's next
 
-Find details about the options of the S3 resource in the xref:reference:s3.adoc[S3 resources reference].
+Read the {crd-docs}/s3.stackable.tech/s3bucket/v1alpha1/[S3Bucket CRD reference] and the {crd-docs}/s3.stackable.tech/s3connection/v1alpha1/[S3Connection CRD reference].

@@ -6,8 +6,8 @@ nav:
   - modules/concepts/nav.adoc
   - modules/demos/nav.adoc
   - modules/tutorials/nav.adoc
-  - modules/reference/nav.adoc
   - modules/operators/nav.adoc
+  - modules/reference/nav.adoc
   - modules/contributor/nav.adoc
   - modules/ROOT/nav2.adoc
 # The prerelease setting affects version sorting.
@@ -24,3 +24,6 @@ asciidoc:
     # use the attributes below to link to the CRD docs
     crd-docs-base-url: "https://crds.stackable.tech"
     crd-docs: "{crd-docs-base-url}/{crd-docs-version}"
+    # this attribute is an annoying little hack to make the versioned
+    # link accessible to the UI template.
+    page-crd-docs: "{crd-docs}"
