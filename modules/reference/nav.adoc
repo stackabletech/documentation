@@ -1,1 +1,3 @@
-- {crd-docs}[CRD Reference {external-link-icon}^]
+* Reference
+** {crd-docs}[CRD Reference {external-link-icon}^]
+** xref:duration.adoc[]
