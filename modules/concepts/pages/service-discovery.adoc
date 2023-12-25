@@ -1,0 +1,126 @@
+= Service discovery ConfigMap
+:page-aliases: service_discovery.adoc
+
+// Abstract
+Stackable operators provide a _service discovery ConfigMap_ for each product instance that is deployed. **This ConfigMap has the same name as the product instance** and contains information about how to connect to the instance. The ConfigMap is used by other Operators to connect products together and can also be used by you, the user, to connect external software to Stackable-operated software.
+
+== Motivation
+
+Products on the Stackable platform can, and in some cases must be connected with each other to run correctly. Some products are fundamental to the platform while others depend on them. For example, a NiFi cluster requires a ZooKeeper connection to run in distributed mode. Other products can optionally be connected with each other for better data flow. For example Trino does not store the query data itself, instead it interfaces with other applications to get access to it.
+
+To connect NiFi to ZooKeeper, NiFi needs to know at which host and port it can find the ZooKeeper instance. However the exact address is not known in advance. To enable a connection from NiFi to ZooKeeper purely based on the name of the ZooKeeper cluster, the discovery ConfigMap is used.
+
+With the ConfigMap, the name of the ZooKeeper cluster is enough to know how to connect to it, the ConfigMap has the same name as the cluster and contains all the information needed to connect to the ZooKeeper cluster.
+
+=== Example
+
+For a ZookeeperCluster named simple-zk:
+
+[source,yaml]
+----
+apiVersion: zookeeper.stackable.tech/v1alpha1
+kind: ZookeeperCluster
+metadata:
+  name: simple-zk
+spec:
+  ...
+----
+
+The Zookeeper operator reads the resource and creates the necessary pods and services to get the instance running. It is aware of the interfaces and connections that may be consumed by other products and it also knows all the details of the actual running processes. It then creates the discovery ConfigMap:
+
+[source,yaml]
+----
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: simple-zk
+data:
+  ZOOKEEPER: simple-zk-server-default-0.simple-zk-server-default.default.svc.cluster.local:2181,simple-zk-server-default-1.simple-zk-server-default.default.svc.cluster.local:2181
+----
+
+The information needed to connect can be a string like above, for example a JDBC connect string: `jdbc:postgresql://localhost:12345`. But a ConfigMap can also contain multiple configuration files which can then be mounted into a client Pod. This is the case for xref:hdfs:discovery.adoc[HDFS], where the `core-site.xml` and `hdfs-site.xml` files are put into the discovery ConfigMap.
+
+== Usage of the service discovery ConfigMap
+
+The ConfigMap is used by Stackable operators to connect products together, but can also be used by the user to retrieve connection information to connect to product instances. The operators consume only the ConfigMap, so it is also possible to create a ConfigMap by hand for a product instance that is not operated by a Stackable operator. These different usage scenarios are explained below.
+
+=== Service discovery within Stackable
+
+Stackable operators use the discovery ConfigMap to automatically connect to service dependencies. Hbase requires HDFS to run. With an HdfsCluster named simple-hdfs defined as such:
+
+[source,yaml]
+----
+apiVersion: hdfs.stackable.tech/v1alpha1
+kind: HdfsCluster
+metadata:
+  name: simple-hdfs
+spec:
+  ...
+----
+The HDFS instance is referenced to by name in HBase cluster spec in the field `hdfsConfigMapName`:
+
+[source,yaml]
+----
+apiVersion: hbase.stackable.tech/v1alpha1
+kind: HbaseCluster
+metadata:
+  name: simple-hbase
+spec:
+  hdfsConfigMapName: simple-hdfs
+  ...
+----
+
+This is a common pattern across the platform. For example the DruidCluster spec contains a field `zookeeperConfigMapName` and the TrinoCluster spec contains a field `hiveConfigMapName` to connect Druid to ZooKeeper and Trino to Hive respectively.
+
+=== Service discovery from outside Stackable
+
+You can connect your own products to Stackable-operated product instances. How exactly you do this depends heavily on the application you want to connect.
+
+In general, use the name of the product instance to retrieve the ConfigMap and use the information in there to connect your own service. You can find links to these documentation pages below in the <<whats-next>> section.
+
+=== Discovering services outside Stackable
+
+It is not uncommon to already have some core software running in your stack, such as HDFS. If you want to use HBase with the Stackable operator, you can still connect your already existing HDFS instance. You will have to create the discovery ConfigMap for your already existing HDFS yourself. Looking at xref:hdfs:discovery.adoc[the discovery documentation for HDFS], you can see that the discovery ConfigMap for HDFS contains the `core-site.xml` and `hdfs-site.xml` files.
+
+The ConfigMap should look something like this:
+
+[source,yaml]
+----
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: my-already-exisiting-hdfs
+data:
+  core-site.xml: |
+    <here should be your core-site.xml file contents>
+  hdfs-site.xml: |
+    <here should be your hdfs-site.xml file contents>
+----
+
+In your HBase cluster spec that you use with the Stackable HBase Operator, you can then reference my-already-existing-hdfs and the Stackable HBase Operator will use your manually created ConfigMap to configure HBase to use your HDFS instance:
+
+[source,yaml]
+----
+apiVersion: hbase.stackable.tech/v1alpha1
+kind: HbaseCluster
+metadata:
+  name: simple-hbase
+spec:
+  hdfsConfigMapName: my-already-exisiting-hdfs
+  ...
+----
+
+IMPORTANT: It's important that you provide *all* the information in the discovery ConfigMap and that it is up-to-date!
+For Stackable managed services the Stackable Operators will take care of this, but for external service discovery it's your responsibility.
+
+[#whats-next]
+== Further reading
+
+Consult discovery ConfigMap documentation for specific products:
+
+* xref:druid:reference/discovery.adoc[Apache Druid]
+* xref:hdfs:discovery.adoc[Apache Hadoop HDFS]
+* xref:hive:discovery.adoc[Apache Hive]
+* xref:kafka:discovery.adoc[Apache Kafka]
+* xref:opa:discovery.adoc[OPA]
+* xref:zookeeper:discovery.adoc[Apache ZooKeeper]

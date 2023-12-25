@@ -1,0 +1,137 @@
+= Service discovery implementation guidelines
+:page-aliases: service_discovery.adoc
+:source-highlighter: highlight.js
+:highlightjs-languages: rust
+
+For a conceptual overview of service discovery, consult the xref:concepts:service_discovery.adoc[service discovery concept page].
+
+== Best practices
+
+=== Exposing config maps for service discovery
+
+The question about which interfaces to expose varies from product to product and must be decided on an individual basis. However, as far as possible the exposed services should be reachable via Kubernetes services like `ClusterIP` or `NodePort`.
+
+=== Consuming config maps for service discovery
+
+The operator that discovers a service has two options for retrieving the information and providing it into the pods:
+
+1. Mount the discovery `ConfigMap` into the `Pod` directly as an environment variable. This can be used for products supporting setting values via CLI or can work with environment variables in their respective configuration files.
+2. Read the discovery `ConfigMap` and provide its content via the usual product configuration `ConfigMap`. This is in general a cleaner way if the product does not support setting values via CLI or environment variables in the configuration files because it avoids writing shell scripts to override the values manually.
+
+== Implementation details
+
+The following section offers some Rust code snippets to get an idea on how to create or retrieve the information in the discovery `ConfigMap`. As a convention, the name of that discovery `ConfigMap` is the name of the cluster. A deployed Stackable ZooKeeper cluster named `simple-zk` in namespace `production` will deploy a discovery `ConfigMap` `production/simple-zk`.
+
+=== Create a discovery ConfigMap
+
+Remember, per convention the discovery `ConfigMap` name of a cluster must be equal to the cluster name. The following code demonstrates how to create a discovery `ConfigMap` using the `ConfigMapBuilder` of the https://github.com/stackabletech/operator-rs[`operator-rs`] framework:
+
+[source,rust]
+----
+use stackable_operator::builder::{ConfigMapBuilder, ObjectMetaBuilder};
+
+let cm = ConfigMapBuilder::new()
+    .metadata(
+        ObjectMetaBuilder::new()
+            .name_and_namespace(my_cluster)
+            .ownerreference_from_resource(my_cluster, None, Some(true))?
+            .build()?,
+    )
+    .add_data("CONNECT_STRING", "http://localhost:12345")
+    .build();
+----
+
+=== Consume a discovery ConfigMap
+
+Given a discovery `ConfigMap`:
+[source,yaml]
+----
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: my-config-map-name
+  namespace: production
+data:
+  CONNECT_STRING: "http://localhost:12345"
+----
+
+==== Mounting the discovery ConfigMap
+
+This is a method to retrieve an `EnvVar` from a `ConfigMap`:
+
+[source,rust]
+----
+use stackable_operator::k8s_openapi::api::{
+    core::v1::{
+       ConfigMapKeySelector, EnvVar, EnvVarSource,
+    },
+};
+
+fn env_var_from_cm(name: &str, configmap_name: &str) -> EnvVar {
+    EnvVar {
+        name: name.to_string(),
+        value_from: Some(EnvVarSource {
+            config_map_key_ref: Some(ConfigMapKeySelector {
+                name: Some(configmap_name.to_string()),
+                key: name.to_string(),
+                ..ConfigMapKeySelector::default()
+            }),
+            ..EnvVarSource::default()
+        }),
+        ..EnvVar::default()
+    }
+}
+----
+
+The returned `EnvVar` then can be added to a `Pod` container and used in the `command` or `args` field using the https://github.com/stackabletech/operator-rs[`operator-rs`] framework container builder:
+
+[source,rust]
+----
+use stackable_operator::builder::ContainerBuilder;
+
+let container = ContainerBuilder::new("my-container")
+    .command(vec!["/bin/bash".to_string(), "-c".to_string()])
+    .args(vec!["./do_magic", "--with-env-var", "${CONNECT_STRING}"])
+    .add_env_var(env_var_from_cm("CONNECT_STRING", "my-config-map-name"))
+    .build();
+----
+
+==== Reading the discovery ConfigMap
+
+This is a method to read one entry of a discovery `ConfigMap` from an operator:
+
+[source,rust]
+----
+use stackable_operator::{
+    client::Client,
+    error::OperatorResult,
+    k8s_openapi::api::core::v1::ConfigMap,
+};
+
+async fn entry_from_cm(
+    client: &Client,
+    name: &str,
+    namespace: Option<&str>,
+    entry: &str,
+) -> OperatorResult<String> {
+    Ok(client
+        .get::<ConfigMap>(name, namespace)
+        .await?
+        .data
+        .and_then(|mut data| data.remove(entry))
+        .unwrap())
+}
+
+let connection_string = entry_from_cm(client, "my-config-map-name", Some("production"), "CONNECT_STRING").await?;
+----
+
+The retrieved connection string can be used to configure the product to connect to the discovered service.
+
+== Existing libraries
+
+Currently, there is not much support from the https://github.com/stackabletech/operator-rs[`operator-rs`] framework to assist with service discovery. The related code is mostly contained in each operator and similar to the examples above.
+
+The following list should indicate support for certain products or helper methods:
+
+- `ConfigMapBuilder` in combination with `ObjectMetaBuilder` assists with building the discovery `ConfigMap`
+- `OPA`: The https://github.com/stackabletech/operator-rs[`operator-rs`] framework has a module called `opa.rs` that supports the creation of the data API connection string

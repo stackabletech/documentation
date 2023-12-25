@@ -1,0 +1,88 @@
+= Documentation style guide
+:page-aliases: style_guide.adoc
+
+:asciidoc-recommended-practices: https://asciidoctor.org/docs/asciidoc-recommended-practices[AsciiDoc recommended practices]
+:kubernetes-style-guide: https://kubernetes.io/docs/contribute/style/style-guide/[Kubernetes style guide]
+:google-style-guide: https://developers.google.com/style/[Google developer documentation style guide]
+
+This page provides guidelines on how to write documentation for the Stackable platform.
+The guidelines cover overall document structure, text appearance and formatting, as well as writing style, language and grammar.
+Following them will make the style and tone of the documentation consistent and clear for the user, and structure and formatting consistent for developers.
+We derive our guidelines from the {asciidoc-recommended-practices}, the {kubernetes-style-guide} and the {google-style-guide}.
+
+If you are wondering about how to write, structure or format something and what you are looking for is not covered on this page, please consult any of the resources linked above.
+
+== Highlights
+
+* Use PascalCase for API objects. Do not use `code style` (i.e. ConfigMap not `ConfigMap`).
+* Use `code style` for commandlinetools (`kubectl`, `stackablectl`), commandline snippets and filenames.
+* Use asterisks for unordered lists.
+* Write a single sentence per line.
+* Use second person: "you" instead of "we".
+* Use sentence case for headings.
+
+== Overall structure: AsciiDoc recommended practices
+
+We rely on the AsciiDoc recommended practices for the overall layout and formatting of the AsciiDoc documents that make up the documentation. Here are the most important parts:
+
+* https://asciidoctor.org/docs/asciidoc-recommended-practices/#one-sentence-per-line[Write one sentence per line], i.e. do not use fixed length line breaks. This has multiple advantages outlined in the linked page, among them easier diffing in source control, easier swapping of sentences and avoiding reflow when changing a subsection of a paragraph.
+* https://asciidoctor.org/docs/asciidoc-recommended-practices/#document-attributes-i-e-variables[Use document attributes (variables) to improve text flow], especially for URLs.
+* https://asciidoctor.org/docs/asciidoc-recommended-practices/#lists[Use asterisks for unordered lists].
+
+Also - but these recommendations are fairly obvious - https://asciidoctor.org/docs/asciidoc-recommended-practices/#document-extension[use the `.adoc` extension for AsciiDoc files], https://asciidoctor.org/docs/asciidoc-recommended-practices/#section-titles[use asymmetric Atx-style for section headings], https://asciidoctor.org/docs/asciidoc-recommended-practices/#delimited-blocks[use only four characters for block delimiters].
+
+Read the {asciidoc-recommended-practices} for more.
+
+== Formatting: Kubernetes style guide
+
+Since the Stackable Data Platform ist built on Kubernetes, the resources mentioned in our documentation are very similar to the ones mentioned in the Kubernetes documentation, so we follow the {kubernetes-style-guide} for formatting of code, Kubernetes resources and objects. Some examples:
+
+* https://kubernetes.io/docs/contribute/style/style-guide/#use-upper-camel-case-for-api-objects[Use PascalCase for API objects] such as ConfigMap or KafkaCluster
+* https://kubernetes.io/docs/contribute/style/style-guide/#use-italics-to-define-or-introduce-new-terms[Use _italics_ to define or introduce new terms]
+* https://kubernetes.io/docs/contribute/style/style-guide/#use-code-style-for-filenames-directories-and-paths[Use `code style` for filenames, directories and paths]
+* https://kubernetes.io/docs/contribute/style/style-guide/#use-code-style-for-object-field-names-and-namespaces[Use `code style` for object field names and namespaces]
+* https://kubernetes.io/docs/contribute/style/style-guide/#use-normal-style-for-string-and-integer-field-values[Use normal style for string and integer field values]
+* https://kubernetes.io/docs/contribute/style/style-guide/#use-code-style-for-kubernetes-command-tool-and-component-names[Use `code style` for command line tools] such as `stackablectl`
+
+== Tone and writing style: Google developer documentation style guide
+
+For overall tone, writing style, language and grammar the {google-style-guide} is a good resource of guidelines.
+Some highlights:
+
+* https://developers.google.com/style/tone[Be conversational and friendly]
+* https://developers.google.com/style/person[Use second person]: "You" rather than "we"
+* https://developers.google.com/style/voice[Use active voice]
+* https://developers.google.com/style/capitalization[Use sentence case for headings]
+* https://developers.google.com/style/future[Avoid talking about future features]
+* https://developers.google.com/style/timeless-documentation[Timeless documentation]
+
+The Google guide also includes it's own list of https://developers.google.com/style/highlights[highlights].
+
+Lastly, these are guidelines and not strict rules to follow. Use your own judgement to clearly communicate and explain - after all this is what documentation is about.
+
+== Scripts and code blocks
+
+* Indent using 2 spaces to save horizontal space.
+* Do not use a `$` prefix for commandline examples.
+* Use long options for shell script flags, as they are easier to understand. Use your own judgment; common ones like `rm -rf` can still be short flags.
+
+== CRD documentation
+
+In general, follow the other guidelines. In particular, use PascalCase for API objects and `code style` for object properties.
+Start doc strings with an uppercase letter and finish with a period.
+
+If you want to link to a page like this one: 
+
+    https://docs.stackable.tech/home/stable/concepts/authentication
+
+use the placeholder:
+
+    DOCS_BASE_URL_PLACEHOLDER/concepts/authentication
+
+When the CRD gets generated, the placeholder will be replaced with a correctly versioned link to the docs.
+
+== Bonus: Google search URL structure best practices
+
+Google recommends a https://developers.google.com/search/docs/crawling-indexing/url-structure[URL structure], which is to use hyphens (`-`) instead of underscores (`_`) in URLs.
+So we should aim to create our files with hyphens too.
+You can use https://docs.antora.org/antora/latest/page/page-aliases/[Antora page aliases] to rename a page.

@@ -1,0 +1,132 @@
+= Overrides
+
+The Stackable Operators configure the products they are operating with sensible defaults and required settings to enable connectivity and security.
+Other important settings are usually exposed as settings in the resource definition.
+In some cases however, you might want to set certain settings that are not exposed, or override settings that the operator has set on the product.
+
+The resource definitions of all products support overrides, specifically for the product configuration, environment variables, and the PodSpec the operators generate.
+
+WARNING: Overriding certain configuration properties can lead to faulty clusters. Overrides should only be used as a last resort!
+
+The cluster definitions also supports overriding configuration aspects, either per xref:roles-and-role-groups.adoc[role or per role group], where the more specific override (role group) has precedence over the less specific one (role).
+
+[#config-overrides]
+== Config overrides
+
+For a xref:roles-and-role-groups.adoc[role or role group], at the same level of `config`, you can specify `configOverrides` for any of the configuration files the product uses.
+
+An example for an HDFS cluster looks as follows:
+
+[source,yaml]
+----
+apiVersion: hdfs.stackable.tech/v1alpha1
+kind: HdfsCluster
+metadata:
+  name: simple-hdfs
+spec:
+  nameNodes: # change to your your role
+    config: # [..]
+    configOverrides: # on role level
+      core-site.xml: # change to your desired configuration file
+        fs.trash.interval: "5"
+    roleGroups:
+      default:
+        config: # [..]
+        configOverrides: # on rolegroup level, takes precedence over the ones specified at role level
+          hdfs-site.xml:
+            dfs.namenode.num.checkpoints.retained: "3"
+        replicas: 1
+----
+
+The role, as well as the configuration file and configuration settings available depend on the specific product.
+All override property values must be strings.
+The properties will be formatted and escaped correctly into the file format used by the product.
+
+You can also set the property to an empty string (`my.property: ""`), which effectively disables the property the operator would write out normally.
+In case of a `.properties` file, this will show up as `my.property=` in the `.properties` file.
+
+[#env-overrides]
+== Environment variable overrides
+
+For a xref:roles-and-role-groups.adoc[role or role group], at the same level of `config`, you can specify `envOverrides` for any env variable
+
+An example for an HDFS cluster looks as follows:
+
+[source,yaml]
+----
+apiVersion: hdfs.stackable.tech/v1alpha1
+kind: HdfsCluster
+metadata:
+  name: simple-hdfs
+spec:
+  nameNodes: # change to your your role
+    config: # [..]
+    envOverrides: # on role level
+      MY_ENV_VAR: "MY_VALUE"
+    configOverrides: # on role level
+      core-site.xml: # change to your desired configuration file
+        fs.trash.interval: "5"
+    roleGroups:
+      default:
+        config: # [..]
+        envOverrides: # on rolegroup level, takes precedence over the ones specified at role level
+          MY_ENV_VAR: "MY_VALUE"
+        replicas: 1
+----
+
+You can set any environment variable, but every specific product does support a different set of environment variables.
+All override property values must be strings.
+
+[#pod-overrides]
+== Pod overrides
+
+For a xref:roles-and-role-groups.adoc[role or role group], at the same level of `config`, you can specify `podOverrides` for any of the attributes you can configure on a Pod.
+
+An example for an HDFS cluster looks as follows:
+
+[source,yaml]
+----
+apiVersion: hdfs.stackable.tech/v1alpha1
+kind: HdfsCluster
+metadata:
+  name: simple-hdfs
+spec:
+  nameNodes: # change to your your role
+    config: # [..]
+    podOverrides: # on role level
+      spec:
+        tolerations:
+          - key: "key1"
+            operator: "Equal"
+            value: "value1"
+            effect: "NoSchedule"
+    roleGroups:
+      default:
+        config: # [..]
+        podOverrides: # on rolegroup level, takes precedence over the ones specified at role level
+          metadata:
+            labels:
+              my-custom-label: super-important-label
+        replicas: 1
+----
+
+The `podOverrides` can be any valid `PodTemplateSpec` (which means every property that you can set on a regular Kubernetes Pod).
+
+The priority of how to construct the final Pod submitted to Kubernetes looks as follows (low to high):
+
+1. PodTemplateSpec calculated by operator
+2. PodTemplateSpec given in role level `podOverrides`
+3. PodTemplateSpec given in rolegroup level `podOverrides`
+
+Each of these are combined top to bottom using a deep merge.
+The exact merge algorithm is described in the https://arnavion.github.io/k8s-openapi/v0.18.x/k8s_openapi/trait.DeepMerge.html[k8s-openapi docs], which basically tries to mimic the way Kubernetes merges patches onto objects.
+
+The `podOverrides` will be merged onto the following resources the operators deploy:
+
+* StatefulSets containing the products (most of the products)
+* DaemonSets containing the products (currently only OPA)
+* Deployments containing the products (currently no product, but there might be Deployments in the future)
+
+They will *not* be applied to:
+
+* Jobs, that are used to setup systems the product depends on e.g. create a database schema for Superset oder Airflow.

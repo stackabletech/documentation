@@ -7,172 +7,166 @@ site:
   keys:
     enable_tracking: true
 
+# URL config settings.
+# docs: https://docs.antora.org/antora/latest/playbook/configure-urls/
 urls:
-  # This replaces the component version in the URL of the latest stable version with 'stable'
-  # i.e. /commons-operator/stable/index.html instead of /commons-operator/0.3/index.html
+  # The symbolic name of the latest stable version, and how to redirect from/to it.
+  # with 'redirect:to', the _actual_ version link is a redirect, and the _actual_ link 
+  # contains the symbolic name, i.e. stable.
+  # As the user browses the latest docs, there will be 'stable' in the links. Also 
+  # search engines will see the 'stable' link and index those pages, so if we release
+  # a new version, these links will be already in the index, which is good.
+  # Linking to the latest version by version number is still possible, and after the
+  # latest version is not latest anymore, the redirect is instead the actual URL.
   latest_version_segment: stable
+  latest_version_segment_strategy: redirect:to
+  # We deploy our site on netlify, so we use their redirect config mechanism
   redirect_facility: netlify
 
 content:
   sources: 
-    - url: https://github.com/stackabletech/documentation.git
-      branches: 
-        - operator-concept
+    - url: .
+      branches:
+        - HEAD
+        - release/23.11
+        - release/23.7
+        - release/23.4
         - release/23.1
-        - release/22.11
-        - release/22.09
-        - release/22.06
-    # stackablectl
-    - url: https://github.com/stackabletech/stackablectl.git
+    # management tools
+    - url: https://github.com/stackabletech/stackable-cockpit.git
       start_path: docs
       branches: main
+    # demos
+    - url: https://github.com/stackabletech/demos.git
+      start_path: docs
+      branches:
+        - main
+        - release-23.11
+        - release-23.7
+        - release-23.4
+        - release-23.1
     # internal operators
     - url: https://github.com/stackabletech/commons-operator.git
       start_path: docs
       branches:
         - main
+        - release-23.11
+        - release-23.7
+        - release-23.4
         - release-23.1
-        - distributed-component-compat  # (required for 0.4 and below)
-        - old-release-docs/0.4
-        - old-release-docs/0.3
-        - old-release-docs/0.2
     - url: https://github.com/stackabletech/secret-operator.git
       start_path: docs
       branches:
         - main
+        - release-23.11
+        - release-23.7
+        - release-23.4
         - release-23.1
-        - distributed-component-compat  # (required for 0.6 and below)
-      tags:
-        - docs/0.6
-        - docs/0.5
     - url: https://github.com/stackabletech/listener-operator.git
       start_path: docs
       branches:
         - main
+        - release-23.11
+        - release-23.7
+        - release-23.4
         - release-23.1
     # product operators
     - url: https://github.com/stackabletech/airflow-operator.git
       start_path: docs
       branches:
         - main
+        - release-23.11
+        - release-23.7
+        - release-23.4
         - release-23.1
-        - distributed-component-compat  # (required for 0.6 and below)
-        - old-release-docs/0.6
-        - old-release-docs/0.5
-      tags:
-        - docs/0.4
     - url: https://github.com/stackabletech/druid-operator.git
       start_path: docs
       branches:
         - main
+        - release-23.11
+        - release-23.7
+        - release-23.4
         - release-23.1
-        - distributed-component-compat
-        - old-release-docs/0.8
-        - old-release-docs/0.7
-      tags:
-        - docs/0.6
     - url: https://github.com/stackabletech/hbase-operator.git
       start_path: docs
       branches:
         - main
+        - release-23.11
+        - release-23.7
+        - release-23.4
         - release-23.1
-        - distributed-component-compat
-        - old-release-docs/0.5
-        - old-release-docs/0.4
-        - old-release-docs/0.3
     - url: https://github.com/stackabletech/hdfs-operator.git
       start_path: docs
       branches:
         - main
+        - release-23.11
+        - release-23.7
+        - release-23.4
         - release-23.1
-        - distributed-component-compat
-        - old-release-docs/0.6
-        - old-release-docs/0.5
-      tags:
-        - docs/0.4
     - url: https://github.com/stackabletech/hive-operator.git
       start_path: docs
       branches:
         - main
+        - release-23.11
+        - release-23.7
+        - release-23.4
         - release-23.1
-        - distributed-component-compat
-      tags:
-        - docs/0.8
-        - docs/0.7
-        - docs/0.6
     - url: https://github.com/stackabletech/kafka-operator.git
       start_path: docs
       branches:
         - main
+        - release-23.11
+        - release-23.7
+        - release-23.4
         - release-23.1
-        - distributed-component-compat
-      tags:
-        - docs/0.8
-        - docs/0.7
-        - docs/0.6
     - url: https://github.com/stackabletech/nifi-operator.git
       start_path: docs
       branches:
         - main
+        - release-23.11
+        - release-23.7
+        - release-23.4
         - release-23.1
-        - distributed-component-compat  # (required for 0.8 and below)
-        - old-release-docs/0.8
-        - old-release-docs/0.7
-        - old-release-docs/0.6
     - url: https://github.com/stackabletech/opa-operator.git
       start_path: docs
       branches:
         - main
+        - release-23.11
+        - release-23.7
+        - release-23.4
         - release-23.1
-        - distributed-component-compat
-      tags:
-        - docs/0.11
-        - docs/0.10
-        - docs/0.9
     - url: https://github.com/stackabletech/spark-k8s-operator.git
       start_path: docs
       branches:
         - main
+        - release-23.11
+        - release-23.7
+        - release-23.4
         - release-23.1
-        - distributed-component-compat
-      tags:
-        - docs/0.6
-        - docs/0.5
-        - docs/0.4
-        - docs/0.3
-        - docs/0.2
     - url: https://github.com/stackabletech/superset-operator.git
       start_path: docs
       branches:
         - main
+        - release-23.11
+        - release-23.7
+        - release-23.4
         - release-23.1
-        - distributed-component-compat
-        - old-release-docs/0.7
-        - old-release-docs/0.6
-        - old-release-docs/0.5
     - url: https://github.com/stackabletech/trino-operator.git
       start_path: docs
       branches:
         - main
+        - release-23.11
+        - release-23.7
+        - release-23.4
         - release-23.1
-        - distributed-component-compat
-      tags:
-        - docs/0.8
-        - docs/0.7
-        - docs/0.6
-        - docs/0.5
-        - docs/0.4
-        - docs/0.3
-        - docs/0.2
     - url: https://github.com/stackabletech/zookeeper-operator.git
       start_path: docs
       branches:
         - main
+        - release-23.11
+        - release-23.7
+        - release-23.4
         - release-23.1
-        - distributed-component-compat
-        - old-release-docs/0.12
-        - old-release-docs/0.11
-        - old-release-docs/0.10
 
 ui:
   bundle:
@@ -189,6 +183,8 @@ asciidoc:
     base-repo: https://github.com/stackabletech
     plantuml-server-url: http://www.plantuml.com/plantuml
     kroki-fetch-diagram: true
+    # an external icon. Create a link opening in a new tab like this: http://my-url.com[Text {external-link-icon}^]
+    external-link-icon: "<i class=\"fa-solid fa-arrow-up-right-from-square fa-xs\" style=\"margin-left: 3px; vertical-align: baseline;\"></i>"
   extensions:
     - asciidoctor-kroki
 

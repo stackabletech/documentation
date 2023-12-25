@@ -3,7 +3,7 @@
 // -------------- Intro ----------------
 
 Many of the tools on the Stackable platform integrate with S3 storage in some way.
-For example Druid can xref:druid:usage-guide/ingestion.adoc#s3[ingest data from S3] and also xref:druid:usage-guide/deep-storage.adoc#s3[use S3 as a backend for deep storage], Spark can use an xref:spark-k8s:usage.adoc#_s3_bucket_specification[S3 bucket] to store application files and data.
+For example Druid can xref:druid:usage-guide/ingestion.adoc#s3[ingest data from S3] and also xref:druid:usage-guide/deep-storage.adoc#s3[use S3 as a backend for deep storage], Spark can use an xref:spark-k8s:usage-guide/s3.adoc[S3 bucket] to store application files and data.
 
 == S3Connection and S3Bucket
 // introducing the objects
@@ -43,19 +43,21 @@ spec:
 S3Bucket(s) reference S3Connection(s) objects. Both types of objects can be referenced by other resources. For example in a DruidCluster you can specify a bucket for deep storage and an S3Connection for data ingestion.
 S3Connection objects can be defined in a standalone fashion or they can be inlined into a bucket object. Similarly a bucket can be defined in a standalone object or inlined into an enclosing object.
 
-[excalidraw,s3-cluster-bucket-connection-reference,svg,width=70%]
-----
-include::partial$diagrams/S3ResourceOverview.excalidraw[]
-----
+image::s3-overview.drawio.svg[A diagram showing four variations (A, B, C, D) of S3 resource referencing.]
 
-The diagram above shows three examples of how the objects can be
- structured.
-// Option 1
-In option 1 all objects are separate from each other. This provides maximum re-usability because the same connection or bucket object can be referenced by multiple resources. It also allows for separation of concerns across team members. Cluster administrators can define S3 connection objects that developers reference in their applications.
-// Option 2
-In option 2 the bucket is inlined in the cluster definition. This makes sense if you have a dedicated bucket for a specific purpose, if it is only used in this one cluster instance, in this single product.
-// Option 3
-Option 3 shows all S3 objects inlined in a DruidCluster resource. This is a very convenient way to quickly test something since the entire configuration is encapsulated in a single but potentially large manifest. 
+The diagram above shows four examples of how the objects can be structured.
+
+// Variant A
+Variant A shows all S3 objects inlined in a DruidCluster resource. This is a very convenient way to quickly test something since the entire configuration is encapsulated in a single but potentially large manifest. 
+
+// Variant B
+In variant B the S3 bucket has been split out into its own resource. It can now be referred to by multiple different tools as well.
+
+// Variant C
+In variant C the bucket is inlined in the cluster definition. This makes sense if you have a dedicated bucket for a specific purpose, if it is only used in this one cluster instance, in this single product, but they are still hosted in the same place, so they still share a connection.
+
+// Variant D
+In variant D all objects are separate from each other. This provides maximum re-usability because the same connection or bucket object can be referenced by multiple resources. It also allows for separation of concerns across team members. Cluster administrators can define S3 connection objects that developers reference in their applications.
 
 === Examples
 
@@ -76,12 +78,9 @@ spec:
 
 ==== Inline definition
 
-The inline definition is variant 3 in the figure above.
+The inline definition is variant A in the figure above.
 
-[excalidraw,s3-cluster-bucket-connection-reference,svg,width=70%]
-----
-include::partial$diagrams/S3ResourcesInlined.excalidraw[]
-----
+image::s3-inline.drawio.svg[The DruidCluster encapsulates an S3Bucket, which in turn contains an S3Connection]
 
 This variant has the advantage that everything is defined in a single file, right where it is going to be used:
 
@@ -111,10 +110,7 @@ spec:
 
 Often multiple buckets are used across a data pipeline, as well as buckets being used by different applications, so stand-alone resource definitions that can be referenced from multiple objects make sense.
 
-[excalidraw,s3-cluster-bucket-connection-reference,svg,width=70%]
-----
-include::partial$diagrams/S3ResourcesByReference.excalidraw[]
-----
+image::s3-fully-separated.drawio.svg[One S3Connection is referenced by two different S3Buckets. The first Bucket is referenced by a DruidCluster and the second bucket is referenced by a SparkCluster and TrinoCluster. No object is inlined.]
 
 The DruidCluster references the S3Bucket, which in turn references the S3Connection. First the definition of the S3Connection:
 
@@ -131,7 +127,6 @@ spec:
 ----
 
 Then the bucket, which references the connection:
-
 
 [source,yaml]
 ----
@@ -163,7 +158,6 @@ spec:
 ----
 
 == Credentials
-
 
 No matter if a connection is specified inline or as a separate object, the credentials are always specified in the same way. You will need a `Secret` containing the access key ID and secret access key, a `SecretClass` and then a reference to this `SecretClass` where you want to specify the credentials.
 
@@ -211,4 +205,4 @@ credentials:
 
 == What's next
 
-- Find details about the options of the S3 resource in the xref:reference:s3.adoc[S3 resources reference].
+Read the {crd-docs}/s3.stackable.tech/s3bucket/v1alpha1/[S3Bucket CRD reference] and the {crd-docs}/s3.stackable.tech/s3connection/v1alpha1/[S3Connection CRD reference].
