@@ -129,6 +129,10 @@ There are a few other important repositories that come up frequently:
 |https://github.com/stackabletech/secret-operator
 |Manages/generates Kubernetes secrets, and mounts them into pods using CSI
 
+|Listener Operator
+|https://github.com/stackabletech/listener-operator
+|A CSI provider intended to provide an abstract way to expose a single Pod to the outside network, while hiding details about the cluster from the application developer.
+
 |Issues
 |https://github.com/stackabletech/issues
 |This repository exists solely for the purpose of tracking issues related to the Stackable Platform in general. Large topics that impact many or even all of the platform components are discussed here. There is no code in this repository.

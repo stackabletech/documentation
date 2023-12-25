@@ -7,10 +7,20 @@ site:
   keys:
     enable_tracking: true
 
+# URL config settings.
+# docs: https://docs.antora.org/antora/latest/playbook/configure-urls/
 urls:
-  # This replaces the component version in the URL of the latest stable version with 'stable'
-  # i.e. /commons-operator/stable/index.html instead of /commons-operator/0.3/index.html
+  # The symbolic name of the latest stable version, and how to redirect from/to it.
+  # with 'redirect:to', the _actual_ version link is a redirect, and the _actual_ link 
+  # contains the symbolic name, i.e. stable.
+  # As the user browses the latest docs, there will be 'stable' in the links. Also 
+  # search engines will see the 'stable' link and index those pages, so if we release
+  # a new version, these links will be already in the index, which is good.
+  # Linking to the latest version by version number is still possible, and after the
+  # latest version is not latest anymore, the redirect is instead the actual URL.
   latest_version_segment: stable
+  latest_version_segment_strategy: redirect:to
+  # We deploy our site on netlify, so we use their redirect config mechanism
   redirect_facility: netlify
 
 content:
@@ -18,6 +28,7 @@ content:
     - url: .
       branches:
         - HEAD
+        - release/23.11
         - release/23.7
         - release/23.4
         - release/23.1
@@ -30,6 +41,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-23.11
         - release-23.7
         - release-23.4
         - release-23.1
@@ -38,6 +50,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-23.11
         - release-23.7
         - release-23.4
         - release-23.1
@@ -45,6 +58,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-23.11
         - release-23.7
         - release-23.4
         - release-23.1
@@ -52,6 +66,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-23.11
         - release-23.7
         - release-23.4
         - release-23.1
@@ -60,6 +75,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-23.11
         - release-23.7
         - release-23.4
         - release-23.1
@@ -67,6 +83,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-23.11
         - release-23.7
         - release-23.4
         - release-23.1
@@ -74,6 +91,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-23.11
         - release-23.7
         - release-23.4
         - release-23.1
@@ -81,6 +99,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-23.11
         - release-23.7
         - release-23.4
         - release-23.1
@@ -88,6 +107,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-23.11
         - release-23.7
         - release-23.4
         - release-23.1
@@ -95,6 +115,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-23.11
         - release-23.7
         - release-23.4
         - release-23.1
@@ -102,6 +123,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-23.11
         - release-23.7
         - release-23.4
         - release-23.1
@@ -109,6 +131,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-23.11
         - release-23.7
         - release-23.4
         - release-23.1
@@ -116,6 +139,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-23.11
         - release-23.7
         - release-23.4
         - release-23.1
@@ -123,6 +147,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-23.11
         - release-23.7
         - release-23.4
         - release-23.1
@@ -130,6 +155,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-23.11
         - release-23.7
         - release-23.4
         - release-23.1
@@ -137,6 +163,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-23.11
         - release-23.7
         - release-23.4
         - release-23.1
@@ -156,6 +183,8 @@ asciidoc:
     base-repo: https://github.com/stackabletech
     plantuml-server-url: http://www.plantuml.com/plantuml
     kroki-fetch-diagram: true
+    # an external icon. Create a link opening in a new tab like this: http://my-url.com[Text {external-link-icon}^]
+    external-link-icon: "<i class=\"fa-solid fa-arrow-up-right-from-square fa-xs\" style=\"margin-left: 3px; vertical-align: baseline;\"></i>"
   extensions:
     - asciidoctor-kroki
 

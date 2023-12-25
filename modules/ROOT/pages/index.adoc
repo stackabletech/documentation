@@ -6,79 +6,34 @@
 :docs-issues: https://github.com/stackabletech/documentation/issues
 :docs-repo: https://github.com/stackabletech/documentation
 
-Welcome to Stackable!
-This documentation gives you an overview of the Stackable Data Platform, how to install and manage it as well as some
-tutorials.
-
 ++++
-<div class="boxes two-column">
-++++
+<style>
+h1 {
+    display: none; // hide the default title
+}
 
-++++
-<div class="box">
-++++
+.landing ul {
+  list-style-type: none; /* Remove bullets */
+  padding: 0; /* Remove padding */
+  margin: 0; /* Remove margins */
+}
 
-++++
-<h3>Introduction</h3>
-++++
+#intro-action {
+    margin-top: 5rem;
+    margin-bottom: 2rem;
+    font-size: 36px;
+    text-align: center;
+}
 
-The Stackable Data Platform allows you to deploy, scale and manage Data infrastructure in any environment running
-https://kubernetes.io/[Kubernetes].
+#help-action {
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+    font-size: 26px;
+    text-align: center;
+}
 
-You can find an overview of the supported components <<Components,below>>, as well as a full list of all supported
-product versions xref:operators:supported_versions.adoc[here].
-
-If you have any feedback regarding the documentation please either open an {docs-issues}[issue], ask a
-{docs-discussion}[question] or look at the source for this documentation in its {docs-repo}[repository].
-
-++++
-</div>
-++++
-
-++++
-<div class="box">
-++++
-
-++++
-<h3>Goal of the project</h3>
-++++
-
-We are building a distribution of existing Open Source tools that together comprise the components of a modern data
-platform.
-
-There are components to ingest data, to store data, to process and visualize and much more. While the platform got
-started in the _Big Data_ ecosystem we are in no way limited to big data workloads.
-
-You can declaratively build these environments, and we don't stop at the tool level as we also provide ways for the
-users to interact with the platform in the "as Code"-approach.
-
-We are leveraging the https://www.openpolicyagent.org/[Open Policy Agent] to provide Security-as-Code.
-
-We are building a distribution that includes the “best of breed” of existing Open Source tools, but bundles them in a
-way, so it is easy to deploy a fully working stack of software. Most of the existing tools are “single purpose” tools,
-which often do not play nicely together out-of-the-box.
-
-++++
-</div>
-++++
-
-++++
-</div>
-++++
-
-== Release Notes
-
-The Stackable platform consists of multiple operators that work together. Periodically a platform release is made,
-including all components of the platform at a specific version. See the latest release notes for 23.7
-xref:release_notes.adoc[here].
-
-== Components
-
-We are using Kubernetes as our deployment platform. And we're building {k8s-operators}[Operators] for each of the
-products we support. The Stackable Data Platform supports the following products:
-
-++++
-<br>
+</style>
+<div id="intro-action">What are you looking for?</div>
 ++++
 
 ++++
@@ -90,28 +45,13 @@ products we support. The Stackable Data Platform supports the following products
 ++++
 
 ++++
-<h3 id="airflow"><a class="anchor" href="#airflow"></a>Apache Airflow</h3>
+<h3>Getting started</h3>
 ++++
 
-Airflow is a workflow engine and your replacement should you be using Apache Oozie.
+Get started with the Stackable Data Platform or a specific operator.
 
-xref:airflow:index.adoc[Read more]
-
-++++
-</div>
-++++
-
-++++
-<div class="box">
-++++
-
-++++
-<h3 id="druid"><a class="anchor" href="#druid"></a>Apache Druid</h3>
-++++
-
-Apache Druid is a real-time database to power modern analytics applications.
-
-xref:druid:index.adoc[Read more]
+* xref:quickstart.adoc[]
+* xref:tutorials:index.adoc#getting-started[Getting started per operator]
 
 ++++
 </div>
@@ -122,28 +62,13 @@ xref:druid:index.adoc[Read more]
 ++++
 
 ++++
-<h3 id="hbase"><a class="anchor" href="#hbase"></a>Apache HBase</h3>
+<h3>Demos and tutorials</h3>
 ++++
 
-HBase is a distributed, scalable, big data store.
+Run a demo data processing pipeline or follow a tutorial to learn about the platform hands-on.
 
-xref:hbase:index.adoc[Read more]
-
-++++
-</div>
-++++
-
-++++
-<div class="box">
-++++
-
-++++
-<h3 id="hdfs"><a class="anchor" href="#hdfs"></a>Apache Hadoop HDFS</h3>
-++++
-
-HDFS is a distributed file system that provides high-throughput access to application data.
-
-xref:hdfs:index.adoc[Read more]
+* xref:demos:index.adoc[]
+* xref:tutorials:index.adoc[]
 
 ++++
 </div>
@@ -154,30 +79,13 @@ xref:hdfs:index.adoc[Read more]
 ++++
 
 ++++
-<h3 id="hive"><a class="anchor" href="#hive"></a>Apache Hive</h3>
+<h3>Concept explanation</h3>
 ++++
 
-The Apache Hive data warehouse software facilitates reading, writing, and managing large datasets residing in
-distributed storage using SQL. We support the Hive Metastore.
+Read concept explanation to gain a better understanding of how the Stackable Data platform works, 
+or how a specific feature works.
 
-xref:hive:index.adoc[Read more]
-
-++++
-</div>
-++++
-
-++++
-<div class="box">
-++++
-
-++++
-<h3 id="kafka"><a class="anchor" href="#kafka"></a>Apache Kafka</h3>
-++++
-
-Apache Kafka is an open-source distributed event streaming platform used by thousands of companies for high-performance
-data pipelines, streaming analytics, data integration, and mission-critical applications.
-
-xref:kafka:index.adoc[Read more]
+xref:concepts:index.adoc[]
 
 ++++
 </div>
@@ -188,29 +96,13 @@ xref:kafka:index.adoc[Read more]
 ++++
 
 ++++
-<h3 id="nifi"><a class="anchor" href="#nifi"></a>Apache NiFi</h3>
+<h3>Product operator docs</h3>
 ++++
 
-An easy to use, powerful, and reliable system to process and distribute data.
+Read documentation for a specific product operator.
+This includes a general overview, a getting started guide and specific feature usage guides.
 
-xref:nifi:index.adoc[Read more]
-
-++++
-</div>
-++++
-
-++++
-<div class="box">
-++++
-
-++++
-<h3 id="spark"><a class="anchor" href="#spark"></a>Apache Spark</h3>
-++++
-
-Apache Spark is a multi-language engine for executing data engineering, data science, and machine learning on
-single-node machines or clusters.
-
-xref:spark-k8s:index.adoc[Read more]
+xref:operators:index.adoc[Operator overview]
 
 ++++
 </div>
@@ -221,28 +113,12 @@ xref:spark-k8s:index.adoc[Read more]
 ++++
 
 ++++
-<h3 id="superset"><a class="anchor" href="#superset"></a>Apache Superset</h3>
+<h3>CRD reference</h3>
 ++++
 
-Apache Superset is a modern data exploration and visualization platform.
+Read the CustomResourceDefinition (CRD) reference for all CRDs that are deployed by any Stackable operator.
 
-xref:superset:index.adoc[Read more]
-
-++++
-</div>
-++++
-
-++++
-<div class="box">
-++++
-
-++++
-<h3 id="trino"><a class="anchor" href="#trino"></a>Trino</h3>
-++++
-
-Fast distributed SQL query engine for big data analytics that helps you explore your data universe.
-
-xref:trino:index.adoc[Read more]
+{crd-docs}[CRD Reference {external-link-icon}^]
 
 ++++
 </div>
@@ -253,19 +129,27 @@ xref:trino:index.adoc[Read more]
 ++++
 
 ++++
-<h3 id="zookeeper"><a class="anchor" href="#zookeeper"></a>Apache ZooKeeper</h3>
+<h3>Tooling</h3>
 ++++
 
-ZooKeeper is a centralized service for maintaining configuration information, naming, providing distributed
-synchronization, and providing group services.
+Learn more about the tooling that supports the Stackable Data Platform; the `stackablectl` CLI utility and the Stackable Cockpit Web UI.
 
-xref:zookeeper:index.adoc[Read more]
+* xref:management:stackablectl:index.adoc[stackablectl]
+* xref:management:cockpit:index.adoc[Cockpit UI]
+
+++++
+</div>
+++++
 
 ++++
 </div>
 ++++
 
+++++
+<div id="help-action">Still need help? Ask a question on <a href="https://github.com/orgs/stackabletech/discussions">GitHub</a> or <a href="https://discord.com/invite/7kZ3BNnCAF">Discord</a>.</div>
+++++
 
-++++
-</div>
-++++
+== Release Notes
+
+The Stackable platform consists of multiple operators that work together. Periodically a platform release is made,
+including all components of the platform at a specific version. See the latest release notes xref:release_notes.adoc[here].
