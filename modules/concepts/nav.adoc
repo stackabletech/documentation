@@ -17,4 +17,3 @@
 *** xref:operations/pod_disruptions.adoc[]
 *** xref:operations/pod_placement.adoc[]
 *** xref:operations/graceful_shutdown.adoc[]
-* xref:concepts:glossary.adoc[]

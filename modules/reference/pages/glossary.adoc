@@ -1,0 +1,57 @@
+= Glossary
+:li: pass:[<i class="fa-solid fa-link fa-sm" style="margin-left: 5px; vertical-align: baseline;"></i>]
+
+// refined styling for the glossary
+++++
+<style>
+dd details {
+    margin-top: 0px !important;
+}
+
+dt {
+    font-size: 18px;
+    font-style: unset !important;
+}
+</style>
+++++
+
+// syntax explanation:
+// - the [[...]] creates an anchor at the list item
+// - The <<...>> creates a link to the achor
+// - The {li} references the pass that you can find at the top of the document, it is a FontAwesome icon
+// - The ...:: is the syntax for a definition list item
+// - The {empty} followed by the + means that there is no "normal" list item, instead there is a block
+// - The period followed by text is the summary of a details block that is collapsed
+// - Inside the "====" is the details of the details block.
+//
+// Please create new entries the same way! This allows easy linking to glossary items.
+// Antora generates dl, dt and dd tages for the definition list, which is great because these are
+// semantic HTML tags.
+
+[[role]]Role <<role,{li}>>:: {empty}
++
+.A <<stacklet,Stacklet>> is made up of multiple roles, which refer to the different processes that make up the service.
+[%collapsible]
+====
+For example HDFS consists of 3 roles: Name nodes, journal nodes and data nodes.
+Learn more about xref:concepts:roles-and-role-groups.adoc[].
+====
+
+[[role-group]]Role group <<role-group,{li}>>:: {empty}
++
+.A <<role,Role>> is made up of multiple role groups. 
+[%collapsible]
+====
+A role group can override configuration set at role level, allowing for different configurations for sets of processes.
+Learn more about xref:concepts:roles-and-role-groups.adoc[].
+====
+
+[[stacklet]]Stacklet <<stacklet,{li}>>:: {empty}
++
+.A deployed service or product instance that is managed by a Stackable operator.
+[%collapsible]
+====
+A Stacklet is defined by a custom resource like AirflowCluster or DruidCluster.
+The term refers to the defining resource and all the resources that belong to it, which are created by the operator, such as StatefulSets, Services, Secrets and ConfigMaps.
+All objects together are the Stacklet.
+====

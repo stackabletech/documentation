@@ -1,8 +1,0 @@
-= Glossary
-
-== Stacklet
-
-A custom resource for a product and all objects that are owned by it.
-
-A product custom resource defines different aspects of a product installation like the kind of product to install (ex. Airflow), the secrets it needs to connect to other systems, the amount of storage it needs and so on. An operator translates this custom resource in a multitude of Kubernetes objects like services, stateful sets, persistent volume claims and so on. The set of objects that are created as a result of this operation is called a `stacklet`.
-
