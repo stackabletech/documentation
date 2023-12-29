@@ -7,11 +7,12 @@ image::overview.drawio.svg[]
 
 The operators are deployed into a Kubernetes cluster, one operator per product (such as Apache ZooKeeper, Apache HDFS, Apache Druid). Every operator has at its core a custom resource (CR) which defines a product instance (shown in green above). The operator creates Kubernetes objects based on the CRs, such as ConfigMaps, StatefulSets and Services.
 
-The operators are deployed with the Stackable CLI tool and product instances are created by deploying manifests into Kubernetes.
+The operators are deployed with xref:management:stackablectl:index.adoc[] (the Stackable CLI tool) and product instances are created by deploying manifests into Kubernetes.
 
-Aspects like SQL database configuration, storage configuration or authentication and authorization work the same way across all operators.
+Aspects like SQL database configuration, xref:resources.adoc[storage configuration] or xref:authentication.adoc[authentication] and xref:opa.adoc[authorization] work the same way across all operators.
 Most operators support LDAP as a common way to authenticate with product instances and OPA as a common way to set up authorization.
 
+[#operators]
 == Operators
 
 The Operators form the core of the Stackable platform. There is one operator for every supported product, as well as a few supporting operators. All Stackable Operators are built on top of a common framework, so they look and behave in a similar way.
@@ -26,13 +27,13 @@ The diagram above shows the custom resource in green. It contains all the config
 [#discovery]
 === Discovery
 
-The operator also creates a **discovery ConfigMap** for every product instance which is used by other products to connect to it. The ConfigMap has the same name as the product instance and contains information about how to connect to the product. This ConfigMap can then be referenced in other product instance resources.
+The operator also creates a xref:service-discovery.adoc[**discovery ConfigMap**] for every product instance which is used by other products to connect to it. The ConfigMap has the same name as the product instance and contains information about how to connect to the product. This ConfigMap can then be referenced in other product instance resources.
 
 image::discovery.drawio.svg[]
 
 For example, Apache ZooKeeper is a dependency of many other products, such as Apache HDFS and Apache Druid. The HDFS and Druid resources can simply reference the ZooKeeper cluster by name and the operators will use the discovery ConfigMap to configure the Druid and HDFS Pods to connect to the ZooKeeper Service.
 
-You can also create these discovery ConfigMaps yourself to make products discoverable that are not operatored by a Stackable Operator. Learn more about product discovery at xref::service_discovery.adoc[].
+You can also create these discovery ConfigMaps yourself to make products discoverable that are not operatored by a Stackable Operator. Learn more about product discovery at xref:service-discovery.adoc[].
 
 [#roles]
 === Roles
@@ -41,12 +42,12 @@ Almost all products that Stackable supports need multiple different processes to
 
 All roles are configured together in the custom resource for the product, but they each get their own StatefulSet, ConfigMaps and Service.
 
-Learn more about roles: xref::roles-and-role-groups.adoc[]
+Learn more about roles: xref:roles-and-role-groups.adoc[]
 
 [#deployment]
 == Deployment
 
-All operators and products run as containers in a Kubernetes cluster. The operators are deployed with stackablectl (the Stackable CLI) or Helm.
+All operators and products run as containers in a xref:home::kubernetes.adoc[Kubernetes cluster]. The operators are deployed with stackablectl (the Stackable CLI) or Helm.
 
 image::deployment.drawio.svg[]
 
@@ -63,6 +64,6 @@ Besides the products themselves, there are also related objects, such as S3 buck
 
 image::common_objects.drawio.svg[]
 
-These objects can be reused by all operators that support this feature. The S3 bucket only needs to be described once, and then it can be referenced in all products that support reading and/or writing from/to S3. Learn more about S3 configuration: xref::s3.adoc[].
+These objects can be reused by all operators that support this feature. The S3 bucket only needs to be described once, and then it can be referenced in all products that support reading and/or writing from/to S3. Learn more about S3 configuration: xref:s3.adoc[].
 
-Similarly for the OpenPolicyAgent (OPA). Configuring it looks the same across all products. Learn more: xref::opa.adoc[].
+Similarly for the OpenPolicyAgent (OPA). Configuring it looks the same across all products. Learn more: xref:opa.adoc[].
