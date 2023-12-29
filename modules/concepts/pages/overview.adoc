@@ -50,7 +50,7 @@ All operators and products run as containers in a Kubernetes cluster. The operat
 
 image::deployment.drawio.svg[]
 
-To deploy a product instance, a product resource needs to be created in Kubernetes, this is usually done by passing a YAML manifest file to kubernetes with `kubectl apply -f`. The manifest file contains the configuration of how the product should operate.
+To deploy a product instance, a product resource needs to be created in Kubernetes, this is usually done by passing a YAML manifest file to kubernetes with `kubectl apply -f <file.yaml>`. The manifest file contains the configuration of how the product should operate.
 The operators read the product resources and create the according Kubernetes resources.
 
 === Stackable command line interface
