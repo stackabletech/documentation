@@ -4,7 +4,7 @@
     "@antora/site-generator": "^3.1.6"
   },
   "dependencies": {
-    "@antora/lunr-extension": "^1.0.0-alpha.6"
+    "@antora/lunr-extension": "^1.0.0-alpha.8"
   },
   "workspaces": [
     "ui"
