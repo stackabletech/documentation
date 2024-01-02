@@ -176,7 +176,6 @@ ui:
 antora:
   extensions:
     - '@antora/lunr-extension'
-    - asciidoctor-kroki
 
 asciidoc:
   attributes:
@@ -185,8 +184,6 @@ asciidoc:
     kroki-fetch-diagram: true
     # an external icon. Create a link opening in a new tab like this: http://my-url.com[Text {external-link-icon}^]
     external-link-icon: "<i class=\"fa-solid fa-arrow-up-right-from-square fa-xs\" style=\"margin-left: 3px; vertical-align: baseline;\"></i>"
-  extensions:
-    - asciidoctor-kroki
 
 # the default caching directory is ./.cache/antora
 # Antora caches the git repos, this can sometimes lead to stale content

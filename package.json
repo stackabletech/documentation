@@ -1,11 +1,10 @@
 {
   "devDependencies": {
-    "@antora/cli": "^3.1.4",
-    "@antora/site-generator": "^3.1.4"
+    "@antora/cli": "^3.1.6",
+    "@antora/site-generator": "^3.1.6"
   },
   "dependencies": {
-    "@antora/lunr-extension": "^1.0.0-alpha.6",
-    "asciidoctor-kroki": "0.15.4"
+    "@antora/lunr-extension": "^1.0.0-alpha.8"
   },
   "workspaces": [
     "ui"
