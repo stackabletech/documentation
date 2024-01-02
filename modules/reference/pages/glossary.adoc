@@ -31,7 +31,7 @@ dt {
 [[role]]Role <<role,{li}>>:: {empty}
 +
 .A <<stacklet,Stacklet>> is made up of multiple roles, which refer to the different processes that make up the service.
-[%collapsible]
+[%collapsible%open]
 ====
 For example HDFS consists of 3 roles: Name nodes, journal nodes and data nodes.
 Learn more about xref:concepts:roles-and-role-groups.adoc[].
@@ -40,7 +40,7 @@ Learn more about xref:concepts:roles-and-role-groups.adoc[].
 [[role-group]]Role group <<role-group,{li}>>:: {empty}
 +
 .A <<role,Role>> is made up of multiple role groups. 
-[%collapsible]
+[%collapsible%open]
 ====
 A role group can override configuration set at role level, allowing for different configurations for sets of processes.
 Learn more about xref:concepts:roles-and-role-groups.adoc[].
@@ -49,7 +49,7 @@ Learn more about xref:concepts:roles-and-role-groups.adoc[].
 [[stacklet]]Stacklet <<stacklet,{li}>>:: {empty}
 +
 .A deployed service or product instance that is managed by a Stackable operator.
-[%collapsible]
+[%collapsible%open]
 ====
 A Stacklet is defined by a custom resource like AirflowCluster or DruidCluster.
 The term refers to the defining resource and all the resources that belong to it, which are created by the operator, such as StatefulSets, Services, Secrets and ConfigMaps.
