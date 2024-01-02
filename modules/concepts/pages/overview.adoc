@@ -1,0 +1,69 @@
+= Stackable Data Platform explained
+
+The Stackable Data Platform (SDP) is built on Kubernetes.
+Its core is a collection of Kubernetes Operators and custom resources which are designed to work together.
+
+image::overview.drawio.svg[]
+
+The operators are deployed into a Kubernetes cluster, one operator per product (such as Apache ZooKeeper, Apache HDFS, Apache Druid). Every operator has at its core a custom resource (CR) which defines a product instance (shown in green above). The operator creates Kubernetes objects based on the CRs, such as ConfigMaps, StatefulSets and Services.
+
+The operators are deployed with xref:management:stackablectl:index.adoc[] (the Stackable CLI tool) and product instances are created by deploying manifests into Kubernetes.
+
+Aspects like SQL database configuration, xref:resources.adoc[storage configuration] or xref:authentication.adoc[authentication] and xref:opa.adoc[authorization] work the same way across all operators.
+Most operators support LDAP as a common way to authenticate with product instances and OPA as a common way to set up authorization.
+
+[#operators]
+== Operators
+
+The Operators form the core of the Stackable platform. There is one operator for every supported product, as well as a few supporting operators. All Stackable Operators are built on top of a common framework, so they look and behave in a similar way.
+
+Every Operator relies on a central custom resource (CR) which is specific to the product it operates (i.e. DruidCluster for Apache Druid).
+It reads this resource and creates kubernetes resources in accordance with the product CR.
+
+image::operator_overview.drawio.svg[]
+
+The diagram above shows the custom resource in green. It contains all the configuration needed to create a product instance. This includes which services the product should connect to, with how many replicas it should operate and how meany resources it should use, among other things.
+
+[#discovery]
+=== Discovery
+
+The operator also creates a xref:service-discovery.adoc[**discovery ConfigMap**] for every product instance which is used by other products to connect to it. The ConfigMap has the same name as the product instance and contains information about how to connect to the product. This ConfigMap can then be referenced in other product instance resources.
+
+image::discovery.drawio.svg[]
+
+For example, Apache ZooKeeper is a dependency of many other products, such as Apache HDFS and Apache Druid. The HDFS and Druid resources can simply reference the ZooKeeper cluster by name and the operators will use the discovery ConfigMap to configure the Druid and HDFS Pods to connect to the ZooKeeper Service.
+
+You can also create these discovery ConfigMaps yourself to make products discoverable that are not operatored by a Stackable Operator. Learn more about product discovery at xref:service-discovery.adoc[].
+
+[#roles]
+=== Roles
+
+Almost all products that Stackable supports need multiple different processes to run. Because they are often still the same software but running with different parameters, Stackable calls them _roles_. For example HDFS has three roles: DataNode, NameNode and JournalNode.
+
+All roles are configured together in the custom resource for the product, but they each get their own StatefulSet, ConfigMaps and Service.
+
+Learn more about roles: xref:roles-and-role-groups.adoc[]
+
+[#deployment]
+== Deployment
+
+All operators and products run as containers in a xref:home::kubernetes.adoc[Kubernetes cluster]. The operators are deployed with stackablectl (the Stackable CLI) or Helm.
+
+image::deployment.drawio.svg[]
+
+To deploy a product instance, a product resource needs to be created in Kubernetes, this is usually done by passing a YAML manifest file to kubernetes with `kubectl apply -f <file.yaml>`. The manifest file contains the configuration of how the product should operate.
+The operators read the product resources and create the according Kubernetes resources.
+
+=== Stackable command line interface
+
+The Stackable command line interface is  called _stackablectl_. It knows about the Stackable platform releases and can install sets of operators from a specific release. It is also possible to deploy stacks of product instances that are already wired together.
+
+== Common configuration of common objects
+
+Besides the products themselves, there are also related objects, such as S3 buckets or LDAP configuration.
+
+image::common_objects.drawio.svg[]
+
+These objects can be reused by all operators that support this feature. The S3 bucket only needs to be described once, and then it can be referenced in all products that support reading and/or writing from/to S3. Learn more about S3 configuration: xref:s3.adoc[].
+
+Similarly for the OpenPolicyAgent (OPA). Configuring it looks the same across all products. Learn more: xref:opa.adoc[].

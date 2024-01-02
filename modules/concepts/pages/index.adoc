@@ -1,3 +1,35 @@
 = Concepts
 
-This section of the documentation is intended to be read to gain a deeper understanding of the bigger picture and architectural design of the platform.
+== Overview
+
+The xref:overview.adoc[Platform overview] is a good starting point to understand the Stackable Data Platform covering the overall architecture, deployement and configuration.
+
+== General configuration mechanisms
+
+Learn about xref:roles-and-role-groups.adoc[], how product image selection works.
+There is also the common xref:overrides.adoc[override] mechanism for configuration settings, although this tool should be used with care!
+
+== Resources
+
+Learn about how xref:resources.adoc[] are configured; this covers CPU, memory and storage.
+Learn about how xref:s3.adoc[] are configured across the platform.
+
+== Connectivity
+
+Many Platform components depend on other components or expose functionality that you can connect to. 
+This connectivity is achived with xref:service-discovery.adoc[service discovery ConfigMaps].
+To access your Stackable operated products from outside the Kuberenetes cluster learn more about xref:service-exposition.adoc[].
+
+== Security
+
+Security aspects include xref:authentication.adoc[authenticating] users when services are accessed and subsequently xref:opa.adoc[authorizing] access to operations and data inside of the services.
+It also includes xref:tls-server-verification.adoc[].
+
+== Operations
+
+The xref:operations/index.adoc[operations] section is directed at platform maintainers.
+It covers xref:operations/cluster_operations.adoc[starting, stopping and restarts] of products, xref:operations/graceful_shutdown.adoc[] and other topics related to maintenance and ensuring stability of the platform operation.
+
+== Observability
+
+Learn abouth xref:logging.adoc[].
