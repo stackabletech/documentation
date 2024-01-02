@@ -1,4 +1,4 @@
 * Reference
 ** {crd-docs}[CRD Reference {external-link-icon}^]
 ** xref:glossary.adoc[]
-** xref:duration.adoc[]
+** xref:dura
