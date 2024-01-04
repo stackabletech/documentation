@@ -208,3 +208,24 @@ enum Error {
   Bar,
 }
 ----
+
+== Naming optional function parameters and variables
+
+Optional function parameters and variables containing `Option` must not use any prefixes or suffixes to indicate the
+value is of type `Option`.
+
+Examples of *incorrect* code for this rule:
+
+[source,rust]
+----
+let tls_settings_or_none: Option<TlsSettings> = None;
+let maybe_tls_settings: Option<TlsSettings> = None;
+let opt_tls_settings: Option<TlsSettings> = None;
+----
+
+Examples of *correct* code for this rule:
+
+[source,rust]
+----
+let tls_settings: Option<TlsSettings> = None;
+----
