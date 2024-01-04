@@ -1,5 +1,7 @@
 = Source code style guide
 
+:k8s-quantity: https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/
+
 == Long versus abbreviated variable names
 
 We use long (no abbreviated) variables names for function parameters and locally declared variables.
@@ -229,4 +231,63 @@ Examples of *correct* code for this rule:
 [source,rust]
 ----
 let tls_settings: Option<TlsSettings> = None;
+----
+
+== Specifying resources measured in bytes and CPU fractions
+
+We follow the Kubernetes convention described {k8s-quantity}[here].
+
+=== Resources measured in bytes
+
+Examples of *incorrect* code for this rule:
+
+[source,rust]
+----
+// Biggest matching unit
+let memory: MemoryQuantity = "1.5Gi".parse();
+let memory: MemoryQuantity = "1Gi".parse();
+
+// Always Mi
+let memory: MemoryQuantity = "1536Mi".parse();
+let memory: MemoryQuantity = "1024Mi".parse();
+
+// No unit at all
+let memory: MemoryQuantity = "12345678".parse();
+----
+
+Examples of *correct* code for this rule:
+
+[source,rust]
+----
+let memory: MemoryQuantity = "100Mi".parse();
+let memory: MemoryQuantity = "1Gi".parse();
+let memory: MemoryQuantity = "1536Mi".parse();
+let memory: MemoryQuantity = "10Gi".parse();
+----
+
+=== Resources measured in CPU fractions
+
+[source,rust]
+----
+// Biggest matching unit
+let memory: CpuQuantity = "500m".parse();
+let memory: CpuQuantity = "1".parse();
+
+// Always m
+let memory: CpuQuantity = "500m".parse();
+let memory: CpuQuantity = "1000m".parse();
+
+// Floating points
+let memory: CpuQuantity = "0.5".parse();
+let memory: CpuQuantity = "1".parse();
+----
+
+Examples of *correct* code for this rule:
+
+[source,rust]
+----
+let memory: CpuQuantity = "100m".parse();
+let memory: CpuQuantity = "500m".parse();
+let memory: CpuQuantity = "1".parse();
+let memory: CpuQuantity = "2".parse();
 ----
