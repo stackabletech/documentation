@@ -21,7 +21,8 @@ tests need not to be adapted. Please skip the steps which are not applicable.
 == Changes in Rust projects
 
 . Make your desired changes in the according repository and test them manually. Ensure that the code compiles without
-  warnings (`cargo clippy --all-targets`) and that the code is formatted with `cargo fmt`.
+  warnings (`cargo clippy --all-targets`) and that the code is formatted with `cargo fmt`. Also make sure that all
+  changes are made in accordance to the xref:code-style-guide.adoc[source code style guide].
 . If code was added or adapted then please create or adapt the unit tests in the same file as well as the integration
   tests in the `tests` directory. Ensure that all unit tests run successfully `cargo test`) and all integration tests
   run successfully (`./scripts/run_tests.sh`). See also <<_changes_in_the_integration_tests>>.
@@ -93,7 +94,7 @@ helm install <operator> deploy/helm/<operator>/
   repositories. Follow the steps in <<Preparation>> to be able to change the documentation.
 . Make your changes.
 . Build the documentation locally to ensure that the formatting is fine and all links are specified correctly. See the
-  {docs-readme}[`README.adoc`] file for further details and the xref:style_guide.adoc[] for style and formatting
+  {docs-readme}[`README.adoc`] file for further details and the xref:docs-style-guide.adoc[] for style and formatting
   guidelines.
 
 == Changes in the operator-templating

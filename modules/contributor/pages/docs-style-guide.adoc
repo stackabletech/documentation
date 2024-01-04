@@ -1,5 +1,5 @@
 = Documentation style guide
-:page-aliases: style_guide.adoc
+:page-aliases: style_guide.adoc, style-guide.adoc
 
 :asciidoc-recommended-practices: https://asciidoctor.org/docs/asciidoc-recommended-practices[AsciiDoc recommended practices]
 :kubernetes-style-guide: https://kubernetes.io/docs/contribute/style/style-guide/[Kubernetes style guide]
