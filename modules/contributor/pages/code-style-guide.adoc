@@ -2,9 +2,9 @@
 
 == Long versus abbreviated variable names
 
-We use long (no abbreviated) variables names for function parameters and locally declared variables. Short (even single
-letter) variable names are allowed in lambdas (closures) and one-liners. The usage of well-known acronyms like CPU, TLS
-or OIDC are allowed.
+We use long (no abbreviated) variables names for function parameters and locally declared variables.
+Short (even single letter) variable names are allowed in lambdas (closures) and one-liners.
+The usage of well-known acronyms like CPU, TLS or OIDC are allowed.
 
 Examples of *incorrect* code for this rule:
 
@@ -37,7 +37,8 @@ let tls_settings = TlsSettings {};
 
 == Captured versus uncaptured format string identifiers
 
-We generally use captured format string identifiers. The identifiers should be concise but not abbreviated.
+We generally use captured format string identifiers.
+The identifiers should be concise but not abbreviated.
 Mix-and-matching of captured and uncaptured format string identifiers must be avoided.
 
 Examples of *incorrect* code for this rule:
@@ -58,7 +59,8 @@ format!("Hello, {greetee}!");
 format!("{greeting}, {greetee}!", greeting = "Hello");
 ----
 
-We place no restriction on named format string identifiers. Both options below are considered valid.
+We place no restriction on named format string identifiers.
+Both options below are considered valid.
 
 [source,rust]
 ----
@@ -70,8 +72,7 @@ format!("Hello, {greetee}!", greetee = "world");
 
 == Newlines between struct fields and enum variants
 
-We add newlines to struct fields and enum variants when they include additional information like documentation comments
-or attributes.
+We add newlines to struct fields and enum variants when they include additional information like documentation comments or attributes.
 
 Examples of *incorrect* code for this rule:
 
@@ -121,9 +122,9 @@ enum Error {
 
 == Error handling
 
-We use `snafu` for all error handling in library *and* application code. Additionally, we restrict the usage of the
-`#[snafu(context(false))]` atrribute on error variants. This ensures that fallible functions need to call `.context()`
-to pass the error along.
+We use `snafu` for all error handling in library *and* application code.
+Additionally, we restrict the usage of the `#[snafu(context(false))]` atrribute on error variants.
+This ensures that fallible functions need to call `.context()` to pass the error along.
 
 Examples of *incorrect* code for this rule:
 
@@ -175,8 +176,9 @@ fn config_file(user: User) -> Result<(), Error> {
 
 == Error messages
 
-All our error messages must start with a lowercase letter and must not end with a dot. Additionally, critical
-(unrecoverable) errors should start with "failed ...". Potentially recoverable errors should start with "unable ...".
+All our error messages must start with a lowercase letter and must not end with a dot.
+Additionally, critical (unrecoverable) errors should start with "failed ...".
+Potentially recoverable errors should start with "unable ...".
 
 Examples of *incorrect* code for this rule:
 
@@ -211,8 +213,7 @@ enum Error {
 
 == Naming optional function parameters and variables
 
-Optional function parameters and variables containing `Option` must not use any prefixes or suffixes to indicate the
-value is of type `Option`.
+Optional function parameters and variables containing `Option` must not use any prefixes or suffixes to indicate the value is of type `Option`.
 
 Examples of *incorrect* code for this rule:
 
