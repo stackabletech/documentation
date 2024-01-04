@@ -3,7 +3,8 @@
 == Long versus abbreviated variable names
 
 We use long (no abbreviated) variables names for function parameters and locally declared variables. Short (even single
-letter) variable names are allowed in lambdas (closures) and one-liners.
+letter) variable names are allowed in lambdas (closures) and one-liners. The usage of well-known acronyms like CPU, TLS
+or OIDC are allowed.
 
 Examples of *incorrect* code for this rule:
 
@@ -27,6 +28,11 @@ fn func(elements: Vec<String>) {}
 // Closures and one-liners
 
 let length = parameter.map(|p| p.len());
+
+// Well-known acronyms
+
+let oidc_provider = OidcProvider {};
+let tls_settings = TlsSettings {};
 ----
 
 == Captured versus uncaptured format string identifiers
