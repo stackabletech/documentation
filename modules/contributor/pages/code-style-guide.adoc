@@ -4,7 +4,7 @@
 
 == Long versus abbreviated identifier names
 
-We use unabbreviated identifier names.
+We use unabbreviated identifier names to avoid ambiguity.
 Short (even single letter) variable names are allowed in lambdas (closures) and one-liners.
 The usage of well-known acronyms like CPU, TLS or OIDC are allowed.
 
