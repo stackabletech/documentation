@@ -69,19 +69,18 @@ let oidc_provider = OidcProvider {};
 let tls_settings = TlsSettings {};
 ----
 
-== Captured versus uncaptured format string identifiers
+== Naming optional function parameters and variables
 
-We generally use captured format string identifiers.
-The identifiers should be concise but not abbreviated.
-Mix-and-matching of captured and uncaptured format string identifiers must be avoided.
+Optional function parameters and variables containing `Option` must not use any prefixes or suffixes to indicate the value is of type `Option`.
 
 [WARNING.code-rule,caption=Examples of incorrect code for this rule]
 ====
 
 [source,rust]
 ----
-format!("Hello, {}!", "world");
-format!("{greeting}, {}!", greeting = "Hello", "world");
+let tls_settings_or_none: Option<TlsSettings> = None;
+let maybe_tls_settings: Option<TlsSettings> = None;
+let opt_tls_settings: Option<TlsSettings> = None;
 ----
 
 ====
@@ -90,6 +89,8 @@ format!("{greeting}, {}!", greeting = "Hello", "world");
 ====
 
 [source,rust]
+----
+let tls_settings: Option<TlsSettings> = None;
 ----
 
 ====
@@ -285,25 +286,47 @@ enum Error {
 }
 ----
 
-== Naming optional function parameters and variables
+== Captured versus uncaptured format string identifiers
 
-Optional function parameters and variables containing `Option` must not use any prefixes or suffixes to indicate the value is of type `Option`.
+We generally use captured format string identifiers.
+The identifiers should be concise but not abbreviated.
+Mix-and-matching of captured and uncaptured format string identifiers must be avoided.
 
-Examples of *incorrect* code for this rule:
-
-[source,rust]
-----
-let tls_settings_or_none: Option<TlsSettings> = None;
-let maybe_tls_settings: Option<TlsSettings> = None;
-let opt_tls_settings: Option<TlsSettings> = None;
-----
-
-Examples of *correct* code for this rule:
+[WARNING.code-rule,caption=Examples of incorrect code for this rule]
+====
 
 [source,rust]
 ----
-let tls_settings: Option<TlsSettings> = None;
+format!("Hello, {}!", "world");
+format!("{greeting}, {}!", greeting = "Hello", "world");
 ----
+
+====
+
+[TIP.code-rule,caption=Examples of correct code for this rule]
+====
+
+[source,rust]
+----
+let greetee = "world";
+
+format!("Hello, {greetee}!");
+format!("{greeting}, {greetee}!", greeting = "Hello");
+----
+
+====
+
+We place no restriction on named format string identifiers.
+Both options below are considered valid.
+
+[source,rust]
+----
+let greetee = "world";
+
+format!("Hello, {greetee}!");
+format!("Hello, {greetee}!", greetee = "universe");
+----
+
 
 == Specifying resources measured in bytes and CPU fractions
 
