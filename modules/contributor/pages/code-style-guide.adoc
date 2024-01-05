@@ -112,53 +112,60 @@ format!("Hello, {greetee}!", greetee = "universe");
 
 == Newlines between struct fields and enum variants
 
-We add newlines to struct fields and enum variants when they include additional information like documentation comments or attributes.
+We add newlines to struct fields and enum variants when they include additional information like documentation comments or attributes, because the variants can become difficult to read.
+This is especially the case when fields include doc comments, attributes like `#[snafu(display(""))]`, and in case of enum variants, various embedded types.
 
-Examples of *incorrect* code for this rule:
-
-[source,rust]
-----
-struct Foo {
-  /// My doc comment for bar
-  bar: usize,
-  /// My doc comment for baz
-  baz: usize,
-}
-
-enum Error {
-  /// Indicates that we failed to foo.
-  #[snafu(display("failed to foo"))]
-  Foo,
-  /// Indicates that we failed to bar.
-  #[snafu(display("failed to bar"))]
-  Bar,
-  Baz,
-}
-----
-
-Examples of *correct* code for this rule:
+[WARNING.code-rule,caption=Examples of incorrect code for this rule]
+====
 
 [source,rust]
 ----
 struct Foo {
-  /// My doc comment for bar
-  bar: usize,
-
-  /// My doc comment for baz
-  baz: usize,
+    /// My doc comment for bar
+    bar: usize,
+    /// My doc comment for baz
+    baz: usize,
 }
 
 enum Error {
-  /// Indicates that we failed to foo.
-  #[snafu(display("failed to foo"))]
-  Foo,
-
-  /// Indicates that we failed to bar.
-  #[snafu(display("failed to bar"))]
-  Bar,
-  Baz,
+    /// Indicates that we failed to foo.
+    #[snafu(display("failed to foo"))]
+    Foo,
+    /// Indicates that we failed to bar.
+    #[snafu(display("failed to bar"))]
+    Bar,
+    Baz,
 }
 ----
+
+====
+
+[TIP.code-rule,caption=Examples of correct code for this rule]
+====
+
+[source,rust]
+----
+struct Foo {
+    /// My doc comment for bar
+    bar: usize,
+
+    /// My doc comment for baz
+    baz: usize,
+}
+
+enum Error {
+    /// Indicates that we failed to foo.
+    #[snafu(display("failed to foo"))]
+    Foo,
+
+    /// Indicates that we failed to bar.
+    #[snafu(display("failed to bar"))]
+    Bar,
+    Baz,
+}
+----
+
+====
 
 == Error handling
 
