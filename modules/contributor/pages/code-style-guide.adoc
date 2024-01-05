@@ -2,7 +2,9 @@
 
 :k8s-quantity: https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/
 
-== Long versus abbreviated identifier names
+== Identifier names
+
+=== Long versus abbreviated
 
 We use unabbreviated identifier names to avoid ambiguity.
 Short (even single letter) variable names are allowed in lambdas (closures) and one-liners.
@@ -38,7 +40,7 @@ fn function(elements: Vec<String>) {}
 
 ====
 
-=== Closures and one-liners
+==== Closures and one-liners
 
 [NOTE]
 ====
@@ -59,7 +61,7 @@ let sum: usize = vec![Some(2), None, Some(4), Some(3), None]
     .sum()
 ----
 
-=== Well-known acronyms
+==== Well-known acronyms
 
 [source,rust]
 ----
@@ -69,7 +71,7 @@ let oidc_provider = OidcProvider {};
 let tls_settings = TlsSettings {};
 ----
 
-== Naming optional function parameters and variables
+=== Optional function parameters and variables
 
 Optional function parameters and variables containing `Option` must not use any prefixes or suffixes to indicate the value is of type `Option`.
 
@@ -95,7 +97,9 @@ let tls_settings: Option<TlsSettings> = None;
 
 ====
 
-== Naming structs and enums
+== Structs and enums
+
+=== Naming convention
 
 Structs can use singular and plural names.
 Enums must use singular names, because only one variant is valid, e.g. `Error::NotFound` and not `Errors::NotFound`.
@@ -138,7 +142,7 @@ enum Color {
 
 ====
 
-== Newlines between struct fields and enum variants
+=== Formatting of struct fields and enum variants
 
 We add newlines to struct fields and enum variants when they include additional information like documentation comments or attributes, because the variants can become difficult to read.
 This is especially the case when fields include doc comments, attributes like `#[snafu(display(""))]`, and in case of enum variants, various embedded types.
@@ -197,11 +201,14 @@ enum Error {
 
 == Error handling
 
+=== Choice of error crate and usage
+
 We use `snafu` for all error handling in library *and* application code.
 Additionally, we restrict the usage of the `#[snafu(context(false))]` atrribute on error variants.
 This ensures that fallible functions need to call `.context()` to pass the error along.
 
-Examples of *incorrect* code for this rule:
+[WARNING.code-rule,caption=Examples of incorrect code for this rule]
+====
 
 [source,rust]
 ----
@@ -229,7 +236,10 @@ fn config_file(user: User) -> Result<(), Error> {
 }
 ----
 
-Examples of *correct* code for this rule:
+====
+
+[TIP.code-rule,caption=Examples of correct code for this rule]
+====
 
 [source,rust]
 ----
@@ -249,13 +259,16 @@ fn config_file(user: User) -> Result<(), Error> {
 }
 ----
 
-== Error messages
+====
+
+=== Error messages
 
 All our error messages must start with a lowercase letter and must not end with a dot.
 Additionally, critical (unrecoverable) errors should start with "failed ...".
 Potentially recoverable errors should start with "unable ...".
 
-Examples of *incorrect* code for this rule:
+[WARNING.code-rule,caption=Examples of incorrect code for this rule]
+====
 
 [source,rust]
 ----
@@ -272,7 +285,10 @@ enum Error {
 }
 ----
 
-Examples of *correct* code for this rule:
+====
+
+[TIP.code-rule,caption=Examples of correct code for this rule]
+====
 
 [source,rust]
 ----
@@ -285,6 +301,8 @@ enum Error {
   Bar,
 }
 ----
+
+====
 
 == Captured versus uncaptured format string identifiers
 
@@ -327,14 +345,14 @@ format!("Hello, {greetee}!");
 format!("Hello, {greetee}!", greetee = "universe");
 ----
 
-
 == Specifying resources measured in bytes and CPU fractions
 
 We follow the Kubernetes convention described {k8s-quantity}[here].
 
 === Resources measured in bytes
 
-Examples of *incorrect* code for this rule:
+[WARNING.code-rule,caption=Examples of incorrect code for this rule]
+====
 
 [source,rust]
 ----
@@ -350,7 +368,10 @@ let memory: MemoryQuantity = "1024Mi".parse();
 let memory: MemoryQuantity = "12345678".parse();
 ----
 
-Examples of *correct* code for this rule:
+====
+
+[TIP.code-rule,caption=Examples of correct code for this rule]
+====
 
 [source,rust]
 ----
@@ -360,7 +381,12 @@ let memory: MemoryQuantity = "1536Mi".parse();
 let memory: MemoryQuantity = "10Gi".parse();
 ----
 
+====
+
 === Resources measured in CPU fractions
+
+[WARNING.code-rule,caption=Examples of incorrect code for this rule]
+====
 
 [source,rust]
 ----
@@ -377,7 +403,10 @@ let memory: CpuQuantity = "0.5".parse();
 let memory: CpuQuantity = "1".parse();
 ----
 
-Examples of *correct* code for this rule:
+====
+
+[TIP.code-rule,caption=Examples of correct code for this rule]
+====
 
 [source,rust]
 ----
@@ -386,3 +415,5 @@ let memory: CpuQuantity = "500m".parse();
 let memory: CpuQuantity = "1".parse();
 let memory: CpuQuantity = "2".parse();
 ----
+
+====
