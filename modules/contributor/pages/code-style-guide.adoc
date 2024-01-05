@@ -2,36 +2,66 @@
 
 :k8s-quantity: https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/
 
-== Long versus abbreviated variable names
+== Long versus abbreviated identifier names
 
-We use long (no abbreviated) variables names for function parameters and locally declared variables.
+We use unabbreviated identifier names.
 Short (even single letter) variable names are allowed in lambdas (closures) and one-liners.
 The usage of well-known acronyms like CPU, TLS or OIDC are allowed.
 
-Examples of *incorrect* code for this rule:
+[WARNING.code-rule,caption=Examples of incorrect code for this rule]
+====
 
 [source,rust]
 ----
+const ONE_H_IN_SECS: usize = 3600;
+
 let param = Some("foo");
 let buf = &[];
 
 fn func(elems: Vec<String>) {}
 ----
+====
 
-Examples of *correct* code for this rule:
+[TIP.code-rule,caption=Examples of correct code for this rule]
+====
 
 [source,rust]
 ----
+const ONE_HOUR_IN_SECONDS: usize = 3600;
+
 let parameter = Some("foo");
 let buffer = &[];
 
-fn func(elements: Vec<String>) {}
+fn function(elements: Vec<String>) {}
+----
+====
 
-// Closures and one-liners
+=== Closures and one-liners
 
+[NOTE]
+====
+It should be noted that the second example is meant to illustrate the use of single letter variable names in closures.
+It does *not* reflect production-level Rust code.
+The snippet would be simplified in the real world.
+====
+
+[source,rust]
+----
 let length = parameter.map(|p| p.len());
 
-// Well-known acronyms
+let sum: usize = vec![Some(2), None, Some(4), Some(3), None]
+    .iter()
+    .filter(|o| o.is_some())
+    .map(|n| n.unwrap())
+    .map(|n| n * 2)
+    .sum()
+----
+
+=== Well-known acronyms
+
+[source,rust]
+----
+const K8S_LABEL_KEY: &str = "app.kubernetes.io";
 
 let oidc_provider = OidcProvider {};
 let tls_settings = TlsSettings {};
