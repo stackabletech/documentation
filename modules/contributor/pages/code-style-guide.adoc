@@ -91,24 +91,51 @@ format!("{greeting}, {}!", greeting = "Hello", "world");
 
 [source,rust]
 ----
-let greetee = "world";
 
-format!("Hello, {greetee}!");
-format!("{greeting}, {greetee}!", greeting = "Hello");
+====
+
+== Naming structs and enums
+
+Structs can use singular and plural names.
+Enums must use singular names, because only one variant is valid, e.g. `Error::NotFound` and not `Errors::NotFound`.
+
+[WARNING.code-rule,caption=Examples of incorrect code for this rule]
+====
+
+[source,rust]
+----
+enum Errors {
+  NotFound,
+  Timeout,
+}
+
+enum Colors {
+  Red,
+  Green,
+  Blue,
+}
 ----
 
 ====
 
-We place no restriction on named format string identifiers.
-Both options below are considered valid.
+[TIP.code-rule,caption=Examples of correct code for this rule]
+====
 
 [source,rust]
 ----
-let greetee = "world";
+enum Error {
+  NotFound,
+  Timeout,
+}
 
-format!("Hello, {greetee}!");
-format!("Hello, {greetee}!", greetee = "universe");
+enum Color {
+  Red,
+  Green,
+  Blue,
+}
 ----
+
+====
 
 == Newlines between struct fields and enum variants
 
