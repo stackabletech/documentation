@@ -264,8 +264,8 @@ fn config_file(user: User) -> Result<(), Error> {
 === Error messages
 
 All our error messages must start with a lowercase letter and must not end with a dot.
-Additionally, critical (unrecoverable) errors should start with "failed ...".
-Potentially recoverable errors should start with "unable ...".
+Additionally, critical (unrecoverable) errors should start with "failed to ...".
+Potentially recoverable errors should start with "unable to ...".
 
 [WARNING.code-rule,caption=Examples of incorrect code for this rule]
 ====
