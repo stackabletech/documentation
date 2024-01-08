@@ -314,7 +314,7 @@ enum Error {
 === Named versus unnamed format string identifiers
 
 For simple string formatting (up to two substitutions), we allow unnamed (and thus also uncaptured) identifiers.
-For more complex formatting (more than two substitutions), we require named identifiers.
+For more complex formatting (more than two substitutions), we require named identifiers to avoid ambiguity, and to decouple argument order from the text (which can lead to incorrect text when the wording is changed and `{}` are reordered while the arguments aren't).
 Mix-and-matching of named versus unnamed identifiers must be avoided.
 See the next section about captured versus uncaptured identifiers.
 
