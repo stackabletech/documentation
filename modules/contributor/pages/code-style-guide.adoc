@@ -72,6 +72,7 @@ let tls_settings = TlsSettings {};
 === Optional function parameters and variables
 
 Optional function parameters and variables containing `Option` must not use any prefixes or suffixes to indicate the value is of type `Option`.
+This rule does not apply to function names like `Client::get_opt()`.
 
 [WARNING.code-rule,caption=Examples of incorrect code for this rule]
 ====
