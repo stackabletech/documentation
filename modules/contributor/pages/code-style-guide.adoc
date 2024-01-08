@@ -421,12 +421,6 @@ let memory: MemoryQuantity = "10Gi".parse();
 
 [source,rust]
 ----
-// Biggest matching unit
-let memory: CpuQuantity = "100m".parse();
-let memory: CpuQuantity = "500m".parse();
-let memory: CpuQuantity = "1".parse();
-let memory: CpuQuantity = "2".parse();
-
 // Always m
 let memory: CpuQuantity = "100m".parse();
 let memory: CpuQuantity = "500m".parse();
