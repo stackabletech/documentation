@@ -203,9 +203,15 @@ enum Error {
 
 === Choice of error crate and usage
 
-We use `snafu` for all error handling in library *and* application code.
+We use `snafu` for all error handling in library *and* application code because we want to provide as much context to the user as possible.
+Further, `snafu` allows us to use the same source error in multiple error variants.
+This feature can be used for cases were we need / require more fine-grained error variants.
+This behaviour is not possible when using `thiserror`, as it uses the `From` trait to convert the source error into an error variant.
+
 Additionally, we restrict the usage of the `#[snafu(context(false))]` atrribute on error variants.
 This ensures that fallible functions need to call `.context()` to pass the error along.
+
+The usage of `thiserror` is considered invalid.
 
 [WARNING.code-rule,caption=Examples of incorrect code for this rule]
 ====
