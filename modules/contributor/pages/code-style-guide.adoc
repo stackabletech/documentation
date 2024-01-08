@@ -385,8 +385,8 @@ We follow the Kubernetes convention described https://kubernetes.io/docs/referen
 ----
 // Biggest matching unit
 let memory: MemoryQuantity = "100Mi".parse();
-let memory: MemoryQuantity = "1.5Gi".parse();
 let memory: MemoryQuantity = "1Gi".parse();
+let memory: MemoryQuantity = "1.5Gi".parse();
 let memory: MemoryQuantity = "10Gi".parse();
 
 // Always Mi
