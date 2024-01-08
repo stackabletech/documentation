@@ -380,12 +380,16 @@ We follow the Kubernetes convention described {k8s-quantity}[here].
 [source,rust]
 ----
 // Biggest matching unit
+let memory: MemoryQuantity = "100Mi".parse();
 let memory: MemoryQuantity = "1.5Gi".parse();
 let memory: MemoryQuantity = "1Gi".parse();
+let memory: MemoryQuantity = "10Gi".parse();
 
 // Always Mi
-let memory: MemoryQuantity = "1536Mi".parse();
+let memory: MemoryQuantity = "100Mi".parse();
 let memory: MemoryQuantity = "1024Mi".parse();
+let memory: MemoryQuantity = "1536Mi".parse();
+let memory: MemoryQuantity = "10240Mi".parse();
 
 // No unit at all
 let memory: MemoryQuantity = "12345678".parse();
@@ -414,16 +418,22 @@ let memory: MemoryQuantity = "10Gi".parse();
 [source,rust]
 ----
 // Biggest matching unit
+let memory: CpuQuantity = "100m".parse();
 let memory: CpuQuantity = "500m".parse();
 let memory: CpuQuantity = "1".parse();
+let memory: CpuQuantity = "2".parse();
 
 // Always m
+let memory: CpuQuantity = "100m".parse();
 let memory: CpuQuantity = "500m".parse();
 let memory: CpuQuantity = "1000m".parse();
+let memory: CpuQuantity = "2000m".parse();
 
 // Floating points
+let memory: CpuQuantity = "0.1".parse();
 let memory: CpuQuantity = "0.5".parse();
 let memory: CpuQuantity = "1".parse();
+let memory: CpuQuantity = "2".parse();
 ----
 
 ====
