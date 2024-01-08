@@ -366,7 +366,7 @@ format!(
 === Captured versus uncaptured format string identifiers
 
 We place no restriction on named format string identifiers.
-Both options below are considered valid.
+All options below are considered valid.
 
 [source,rust]
 ----
@@ -374,6 +374,7 @@ let greetee = "world";
 
 format!("Hello, {greetee}!");
 format!("Hello, {greetee}!", greetee = "universe");
+format!("Hello {name}, hello again {name}", name = greetee);
 ----
 
 // TODO: Do we allow mix-and-matching captured and named identifiers?
