@@ -1,7 +1,5 @@
 = Source code style guide
 
-:k8s-quantity: https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/
-
 == Identifier names
 
 === Long versus abbreviated
@@ -376,7 +374,7 @@ format!("Hello, {greetee}!", greetee = "universe");
 
 == Specifying resources measured in bytes and CPU fractions
 
-We follow the Kubernetes convention described {k8s-quantity}[here].
+We follow the Kubernetes convention described https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/[here].
 
 === Resources measured in bytes
 
