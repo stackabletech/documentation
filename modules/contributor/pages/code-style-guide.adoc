@@ -5,7 +5,11 @@
 === Long versus abbreviated
 
 We use unabbreviated identifier names to avoid ambiguity.
-Short (even single letter) variable names are allowed in lambdas (closures) and one-liners.
+Short (even single letter) variable names are allowed in lambdas (closures), in one-liners, and when the context allows it.
+
+[quote,Uncle Bob Martin, 'Source: https://twitter.com/unclebobmartin/status/360029878126514177[Twitter]']
+The shorter the scope the shorter the variable names, and the longer the function [...] names.  And vice versa.
+
 The usage of well-known acronyms like CPU, TLS or OIDC are allowed.
 
 [WARNING.code-rule,caption=Examples of incorrect code for this rule]
@@ -34,6 +38,8 @@ let parameter = Some("foo");
 let buffer = &[];
 
 fn function(elements: Vec<String>) {}
+
+for i in 0..5 {}
 ----
 
 ====
