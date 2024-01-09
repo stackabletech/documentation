@@ -1,0 +1,211 @@
+= ADR033: Foundation for admission or conversion webhooks - CA bundle injection
+Doc Writer <doc.writer@asciidoctor.org>
+v0.1
+:status: draft
+:date: 2024-01-09
+
+* Status: {status}
+* Deciders:
+** Andrew Kenworthy
+** Malte Sander
+** Sascha Lautenschlaeger
+* Date: {date}
+
+Technical Story: https://github.com/stackabletech/issues/issues/361
+
+== Context
+
+There are many use cases for the future development of the SDP that involve validating, mutating and conversion webhooks. Tasks that must be tackled in the near future include:
+
+- The proper versioning of our CRDs and the possibility of smoothly up- and downgrading between versions including breaking changes (see https://github.com/stackabletech/documentation/issues/273)
+- Fixing the commons operator initial restarting problem (see https://github.com/stackabletech/commons-operator/issues/111 and spike https://github.com/stackabletech/commons-operator/tree/spike/sts-restarter-webhook)
+
+When creating an API request, e.g. creating a custom resource, the Kubernetes API server performs the following steps before storing into etcd.
+
+1. Authentication / Authorization
+2. Mutating admission
+3. Schema validation
+4. Validation admission
+5. Conversion to storage version
+
+The steps 2 to 4 may run in a loop if multiple mutating admissions are performed and have side effects.
+
+In order for the Kubernetes API server to contact webhook controllers, the webhook endpoints have to present a certificate trusted by the Kubernetes API server. This can be configured similar for conversion and validating / mutating webhooks as follows.
+
+=== Conversion webhooks CA configuration
+
+[source,yaml]
+----
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  # name must match the spec fields below, and be in the form: <plural>.<group>
+  name: crontabs.example.com
+spec:
+  # group name to use for REST API: /apis/<group>/<version>
+  group: example.com
+  # list of versions supported by this CustomResourceDefinition
+  versions:
+  - name: v1beta1
+    # Each version can be enabled/disabled by Served flag.
+    served: true
+    # One and only one version must be marked as the storage version.
+    storage: true
+    # Each version can define its own schema when there is no top-level
+    # schema is defined.
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties:
+          hostPort:
+            type: string
+  - name: v1
+    served: true
+    storage: false
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties:
+          host:
+            type: string
+          port:
+            type: string
+  conversion:
+    # a Webhook strategy instruct API server to call an external webhook for any conversion between custom resources.
+    strategy: Webhook
+    # webhook is required when strategy is `Webhook` and it configures the webhook endpoint to be called by API server.
+    webhook:
+      # conversionReviewVersions indicates what ConversionReview versions are understood/preferred by the webhook.
+      # The first version in the list understood by the API server is sent to the webhook.
+      # The webhook must respond with a ConversionReview object in the same version it received.
+      conversionReviewVersions: ["v1","v1beta1"]
+      clientConfig:
+        service:
+          namespace: default
+          name: example-conversion-webhook-server
+          path: /crdconvert
+        caBundle: "Ci0tLS0tQk...<base64-encoded PEM bundle>...tLS0K"
+  # either Namespaced or Cluster
+  scope: Namespaced
+  names:
+    # plural name to be used in the URL: /apis/<group>/<version>/<plural>
+    plural: crontabs
+    # singular name to be used as an alias on the CLI and for display
+    singular: crontab
+    # kind is normally the CamelCased singular type. Your resource manifests use this.
+    kind: CronTab
+    # shortNames allow shorter string to match your resource on the CLI
+    shortNames:
+    - ct
+----
+
+=== Validating / Mutating webhooks CA configuration
+
+[source,yaml]
+----
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration # or MutatingWebhookConfiguration
+webhooks:
+  - name: my-webhook.example.com
+    matchPolicy: Equivalent
+    rules:
+      - operations: ['CREATE','UPDATE']
+        apiGroups: ['*']
+        apiVersions: ['*']
+        resources: ['*']
+    failurePolicy: "Ignore" # Fail-open (optional)
+    sideEffects: None
+    clientConfig:
+      service:
+        namespace: default
+        name: example-validation-webhook-server # or example-mutating-webhook-server
+        path: /validate # or /mutate
+      caBundle: "Ci0tLS0tQk...<base64-encoded PEM bundle>...tLS0K"
+----
+
+The `clientConfig.caBundle` can not be shipped by us as it will differ from cluster to cluster and must be injected at runtime.
+
+This ADR is about how to achieve the CA bundle injection using external tools or a self-made solution via the secret-operator.
+
+== Problem Statement
+
+The required CA bundles for the webhooks endpoints must be injected at runtime. There exist tools like Cert Manager that do exactly this, most of them using annotations like:
+
+[source,yaml]
+----
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: my-webhook.example.com
+  annotations:
+    cert-manager.io/inject-ca-from-secret: default/my-webhook-example-com-ca
+----
+
+This can be used for CRDs and conversion webhooks as well.
+
+The SDP should be compatible with as many of these as possible. The normal way of configuration seems to be adding an annotation to the objects containing the CA, which we can probably somehow support in our Helm chart, or solve via documentation.
+
+In a second step the operator needs to obtain a certificate signed by the CA, for which we could use the k8search backend of the secret operator and point this at a configmap which again, can be filled by certmanager or the Service CA operator mentioned above, configured via an annotation.
+
+For clusters without any existing manager we should provide our own, lightweight caBundle injector that can work in tandem with the secret operator.
+
+== Decision Drivers
+
+* Generic solution to be compatible with as many external cert providers as possible
+* Openshift compatible
+* How to activate / deactivate if e.g no conversion webhooks should be applied?
+* Do not get vendor-locked
+
+== Considered Options
+
+* https://cert-manager.io/[Cert Manager]
+* https://github.com/openshift/service-ca-operator/blob/master/README.md[OpenShift Service CA operator]
+* Lightweight self-made solution via secret-operator
+
+== Decision Outcome
+
+Chosen option: "[option 1]", because [justification. e.g., only option, which meets k.o. criterion decision driver | which resolves force | … | comes out best (see below)].
+
+=== Positive Consequences <!-- optional -->
+
+* [e.g., improvement of quality attribute satisfaction, follow-up decisions required, …]
+* …
+
+=== Negative Consequences <!-- optional -->
+
+* [e.g., compromising quality attribute, follow-up decisions required, …]
+* …
+
+== Pros and Cons of the Options <!-- optional -->
+
+=== [option 1]
+
+[example | description | pointer to more information | …] <!-- optional -->
+
+* Good, because [argument a]
+* Good, because [argument b]
+* Bad, because [argument c]
+* … <!-- numbers of pros and cons can vary -->
+
+=== [option 2]
+
+[example | description | pointer to more information | …] <!-- optional -->
+
+* Good, because [argument a]
+* Good, because [argument b]
+* Bad, because [argument c]
+* … <!-- numbers of pros and cons can vary -->
+
+=== [option 3]
+
+[example | description | pointer to more information | …] <!-- optional -->
+
+* Good, because [argument a]
+* Good, because [argument b]
+* Bad, because [argument c]
+* … <!-- numbers of pros and cons can vary -->
+
+== Links <!-- optional -->
+
+* [Link type] [Link to ADR] <!-- example: Refined by [ADR-0005](0005-example.md) -->
+* … <!-- numbers of links can vary -->
