@@ -1,0 +1,195 @@
+= ADR033: Foundation for conversion webhooks deployment
+Doc Writer <doc.writer@asciidoctor.org>
+v0.1
+:status: draft
+:date: 2024-01-09
+
+* Status: {status}
+* Deciders:
+** Andrew Kenworthy
+** Malte Sander
+** Sascha Lautenschlaeger
+* Date: {date}
+
+Technical Story: https://github.com/stackabletech/issues/issues/361
+
+// TODO: insert ref to ADR?? CA bundle injection https://github.com/stackabletech/documentation/pull/522
+
+== Context
+
+We have to start versioning our CRDs properly and move away from `v1alhpa1` to have stable interfaces for customers to rely on. Since we cannot avoid having breaking changes in the future which require a bump in the respective CRD version, we have to supply conversion webhooks that take care of converting older versions to the current storage version.
+
+A conversion webhook is registered in a CRD like this:
+
+[source,yaml]
+----
+  conversion:
+    strategy: Webhook
+    webhook:
+      conversionReviewVersions: ["v1"]
+      clientConfig:
+        service:
+          namespace: default
+          name: example-conversion-webhook-server
+          path: /crdconvert
+        caBundle: "Ci0tLS0tQk...<base64-encoded PEM bundle>...tLS0K"
+----
+
+This ADR is about the location of webhook endpoint / server that the `webhook.clientConfig.service` is referencing.
+
+// TODO: insert ref to ADR?? for versioning in operators?
+
+== Problem Statement
+
+There are several options on how or where to deploy a conversion webhook, e.g. coupled closely with the operator as a controller or completely decoupled via an extra helm deployment.
+
+We need a uniform deployment across all operators to keep implementation and maintenance to a minimum and reuse code wherever possible.
+Additionally, webhooks should be enabled / disabled on demand via options like Helm, operator-parameters or CRD flags.
+
+== Decision Drivers
+
+- How to abstract a common conversion webhook skeleton in operator-rs, that can be implemented in the operators within a few lines of code (excluding the actual conversion code)?
+- How to keep maintenance, updating, pipelines or extra images to a minimum?
+- Openshift compatability?
+- How to deactivate the conversion webhook if not desired by customers? Or how to activate if opt-in?
+- Does the webhook have to keep working if e.g. the operator crashes (coupled)?
+
+== Considered Options
+
+[[option1]]
+=== Option 1: Deploy within the operator as controller
+
+The operator contains another controller / thread with the webhook server and conversion code.
+
+==== Pros
+
+- Webhook code resides in the operator code
+- No extra bin / main file
+- No extra docker image
+- No extra pipelines for the build process
+- Could be enabled / disabled via operator CLI parameters or Helm parameters
+- Always up to date with the operator, no extra versioning
+
+==== Cons
+
+- Operator crash affects webhook, no custom resources can be applied for that time
+- (OpenShift restrictions? Restricted namespaces etc.?)
+
+[[option2]]
+=== Option 2: Deploy within the operator as extra container with operator image
+
+The operator deployment contains another container next to the actual operator containing the webhook server and conversion code using the operator docker image.
+
+==== Pros
+
+- Webhook code resides in the operator code
+- No extra pipelines for the build process
+- Could be enabled / disabled Helm parameters
+- Operator crash does not affect webhook
+- Always up to date with the operator, no extra versioning
+
+==== Cons
+
+- Overhead due to operator image (not just the lightweight webhook server)
+- (Extra bin / main file)
+- (OpenShift restrictions? Restricted namespaces etc.?)
+
+[[option3]]
+=== Option 3: Deploy within the operator as extra container and extra image
+
+The operator deployment contains another container next to the actual operator containing the webhook server and conversion code using its own docker image.
+
+==== Pros
+
+- Webhook code could reside in the operator code
+- Operator crash does not affect webhook
+- Could be enabled / disabled Helm parameters
+- Always up to date with the operator, no extra versioning
+
+==== Cons
+
+- No overhead due to operator image (just the lightweight webhook server)
+- Extra pipelines for the build process
+- (OpenShift restrictions? Restricted namespaces etc.?)
+
+[[option4]]
+=== Option 4: The operator creates a webhook deployment
+
+The operator deploys a webhook deployment similar to how it deploys e.g. StatefulSets.
+
+==== Pros
+
+- Operator crash does not affect webhook
+- Could be enabled / disabled via custom resource (one webhook per cluster - not sure if that is desired though)
+- Always up to date with the operator, no extra versioning
+- Should not interfere with OpenShift
+
+==== Cons
+
+- Possibly extra image
+- Possibly extra pipelines
+
+[[option5]]
+=== Option 5: The webhook is a deployment via Helm
+
+The operator Helm bundle contains an extra deployment with the webhook server (in the operator namespace?).
+
+==== Pros
+
+- Operator crash does not affect webhook
+- Could be enabled / disabled Helm parameters
+- Should not interfere with OpenShift
+
+==== Cons
+
+- Possibly extra image
+- Possibly extra pipelines
+- Possibly extra versioning
+
+== Decision Outcome
+
+Chosen option: "[option 1]", because [justification. e.g., only option, which meets k.o. criterion decision driver | which resolves force | … | comes out best (see below)].
+
+=== Positive Consequences <!-- optional -->
+
+* [e.g., improvement of quality attribute satisfaction, follow-up decisions required, …]
+* …
+
+=== Negative Consequences <!-- optional -->
+
+* [e.g., compromising quality attribute, follow-up decisions required, …]
+* …
+
+== Pros and Cons of the Options <!-- optional -->
+
+=== [option 1]
+
+[example | description | pointer to more information | …] <!-- optional -->
+
+* Good, because [argument a]
+* Good, because [argument b]
+* Bad, because [argument c]
+* … <!-- numbers of pros and cons can vary -->
+
+=== [option 2]
+
+[example | description | pointer to more information | …] <!-- optional -->
+
+* Good, because [argument a]
+* Good, because [argument b]
+* Bad, because [argument c]
+* … <!-- numbers of pros and cons can vary -->
+
+=== [option 3]
+
+[example | description | pointer to more information | …] <!-- optional -->
+
+* Good, because [argument a]
+* Good, because [argument b]
+* Bad, because [argument c]
+* … <!-- numbers of pros and cons can vary -->
+
+== Links <!-- optional -->
+
+* [Link type] [Link to ADR] <!-- example: Refined by [ADR-0005](0005-example.md) -->
+* … <!-- numbers of links can vary -->
