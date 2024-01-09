@@ -30,7 +30,7 @@ When creating an API request, e.g. creating a custom resource, the Kubernetes AP
 
 The steps 2 to 4 may run in a loop if multiple mutating admissions are performed and have side effects.
 
-In order for the Kubernetes API server to contact webhook controllers, the webhook endpoints have to present a certificate trusted by the Kubernetes API server. This can be configured similar for conversion and validating / mutating webhooks as follows.
+In order for the Kubernetes API server to contact webhook controllers, the webhook endpoints have to present a certificate trusted by the Kubernetes API server. This can be configured similarly for conversion and validating / mutating webhooks as follows.
 
 === Conversion webhooks CA configuration
 
@@ -129,7 +129,7 @@ This ADR is about how to achieve the CA bundle injection using external tools or
 
 == Problem Statement
 
-The required CA bundles for the webhooks endpoints must be injected at runtime. There exist tools like Cert Manager that do exactly this, most of them using annotations like:
+The required CA bundles for the webhooks endpoints must be injected at runtime. There exist tools like [Cert Manager]([url](https://cert-manager.io/docs/concepts/ca-injector/#injecting-the-kubernetes-api-server-ca)) that do exactly this, adding one of these annotations to an injectionable source: cert-manager.io/inject-ca-from, cert-manager.io/inject-ca-from-secret, or cert-manager.io/inject-apiserver-ca (depending on the injection source). For example:
 
 [source,yaml]
 ----
@@ -154,7 +154,7 @@ For clusters without any existing manager we should provide our own, lightweight
 * Generic solution to be compatible with as many external cert providers as possible
 * Openshift compatible
 * How to activate / deactivate if e.g no conversion webhooks should be applied?
-* Do not get vendor-locked
+* Avoid vendor lock-in
 
 == Considered Options
 
