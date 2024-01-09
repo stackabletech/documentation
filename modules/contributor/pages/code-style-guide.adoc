@@ -150,13 +150,23 @@ enum Color {
 === Formatting of struct fields and enum variants
 
 We add newlines to struct fields and enum variants when they include additional information like documentation comments or attributes, because the variants can become difficult to read.
-This is especially the case when fields include doc comments, attributes like `#[snafu(display(""))]`, and in case of enum variants, various embedded types.
+This is especially the case when fields include doc comments, attributes like `#[snafu()]`, and in case of enum variants, various embedded types.
+
+Enum variants and struct fields don't need to be separated when **no** additional information is attached to any of the variants or fields.
 
 [WARNING.code-rule,caption=Examples of incorrect code for this rule]
 ====
 
 [source,rust]
 ----
+enum Color {
+    Red,
+
+    Green,
+
+    Blue,
+}
+
 struct Foo {
     /// My doc comment for bar
     bar: usize,
@@ -182,6 +192,12 @@ enum Error {
 
 [source,rust]
 ----
+enum Color {
+    Red,
+    Green,
+    Blue,
+}
+
 struct Foo {
     /// My doc comment for bar
     bar: usize,
@@ -203,6 +219,11 @@ enum Error {
 ----
 
 ====
+
+Any single uncommented variants or fields in an otherwise-commented enum or struct is considered to be a smell.
+If any of the items is commented, all items should be.
+It should however also be noted that there is no requirement to comment fields or variants.
+Comments should only be added if they provide additional information not available from context.
 
 == Error handling
 
