@@ -63,7 +63,7 @@ The operator contains another controller / thread with the webhook server and co
 
 ==== Pros
 
-- Webhook code resides in the operator code
+- Webhook code resides in the operator code (easier testing)
 - No extra bin / main file
 - No extra docker image
 - No extra pipelines for the build process
@@ -128,6 +128,7 @@ The operator deploys a webhook deployment similar to how it deploys e.g. Statefu
 
 - Possibly extra image
 - Possibly extra pipelines
+- Possibly more complex to test
 
 [[option5]]
 === Option 5: The webhook is a deployment via Helm
