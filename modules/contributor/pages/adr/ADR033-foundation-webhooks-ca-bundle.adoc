@@ -20,7 +20,7 @@ There are many use cases for the future development of the SDP that involve vali
 - The proper versioning of our CRDs and the possibility of smoothly up- and downgrading between versions including breaking changes (see https://github.com/stackabletech/documentation/issues/273)
 - Fixing the commons operator initial restarting problem (see https://github.com/stackabletech/commons-operator/issues/111 and spike https://github.com/stackabletech/commons-operator/tree/spike/sts-restarter-webhook)
 
-When creating an API request, e.g. creating a custom resource, the Kubernetes API server performs the following steps before storing into etcd.
+When the Kubernetes API server receives an incoming request, for example when a custom resource should be created, webhooks can intercept that request after authentication and authorization. The following steps are performed before the server finally persists the object into etdc.
 
 1. Authentication / Authorization
 2. Mutating admission
@@ -28,7 +28,7 @@ When creating an API request, e.g. creating a custom resource, the Kubernetes AP
 4. Validation admission
 5. Conversion to storage version
 
-The steps 2 to 4 may run in a loop if multiple mutating admissions are performed and have side effects.
+The steps 2 to 4 may run in a loop if multiple mutating admissions are performed and can have side effects.
 
 In order for the Kubernetes API server to contact webhook controllers, the webhook endpoints have to present a certificate trusted by the Kubernetes API server. This can be configured similarly for conversion and validating / mutating webhooks as follows.
 
@@ -129,7 +129,14 @@ This ADR is about how to achieve the CA bundle injection using external tools or
 
 == Problem Statement
 
-The required CA bundles for the webhooks endpoints must be injected at runtime. There exist tools like [Cert Manager]([url](https://cert-manager.io/docs/concepts/ca-injector/#injecting-the-kubernetes-api-server-ca)) that do exactly this, adding one of these annotations to an injectionable source: cert-manager.io/inject-ca-from, cert-manager.io/inject-ca-from-secret, or cert-manager.io/inject-apiserver-ca (depending on the injection source). For example:
+The required CA bundles for the webhooks endpoints must be injected at runtime. There exist tools like https://cert-manager.io/docs/concepts/ca-injector/#injecting-the-kubernetes-api-server-ca[Cert Manager] that do exactly this.
+Adding one of these annotations to an injectionable source:
+
+. `cert-manager.io/inject-ca-from`
+. `cert-manager.io/inject-ca-from-secret`
+. `cert-manager.io/inject-apiserver-ca`
+
+For example:
 
 [source,yaml]
 ----
