@@ -296,8 +296,7 @@ fn config_file(user: User) -> Result<(), Error> {
 === Error messages
 
 All our error messages must start with a lowercase letter and must not end with a dot.
-Additionally, critical (unrecoverable) errors should start with "failed to ...".
-Potentially recoverable errors should start with "unable to ...".
+It is recommended to start the error messages with "failed to..." or "unable to ...".
 
 [WARNING.code-rule,caption=Examples of incorrect code for this rule]
 ====
@@ -335,6 +334,16 @@ enum Error {
 ----
 
 ====
+
+==== Examples for "failed to ..." error messages
+
+. `failed to parse config file` to indicate the parsing of the config file failed, usually because the file doesn't conform to the configuration language.
+. `failed to construct http client` to indicate we wanted to construct a HTTP client to retrieve remote content.
+
+==== Exampled for "unable to ..." error messages
+
+. `unable to read config file from ...` to indicate we could load the file (for example because the file doesn't exist).
+. `unable to parse value ...` to indicate we failed to parse a user provided value which didn't conform to the expected syntax.
 
 == String formatting
 
