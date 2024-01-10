@@ -85,7 +85,7 @@ The versions need to be specified as follows:
 spec:
   image:
     productVersion: 3.3.1
-    # stackableVersion: 23.7.0 # optional, or e.g. 23.7
+    # stackableVersion: 23.7.0 # optional
 ----
 
 == Custom docker registry
