@@ -221,7 +221,7 @@ enum Error {
 ====
 
 Any single uncommented variants or fields in an otherwise-commented enum or struct is considered to be a smell.
-If any of the items is commented, all items should be.
+If any of the items are commented, all items should be.
 It should however also be noted that there is no requirement to comment fields or variants.
 Comments should only be added if they provide additional information not available from context.
 
