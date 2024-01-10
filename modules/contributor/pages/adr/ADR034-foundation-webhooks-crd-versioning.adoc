@@ -73,6 +73,7 @@ The operator contains another controller / thread with the webhook server and co
 ==== Cons
 
 - Operator crash affects webhook, no custom resources can be applied for that time
+- Updating webhook requires updating the whole operator
 - (OpenShift restrictions? Restricted namespaces etc.?)
 
 [[option2]]
@@ -82,7 +83,7 @@ The operator deployment contains another container next to the actual operator c
 
 ==== Pros
 
-- Webhook code resides in the operator code
+- Webhook code resides in the operator code (easier testing)
 - No extra pipelines for the build process
 - Could be enabled / disabled Helm parameters
 - Operator crash does not affect webhook
@@ -91,6 +92,7 @@ The operator deployment contains another container next to the actual operator c
 ==== Cons
 
 - Overhead due to operator image (not just the lightweight webhook server)
+- Updating webhook requires updating the whole operator
 - (Extra bin / main file)
 - (OpenShift restrictions? Restricted namespaces etc.?)
 
@@ -109,6 +111,7 @@ The operator deployment contains another container next to the actual operator c
 
 ==== Cons
 
+- Updating webhook requires updating the whole operator
 - Extra pipelines / images for the build process
 - (OpenShift restrictions? Restricted namespaces etc.?)
 
@@ -126,6 +129,7 @@ The operator deploys a webhook deployment similar to how it deploys e.g. Statefu
 
 ==== Cons
 
+- Updating webhook requires updating the whole operator (bundle)
 - Possibly extra image
 - Possibly extra pipelines
 - Possibly more complex to test
@@ -139,6 +143,7 @@ The operator Helm bundle contains an extra deployment with the webhook server (i
 
 - Operator crash does not affect webhook
 - Could be enabled / disabled Helm parameters
+- The webhook can be updated independently
 - Should not interfere with OpenShift
 
 ==== Cons
