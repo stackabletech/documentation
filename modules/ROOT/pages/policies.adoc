@@ -62,7 +62,7 @@ The only upgrade path we support is from one version to the next.
 
 == CRD Versioning lifecycle policy
 
-IMPORTANT: As of June 2023 all our CRDs are versioned as `alpha1`. We will start introducing other versions later in 2023.
+IMPORTANT: As of January 2024 all our CRDs are versioned as `alpha1`. We will start introducing other versions later
 
 CustomResourceDefinitions at Stackable are versioned.
 
