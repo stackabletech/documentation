@@ -1,33 +1,44 @@
 = Enabling verification of image signatures
 
-Image signing is a security measure that helps ensure the authenticity and integrity of container images. Starting with SDP 23.7, all our operator images are signed https://docs.sigstore.dev/cosign/openid_signing/["keyless"] (signing of product images and Helm charts will follow). By verifying these signatures, cluster administrators can ensure that the operator images pulled from Stackable's container registry are authentic and have not been tampered with.
-Since Kubernetes does not have native support for verifying image signatures yet, we will use a tool called https://kyverno.io/[Kyverno] in this tutorial.
+Image signing is a security measure that helps ensure the authenticity and integrity of container images. Starting with SDP 23.7, all our images are signed https://docs.sigstore.dev/cosign/openid_signing/["keyless"]. By verifying these signatures, cluster administrators can ensure that the images pulled from Stackable's container registry are authentic and have not been tampered with.
+Since Kubernetes does not have native support for verifying image signatures yet, we will use a Sigstore's https://docs.sigstore.dev/policy-controller/overview/[Policy Controller] in this tutorial.
 
-== Installing Kyverno
+IMPORTANT: Releases prior to SDP 23.7 do not have signed images. If you are using an older release and enforce image signature verification, Pods with Stackable images will be prevented from starting.
+
+== Installing the Policy Controller
 Kyverno can be easily installed via Helm:
 
 [source,bash]
 ----
-helm repo add kyverno https://kyverno.github.io/kyverno/
+helm repo add sigstore https://sigstore.github.io/helm-charts
 helm repo update
-helm install kyverno kyverno/kyverno -n kyverno --create-namespace
+helm install --include-crds policy-controller sigstore/policy-controller
 ----
-
-Other installation methods and options to run Kyverno in a highly-available fashion are described in the https://kyverno.io/docs/installation/methods/[Kyverno documentation].
 
 == Creating a policy to verify image signatures
 
-Now that Kyverno is installed, we can create a policy that verifies that all operator images that are part of the SDP 23.7 releases are signed by Stackable's CI pipeline (Github Actions):
+Now that the Policy Controller is installed, we can create a policy that verifies that all images provided by Stackable are signed by Stackable's CI pipeline (Github Actions):
 
 [source,yaml]
-include::example$verify-signatures/kyverno-policy.yaml[]
+include::example$verify-signatures/stackable-image-policy.yaml[]
 
-Apply this policy to the cluster by saving it as `kyverno-policy.yaml` and running:
+Apply this policy to the cluster by saving it as `stackable-image-policy.yaml` and running:
 [source,bash]
 ----
-kubectl apply -f kyverno-policy.yaml
+kubectl apply -f stackable-image-policy.yaml
 ----
 
-The policy will be applied to all namespaces in the cluster. It checks all newly created Pods that run any image matching the expression `docker.stackable.tech/+++*+++-operator:23.7.+++*+++` (all Stackable operators version 23.7.+++*+++) and ensures that these images have been signed by a Stackable Github Action from the release 23.7 (`https://github.com/stackabletech/+++*+++-operator/.github/workflows/build.yml@refs/tags/23.7.+++*+++`). If the signature of an operator image is invalid or missing, the policy will deny the pod creation.
-For a more detailed explanation of the policy options, please refer to the https://kyverno.io/docs/writing-policies/verify-images/sigstore/#keyless-signing-and-verification[Kyverno documentation].
-If the `subject` field in the policy is changed to something like `https://github.com/test/+++*+++`, the policy will deny the creation of operator pods because the signature is no longer valid.
+The policy will be applied to all namespaces in the cluster !!TODO ... that are labeled with ... !!. It checks all newly created Pods that run any image matching the expression `+++*+++.stackable.tech/+++*+++` (all images provided by Stackable) and ensures that these images have been signed by a Stackable Github Action (`https://github.com/stackabletech/.+/.github/workflows/build.yml@refs.+`). If the signature of an image is invalid or missing, the policy will deny the pod creation.
+For a more detailed explanation of the policy options, please refer to the https://docs.sigstore.dev/policy-controller/overview/#configuring-image-patterns[Sigstore documentation].
+If the `subjectRegExp` field in the policy is changed to something like `https://github.com/test/.+`, the policy will deny the creation of pods with Stackable images because the signature is no longer valid.
+
+== Verifying image signatures in an air-gapped environment
+As mentioned before, our images and Helm charts for SDP are signed keyless. Keyless signing seems to becoming the standard procedure to sign OCI artifacts, projects like https://kubernetes.io/docs/tasks/administer-cluster/verify-signed-artifacts/#verifying-image-signatures[Kubernetes] use it as well.
+Describing the whole flow with all the components is out of scope for this documentation, so we will try to provide a summary of the most important parts instead: To verify that an image has been signed by Stackable, customers check that the image has a valid signature and that this signature is actually from Stackable's CI (Github Actions). More specifically, they check that the identity of the signer (a Github Actions workflow) was confirmed by a trusted authority (github.com in that case). The role of a Sigstore project called https://github.com/sigstore/fulcio[Fulcio] is issuing a certificate for exactly that: "We confirm that this signature is from 'https://github.com/stackabletech/docker-images/.github/workflows/release.yml@refs/tags/23.11.0' and 'https://token.actions.githubusercontent.com' confirmed that identity to us".
+By default, the public Fulcio instance hosted by Sigstore is used for this, which is what we do at Stackable as well.
+
+That means, that customers wanting to verify these image signatures need to trust the Fulcio instance, which issues the certificates that guarantee the identity of the signer. The root of trust for the Sigstore components like the public Fulcio instance is provided by a framework called https://theupdateframework.io/[The Update Framework (TUF)]:
+[quote,From the Sigstore documentation, https://docs.sigstore.dev/signing/overview/#root-of-trust]
+Sigstore’s root of trust, which includes Fulcio’s root CA certificate and Rekor’s public key, are distributed by The Update Framework (TUF). TUF is a framework to provide secure software and file updates. TUF defines a set of protocols to protect against various types of attacks.
+
+The problem for air-gapped environments is that expiration of keys is built into TUF. That means, to verify image signatures continuously, customers need to update the root of trust regularly. This can be achieved by running a TUF mirror, if possible, as explained https://docs.sigstore.dev/policy-controller/overview/#configuring-trustroot-for-custom-tuf-root[here], or by regularly updating a snapshot of the TUF repository, as explained https://docs.sigstore.dev/policy-controller/overview/#configuring-trustroot-for-custom-tuf-repository[here]. You can then refer to the newly created `TrustRoot` in the policy via the `trustRootRef` attribute (as shown https://docs.sigstore.dev/policy-controller/overview/#configuring-verification-against-different-sigstore-instances[here]).
