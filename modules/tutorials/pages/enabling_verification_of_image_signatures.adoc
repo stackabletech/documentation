@@ -6,14 +6,17 @@ Since Kubernetes does not have native support for verifying image signatures yet
 IMPORTANT: Releases prior to SDP 23.7 do not have signed images. If you are using an older release and enforce image signature verification, Pods with Stackable images will be prevented from starting.
 
 == Installing the Policy Controller
-Kyverno can be easily installed via Helm:
+The Policy Controller can be easily installed via Helm:
 
 [source,bash]
 ----
 helm repo add sigstore https://sigstore.github.io/helm-charts
 helm repo update
-helm install --include-crds policy-controller sigstore/policy-controller
+helm install policy-controller sigstore/policy-controller
 ----
+
+The default settings might not be appropriate for your environment, please refer to the https://artifacthub.io/packages/helm/sigstore/policy-controller[configurable values] for more information.
+
 
 == Creating a policy to verify image signatures
 
@@ -28,15 +31,22 @@ Apply this policy to the cluster by saving it as `stackable-image-policy.yaml` a
 kubectl apply -f stackable-image-policy.yaml
 ----
 
-The policy will be applied to all namespaces in the cluster !!TODO ... that are labeled with ... !!. It checks all newly created Pods that run any image matching the expression `+++*+++.stackable.tech/+++*+++` (all images provided by Stackable) and ensures that these images have been signed by a Stackable Github Action (`https://github.com/stackabletech/.+/.github/workflows/build.yml@refs.+`). If the signature of an image is invalid or missing, the policy will deny the pod creation.
+If you used the default values for the Helm chart, policies will only be applied to namespaces labeled with `policy.sigstore.dev/include: "true"`.
+Add a label for the namespace where you deployed SDP:
+[source,bash]
+----
+kubectl label namespace stackable policy.sigstore.dev/include=true
+----
+
+The Policy Controller checks all newly created Pods in that namespace which run any image matching `+++**+++.stackable.tech/+++**+++` (all images provided by Stackable) and ensures that these images have been signed by a Stackable Github Action (`https://github.com/stackabletech/.+/.github/workflows/build.yml@refs.+`). If the signature of an image is invalid or missing, the policy will deny the pod creation.
 For a more detailed explanation of the policy options, please refer to the https://docs.sigstore.dev/policy-controller/overview/#configuring-image-patterns[Sigstore documentation].
-If the `subjectRegExp` field in the policy is changed to something like `https://github.com/test/.+`, the policy will deny the creation of pods with Stackable images because the signature is no longer valid.
+If the `subjectRegExp` field in the policy is changed to something like `https://github.com/test/.+`, the policy will deny the creation of pods with Stackable images because the identity of the subject that signed the image will no longer match.
 
 == Verifying image signatures in an air-gapped environment
 As mentioned before, our images and Helm charts for SDP are signed keyless. Keyless signing is more complex than "classic" signing with a private and public key, but brings several https://www.chainguard.dev/unchained/benefits-of-keyless-software-signing[benefits]. Projects like https://kubernetes.io/docs/tasks/administer-cluster/verify-signed-artifacts/#verifying-image-signatures[Kubernetes] use it as well.
 Describing the whole flow with all the components is out of scope for this documentation, so we will try to provide a summary of the most important parts instead: To verify that an image has been signed by Stackable, customers check that the image has a valid signature and that this signature was created by Stackable's CI (Github Actions). More specifically, they check that the identity of the signer (a Github Actions workflow) was confirmed by a trusted authority (github.com in that case). The role of the Sigstore project https://github.com/sigstore/fulcio[Fulcio] is issuing a certificate for exactly that: "This Fulcio instance confirms that this signature was created by 'https://github.com/stackabletech/docker-images/.github/workflows/release.yml@refs/tags/23.11.0' and 'https://token.actions.githubusercontent.com' confirmed that identity".
 By default, the public Fulcio instance hosted by Sigstore is used for this, which is what we do at Stackable as well.
 
-That means customers wanting to verify these image signatures need to trust the Fulcio instance, which issues the certificates that guarantee the identity of the signer. The root of trust for the Sigstore components like the public Fulcio instance is provided by a framework called https://docs.sigstore.dev/signing/overview/#root-of-trust[The Update Framework (TUF)]. Thankfully, the whole initialization of the root of trust is handled by the policy controller.
-The problem for air-gapped environments is that expiration of keys is built into TUF. That means, to verify image signatures continuously, the policy controller needs an up-to-date version of the root of trust. In a environment with internet access, it can just connect to Sigstore's TUF repository and get the latest contents. In an air-gapped environment, this is not possible. It is possible, however, to specify a TUF mirror that is reachable from the air-gapped environment, as explained https://docs.sigstore.dev/policy-controller/overview/#configuring-trustroot-for-custom-tuf-root[here]. This mirror could for example serve the contents of https://tuf-repo-cdn.sigstore.dev via HTTPS. Another way is to provide a base64 encoded, gzipped tarball of the TUF repository, as explained https://docs.sigstore.dev/policy-controller/overview/#configuring-trustroot-for-custom-tuf-repository[here]. Remember that in both cases the contents of the TUF repository need to be updated regularly. The Sigstore TUF repository is hosted at https://tuf-repo-cdn.sigstore.dev/ and the contents are also available https://github.com/sigstore/root-signing/tree/main/repository/repository[on github].
-You can then refer to the newly created `TrustRoot` (which is configured to use the TUF mirror) in the policy via the `trustRootRef` attribute, as shown https://docs.sigstore.dev/policy-controller/overview/#configuring-verification-against-different-sigstore-instances[in the policy controller's documentation].
+That means customers wanting to verify these image signatures need to trust the Fulcio instance, which issues the certificates that guarantee the identity of the signer. The root of trust for the Sigstore components like the public Fulcio instance is provided by a framework called https://docs.sigstore.dev/signing/overview/#root-of-trust[The Update Framework (TUF)]. Thankfully, the whole initialization of the root of trust is handled by the Policy Controller.
+The problem for air-gapped environments is that expiration of keys is built into TUF. That means, to verify image signatures continuously, the Policy Controller needs an up-to-date version of the root of trust. In a environment with internet access, it can just connect to Sigstore's TUF repository and get the latest contents. In an air-gapped environment, this is not possible. It is possible, however, to specify a TUF mirror that is reachable from the air-gapped environment, as explained https://docs.sigstore.dev/policy-controller/overview/#configuring-trustroot-for-custom-tuf-root[here]. This mirror could for example serve the contents of https://tuf-repo-cdn.sigstore.dev via HTTPS. Another way is to provide a base64 encoded, gzipped tarball of the TUF repository, as explained https://docs.sigstore.dev/policy-controller/overview/#configuring-trustroot-for-custom-tuf-repository[here]. Remember that in both cases the contents of the TUF repository need to be updated regularly. The Sigstore TUF repository is hosted at https://tuf-repo-cdn.sigstore.dev/ and the contents are also available https://github.com/sigstore/root-signing/tree/main/repository/repository[on github].
+You can then refer to the newly created `TrustRoot` (which is configured to use the TUF mirror) in the policy via the `trustRootRef` attribute, as shown https://docs.sigstore.dev/policy-controller/overview/#configuring-verification-against-different-sigstore-instances[in the Policy Controller's documentation].
