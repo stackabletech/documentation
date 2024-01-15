@@ -1,0 +1,13 @@
+= Running Stackable in an air-gapped environment
+
+The main challenge with running Stackable in an air-gapped environment is how to get the artifacts (container images and Helm charts) into the environment. There are a few ways to do this:
+
+* Mirror our images and Helm charts to a registry (e.g. https://goharbor.io/[Harbor]) in the air-gapped environment. This is the recommended approach. If you use Harbor, you can setup https://goharbor.io/docs/latest/administration/configuring-replication/[replication] to replicate our project `sdp` from our registry `oci.stackable.tech` (and maybe `sdp-charts` as well, if you also need access to Stackable's Helm charts from within your air-gapped environment).
+* If possible, setup a reverse proxy to Stackable's registry with internet connection that is reachable from all nodes in your air-gapped environment.
+* Download our images (e.g. using `docker save`) on a machine with internet access, copy them onto the nodes in your air-gapped environment and load them (e.g. using `ctr images import`). Then render the Helm charts using the `--template` flag, copy the rendered YAML files your air-gapped environment and apply them.
+
+In the first two scenarios, you also need to make sure that the nodes load the images from the registry (or the registry mirror). Again, there are a several ways to do this:
+
+* Provide the URL to your registry in the CRDs (see https://docs.stackable.tech/home/nightly/concepts/product-image-selection#_custom_docker_registry["Custom docker registry"]) and in the values of the Helm charts of the operators (`helm template --set image.repository="my.custom.registry" ...`). !! TODO: explain how to do this for stackablectl !!
+* If you use `containerd` as your container runtime, patch the `containerd` config on every node to use the mirrored registry instead of `oci.stackable.tech`, see https://github.com/containerd/containerd/blob/main/docs/cri/config.md#registry-configuration["Registry configuration"]. !! TODO: provide example !!
+* Add an alias for `oci.stackable.tech` to the `/etc/hosts` file on every node (e.g. `10.7.228.12 oci.stackable.tech`), issue a self-signed certificate for `oci.stackable.tech` to your registry and add the certificate to the trusted certificates on every node. Note that if you also want to enforce signature checks for Stackable's images via a policy controller, you will need to add this host alias to the Pod of the policy controller as well (and make it trust the certificate). Learn more about image signature verification xref:concepts:enabling_verification_of_image_signatures.adoc[here].
