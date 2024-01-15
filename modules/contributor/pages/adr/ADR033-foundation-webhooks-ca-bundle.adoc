@@ -136,7 +136,7 @@ This ADR is about how to achieve the CA bundle injection using external tools or
 
 == Problem Statement
 
-The required CA bundles for the webhooks endpoints must be injected at runtime. There exist tools like https://cert-manager.io/docs/concepts/ca-injector/#injecting-the-kubernetes-api-server-ca[Cert Manager] that do exactly this.
+The required CA bundles for the webhooks endpoints must be injected at runtime. There exist tools like https://cert-manager.io/docs/concepts/ca-injector/#injecting-ca-data-from-a-certificate-resource[Cert Manager] that do exactly this.
 Adding one of these annotations to an injectable source:
 
 . `cert-manager.io/inject-ca-from`
