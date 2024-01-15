@@ -1,0 +1,116 @@
+= Allowed Pod disruptions
+
+Any downtime of our products is generally considered to be bad.
+Although downtime can't be prevented 100% of the time - especially if the product does not support High Availability - we can try to do our best to reduce it to an absolute minimum.
+
+Kubernetes has mechanisms to ensure minimal *planned* downtime.
+Please keep in mind, that this only affects planned (voluntary) downtime of Pods - unplanned Kubernetes node crashes can always occur.
+
+Our product operator will always deploy so-called https://kubernetes.io/docs/tasks/run-application/configure-pdb/[PodDisruptionBudget (PDB)] resources alongside the products.
+For every role that you specify (e.g. HDFS namenodes or Trino workers) a PDB is created.
+
+== Default values
+The defaults depend on the individual product and can be found below the "Operations" usage guide.
+
+They are based on our knowledge of each product's fault tolerance.
+In some cases they may be a little pessimistic, but they can be adjusted as documented in the following sections.
+
+In general, product roles are split into the following two categories, which serve as guidelines for the default values we apply:
+
+=== Multiple replicas to increase availability
+
+For these roles (e.g. ZooKeeper servers, HDFS journal + namenodes or HBase masters), only a single Pod is allowed to be unavailable.
+For example, imagine a cluster with 7 ZooKeeper servers, where 4 servers are required to form a quorum and healthy ensemble.
+By allowing 2 servers to be unavailable, there is no single point of failure (as there are at least 5 servers available).
+But there is only a single spare server left. The reason to choose 7 instead of e.g. 5 ZooKeeper servers might be, that there are always at least 2 spare servers.
+Increasing the number of allowed disruptions and increasing the number of replicas is not improving the general availability.
+
+=== Multiple replicas to increase performance
+
+For these roles (e.g. HDFS datanodes, HBase regionservers or Trino workers), more than a single Pod is allowed to be unavailable. Otherwise, rolling re-deployments may take very long.
+
+IMPORTANT: The operators calculate the number of Pods for a given role by adding the number of replicas of every rolegroup that is part of that role.
+
+In case there are no replicas defined on a rolegroup, one Pod will be assumed for this rolegroup, as the created Kubernetes objects (StatefulSets or Deployments) will default to a single replica as well.
+However, in case there are https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/[HorizontalPodAutoscaler] in place, the number of replicas of a rolegroup can change dynamically.
+In this case the operators might falsely assume that rolegroups have fewer Pods than they actually have.
+This is a pessimistic approach, as the number of allowed disruptions normally stays the same or even increases when the number of Pods increases.
+This should be safe, but in some cases more Pods *could* have been allowed to be unavailable which may increase the duration of rolling re-deployments.
+
+== Influencing and disabling PDBs
+
+You can configure
+
+1. Whether PDBs are written at all
+2. The `maxUnavailable` replicas for this role PDB
+
+The following example
+
+1. Sets `maxUnavailable` for NameNodes to `1`
+2. Sets `maxUnavailable` for DataNodes to `10`, which allows downtime of 10% of the total DataNodes.
+3. Disables PDBs for JournalNodes
+
+[source,yaml]
+----
+apiVersion: hdfs.stackable.tech/v1alpha1
+kind: HdfsCluster
+metadata:
+  name: hdfs
+spec:
+  nameNodes:
+    roleConfig: # optional, only supported on role level, *not* on rolegroup
+      podDisruptionBudget: # optional
+        enabled: true # optional, defaults to true
+        maxUnavailable: 1 # optional, defaults to our "smart" calculation
+    roleGroups:
+      default:
+        replicas: 3
+  dataNodes:
+    roleConfig:
+      podDisruptionBudget:
+        maxUnavailable: 10
+    roleGroups:
+      default:
+        replicas: 100
+  journalnodes:
+    roleConfig:
+      podDisruptionBudget:
+        enabled: false
+    roleGroups:
+      default:
+        replicas: 3
+----
+
+== Using you own custom PDBs
+In case you are not satisfied with the PDBs that are written by the operators, you can deploy your own.
+
+WARNING: In case you write custom PDBs, it is your responsibility to take care of the availability of the products
+
+IMPORTANT: It is important to disable the PDBs created by the Stackable operators as described above before creating your own PDBs, as this is a https://github.com/kubernetes/kubernetes/issues/75957[limitation of Kubernetes].
+
+*After disabling the Stackable PDBs*, you can deploy you own PDB such as
+
+[source,yaml]
+----
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: hdfs-journalnode-and-namenode
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: hdfs
+      app.kubernetes.io/instance: hdfs
+    matchExpressions:
+      - key: app.kubernetes.io/component
+        operator: In
+        values:
+          - journalnode
+          - namenode
+----
+
+This PDB allows only one Pod out of all the Namenodes and Journalnodes to be down at one time.
+
+== Details
+Have a look at the xref:contributor:adr/ADR030-allowed-pod-disruptions.adoc[ADR on Allowed Pod disruptions] for the implementation details.

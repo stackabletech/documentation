@@ -10,9 +10,9 @@ build-ui:
 	node_modules/.bin/gulp --cwd ui bundle
 
 clean:
-	rm -r build
+	rm -rf build
 	# 'cache' is the configured cache dir in the playbook
-	rm -r cache
+	rm -rf cache
 
 # The netlify repo is checked out without any blobs. This script
 # iterates through the release branches and checks them out one-by-one
@@ -27,7 +27,7 @@ netlify-fetch:
 	git fetch --all
 	# checkout all release branches once, so we fetch the files
 	for remote in $(shell git branch -r | grep release/); do \
-		git checkout --recurse-submodules "$${remote#origin/}" ;\
+		git checkout --recurse-submodules "$${remote#origin/}" ; git pull; \
 	done
 	# go back to the initial commit to start the build
 	git -c advice.detachedHead=false checkout --recurse-submodules $(CURRENT_COMMIT)

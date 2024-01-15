@@ -58,7 +58,7 @@ By defining our own, thin, abstraction layer we can isolate our users from the c
 We could do nothing right now and instead use the _create_test_cluster.py_ script as our entry point for the initial release.
 
 * Good, this gives us time to design a fully thought out solution before implementing something
-* Bad, _create_test_cluster.py_ doesn't feel very polished and we do want to introducet _stackablectl_ to the world as our tool of choice
+* Bad, _create_test_cluster.py_ doesn't feel very polished and we do want to introduce _stackablectl_ to the world as our tool of choice
 
 === Implement basic definition of stacks
 

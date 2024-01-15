@@ -1,4 +1,5 @@
-= Development Dashboard
+= Development dashboard
+:page-aliases: development_dashboard.adoc
 
 This page contains information about our products and relevant links you might need during development.
 
@@ -127,6 +128,10 @@ There are a few other important repositories that come up frequently:
 |Secret Operator
 |https://github.com/stackabletech/secret-operator
 |Manages/generates Kubernetes secrets, and mounts them into pods using CSI
+
+|Listener Operator
+|https://github.com/stackabletech/listener-operator
+|A CSI provider intended to provide an abstract way to expose a single Pod to the outside network, while hiding details about the cluster from the application developer.
 
 |Issues
 |https://github.com/stackabletech/issues

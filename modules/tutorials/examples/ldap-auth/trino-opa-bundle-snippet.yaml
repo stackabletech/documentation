@@ -2,12 +2,19 @@ data:
   trino.rego: |
     package trino
 
+    import future.keywords.in
+
     default allow = false
 
     allow {
-      input.context.identity.user == "alice"
+      is_alice
+    }
+    extended[i] {
+      some i
+      input.action.filterResources[i]
+      is_alice
     }
 
-    allow {
-      input.context.identity.user == "bob"
+    is_alice() {
+      input.context.identity.user == "alice"
     }

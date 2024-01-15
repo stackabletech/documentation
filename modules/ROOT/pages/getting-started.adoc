@@ -1,35 +1,40 @@
 = Getting Started
+:page-aliases: getting_started.adoc
 
 One of the best ways of getting started with a new platform is to try it out. Any big data platform has a lot of moving parts and getting some hands on keyboard time with it helps reinforce learning.
 
 == About this guide
 
-Firstly, let’s cover whether this *Getting Started* guide is right for you. This is intended as a learning tool to discover more about Stackable, its deployment and architecture.
+Firstly, let's cover whether this *Getting Started* guide is right for you. This is intended as a learning tool to discover more about Stackable, its deployment and architecture.
 
-* If you want to build a production cluster then this is not for you. This tutorial is to familiarise you with the Stackable architecture and is not a guide for building robust clusters.
+* If you want to build a production cluster then this is not for you. This tutorial is to familiarize you with the Stackable architecture and is not a guide for building robust clusters.
 * This is intended for use in a private network or lab; it doesn't enable many security features such as authentication or encryption and should not be directly connected to the Internet. Be careful if you're deploying in the cloud as your instances may default to using public IPs.
 
 == Overview
+
 Stackable is based on Kubernetes and uses this as the control plane to manage clusters. In this guide we will build a simple cluster with 3 services; Apache ZooKeeper, Apache Kafka and Apache NiFi.
 
 == Installing Kubernetes and kubectl
-Stackable’s control plane is built around Kubernetes. Follow the xref:kubernetes.adoc#local-installation[instructions] on how to set up a local Kubernetes instance if you do not have access to a cluster and install kubectl.
+
+Stackable's control plane is built around Kubernetes. Follow the xref:kubernetes.adoc#local-installation[instructions] on how to set up a local Kubernetes instance if you do not have access to a cluster and install kubectl.
 
 If you already have kubectl installed, and have access to a Kubernetes cluster, you can skip this step.
 
 == Installing Stackable
+
 === Install stackablectl
 
-Install the Stackable command line utility xref:stackablectl::index.adoc[stackablectl] by following the installation steps for your platform on the xref:stackablectl::installation.adoc[installation] page.
+Install the Stackable command line utility xref:management:stackablectl:index.adoc[stackablectl] by following the installation steps for your platform on the xref:management:stackablectl:installation.adoc[installation] page.
 
 === Installing Stackable Operators
+
 The Stackable operators are components that translate the service definitions deployed via Kubernetes into deploy services on the worker nodes. These can be installed on any node that has access to the Kubernetes control plane. In this example we will install them on the controller node.
 
-Stackable operators can be installed using stackablectl. Run the following commands to install ZooKeeper, Kafka and NiFi from the Stackable 23.7 release.
+Stackable operators can be installed using `stackablectl`. Run the following commands to install ZooKeeper, Kafka and NiFi from the Stackable 23.11 release.
 
 [source,bash]
 ----
-stackablectl release install -i commons -i secret -i zookeeper -i kafka -i nifi 23.7
+stackablectl release install -i commons -i secret -i listener -i zookeeper -i kafka -i nifi 23.11
 ----
 
 .Using Helm instead
@@ -48,29 +53,34 @@ Install the operators:
 
 [source,bash]
 ----
-helm install zookeeper-operator stackable-stable/zookeeper-operator --version=23.7
-helm install kafka-operator stackable-stable/kafka-operator --version=23.7
-helm install secret-operator stackable-stable/secret-operator --version=23.7
-helm install commons-operator stackable-stable/commons-operator --version=23.7
-helm install nifi-operator stackable-stable/nifi-operator --version=23.7
+helm install zookeeper-operator stackable-stable/zookeeper-operator --version=23.11.0
+helm install kafka-operator stackable-stable/kafka-operator --version=23.11.0
+helm install secret-operator stackable-stable/secret-operator --version=23.11.0
+helm install listener-operator stackable-stable/listener-operator --version=23.11.0
+helm install commons-operator stackable-stable/commons-operator --version=23.11.0
+helm install nifi-operator stackable-stable/nifi-operator --version=23.11.0
 ----
 ====
 
 You can check which operators are installed using `stackablectl operator installed`:
 
+[source,console]
 ----
 OPERATOR              VERSION         NAMESPACE                      STATUS           LAST UPDATED
-commons               23.7.0          default                        deployed         2023-07-27 09:41:05.769685041 +0200 CEST
-kafka                 23.7.0          default                        deployed         2023-07-27 09:41:27.685845379 +0200 CEST
-nifi                  23.7.0          default                        deployed         2023-07-27 09:41:40.928558978 +0200 CEST
-secret                23.7.0          default                        deployed         2023-07-27 09:41:51.820834174 +0200 CEST
-zookeeper             23.7.0          default                        deployed         2023-07-27 09:41:54.972145417 +0200 CEST
+commons               23.11.0         default                        deployed         2023-11-30 17:58:32.916032854 +0100 CET
+kafka                 23.11.0         default                        deployed         2023-11-30 17:58:55.036115353 +0100 CET
+listener              23.11.0         default                        deployed         2023-11-30 17:59:18.136775259 +0100 CET
+nifi                  23.11.0         default                        deployed         2023-11-30 17:59:51.927081648 +0100 CET
+secret                23.11.0         default                        deployed         2023-11-30 18:00:05.060241771 +0100 CET
+zookeeper             23.11.0         default                        deployed         2023-11-30 18:00:08.425686918 +0100 CET
 ----
 
 == Deploying Stackable Services
-At this point you’ve successfully deployed Kubernetes and the Stackable operators we need and are ready to deploy services to the cluster. To do this we provide service descriptions to Kubernetes for each of the services we wish to deploy.
+
+At this point you've successfully deployed Kubernetes and the Stackable operators we need and are ready to deploy services to the cluster. To do this we provide service descriptions to Kubernetes for each of the services we wish to deploy.
 
 === Apache ZooKeeper
+
 We will deploy an Apache ZooKeeper instance to our cluster.
 
 [source,bash]
@@ -83,7 +93,7 @@ metadata:
   name: simple-zk
 spec:
   image:
-    productVersion: "3.8.1"
+    productVersion: 3.8.3
   clusterConfig:
     tls:
       serverSecretClass: null
@@ -105,6 +115,7 @@ EOF
 ----
 
 === Apache Kafka
+
 We will deploy an Apache Kafka broker that depends on the ZooKeeper service we just deployed. The zookeeperReference property below points to the namespace and name we gave to the ZooKeeper service deployed previously.
 
 [source,bash]
@@ -117,7 +128,7 @@ metadata:
   name: simple-kafka
 spec:
   image:
-    productVersion: "3.4.0"
+    productVersion: 3.5.1
   clusterConfig:
     zookeeperConfigMapName: simple-kafka-znode
     tls:
@@ -139,6 +150,7 @@ EOF
 ----
 
 === Apache NiFi
+
 We will next deploy an Apache NiFi server.
 
 [source,bash]
@@ -153,59 +165,79 @@ spec:
   clusterRef:
     name: simple-zk
 ---
-apiVersion: v1
-kind: Secret
-metadata:
-  name: nifi-admin-credentials-simple
-stringData:
-  username: admin
-  password: AdminPassword
----
 apiVersion: nifi.stackable.tech/v1alpha1
 kind: NifiCluster
 metadata:
   name: simple-nifi
 spec:
   image:
-    productVersion: "1.21.0"
+    productVersion: 1.23.2
   clusterConfig:
     listenerClass: external-unstable
     zookeeperConfigMapName: simple-nifi-znode
     authentication:
-      method:
-        singleUser:
-          adminCredentialsSecret: nifi-admin-credentials-simple
+      - authenticationClass: nifi-users
     sensitiveProperties:
       keySecret: nifi-sensitive-property-key
-      autoGenerate: true
   nodes:
     roleGroups:
       default:
         replicas: 1
+---
+apiVersion: authentication.stackable.tech/v1alpha1
+kind: AuthenticationClass
+metadata:
+  name: nifi-users
+spec:
+  provider:
+    static:
+      userCredentialsSecret:
+        name: nifi-admin-credentials
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: nifi-admin-credentials
+stringData:
+  admin: AdminPassword
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: nifi-sensitive-property-key
+stringData:
+  nifiSensitivePropsKey: mYsUp3rS3cr3tk3y
 EOF
 ----
 
 You can check the status of the services using `kubectl get pods`. This will retrieve the status of all pods running in the default namespace.
 
 ----
-NAME                                             READY   STATUS      RESTARTS   AGE
-commons-operator-deployment-598c744f6f-gfj2h     1/1     Running     0          15m
-kafka-operator-deployment-7c4bd694d5-xjwsj       1/1     Running     0          15m
-nifi-operator-deployment-748d748487-qg885        1/1     Running     0          15m
-secret-operator-daemonset-wr57f                  3/3     Running     0          14m
-simple-kafka-broker-brokers-0                    2/2     Running     0          7m50s
-simple-nifi-create-reporting-task-1-21-0-jltpv   0/1     Completed   4          5m13s
-simple-nifi-node-default-0                       1/1     Running     0          5m13s
-simple-zk-server-primary-0                       1/1     Running     0          14m
-zookeeper-operator-deployment-64fcccc797-pckhf   1/1     Running     0          14m
+NAME                                                       READY   STATUS    RESTARTS   AGE
+commons-operator-deployment-5b589f4494-slqx7               1/1     Running   0          14m
+kafka-operator-deployment-5db5d8c846-564pd                 1/1     Running   0          14m
+listener-operator-controller-deployment-65f8bbdff4-fz9fh   2/2     Running   0          14m
+listener-operator-node-daemonset-ffjdx                     2/2     Running   0          14m
+listener-operator-node-daemonset-rfd6k                     2/2     Running   0          14m
+listener-operator-node-daemonset-wtw8j                     2/2     Running   0          14m
+nifi-operator-deployment-546fdb6bf8-6zptt                  1/1     Running   0          13m
+secret-operator-daemonset-4cqfl                            3/3     Running   0          13m
+secret-operator-daemonset-p9579                            3/3     Running   0          13m
+secret-operator-daemonset-wktz8                            3/3     Running   0          13m
+simple-kafka-broker-brokers-0                              2/2     Running   0          12m
+simple-nifi-node-default-0                                 1/1     Running   0          11m
+simple-zk-server-primary-0                                 1/1     Running   0          13m
+zookeeper-operator-deployment-7bcdcbb558-xc77h             1/1     Running   0          13m
 ----
 
 Since this is the first time that each of these services has been deployed to these nodes, it will take some time to download the software from the Stackable repository and deploy the services. Once all the pods are in the running state your cluster is ready to use.
 
 == Testing your cluster
+
 If all has gone well then you will have successfully deployed a Stackable cluster and used it to start three services that should now be ready for you.
 
 === Apache ZooKeeper
+
 We can test ZooKeeper by running the ZooKeeper CLI shell. The easiest way to do this is to run the CLI shell on the pod that is running ZooKeeper.
 
 [source,bash]
@@ -217,10 +249,11 @@ The shell should connect automatically to the ZooKeeper server running on the po
 
 ----
 [zk: localhost:2181(CONNECTED) 0] ls /
-[znode-81484420-e097-4b13-a121-84f0211b99db, znode-9076785e-39d0-49cc-b067-30be25bf4faa, znode-a4b12f66-48c2-40dc-91d8-a42135eaf371, zookeeper]
+[znode-17951052-3ffd-4e7a-9cfe-6865f827752d, znode-2d752976-f37c-4baf-a3af-2eed96ba57f5, znode-f946b36f-a0bc-4d11-93d6-8ac6a321c836, zookeeper]
 ----
 
 === Apache Kafka
+
 To test Kafka we'll create a topic, and verify that it was created.
 First create the topic with the following command:
 
@@ -239,6 +272,7 @@ kubectl exec -i -t simple-kafka-broker-brokers-0 -c kafka -- \
 ----
 
 === Apache NiFi
+
 Apache NiFi provides a web interface and the easiest way to test it is to view this in a web browser.
 To access the web interface we first need to get the ip address and port Nifi is listening on.
 To get the IP address we need to connect to (in this case `172.18.0.2`), run:
@@ -273,8 +307,8 @@ If a password has not been specified for the admin user the Apache NiFi operator
 
 [source,bash]
 ----
-kubectl get secrets nifi-admin-credentials-simple \
--o jsonpath="{.data.password}" | base64 -d && echo
+kubectl get secrets nifi-admin-credentials \
+-o jsonpath="{.data.admin}" | base64 -d && echo
 ----
 
 Once you have these credentials you can log in and you should see a blank NiFi canvas.
