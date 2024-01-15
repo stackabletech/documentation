@@ -48,10 +48,10 @@ Additionally, webhooks should be enabled / disabled on demand via options like H
 
 == Decision Drivers
 
-- How to abstract a common conversion webhook skeleton in operator-rs, that can be implemented in the operators within a few lines of code (excluding the actual conversion code)?
+- How to abstract a common admission/conversion webhook skeleton in operator-rs, that can be implemented in the operators within a few lines of code (excluding the actual conversion code)?
 - How to keep maintenance, updating, pipelines or extra images to a minimum?
 - Openshift compatability?
-- How to deactivate the conversion webhook if not desired by customers? Or how to activate if opt-in?
+- How to deactivate or not deploy the conversion webhook if not desired by customers? Or how to activate if opt-in?
 - Does the webhook have to keep working if e.g. the operator crashes (coupled)?
 
 == Considered Options
@@ -165,35 +165,6 @@ Chosen option: "[option 1]", because [justification. e.g., only option, which me
 
 * [e.g., compromising quality attribute, follow-up decisions required, …]
 * …
-
-== Pros and Cons of the Options <!-- optional -->
-
-=== [option 1]
-
-[example | description | pointer to more information | …] <!-- optional -->
-
-* Good, because [argument a]
-* Good, because [argument b]
-* Bad, because [argument c]
-* … <!-- numbers of pros and cons can vary -->
-
-=== [option 2]
-
-[example | description | pointer to more information | …] <!-- optional -->
-
-* Good, because [argument a]
-* Good, because [argument b]
-* Bad, because [argument c]
-* … <!-- numbers of pros and cons can vary -->
-
-=== [option 3]
-
-[example | description | pointer to more information | …] <!-- optional -->
-
-* Good, because [argument a]
-* Good, because [argument b]
-* Bad, because [argument c]
-* … <!-- numbers of pros and cons can vary -->
 
 == Links <!-- optional -->
 
