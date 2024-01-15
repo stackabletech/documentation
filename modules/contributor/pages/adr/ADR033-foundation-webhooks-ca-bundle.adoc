@@ -42,6 +42,8 @@ kind: CustomResourceDefinition
 metadata:
   # name must match the spec fields below, and be in the form: <plural>.<group>
   name: crontabs.example.com
+  annotations:
+    cert-manager.io/inject-ca-from-secret: default/example-conversion-webhook-ca
 spec:
   # group name to use for REST API: /apis/<group>/<version>
   group: example.com
@@ -85,7 +87,7 @@ spec:
           namespace: default
           name: example-conversion-webhook-server
           path: /crdconvert
-        caBundle: "Ci0tLS0tQk...<base64-encoded PEM bundle>...tLS0K"
+        #caBundle: will be injected from a Secret 'default/example-conversion-webhook-ca' with a 'ca.crt' data key
   # either Namespaced or Cluster
   scope: Namespaced
   names:
@@ -106,6 +108,10 @@ spec:
 ----
 apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingWebhookConfiguration # or MutatingWebhookConfiguration
+metadata:
+  name: "example-validating-webhook-server"
+  annotations:
+    cert-manager.io/inject-ca-from-secret: default/example-conversion-webhook-ca
 webhooks:
   - name: my-webhook.example.com
     matchPolicy: Equivalent
@@ -121,7 +127,7 @@ webhooks:
         namespace: default
         name: example-validation-webhook-server # or example-mutating-webhook-server
         path: /validate # or /mutate
-      caBundle: "Ci0tLS0tQk...<base64-encoded PEM bundle>...tLS0K"
+      #caBundle: will be injected from a Secret 'default/example-conversion-webhook-ca' with a 'ca.crt' data key
 ----
 
 The `clientConfig.caBundle` cannot be shipped by us as it will differ from cluster to cluster and must be injected at runtime.
