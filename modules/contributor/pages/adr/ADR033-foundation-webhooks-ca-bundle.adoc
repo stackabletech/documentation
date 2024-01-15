@@ -15,7 +15,7 @@ Technical Story: https://github.com/stackabletech/issues/issues/361
 
 == Context
 
-There are many use cases for the future development of the SDP that involve validating, mutating and conversion webhooks. Tasks that must be tackled in the near future include:
+There are many use cases for the future development of the SDP that involve https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/[validating, mutating] and https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definition-versioning/[conversion] webhooks. Tasks that must be tackled in the near future include:
 
 - The proper versioning of our CRDs and the possibility of smoothly up- and downgrading between versions including breaking changes (see https://github.com/stackabletech/documentation/issues/273)
 - Fixing the commons operator initial restarting problem (see https://github.com/stackabletech/commons-operator/issues/111 and spike https://github.com/stackabletech/commons-operator/tree/spike/sts-restarter-webhook)
@@ -152,8 +152,6 @@ metadata:
 This can be used for CRDs and conversion webhooks as well.
 
 The SDP should be compatible with as many of these as possible. The normal way of configuration seems to be adding an annotation to the objects containing the CA, which we can probably somehow support in our Helm chart, or solve via documentation.
-
-In a second step the operator needs to obtain a certificate signed by the CA, for which we could use the k8search backend of the secret operator and point this at a configmap which again, can be filled by cert-manager or the Service CA operator mentioned above, configured via an annotation.
 
 For clusters without any existing manager we should provide our own, lightweight caBundle injector that can work in tandem with the secret operator.
 
