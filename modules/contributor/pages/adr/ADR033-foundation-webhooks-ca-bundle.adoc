@@ -143,7 +143,7 @@ Adding one of these annotations to an injectable source:
 . `cert-manager.io/inject-ca-from-secret`
 . `cert-manager.io/inject-apiserver-ca`
 
-For example:
+For example injecting a CA from a secret using Cert-Manager:
 
 [source,yaml]
 ----
@@ -188,19 +188,25 @@ The OpenShift Service CA operator is an OpenShift ClusterOperator and contains s
 
 This would be the Stackable internal solution to avoid any external party tools. It would work similar to the OpenShift Service CA operator but rather injecting the bundles via the CSI instead of ConfigMap mounts.
 
+[[option4]]
+=== Common library for cert management / injection in operator-rs
+
+Put the cert management / injection stuff into a library (op-rs?) that we run in-process for each operator that has a webhook.
+
 == Pros and Cons of the Options
 
 === <<option1>>
 
 * Good, because covers both Kubernetes and Openshift
 * Good, because widely used and de-facto standard for cert injection
-* Good, because cert injection works via annotations (compatibility)
+* Good, because cert injection works via annotations (compatibility) for various Kubernetes Resources (CRDs, Validating/Mutating webhooks)
 * Bad, because another tool we have to be experienced with, check for updates and breaking features etc.
 
 === <<option2>>
 
 * Good, because cert injection works via annotations (compatibility)
 * Bad, because specific to OpenShift
+* Bad, because only injecting to ConfigMaps
 * Bad, because another tool we have to be experienced with, check for updates and breaking features etc.
 
 === <<option3>>
@@ -208,6 +214,10 @@ This would be the Stackable internal solution to avoid any external party tools.
 * Good, because no external tools are required
 * Good, because reusing secret-operator and cert management should be an internal part of the SDP
 * Bad, because requires more time and coding
+
+=== <<option4>>
+
+TBD.
 
 == Decision Outcome
 
