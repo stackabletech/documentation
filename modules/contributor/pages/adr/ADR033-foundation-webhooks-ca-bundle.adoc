@@ -19,8 +19,9 @@ There are many use cases for the future development of the SDP that involve vali
 
 - The proper versioning of our CRDs and the possibility of smoothly up- and downgrading between versions including breaking changes (see https://github.com/stackabletech/documentation/issues/273)
 - Fixing the commons operator initial restarting problem (see https://github.com/stackabletech/commons-operator/issues/111 and spike https://github.com/stackabletech/commons-operator/tree/spike/sts-restarter-webhook)
+- Inject logging / vector sidecar containers (mutating)
 
-When the Kubernetes API server receives an incoming request, for example when a custom resource should be created, webhooks can intercept that request after authentication and authorization. The following steps are performed before the server finally persists the object into etdc.
+When the Kubernetes API server receives an incoming request, for example when a custom resource should be created, webhooks can intercept that request after authentication and authorization. The following steps are performed before the server finally persists the object into etc.
 
 1. Authentication / Authorization
 2. Mutating admission
@@ -123,14 +124,14 @@ webhooks:
       caBundle: "Ci0tLS0tQk...<base64-encoded PEM bundle>...tLS0K"
 ----
 
-The `clientConfig.caBundle` can not be shipped by us as it will differ from cluster to cluster and must be injected at runtime.
+The `clientConfig.caBundle` cannot be shipped by us as it will differ from cluster to cluster and must be injected at runtime.
 
 This ADR is about how to achieve the CA bundle injection using external tools or a self-made solution via the secret-operator.
 
 == Problem Statement
 
 The required CA bundles for the webhooks endpoints must be injected at runtime. There exist tools like https://cert-manager.io/docs/concepts/ca-injector/#injecting-the-kubernetes-api-server-ca[Cert Manager] that do exactly this.
-Adding one of these annotations to an injectionable source:
+Adding one of these annotations to an injectable source:
 
 . `cert-manager.io/inject-ca-from`
 . `cert-manager.io/inject-ca-from-secret`
@@ -152,7 +153,7 @@ This can be used for CRDs and conversion webhooks as well.
 
 The SDP should be compatible with as many of these as possible. The normal way of configuration seems to be adding an annotation to the objects containing the CA, which we can probably somehow support in our Helm chart, or solve via documentation.
 
-In a second step the operator needs to obtain a certificate signed by the CA, for which we could use the k8search backend of the secret operator and point this at a configmap which again, can be filled by certmanager or the Service CA operator mentioned above, configured via an annotation.
+In a second step the operator needs to obtain a certificate signed by the CA, for which we could use the k8search backend of the secret operator and point this at a configmap which again, can be filled by cert-manager or the Service CA operator mentioned above, configured via an annotation.
 
 For clusters without any existing manager we should provide our own, lightweight caBundle injector that can work in tandem with the secret operator.
 
@@ -160,14 +161,49 @@ For clusters without any existing manager we should provide our own, lightweight
 
 * Generic solution to be compatible with as many external cert providers as possible
 * Openshift compatible
-* How to activate / deactivate if e.g no conversion webhooks should be applied?
+* How to activate / deactivate if e.g. no conversion webhooks should be applied?
 * Avoid vendor lock-in
 
 == Considered Options
 
-* https://cert-manager.io/[Cert Manager]
-* https://github.com/openshift/service-ca-operator/blob/master/README.md[OpenShift Service CA operator]
-* Lightweight self-made solution via secret-operator
+[[option1]]
+=== https://cert-manager.io/[Cert-Manager]
+
+The cert-manager is a powerful and extensible X.509 certificate controller for Kubernetes and OpenShift workloads. It supports certificates from a variety of popular private and public Issuers (HashiCorp, Lets encrypt and many more). The cert-manager ensures that the certificates are valid and up-to-date, and will attempt to renew certificates at a configured time before expiry.
+
+[[option2]]
+=== https://github.com/openshift/service-ca-operator/blob/master/README.md[OpenShift Service CA operator]
+
+The OpenShift Service CA operator is an OpenShift ClusterOperator and contains several controllers:
+
+* *Serving cert signer*: Issues a signed serving certificate/key pair to services annotated with `service.beta.openshift.io/serving-cert-secret-name` via a secret
+* *ConfigMap CA bundle injector*: Watches for configmaps annotated with `service.beta.openshift.io/inject-cabundle=true` and adds or updates a data item (key `service-ca.crt`) containing the PEM-encoded CA signing bundle. Consumers of the configmap can then trust `service-ca.crt` in their TLS client configuration, allowing connections to services that utilize service-serving certificates. Pods referencing the `service-ca.crt` in a VolumeMount will not start before the CA bundle was injected.
+
+[[option3]]
+=== Lightweight self-made solution via secret-operator
+
+This would be the Stackable internal solution to avoid any external party tools. It would work similar to the OpenShift Service CA operator but rather injecting the bundles via the CSI instead of ConfigMap mounts.
+
+== Pros and Cons of the Options
+
+=== <<option1>>
+
+* Good, because covers both Kubernetes and Openshift
+* Good, because widely used and de-facto standard for cert injection
+* Good, because cert injection works via annotations (compatibility)
+* Bad, because another tool we have to be experienced with, check for updates and breaking features etc.
+
+=== <<option2>>
+
+* Good, because cert injection works via annotations (compatibility)
+* Bad, because specific to OpenShift
+* Bad, because another tool we have to be experienced with, check for updates and breaking features etc.
+
+=== <<option3>>
+
+* Good, because no external tools are required
+* Good, because reusing secret-operator and cert management should be an internal part of the SDP
+* Bad, because requires more time and coding
 
 == Decision Outcome
 
@@ -182,35 +218,6 @@ Chosen option: "[option 1]", because [justification. e.g., only option, which me
 
 * [e.g., compromising quality attribute, follow-up decisions required, …]
 * …
-
-== Pros and Cons of the Options <!-- optional -->
-
-=== [option 1]
-
-[example | description | pointer to more information | …] <!-- optional -->
-
-* Good, because [argument a]
-* Good, because [argument b]
-* Bad, because [argument c]
-* … <!-- numbers of pros and cons can vary -->
-
-=== [option 2]
-
-[example | description | pointer to more information | …] <!-- optional -->
-
-* Good, because [argument a]
-* Good, because [argument b]
-* Bad, because [argument c]
-* … <!-- numbers of pros and cons can vary -->
-
-=== [option 3]
-
-[example | description | pointer to more information | …] <!-- optional -->
-
-* Good, because [argument a]
-* Good, because [argument b]
-* Bad, because [argument c]
-* … <!-- numbers of pros and cons can vary -->
 
 == Links <!-- optional -->
 
