@@ -21,7 +21,7 @@ There are many use cases for the future development of the SDP that involve vali
 - Fixing the commons operator initial restarting problem (see https://github.com/stackabletech/commons-operator/issues/111 and spike https://github.com/stackabletech/commons-operator/tree/spike/sts-restarter-webhook)
 - Inject logging / vector sidecar containers (mutating)
 
-When the Kubernetes API server receives an incoming request, for example when a custom resource should be created, webhooks can intercept that request after authentication and authorization. The following steps are performed before the server finally persists the object into etc.
+When the Kubernetes API server receives an incoming request, for example when a custom resource should be created, webhooks can intercept that request after authentication and authorization. The following steps are performed before the server finally persists the object into etcd.
 
 1. Authentication / Authorization
 2. Mutating admission
