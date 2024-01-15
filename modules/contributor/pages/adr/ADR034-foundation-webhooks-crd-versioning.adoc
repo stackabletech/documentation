@@ -123,7 +123,7 @@ The operator deploys a webhook deployment similar to how it deploys e.g. Statefu
 ==== Pros
 
 - Operator crash does not affect webhook
-- Could be enabled / disabled via custom resource (one webhook per cluster - not sure if that is desired though)
+- Could be enabled / disabled via custom resource
 - Always up to date with the operator, no extra versioning
 - Should not interfere with OpenShift
 
