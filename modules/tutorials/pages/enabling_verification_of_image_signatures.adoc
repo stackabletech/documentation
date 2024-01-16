@@ -44,25 +44,34 @@ If the `subjectRegExp` field in the policy is changed to something like `https:/
 
 == Verifying image signatures in an air-gapped environment
 
-// intro
-As mentioned before, our images and Helm charts for SDP are signed keyless. Keyless signing is more complex than "classic" signing with a private and public key, but brings several https://www.chainguard.dev/unchained/benefits-of-keyless-software-signing[benefits]. It's also in line with Kubernetes, https://kubernetes.io/docs/tasks/administer-cluster/verify-signed-artifacts/[which uses keyless signing as well].
+As mentioned before, our images and Helm charts for SDP are signed keyless. Keyless signing is more complex than "classic" signing with a private and public key, especially when you want to verify signatures in an air-gapped environment. However, it brings several https://www.chainguard.dev/unchained/benefits-of-keyless-software-signing[benefits] and by signing our images keyless, we're also in line with Kubernetes, https://kubernetes.io/docs/tasks/administer-cluster/verify-signed-artifacts/[which uses keyless signing as well].
 
 === The general setup
 
-The Policy Controller needs an up-to-date version of the root of trust, this is distributed as a collection of files and in an online setting it is automatically fetched from the https://tuf-repo-cdn.sigstore.dev/[Sigstore TUF Repo CDN].
+To verify keyless signatures, the Policy Controller needs an up-to-date version of the root of trust, which is distributed as a collection of files (to put it simply). In an online setting, these files are automatically fetched from a CDN, by default the https://tuf-repo-cdn.sigstore.dev/[Sigstore TUF Repo CDN].
 
-NOTE: https://theupdateframework.io/[The Update Framework (TUF)] is the mechanism used by the Policy Controller to update the root of trust.
+NOTE: https://docs.sigstore.dev/signing/overview/#root-of-trust[The Update Framework (TUF)] is the mechanism used by the Policy Controller to initialize and update the root of trust.
 
-In an air-gapped environment, the CDN is not available, and so instead you have to provide the root of trust files yourself.
-There are multiple ways to do this, and you should pick the way that works best for your air-gapped environment.
+In an air-gapped environment, this CDN is not reachable, so instead you have to provide those files yourself. You can get these files from https://github.com/sigstore/root-signing/tree/main/repository/repository[GitHub].
+There two multiple ways how you can provide these files to the Policy Controller, please pick the one that works best for your air-gapped environment:
 
-The files hosted in the CDN are available also on https://github.com/sigstore/root-signing/tree/main/repository/repository[GitHub].
-This is the source where you need to get the files.
-Then there are two ways to provide these files to the Policy Controller inside of your air-gapped Kubernetes.
-Either by hosting them with a HTTP server that is reachable by the Policy Controller, or by zipping the files, serializing them and putting them directly into a custom resource.
-For both options we refer to the Sigstore documentation: https://docs.sigstore.dev/policy-controller/overview/#configuring-trustroot-for-custom-tuf-root[configuring a mirror] or https://docs.sigstore.dev/policy-controller/overview/#configuring-trustroot-for-custom-tuf-repository[serializing the files into a custom resource].
+1. Serve them via an HTTP server that is reachable by the Policy Controller. +
+ Example:
++
+[source,bash]
+----
+git clone https://github.com/sigstore/root-signing
+cd root-signing/repository/repository
+python3 -m http.server 8081
+----
++
+Now you can provide the host's IP address and port (8081 in the example) as the mirror URL. For how to do this exactly, we refer to the https://docs.sigstore.dev/policy-controller/overview/#configuring-trustroot-for-custom-tuf-root[Policy Controller's documentation].
++
+NOTE: Since we're using Sigstore's TUF repository, you don't have to provide the `.spec.root` attribute in the `TrustRoot` resource, `.spec.mirror` is sufficient.
 
-Both options yield you a TrustRoot custom resource which you then need to configure in your ClusterImagePolicy.
+2. Packing the files into an archive, serializing them and putting them directly into a the `TrustRoot` resource. This is explained in the https://docs.sigstore.dev/policy-controller/overview/#configuring-trustroot-for-custom-tuf-repository[Policy Controller's documentation].
+
+Both options yield you a `TrustRoot` custom resource which you then need to configure in your `ClusterImagePolicy`.
 This is done via the `trustRootRef` attribute, as shown https://docs.sigstore.dev/policy-controller/overview/#configuring-verification-against-different-sigstore-instances[in the Policy Controller's documentation].
 
 === Updating
@@ -71,26 +80,18 @@ The problem for air-gapped environments is that expiration of keys is built into
 That means, to verify image signatures continuously, the Policy Controller needs an up-to-date version of the root of trust.
 
 Depending on which way you are providing the root of trust (mirror or direct files), you need to update that accordingly.
-If your cluster has access to for example a bastion host that in turn has limited internet access, configuring a mirror might be the easier way to go for you.
-You might even be able to simply configure a reverse proxy to https://tuf-repo-cdn.sigstore.dev/ to avoid manually updating files periodically.
+If, for example, you can reach a bastion host from your air-gapped environment that has internet access, configuring a mirror might be the easier way to go for you. In that case, you could simply configure a reverse proxy to https://tuf-repo-cdn.sigstore.dev/ on the bastion host, to avoid manually updating files periodically.
 
-If your setup is completely air-gapped, you will have to do periodic manual updates of the files that you deployed earlier.
+If your setup is completely air-gapped, you will have to do periodic manual updates of the files that you deployed earlier (e.g. in the first example, you could run `git pull` daily).
 It is not clear how often the root of trust needs to be updated (TODO: research if we can find out more)
 
-Either refresh your mirror or periodically supply the files directly via other methods into your airgapped system.
-
-The Policy Controller does not need to be restarted. (TODO verify)
+The Policy Controller does not need to be restarted after the files have been updated. (TODO: verify this)
 
 == Further reading
 
-...
+There's a lot more to learn about how keyless signing and verification works. We recommend the following resources:
 
-=== Background: How it usually works online with Fulcio
-
-Describing the whole flow with all the components is out of scope for this documentation, so we will try to provide a summary of the most important parts instead: +
-To verify that an image has been signed by Stackable, customers check that the image has a valid signature and that this signature was created by Stackable's CI (Github Actions). More specifically, they check that the identity of the signer is one of Stackable's Github Actions workflows and that this identity has been confirmed by a trusted authority (Github in that case). The role of the Sigstore project https://github.com/sigstore/fulcio[Fulcio] is to issue a certificate for exactly that: +
-"This Fulcio instance confirms that this signature was created by `https://github.com/stackabletech/docker-images/.github/workflows/release.yml@refs/tags/23.11.0` and `https://token.actions.githubusercontent.com` confirmed that identity".
-
-By default, the public Fulcio instance hosted by Sigstore is used for this, which is what we do at Stackable as well.
-
-That means customers wanting to verify these image signatures need to trust the Fulcio instance, which issues the certificates that attest the identity of the signer. The root of trust for Sigstore components like the public Fulcio instance is distributed by a framework called https://docs.sigstore.dev/signing/overview/#root-of-trust[The Update Framework (TUF)]. Thankfully, the whole initialization of the root of trust via TUF is handled by the Policy Controller.
+* https://docs.sigstore.dev/signing/overview/
+* https://docs.sigstore.dev/policy-controller/overview/
+* https://www.chainguard.dev/unchained/life-of-a-sigstore-signature
+* https://blog.sigstore.dev/why-you-cant-use-sigstore-without-sigstore-de1ed745f6fc/
