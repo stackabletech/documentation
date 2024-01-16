@@ -1,0 +1,99 @@
+= Multi-Architecture for SDP
+
+Today, we are proud to announce the next step in our efforts to port stackable data platform to the arm64 architecture. 
+
+We arrived with 23.11.0 at a point where we are able to test and develop on a bare-metal arm cluster. We are using Azure and in future we going to have a corporation with HPE who thankfully supply us with resources to build and test the stackable data platform on multiple architectures on their brand new and powerful Ampere hardware.
+
+As this marks our beta phase, in this article we want to give an overview over the situation, a rough road-map as well as a method to early access the 23.11.0 release for SDP on arm64.
+
+== State of the Art
+
+At this very moment, we have a full and working 23.11.0 release. We made it accessible for the general public but didn't merge it yet with the x86 releases you are already comfortable with. 
+
+Since this is new to us too, we started by building the release manually and check it on weaknesses. To do so, we are about to build a long-living cluster where we perform updates and workflows on. We think developed functionality on the x86 side can't be lost just due to port it on another architecture. Therefore we plan to test functionalities which only can be seen if SDP is running long enough ( e.g. certificate rotations ).
+
+As tests for 23.11.0 ( not sophisticated ) we worked on our demos to make them accessible on arm64. Those Demos behaved as we expected and knew from x86. This means, we have reworked the foundations of the demos and now you as a user can use them and work with SDP on your native cluster.
+
+=== Actual Releases
+
+We have currently one release on arm64 which is 23.11.0.
+
+We decided only to go for specific tags as we don't want to mess around with dev images. We could bundle them as a manifest list but decided to do that when we have an automated workflow and tests infrastructure in place. 
+
+== Early-Access
+
+As mentioned before, we have a working full release for arm64 images. Those images are stored within the `stackable-experimental` org in our https://repo.stackable.tech/#browse/browse:docker:v2%2Fstackable-experimental[Nexus]. 
+
+Accessing our data platform on arm, would mean you need to pull those images out of the repo. As those are not available by default, you need to switch to the `stackable-experimental` organization. This needs to be done within two steps.
+
+=== Early-Access with Helm
+
+Operators, according to our https://docs.stackable.tech/home/stable/airflow/getting_started/installation[installation guide] you can install arm64 operators e.g. for the commons operator as follows:
+
+`helm install commons-operator stackable-stable/commons-operator --namespace stackable-operators --create-namespace --version=23.11.0 --set image.repository=docker.stackable.tech/stackable-experimental/commons-operator`
+
+The magic happens with `--set image.repository=docker.stackable.tech/stackable-experimental/commons-operator` `, here you overwrite the default image selection with the new organization stackable-experimental. 
+
+*Hint:* You have to install every operator you need for whatever demo single handed with helm and use `--skip-release` with stackablectl. Otherwise it will try to install x86 operators and maybe pulls arm64 products afterwards. 
+
+=== Early-Access to our products
+
+Driven by the multi architecture technology we introduced the https://docs.stackable.tech/home/stable/concepts/product_image_selection[Product image selection] mechanism which allows the user to choose a own product image. This has some more advantages when you think about air-gapped environments or a mirrored repository. However, in our case we can choose the arm64 image as follows:
+
+```yaml 
+spec:
+  image:
+    custom: docker.stackable.tech/stackable-experimental/kafka:3.5.1-stackable23.11.0
+    productVersion: 3.5.1
+```
+Once again, the key to success is to exchange stackable with stackable-experimental and point to the release 23.11.0.
+
+Please not that only 23.11.0 is working at this moment.
+
+=== Prepared Demos
+
+You have seen now, that there are certain ways to access SPD for arm64. This obviously is true for the demos to but we had to rework some files.
+
+As we strive to provide our Users the most comfort we can, we would provide with a ready branch to execute our demos. in the following we provide you a complete set of instructions to make your arm demo a success.
+
+As prerequisites we expect you to have a Kubernetes Cluster of any flavour and stackablectl https://docs.stackable.tech/home/stable/quickstart[installed]. 
+
+1. Clone the demo repository
+`git clone git@github.com:stackabletech/demos.git`
+
+2. Checkout arm64 demo branch ( release 23.11.0 )
+`git checkout spike/demos-on-arm`
+
+3. Install your demo with stackablectl (e.g. nifi-kafka-druid-earthquake-data)
+`stackablectl demo install nifi-kafka-druid-earthquake-data --skip-release -s stacks/stacks-v2.yaml -d demos/demos-v2.yaml
+`
+
+== Road-Map
+
+=== Release 23.7
+
+Untested release, all products besides Airflow and Superset are available and all operators are build. 
+
+Since still untested we released silently in stackable-experimental.
+
+=== Release 23.11
+
+Fairly untested release, not worked through yet.
+
+We would suggest to build it the same way now as we did last time. On a local node and push and tag by hand. Additionally we would like to take the opportunity to build a long-living test cluster for the release 23.11. This way, we could build a good amount (or the complete sdp platform) on a arm based cluster and do some efficient testing.
+
+Additionally we would like to put in the efforts and get all products and operators build and released as arm64 images.
+
+=== Between 23.11 and 24.3
+
+Having a automatic workflow that builds multi architecture dev releases into stackable-experimental all the time. While this is happening, I would like to update the test cluster with the dev versions and see if the newest changes do something to the arm side. 
+
+This step can only be done if we have tested on 23.11 whatever we need to see and brought in all fixes necessary for SDP to function on arm64
+
+=== Release 24.3
+
+Tested release (compared to amd could be like a 80% coverage ). Multi architecture builds get automatically released in the stackable-experimental repository at first. After sufficient testing I would like to go and finally merge stackable-experimental → stackable and having a first ever multi arch release. Still silent at this point, but documented.
+
+=== Release 24.7
+
+The "loud" multi arch release. From this point we would like SDP to be officially and fully tested on multi architecture. 
