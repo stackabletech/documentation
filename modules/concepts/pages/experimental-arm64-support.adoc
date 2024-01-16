@@ -93,9 +93,9 @@ Additionally we would like to put in the efforts and get all products and operat
 
 === Between 23.11 and 24.3
 
-Having a automatic workflow that builds multi architecture dev releases into stackable-experimental all the time. While this is happening, I would like to update the test cluster with the dev versions and see if the newest changes do something to the arm side. 
+Having a automatic workflow that builds multi architecture dev releases into stackable-experimental all the time. While this is happening, I would like to update the test cluster with the dev versions and see if the newest changes do something to the arm64 side of things. 
 
-This step can only be done if we have tested on 23.11 whatever we need to see and brought in all fixes necessary for SDP to function on arm64
+This step can only be done if we have tested on 23.11.x for whatever we need to see and brought in all fixes necessary for SDP to function on arm64.
 
 === Release 24.3
 
