@@ -65,8 +65,7 @@ As prerequisites we expect you to have a Kubernetes Cluster of any flavour and s
 `git checkout spike/demos-on-arm`
 
 3. Install your demo with stackablectl (e.g. nifi-kafka-druid-earthquake-data)
-`stackablectl demo install nifi-kafka-druid-earthquake-data --skip-release -s stacks/stacks-v2.yaml -d demos/demos-v2.yaml
-`
+`stackablectl demo install nifi-kafka-druid-earthquake-data --skip-release -s stacks/stacks-v2.yaml -d demos/demos-v2.yaml`
 
 == Road-Map
 
