@@ -20,7 +20,7 @@ The default settings might not be appropriate for your environment, please refer
 
 == Creating a policy to verify image signatures
 
-Now that the Policy Controller is installed, we can create a policy that verifies that all images provided by Stackable are signed by Stackable's CI pipeline (Github Actions):
+Now that the Policy Controller is installed, you can create a policy that verifies that all images provided by Stackable are signed by Stackable's CI pipeline (Github Actions):
 
 [source,yaml]
 include::example$verify-signatures/stackable-image-policy.yaml[]
@@ -67,7 +67,7 @@ python3 -m http.server 8081
 +
 Now you can provide the host's IP address and port (8081 in the example) as the mirror URL. For how to do this exactly, we refer to the https://docs.sigstore.dev/policy-controller/overview/#configuring-trustroot-for-custom-tuf-root[Policy Controller's documentation].
 +
-NOTE: Since we're using Sigstore's TUF repository, you don't have to provide the `.spec.root` attribute in the `TrustRoot` resource, `.spec.mirror` is sufficient.
+NOTE: Since Sigstore's TUF repository is used, you don't have to provide the `.spec.root` attribute in the `TrustRoot` resource, `.spec.mirror` is sufficient.
 
 2. Packing the files into an archive, serializing them and putting them directly into a the `TrustRoot` resource. This is explained in the https://docs.sigstore.dev/policy-controller/overview/#configuring-trustroot-for-custom-tuf-repository[Policy Controller's documentation].
 
