@@ -8,7 +8,9 @@ As this marks our beta phase, in this article we want to give an overview over t
 
 == State of the Art
 
-At this very moment, we have a full and working 23.11.0 release. We made it accessible for the general public but didn't merge it yet with the x86 releases you are already comfortable with. 
+At this very moment, we have a working 23.11.0 release. We made it accessible for the general public but didn't merge it yet with the x86 releases you are already comfortable with. 
+
+NOTE: Listener Operator is not available within 23.11.0 for arm64
 
 Since this is new to us too, we started by building the release manually and check it on weaknesses. To do so, we are about to build a long-living cluster where we perform updates and workflows on. We think developed functionality on the x86 side can't be lost just due to port it on another architecture. Therefore we plan to test functionalities which only can be seen if SDP is running long enough ( e.g. certificate rotations ).
 
@@ -22,19 +24,19 @@ We decided only to go for specific tags as we don't want to mess around with dev
 
 == Early-Access
 
-As mentioned before, we have a working full release for arm64 images. Those images are stored within the `stackable-experimental` org in our https://repo.stackable.tech/#browse/browse:docker:v2%2Fstackable-experimental[Nexus]. 
+As mentioned before, we have a working release 23.11.0 ported to the arm64 architecture. Those images are stored within the `stackable-experimental` organization in our https://repo.stackable.tech/#browse/browse:docker:v2%2Fstackable-experimental[Nexus]. 
 
-Accessing our data platform on arm, would mean you need to pull those images out of the repo. As those are not available by default, you need to switch to the `stackable-experimental` organization. This needs to be done within two steps.
+Accessing our data platform for arm64, would mean you need to pull those images out of the repo. As those are not available by default, you need to switch to the `stackable-experimental` organization. This needs to be done within the following two steps.
 
 === Early-Access with Helm
 
-Operators, according to our https://docs.stackable.tech/home/stable/airflow/getting_started/installation[installation guide] you can install arm64 operators e.g. for the commons operator as follows:
+According to our https://docs.stackable.tech/home/stable/airflow/getting_started/installation[installation guide] you can install arm64 operators e.g. for the commons operator as follows:
 
 `helm install commons-operator stackable-stable/commons-operator --namespace stackable-operators --create-namespace --version=23.11.0 --set image.repository=docker.stackable.tech/stackable-experimental/commons-operator`
 
-The magic happens with `--set image.repository=docker.stackable.tech/stackable-experimental/commons-operator` `, here you overwrite the default image selection with the new organization stackable-experimental. 
+The magic happens with `--set image.repository=docker.stackable.tech/stackable-experimental/commons-operator` `, here you overwrite the default image selection with the new organization stackable-experimental. Every operator can be installed analog to that.
 
-*Hint:* You have to install every operator you need for whatever demo single handed with helm and use `--skip-release` with stackablectl. Otherwise it will try to install x86 operators and maybe pulls arm64 products afterwards. 
+WARNING: You have to install every operator you need for whatever demo single handed with helm and use `--skip-release` with stackablectl. Otherwise it will try to install x86 operators and maybe pulls arm64 products afterwards.
 
 === Early-Access to our products
 
@@ -48,7 +50,7 @@ spec:
 ```
 Once again, the key to success is to exchange stackable with stackable-experimental and point to the release 23.11.0.
 
-Please not that only 23.11.0 is working at this moment.
+NOTE: Only 23.11.0 is working at this moment.
 
 === Prepared Demos
 
