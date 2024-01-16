@@ -35,7 +35,7 @@ Read the {asciidoc-recommended-practices} for more.
 
 == Formatting: Kubernetes style guide
 
-Since the Stackable Data Platform ist built on Kubernetes, the resources mentioned in our documentation are very similar to the ones mentioned in the Kubernetes documentation, so we follow the {kubernetes-style-guide} for formatting of code, Kubernetes resources and objects. Some examples:
+Since the Stackable Data Platform is built on Kubernetes, the resources mentioned in our documentation are very similar to the ones mentioned in the Kubernetes documentation, so we follow the {kubernetes-style-guide} for formatting of code, Kubernetes resources and objects. Some examples:
 
 * https://kubernetes.io/docs/contribute/style/style-guide/#use-upper-camel-case-for-api-objects[Use PascalCase for API objects] such as ConfigMap or KafkaCluster
 * https://kubernetes.io/docs/contribute/style/style-guide/#use-italics-to-define-or-introduce-new-terms[Use _italics_ to define or introduce new terms]
