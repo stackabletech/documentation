@@ -14,7 +14,7 @@ NOTE: Listener Operator is not available within 23.11.0 for arm64
 
 Since this is new to us too, we started by building the release manually and check it on weaknesses. To do so, we are about to build a long-living cluster where we perform updates and workflows on. We think developed functionality on the x86 side can't be lost just due to port it on another architecture. Therefore we plan to test functionalities which only can be seen if SDP is running long enough ( e.g. certificate rotations ).
 
-As tests for 23.11.0 ( not sophisticated ) we worked on our demos to make them accessible on arm64. Those Demos behaved as we expected and knew from x86. This means, we have reworked the foundations of the demos and now you as a user can use them and work with SDP on your native cluster.
+As tests for 23.11.0 ( not sophisticated ) we worked on our demos to make them accessible on arm64. Those demos behaved as we expected and knew from x86. This means, we have reworked the foundations of the demos and now you as a user can use them and work with SDP on your native cluster.
 
 === Actual Releases
 
@@ -30,9 +30,11 @@ Accessing our data platform for arm64, would mean you need to pull those images 
 
 === Early-Access with Helm
 
-According to our https://docs.stackable.tech/home/stable/airflow/getting_started/installation[installation guide] you can install arm64 operators e.g. for the commons operator as follows:
+According to our https://docs.stackable.tech/home/stable/airflow/getting_started/installation#_helm[installation guide] you can install arm64 operators e.g. for the commons operator as follows:
 
-`helm install commons-operator stackable-stable/commons-operator --namespace stackable-operators --create-namespace --version=23.11.0 --set image.repository=docker.stackable.tech/stackable-experimental/commons-operator`
+```bash
+helm install commons-operator stackable-stable/commons-operator --namespace stackable-operators --create-namespace --version=23.11.0 --set image.repository=docker.stackable.tech/stackable-experimental/commons-operator
+```
 
 The magic happens with `--set image.repository=docker.stackable.tech/stackable-experimental/commons-operator` `, here you overwrite the default image selection with the new organization stackable-experimental. Every operator can be installed analog to that.
 
