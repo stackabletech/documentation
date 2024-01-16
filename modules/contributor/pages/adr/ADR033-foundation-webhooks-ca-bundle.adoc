@@ -157,7 +157,7 @@ metadata:
 
 This can be used for CRDs and conversion webhooks as well.
 
-The SDP should be compatible with as many of these as possible. The normal way of configuration seems to be adding an annotation to the objects containing the CA, which we can probably somehow support in our Helm chart, or solve via documentation.
+The SDP should focus on one solution for CA injection, internally or externally, but strive for compatibility with as many others as possible. The normal way of configuration seems to be adding an annotation to the objects containing the CA, which we can probably somehow support in our Helm chart, or solve via documentation.
 
 For clusters without any existing manager we should provide our own, lightweight caBundle injector that can work in tandem with the secret operator.
 
@@ -214,10 +214,12 @@ Put the cert management / injection stuff into a library (op-rs?) that we run in
 * Good, because no external tools are required
 * Good, because reusing secret-operator and cert management should be an internal part of the SDP
 * Bad, because requires more time and coding
+* Bad, because secret-operator must version its own CRDs as well which could be a predicament
 
 === <<option4>>
 
-TBD.
+* Good, because no external tools are required
+* Bad, because requires more time and coding
 
 == Decision Outcome
 
