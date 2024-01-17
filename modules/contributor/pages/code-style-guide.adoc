@@ -293,6 +293,43 @@ fn config_file(user: User) -> Result<(), Error> {
 
 ====
 
+=== Error variant names
+
+All error variants must not include any unnesecarry prefixes or suffixes.
+Examples of such prefixes include (but are not limited to) `FailedTo` and `UnableTo`.
+Furthermore, examples for suffixes are `Error` or `Snafu` 
+Error variant names must however include verbs or identifiers as a prefix.
+
+[WARNING.code-rule,caption=Examples of incorrect code for this rule]
+====
+
+[source,rust]
+----
+#[derive(Snafu)]
+enum Error {
+    FailedToParseConfig,
+    HttpRequestError,
+    ConfigRead,
+}
+----
+
+====
+
+[TIP.code-rule,caption=Examples of correct code for this rule]
+====
+
+[source,rust]
+----
+#[derive(Snafu)]
+enum Error {
+    ParseConfig,
+    HttpRequest,
+    ReadConfig,
+}
+----
+
+====
+
 === Error messages
 
 All our error messages must start with a lowercase letter and must not end with a dot.
