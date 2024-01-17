@@ -246,12 +246,12 @@ The usage of `thiserror` is considered invalid.
 ----
 #[derive(thiserror::Error)]
 enum Error {
-  #[error("failed to read config file")]
-  FileRead(#[from] std::io::Error)
+    #[error("failed to read config file")]
+    FileRead(#[from] std::io::Error)
 }
 
 fn config_file(user: User) -> Result<(), Error> {
-  std::fs::read_to_string(user.file_path)?;
+    std::fs::read_to_string(user.file_path)?;
 }
 ----
 
@@ -259,12 +259,12 @@ fn config_file(user: User) -> Result<(), Error> {
 ----
 #[derive(Snafu)]
 enum Error {
-  #[snafu(context(false))]
-  FileRead { source: std::io::Error }
+    #[snafu(context(false))]
+    FileRead { source: std::io::Error }
 }
 
 fn config_file(user: User) -> Result<(), Error> {
-  std::fs::read_to_string(user.file_path)?;
+    std::fs::read_to_string(user.file_path)?;
 }
 ----
 
@@ -277,17 +277,17 @@ fn config_file(user: User) -> Result<(), Error> {
 ----
 #[derive(Snafu)]
 enum Error {
-  #[snafu(display("failed to read config file of user {user_name}"))]
-  FileRead {
-    source: std::io::Error,
-    user_name: String,
-  }
+    #[snafu(display("failed to read config file of user {user_name}"))]
+    FileRead {
+        source: std::io::Error,
+        user_name: String,
+    }
 }
 
 fn config_file(user: User) -> Result<(), Error> {
-  std::fs::read_to_string(user.file_path).context(FileReadSnafu {
-    user_name: user.name,
-  });
+    std::fs::read_to_string(user.file_path).context(FileReadSnafu {
+        user_name: user.name,
+    });
 }
 ----
 
@@ -342,14 +342,14 @@ It is recommended to start the error messages with "failed to..." or "unable to 
 ----
 #[derive(Snafu)]
 enum Error {
-  #[snafu(display("Foo happened."))]
-  Foo,
+    #[snafu(display("Foo happened."))]
+    Foo,
 
-  #[snafu(display("Bar encountered"))]
-  Bar,
+    #[snafu(display("Bar encountered"))]
+    Bar,
 
-  #[snafu(display("arghh baz."))]
-  Baz,
+    #[snafu(display("arghh baz."))]
+    Baz,
 }
 ----
 
@@ -362,11 +362,11 @@ enum Error {
 ----
 #[derive(Snafu)]
 enum Error {
-  #[snafu(display("failed to foo"))]
-  Foo,
+    #[snafu(display("failed to foo"))]
+    Foo,
 
-  #[snafu(display("unable to bar"))]
-  Bar,
+    #[snafu(display("unable to bar"))]
+    Bar,
 }
 ----
 
