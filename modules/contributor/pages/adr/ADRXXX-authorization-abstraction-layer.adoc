@@ -65,11 +65,9 @@ Here is an example of what it could look like in yaml:
 
 [source,yaml]
 ----
-kind: RebacRules
+kind: RebacRelations
 metadata:
   name: project-ladida
-  labels:
-    opa.stackable.tech/bundle: "true"
 # Project Ladida manages the mydata table in Trino
 # User 13 and all the members of the 'otherproj' project are members 
 # of Project Ladida
@@ -95,3 +93,9 @@ relations:
     object: "project:ladidi"
 ----
 
+=== Implementation
+
+The RebacType and RebacRelations can both be annotated with the `opa.stackable.tech/bundle: "true"` label to include it into the OPA bundle.
+
+The relation definitions can the be verified - to a degree - and subsequently everything is serialized as JSON and provided as `data` to OPA.
+We then need to define a RegoRule framework inside OPA to evaluate these rules correctly.

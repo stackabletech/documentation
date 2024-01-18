@@ -6,3 +6,5 @@ include::partial$current_adrs.adoc[]
 *
 *** Drafts
 **** xref:adr/drafts/ADRx-choose_authorization_engine.adoc[]
+**** xref:adr/ADRXXX-authorization-abstraction-layer.adoc[]
+
