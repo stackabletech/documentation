@@ -2,12 +2,34 @@
 
 The main challenge with running Stackable in an air-gapped environment is how to get the artifacts (container images and Helm charts) into the environment. There are a few ways to do this:
 
-* Mirror our images and Helm charts to a registry (e.g. https://goharbor.io/[Harbor]) in the air-gapped environment. This is the recommended approach. If you use Harbor and the instance running Harbor has internet connection, you can setup https://goharbor.io/docs/latest/administration/configuring-replication/[replication] to replicate our project `sdp` from our registry `oci.stackable.tech` (and optionally `sdp-charts` as well, if you also need access to Stackable's Helm charts from within your air-gapped environment). Otherwise you need to transfer the relevant images from the `sdp` project in `oci.stackable.tech` to your registry manually.
-* If possible, setup a reverse proxy to Stackable's registry on a node with internet connection that is reachable from all nodes in your air-gapped environment.
+* Mirror our images and Helm charts to a registry (e.g. https://goharbor.io/[Harbor]) in the air-gapped environment. This is the recommended approach. If you use Harbor and the instance running Harbor has internet connection, you can setup https://goharbor.io/docs/latest/administration/configuring-replication/[replication] to replicate our project `sdp` from our registry `oci.stackable.tech` (and optionally `sdp-charts` as well, if you also need access to Stackable's Helm charts from within your air-gapped environment). Otherwise, you need to transfer the images that are relevant to you from the `sdp` project in `oci.stackable.tech` to your registry manually.
+* If possible, setup a reverse proxy to Stackable's registry on a node with internet connection that is reachable from all nodes within your air-gapped environment. You could, for example, use https://distribution.github.io/distribution/[distribution] for this. Here's a command to spin up a pull-through cache to `oci.stackable.tech` on port 5001: `docker run -d --name proxy-stackable -p 5001:5000 --restart=always -e REGISTRY_PROXY_REMOTEURL=https://oci.stackable.tech registry:2`. The registry is now available on localhost:5001 via HTTP. Once an image has been loaded, it will be cached by the proxy.
 * Download our images (e.g. using `docker save`) on a machine with internet access, copy them onto the nodes in your air-gapped environment and load them (e.g. using `ctr images import`). Then render the Helm charts using the `helm template` subcommand, copy the rendered YAML files your air-gapped environment and apply them.
 
-In the first two scenarios, you need to make sure that the nodes load the images from the registry mirror. Again, there are a several ways to do this:
+In the first two scenarios, you need to make sure that the nodes load the images from your local registry mirror. Again, there are a several ways to do this:
 
-* Specify the image repository in the CRDs (see https://docs.stackable.tech/home/nightly/concepts/product-image-selection#_custom_docker_registry["Custom docker registry"]) and in the values of the Helm charts of the operators (`helm install --set image.repository="my.custom.registry/stackable/nifi-operator" ...`).
-* If you use `containerd` as your container runtime, patch the `containerd` config on every node to use the mirrored registry instead of `oci.stackable.tech`, see https://github.com/containerd/containerd/blob/main/docs/cri/config.md#registry-configuration["Registry configuration"]. !! TODO provide example !!
-* Add an alias for `oci.stackable.tech` to the `/etc/hosts` file on every node (e.g. `10.7.228.12 oci.stackable.tech`), issue a self-signed certificate for `oci.stackable.tech` to your registry and add the certificate to the trusted certificates on every node. Note that if you also want to enforce signature checks for Stackable's images via a policy controller, you will need to add this host alias to the Pod of the policy controller as well (and make it trust the certificate). Learn more about image signature verification xref:concepts:enabling_verification_of_image_signatures.adoc[here].
+* Specify the image repository in the CRDs (see https://docs.stackable.tech/home/nightly/concepts/product-image-selection#_custom_docker_registry["Custom docker registry"]) and in the values of the Helm charts when installing the operators (`helm install --set image.repository="my.custom.registry/stackable/nifi-operator" ...`).
+* If you use `containerd` as your container runtime, you can patch the `containerd` config on every node to use the mirrored registry instead of `oci.stackable.tech`. +
+Example: Create the file `/etc/containerd/certs.d/oci.stackable.tech/hosts.toml` with the following contents:
++
+[source,toml]
+----
+server = "http://10.7.228.12"
+
+[host."10.7.228.12"]
+  ca = "/etc/pki/tls/certs/mycert.crt"
+----
++
+Note that `/etc/pki/tls/certs/mycert.crt` has to contain the IP (`10.7.228.12` in the example) as SAN. +
+Modify your containerd config (usually located at `/etc/containerd/config.toml`):
++
+[source,toml]
+----
+[plugins."io.containerd.grpc.v1.cri".registry]
+   config_path = "/etc/containerd/certs.d"
+----
+Then restart the `containerd` service.
++
+For further information, see https://github.com/containerd/containerd/blob/main/docs/cri/config.md#registry-configuration["Registry configuration"].
+
+* Add an alias for `oci.stackable.tech` to the `/etc/hosts` file on every node (like `10.7.228.12 oci.stackable.tech`), issue a self-signed certificate for `oci.stackable.tech` to your registry and add the certificate to the trusted certificates on every node. Note that if you also want to enforce signature checks for Stackable's images via a policy controller, you will need to add this host alias to the Pod of the policy controller as well (and make it trust the certificate). Learn more about image signature verification xref:concepts:enabling_verification_of_image_signatures.adoc[here].
