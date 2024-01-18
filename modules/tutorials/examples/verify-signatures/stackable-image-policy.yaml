@@ -1,0 +1,15 @@
+apiVersion: policy.sigstore.dev/v1alpha1
+kind: ClusterImagePolicy
+metadata:
+  name: stackable-image-is-signed-by-github-actions
+spec:
+  images:
+    - glob: "**.stackable.tech/**"
+  authorities:
+    - keyless:
+        url: https://fulcio.sigstore.dev
+        identities:
+          - issuer: https://token.actions.githubusercontent.com
+            subjectRegExp: "https://github.com/stackabletech/.+/.github/workflows/build.yml@refs.+"
+      ctlog:
+        url: https://rekor.sigstore.dev
