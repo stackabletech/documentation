@@ -1,0 +1,97 @@
+= ADRXXX
+
+== Context
+
+As a user I want to be able to very easily define my access control for everything in the platform. Access control rules per product should be defined on groups or projects, and then I assign users as members of these projects - defined as relations maybe? I want to be able to simply say "John is a member of the data science team" and that gives John access to a number of resources in the platform.
+
+== Problem Statement
+
+How should we design the user facing part of this authorization spec? Do we create Custom Resources for some of this? Or simply ConfigMaps? How many, how are the rules split across resources?
+
+== Decision Drivers
+
+* The design should be flexible to allow to easily represent verious organizational structures
+* The design should validate as much of the input as possible, to prevent misspellings from invalidating rules. Nothing should just silently not do anything.
+
+== Proposed Design
+
+We design a relation based access control system (ReBAC), inspired by Google Zanzibar.
+
+We define a CustomResource that allows users to define ReBAC stuff in CRs. we translate that into JSON that we can then give into OPA as data context.
+
+There are three kinds of rules that users can define easily in a CR:
+- relations of objects and users
+- relations of objects and user sets
+- relations of objects and other objects
+
+Users are pre defined in either LDAP or keycloak, and referenced by their name/ID.
+Resolving users is done in OPA, using the UserInfoFetcher.
+For this ADR, we will assume users are specified by their username, i.e. "alice" or "bob".
+
+Other objects in the system can be entities inside of the products, such as a `trino-table`.
+We also allow users to define their own objects and relations, mainly to organize their users and permissions.
+Every user-defined object and relation needs to be specified in an RebacType object.
+
+Example:
+
+[source,yaml]
+----
+kind: RebacType
+metadata:
+  name: project  # <1>
+spec:
+  relations:  # <2>
+    - name: member
+  objects:  # <3>
+    - secret-project
+    - datascience-spike
+    - ladida
+    - otherproj
+----
+
+<1>: The name of the RebacType. This will be referenced in rule definitions.
+<2>: The relations that are defined for this type. In this case there is a "member" definition. Users can be members of a project.
+<3>: Object defintions. This is optional; if given, only these objects can be referenced, adding another layer of verification.
+
+For products, the SDP comes with predefined objects that make sense for the product.
+For example in Trino we will define `trino-table` and `trino-catalog`, each with a `reader`, `editor` and `owner` relation.
+For Superset we can define a `superset-dashboard` with the same relations.
+For Kafka we can define a `kafka-topic` type.
+
+We can group some resources together into a project, and then assign users to the project. 
+Users can be assigned individually or based on their group memberships.
+
+Here is an example of what it could look like in yaml:
+
+[source,yaml]
+----
+kind: RebacRules
+metadata:
+  name: project-ladida
+  labels:
+    opa.stackable.tech/bundle: "true"
+# Project Ladida manages the mydata table in Trino
+# User 13 and all the members of the 'otherproj' project are members 
+# of Project Ladida
+relations:
+  # Which resources are part of the project?
+  - subject: "project:ladida"
+    relation: "owner"
+    object: "trino-table:mydata"
+  - subject: "project:ladida"
+    relation: "reader"
+    object: "kafka-topic:datasource"
+  - subject: "project:ladida"
+    relation: "editor"
+    object: "superset-dashboard:ladida-viz"
+  # Who is part of the project?
+  - user: "alice"
+    relation: "member"
+    object: "project:ladida"
+  - userset:
+      object: "department:datascience"
+      relation: "member"
+    relation: "member"
+    object: "project:ladidi"
+----
+
