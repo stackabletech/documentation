@@ -48,15 +48,16 @@ As mentioned before, our images and Helm charts for SDP are signed keyless. Keyl
 
 === The general setup
 
-To verify keyless signatures, the Policy Controller needs an up-to-date version of the root of trust, which is distributed as a collection of files (to put it simply). In an online setting, these files are automatically fetched from a CDN, by default the https://tuf-repo-cdn.sigstore.dev/[Sigstore TUF Repo CDN].
+To verify keyless signatures, the Policy Controller needs an up-to-date version of the root of trust, which is distributed as a collection of files (to put it simply). In an online setting, these files are automatically fetched via HTTP, by default from the https://tuf-repo-cdn.sigstore.dev/[Sigstore TUF Repo CDN].
 
 NOTE: https://docs.sigstore.dev/signing/overview/#root-of-trust[The Update Framework (TUF)] is the mechanism used by the Policy Controller to initialize and update the root of trust.
 
 In an air-gapped environment, this CDN is not reachable, so instead you have to provide those files yourself. You can get these files from https://github.com/sigstore/root-signing/tree/main/repository/repository[GitHub].
-There two multiple ways how you can provide these files to the Policy Controller, please pick the one that works best for your air-gapped environment:
+There are multiple ways how you can provide these files to the Policy Controller, please pick the one that works best for your air-gapped environment:
 
-1. Serve them via an HTTP server that is reachable by the Policy Controller. +
- Example:
+* Serve them via an HTTP server that is reachable by the Policy Controller. +
+ If you can reach a bastion host from your air-gapped environment that has internet access, configuring a reverse proxy to https://tuf-repo-cdn.sigstore.dev/ will most likely be the easiest way to go for you. This avoids the need to manually update files periodically. +
+ If that's not possible, you can clone the TUF repository and serve it via HTTP, like so:
 +
 [source,bash]
 ----
@@ -65,27 +66,22 @@ cd root-signing/repository/repository
 python3 -m http.server 8081
 ----
 +
-Now you can provide the host's IP address and port (8081 in the example) as the mirror URL. For how to do this exactly, we refer to the https://docs.sigstore.dev/policy-controller/overview/#configuring-trustroot-for-custom-tuf-root[Policy Controller's documentation].
-+
-NOTE: Since Sigstore's TUF repository is used, you don't have to provide the `.spec.root` attribute in the `TrustRoot` resource, `.spec.mirror` is sufficient.
+In both cases, you can provide the host's IP address and port as the mirror URL to the policy controller. For how to do this exactly, we refer to the https://docs.sigstore.dev/policy-controller/overview/#configuring-trustroot-for-custom-tuf-root[Policy Controller's documentation].
 
-2. Packing the files into an archive, serializing them and putting them directly into a the `TrustRoot` resource. This is explained in the https://docs.sigstore.dev/policy-controller/overview/#configuring-trustroot-for-custom-tuf-repository[Policy Controller's documentation].
+* Packing the files into an archive, serializing them and putting them directly into a the `TrustRoot` resource. This is explained in the https://docs.sigstore.dev/policy-controller/overview/#configuring-trustroot-for-custom-tuf-repository[Policy Controller's documentation] as well.
 
 Both options yield you a `TrustRoot` custom resource which you then need to configure in your `ClusterImagePolicy`.
 This is done via the `trustRootRef` attribute, as shown https://docs.sigstore.dev/policy-controller/overview/#configuring-verification-against-different-sigstore-instances[in the Policy Controller's documentation].
 
-=== Updating
+Now there's one problem left: When starting, the Policy Controller tries to fetch the root of trust from https://tuf-repo-cdn.sigstore.dev/ by default. This will obviously fail in an air-gapped environment. To circumvent this, you can either set `.webhook.extraArgs.disable-tuf` to `true` in the Helm chart values, which disables the default initialization of the TUF repository. Or, if you configured a TUF mirror that's reachable via HTTP anyway, you can set `.webhook.extraArgs.tuf-mirror` to the URL of your mirror, to use it as the default TUF repository. In that case, you also don't have to create and configure the `TrustRoot` resource anymore.
 
-The problem for air-gapped environments is that expiration of keys is built into TUF.
-That means, to verify image signatures continuously, the Policy Controller needs an up-to-date version of the root of trust.
+=== Updating the root of trust
 
-Depending on which way you are providing the root of trust (mirror or direct files), you need to update that accordingly.
-If, for example, you can reach a bastion host from your air-gapped environment that has internet access, configuring a mirror might be the easier way to go for you. In that case, you could simply configure a reverse proxy to https://tuf-repo-cdn.sigstore.dev/ on the bastion host, to avoid manually updating files periodically.
+The problem for air-gapped environments is that expiration of keys is built into TUF, which means the root of trust expires after some time and needs to be updated before that happens. This only affects you if you are not using the proxy on a bastion host, as explained before.
 
-If your setup is completely air-gapped, you will have to do periodic manual updates of the files that you deployed earlier (e.g. in the first example, you could run `git pull` daily).
-It is not clear how often the root of trust needs to be updated (TODO: research if we can find out more)
+So, depending on which way you are providing the files for the root of trust (serve them via HTTP or provide them as serialized repository), you need to update them accordingly. In the example above with the HTTP server, this would mean running `git pull` to get an up-to-date version of the TUF repository.
 
-The Policy Controller does not need to be restarted after the files have been updated. (TODO: verify this)
+If you provide the files as serialized repository in the `TrustRoot` resource, the Policy Controller should automatically pick up the change once you update the resource. However, when serving them over HTTP, the Policy Controller does not automatically detect the change. In that case, you can either restart the Policy Controller deployment or modify the `TrustRoot` resource (e.g. by adding an annotation or label) to trigger a reload.
 
 == Further reading
 
