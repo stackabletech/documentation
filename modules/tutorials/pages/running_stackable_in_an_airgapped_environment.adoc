@@ -10,17 +10,17 @@ In the first two scenarios, you need to make sure that the nodes load the images
 
 * Specify the image repository in the CRDs (see https://docs.stackable.tech/home/nightly/concepts/product-image-selection#_custom_docker_registry["Custom docker registry"]) and in the values of the Helm charts when installing the operators (`helm install --set image.repository="my.custom.registry/stackable/nifi-operator" ...`).
 * If you use `containerd` as your container runtime, you can patch the `containerd` config on every node to use the mirrored registry instead of `oci.stackable.tech`. +
-Example: Create the file `/etc/containerd/certs.d/oci.stackable.tech/hosts.toml` with the following contents:
+Example: Let's assume you have a registry mirror running on `10.7.228.12`, reachable via HTTPS on port 443 using a self signed certificate. Now copy the certificate over to your Kubernetes node, in this example we'll place it in the `/etc/pki/tls/certs` folder.
+Create the file `/etc/containerd/certs.d/oci.stackable.tech/hosts.toml` on the node, with the following contents:
 +
 [source,toml]
 ----
-server = "http://10.7.228.12"
-
 [host."10.7.228.12"]
   ca = "/etc/pki/tls/certs/mycert.crt"
+  capabilities = ["pull", "resolve"]
 ----
 +
-Note that `/etc/pki/tls/certs/mycert.crt` has to contain the IP (`10.7.228.12` in the example) as SAN. +
+Since `containerd` defaults to using HTTPS on port 443, we don't have to specify the protocol and port and can just provide the IP. Note that the certificate (`mycert.crt`) has to contain the IP (`10.7.228.12`) as SAN. +
 Modify your containerd config (usually located at `/etc/containerd/config.toml`):
 +
 [source,toml]
@@ -28,6 +28,6 @@ Modify your containerd config (usually located at `/etc/containerd/config.toml`)
 [plugins."io.containerd.grpc.v1.cri".registry]
    config_path = "/etc/containerd/certs.d"
 ----
-Then restart the `containerd` service. For further information, see https://github.com/containerd/containerd/blob/main/docs/cri/config.md#registry-configuration["Registry configuration"].
+Then restart the `containerd` service. Now `containerd` will fetch all images that would normally be fetched from `oci.stackable.tech` from `10.7.228.12` instead. The registry host name is determined by the path `hosts.toml` is located in, so other registry hosts are not affected. For further information, see https://github.com/containerd/containerd/blob/main/docs/cri/config.md#registry-configuration["Registry configuration"].
 
 * Add an alias for `oci.stackable.tech` to the `/etc/hosts` file on every node (like `10.7.228.12 oci.stackable.tech`), issue a self-signed certificate for `oci.stackable.tech` to your registry and add the certificate to the trusted certificates on every node. Note that if you also want to enforce signature checks for Stackable's images via a policy controller, you will need to add this host alias to the Pod of the policy controller as well (and make it trust the certificate). Learn more about image signature verification xref:tutorials:enabling_verification_of_image_signatures.adoc[here].
