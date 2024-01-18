@@ -20,6 +20,23 @@ Access control rules per product should be defined on groups or projects, and th
 I want to be able to simply say "John is a member of the data science team" and that gives John access to a number of resources in the platform based on his team membership.
 I also want to be able to easily specify one-of access to individuals for specific resources, such as given Alice access to a specific Trino table.
 
+=== Different authorization models: RBAC, ABAC, ReBAC and more
+
+Out-of-the-box, OPA uses RegoRules to define policies. 
+This is very powerful, but also more complex that other mechanisms such as RBAC or ACLs.
+We want to pick an authorization model to build on top of OPA and abstract away from the RegoRules for 95% of use cases that the typical Stackable user might encounter.
+
+Relation-based access control (ReBAC) was popularized by Google Zanzibar and goes beyond RBAC.
+The relational model allows for more flexibility when defining rules.
+
+Learn more:
+
+* https://authzed.com/zanzibar
+* https://authzed.com/blog/what-is-google-zanzibar
+* https://gruchalski.com/posts/2022-05-07-zanzibar-style-acls-with-opa-rego/
+* https://www.permit.io/blog/oparebac
+* https://www.permit.io/blog/policy-engines
+
 == Decision Drivers
 
 * The design should be flexible to allow to easily represent various organizational structures.
@@ -126,3 +143,10 @@ The RebacType and RebacRelations can both be annotated with the `opa.stackable.t
 
 The relation definitions can the be verified - to a degree - and subsequently everything is serialized as JSON and provided as `data` to OPA.
 We then need to define a RegoRule framework inside OPA to evaluate these rules correctly.
+
+== TODO: Gaia-X considerations
+
+TSA? OCM?
+
+"TSA ist OPA, unser Authr. ist OPA, aber bauen wir oder TSA dinge drumherum, die die Integration schwer machen?"
+
