@@ -41,9 +41,10 @@ We define a CustomResource that allows users to define ReBAC stuff in CRs.
 This allows for more validation instead of putting rules in a DSL or in JSON into a ConfigMap.
 
 There are three kinds of rules that users can define easily in a CR:
-- relations of objects and users
-- relations of objects and user sets
-- relations of objects and other objects
+
+* relations of objects and users
+* relations of objects and user sets
+* relations of objects and other objects
 
 Users are pre defined in either LDAP or keycloak, and referenced by their name/ID.
 Resolving users is done in OPA, using the UserInfoFetcher.
@@ -70,9 +71,9 @@ spec:
     - otherproj
 ----
 
-<1>: The name of the RebacType. This will be referenced in rule definitions.
-<2>: The relations that are defined for this type. In this case there is a "member" definition. Users can be members of a project.
-<3>: Object defintions. This is optional; if given, only these objects can be referenced, adding another layer of verification.
+<1> The name of the RebacType. This will be referenced in rule definitions.
+<2> The relations that are defined for this type. In this case there is a "member" definition. Users can be members of a project.
+<3> Object defintions. This is optional; if given, only these objects can be referenced, adding another layer of verification.
 
 For products, the SDP comes with predefined objects that make sense for the product.
 For example in Trino we will define `trino-table` and `trino-catalog`, each with a `reader`, `editor` and `owner` relation.
