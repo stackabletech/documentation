@@ -191,7 +191,7 @@ This would be the Stackable internal solution to avoid any external party tools.
 [[option4]]
 === Common library for cert management / injection in operator-rs
 
-Put the cert management / injection stuff into a library (op-rs?) that we run in-process for each operator that has a webhook.
+Put the cert management / injection stuff into a library in operator-rs (similar to the code in secret-operator) that we run in-process for each operator that has a webhook. See https://github.com/stackabletech/commons-operator/tree/spike/sts-restarter-webhook[commons-operator spike].
 
 == Pros and Cons of the Options
 
@@ -219,23 +219,16 @@ Put the cert management / injection stuff into a library (op-rs?) that we run in
 === <<option4>>
 
 * Good, because no external tools are required
+* Good, because all included within the SDP
+* Good, because external tools can be used if required
 * Bad, because requires more time and coding
 
 == Decision Outcome
 
-Chosen option: "[option 1]", because [justification. e.g., only option, which meets k.o. criterion decision driver | which resolves force | … | comes out best (see below)].
+Chosen option <<option4>>, because the CA injection will be handled as part of the SDP and no external dependencies are required. The common library will reside in the operator-rs and be used in every operator. OpenShift should not pose a problem since no extra components are necessary. The required infrastructure (e.g. operator-templating, ca injection / generation) can be developed in parallel to the operators e.g. version conversion logic.
 
-=== Positive Consequences <!-- optional -->
+=== Positive Consequences
 
-* [e.g., improvement of quality attribute satisfaction, follow-up decisions required, …]
-* …
-
-=== Negative Consequences <!-- optional -->
-
-* [e.g., compromising quality attribute, follow-up decisions required, …]
-* …
-
-== Links <!-- optional -->
-
-* [Link type] [Link to ADR] <!-- example: Refined by [ADR-0005](0005-example.md) -->
-* … <!-- numbers of links can vary -->
+* No external dependencies
+* CA bundle injection as basic part of the SDP
+* Opt-out (e.g. removing the conversion webhook from CRD) possible
