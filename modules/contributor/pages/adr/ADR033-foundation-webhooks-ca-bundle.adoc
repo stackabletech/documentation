@@ -225,7 +225,7 @@ Put the cert management / injection stuff into a library in operator-rs (similar
 
 == Decision Outcome
 
-Chosen option <<option4>>, because the CA injection will be handled as part of the SDP and no external dependencies are required. The common library will reside in the operator-rs and be used in every operator. OpenShift should not pose a problem since no extra components are necessary. The required infrastructure (e.g. operator-templating, ca injection / generation) can be developed in parallel to the operators e.g. version conversion logic.
+Chosen option <<option4>>, because the CA injection will be handled as part of the SDP and no external dependencies are required. The common library will reside in the operator-rs and used in every operator. OpenShift should not pose a problem since no extra components are necessary. The required infrastructure (e.g. operator-templating, ca injection / generation) can be developed in parallel to the operators e.g. version conversion logic.
 
 === Positive Consequences
 
