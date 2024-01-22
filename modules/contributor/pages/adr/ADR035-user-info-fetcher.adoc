@@ -20,19 +20,18 @@ We need to design a CRD change for users to enable the UIF.
 
 === Stand-alone CRD
 
-Create a new CRD, e.g. UserInfoFetcher and have a controller for it that e.g. creates a DaemonSet.
+We could create a new CRD, e.g. UserInfoFetcher and have a controller for it that creates a DaemonSet.
 A OpaCluster would than be able to link to a UserInfoFetcher discovery ConfigMap.
 
-* Good, because a UIF instance can be shared across multiple OPA clusters -> Simplicity and improves caching as well
+* Good, because a UIF instance can be shared across multiple OPA clusters -> Simple and improved caching
 * Bad, because OPA clusters would need to authenticate against UIF clusters.
 * Bad, because UIF might need some form of authorization as well
 
 === Integrate in OpaCluster
 
-A OpaCluster has a new section that allows to spin a UIF as a sidecar within the Opa DaemonSet.
+Add a new section to OpaCluster that allows users to spin up a UIF as a sidecar within the Opa DaemonSet.
 
 The CRD is mostly copied from the `oidc` AuthenticationClass introduced in xref:adr/ADR032-oidc-support.adoc[] with the addition of needed credentials for Keycloak as well as the admin and user realm and a very simplistic cache.
-
 The cache will be probably extended in the future (e.g. max number of entries or users that should not be cached), which can be done in a non-breaking fashion below `spec.clusterConfig.userInfo.backend.keycloak.cache`.`
 
 [source,yaml]
