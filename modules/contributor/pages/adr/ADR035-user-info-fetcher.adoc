@@ -31,6 +31,10 @@ A OpaCluster would than be able to link to a UserInfoFetcher discovery ConfigMap
 
 A OpaCluster has a new section that allows to spin a UIF as a sidecar within the Opa DaemonSet.
 
+The CRD is mostly copied from the `oidc` AuthenticationClass introduced in xref:adr/ADR032-oidc-support.adoc[] with the addition of needed credentials for Keycloak as well as the admin and user realm and a very simplistic cache.
+
+The cache will be probably extended in the future (e.g. max number of entries or users that should not be cached), which can be done in a non-breaking fashion below `spec.clusterConfig.userInfo.backend.keycloak.cache`.`
+
 [source,yaml]
 ----
 apiVersion: opa.stackable.tech/v1alpha1
