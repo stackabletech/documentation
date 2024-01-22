@@ -11,14 +11,34 @@ Technical Story: https://github.com/stackabletech/issues/issues/439
 
 == Problem Statement
 
-How should we design the user facing part of an authorization layer for the platform? Do we create Custom Resources for some of this? Or simply ConfigMaps? How many, how are the rules split across resources?
+How should we design the user facing part of an authorization layer for the platform?
+Do we create Custom Resources for some of this, or are ConfigMaps sufficient?
+How many, how are the rules split across resources?
 
 == Context
 
-As a user I want to be able to very easily define my access control for everything in the platform.
-Access control rules per product should be defined on groups or projects, and then I assign users as members of these groups, departments and projects.
-I want to be able to simply say "John is a member of the data science team" and that gives John access to a number of resources in the platform based on his team membership.
-I also want to be able to easily specify one-of access to individuals for specific resources, such as given Alice access to a specific Trino table.
+What is the current state of authorization in the SDP, what do users want to define and which authorization models are widespread already?
+
+=== Current state of authorization and policy in the SDP
+
+Currently the Stackable Data Platform supports authorization policies through OPA.
+OPA is a general _policy_ agent and does not out of the box have any particular framework in place for _authorization_ as a special case of policy.
+OPA uses policy-as-code to define policy, and as such supports a wide variety of approaches to policy definitions.
+
+=== Authorization settings that users might want to model
+
+Some use case examples:
+
+* rules for individuals: Alice needs one-of read access to a Trino Table
+* group based access control: Bob joins the company in the data science team and should get access to all the resources he needs to stark working
+* resource grouping and ad-hoc groups: A new data analysis task force is formed that needs access to specific resources. Resources should be grouped and then all task force members need access.
+* Class based permissions: Andy needs to be able to read _all_ Trino tables, and not just a pre-defined selection of tables.
+
+A common complaint seems to be that in RBAC systems, roles end up getting copy pasted. 
+A role might have many permissions attached to it, so if you want to modify a particular permission for just one user, you might end up copy-pasting the role.
+
+Also, users should be able to treat resources in general the same way across all supported products.
+I.e. there should be an abstraction over resources such as Trino tables, Superset dashboards and Kafka topics.
 
 === Different authorization models: RBAC, ABAC, ReBAC and more
 
@@ -26,8 +46,14 @@ Out-of-the-box, OPA uses RegoRules to define policies.
 This is very powerful, but also more complex that other mechanisms such as RBAC or ACLs.
 We want to pick an authorization model to build on top of OPA and abstract away from the RegoRules for 95% of use cases that the typical Stackable user might encounter.
 
+Role-based access control (RBAC) is a common authorization model where users are assigned roles, and roles come with certain sets of permissions.
+
 Relation-based access control (ReBAC) was popularized by Google Zanzibar and goes beyond RBAC.
 The relational model allows for more flexibility when defining rules.
+
+https://www.permit.io/blog/rbac-vs-rebac[RBAC vs. ReBAC].
+
+https://www.keycloak.org/docs/latest/authorization_services/index.html#_overview[The Keycloak model]
 
 Learn more:
 
@@ -37,18 +63,61 @@ Learn more:
 * https://www.permit.io/blog/oparebac
 * https://www.permit.io/blog/policy-engines
 
+=== What models do the applications use?
+
+Druid: Uses an RBAC model
+
+Kafka: RBAC, group based with LDAP, ACLs
+
 == Decision Drivers
 
 * The design should be flexible to allow to easily represent various organizational structures.
 * It should be possible to group together access to different resources across products.
 * The design should validate as much of the input as possible, to prevent misspellings from invalidating rules. Nothing should just silently not do anything.
 * Rules should be defined as Manifests and put into Kubernetes.
+* Solution needs to be safely implemented. This means that it might be good to keep complexity low. This is a security component!
+* Solution needs to work well with existing authorization models in the applications we support.
+* Expressive enough so users do not have to copy-paste roles or lists of permissions.
 
 == Constraints
 
 * We use OPA as the underlying policy engine, so any design needs to be implementable with OPA.
 
-== Proposed Design
+== Expected outcome
+
+We should decide on a general authorization model, what we want it to look like to the user and also have a rough idea of how it will be implemented.
+
+== RBAC vs ReBAC
+
+_RBAC_ is the default choice for authorization models, as it is widely known an understood already, and simple to implement and understand.
+Kubernetes itself uses RBAC with Role, ClusterRole, RoleBinding etc..
+
+In RBAC it is difficult to give one-of permissions to individual users, since permissions are always assinged to a role, and then the role is assigned to a user.
+
+How are policies actually derived from the relationships in ReBAC?
+
+I think it makes sense to stay close to the applications here, i.e. for druid there should still be read/write permissions on resources.
+
+we still need to define things like "an editor on thsi resource group can write to this topic"
+
+It would be cool to have "resource groups" and then just relations like "owner", "reader", "edtior" relating to a whole group of resources.
+
+A mixed model might make sense, maybe a hierarchical tree of user groups on the one side, and resource groups on the other side? or composing roles and also composing groups, and then mapping groups and roles? I got this idea from Keycloak.
+
+I think maybe the idea of having the permission for an action on a resource is still very central to all the products we support, and it makes sense to keep that.
+Maybe just in a "permission bundle" and those can also be grouped?
+
+I think in i.e. GDrive we could give someone read permission on a folder of files, but this relation needs to be already embedded in the application. 
+We cannot give someone read access on a group of Trino tables, because this concept does not exist in Trino. 
+The group will still need to be maintained outside of Trino, and so we do not have a lot to gain here.
+
+== Design A
+
+RBAC-based design.
+
+Let users define 
+
+== Design B
 
 We design a relation based access control system (ReBAC), inspired by Google Zanzibar.
 ReBAC allows for role-based access control as well (RBAC) but goes beyond that to also allow hierarchies of objects that users can be related to.
