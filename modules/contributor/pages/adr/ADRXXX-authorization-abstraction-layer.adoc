@@ -19,11 +19,33 @@ How many, how are the rules split across resources?
 
 What is the current state of authorization in the SDP, what do users want to define and which authorization models are widespread already?
 
+=== Terminology
+
+Resource:: A resource in the authorization context is commonly something that can be accessed, read, edited etc., like a DAG in Airflow, a Table in Trino or a file in a file system. Resources can also be grouped, like a folder in a file system containing multiple files. A resource is specific, so it does not refer to Trino tables in general, but to a specific Foo table (for example).
+Action:: An action is defined in context of a resource. Examples are "Viewing", "Editing", "Deleting", "Creating".
+Permission:: A permission is the combination of an action and a resource. Like "view table Foo". A permission can also be more general, like "view all tables" (i.e. no specific resource is specified, just a class/type of resource).
+Policy:: A policy is a generic term that does not only exist in authorization. It is a rule, like "The cluster should always have 10% free memory left" or "Only the HR team can access the employee database".
+RBAC:: Role-based access control.
+Role:: A role in RBAC generally means a collection of permissions. In RBAC, permissions are assigned to roles. For example, an _admin_ role might have the permission to view and edit all data. A _marketting-employee_ role grants viewing access to a specific set of tables.
+ReBAC:: Relation-based access control.
+Relation:: A relation is pretty generic, and refers to relations between object and and other objects (or resources), between resources and users or between users and other users or user groups. Examples: "Alice is a _reader_ of a table." "Bob is a _member_ of the data science team." "The `pictures` folder is the _parent_ of the `cat.jpg` file."
+Group:: A group is typically a collection of users. Groups can also be organized hierarchically. Groups can sometimes be used to attach roles to, so users can simply be grouped together and their permissions be managed as a whole.
+
 === Current state of authorization and policy in the SDP
 
 Currently the Stackable Data Platform supports authorization policies through OPA.
 OPA is a general _policy_ agent and does not out of the box have any particular framework in place for _authorization_ as a special case of policy.
 OPA uses policy-as-code to define policy, and as such supports a wide variety of approaches to policy definitions.
+
+Some products do not support OPA yet, but we want to support OPA in them in the future.
+Some products like Airflow and Superset do not support OPA and we do not plan to add support at this moment.
+
+The products themselves also have access control models:
+
+* Druid: Uses an RBAC model
+* Kafka: RBAC, group based with LDAP, ACLs
+* Airflow: Uses roles to group permissions, and then assign roles to users. Roles can also be assigned to LDAP groups.
+
 
 === Authorization settings that users might want to model
 
@@ -32,6 +54,7 @@ Some use case examples:
 * rules for individuals: Alice needs one-of read access to a Trino Table
 * group based access control: Bob joins the company in the data science team and should get access to all the resources he needs to stark working
 * resource grouping and ad-hoc groups: A new data analysis task force is formed that needs access to specific resources. Resources should be grouped and then all task force members need access.
+* group hierarchies: there might be multiple data science teams that share access to some common resources, but also have specific resources that are only relevant to each team.
 * Class based permissions: Andy needs to be able to read _all_ Trino tables, and not just a pre-defined selection of tables.
 
 A common complaint seems to be that in RBAC systems, roles end up getting copy pasted. 
@@ -62,12 +85,6 @@ Learn more:
 * https://gruchalski.com/posts/2022-05-07-zanzibar-style-acls-with-opa-rego/
 * https://www.permit.io/blog/oparebac
 * https://www.permit.io/blog/policy-engines
-
-=== What models do the applications use?
-
-Druid: Uses an RBAC model
-
-Kafka: RBAC, group based with LDAP, ACLs
 
 == Decision Drivers
 
