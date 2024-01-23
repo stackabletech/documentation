@@ -1,11 +1,11 @@
 = ADR012: Authentication token management
-Teo Klestrup Röijezon <teo.roijezon@stackable.de>
+Natalie Klestrup Röijezon <nat.roijezon@stackable.de>
 v0.1, 2021-11-23
 :status: accepted
 
 * Status: {status}
 * Deciders:
-** Teo Klestrup Röijezon
+** Natalie Klestrup Röijezon
 ** Lars Francke
 ** Sönke Liebau
 * Date: 2021-11-23
