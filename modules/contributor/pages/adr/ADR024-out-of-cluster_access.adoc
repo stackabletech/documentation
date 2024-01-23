@@ -5,7 +5,7 @@ v0.1, 2022-09-06
 
 * Status: {status}
 * Deciders:
-** Teo Klestrup Röijezon
+** Natalie Klestrup Röijezon
 ** Felix Hennig
 ** Vladislav Supalov
 * Date: 2022-09-06
