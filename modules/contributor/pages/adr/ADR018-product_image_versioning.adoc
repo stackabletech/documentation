@@ -1,5 +1,5 @@
 = ADR018: Product Image Versioning
-Teo Klestrup Röijezon <teo.roijezon@stackable.de>
+Natalie Klestrup Röijezon <nat.roijezon@stackable.de>
 v0.1, 04.05.2022
 :status: approved
 
@@ -11,7 +11,7 @@ v0.1, 04.05.2022
 ** Razvan Mihai
 ** Siegfried Weber
 ** Sönke Liebau
-** Teo Klestrup-Röjiezon
+** Natalie Klestrup-Röjiezon
 * Date: 04.05.2022
 
 == Glossary
