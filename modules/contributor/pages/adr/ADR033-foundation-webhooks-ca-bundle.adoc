@@ -54,7 +54,7 @@ spec:
     served: true
     # One and only one version must be marked as the storage version.
     storage: true
-    # Each version can define its own schema when there is no top-level
+    # Each version can define its own schema when no top-level
     # schema is defined.
     schema:
       openAPIV3Schema:
@@ -136,8 +136,7 @@ This ADR is about how to achieve the CA bundle injection using external tools or
 
 == Problem Statement
 
-The required CA bundles for the webhooks endpoints must be injected at runtime. There exist tools like https://cert-manager.io/docs/concepts/ca-injector/#injecting-ca-data-from-a-certificate-resource[Cert Manager] that do exactly this.
-Adding one of these annotations to an injectable source:
+The required CA bundles for the webhooks endpoints must be injected at runtime. There exist tools like https://cert-manager.io/docs/concepts/ca-injector/#injecting-ca-data-from-a-certificate-resource[Cert Manager] that do exactly this, adding one of these annotations to an injectable source:
 
 . `cert-manager.io/inject-ca-from`
 . `cert-manager.io/inject-ca-from-secret`
@@ -157,7 +156,7 @@ metadata:
 
 This can be used for CRDs and conversion webhooks as well.
 
-The SDP should focus on one solution for CA injection, internally or externally, but strive for compatibility with as many others as possible. The normal way of configuration seems to be adding an annotation to the objects containing the CA, which we can probably somehow support in our Helm chart, or solve via documentation.
+The SDP should focus on one solution for CA injection, internally or externally, but strive for compatibility with as many others as possible. The normal way of configuration seems to be adding an annotation to the objects containing the CA, which can be supported in our Helm chart or solved via documentation.
 
 For clusters without any existing manager we should provide our own, lightweight caBundle injector that can work in tandem with the secret operator.
 
@@ -186,7 +185,7 @@ The OpenShift Service CA operator is an OpenShift ClusterOperator and contains s
 [[option3]]
 === Lightweight self-made solution via secret-operator
 
-This would be the Stackable internal solution to avoid any external party tools. It would work similar to the OpenShift Service CA operator but rather injecting the bundles via the CSI instead of ConfigMap mounts.
+This would be the Stackable internal solution to avoid any external party tools. It would work in a similar way to the OpenShift Service CA operator but would rather inject the bundles via the CSI instead of ConfigMap mounts.
 
 [[option4]]
 === Common library for cert management / injection in operator-rs
@@ -225,7 +224,7 @@ Put the cert management / injection stuff into a library in operator-rs (similar
 
 == Decision Outcome
 
-Chosen option <<option4>>, because the CA injection will be handled as part of the SDP and no external dependencies are required. The common library will reside in the operator-rs and used in every operator. OpenShift should not pose a problem since no extra components are necessary. The required infrastructure (e.g. operator-templating, ca injection / generation) can be developed in parallel to the operators e.g. version conversion logic.
+Chosen option <<option4>>, because the CA injection will be handled as part of the SDP and no external dependencies are required. The common library will reside in the operator-rs and be used in every operator. OpenShift should not pose a problem since no extra components are necessary. The required infrastructure (e.g. operator-templating, ca injection / generation) can be developed in parallel to the operators e.g. version conversion logic.
 
 === Positive Consequences
 
