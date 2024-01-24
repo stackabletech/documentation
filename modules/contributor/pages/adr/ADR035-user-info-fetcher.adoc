@@ -1,7 +1,7 @@
 = ADR035: User info fetcher CRD changes
 Sebastian Bernauer <sebastian.bernauer@stackable.tech>
 v0.1, 2024-01-22
-:status: [draft]
+:status: accepted
 
 * Status: {status}
 * Date: 2024-01-22
