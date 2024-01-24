@@ -1,7 +1,7 @@
 = ADR034: Foundation for conversion webhooks deployment
 Doc Writer <doc.writer@asciidoctor.org>
 v0.1
-:status: draft
+:status: accepted
 :date: 2024-01-09
 
 * Status: {status}
