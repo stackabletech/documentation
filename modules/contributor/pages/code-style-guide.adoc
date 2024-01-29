@@ -9,24 +9,6 @@ This means:
 * put the name and version keys in that order at the top of that section, followed by the remaining keys other than description in order, followed by the description at the end of that section.
 * For other sections, sort keys with https://www.gnu.org/software/coreutils/manual/html_node/Version-sort-overview.html[version-sort] (basically the same as alphabetically).
 
-[WARNING.code-rule,caption=Examples of incorrect code for this rule]
-====
-
-[source,toml]
-----
-[package]
-description = "this crate does nothing"
-name = "crate-name"
-version = "0.0.1"
-
-[dependencies]
-another_dependency = "0.1.0"
-yet_another_dependency = "0.2.0"
-a_dependency = "1.2.3"
-----
-
-====
-
 [TIP.code-rule,caption=Examples of correct code for this rule]
 ====
 
@@ -48,6 +30,24 @@ yet_another_dependency = "0.2.0"
 
 ====
 
+[WARNING.code-rule,caption=Examples of incorrect code for this rule]
+====
+
+[source,toml]
+----
+[package]
+description = "this crate does nothing"
+name = "crate-name"
+version = "0.0.1"
+
+[dependencies]
+another_dependency = "0.1.0"
+yet_another_dependency = "0.2.0"
+a_dependency = "1.2.3"
+----
+
+====
+
 NOTE: This formatting might be supported by `rustfmt` in the future, see the https://github.com/rust-lang/rustfmt/pull/5240[PR] here.
 
 == Identifier names
@@ -62,21 +62,6 @@ The shorter the scope the shorter the variable names, and the longer the functio
 
 The usage of well-known acronyms like CPU, TLS or OIDC are allowed.
 
-[WARNING.code-rule,caption=Examples of incorrect code for this rule]
-====
-
-[source,rust]
-----
-const ONE_H_IN_SECS: usize = 3600;
-
-let param = Some("foo");
-let buf = &[];
-
-fn func(elems: Vec<String>) {}
-----
-
-====
-
 [TIP.code-rule,caption=Examples of correct code for this rule]
 ====
 
@@ -90,6 +75,21 @@ let buffer = &[];
 fn function(elements: Vec<String>) {}
 
 for i in 0..5 {}
+----
+
+====
+
+[WARNING.code-rule,caption=Examples of incorrect code for this rule]
+====
+
+[source,rust]
+----
+const ONE_H_IN_SECS: usize = 3600;
+
+let param = Some("foo");
+let buf = &[];
+
+fn func(elems: Vec<String>) {}
 ----
 
 ====
@@ -130,6 +130,16 @@ let tls_settings = TlsSettings {};
 Optional function parameters and variables containing `Option` must not use any prefixes or suffixes to indicate the value is of type `Option`.
 This rule does not apply to function names like `Client::get_opt()`.
 
+[TIP.code-rule,caption=Examples of correct code for this rule]
+====
+
+[source,rust]
+----
+let tls_settings: Option<TlsSettings> = None;
+----
+
+====
+
 [WARNING.code-rule,caption=Examples of incorrect code for this rule]
 ====
 
@@ -142,22 +152,31 @@ let opt_tls_settings: Option<TlsSettings> = None;
 
 ====
 
-[TIP.code-rule,caption=Examples of correct code for this rule]
-====
-
-[source,rust]
-----
-let tls_settings: Option<TlsSettings> = None;
-----
-
-====
-
 == Structs and enums
 
 === Naming convention
 
 Structs can use singular and plural names.
 Enums must use singular names, because only one variant is valid, e.g. `Error::NotFound` and not `Errors::NotFound`.
+
+[TIP.code-rule,caption=Examples of correct code for this rule]
+====
+
+[source,rust]
+----
+enum Error {
+  NotFound,
+  Timeout,
+}
+
+enum Color {
+  Red,
+  Green,
+  Blue,
+}
+----
+
+====
 
 [WARNING.code-rule,caption=Examples of incorrect code for this rule]
 ====
@@ -178,31 +197,45 @@ enum Colors {
 
 ====
 
-[TIP.code-rule,caption=Examples of correct code for this rule]
-====
-
-[source,rust]
-----
-enum Error {
-  NotFound,
-  Timeout,
-}
-
-enum Color {
-  Red,
-  Green,
-  Blue,
-}
-----
-
-====
-
 === Formatting of struct fields and enum variants
 
 We add newlines to struct fields and enum variants when they include additional information like documentation comments or attributes, because the variants can become difficult to read.
 This is especially the case when fields include doc comments, attributes like `#[snafu()]`, and in case of enum variants, various embedded types.
 
 Enum variants and struct fields don't need to be separated when **no** additional information is attached to any of the variants or fields.
+
+[TIP.code-rule,caption=Examples of correct code for this rule]
+====
+
+[source,rust]
+----
+enum Color {
+    Red,
+    Green,
+    Blue,
+}
+
+struct Foo {
+    /// My doc comment for bar
+    bar: usize,
+
+    /// My doc comment for baz
+    baz: usize,
+}
+
+enum Error {
+    /// Indicates that we failed to foo.
+    #[snafu(display("failed to foo"))]
+    Foo,
+
+    /// Indicates that we failed to bar.
+    #[snafu(display("failed to bar"))]
+    Bar,
+    Baz,
+}
+----
+
+====
 
 [WARNING.code-rule,caption=Examples of incorrect code for this rule]
 ====
@@ -228,39 +261,6 @@ enum Error {
     /// Indicates that we failed to foo.
     #[snafu(display("failed to foo"))]
     Foo,
-    /// Indicates that we failed to bar.
-    #[snafu(display("failed to bar"))]
-    Bar,
-    Baz,
-}
-----
-
-====
-
-[TIP.code-rule,caption=Examples of correct code for this rule]
-====
-
-[source,rust]
-----
-enum Color {
-    Red,
-    Green,
-    Blue,
-}
-
-struct Foo {
-    /// My doc comment for bar
-    bar: usize,
-
-    /// My doc comment for baz
-    baz: usize,
-}
-
-enum Error {
-    /// Indicates that we failed to foo.
-    #[snafu(display("failed to foo"))]
-    Foo,
-
     /// Indicates that we failed to bar.
     #[snafu(display("failed to bar"))]
     Bar,
@@ -288,6 +288,29 @@ Additionally, we restrict the usage of the `#[snafu(context(false))]` atrribute 
 This ensures that fallible functions need to call `.context()` to pass the error along.
 
 The usage of `thiserror` is considered invalid.
+
+[TIP.code-rule,caption=Examples of correct code for this rule]
+====
+
+[source,rust]
+----
+#[derive(Snafu)]
+enum Error {
+    #[snafu(display("failed to read config file of user {user_name}"))]
+    FileRead {
+        source: std::io::Error,
+        user_name: String,
+    }
+}
+
+fn config_file(user: User) -> Result<(), Error> {
+    std::fs::read_to_string(user.file_path).context(FileReadSnafu {
+        user_name: user.name,
+    });
+}
+----
+
+====
 
 [WARNING.code-rule,caption=Examples of incorrect code for this rule]
 ====
@@ -320,50 +343,12 @@ fn config_file(user: User) -> Result<(), Error> {
 
 ====
 
-[TIP.code-rule,caption=Examples of correct code for this rule]
-====
-
-[source,rust]
-----
-#[derive(Snafu)]
-enum Error {
-    #[snafu(display("failed to read config file of user {user_name}"))]
-    FileRead {
-        source: std::io::Error,
-        user_name: String,
-    }
-}
-
-fn config_file(user: User) -> Result<(), Error> {
-    std::fs::read_to_string(user.file_path).context(FileReadSnafu {
-        user_name: user.name,
-    });
-}
-----
-
-====
-
 === Error variant names
 
 All error variants must not include any unnesecarry prefixes or suffixes.
 Examples of such prefixes include (but are not limited to) `FailedTo` and `UnableTo`.
 Furthermore, examples for suffixes are `Error` or `Snafu` 
 Error variant names must however include verbs or identifiers as a prefix.
-
-[WARNING.code-rule,caption=Examples of incorrect code for this rule]
-====
-
-[source,rust]
-----
-#[derive(Snafu)]
-enum Error {
-    FailedToParseConfig,
-    HttpRequestError,
-    ConfigRead,
-}
-----
-
-====
 
 [TIP.code-rule,caption=Examples of correct code for this rule]
 ====
@@ -380,10 +365,42 @@ enum Error {
 
 ====
 
+[WARNING.code-rule,caption=Examples of incorrect code for this rule]
+====
+
+[source,rust]
+----
+#[derive(Snafu)]
+enum Error {
+    FailedToParseConfig,
+    HttpRequestError,
+    ConfigRead,
+}
+----
+
+====
+
 === Error messages
 
 All our error messages must start with a lowercase letter and must not end with a dot.
 It is recommended to start the error messages with "failed to..." or "unable to ...".
+
+[TIP.code-rule,caption=Examples of correct code for this rule]
+====
+
+[source,rust]
+----
+#[derive(Snafu)]
+enum Error {
+    #[snafu(display("failed to foo"))]
+    Foo,
+
+    #[snafu(display("unable to bar"))]
+    Bar,
+}
+----
+
+====
 
 [WARNING.code-rule,caption=Examples of incorrect code for this rule]
 ====
@@ -400,23 +417,6 @@ enum Error {
 
     #[snafu(display("arghh baz."))]
     Baz,
-}
-----
-
-====
-
-[TIP.code-rule,caption=Examples of correct code for this rule]
-====
-
-[source,rust]
-----
-#[derive(Snafu)]
-enum Error {
-    #[snafu(display("failed to foo"))]
-    Foo,
-
-    #[snafu(display("unable to bar"))]
-    Bar,
 }
 ----
 
@@ -446,6 +446,22 @@ It might be better to split up long formatting strings into multiple smaller one
 Mix-and-matching of named versus unnamed identifiers must be avoided.
 See the next section about captured versus uncaptured identifiers.
 
+[TIP.code-rule,caption=Examples of correct code for this rule]
+====
+
+[source,rust]
+----
+format!(
+    "My {quantifier} {adjective} string with {count} substitutions is {description}!",
+    quantifier = "super",
+    adjective = "long",
+    count = 4,
+    description = "crazy",
+);
+----
+
+====
+
 [WARNING.code-rule,caption=Examples of incorrect code for this rule]
 ====
 
@@ -465,22 +481,6 @@ format!(
     "long",
     count = 4,
     "crazy",
-);
-----
-
-====
-
-[TIP.code-rule,caption=Examples of correct code for this rule]
-====
-
-[source,rust]
-----
-format!(
-    "My {quantifier} {adjective} string with {count} substitutions is {description}!",
-    quantifier = "super",
-    adjective = "long",
-    count = 4,
-    description = "crazy",
 );
 ----
 
@@ -508,6 +508,19 @@ We follow the Kubernetes convention described https://kubernetes.io/docs/referen
 
 === Resources measured in bytes
 
+[TIP.code-rule,caption=Examples of correct code for this rule]
+====
+
+[source,rust]
+----
+let memory: MemoryQuantity = "100Mi".parse();
+let memory: MemoryQuantity = "1Gi".parse();
+let memory: MemoryQuantity = "1536Mi".parse();
+let memory: MemoryQuantity = "10Gi".parse();
+----
+
+====
+
 [WARNING.code-rule,caption=Examples of incorrect code for this rule]
 ====
 
@@ -531,20 +544,20 @@ let memory: MemoryQuantity = "12345678".parse();
 
 ====
 
+=== Resources measured in CPU fractions
+
 [TIP.code-rule,caption=Examples of correct code for this rule]
 ====
 
 [source,rust]
 ----
-let memory: MemoryQuantity = "100Mi".parse();
-let memory: MemoryQuantity = "1Gi".parse();
-let memory: MemoryQuantity = "1536Mi".parse();
-let memory: MemoryQuantity = "10Gi".parse();
+let memory: CpuQuantity = "100m".parse();
+let memory: CpuQuantity = "500m".parse();
+let memory: CpuQuantity = "1".parse();
+let memory: CpuQuantity = "2".parse();
 ----
 
 ====
-
-=== Resources measured in CPU fractions
 
 [WARNING.code-rule,caption=Examples of incorrect code for this rule]
 ====
@@ -560,19 +573,6 @@ let memory: CpuQuantity = "2000m".parse();
 // Floating points
 let memory: CpuQuantity = "0.1".parse();
 let memory: CpuQuantity = "0.5".parse();
-let memory: CpuQuantity = "1".parse();
-let memory: CpuQuantity = "2".parse();
-----
-
-====
-
-[TIP.code-rule,caption=Examples of correct code for this rule]
-====
-
-[source,rust]
-----
-let memory: CpuQuantity = "100m".parse();
-let memory: CpuQuantity = "500m".parse();
 let memory: CpuQuantity = "1".parse();
 let memory: CpuQuantity = "2".parse();
 ----
