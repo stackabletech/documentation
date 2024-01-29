@@ -14,6 +14,7 @@ Multiple operators use this CRD as a way to express and configure the authentica
 The following authentication providers are supported:
 
 * <<LDAP>>: Authenticate users using an LDAP server.
+* <<OIDC>>: Authenticate users using an OpenID connect provider.
 * <<TLS>>: Authenticate users with client TLS certificates.
 * <<Static>>: Authenticate users against a static list of users and passwords in a simple Kubernetes Secret.
 
@@ -35,6 +36,25 @@ In a diagram it would look like this:
 image::image$authentication-overview.drawio.svg[]
 
 NOTE: Learn more in the xref:tutorials:authentication_with_openldap.adoc[OpenLDAP tutorial] and get a full overview of all the properties in the {crd-docs}/authentication.stackable.tech/authenticationclass/v1alpha1/#spec-provider-ldap[AuthenticationClass LDAP provider CRD reference].
+
+[#OIDC]
+=== OpenID Connect
+
+An OIDC provider like https://www.keycloak.org/[Keycloak {external-link-icon}^] could be configured as follows:
+
+[source,yaml]
+----
+include::example$authenticationclass-keycloak.yaml[]
+----
+
+<1> Hostname of the identity provider.
+<2> Port of the identity provider. If TLS is used defaults to 443, otherwise to 80.
+<3> Root HTTP path of the identity provider. Defaults to `/`.
+<4> Scopes to request from your identity provider. It is recommended to request the `openid`, `email`, and `profile` scopes.
+<5> If a product extracts some sort of "effective user" that is represented by a string internally, this config determines which claim is used to extract that string.
+<6> This is a hint about which identity provider is used by the AuthenticationClass.
+
+NOTE: Get a full overview of all the properties in the {crd-docs}/authentication.stackable.tech/authenticationclass/v1alpha1/#spec-provider-oidc[AuthenticationClass OIDC provider CRD reference].
 
 [#tls]
 === TLS
