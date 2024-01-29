@@ -199,7 +199,7 @@ enum Colors {
 
 === Formatting of struct fields and enum variants
 
-We add newlines to struct fields and enum variants when they include additional information like documentation comments or attributes, because the variants can become difficult to read.
+Add newlines to struct fields and enum variants when they include additional information like documentation comments or attributes, because the variants can become difficult to read.
 This is especially the case when fields include doc comments, attributes like `#[snafu()]`, and in case of enum variants, various embedded types.
 
 Enum variants and struct fields don't need to be separated when **no** additional information is attached to any of the variants or fields.
@@ -279,12 +279,12 @@ Comments should only be added if they provide additional information not availab
 
 === Choice of error crate and usage
 
-We use `snafu` for all error handling in library *and* application code because we want to provide as much context to the user as possible.
+Use `snafu` for all error handling in library *and* application code to provide as much context to the user as possible.
 Further, `snafu` allows us to use the same source error in multiple error variants.
-This feature can be used for cases were we need / require more fine-grained error variants.
+This feature can be used for cases where more fine-grained error variants are required.
 This behaviour is not possible when using `thiserror`, as it uses the `From` trait to convert the source error into an error variant.
 
-Additionally, we restrict the usage of the `#[snafu(context(false))]` atrribute on error variants.
+Additionally, the usage of the `#[snafu(context(false))]` atrribute on error variants is restricted.
 This ensures that fallible functions need to call `.context()` to pass the error along.
 
 The usage of `thiserror` is considered invalid.
