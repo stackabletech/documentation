@@ -6,8 +6,8 @@ Follow the https://doc.rust-lang.org/nightly/style-guide/cargo.html[official for
 This means:
 
 * Put the `[package]` section at the top of the file.
-* Put the name and version keys in that order at the top of that section, followed by the remaining keys other than description in order, followed by the description at the end of that section.
-* For other sections, sort keys with https://www.gnu.org/software/coreutils/manual/html_node/Version-sort-overview.html[version-sort] (basically the same as alphabetically).
+* Put the name and version keys in that order at the top of that section, followed by the remaining keys other than description in order (sort keys with https://www.gnu.org/software/coreutils/manual/html_node/Version-sort-overview.html[version-sort]; very similar to lexical sorting)), followed by the description at the end of that section.
+* For other sections, sort keys with version-sort.
 
 [TIP.code-rule,caption=Examples of correct code for this rule]
 ====
