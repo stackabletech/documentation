@@ -430,7 +430,7 @@ enum Error {
 ==== Exampled for "unable to ..." error messages
 
 . `unable to read config file from ...` to indicate that the file could not be loaded (for example because the file doesn't exist).
-. `unable to parse value ...` to indicate that parsing a user provided value failed (for example because it  didn't conform to the expected syntax).
+. `unable to parse value ...` to indicate that parsing a user provided value failed (for example because it didn't conform to the expected syntax).
 
 == String formatting
 
