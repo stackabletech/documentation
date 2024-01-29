@@ -32,4 +32,5 @@ It covers xref:operations/cluster_operations.adoc[starting, stopping and restart
 
 == Observability
 
-Learn abouth xref:logging.adoc[].
+Learn about which xref:labels.adoc[labels] are attached to the operators and the stacklets and the resources that get created by the operator.
+Also learn about xref:logging.adoc[].

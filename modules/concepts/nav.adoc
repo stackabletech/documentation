@@ -21,4 +21,5 @@
 *** xref:operations/pod_placement.adoc[]
 *** xref:operations/graceful_shutdown.adoc[]
 ** Observability
+*** xref:labels.adoc[]
 *** xref:logging.adoc[]
