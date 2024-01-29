@@ -9,7 +9,26 @@ This means:
 * put the name and version keys in that order at the top of that section, followed by the remaining keys other than description in order, followed by the description at the end of that section.
 * For other sections, sort keys with https://www.gnu.org/software/coreutils/manual/html_node/Version-sort-overview.html[version-sort] (basically the same as alphabetically).
 
-Example of the top of a `Cargo.toml` file:
+[WARNING.code-rule,caption=Examples of incorrect code for this rule]
+====
+
+[source,toml]
+----
+[package]
+description = "this crate does nothing"
+name = "crate-name"
+version = "0.0.1"
+
+[dependencies]
+a_dependency = "1.2.3"
+another_dependency = "0.1.0"
+yet_another_dependency = "0.2.0"
+----
+
+====
+
+[TIP.code-rule,caption=Examples of correct code for this rule]
+====
 
 [source,toml]
 ----
@@ -17,8 +36,17 @@ Example of the top of a `Cargo.toml` file:
 name = "crate-name"
 version = "0.0.1"
 # ... otherwise alphabetically sorted here
+# ... and then the description as the last key
 description = "this crate does nothing"
+
+[dependencies]
+# dependencies sorted alphabetically
+a_dependency = "1.2.3"
+another_dependency = "0.1.0"
+yet_another_dependency = "0.2.0"
 ----
+
+====
 
 NOTE: This formatting might be supported by `rustfmt` in the future, see the https://github.com/rust-lang/rustfmt/pull/5240[PR] here.
 
