@@ -1,5 +1,27 @@
 = Source code style guide
 
+== Cargo.toml
+
+Follow the https://doc.rust-lang.org/nightly/style-guide/cargo.html[official formatting conventions] for the `Cargo.toml` file.
+This means:
+
+* Put the `[package]` section at the top of the file
+* put the name and version keys in that order at the top of that section, followed by the remaining keys other than description in order, followed by the description at the end of that section.
+* For other sections, sort keys with https://www.gnu.org/software/coreutils/manual/html_node/Version-sort-overview.html[version-sort] (basically the same as alphabetically).
+
+Example of the top of a `Cargo.toml` file:
+
+[source,toml]
+----
+[package]
+name = "crate-name"
+version = "0.0.1"
+# ... otherwise alphabetically sorted here
+description = "this crate does nothing"
+----
+
+NOTE: This formatting might be supported by `rustfmt` in the future, see the https://github.com/rust-lang/rustfmt/pull/5240[PR] here.
+
 == Identifier names
 
 === Long versus abbreviated
