@@ -20,9 +20,9 @@ name = "crate-name"
 version = "0.0.1"
 
 [dependencies]
-a_dependency = "1.2.3"
 another_dependency = "0.1.0"
 yet_another_dependency = "0.2.0"
+a_dependency = "1.2.3"
 ----
 
 ====
