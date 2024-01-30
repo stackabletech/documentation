@@ -11,7 +11,7 @@ Some of these labels are https://kubernetes.io/docs/concepts/overview/working-wi
 These are the labels that are added:
 
 - `app.kubernetes.io/name` - The name of the product, i.e. `druid` or `zookeeper`.
-- `app.kubernetes.io/version` - The version of the product, i.e. `3.3.4`
+- `app.kubernetes.io/version` - The version of the product and Stackable version, i.e. `3.3.4-stackable23.11.0`
 - `app.kubernetes.io/instance` - The name of the Stacklet.
 - `app.kubernetes.io/component` - This is the xref:concepts:roles-and-role-groups.adoc[role] that this resource belongs to.
 - `app.kubernetes.io/role-group` - The name of the xref:concepts:roles-and-role-groups.adoc[role group] that a resource belongs to.
@@ -22,35 +22,35 @@ also this:
 - `stackable.tech/vendor` with value `Stackable`
 
 
-== Labels added by tooling
+== Labels added by tools
 
-* each operator is labeled with "vendor" (and other recommended labels)
+The resources associated with an operator installation are also labeled (or can be).
 
 === stackablectl
 
-* when using stackablectl
-** stacks and demos
-*** all manifests that are part of stacks/demos have a label for that attached. I.e. configmaps, secrets, volumes ....
-**** vendor label; dynamic labels: stackablectl was used; part of which stack/demo it is
-*** Helm installs (i.e. postgres, redis etc.): ... nothing yet
-*** operator installs: operators installed as part of a stack/demo are labeled
-*** all the other recommended labels are still applied to resources
+**Installing operators** - +
+When installing operators, stackablectl will always label the Deployment, ConfigMap, ClusterRole etc. with
 
+* `stackable.tech/vendor=Stackable`
+* `stackable.tech/managed-by=stackablectl`
 
+**Stacks and demos** - +
+When installing a stack or a demo, `stackablectl` adds additional labels to identify the parts of the stack or demo:
+
+* `stackable-tech/stack` with the value being the Stack name.
+* `stackable-tech/demo` with the value being the Demo name.
+
+These labels are attached to all parts of the Stack or demo directly installed by Stackable.
+This includes the operators that are needed, additional depdencies installed via Helm and additional required Kubernetes objects like Secrets or ConfigMaps.
+
+NOTE: The Stacklets themselves are not yet labeled with the Stack or Demo that they belong to.
 
 
 === Helm
 
-* The Helm charts for the operators support adding your own labels to them
-** all _templated resources_ (Deployment, ClusterRole, ...) get these labels
+The Helm Charts for the Stackable operators support specifying labels in the `values.yaml` file.
+All resources deployed by the Helm Chart (Deployment, ClusterRole, Configmap etc.) will have the labels attached when the operator is deployed.
 
+== Further reading
 
-
-== Read more
-
-ADR: https://docs.stackable.tech/home/nightly/contributor/adr/adr031-resource-labels
-
-// what would be nice to have:
-//
-// * custom labels
-// * operators labeling their resources as part of a stack too
+Have a look at https://docs.stackable.tech/home/nightly/contributor/adr/adr031-resource-labels[] if you want to find out about the design decisions for our labels.
