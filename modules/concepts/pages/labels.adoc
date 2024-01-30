@@ -10,25 +10,23 @@ Every resource created by a Stackable operator is labelled with a common set of 
 Some of these labels are https://kubernetes.io/docs/concepts/overview/working-with-objects/common-labels/[recommended] to use by the Kubernetes documentation.
 These are the labels that are added:
 
-* recommended labels
-** each operator is labeled with "vendor" (and other recommended labels)
-** each resource created by an operator is labeled with "vendor" (and other recommended labels)
+- `app.kubernetes.io/name` - The name of the product, i.e. `druid` or `zookeeper`.
+- `app.kubernetes.io/version` - The version of the product, i.e. `3.3.4`
+- `app.kubernetes.io/instance` - The name of the Stacklet.
+- `app.kubernetes.io/component` - This is the xref:concepts:roles-and-role-groups.adoc[role] that this resource belongs to.
+- `app.kubernetes.io/role-group` - The name of the xref:concepts:roles-and-role-groups.adoc[role group] that a resource belongs to.
+- `app.kubernetes.io/managed-by` - Which software manages this resource? This will be the operator, i.e. `airflow-operator`.
+
+also this:
+
+- `stackable.tech/vendor` with value `Stackable`
+
 
 == Labels added by tooling
 
+* each operator is labeled with "vendor" (and other recommended labels)
+
 === stackablectl
-
-=== Helm
-
-* The Helm charts for the operators support adding your own labels to them
-** all _templated resources_ (Deployment, ClusterRole, ...) get these labels
-
-
-
-
-// Intro TODO
-
-Which labels, what for?
 
 * when using stackablectl
 ** stacks and demos
@@ -41,6 +39,16 @@ Which labels, what for?
 
 
 
+=== Helm
+
+* The Helm charts for the operators support adding your own labels to them
+** all _templated resources_ (Deployment, ClusterRole, ...) get these labels
+
+
+
+== Read more
+
+ADR: https://docs.stackable.tech/home/nightly/contributor/adr/adr031-resource-labels
 
 // what would be nice to have:
 //
