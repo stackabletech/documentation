@@ -30,7 +30,7 @@ The resources associated with an operator installation are also labeled (or can 
 
 ==== Installing operators
 
-When installing operators, stackablectl will always label the Deployment, ConfigMap, ClusterRole etc. with
+When installing operators, `stackablectl` will always label the Deployment, ConfigMap, ClusterRole etc. with
 
 * `stackable.tech/vendor=Stackable`
 * `stackable.tech/managed-by=stackablectl`
