@@ -1,5 +1,28 @@
 = Labels
 
+Labels are key/value pairs in the metadata of Kubernetes objects that add identifying information to the object.
+They do not have direct semantic implications but can be used to organize and manage resources.
+stackablectl, the cockpit and the Helm Charts add labels to the resources that are part of a Stacklet, and the operators add labels to the resources they create.
+
+== Resource labels added by the operators
+
+Every resource created by a Stackable operator is labelled with a common set of labels.
+Some of these labels are https://kubernetes.io/docs/concepts/overview/working-with-objects/common-labels/[recommended] to use by the Kubernetes documentation.
+These are the labels that are added:
+
+* recommended labels
+** each operator is labeled with "vendor" (and other recommended labels)
+** each resource created by an operator is labeled with "vendor" (and other recommended labels)
+
+== Labels added by tooling
+
+=== stackablectl
+
+=== Helm
+
+* The Helm charts for the operators support adding your own labels to them
+** all _templated resources_ (Deployment, ClusterRole, ...) get these labels
+
 
 
 
@@ -7,9 +30,6 @@
 
 Which labels, what for?
 
-* recommended labels
-** each operator is labeled with "vendor" (and other recommended labels)
-** each resource created by an operator is labeled with "vendor" (and other recommended labels)
 * when using stackablectl
 ** stacks and demos
 *** all manifests that are part of stacks/demos have a label for that attached. I.e. configmaps, secrets, volumes ....
@@ -18,9 +38,6 @@ Which labels, what for?
 *** operator installs: operators installed as part of a stack/demo are labeled
 *** all the other recommended labels are still applied to resources
 
-
-* The Helm charts for the operators support adding your own labels to them
-** all _templated resources_ (Deployment, ClusterRole, ...) get these labels
 
 
 
