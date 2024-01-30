@@ -1,3 +1,31 @@
 = Labels
 
-TODO
+
+
+
+// Intro TODO
+
+Which labels, what for?
+
+* recommended labels
+** each operator is labeled with "vendor" (and other recommended labels)
+** each resource created by an operator is labeled with "vendor" (and other recommended labels)
+* when using stackablectl
+** stacks and demos
+*** all manifests that are part of stacks/demos have a label for that attached. I.e. configmaps, secrets, volumes ....
+**** vendor label; dynamic labels: stackablectl was used; part of which stack/demo it is
+*** Helm installs (i.e. postgres, redis etc.): ... nothing yet
+*** operator installs: operators installed as part of a stack/demo are labeled
+*** all the other recommended labels are still applied to resources
+
+
+* The Helm charts for the operators support adding your own labels to them
+** all _templated resources_ (Deployment, ClusterRole, ...) get these labels
+
+
+
+
+// what would be nice to have:
+//
+// * custom labels
+// * operators labeling their resources as part of a stack too
