@@ -2,7 +2,7 @@
 
 Labels are key/value pairs in the metadata of Kubernetes objects that add identifying information to the object.
 They do not have direct semantic implications but can be used to organize and manage resources.
-stackablectl, the cockpit and the Helm Charts add labels to the resources that are part of a Stacklet, and the operators add labels to the resources they create.
+The `stackablectl` tool, the cockpit and the Helm Charts add labels to the resources that are part of a Stacklet, and the operators add labels to the resources they create.
 
 == Resource labels added by the operators
 
