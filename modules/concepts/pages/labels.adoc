@@ -42,10 +42,10 @@ When installing a stack or a demo, `stackablectl` adds additional labels to iden
 * `stackable-tech/stack` with the value being the Stack name.
 * `stackable-tech/demo` with the value being the Demo name.
 
-These labels are attached to all parts of the Stack or demo directly installed by Stackable.
-This includes the operators that are needed, additional depdencies installed via Helm and additional required Kubernetes objects like Secrets or ConfigMaps.
+These labels are attached to some parts of the Stack or demo directly installed by Stackable.
+This includes the operators that are needed and additional required Kubernetes objects like Secrets or ConfigMaps.
 
-NOTE: The Stacklets themselves are not yet labeled with the Stack or Demo that they belong to.
+NOTE: The Stacklets themselves and external dependencies are not yet labeled with the Stack or Demo that they belong to.
 
 
 === Helm
