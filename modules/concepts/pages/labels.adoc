@@ -51,7 +51,7 @@ NOTE: The Stacklets themselves are not yet labeled with the Stack or Demo that t
 === Helm
 
 The Helm Charts for the Stackable operators support specifying labels in the `values.yaml` file.
-All resources deployed by the Helm Chart (Deployment, ClusterRole, Configmap etc.) will have the labels attached when the operator is deployed.
+All resources deployed by the Helm Chart (Deployment, ClusterRole, Configmap, etc.) will have the labels attached when the operator is deployed.
 
 == Further reading
 
