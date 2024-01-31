@@ -9,7 +9,7 @@ v0.1, 2022-04-28
 ** Razvan Mihai
 ** Sebastian Bernauer
 ** Sönke Liebau
-** Teo Klestrup Röijezon
+** Natalie Klestrup Röijezon
 * Date: 2022-04-28
 
 Technical Story: https://github.com/stackabletech/issues/issues/208[#208]

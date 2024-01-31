@@ -1,0 +1,58 @@
+= Labels
+
+Labels are key/value pairs in the metadata of Kubernetes objects that add identifying information to the object.
+They do not have direct semantic implications but can be used to organize and manage resources.
+The `stackablectl` tool, the cockpit and the Helm Charts add labels to the resources that are part of a Stacklet, and the operators add labels to the resources they create.
+
+== Resource labels added by the operators
+
+Every resource created by a Stackable operator is labelled with a common set of labels.
+Some of these labels are https://kubernetes.io/docs/concepts/overview/working-with-objects/common-labels/[recommended] to use by the Kubernetes documentation.
+The following labels are added to resources:
+
+- `app.kubernetes.io/name` - The name of the product, i.e. `druid` or `zookeeper`.
+- `app.kubernetes.io/version` - The version of the product and Stackable version, i.e. `3.3.4-stackable23.11.0`
+- `app.kubernetes.io/instance` - The name of the Stacklet.
+- `app.kubernetes.io/component` - This is the xref:concepts:roles-and-role-groups.adoc[role] that this resource belongs to.
+- `app.kubernetes.io/role-group` - The name of the xref:concepts:roles-and-role-groups.adoc[role group] that a resource belongs to.
+- `app.kubernetes.io/managed-by` - Which software manages this resource? This will be the operator, i.e. `airflow-operator`.
+
+also this:
+
+- `stackable.tech/vendor` with value `Stackable`
+
+
+== Labels added by tools
+
+The resources associated with an operator installation are also labeled (or can be).
+
+=== stackablectl
+
+==== Installing operators
+
+When installing operators, `stackablectl` will always label the Deployment, ConfigMap, ClusterRole etc. with
+
+* `stackable.tech/vendor=Stackable`
+* `stackable.tech/managed-by=stackablectl`
+
+==== Stacks and demos
+
+When installing a stack or a demo, `stackablectl` adds additional labels to identify the parts of the stack or demo:
+
+* `stackable-tech/stack` with the value being the Stack name.
+* `stackable-tech/demo` with the value being the Demo name.
+
+These labels are attached to some parts of the Stack or demo directly installed by Stackable.
+This includes the operators that are needed and additional required Kubernetes objects like Secrets or ConfigMaps.
+
+NOTE: The Stacklets themselves and external dependencies are not yet labeled with the Stack or Demo that they belong to.
+
+
+=== Helm
+
+The Helm Charts for the Stackable operators support specifying labels in the `values.yaml` file.
+All resources deployed by the Helm Chart (Deployment, ClusterRole, Configmap, etc.) will have the labels attached when the operator is deployed.
+
+== Further reading
+
+Have a look at https://docs.stackable.tech/home/nightly/contributor/adr/adr031-resource-labels[] if you want to find out about the design decisions for our labels.

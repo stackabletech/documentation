@@ -9,7 +9,7 @@ v0.1, 29.04.2022
 ** Sebastian Bernauer
 ** Siegfried Weber
 ** Sönke Liebau
-** Teo Klestrup Röijezon
+** Natalie Klestrup Röijezon
 * Date: 29.04.2022
 
 == Context and Problem Statement

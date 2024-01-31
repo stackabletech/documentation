@@ -12,7 +12,7 @@ v0.1, 2022-12-07
 ** Sebastian Bernauer
 ** Siegfried Weber
 ** Sönke Liebau
-** Teo Klestrup Röijezon
+** Natalie Klestrup Röijezon
 * Date: 2022-12-07
 
 Technical Story: https://github.com/stackabletech/issues/issues/202, https://github.com/stackabletech/issues/issues/261

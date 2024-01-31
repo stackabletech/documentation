@@ -9,7 +9,7 @@ v0.1, 16.05.2022
 ** Malte Sander
 ** Sebastian Bernauer
 ** Sönke Liebau
-** Teo Klestrup Röijezon
+** Natalie Klestrup Röijezon
 * Date: 17.05.2022
 
 == Context and Problem Statement
