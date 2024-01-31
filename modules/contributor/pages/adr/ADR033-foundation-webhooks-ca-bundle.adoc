@@ -169,10 +169,9 @@ For clusters without any existing manager we should provide our own, lightweight
 
 == Decision Drivers
 
-* Generic solution to be compatible with as many external cert providers as possible
-* Openshift compatible
-* How to activate / deactivate if e.g. no conversion webhooks should be applied?
-* Avoid vendor lock-in
+* Generic solution to be compatible with as many external cert providers as possible to avoid vendor lock-in. This means a possible abstraction to support switching out cert providers / "backends".
+* Openshift compatibility.
+* How to activate / deactivate if e.g. no conversion webhooks should be applied? This is about how we e.g. set inject annotations via templating / Helm.
 
 == Considered Options
 
