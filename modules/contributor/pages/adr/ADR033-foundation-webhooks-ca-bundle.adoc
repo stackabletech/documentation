@@ -205,6 +205,8 @@ Put the cert management / injection stuff into a library in operator-rs (similar
 * Good, because covers both Kubernetes and Openshift
 * Good, because widely used and de-facto standard for cert injection
 * Good, because cert injection works via annotations (compatibility) for various Kubernetes Resources (CRDs, Validating/Mutating webhooks)
+* Good, because it's already popular and familiar to users
+* Good, because it frees maintenance and development resources for us
 * Bad, because another tool we have to be experienced with, check for updates and breaking features etc.
 
 === <<option2>>
@@ -224,7 +226,6 @@ Put the cert management / injection stuff into a library in operator-rs (similar
 === <<option4>>
 
 * Good, because no external tools are required
-* Good, because all included within the SDP
 * Good, because external tools can be used if required
 * Bad, because requires more time and coding
 
