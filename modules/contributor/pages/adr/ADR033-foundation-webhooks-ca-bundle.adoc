@@ -33,6 +33,7 @@ The steps 2 to 4 may run in a loop if multiple mutating admissions are performed
 
 In order for the Kubernetes API server to contact webhook controllers, the webhook endpoints have to present a certificate trusted by the Kubernetes API server. This can be configured similarly for conversion and validating / mutating webhooks as follows.
 
+[[conversion_webhooks_ca_example]]
 === Conversion webhooks CA configuration
 
 The following snippet shows a CRD containing multiple versions (`v1beta1`, `v1`) with different schemas. The `v1beta1` is still the storage version. Due to schema changes, any custom resource deployed as version `v1` requires a conversion webhook.
@@ -160,7 +161,7 @@ metadata:
     cert-manager.io/inject-ca-from-secret: default/my-webhook-example-com-ca
 ----
 
-This can be used for CRDs and conversion webhooks as well.
+This can be used for CRDs and conversion webhooks as well as shown in <<conversion_webhooks_ca_example>>.
 
 The SDP should focus on one solution for CA injection, internally or externally, but strive for compatibility with as many others as possible. The normal way of configuration seems to be adding an annotation to the objects containing the CA, which can be supported in our Helm chart or solved via documentation.
 
