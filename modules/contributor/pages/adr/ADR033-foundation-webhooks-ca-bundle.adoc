@@ -35,6 +35,10 @@ In order for the Kubernetes API server to contact webhook controllers, the webho
 
 === Conversion webhooks CA configuration
 
+The following snippet shows a CRD containing multiple versions (`v1beta1`, `v1`) with different schemas. The `v1beta1` is still the storage version. Due to schema changes, any custom resource deployed as version `v1` requires a conversion webhook.
+
+The `conversion.webhook.clientConfig.service` points to an endpoint where the actual conversion from an applied `v1` to the stored `v1beta1` takes place. The Kubernetes API server must trust the endpoint for which a certificate is provided / injected in `conversion.webhook.clientConfig.caBundle`. The CA bundle in this case is injected via a Cert-Manager annotation that is discussed later in this document.
+
 [source,yaml]
 ----
 apiVersion: apiextensions.k8s.io/v1
@@ -103,6 +107,8 @@ spec:
 ----
 
 === Validating / Mutating webhooks CA configuration
+
+The following snippet shows a `ValidatingWebhookConfiguration` which is similar to a `MutatingWebhookConfiguration`. The `webhooks.clientConfig` is configured as for the conversion webhook above. The `webhooks.clientConfig.service` points to the endpoint where the webhook is served an must be trusted by the Kubernetes API server via `webhooks.clientConfig.caBundle`. The CA bundle in this case is injected via a Cert-Manager annotation that is discussed later in this document.
 
 [source,yaml]
 ----
