@@ -21,19 +21,17 @@ also this:
 
 - `stackable.tech/vendor` with value `Stackable`
 
-
 == Labels added by tools
 
 The resources associated with an operator installation are also labeled (or can be).
 
 === stackablectl
 
-==== Installing operators
+==== Installing operators and releases
 
-When installing operators, `stackablectl` will always label the Deployment, ConfigMap, ClusterRole etc. with
+When installing operators and releases, `stackablectl` will always label the Deployment, ConfigMap, ClusterRole etc. with
 
 * `stackable.tech/vendor=Stackable`
-* `stackable.tech/managed-by=stackablectl`
 
 ==== Stacks and demos
 
@@ -41,17 +39,19 @@ When installing a stack or a demo, `stackablectl` adds additional labels to iden
 
 * `stackable-tech/stack` with the value being the Stack name.
 * `stackable-tech/demo` with the value being the Demo name.
+* `stackable.tech/managed-by=stackablectl`
 
-These labels are attached to some parts of the Stack or demo directly installed by Stackable.
-This includes the operators that are needed and additional required Kubernetes objects like Secrets or ConfigMaps.
+These labels are attached to the demo and stack manifests, which include Secret, ConfigMap or ClusterRole.
 
 NOTE: The Stacklets themselves and external dependencies are not yet labeled with the Stack or Demo that they belong to.
-
 
 === Helm
 
 The Helm Charts for the Stackable operators support specifying labels in the `values.yaml` file.
 All resources deployed by the Helm Chart (Deployment, ClusterRole, Configmap, etc.) will have the labels attached when the operator is deployed.
+The default set of labels includes:
+
+* `stackable.tech/vendor=Stackable`
 
 == Further reading
 
