@@ -17,6 +17,8 @@ Technical Story: https://github.com/stackabletech/issues/issues/361
 
 We have to start versioning our CRDs properly and move away from `v1alhpa1` to have stable interfaces for customers to rely on. Since we cannot avoid having breaking changes in the future which require a bump in the respective CRD version, we have to supply conversion webhooks that take care of converting older versions to the current storage version.
 
+Converting custom resources between versions is a separate step, independent of webhook deployments. CRD versions should be seemlessly upgraded when new operators/webhooks are upgraded. Downgrades are possible by first converting the custom resources to the old version and then downgrading the operator and webhook.
+
 A conversion webhook is registered in a CRD like this:
 
 [source,yaml]
@@ -35,6 +37,26 @@ A conversion webhook is registered in a CRD like this:
 
 This ADR is about the location of webhook endpoint / server that the `webhook.clientConfig.service` is referencing.
 
+
+=== Use case: CRD downgrades
+
+There can be multiple CRD versions for an operator. There is only one stored version and multiple served versions of the CRDs.
+
+Setting:
+
+* old crd version "v1"
+* new crd version "v2"
+* there is a cluster/stacklet in version "v2" running
+
+Downgrade procedure:
+
+* Step 1: request the cluster definition in "v1" and apply it again
+* Step 2: donwgrade operator and webhook deployments
+
+NOTE: this works, because the cluster version has been downgraded before the webhook has been downgraded. This means that the webhook and the operator can be deployed in lock-step.
+
+Proposal: we could implement step 1 as a convenience in stackablectl and/or document how to perform it with kubectl or the https://github.com/kubernetes-sigs/kube-storage-version-migrator[storage migrator]
+
 == Problem Statement
 
 There are several options on how or where to deploy a conversion webhook, e.g. coupled closely with the operator as a controller or completely decoupled via an extra helm deployment.
@@ -52,14 +74,15 @@ Furthermore, in terms of downgrading, webhooks should always be deployed in thei
 - How to abstract a common admission/conversion webhook skeleton in operator-rs, that can be implemented in the operators within a few lines of code (excluding the actual conversion code)?
 - How to keep maintenance, updating, pipelines or extra images to a minimum?
 - How to deactivate or not deploy the conversion webhook if not desired by customers? Or how to activate if opt-in?
-- Does the webhook have to keep working if e.g. the operator crashes (coupled)?
 
 == Decision Drivers
 
-- Keep pipelining / maintenance / extra images / code to a minimum
-- Decoupling of operator and webhook (e.g. upgrade/downgrade)
-- Must be Openshift compatible
-- Must be HA or run without the operator present
+* Keep pipelining / maintenance / extra images / code to a minimum
+* Decoupling of operator and webhook (e.g. upgrade/downgrade)
+* Must be deployable with Operator Lifecycle Manager (OLM)
+** OLM deploys webhooks together with operators in the same Cluster Service Version (CSV). This means, webhooks and operators are NOT independently up- or down-gradable.
+** Helm charts and OLM bundles should not diverge in functionality. This is to reduce maintenance costs.
+* The webhook has to keep working if the operator crashes
 
 == Considered Options
 
