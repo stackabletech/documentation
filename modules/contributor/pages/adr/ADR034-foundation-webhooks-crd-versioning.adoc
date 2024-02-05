@@ -166,9 +166,9 @@ The operator deploys a webhook deployment similar to how it deploys e.g. Statefu
 - Possibly more complex to test
 
 [[option5]]
-=== Option 5: The webhook is a deployment via Helm
+=== Option 5: The webhook has it's own is a Deployment
 
-The operator Helm bundle contains an extra dedicated deployment with the webhook server (in the operator namespace?). One webhook deployment per operator. Same image as operator.
+The webhook and the operator are deployed in lock-step, each in it's own Deployment. Both deployments are part of the same Helm Chart, OLM CSV, etc. The webhook high-availability is achieved with multiple Deployment replicas. Both are bundled in the same container image.
 
 ==== Pros
 
@@ -180,7 +180,7 @@ The operator Helm bundle contains an extra dedicated deployment with the webhook
 
 ==== Cons
 
-- Helm drawbacks
+- In OLM environments, if the operator fails to deploy, the webhook is also not deployed.
 
 == Decision Outcome
 
