@@ -78,7 +78,7 @@ Furthermore, in terms of downgrading, webhooks should always be deployed in thei
 == Decision Drivers
 
 * Keep pipelining / maintenance / extra images / code to a minimum
-* Decoupling of operator and webhook (e.g. upgrade/downgrade)
+* Operator and webhook are deployed in lock-step
 * Must be deployable with Operator Lifecycle Manager (OLM)
 ** OLM deploys webhooks together with operators in the same Cluster Service Version (CSV). This means, webhooks and operators are NOT independently up- or down-gradable.
 ** Helm charts and OLM bundles should not diverge in functionality. This is to reduce maintenance costs.
@@ -166,7 +166,7 @@ The operator deploys a webhook deployment similar to how it deploys e.g. Statefu
 - Possibly more complex to test
 
 [[option5]]
-=== Option 5: The webhook has it's own is a Deployment
+=== Option 5: The webhook has its own Deployment
 
 The webhook and the operator are deployed in lock-step, each in it's own Deployment. Both deployments are part of the same Helm Chart, OLM CSV, etc. The webhook high-availability is achieved with multiple Deployment replicas. Both are bundled in the same container image.
 
@@ -184,22 +184,7 @@ The webhook and the operator are deployed in lock-step, each in it's own Deploym
 
 == Decision Outcome
 
-Chosen <<option5>>, because it provides us with the most flexibility of deployment and utilization of SDP tools like operator-templating. It has the least amount of drawbacks in terms of complexity, maintain- and updatability. A basic module / crate for the webhook skeleton will be implemented in operator-rs and can be reused with operator specific logic for conversion.
-
-=== Research
-
-- Research: Openshift compatibility
-- Research: OLM bundles + operator + webhook
-
-=== Positive Consequences
-
-- Operator-templating
-- Can be updated independently of the operator if required
-- Parallelize processes like creating infrastructure, cert sidecar containers, "conversion" framework in the operators
-
-=== Negative Consequences
-
-- TBD
+Chosen <<option5>>, because it fits on all decision drivers.
 
 == Links
 
