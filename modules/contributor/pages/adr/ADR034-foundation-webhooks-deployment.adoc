@@ -6,16 +6,22 @@ v0.1
 
 * Status: {status}
 * Deciders:
+** Sebastian Bernauer
 ** Andrew Kenworthy
-** Malte Sander
 ** Sascha Lautenschlaeger
+** Razvan Mihai
+** Natalie Röijezon
+** Malte Sander
 * Date: {date}
 
 Technical Story: https://github.com/stackabletech/issues/issues/361
 
 == Context
 
-We have to start versioning our CRDs properly and move away from `v1alhpa1` to have stable interfaces for customers to rely on. Since we cannot avoid having breaking changes in the future which require a bump in the respective CRD version, we have to supply conversion webhooks that take care of converting older versions to the current storage version.
+We must version our CustomResourceDefinitions (CRDs).
+This step allows us to move away from unstable alpha or beta versions (like `v1alhpa1`) to stable versions like `v1` or `v2`.
+These versions provide stable interfaces which customers can rely on.
+Since we cannot avoid having breaking changes in the future (which require a bump in the respective CRD version), we have to supply conversion webhooks that take care of converting older versions to the current storage version.
 
 Converting custom resources between versions is a separate step, independent of webhook deployments. CRD versions should be seemlessly upgraded when new operators/webhooks are upgraded. Downgrades are possible by first converting the custom resources to the old version and then downgrading the operator and webhook.
 
