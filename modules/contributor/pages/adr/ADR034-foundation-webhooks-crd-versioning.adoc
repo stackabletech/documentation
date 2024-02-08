@@ -84,6 +84,18 @@ Furthermore, in terms of downgrading, webhooks should always be deployed in thei
 ** Helm charts and OLM bundles should not diverge in functionality. This is to reduce maintenance costs.
 * The webhook has to keep working if the operator crashes
 
+=== More notes on OLM
+
+OLM is a Kubernetes operator that manages the lifecycle of other operators. It is used to install, update, and remove operators and their associated services. OLM uses a custom resource called a ClusterServiceVersion (CSV) to manage the lifecycle of an operator. A CSV is a manifest that describes the operator and its associated services. It contains metadata about the operator, such as its name, version, and supported Kubernetes versions. It also contains a list of resources that the operator manages, such as custom resource definitions (CRDs), roles, role bindings and most relevant for this ADR, webhook deployments.
+
+Webhooks managed by OLM are deployed together with the operator in the same ClusterServiceVersion (CSV) but as a separate Deployment. The webhook and the operator manage the same ClusterResourceDefinitions marked as `owned` in the CSV.
+
+Any CSV that contains conversion webhooks must support the `AllNamespaces` install mode. This is because webhooks are cluster-wide resources and must be installed in all namespaces.
+
+The `spec.conversions.webhook.clientConfig.namespace` field of the CRD is a required field. For OLM, this means that the webhook must be deployed in that namespace together with the operator. This is a limitation of OLM and is not something that can be changed.
+
+For more details regarding OLM constraints for webhooks, see the OpenShift Container Platform https://docs.openshift.com/container-platform/4.14/operators/operator_sdk/osdk-generating-csvs.html#olm-webhook-considerations_osdk-generating-csvs[documentation].
+
 == Considered Options
 
 [[option1]]
