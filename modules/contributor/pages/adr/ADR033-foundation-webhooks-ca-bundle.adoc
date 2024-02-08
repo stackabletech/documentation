@@ -167,6 +167,20 @@ The SDP should focus on one solution for CA injection, internally or externally,
 
 For clusters without any existing manager we should provide our own, lightweight caBundle injector that can work in tandem with the secret operator.
 
+=== Notes on OLM
+
+The Operator Lifecycle Manager (OLM) is a core component of OpenShift. It is used to install, manage, and upgrade the lifecycle of all Operators and their associated services running across a cluster. It is the recommended way to install and manage operators on OpenShift. OLM is also used to install the Stackable Operator Framework.
+
+Operators and webhooks managed by OLM are automatically injected with the CA bundle from the cluster. This is done by the OLM itself and does not require any additional configuration.
+
+OLM patches the CustomResourceDefinition (CRD) marked as `owned` with the CA bundle from the cluster and mounts certificates and keys in the webhook Pods. The keys are in the EC format (as of version 4.14 of OpenShift).
+
+OLM mounts the TLS key and certificate for the webhook at the following locations:
+
+ * The TLS certificate file is mounted to the deployment at `/apiserver.local.config/certificates/apiserver.crt`.
+* The TLS key file is mounted to the deployment at `/apiserver.local.config/certificates/apiserver.key`.
+
+For more details regarding OLM constraints for webhooks, see the OpenShift Container Platform https://docs.openshift.com/container-platform/4.14/operators/operator_sdk/osdk-generating-csvs.html#olm-webhook-considerations_osdk-generating-csvs[documentation].
 == Decision Drivers
 
 * Generic solution to be compatible with as many external cert providers as possible to avoid vendor lock-in. This means a possible abstraction to support switching out cert providers / "backends".
