@@ -9,7 +9,7 @@ That means E-Mail notifications to the NSA and BIS are not required and therefor
 
 In particular:
 
-* We are exempt under https://www.ecfr.gov/current/title-15/subtitle-B/chapter-VII/subchapter-C/part-734/section-734.3[EAR 734.3(b)] because we are published according to EAR 734.7
+* We are exempt under https://www.ecfr.gov/current/title-15/subtitle-B/chapter-VII/subchapter-C/part-734/section-734.3[EAR 734.3(b)] because we are published according to https://www.ecfr.gov/current/title-15/subtitle-B/chapter-VII/subchapter-C/part-734/section-734.7[EAR 734.7]
 * We are exempt under https://www.ecfr.gov/current/title-15/subtitle-B/chapter-VII/subchapter-C/part-734/section-734.7[EAR 742.15(b)] as all our software only includes https://ecfr.io/Title-15/Section-772.1[standard encryption]
 
 The Stackable Data Platform is open source, and the source code of all the components can be found on https://github.com/stackabletech/[GitHub].
