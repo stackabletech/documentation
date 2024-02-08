@@ -126,9 +126,9 @@ For more details regarding OLM constraints for webhooks, see the OpenShift Conta
 == Considered Options
 
 [[option1]]
-=== Option 1: Deploy within the operator as controller
+=== Option 1: Deploy within the Operator as Controller
 
-The operator contains another controller / thread with the webhook server and conversion code.
+The operator contains another controller in a separate thread with the webhook server and conversion code.
 
 ==== Pros
 
@@ -146,14 +146,14 @@ The operator contains another controller / thread with the webhook server and co
 - (OpenShift restrictions? Restricted namespaces etc.?)
 
 [[option2]]
-=== Option 2: Deploy within the operator as extra container with operator image
+=== Option 2: Deploy within the Operator as Extra Container with Operator Image
 
 The operator deployment contains another container next to the actual operator containing the webhook server and conversion code using the operator docker image.
 
 ==== Pros
 
 - No extra pipelines for the build process
-- Could be enabled / disabled Helm parameters
+- Could be enabled / disabled using Helm parameters
 - Operator crash does not affect webhook
 - Always up to date with the operator, no extra versioning
 
@@ -166,7 +166,7 @@ The operator deployment contains another container next to the actual operator c
 - (OpenShift restrictions? Restricted namespaces etc.?)
 
 [[option3]]
-=== Option 3: Deploy within the operator as extra container and extra image
+=== Option 3: Deploy within the Operator as Extra Container and Extra Image
 
 The operator deployment contains another container next to the actual operator containing the webhook server and conversion code using its own docker image.
 
@@ -174,7 +174,7 @@ The operator deployment contains another container next to the actual operator c
 
 - No overhead due to operator image (just the lightweight webhook server)
 - Operator crash does not affect webhook
-- Could be enabled / disabled Helm parameters
+- Could be enabled / disabled using Helm parameters
 - Always up to date with the operator, no extra versioning
 
 ==== Cons
@@ -185,9 +185,9 @@ The operator deployment contains another container next to the actual operator c
 - (OpenShift restrictions? Restricted namespaces etc.?)
 
 [[option4]]
-=== Option 4: The operator creates a webhook deployment
+=== Option 4: The Operator creates a Webhook Deployment
 
-The operator deploys a webhook deployment similar to how it deploys e.g. StatefulSets.
+The operator deploys a webhook Deployment similar to how it deploys e.g. StatefulSets.
 
 ==== Pros
 
@@ -205,7 +205,7 @@ The operator deploys a webhook deployment similar to how it deploys e.g. Statefu
 - Possibly more complex to test
 
 [[option5]]
-=== Option 5: The webhook has its own Deployment
+=== Option 5: The Webhook has its own Deployment
 
 The webhook and the operator are deployed in lock-step, each in it's own Deployment.
 Both deployments are part of the same Helm Chart, OLM CSV, etc.
