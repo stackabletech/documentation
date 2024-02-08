@@ -23,12 +23,14 @@ This step allows us to move away from unstable alpha or beta versions (like `v1a
 These versions provide stable interfaces which customers can rely on.
 Since we cannot avoid having breaking changes in the future (which require a bump in the respective CRD version), we have to supply conversion webhooks that take care of converting older versions to the current storage version.
 
-Converting custom resources between versions is a separate step, independent of webhook deployments. CRD versions should be seemlessly upgraded when new operators/webhooks are upgraded. Downgrades are possible by first converting the custom resources to the old version and then downgrading the operator and webhook.
+Converting custom resources between versions is a separate step, independent of webhook deployments.
+CRD versions should be seemlessly upgraded when new operators/webhooks are upgraded. Downgrades are possible by first converting the custom resources to the old version and then downgrading the operator and webhook.
 
 A conversion webhook is registered in a CRD like this:
 
 [source,yaml]
 ----
+spec:
   conversion:
     strategy: Webhook
     webhook:
@@ -41,7 +43,7 @@ A conversion webhook is registered in a CRD like this:
         caBundle: "Ci0tLS0tQk...<base64-encoded PEM bundle>...tLS0K"
 ----
 
-This ADR is about the location of webhook endpoint / server that the `webhook.clientConfig.service` is referencing.
+This ADR is about the location of the webhook endpoint / server which the `spec.conversion.webhook.clientConfig.service` block is referencing.
 
 
 === Use case: CRD downgrades
@@ -59,13 +61,17 @@ Downgrade procedure:
 * Step 1: request the cluster definition in "v1" and apply it again
 * Step 2: donwgrade operator and webhook deployments
 
-NOTE: this works, because the cluster version has been downgraded before the webhook has been downgraded. This means that the webhook and the operator can be deployed in lock-step.
+[NOTE]
+====
+This works, because the cluster version has been downgraded before the webhook has been downgraded.
+This means that the webhook and the operator can be deployed in lock-step.
+====
 
 Proposal: we could implement step 1 as a convenience in stackablectl and/or document how to perform it with kubectl or the https://github.com/kubernetes-sigs/kube-storage-version-migrator[storage migrator]
 
 == Problem Statement
 
-There are several options on how or where to deploy a conversion webhook, e.g. coupled closely with the operator as a controller or completely decoupled via an extra helm deployment.
+There are several options on how or where to deploy a conversion webhook, e.g. coupled closely with the operator as a controller or completely decoupled via an extra deployment.
 
 We need a uniform deployment across all operators to keep implementation and maintenance to a minimum and reuse code wherever possible.
 Additionally, webhooks should be enabled / disabled on demand via options like Helm, operator-parameters or CRD flags.
@@ -75,8 +81,8 @@ Furthermore, in terms of downgrading, webhooks should always be deployed in thei
 == Discussion questions
 
 - Do we want this to be HA?
-- Do we want this to be deployed decoupled?
-- One operator per kubernetes cluster: What if 3 operators deployed watching different namespaces / versions? Should be strongly discouraged!
+- Do we want this to be deployed in a decoupled way?
+- One operator per Kubernetes cluster: What if 3 operators deployed watching different namespaces / versions? Should be strongly discouraged!
 - How to abstract a common admission/conversion webhook skeleton in operator-rs, that can be implemented in the operators within a few lines of code (excluding the actual conversion code)?
 - How to keep maintenance, updating, pipelines or extra images to a minimum?
 - How to deactivate or not deploy the conversion webhook if not desired by customers? Or how to activate if opt-in?
@@ -86,19 +92,34 @@ Furthermore, in terms of downgrading, webhooks should always be deployed in thei
 * Keep pipelining / maintenance / extra images / code to a minimum
 * Operator and webhook are deployed in lock-step
 * Must be deployable with Operator Lifecycle Manager (OLM)
-** OLM deploys webhooks together with operators in the same Cluster Service Version (CSV). This means, webhooks and operators are NOT independently up- or down-gradable.
+** OLM deploys webhooks together with operators in the same Cluster Service Version (CSV). This means, webhooks and operators are NOT independently up- or down-gradable. Also see the <<olm-notes>>.
 ** Helm charts and OLM bundles should not diverge in functionality. This is to reduce maintenance costs.
 * The webhook has to keep working if the operator crashes
 
-=== More notes on OLM
+[[olm-notes]]
+=== OLM Notes
 
-OLM is a Kubernetes operator that manages the lifecycle of other operators. It is used to install, update, and remove operators and their associated services. OLM uses a custom resource called a ClusterServiceVersion (CSV) to manage the lifecycle of an operator. A CSV is a manifest that describes the operator and its associated services. It contains metadata about the operator, such as its name, version, and supported Kubernetes versions. It also contains a list of resources that the operator manages, such as custom resource definitions (CRDs), roles, role bindings and most relevant for this ADR, webhook deployments.
+OLM is a Kubernetes operator that manages the lifecycle of other operators.
+It is used to install, update, and remove operators and their associated services.
+OLM uses a custom resource called a ClusterServiceVersion (CSV) to manage the lifecycle of an operator.
+A CSV is a manifest that describes the operator and its associated services.
+It contains metadata about the operator, such as its name, version, and supported Kubernetes versions.
+It also contains a list of resources that the operator manages, such as custom resource definitions (CRDs), roles, role bindings and most relevant for this ADR, webhook deployments.
 
-Webhooks managed by OLM are deployed together with the operator in the same ClusterServiceVersion (CSV) but as a separate Deployment. The webhook and the operator manage the same ClusterResourceDefinitions marked as `owned` in the CSV.
+Webhooks managed by OLM are deployed together with the operator in the same ClusterServiceVersion (CSV) but as a separate Deployment.
+The webhook and the operator manage the same ClusterResourceDefinitions marked as `owned` in the CSV.
 
-Any CSV that contains conversion webhooks must support the `AllNamespaces` install mode. This is because webhooks are cluster-wide resources and must be installed in all namespaces.
+Any CSV that contains conversion webhooks must support the `AllNamespaces` install mode.
+This is because webhooks are cluster-wide resources and must be installed in all namespaces.
 
-The `spec.conversions.webhook.clientConfig.namespace` field of the CRD is a required field. For OLM, this means that the webhook must be deployed in that namespace together with the operator. This is a limitation of OLM and is not something that can be changed.
+The
+
+- `spec.conversion.webhook.clientConfig.service.namespace` and
+- `spec.conversion.webhook.clientConfig.service.name`
+
+fields of the CRD is a required field.
+For OLM, this means that the webhook must be deployed in that namespace together with the operator.
+This is a limitation of OLM and is not something that can be changed.
 
 For more details regarding OLM constraints for webhooks, see the OpenShift Container Platform https://docs.openshift.com/container-platform/4.14/operators/operator_sdk/osdk-generating-csvs.html#olm-webhook-considerations_osdk-generating-csvs[documentation].
 
@@ -186,7 +207,10 @@ The operator deploys a webhook deployment similar to how it deploys e.g. Statefu
 [[option5]]
 === Option 5: The webhook has its own Deployment
 
-The webhook and the operator are deployed in lock-step, each in it's own Deployment. Both deployments are part of the same Helm Chart, OLM CSV, etc. The webhook high-availability is achieved with multiple Deployment replicas. Both are bundled in the same container image.
+The webhook and the operator are deployed in lock-step, each in it's own Deployment.
+Both deployments are part of the same Helm Chart, OLM CSV, etc.
+The webhook high-availability is achieved with multiple Deployment replicas.
+Both are bundled in the same container image.
 
 ==== Pros
 
