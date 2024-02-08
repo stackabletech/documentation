@@ -24,7 +24,7 @@ These versions provide stable interfaces which customers can rely on.
 Since we cannot avoid having breaking changes in the future (which require a bump in the respective CRD version), we have to supply conversion webhooks that take care of converting older versions to the current storage version.
 
 Converting custom resources between versions is a separate step, independent of webhook deployments.
-CRD versions should be seemlessly upgraded when new operators/webhooks are upgraded. Downgrades are possible by first converting the custom resources to the old version and then downgrading the operator and webhook.
+CRD versions should be seamlessly upgraded when new operators/webhooks are upgraded. Downgrades are possible by first converting the custom resources to the old version and then downgrading the operator and webhook.
 
 A conversion webhook is registered in a CRD like this:
 
