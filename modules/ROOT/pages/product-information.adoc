@@ -21,12 +21,12 @@ Supported products:
 
 * xref:airflow:index.adoc[Apache Airflow]
 * xref:druid:index.adoc[Apache Druid]
-* xref:hbase:index.adoc[Apache HBase] (including xref:hbase:usage-guide/phoenix.adoc[Apache Phoenix])
+* xref:hbase:index.adoc[Apache HBase]
 * xref:hive:index.adoc[Apache Hive Metastore]
 * xref:hdfs:index.adoc[Apache Hadoop HDFS]
 * xref:kafka:index.adoc[Apache Kafka]
 * xref:nifi:index.adoc[Apache Nifi]
-* xref:spark-k8s:index.adoc[Apache Spark] (including xref:spark-k8s:usage-guide/history-server.adoc[Spark History Server])
+* xref:spark-k8s:index.adoc[Apache Spark]
 * xref:superset:index.adoc[Apache Superset]
 * xref:trino:index.adoc[Trino]
 * xref:zookeeper:index.adoc[Apache Zookeeper]
