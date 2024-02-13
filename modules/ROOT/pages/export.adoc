@@ -4,8 +4,9 @@
 
 The USA have the https://en.wikipedia.org/wiki/Export_Administration_Regulations[Export Administration Regulations (EAR)] as the primary regulation to control export.
 
-All of our products are exempt from the EAR regulations because they are publicly available and do not contain non-standard cryptography.
-That means E-Mail notifications to the NSA and BIS are not required and therefore not published here.
+All of our products are outside of the scope of EAR because they fall under the _publicly available_ exemption and do not contain non-standard cryptography.
+
+NOTE: That means E-Mail notifications to the NSA and BIS are not required and therefore not published here.
 
 In particular:
 
