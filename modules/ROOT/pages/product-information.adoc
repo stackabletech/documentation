@@ -1,0 +1,137 @@
+= Product information
+
+This page contains concrete specifications about the Stackable Data Platform (SDP) as a product, which components are
+included, how they are supplied and which external dependencies exist that you as a customer need to take care of.
+
+[#platform-components]
+== Platform components
+
+The Stackable Platform is made up of multiple components. Operators for data products, Operators for additional
+functionality to facilitate easy integration between the different products, as well as the data products themselves.
+Auxiliary software to interact with the platform, as well as software to ease the deployment of platform components.
+
+=== Data products and Kubernetes Operators
+
+The main components of the SDP are a set of open source data products. The SDP control plane consists of corresponding
+Kubernetes Operators. Each Operator is supplied in a Docker <<containers, container>> image. For every Operator there is
+also a Helm Chart to facilitate installation via Helm. Operators for Products supported by the Platform deploy these
+products as <<containers, containers>> in Kubernetes.
+
+Supported products:
+
+* xref:airflow:index.adoc[Apache Airflow]
+* xref:druid:index.adoc[Apache Druid]
+* xref:hbase:index.adoc[Apache HBase] (including xref:hbase:usage-guide/phoenix.adoc[Apache Phoenix])
+* xref:hive:index.adoc[Apache Hive Metastore]
+* xref:hdfs:index.adoc[Apache Hadoop HDFS]
+* xref:kafka:index.adoc[Apache Kafka]
+* xref:nifi:index.adoc[Apache Nifi]
+* xref:spark-k8s:index.adoc[Apache Spark] (including xref:spark-k8s:usage-guide/history-server.adoc[Spark History Server])
+* xref:superset:index.adoc[Apache Superset]
+* xref:trino:index.adoc[Trino]
+* xref:zookeeper:index.adoc[Apache Zookeeper]
+
+The product also includes the xref:opa:index.adoc[Open Policy Agent], and operators that provide additional
+functionality for managing and control SDP: xref:commons-operator:index.adoc[Commons],
+xref:secret-operator:index.adoc[Secret] and xref:listener-operator:index.adoc[Listener] Operator.
+
+The pages linked above also detail the use cases and features supported by each component. You can find additional
+information in the xref:release_notes.adoc[release notes]. Refer to the xref:operators:supported_versions.adoc[list of
+supported product versions] to find out which product versions are supported.
+
+
+[#stackablectl]
+=== stackablectl
+
+xref:management:stackablectl:index.adoc[] is a command line utility that makes it easier to install and interact with
+Stackable components.
+
+== Supported installation methods
+
+[#containers]
+=== Operators and products
+
+All operators are supplied in container images. The products are also deployed in container images. The docker images
+are available for download here: https://repo.stackable.tech/#browse/browse:docker[]
+
+Stackable supports installing the Operators via https://helm.sh/[Helm] or with <<stackablectl>>. Every Operator includes
+installation instructions in the Getting started guide.
+
+==== Helm Charts
+
+The Helm Charts can be found here: https://repo.stackable.tech/#browse/browse:helm-stable[] Using the Helm Charts
+requires Helm version 3 or above.
+
+
+[#stackablectl-installation]
+==== stackablectl
+
+`stackablectl` is available for download, pre-built binaries are available on GitHub. The download link and installation
+steps are provided in the xref:management:stackablectl:installation.adoc[installation].
+
+== System requirements
+
+=== Operators
+
+Every Operator needs:
+
+* 0.2 cores (i.e. i5 or similar)
+* 256MB RAM
+
+=== stackablectl
+
+Hardware requirements and supported operating systems can be found in the
+xref:management:stackablectl:installation.adoc#system-requirements[system requirements section] of the `stackablectl`
+documentation.
+
+=== Stackable Data Platform Open Source Products
+
+The system requirements of each open source product depend on your specific use case. In the xref:demos:index.adoc[demos]
+you can find example use cases; every demo also has a _System requirements_ section which can provide a guideline for
+system sizing. Further example sizings can be found at https://ci.stackable.tech/job/<product>-operator-it-summary/
+(where `<product>` is i.e. _druid_, _hbase_, etc.) in the `cluster-info.txt` file. These are the cluster sizes used for
+integration tests, and can be regarded as working cluster configurations.
+
+== Prerequisites and required external components
+
+Required external components are components that are required for the platform or parts of it to operate, but are not
+part of the Stackable Data Platform. Note that Stackable does neither distribute nor offer support for the external
+components.
+
+=== Kubernetes
+
+A Kubernetes cluster is required to install the Stackable Data Platform. The supported Kubernetes versions are:
+
+include::partial$supported-kubernetes-versions.adoc[]
+
+There are various Kubernetes distributions. Stackable supports:
+
+include::partial$supported-kubernetes-distributions.adoc[]
+
+=== Product specific dependencies
+
+The following products have required external components to run:
+
+* xref:airflow:required-external-components.adoc[Apache Airflow]
+* xref:druid:required-external-components.adoc[Apache Druid]
+* xref:hive:required-external-components.adoc[Apache Hive]
+* xref:superset:required-external-components.adoc[Apache Superset]
+
+== Optional and technology preview components
+
+=== Optional components
+
+Stackable software can be used with xref:demos:index.adoc[sample configurations] and third-party components, as
+outlined in the relevant documentation. These external components are not part of of the stackable products and can be
+used by the customer at their own risk. Stackable does not distribute these components and does not offer support for
+them. (See <<platform-components,Platform components>> above for a list of the supported components that are part of the
+platform)
+
+=== Technology preview components
+
+Some functionality of the platform might be labelled as _technology preview_. Stackable does not offer support for
+technology preview components, and therefore discourages their use in a production setting. Using these
+features/components is done so at your own risk. Customers are encouraged to provide feedback and suggestions for
+improvements on preview components. Neither Stackable nor third parties or licensees are obligated to distribute
+technology preview components or include them into the product. Technology preview components might be discontinued at
+any time.
