@@ -112,10 +112,10 @@ include::partial$supported-kubernetes-distributions.adoc[]
 
 The following products have required external components to run:
 
-* xref:airflow:required-external-components.adoc[Apache Airflow]
-* xref:druid:required-external-components.adoc[Apache Druid]
-* xref:hive:required-external-components.adoc[Apache Hive]
-* xref:superset:required-external-components.adoc[Apache Superset]
+* Apache Airflow
+* Apache Druid
+* Apache Hive
+* Apache Superset
 
 == Optional and technology preview components
 
