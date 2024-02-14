@@ -2,7 +2,7 @@
 
 == USA
 
-The USA have the https://en.wikipedia.org/wiki/Export_Administration_Regulations[Export Administration Regulations (EAR)] as the primary regulation to control export.
+The USA adopts the https://en.wikipedia.org/wiki/Export_Administration_Regulations[Export Administration Regulations (EAR)] as the primary regulation to control exports.
 
 All of our products are outside of the scope of EAR because they fall under the _publicly available_ exemption and do not contain non-standard cryptography.
 
