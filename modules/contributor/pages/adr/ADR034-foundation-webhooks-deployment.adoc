@@ -1,0 +1,234 @@
+= ADR034: Foundation for conversion webhooks deployment
+Doc Writer <doc.writer@asciidoctor.org>
+v0.1
+:status: accepted
+:date: 2024-01-09
+
+* Status: {status}
+* Deciders:
+** Sebastian Bernauer
+** Andrew Kenworthy
+** Sascha Lautenschlaeger
+** Razvan Mihai
+** Natalie Röijezon
+** Malte Sander
+* Date: {date}
+
+Technical Story: https://github.com/stackabletech/issues/issues/361
+
+== Context
+
+We must version our CustomResourceDefinitions (CRDs).
+This step allows us to move away from unstable alpha or beta versions (like `v1alhpa1`) to stable versions like `v1` or `v2`.
+These versions provide stable interfaces which customers can rely on.
+Since we cannot avoid having breaking changes in the future (which require a bump in the respective CRD version), we have to supply conversion webhooks that take care of converting older versions to the current storage version.
+
+Converting custom resources between versions is a separate step, independent of webhook deployments.
+CRD versions should be seamlessly upgraded when new operators/webhooks are upgraded. Downgrades are possible by first converting the custom resources to the old version and then downgrading the operator and webhook.
+
+A conversion webhook is registered in a CRD like this:
+
+[source,yaml]
+----
+spec:
+  conversion:
+    strategy: Webhook
+    webhook:
+      conversionReviewVersions: ["v1"]
+      clientConfig:
+        service:
+          namespace: default
+          name: example-conversion-webhook-server
+          path: /crdconvert
+        caBundle: "Ci0tLS0tQk...<base64-encoded PEM bundle>...tLS0K"
+----
+
+This ADR is about the location of the webhook endpoint / server which the `spec.conversion.webhook.clientConfig.service` block is referencing.
+
+
+=== Use case: CRD downgrades
+
+There can be multiple CRD versions for an operator. There is only one stored version and multiple served versions of the CRDs.
+
+Setting:
+
+* old crd version "v1"
+* new crd version "v2"
+* there is a cluster/stacklet in version "v2" running
+
+Downgrade procedure:
+
+* Step 1: request the cluster definition in "v1" and apply it again
+* Step 2: donwgrade operator and webhook deployments
+
+[NOTE]
+====
+This works, because the cluster version has been downgraded before the webhook has been downgraded.
+This means that the webhook and the operator can be deployed in lock-step.
+====
+
+Proposal: we could implement step 1 as a convenience in stackablectl and/or document how to perform it with kubectl or the https://github.com/kubernetes-sigs/kube-storage-version-migrator[storage migrator]
+
+== Problem Statement
+
+There are several options on how or where to deploy a conversion webhook, e.g. coupled closely with the operator as a controller or completely decoupled via an extra deployment.
+
+We need a uniform deployment across all operators to keep implementation and maintenance to a minimum and reuse code wherever possible.
+Additionally, webhooks should be enabled / disabled on demand via options like Helm, operator-parameters or CRD flags.
+
+Furthermore, in terms of downgrading, webhooks should always be deployed in their "latest" version, meaning they can convert all supported (new) versions.
+
+== Discussion questions
+
+- Do we want this to be HA?
+- Do we want this to be deployed in a decoupled way?
+- One operator per Kubernetes cluster: What if 3 operators deployed watching different namespaces / versions? Should be strongly discouraged!
+- How to abstract a common admission/conversion webhook skeleton in operator-rs, that can be implemented in the operators within a few lines of code (excluding the actual conversion code)?
+- How to keep maintenance, updating, pipelines or extra images to a minimum?
+- How to deactivate or not deploy the conversion webhook if not desired by customers? Or how to activate if opt-in?
+
+== Decision Drivers
+
+* Keep pipelining / maintenance / extra images / code to a minimum
+* Operator and webhook are deployed in lock-step
+* Must be deployable with Operator Lifecycle Manager (OLM)
+** OLM deploys webhooks together with operators in the same Cluster Service Version (CSV). This means, webhooks and operators are NOT independently up- or down-gradable. Also see the <<olm-notes>>.
+** Helm charts and OLM bundles should not diverge in functionality. This is to reduce maintenance costs.
+* The webhook has to keep working if the operator crashes
+
+[[olm-notes]]
+=== OLM Notes
+
+OLM is a Kubernetes operator that manages the lifecycle of other operators.
+It is used to install, update, and remove operators and their associated services.
+OLM uses a custom resource called a ClusterServiceVersion (CSV) to manage the lifecycle of an operator.
+A CSV is a manifest that describes the operator and its associated services.
+It contains metadata about the operator, such as its name, version, and supported Kubernetes versions.
+It also contains a list of resources that the operator manages, such as custom resource definitions (CRDs), roles, role bindings and most relevant for this ADR, webhook deployments.
+
+Webhooks managed by OLM are deployed together with the operator in the same ClusterServiceVersion (CSV) but as a separate Deployment.
+The webhook and the operator manage the same ClusterResourceDefinitions marked as `owned` in the CSV.
+
+Any CSV that contains conversion webhooks must support the `AllNamespaces` install mode.
+This is because webhooks are cluster-wide resources and must be installed in all namespaces.
+
+The
+
+- `spec.conversion.webhook.clientConfig.service.namespace` and
+- `spec.conversion.webhook.clientConfig.service.name`
+
+fields of the CRD is a required field.
+For OLM, this means that the webhook must be deployed in that namespace together with the operator.
+This is a limitation of OLM and is not something that can be changed.
+
+For more details regarding OLM constraints for webhooks, see the OpenShift Container Platform https://docs.openshift.com/container-platform/4.14/operators/operator_sdk/osdk-generating-csvs.html#olm-webhook-considerations_osdk-generating-csvs[documentation].
+
+== Considered Options
+
+[[option1]]
+=== Option 1: Deploy within the Operator as Controller
+
+The operator contains another controller in a separate thread with the webhook server and conversion code.
+
+==== Pros
+
+- No extra bin / main file
+- No extra docker image (Openshift certification)
+- No extra pipelines for the build process
+- Always up to date with the operator, no extra versioning
+
+==== Cons
+
+- Downgrade not possible -> older operators may not know new storage versions
+- Operator crash affects webhook, no custom resources can be applied for that time
+  -> prevents writes and reads only current versions works
+- Updating webhook requires updating the whole operator
+- (OpenShift restrictions? Restricted namespaces etc.?)
+
+[[option2]]
+=== Option 2: Deploy within the Operator as Extra Container with Operator Image
+
+The operator deployment contains another container next to the actual operator containing the webhook server and conversion code using the operator docker image.
+
+==== Pros
+
+- No extra pipelines for the build process
+- Could be enabled / disabled using Helm parameters
+- Operator crash does not affect webhook
+- Always up to date with the operator, no extra versioning
+
+==== Cons
+
+- Downgrade not possible -> older operators may not know new storage versions
+- Overhead due to operator image (not just the lightweight webhook server)
+- Updating webhook requires updating the whole operator
+- (Extra bin / main file)
+- (OpenShift restrictions? Restricted namespaces etc.?)
+
+[[option3]]
+=== Option 3: Deploy within the Operator as Extra Container and Extra Image
+
+The operator deployment contains another container next to the actual operator containing the webhook server and conversion code using its own docker image.
+
+==== Pros
+
+- No overhead due to operator image (just the lightweight webhook server)
+- Operator crash does not affect webhook
+- Could be enabled / disabled using Helm parameters
+- Always up to date with the operator, no extra versioning
+
+==== Cons
+
+- Downgrade not possible -> older operators may not know new storage versions
+- Updating webhook requires updating the whole operator
+- Extra pipelines / images for the build process
+- (OpenShift restrictions? Restricted namespaces etc.?)
+
+[[option4]]
+=== Option 4: The Operator creates a Webhook Deployment
+
+The operator deploys a webhook Deployment similar to how it deploys e.g. StatefulSets.
+
+==== Pros
+
+- Operator crash does not affect webhook
+- Could be enabled / disabled via custom resource
+- Always up to date with the operator, no extra versioning
+- Should not interfere with OpenShift
+
+==== Cons
+
+- Downgrade not possible -> older operators may not know new storage versions
+- Updating webhook requires updating the whole operator (bundle)
+- Possibly extra image
+- Possibly extra pipelines
+- Possibly more complex to test
+
+[[option5]]
+=== Option 5: The Webhook has its own Deployment
+
+The webhook and the operator are deployed in lock-step, each in it's own Deployment.
+Both deployments are part of the same Helm Chart, OLM CSV, etc.
+The webhook high-availability is achieved with multiple Deployment replicas.
+Both are bundled in the same container image.
+
+==== Pros
+
+- Operator crash does not affect webhook
+- Downgrade possible -> can adept to new CRD storage versions
+- Could be enabled / disabled Helm parameters
+- The webhook can be updated independently
+- No extra pipelines / images
+
+==== Cons
+
+- In OLM environments, if the operator fails to deploy, the webhook is also not deployed.
+
+== Decision Outcome
+
+Chosen <<option5>>, because it fits on all decision drivers.
+
+== Links
+
+- ADR https://docs.stackable.tech/home/nightly/contributor/adr/adr034-foundation-webhooks-ca-bundle.adoc[CA bundle injection]
+- https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definition-versioning/[Kubernetes CRD versioning]
