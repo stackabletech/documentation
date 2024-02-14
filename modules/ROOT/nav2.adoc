@@ -4,3 +4,4 @@
 * xref:product-information.adoc[]
 * xref:policies.adoc[]
 * xref:licenses.adoc[Licenses]
+* xref:export.adoc[Export Control]
