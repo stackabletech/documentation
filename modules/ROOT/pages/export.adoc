@@ -6,7 +6,7 @@ The USA adopts the https://en.wikipedia.org/wiki/Export_Administration_Regulatio
 
 All of our products are outside of the scope of EAR because they fall under the _publicly available_ exemption and do not contain non-standard cryptography.
 
-NOTE: That means E-Mail notifications to the NSA and BIS are not required and therefore not published here.
+NOTE: That means E-Mail notifications to the NSA and BIS are not required and are therefore not published here.
 
 In particular:
 
