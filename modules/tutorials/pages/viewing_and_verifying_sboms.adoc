@@ -1,0 +1,73 @@
+= Viewing and verifying SBOMs of Stackable Data Platform container images
+
+With release 24.3 of SDP, we started providing SBOMs (Software Bill of Materials) for our container images. Please note that they currently are in a draft state and we are continuously working on improving them. As a first step, we aim to provide a list of all primary (top level) components and their versions that are included in each container image. Our SBOMs follow the https://cyclonedx.org/[CycloneDX] standard and are available in JSON format.
+
+We store these SBOMs in two places:
+First, we simply serve them via HTTPS here: !! TODO: add link to the public location !!
+You'll find a simple directory structure, one directory per container image, and one SBOM per version of the image. The file names are the tags of the image.
+
+This is convenient and easy to use, it's possible to simply browse through our SBOM repository, but it has at least two problems:
+1. There's no way to verify the authenticity of the SBOMs. If an attacker would compromise the server where we host our SBOMs, they could replace the SBOMs with their own versions.
+2. There's no way to verify that an SBOM actually belongs to a certain container image. Of course, we just claimed that the file names are the tag of the image this SBOM belongs to, and you can trust us on this, but it's also possible to verify this relationship technically.
+
+That's why we additionally store our SBOMs as signed https://github.com/in-toto/attestation[attestations] to our container images directly in our container registry. In this tutorial, we are going to use https://github.com/sigstore/cosign[cosign] to verify these attestations and to extract the SBOM from them.
+
+== Verifying and extracting an SBOM manually with cosign
+To install cosign, please have a look at the https://docs.sigstore.dev/system_config/installation/[installation instructions] in the cosign documentation and choose your preferred installation method. A tool called https://github.com/jqlang/jq[jq] is additionally used to parse the JSON output of cosign.
+
+With the following chain of commands, the SBOM of `airflow-operator` version `24.3.0` is verified and extracted:
+
+[source,bash]
+----
+cosign verify-attestation --type cyclonedx --certificate-identity-regexp '^https://github.com/stackabletech/.+/.github/workflows/.+@.+' --certificate-oidc-issuer https://token.actions.githubusercontent.com docker.stackable.tech/stackable/airflow-operator:24.3.0 | jq '.payload' -r | base64 -d | jq '.predicate'
+----
+
+Explanation of the commands and parameters:
+The `--type` parameter specifies the type of the predicate, in this case `cyclonedx` for CycloneDX SBOMs.
+The `--certificate-identity-regexp` parameter specifies a regular expression that is used to match the identity of the signer of the attestation. In this case, that means: The attestation must be signed by a GitHub Actions workflow run by the `stackabletech` organization (the *identity*). Now, because in general anyone could claim to be a `stackabletech` workflow run, the `--certificate-oidc-issuer` parameter ensures that this identity was actually verified by GitHub.
+If the identity of the signer matches, we can be sure the contents of the attestation are authentic and were created by one of Stackable's Github Action Workflows. `cosign verify-attestation` then prints the signed attestation to `stdout`, which is an https://github.com/in-toto/attestation[in-toto attestation] wrapped in a https://github.com/secure-systems-lab/dsse[DSSE]. The next command (`jq '.payload'`) gets the payload of the envelope, which is the base64 encoded attestation. `base64 -d` decodes it and returns the attestation in JSON format. The attestation has a `subject` attribute, which provides information about the container image the SBOM belongs to. `predicate` is the actual SBOM, which is extrated by the `jq '.predicate'` command and then printed to `stdout` in JSON format.
+
+`cosign` also prints information to `stderr`, which can be used to determine further information on the verification results and the exact Github Action workflow that was used to create this attestation.
+
+You can now be sure that the SBOM was attested to the container image you're interested in by a Stackable Github Action workflow, and it's even possible to look at the workflow to see how exactly this happened.
+
+== Enabling automatic verification of SBOMs
+Similar to our xref:tutorials:enabling_verification_of_image_signatures.adoc[image signature verification] tutorial, it's possible to enforce that only container images with SBOMs that are signed by Stackable are allowed to run in your cluster. We will use Sigstore's https://docs.sigstore.dev/policy-controller/overview/[Policy Controller] to achieve this.
+
+IMPORTANT: Releases prior to SDP 24.3 do not have signed SBOMs. If you are using an older release and enforce SBOM verification, Pods with Stackable images will be prevented from starting.
+
+=== Installing the Policy Controller
+The Policy Controller can be easily installed via Helm:
+
+[source,bash]
+----
+helm repo add sigstore https://sigstore.github.io/helm-charts
+helm repo update
+helm install policy-controller sigstore/policy-controller
+----
+
+The default settings might not be appropriate for your environment, please refer to the https://artifacthub.io/packages/helm/sigstore/policy-controller[configurable values for the Helm chart] for more information.
+
+
+=== Creating a policy to verify SBOMs
+
+Now that the Policy Controller is installed, you can create a policy that verifies that all images provided by Stackable have an SBOM attached that is signed by Stackable's CI pipeline (Github Actions):
+
+[source,yaml]
+include::example$verify-signatures/stackable-sbom-policy.yaml[]
+
+Apply this policy to the cluster by saving it as `stackable-sbom-policy.yaml` and running:
+[source,bash]
+----
+kubectl apply -f stackable-sbom-policy.yaml
+----
+
+If you used the default values for the Helm chart, policies will only be applied to namespaces labeled with `policy.sigstore.dev/include: "true"`.
+Add a label for the namespace where you deployed SDP:
+[source,bash]
+----
+kubectl label namespace stackable policy.sigstore.dev/include=true
+----
+
+The Policy Controller checks all newly created Pods in this namespace that run any image matching `+++**+++.stackable.tech/+++**+++` (this matches images provided by Stackable) and ensures that these images have an attested SBOM that's been signed by a Stackable Github Action. If the no SBOM is present or its signature is invalid or missing, the policy will deny the pod creation.
+For a more detailed explanation of the policy options, please refer to the https://docs.sigstore.dev/policy-controller/overview/#configuring-image-patterns[Sigstore documentation].
