@@ -219,7 +219,7 @@ credentials:
 
 TLS certificates are specified in a similar way. You will need a `Secret` containing the certificate, a `SecretClass` and then a reference to this `SecretClass` where you want to specify the certificate.
 
-The Secret must contain the TLS certificate and the CA certificate. The `tls.crt` and `tls.key` are the certificate and the private key of the server. The `ca.crt` is the certificate of the Certificate Authority that signed the server's certificate.
+The Secret must contain the TLS certificate and the CA certificate. The `tls.crt` and `tls.key` are the certificate and the private key of the server. The `ca.crt` is the certificate of the Certificate Authority that signed the server's certificate. The values are expected to be base64 encoded PEM files.
 
 [source,yaml]
 ----
