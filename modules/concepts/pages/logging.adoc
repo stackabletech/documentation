@@ -68,7 +68,7 @@ spec:
           main-container:
             console:
               level: INFO
-    myRoleGroup
+    myRoleGroup:
       config:                      // <2>
         logging:                   // <3>
           enableVectorAgent: true  // <4>
