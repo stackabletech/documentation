@@ -57,32 +57,45 @@ As part of the logging configuration, individual modules can be configured with 
 
 [source,yaml]
 ----
-vectorAggregatorConfigMapName: vector-aggregator-discovery  // <1>
-...
-  logging:                   // <2>
-    enableVectorAgent: true  // <3>
-    containers:              // <4>
-      main-container:
-        console:             // <5>
-          level: DEBUG
-        file:
-          level: INFO
-        loggers:             // <6>
-          ROOT:
-            level: INFO
-          my.module:
-            level: DEBUG
-          some.chatty.module:
-            level: NONE
-      sidecar-container:
-        ...
+spec:
+  clusterConfig:
+    vectorAggregatorConfigMapName: vector-aggregator-discovery  // <1>
+  myRole:
+    config:                        // <2>
+      logging:
+        enableVectorAgent: true
+        containers:
+          main-container:
+            console:
+              level: INFO
+    myRoleGroup
+      config:                      // <2>
+        logging:                   // <3>
+          enableVectorAgent: true  // <4>
+          containers:              // <5>
+            main-container:
+              console:             // <6>
+                level: DEBUG
+              file:
+                level: INFO
+              loggers:             // <7>
+                ROOT:
+                  level: INFO
+                my.module:
+                  level: DEBUG
+                some.chatty.module:
+                  level: NONE
+            sidecar-container:
+              console:
+                level: ERROR 
 ----
 <1> The discovery ConfigMap of the Vector aggregator to publish the logs to. This is set at cluster level.
-<2> The logging configuration fragment, can be set at role or role group level.
-<3> Enable the Vector agent to aggregate logs.
-<4> Logging is defined for each container.
-<5> Console and file appenders can have different log level thresholds.
-<6> Setting log levels for individual modules is also possible.
+<2> The role or role group config containing the logging configuration.
+<3> The logging configuration fragment, can be set at role or role group level.
+<4> Enable the Vector agent to aggregate logs.
+<5> Logging is defined for each container.
+<6> Console and file appenders can have different log level thresholds.
+<7> Setting log levels for individual modules is also possible.
 
 **Log levels per module** - In the `loggers` section the log levels for each module are configured.
 Note the `ROOT` module.
