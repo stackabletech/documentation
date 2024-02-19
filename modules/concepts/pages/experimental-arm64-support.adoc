@@ -10,8 +10,6 @@ As this marks our beta phase, in this article we want to give an overview over t
 
 At this very moment, we have a working 23.11.0 release. We made it accessible for the general public but didn't merge it yet with the x86 releases you are already comfortable with. 
 
-NOTE: Listener Operator is not available within 23.11.0 for arm64
-
 Since this is new to us too, we started by building the release manually and check it on weaknesses. To do so, we are about to build a long-living cluster where we perform updates and workflows on. We think developed functionality on the x86 side can't be lost just due to port it on another architecture. Therefore we plan to test functionalities which only can be seen if SDP is running long enough ( e.g. certificate rotations ).
 
 As tests for 23.11.0 ( not sophisticated ) we worked on our demos to make them accessible on arm64. Those demos behaved as we expected and knew from x86. This means, we have reworked the foundations of the demos and now you as a user can use them and work with SDP on your native cluster.
@@ -105,4 +103,4 @@ Tested release (compared to amd could be like a 80% coverage ). Multi architectu
 
 === Release 24.7
 
-The "loud" multi arch release. From this point we would like SDP to be officially and fully tested on multi architecture. 
+The "loud" multi arch release. From this point we would like SDP to be officially and fully tested on multi architecture.
