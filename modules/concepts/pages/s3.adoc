@@ -217,9 +217,27 @@ credentials:
 
 == TLS
 
-TLS certificates are specified in a similar way. You will need a `Secret` containing the certificate, a `SecretClass` and then a reference to this `SecretClass` where you want to specify the certificate.
+TLS certificates are specified in a similar way. You will need a `SecretClass` that is referenced by the connection object. When using the `k8sSearch` backend, a `Secret` object containing the certificate/key pair is also needed.
 
-The Secret must contain the TLS certificate and the CA certificate. The `tls.crt` and `tls.key` are the certificate and the private key of the server. The `ca.crt` is the certificate of the Certificate Authority that signed the server's certificate. The values are expected to be base64 encoded PEM files.
+The `Secret` must contain the TLS certificate and the CA certificate. The `tls.crt` and `tls.key` are the certificate and the private key of the server. The `ca.crt` is the certificate of the Certificate Authority that signed the server's certificate. The values are expected to be base64 encoded PEM files.
+
+In this case, the `SecretClass` would look like this:
+
+[source,yaml]
+----
+apiVersion: secrets.stackable.tech/v1alpha1
+kind: SecretClass
+metadata:
+  name: s3-certificate-class
+spec:
+  backend:
+    k8sSearch:
+      searchNamespace:
+        pod: {}
+----
+
+
+And the `Secret` object defining the certificate/key pair:
 
 [source,yaml]
 ----
@@ -235,7 +253,7 @@ data:
   tls.key: ...
 ----
 
-The secret class definition can be identical with the one above but with a different name (`s3-certificate-class`). To reference it from the connection object:
+Finally, reference the `SecretClass` from the connection object:
 
 [source,yaml]
 ----
