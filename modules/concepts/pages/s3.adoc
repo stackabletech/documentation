@@ -219,7 +219,7 @@ credentials:
 
 TLS certificates are specified in a similar way. You will need a `SecretClass` that is referenced by the connection object. When using the `k8sSearch` backend, a `Secret` object containing the certificate/key pair is also needed.
 
-The `Secret` must contain the TLS certificate and the CA certificate. The `tls.crt` and `tls.key` are the certificate and the private key of the server. The `ca.crt` is the certificate of the Certificate Authority that signed the server's certificate. This is usually optional. The values are expected to be base64 encoded PEM files.
+The Secret must contain the CA certificate in the form of a `ca.crt` key, which contains the Certificate Authority that signed the server's certificate. The values are expected to be base64 encoded PEM files.
 
 In this case, the `SecretClass` would look like this:
 
