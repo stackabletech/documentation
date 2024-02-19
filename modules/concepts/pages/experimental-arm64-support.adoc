@@ -10,8 +10,6 @@ As this marks our beta phase, in this article we want to give an overview over t
 
 At the moment we have a working 23.11.0 release. We made it publicly accessible but didn't merge it yet with the x86-64 releases you are already comfortable with.
 
-NOTE: Listener Operator is not available within 23.11.0 for ARM64
-
 Since this is new to us too, we have started by building the release manually and checking it for any defects when compared to the x86-64 release. To do so we are building a long-living soak test cluster where we perform updates and run workflows. We believe that most of the developed functionality on the x86-64 side can't be lost just by porting it to another architecture, and therefore we plan to focus on testing features which only can be seen on long-running clusters e.g. certificate rotation.
 
 As a means of testing our 23.11.0 release we worked on our demos to make them accessible on ARM64. Those demos behaved as we expected compared to the same running on x86-64. This means, we have reworked the foundations of the demos and now you as a user can use them and work with SDP on your native cluster.
