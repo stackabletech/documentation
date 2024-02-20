@@ -30,7 +30,7 @@ Accessing our data platform for ARM64 would mean needing to pull those images fr
 
 According to our https://docs.stackable.tech/home/stable/airflow/getting_started/installation#_helm[installation guide] you can install ARM64 operators e.g. for the commons operator as follows:
 
-```bash
+```[source,bash]
 helm install commons-operator stackable-stable/commons-operator --namespace stackable-operators --create-namespace --version=23.11.0 --set image.repository=docker.stackable.tech/stackable-experimental/commons-operator
 ```
 
@@ -42,7 +42,7 @@ WARNING: You have to install every operator you need for a given demo individual
 
 Driven by the multi-architecture technology we introduced, the https://docs.stackable.tech/home/stable/concepts/product_image_selection[Product image selection] mechanism allows the user to choose a specific product image. This has some more advantages when you think about air-gapped environments or a mirrored repository. In our case we can use this feature to choose the ARM64 image as follows:
 
-```yaml 
+```[source,yaml]
 spec:
   image:
     custom: docker.stackable.tech/stackable-experimental/kafka:3.5.1-stackable23.11.0
@@ -59,12 +59,12 @@ You have seen there are  ways to access SPD demos for ARM64 architecture, but we
 As a prerequisite, we expect you to have a Kubernetes Cluster of any flavour and stackablectl https://docs.stackable.tech/home/stable/quickstart[installed].
 
 ==== 1. Clone the demo repository
-```bash
+```[source,bash]
 git clone git@github.com:stackabletech/demos.git
 ```
 
 ==== 2. Checkout ARM64 demo branch ( release 23.11.0 )
-```bash
+```[source,bash]
 git pull && git checkout spike/demos-on-arm
 ```
 
