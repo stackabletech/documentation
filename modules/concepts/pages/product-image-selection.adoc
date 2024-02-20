@@ -50,10 +50,9 @@ What this means is, that for example the Stackable Operator for Apache HBase wil
 |===
 
 
-However, since the last digit of the Stackable version is considered to be a patchlevel indicator, operators will be compatible with all images from the same release line.
+However, since the last digit of the Stackable version is considered to be a patch level indicator, operators will be compatible with all images from the same release line.
 So an operator of version _23.4.x_ will be compatible with all images of version _23.4.y_.
-This is intended to allow shorter update cycles for users, when new image versions are released that may contain security fixes - should the user so choose.
-
+This is intended to allow shorter update cycles for users, when new image versions are released that may contain security fixes.
 
 The following paragraphs explain the available settings and how they work.
 
@@ -61,17 +60,13 @@ At the bottom of this page in the <<_common_scenarios, common scenarios>> sectio
 
 == Stackable provided images
 
-If your Kubernetes cluster has internet access, the easiest way is to use the publicly available Images from the https://docker.stackable.tech/[Image registry hosted by Stackable].
+If your Kubernetes cluster has internet access, the easiest way is to use the publicly available images from the https://docker.stackable.tech/[Image registry hosted by Stackable].
 If the Kubernetes cluster does not have internet access, a xref:_custom_docker_registry[] or xref:_custom_images[] can be used.
 
 Currently, you need to specify the product version. This can be found on the xref:operators:supported_versions.adoc[list of supported product versions] or on the website of the product itself.
 This requirement might be relaxed in the future, as every platform release will ship wth a recommended product versions, which will be used by default.
 
-Additionally, you can specify the Stackable version: As we need to make changes to the Images from time to time (e.g. security updates), we also have to version them using the Stackable version. An image gets released for every version of the SDP.
-There are two variants you can choose from:
-
-1. Fixed version, e.g. `23.7.0`. This image will never change.
-2. Release line, e.g. `23.7`. This will be a floating tag pointing to the latest patch release of the SDP release line. It will contain the latest security patches, but will also change over time.
+Additionally, as images should be updated from time to time (e.g. new base image, security updates), a Stackable version can be provided. An image with the Stackable version `23.7.0` is fixed and will never change. Security updates within a release line will result in patch version bumps in the Stackable version to e.g. `23.7.1`.
 
 If you don't specify the Stackable version, the operator will use its own version, e.g. `23.7.0`.
 When using a nightly operator or a `pr` version, it will use the nightly `0.0.0-dev` image.
@@ -137,7 +132,7 @@ When deriving images from official Stackable images this will mean updating the 
 The recommended process here is:
 
 ** Tag clusters as "do not reconcile" (see xref:operations/cluster_operations.adoc[])
-** Update Stackable plattform
+** Update Stackable platform
 ** Change custom images in cluster specifications
 ** Remove "do not reconcile flag"
 
@@ -156,34 +151,8 @@ spec:
     productVersion: 3.3.1
 ----
 
-### Quick updates of images
-Sometimes it can be useful to decouple operators upgrades from the image versions to allow using updated images as soons as Stackable releases them.
-This can significantly shorten turnaround times when reacting to security vulnerabilities for example.
-
-For this scenario the Stackable version can be set to the release line, without including the patch level indicator.
-This will cause the operator to always use the most current image that it is compatible with when starting products.
-
-[NOTE]
-====
-This behavior can result in _mixed_ clusters running on different image versions of the product.
-This should not create any issues, since the contained product binaries are exactly the same, but is worth knowing.
-
-A rolling restart of the product would clean this mixed state up.
-====
-
-#### Config
-[source,yaml]
-----
-spec:
-  image:
-    productVersion: 3.3.1
-    stackableVersion: 23.4
-----
-
-
-
-#### Custom images / pinned images
-When a setup requires the utmost stability and it is preferrable for things to break, rather than run with a different image version that for example has not been certified.
+### Custom images / pinned images
+When a setup requires the utmost stability, and it is preferable for things to break, rather than run with a different image version that for example has not been certified.
 Or when a user requires custom libraries / code in the images they run and build their own images derived from official Stackable images, this is the only possible way to do this.
 
 Please see the warnings in <<customimages, custom images section>> above for how to upgrade in this scenario.
