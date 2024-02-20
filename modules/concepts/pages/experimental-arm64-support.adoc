@@ -1,4 +1,7 @@
 = Multi-Architecture for SDP
+:page-aliases: experimental-arm64-support.adoc
+:description: This page describes how to access ARM64 based SDP early
+:keywords: Multi-Architecture, infrastructure, docker, image, tags, early-access
 
 Today, we are proud to announce the next step in our efforts to port Stackable Data Platform (SDP) to the ARM64 architecture.
 
