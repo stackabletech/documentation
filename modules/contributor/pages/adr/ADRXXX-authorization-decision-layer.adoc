@@ -31,6 +31,8 @@ While there are some commonalities across products (they all have a 'resource' c
 without losing out on fine grained control.
 We want to keep as much control as possible.
 
+We can also keep it close to what the software is already doing - in the case of Trino - which makes it easier for users that are migrating.
+
 The RegoRules are deployed by the product operator as ConfigMaps.
 The package name contains the version of the ruleset, the product and the product version: `stackable.v1.trino.v439`
 
