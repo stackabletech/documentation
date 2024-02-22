@@ -6,7 +6,7 @@ You can browse through our SBOMs at https://sboms.stackable.tech/.
 
 You will find a simple hierarchical structure, one directory per release, containing a list of all container images included in that release. For each container image, one SBOM per version of the image is listed.
 
-This page is a simple wrapper on top of our OCI registry, where the SBOMs are attached as signed https://github.com/in-toto/attestation[attestations] to our container images. When you click on a link in our SBOM browser, the SBOM is validated, extracted from the container registry, and then downloaded to your device.
+This page is a simple wrapper on top of the Stackable OCI registry, where the SBOMs are attached as signed https://github.com/in-toto/attestation[attestations] to the container images. When you click on a link in the SBOM browser, the SBOM is validated, extracted from the container registry, and then downloaded to your device.
 The next step of this tutorial explains the single steps happening under the hood when a link is clicked, and how to do them manually.
 
 == Verifying and extracting an SBOM manually with cosign
