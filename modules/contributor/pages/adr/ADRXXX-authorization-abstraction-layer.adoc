@@ -1,4 +1,4 @@
-= ADRXXX: Authorization abstraction layer
+= ADRXXX: Authorization decision layer
 Felix Hennig <felix.hennig@stackable.tech>
 v0.1, 2024-01-18
 :status: draft
