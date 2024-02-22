@@ -3,3 +3,4 @@
 ** xref:logging-vector-aggregator.adoc[]
 ** xref:enabling_verification_of_image_signatures.adoc[]
 ** xref:running_stackable_in_an_airgapped_environment.adoc[]
+** xref:viewing_and_verifying_sboms.adoc[]
