@@ -105,137 +105,30 @@ I.e. there should be an abstraction over resources such as Trino tables, Superse
 
 We should decide on a general authorization model, what we want it to look like to the user and also have a rough idea of how it will be implemented.
 
-== RBAC vs ReBAC
+== Proposed design
 
-_RBAC_ is the default choice for authorization models, as it is widely known an understood already, and simple to implement and understand.
-Kubernetes itself uses RBAC with Role, ClusterRole, RoleBinding etc..
+=== Stackable Rego rule library
 
-In RBAC it is difficult to give one-of permissions to individual users, since permissions are always assinged to a role, and then the role is assigned to a user.
+For every product (and every supported version of a product) we ship a ruleset that users can use (and might be used as a default).
+Since the rules are dependent on the product version, the product operator needs to ship these rules.
+What about the OPA version? Rules need to also be compatible with the OPA version?
 
-How are policies actually derived from the relationships in ReBAC?
+=== product specific JSON data policies
 
-I think it makes sense to stay close to the applications here, i.e. for druid there should still be read/write permissions on resources.
+The rules work with product specific JSON policies.
+These policies should expose every feature that the authorizer supports.
 
-we still need to define things like "an editor on thsi resource group can write to this topic"
+=== Unified policy CRs
 
-It would be cool to have "resource groups" and then just relations like "owner", "reader", "edtior" relating to a whole group of resources.
+The unified policy CRD is modeled as ABAC.
+Resources and users have attributes which get matched in a policy. 
+If a decision request matches to a policy, the permissions from the policy apply.
 
-A mixed model might make sense, maybe a hierarchical tree of user groups on the one side, and resource groups on the other side? or composing roles and also composing groups, and then mapping groups and roles? I got this idea from Keycloak.
+Resource attributes are resource specific, i.e. for a Trino table, there is a "catalog" attribute, but that only exists on Trino tables.
 
-I think maybe the idea of having the permission for an action on a resource is still very central to all the products we support, and it makes sense to keep that.
-Maybe just in a "permission bundle" and those can also be grouped?
+More advanced stuff like masking properties is maybe not supported. maybe the access levels are also only "read", "write" and "full".
 
-I think in i.e. GDrive we could give someone read permission on a folder of files, but this relation needs to be already embedded in the application. 
-We cannot give someone read access on a group of Trino tables, because this concept does not exist in Trino. 
-The group will still need to be maintained outside of Trino, and so we do not have a lot to gain here.
-
-== Design A
-
-RBAC-based design.
-
-Let users define 
-
-== Design B
-
-We design a relation based access control system (ReBAC), inspired by Google Zanzibar.
-ReBAC allows for role-based access control as well (RBAC) but goes beyond that to also allow hierarchies of objects that users can be related to.
-This allows for more flexibility when defining organizational structures, and rules can be attached at any level.
-
-We define a CustomResource that allows users to define ReBAC stuff in CRs.
-This allows for more validation instead of putting rules in a DSL or in JSON into a ConfigMap.
-
-There are three kinds of rules that users can define easily in a CR:
-
-* relations of objects and users
-* relations of objects and user sets
-* relations of objects and other objects
-
-Users are pre defined in either LDAP or keycloak, and referenced by their name/ID.
-Resolving users is done in OPA, using the UserInfoFetcher.
-For this ADR, we will assume users are specified by their username, i.e. "alice" or "bob".
-
-Other objects in the system can be entities inside of the products, such as a `trino-table`.
-We also allow users to define their own objects and relations, mainly to organize their users and permissions.
-Every user-defined object and relation needs to be specified in an RebacType object.
-
-Example:
-
-[source,yaml]
-----
-kind: RebacType
-metadata:
-  name: project  # <1>
-spec:
-  relations:  # <2>
-    - name: member
-  objects:  # <3>
-    - secret-project
-    - datascience-spike
-    - ladida
-    - otherproj
-----
-
-<1> The name of the RebacType. This will be referenced in rule definitions.
-<2> The relations that are defined for this type. In this case there is a "member" definition. Users can be members of a project.
-<3> Object defintions. This is optional; if given, only these objects can be referenced, adding another layer of verification.
-
-For products, the SDP comes with predefined objects that make sense for the product.
-For example in Trino we will define `trino-table` and `trino-catalog`, each with a `reader`, `editor` and `owner` relation.
-For Superset we can define a `superset-dashboard` with the same relations.
-For Kafka we can define a `kafka-topic` type.
-
-We can group some resources together into a project, and then assign users to the project. 
-Users can be assigned individually or based on their group memberships.
-
-Here is an example of what it could look like in yaml:
-
-[source,yaml]
-----
-kind: RebacRelations
-metadata:
-  name: project-ladida
-# Project Ladida manages the mydata table in Trino
-# User 13 and all the members of the 'otherproj' project are members 
-# of Project Ladida
-relations:
-  # Which resources are part of the project?
-  - subject: "project:ladida"
-    relation: "owner"
-    object: "trino-table:mydata"
-  - subject: "project:ladida"
-    relation: "reader"
-    object: "kafka-topic:datasource"
-  - subject: "project:ladida"
-    relation: "editor"
-    object: "superset-dashboard:ladida-viz"
-  # Who is part of the project?
-  - user: "alice"
-    relation: "member"
-    object: "project:ladida"
-  - userset:
-      object: "ad-group:datascience"
-      relation: "member"
-    relation: "member"
-    object: "project:ladida"
-----
-
-The first three relations define the project as the owner/reader/editor of a number of resources.
-Transitively, any member of the project will get these relations.
-
-The last two relations define the user "alice" as a member of the project, as well as any member of the ActiveDirectoy group "datascience".
-
-=== Implementation
-
-The RebacType and RebacRelations can both be annotated with the `opa.stackable.tech/bundle: "true"` label to include it into the OPA bundle.
-
-The relation definitions can the be verified - to a degree - and subsequently everything is serialized as JSON and provided as `data` to OPA.
-We then need to define a RegoRule framework inside OPA to evaluate these rules correctly.
-
-== TODO: Gaia-X considerations
-
-TSA? OCM?
-
-"TSA ist OPA, unser Authr. ist OPA, aber bauen wir oder TSA dinge drumherum, die die Integration schwer machen?"
+The OPA operator should read these CRs and convert them into JSON data policies.
 
 == Appendix
 
