@@ -8,7 +8,7 @@ v0.1, 2022-05-02
 ** Malte Sander
 ** Sebastian Bernauer
 ** Sönke Liebau
-** Teo Klestrup Röijezon
+** Natalie Klestrup Röijezon
 * Date: 2022-05-04
 
 Technical Story: https://github.com/stackabletech/zookeeper-operator/issues/466

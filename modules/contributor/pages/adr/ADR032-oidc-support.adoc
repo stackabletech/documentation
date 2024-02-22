@@ -1,7 +1,7 @@
 = ADR032: OIDC Support
 Felix Hennig <felix.hennig@stackable.tech>
 v0.2, 2023-11-14
-:status: draft
+:status: accepted
 
 * Status: {status}
 * Deciders:

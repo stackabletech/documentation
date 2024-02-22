@@ -1,0 +1,79 @@
+= ADR035: User info fetcher CRD changes
+Sebastian Bernauer <sebastian.bernauer@stackable.tech>
+v0.1, 2024-01-22
+:status: accepted
+
+* Status: {status}
+* Date: 2024-01-22
+
+Technical Story: https://github.com/stackabletech/opa-operator/issues/478
+
+== Context and Problem Statement
+
+From the https://docs.stackable.tech/home/nightly/opa/usage-guide/user-info-fetcher[documentation for user-info-fetcher]:
+
+> The User info fetcher allows for additional information to be obtained from the configured backend (for example, Keycloak). You can then write Rego rules for OpenPolicyAgent which make an HTTP request to the User info fetcher and make use of the additional information returned for the username or user id.
+
+We need to design a CRD change for users to enable the UIF.
+
+== Considered Options
+
+=== Stand-alone CRD
+
+We could create a new CRD, e.g. UserInfoFetcher and have a controller for it that creates a DaemonSet.
+An OpaCluster would then be able to link to a UserInfoFetcher discovery ConfigMap.
+
+* Good, because a UIF instance can be shared across multiple OPA clusters -> Simple and improved caching
+* Bad, because OPA clusters would need to authenticate against UIF clusters.
+* Bad, because UIF might need some form of authorization as well
+
+=== Integrate in OpaCluster
+
+Add a new section to OpaCluster that allows users to spin up a UIF as a sidecar within the Opa DaemonSet's Pods.
+
+The CRD is mostly copied from the `oidc` AuthenticationClass introduced in xref:adr/ADR032-oidc-support.adoc[] with the addition of needed credentials for Keycloak as well as the _admin_ and _user_ realms and a very simplistic cache.
+The cache might be extended in the future (e.g. to set the maximum number of cache entries or exempt particular users from being cached), which can be done in a non-breaking fashion below `spec.clusterConfig.userInfo.backend.keycloak.cache`.`
+
+[source,yaml]
+----
+apiVersion: opa.stackable.tech/v1alpha1
+kind: OpaCluster
+metadata:
+  name: opa
+spec:
+  image:
+    productVersion: 0.57.0
+  clusterConfig:
+    userInfo:
+      backend:
+        keycloak:
+          hostname: keycloak.my-namespace.svc.cluster.local
+          port: 8443
+          tls:
+            verification:
+              server:
+                caCert:
+                  secretClass: tls
+          clientCredentialsSecret: user-info-fetcher-client-credentials
+          adminRealm: master
+          userRealm: master
+          cache: # optional, enabled by default
+            entryTimeToLive: 60s # optional, defaults to 60s
+  servers:
+    roleGroups:
+      default: {}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: user-info-fetcher-client-credentials
+stringData:
+  clientId: user-info-fetcher
+  clientSecret: user-info-fetcher-client-secret
+----
+
+* Good, because only accessible via the loopback network interface to OPA clusters -> No authentication or authorization needed.
+
+== Decision Outcome
+
+Chosen option: "Integrate in OpaCluster", because we wanted to avoid the whole authentication and authorization story.

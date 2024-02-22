@@ -1,0 +1,16 @@
+apiVersion: authentication.stackable.tech/v1alpha1
+kind: AuthenticationClass
+metadata:
+  name: keycloak
+spec:
+  provider:
+    oidc:
+      hostname: my.keycloak.server        # <1>
+      port: 8080                          # <2>
+      rootPath: /realms/master            # <3>
+      scopes:                             # <4>
+      - email
+      - openid
+      - profile
+      principalClaim: preferred_username  # <5>
+      providerHint: Keycloak              # <6>

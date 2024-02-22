@@ -1,35 +1,93 @@
 = Enabling verification of image signatures
 
-Image signing is a security measure that helps ensure the authenticity and integrity of container images. Starting with SDP 23.7, all our images are signed https://docs.sigstore.dev/cosign/openid_signing/["keyless"]. By verifying these signatures, cluster administrators can ensure that the images pulled from Stackable's container registry are authentic and have not been tampered with.
-Since Kubernetes does not have native support for verifying image signatures yet, we will use a tool called https://kyverno.io/[Kyverno] in this tutorial.
+Image signing is a security measure that helps ensure the authenticity and integrity of container images. Starting with SDP 23.11, all our images are signed https://docs.sigstore.dev/cosign/openid_signing/["keyless"]. By verifying these signatures, cluster administrators can ensure that the images pulled from Stackable's container registry are authentic and have not been tampered with.
+Since Kubernetes does not have native support for verifying image signatures yet, we will use Sigstore's https://docs.sigstore.dev/policy-controller/overview/[Policy Controller] in this tutorial.
 
-IMPORTANT: Releases prior to SDP 23.7 do not have signed images. If you are using an older release and enforce image signature verification, Pods with Stackable images will be prevented from starting.
+IMPORTANT: Releases prior to SDP 23.11 do not have signed images. If you are using an older release and enforce image signature verification, Pods with Stackable images will be prevented from starting.
 
-== Installing Kyverno
-Kyverno can be easily installed via Helm:
+== Installing the Policy Controller
+The Policy Controller can be easily installed via Helm:
 
 [source,bash]
 ----
-helm repo add kyverno https://kyverno.github.io/kyverno/
+helm repo add sigstore https://sigstore.github.io/helm-charts
 helm repo update
-helm install kyverno kyverno/kyverno -n kyverno --create-namespace
+helm install policy-controller sigstore/policy-controller
 ----
 
-Other installation methods and options to run Kyverno in a highly-available fashion are described in the https://kyverno.io/docs/installation/methods/[Kyverno documentation].
+The default settings might not be appropriate for your environment, please refer to the https://artifacthub.io/packages/helm/sigstore/policy-controller[configurable values for the Helm chart] for more information.
+
 
 == Creating a policy to verify image signatures
 
-Now that Kyverno is installed, we can create a policy that verifies that all images provided by Stackable are signed by Stackable's CI pipeline (Github Actions):
+Now that the Policy Controller is installed, you can create a policy that verifies that all images provided by Stackable are signed by Stackable's CI pipeline (Github Actions):
 
 [source,yaml]
-include::example$verify-signatures/kyverno-policy.yaml[]
+include::example$verify-signatures/stackable-image-policy.yaml[]
 
-Apply this policy to the cluster by saving it as `kyverno-policy.yaml` and running:
+Apply this policy to the cluster by saving it as `stackable-image-policy.yaml` and running:
 [source,bash]
 ----
-kubectl apply -f kyverno-policy.yaml
+kubectl apply -f stackable-image-policy.yaml
 ----
 
-The policy will be applied to all namespaces in the cluster. It checks all newly created Pods that run any image matching the expression `docker.stackable.tech/+++*+++` (all images provided by Stackable) and ensures that these images have been signed by a Stackable Github Action (`https://github.com/stackabletech/+++*+++/.github/workflows/build.yml@refs/+++*+++`). If the signature of an image is invalid or missing, the policy will deny the pod creation.
-For a more detailed explanation of the policy options, please refer to the https://kyverno.io/docs/writing-policies/verify-images/sigstore/#keyless-signing-and-verification[Kyverno documentation].
-If the `subject` field in the policy is changed to something like `https://github.com/test/+++*+++`, the policy will deny the creation of pods with Stackable images because the signature is no longer valid.
+If you used the default values for the Helm chart, policies will only be applied to namespaces labeled with `policy.sigstore.dev/include: "true"`.
+Add a label for the namespace where you deployed SDP:
+[source,bash]
+----
+kubectl label namespace stackable policy.sigstore.dev/include=true
+----
+
+The Policy Controller checks all newly created Pods in this namespace that run any image matching `+++**+++.stackable.tech/+++**+++` (this matches images provided by Stackable) and ensures that these images have been signed by a Stackable Github Action. If the signature of an image is invalid or missing, the policy will deny the pod creation.
+For a more detailed explanation of the policy options, please refer to the https://docs.sigstore.dev/policy-controller/overview/#configuring-image-patterns[Sigstore documentation].
+If the `subjectRegExp` field in the policy is changed to something like `https://github.com/test/.+`, the policy will deny the creation of pods with Stackable images because the identity of the subject that signed the image (a Stackable Github Action Workflow) will no longer match the expression specified in the policy.
+
+== Verifying image signatures in an air-gapped environment
+
+As mentioned before, our images and Helm charts for SDP are signed keyless. Keyless signing is more complex than "classic" signing with a private and public key, especially when you want to verify signatures in an air-gapped environment. However, it brings several https://www.chainguard.dev/unchained/benefits-of-keyless-software-signing[benefits] and by signing our images keyless, we're also in line with Kubernetes, https://kubernetes.io/docs/tasks/administer-cluster/verify-signed-artifacts/[which uses keyless signing as well].
+
+=== The general setup
+
+To verify keyless signatures, the Policy Controller needs an up-to-date version of the root of trust, which is distributed as a collection of files (to put it simply). In an online setting, these files are automatically fetched via HTTP, by default from the https://tuf-repo-cdn.sigstore.dev/[Sigstore TUF Repo CDN].
+
+NOTE: https://docs.sigstore.dev/signing/overview/#root-of-trust[The Update Framework (TUF)] is the mechanism used by the Policy Controller to initialize and update the root of trust.
+
+In an air-gapped environment, this CDN is not reachable, so instead you have to provide those files yourself. You can get these files from https://github.com/sigstore/root-signing/tree/main/repository/repository[GitHub].
+There are multiple ways how you can provide these files to the Policy Controller, please pick the one that works best for your air-gapped environment:
+
+* Serve them via an HTTP server that is reachable by the Policy Controller. +
+ If you can reach a bastion host from your air-gapped environment that has internet access, configuring a reverse proxy to https://tuf-repo-cdn.sigstore.dev/ will most likely be the easiest way to go for you. This avoids the need to manually update files periodically. +
+ If that's not possible, you can clone the TUF repository and serve it via HTTP, like so:
++
+[source,bash]
+----
+git clone https://github.com/sigstore/root-signing
+cd root-signing/repository/repository
+python3 -m http.server 8081
+----
++
+In both cases, you can provide the host's IP address and port as the mirror URL to the policy controller. For how to do this exactly, we refer to the https://docs.sigstore.dev/policy-controller/overview/#configuring-trustroot-for-custom-tuf-root[Policy Controller's documentation].
+
+* Packing the files into an archive, serializing them and putting them directly into a the `TrustRoot` resource. This is explained in the https://docs.sigstore.dev/policy-controller/overview/#configuring-trustroot-for-custom-tuf-repository[Policy Controller's documentation] as well.
+
+Both options yield you a `TrustRoot` custom resource which you then need to configure in your `ClusterImagePolicy`.
+This is done via the `trustRootRef` attribute, as shown https://docs.sigstore.dev/policy-controller/overview/#configuring-verification-against-different-sigstore-instances[in the Policy Controller's documentation].
+
+Now there's one problem left: When starting, the Policy Controller tries to fetch the root of trust from https://tuf-repo-cdn.sigstore.dev/ by default. This will obviously fail in an air-gapped environment. To circumvent this, you can either set `.webhook.extraArgs.disable-tuf` to `true` in the Helm chart values, which disables the default initialization of the TUF repository. Or, if you configured a TUF mirror that's reachable via HTTP anyway, you can set `.webhook.extraArgs.tuf-mirror` to the URL of your mirror, to use it as the default TUF repository. In that case, you also don't have to create and configure the `TrustRoot` resource anymore.
+
+=== Updating the root of trust
+
+The problem for air-gapped environments is that expiration of keys is built into TUF, which means the root of trust expires after some time and needs to be updated before that happens. This only affects you if you are not using the proxy on a bastion host, as explained before.
+
+So, depending on which way you are providing the files for the root of trust (serve them via HTTP or provide them as serialized repository), you need to update them accordingly. In the example above with the HTTP server, this would mean running `git pull` to get an up-to-date version of the TUF repository.
+
+If you provide the files as serialized repository in the `TrustRoot` resource, the Policy Controller should automatically pick up the change once you update the resource. However, when serving them over HTTP, the Policy Controller does not automatically detect the change. In that case, you can either restart the Policy Controller deployment or modify the `TrustRoot` resource (e.g. by adding an annotation or label) to trigger a reload.
+
+== Further reading
+
+There's a lot more to learn about how keyless signing and verification works. We recommend the following resources:
+
+* https://docs.sigstore.dev/signing/overview/
+* https://docs.sigstore.dev/policy-controller/overview/
+* https://www.chainguard.dev/unchained/life-of-a-sigstore-signature
+* https://blog.sigstore.dev/why-you-cant-use-sigstore-without-sigstore-de1ed745f6fc/
