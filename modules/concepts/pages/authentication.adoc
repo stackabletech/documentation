@@ -35,7 +35,7 @@ In a diagram it would look like this:
 
 image::image$authentication-overview.drawio.svg[]
 
-NOTE: Learn more in the xref:tutorials:authentication_with_openldap.adoc[OpenLDAP tutorial] and get a full overview of all the properties in the {crd-docs}/authentication.stackable.tech/authenticationclass/v1alpha1/#spec-provider-ldap[AuthenticationClass LDAP provider CRD reference].
+NOTE: Learn more in the xref:tutorials:authentication-with-openldap.adoc[OpenLDAP tutorial] and get a full overview of all the properties in the {crd-docs}/authentication.stackable.tech/authenticationclass/v1alpha1/#spec-provider-ldap[AuthenticationClass LDAP provider CRD reference].
 
 [#OIDC]
 === OpenID Connect
@@ -97,5 +97,5 @@ include::example$authenticationclass-static-secret.yaml[]
 [#further-reading]
 == Further Reading
 
-* xref:tutorials:authentication_with_openldap.adoc[] tutorial
+* xref:tutorials:authentication-with-openldap.adoc[] tutorial
 * {crd-docs}/authentication.stackable.tech/authenticationclass/v1alpha1/[AuthenticationClass CRD reference]

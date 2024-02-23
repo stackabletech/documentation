@@ -16,7 +16,11 @@ With the following chain of commands, the SBOM of `airflow-operator` version `24
 
 [source,bash]
 ----
-cosign verify-attestation --type cyclonedx --certificate-identity-regexp '^https://github.com/stackabletech/.+/.github/workflows/.+@.+' --certificate-oidc-issuer https://token.actions.githubusercontent.com docker.stackable.tech/stackable/airflow-operator:24.3.0 | jq '.payload' -r | base64 -d | jq '.predicate'
+cosign verify-attestation --type cyclonedx
+--certificate-identity-regexp '^https://github.com/stackabletech/.+/.github/workflows/.+@.+'
+--certificate-oidc-issuer https://token.actions.githubusercontent.com
+docker.stackable.tech/stackable/airflow-operator:24.3.0 | jq '.payload' -r
+| base64 -d | jq '.predicate'
 ----
 
 IMPORTANT: For simplicity, the tag 24.3.0 is used here to refer to the image. In a real scenario, we recommend to use the digest (`airflow-operator@sha256:...`) instead, to ensure you're pulling the SBOM for the exact image you're interested in.
@@ -32,12 +36,12 @@ If the identity of the signer matches, you can be sure the contents of the attes
 You can now be sure that the SBOM was attested to the container image you're interested in by a Stackable Github Action workflow, it's even possible to look at the workflow to see how exactly this happened.
 
 == Enabling automatic verification of SBOMs
-Similar to our xref:tutorials:enabling_verification_of_image_signatures.adoc[image signature verification] tutorial, it's possible to enforce that only container images with SBOMs that are signed by Stackable are allowed to run in your cluster. Sigstore's https://docs.sigstore.dev/policy-controller/overview/[Policy Controller] can be used to achieve this.
+Similar to our xref:tutorials:enabling-verification-of-image-signatures.adoc[image signature verification] tutorial, it's possible to enforce that only container images with SBOMs that are signed by Stackable are allowed to run in your cluster. Sigstore's https://docs.sigstore.dev/policy-controller/overview/[Policy Controller] can be used to achieve this.
 
 IMPORTANT: Releases prior to SDP 24.3 do not have signed SBOMs. If you are using an older release and enforce SBOM verification, Pods with Stackable images will be prevented from starting.
 
 === Installing the Policy Controller
-The Policy Controller can be easily installed via Helm:
+Install the Policy Controller via Helm:
 
 [source,bash]
 ----

@@ -32,4 +32,4 @@ Then restart the `containerd` service. Now `containerd` will fetch all images th
 
 * Add an alias for `oci.stackable.tech` to the `/etc/hosts` file on every node (like `10.7.228.12 oci.stackable.tech`), issue a self-signed certificate for `oci.stackable.tech` to your registry and add the certificate to the trusted certificates on every node. Note that if you also want to enforce signature checks for Stackable's images via a policy controller, you will need to add this host alias to the Pod of the policy controller as well (and make it trust the certificate).
 
-If you want to know how to verify image signatures in an air-gapped environment, check out our documentation about xref:tutorials:enabling_verification_of_image_signatures.adoc[image signature verification].
+If you want to know how to verify image signatures in an air-gapped environment, check out our documentation about xref:tutorials:enabling-verification-of-image-signatures.adoc[image signature verification].
