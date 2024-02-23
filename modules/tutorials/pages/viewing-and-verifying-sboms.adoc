@@ -17,7 +17,8 @@ With the following chain of commands, the SBOM of `airflow-operator` version `24
 [source,bash]
 ----
 cosign verify-attestation --type cyclonedx
---certificate-identity-regexp '^https://github.com/stackabletech/.+/.github/workflows/.+@.+'
+--certificate-identity-regexp
+'^https://github.com/stackabletech/.+/.github/workflows/.+@.+'
 --certificate-oidc-issuer https://token.actions.githubusercontent.com
 docker.stackable.tech/stackable/airflow-operator:24.3.0 | jq '.payload' -r
 | base64 -d | jq '.predicate'
