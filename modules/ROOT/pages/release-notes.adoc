@@ -1699,7 +1699,7 @@ implemented for HBase, Hadoop and Zookeeper and will eventually be available for
 
 LDAP support has now been added to multiple products. An explanation of the overall approach is given
 xref:concepts:authentication.adoc[here] but in order to make the configuration steps a little clearer a
-xref:tutorials:authentication-with-openldap.adoc[tutorial] has been added that uses a dedicated Stackable
+xref:tutorials:authentication_with_openldap.adoc[tutorial] has been added that uses a dedicated Stackable
 xref:management:stackablectl:commands/stack.adoc[stack] for OpenLDAP and shows its usage.
 
 The xref:management:stackablectl:quickstart.adoc[quickstart guide] shows how to get started with `stackablectl`. This
