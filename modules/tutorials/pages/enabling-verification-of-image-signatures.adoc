@@ -6,7 +6,7 @@ Since Kubernetes does not have native support for verifying image signatures yet
 IMPORTANT: Releases prior to SDP 23.11 do not have signed images. If you are using an older release and enforce image signature verification, Pods with Stackable images will be prevented from starting.
 
 == Installing the Policy Controller
-The Policy Controller can be easily installed via Helm:
+Install the Policy Controller via Helm:
 
 [source,bash]
 ----
