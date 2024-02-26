@@ -1,5 +1,6 @@
 * xref:tutorials:index.adoc[]
 ** xref:authentication_with_openldap.adoc[]
 ** xref:logging-vector-aggregator.adoc[]
-** xref:enabling_verification_of_image_signatures.adoc[]
-** xref:running_stackable_in_an_airgapped_environment.adoc[]
+** xref:enabling-verification-of-image-signatures.adoc[]
+** xref:running-stackable-in-an-airgapped-environment.adoc[]
+** xref:viewing-and-verifying-sboms.adoc[]
