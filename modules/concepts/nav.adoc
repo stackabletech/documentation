@@ -4,7 +4,7 @@
 *** xref:roles-and-role-groups.adoc[]
 *** xref:product_image_selection.adoc[]
 *** xref:overrides.adoc[Advanced: overrides]
-*** xref:experimental-ARM64-support.adoc[ARM64-Early-Access]
+*** xref:arm_support.adoc[]
 ** Resources
 *** xref:resources.adoc[]
 *** xref:s3.adoc[]
