@@ -13,6 +13,7 @@ There is also the common xref:overrides.adoc[override] mechanism for configurati
 
 Learn about how xref:resources.adoc[] are configured; this covers CPU, memory and storage.
 Learn about how xref:s3.adoc[] are configured across the platform.
+Learn about how to access xref:experimental-arm64-support[ARM64-support].
 
 == Connectivity
 

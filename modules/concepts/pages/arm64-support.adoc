@@ -1,0 +1,74 @@
+= Multi-Architecture for SDP (Experimental)
+:description: This page describes how to access ARM64 based SDP early
+:keywords: Multi-Architecture, infrastructure, docker, image, tags, early-access
+
+WARNING: This is an experimental feature of the Stackable Data Platform and still under https://github.com/stackabletech/issues/issues/463[development].
+
+== Early-Access
+
+SDP release 23.11.0 has been ported to the ARM64 architecture. These images are stored within the `stackable-experimental` organization in our https://repo.stackable.tech/#browse/browse:docker:v2%2Fstackable-experimental[Nexus]. 
+
+As they are not available by default so you need to first switch to the `stackable-experimental` organization before pulling them for use with the data platform.
+
+=== Actual Releases
+
+The only release currently available for ARM64 is the early-access version mentioned above.
+
+Each product is built using ARM-specific tags to keep them distinct from development/nightly images. In future they may be bundled as a manifest list using an automated workflow. 
+
+=== Early-Access with Helm
+
+According to our https://docs.stackable.tech/home/stable/airflow/getting_started/installation#_helm[installation guide] you can install ARM64 operators e.g. for the commons operator as follows:
+
+[source,bash]
+----
+helm install commons-operator stackable-stable/commons-operator --namespace stackable-operators --create-namespace --version=23.11.0 --set image.repository=docker.stackable.tech/stackable-experimental/commons-operator
+----
+
+By declaring `--set image.repository=docker.stackable.tech/stackable-experimental/commons-operator` you will overwrite the image selected by default with one located in the organization `stackable-experimental`. The other operators can be installed in the same way.
+
+WARNING: You have to install every operator you need for a given demo individually with helm using `--skip-release` with stackablectl. Otherwise, it will try to install x86 operators and pull ARM64 product images afterwards.
+
+=== Early-Access to our products
+
+The https://docs.stackable.tech/home/stable/concepts/product_image_selection[Product image selection] mechanism allows the user to choose a specific product image and/or a different repository which may be relevant for e.g. air-gapped environments or when using a mirrored repository. To choose an ARM64 image specify the image in the `custom` field as follows:
+
+[source,yaml]
+----
+spec:
+  image:
+    custom: docker.stackable.tech/stackable-experimental/kafka:3.5.1-stackable23.11.0
+    productVersion: 3.5.1
+----
+
+NOTE: Only 23.11.0 is working at this moment.
+
+=== Prepared Demos
+
+It is possible to run SDP demos on ARM64 architecture, but due to the changes that are necessary we have provided a separate branch to make this easier. Please follow the instructions below to run a demo on ARM.
+
+You will need access to a Kubernetes Cluster and to have the stackablectl https://docs.stackable.tech/home/stable/quickstart[command-line tool] installed.
+
+==== 1. Clone the demo repository
+[source,bash]
+----
+git clone git@github.com:stackabletech/demos.git
+----
+
+==== 2. Checkout ARM64 demo branch ( release 23.11.0 )
+[source,bash]
+----
+cd demos && git pull && git checkout spike/demos-on-arm
+----
+==== 3. Install stackable operators ( release 23.11.0 )
+NOTE: This executes a script where all operators with version 23.11.0 are installed. You can omit this step and only install operators you want by copying the corresponding `helm` command.
+
+[source,bash]
+----
+./arm.sh
+----
+==== 4. Install your demo with stackablectl (e.g. nifi-kafka-druid-earthquake-data)
+[source,bash]
+----
+stackablectl demo install nifi-kafka-druid-earthquake-data --skip-release -s stacks/stacks-v2.yaml -d demos/demos-v2.yaml
+----
