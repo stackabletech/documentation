@@ -1,5 +1,4 @@
-= Multi-Architecture for SDP
-:page-aliases: arm_support.adoc
+= Multi-Architecture for SDP (Experimental)
 :description: This page describes how to access ARM64 based SDP early
 :keywords: Multi-Architecture, infrastructure, docker, image, tags, early-access
 
