@@ -21,6 +21,15 @@ If you are wondering about how to write, structure or format something and what 
 * Use second person: "you" instead of "we".
 * Use sentence case for headings.
 
+== File names
+
+We follow Googles recommendations on https://developers.google.com/search/docs/crawling-indexing/url-structure[URL structure].
+This means we use hyphens (`-`) instead of underscores (`_`) in URLs.
+
+Existing files with underscores can be renamed, use https://docs.antora.org/antora/latest/page/page-aliases/[Antora page aliases] when renaming a file to ensure that old links to the file still work.
+
+Keep file names stable, that means don't add _experimental_ or similar to the filenames, as otherwise the file name would have to change once a feature matures.
+
 == Overall structure: AsciiDoc recommended practices
 
 We rely on the AsciiDoc recommended practices for the overall layout and formatting of the AsciiDoc documents that make up the documentation. Here are the most important parts:
@@ -80,9 +89,3 @@ use the placeholder:
     DOCS_BASE_URL_PLACEHOLDER/concepts/authentication
 
 When the CRD gets generated, the placeholder will be replaced with a correctly versioned link to the docs.
-
-== Bonus: Google search URL structure best practices
-
-Google recommends a https://developers.google.com/search/docs/crawling-indexing/url-structure[URL structure], which is to use hyphens (`-`) instead of underscores (`_`) in URLs.
-So we should aim to create our files with hyphens too.
-You can use https://docs.antora.org/antora/latest/page/page-aliases/[Antora page aliases] to rename a page.
