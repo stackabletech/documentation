@@ -41,7 +41,6 @@ spec:
     custom: docker.stackable.tech/stackable-experimental/kafka:3.5.1-stackable23.11.0
     productVersion: 3.5.1
 ----
-Once again, the important thing is to exchange `stackable` with `stackable-experimental` and point to release 23.11.0.
 
 NOTE: Only 23.11.0 is working at this moment.
 
