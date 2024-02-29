@@ -4,7 +4,7 @@
 
 WARNING: This is an experimental feature of the Stackable Data Platform (SDP) and still under https://github.com/stackabletech/issues/issues/463[development].
 
-== Early Access
+== Early access
 
 SDP release 23.11.0 has been ported to the ARM64 architecture.
 These images are stored within the `stackable-experimental` organization in our https://repo.stackable.tech/#browse/browse:docker:v2%2Fstackable-experimental[Docker repository].
