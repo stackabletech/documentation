@@ -11,7 +11,7 @@ These images are stored within the `stackable-experimental` organization in our 
 
 They are not available by default, so you need to switch to the `stackable-experimental` organization before pulling them for use with the data platform.
 
-=== Available Releases
+=== Available releases
 
 The only release currently available for ARM64 is the early access version mentioned above.
 
