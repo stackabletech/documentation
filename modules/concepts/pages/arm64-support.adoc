@@ -47,7 +47,7 @@ spec:
 
 NOTE: Only 23.11.0 is working at this moment.
 
-=== Prepared Demos
+=== Prepared demos
 
 It is possible to run SDP demos on ARM64 architecture, but due to the changes that are necessary we have provided a separate branch to make this easier.
 Please follow the instructions below to run a demo on ARM.
