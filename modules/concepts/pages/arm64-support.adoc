@@ -29,9 +29,6 @@ helm install commons-operator stackable-stable/commons-operator --namespace stac
 
 By declaring `--set image.repository=docker.stackable.tech/stackable-experimental/commons-operator` you will overwrite the image selected by default with one located in the organization `stackable-experimental`. The other operators can be installed in the same way.
 
-TODO: Change this
-WARNING: You have to install every operator you need for a given demo individually with helm using `--skip-release` with stackablectl. Otherwise, it will try to install x86 operators and pull ARM64 product images afterwards.
-
 === Products
 
 The https://docs.stackable.tech/home/stable/concepts/product_image_selection[Product image selection] mechanism allows the user to choose a specific product image and/or a different repository, which may be relevant for e.g. air-gapped environments or when using a mirrored repository.
@@ -48,6 +45,11 @@ spec:
 NOTE: Only 23.11.0 is working at this moment.
 
 === Prepared demos
+
+WARNING: Usually stackablectl would install all required operators for a demo automatically.
+But stackablectl is not yet aware of multiple architectures so it would install the x86 operators.
+Therefore, if you want to install a demo, you nede to always use the `--skip-release` flag for stackablectl.
+See the example in this section.
 
 It is possible to run SDP demos on ARM64 architecture, but due to the changes that are necessary we have provided a separate branch to make this easier.
 Please follow the instructions below to run a demo on ARM.
