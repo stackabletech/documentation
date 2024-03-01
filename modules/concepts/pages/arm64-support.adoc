@@ -1,5 +1,5 @@
 = Multi-Architecture for SDP (Experimental)
-:description: This page describes how to access ARM64 based SDP early
+:description: This page describes how to access ARM64-based SDP early
 :keywords: Multi-Architecture, infrastructure, docker, image, tags, early-access
 
 WARNING: This is an experimental feature of the Stackable Data Platform (SDP) and still under https://github.com/stackabletech/issues/issues/463[development].
@@ -8,8 +8,6 @@ WARNING: This is an experimental feature of the Stackable Data Platform (SDP) an
 
 SDP release 23.11.0 has been ported to the ARM64 architecture.
 These images are stored within the `stackable-experimental` organization in our https://repo.stackable.tech/#browse/browse:docker:v2%2Fstackable-experimental[Docker repository].
-
-They are not available by default, so you need to switch to the `stackable-experimental` organization before pulling them for use with the data platform.
 
 === Available releases
 
@@ -50,7 +48,7 @@ NOTE: Only 23.11.0 is working at this moment.
 
 WARNING: Usually stackablectl would install all required operators for a demo automatically.
 But stackablectl is not yet aware of multiple architectures so it would install the x86 operators.
-Therefore, if you want to install a demo, you nede to always use the `--skip-release` flag for stackablectl.
+Therefore, if you want to install a demo, you need to always use the `--skip-release` flag for stackablectl.
 See the example in this section.
 
 It is possible to run SDP demos on ARM64 architecture, but due to the changes that are necessary we have provided a separate branch to make this easier.
