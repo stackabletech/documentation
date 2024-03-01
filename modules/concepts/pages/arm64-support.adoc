@@ -27,6 +27,8 @@ According to our https://docs.stackable.tech/home/stable/airflow/getting_started
 helm install commons-operator stackable-stable/commons-operator --namespace stackable-operators --create-namespace --version=23.11.0 --set image.repository=docker.stackable.tech/stackable-experimental/commons-operator
 ----
 
+WARNING: Listener operator 23.11.0 not available for the ARM64 architecture
+
 By declaring `--set image.repository=docker.stackable.tech/stackable-experimental/commons-operator` you will overwrite the image selected by default with one located in the organization `stackable-experimental`. The other operators can be installed in the same way.
 
 === Products
@@ -69,7 +71,7 @@ cd demos && git pull && git checkout spike/demos-on-arm
 ----
 
 ==== 3. Install stackable operators (release 23.11.0)
-NOTE: This executes a script where all operators with version 23.11.0 are installed.
+NOTE: This executes a script where all operators (except Listener operator) with version 23.11.0 are installed.
 You can omit this step and only install operators you want by copying the corresponding `helm` command.
 
 [source,bash]
