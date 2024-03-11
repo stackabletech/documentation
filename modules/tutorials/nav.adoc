@@ -4,4 +4,3 @@
 ** xref:enabling-verification-of-image-signatures.adoc[]
 ** xref:running-stackable-in-an-airgapped-environment.adoc[]
 ** xref:viewing-and-verifying-sboms.adoc[]
-** xref:writing-a-webhook-server.adoc[]
