@@ -1,1 +1,85 @@
 = Writing a webhook server
+
+== Creating a new binary crate
+
+Webhook servers are developed and deployed alongside the product operators.
+This can be achieved by creating a new binary crate in the same repository.
+Let's walk through the creation of such a binary step-by-step using our Airflow operator as an example.
+We get started by entering the `airflow-operator` repository and then creating a new binary crate using `cargo`.
+
+[source,shell]
+----
+cd path/to/airflow-operator
+cargo new rust/webhook-binary
+----
+
+This created and adjusted multiple files.
+The root `Cargo.toml` file gained another workspace member and a new folder `rust/webhook-binary` with default files was created.
+Next, add `stackable-webhook` and `tokio` as dependencies.
+
+[NOTE]
+====
+All dependencies below used the latest version at the time of writing.
+Make sure to use the **current** latest version when following this guide.
+====
+
+[source,toml]
+----
+[workspace.package]
+version = "0.0.0-dev"
+repository = "https://github.com/stackabletech/airflow-operator"
+# ...
+
+[workspace.dependencies]
+stackable-webhook = { git = "https://github.com/stackabletech/operator-rs.git" }
+tokio = { version = "1.29", features = ["full"] }
+----
+
+'''
+
+[source,toml]
+----
+[package]
+name = "webhook-binary"
+version.workspace = true
+repository.workspace = true
+# ...
+
+[dependencies]
+stackable-webhook.workspace = true
+tokio.workspace = true
+----
+
+Now we are ready to write our custom webhook server.
+
+== Conversion webhook
+
+If we want to write a CRD conversion webhook, we can use an additional abstraction.
+The `stackable-webhook` library provides a ready-to-use `ConversionWebhookServer`, which already handles receiving and responding with the correct type.
+
+[NOTE]
+====
+The `#[tokio::main]` attribute is only available when the https://docs.rs/tokio/latest/tokio/#feature-flags[`macros`] feature is enabled.
+Using the `full` feature flag includes the `macros` flag.
+====
+
+[source,rust]
+----
+use stackable_webhook::{
+    servers::{ConversionReview, ConversionWebhookServer},
+    Options,
+};
+
+#[tokio::main]
+async fn main() {
+    let server = ConversionWebhookServer::new(handler, Options::default());
+    server.run().await.unwrap()
+}
+
+fn handler(request: ConversionReview) -> ConversionReview {
+    // Add you CRD conversion here
+    todo!()
+}
+----
+
+== Mutating and validating webhooks
