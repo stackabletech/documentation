@@ -1,4 +1,4 @@
-= Writing a webhook server
+= Webhook server implementation guidelines
 
 == Creating a new binary crate
 
@@ -16,7 +16,7 @@ cd airflow-operator
 cargo new rust/webhook-binary
 ----
 
-This created and adjusted multiple files.
+Running this command created and adjusted multiple files.
 The root `Cargo.toml` file gained another workspace member and a new folder `rust/webhook-binary` with default files was created.
 Next, add `stackable-webhook` and `tokio` as dependencies.
 
@@ -94,3 +94,26 @@ fn handler(request: ConversionReview) -> ConversionReview {
 ----
 
 == Mutating and validating webhooks
+
+The `stackable-webhook` library currently doesn't provide ready-to-use webhook servers for mutating or validating webhooks like `ConversionWebhookServer` above.
+Instead, you can implement a completly custom `Router` via the `axum` crate.
+
+[source,rust]
+----
+use axum::{routing::post, Router};
+use stackable_webhook::{Options, WebhookServer};
+
+#[tokio::main]
+async fn main() {
+    let router = Router::new()
+        .route("mutate", post(mutate))
+        .route("validate", post(validate));
+
+    let server = WebhookServer::new(router, Options::default());
+    server.run().await.unwrap();
+}
+
+async fn mutate() {}
+
+async fn validate() {}
+----
