@@ -6,7 +6,8 @@
 ** xref:code-style-guide.adoc[]
 ** xref:docs-style-guide.adoc[]
 ** Implementation guidelines
-*** xref:logging.adoc[]
-*** xref:service_discovery.adoc[]
-*** xref:opa_configuration.adoc[]
+*** xref:guidelines/logging.adoc[]
+*** xref:guidelines/service-discovery.adoc[]
+*** xref:guidelines/opa-configuration.adoc[]
+*** xref:guidelines/webhook-server.adoc[]
 include::partial$adr-nav.adoc[]
