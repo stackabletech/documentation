@@ -1,5 +1,5 @@
 = OPA connection implementation guidelines
-:page-aliases: opa_configuration.adoc
+:page-aliases: opa_configuration.adoc, opa-configuration.adoc
 :source-highlighter: highlight.js
 :highlightjs-languages: rust
 

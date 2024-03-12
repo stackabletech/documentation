@@ -1,5 +1,6 @@
 :source-highlighter: highlight.js
 :highlightjs-languages: rust
+:page-aliases: logging.adoc
 
 = Logging aggregation implementation guidelines
 

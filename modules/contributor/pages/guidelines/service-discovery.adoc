@@ -1,5 +1,5 @@
 = Service discovery implementation guidelines
-:page-aliases: service_discovery.adoc
+:page-aliases: service_discovery.adoc, service-discovery.adoc
 :source-highlighter: highlight.js
 :highlightjs-languages: rust
 
