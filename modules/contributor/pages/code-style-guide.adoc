@@ -385,6 +385,11 @@ enum Error {
 All our error messages must start with a lowercase letter and must not end with a dot.
 It is recommended to start the error messages with "failed to..." or "unable to ...".
 
+Parameterised values need a clear distinction between them and the rest of the error message.
+These values must be wrapped by double quotes `"` and must use the `Debug` implementation for output.
+For types which don't add double quotes around its value, the developer needs to add them manually.
+Most types other than `String` don't wrap their values in double quotes.
+
 [TIP.code-rule,caption=Examples of correct code for this rule]
 ====
 
@@ -397,6 +402,12 @@ enum Error {
 
     #[snafu(display("unable to bar"))]
     Bar,
+
+    #[snafu(display("failed to baz {name:?}, received code \"{code:?}\""))]
+    Baz {
+        name: String,
+        code: usize,
+    },
 }
 ----
 
@@ -415,8 +426,14 @@ enum Error {
     #[snafu(display("Bar encountered"))]
     Bar,
 
-    #[snafu(display("arghh baz."))]
-    Baz,
+    #[snafu(display("failed to baz {name}, received code {code:?}"))]
+    Baz {
+        name: String,
+        code: usize,
+    },
+
+    #[snafu(display("arghh foo bar."))]
+    FooBar,
 }
 ----
 
