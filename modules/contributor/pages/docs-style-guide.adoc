@@ -81,7 +81,7 @@ Hello World <.>
 ----
 ....
 <.> Use `console` for the highlighting setting.
-<.> Prefix the command line with the dollar sign (`$`) which will copy the line in the 'Copy' functionality in the UI.
+<.> Prefix the command line with the dollar sign (`$`) so that when the reader clicks the 'Copy' button, only the command-lines are copied.
 <.> Do _not_ prefix output lines, so they are not copied.
 
 More information on code blocks in the https://docs.antora.org/antora/latest/asciidoc/source/[Antora documentation].
