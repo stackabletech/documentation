@@ -53,6 +53,39 @@ Since the Stackable Data Platform is built on Kubernetes, the resources mentione
 * https://kubernetes.io/docs/contribute/style/style-guide/#use-normal-style-for-string-and-integer-field-values[Use normal style for string and integer field values]
 * https://kubernetes.io/docs/contribute/style/style-guide/#use-code-style-for-kubernetes-command-tool-and-component-names[Use `code style` for command line tools] such as `stackablectl`
 
+=== Code blocks (scripts, console instructions)
+
+For scripts and source code blocks, use this syntax:
+
+[source]
+....
+[source,yaml] <.>
+----
+spec:
+  command: | <.>
+    some-command --with-long-option 'my-option' <.>
+----
+....
+<.> Put the language here, i.e. `bash` or `yaml` to get appropriate syntax highlighting.
+<.> Indent 2 spaces to save horizontal space when applicable.
+<.> Use long options for shell script flags, as they are easier to understand. Use your own judgment; common ones like `rm -rf` can still be short flags.
+
+For console instructions, which might include example output:
+
+[source]
+....
+[source,console] <.>
+----
+$ echo 'Hello World' <.>
+Hello World <.>
+----
+....
+<.> Use `console` for the highlighting setting.
+<.> Prefix the command line with the dollar sign (`$`) so that when the reader clicks the 'Copy' button, only the command-lines are copied.
+<.> Do _not_ prefix output lines, to prevent the lines from being copied.
+
+More information on code blocks in the https://docs.antora.org/antora/latest/asciidoc/source/[Antora documentation].
+
 == Tone and writing style: Google developer documentation style guide
 
 For overall tone, writing style, language and grammar the {google-style-guide} is a good resource of guidelines.
@@ -68,12 +101,6 @@ Some highlights:
 The Google guide also includes it's own list of https://developers.google.com/style/highlights[highlights].
 
 Lastly, these are guidelines and not strict rules to follow. Use your own judgement to clearly communicate and explain - after all this is what documentation is about.
-
-== Scripts and code blocks
-
-* Indent using 2 spaces to save horizontal space.
-* Do not use a `$` prefix for commandline examples.
-* Use long options for shell script flags, as they are easier to understand. Use your own judgment; common ones like `rm -rf` can still be short flags.
 
 == CRD documentation
 
