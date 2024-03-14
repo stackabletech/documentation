@@ -67,7 +67,7 @@ spec:
 ----
 ....
 <.> Put the language here, i.e. `bash` or `yaml` to get appropriate syntax highlighting.
-<.> Indent 2 spaces (not 4, also for Python/Java/Rust etc.) to save horizontal space.
+<.> Indent 2 spaces to save horizontal space when applicable.
 <.> Use long options for shell script flags, as they are easier to understand. Use your own judgment; common ones like `rm -rf` can still be short flags.
 
 For console instructions, which might include example output:
