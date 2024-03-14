@@ -67,10 +67,10 @@ spec:
 ----
 ....
 <.> Put the language here, i.e. `bash` or `yaml` to get appropriate syntax highlighting.
-<.> Indent 2 spaces to save horizontal space (also for Python or Java code!).
+<.> Indent 2 spaces (not 4, also for Python/Java/Rust etc.) to save horizontal space.
 <.> Use long options for shell script flags, as they are easier to understand. Use your own judgment; common ones like `rm -rf` can still be short flags.
 
-For console instructions, use:
+For console instructions, which might include example output:
 
 [source]
 ....
@@ -81,8 +81,8 @@ Hello World <.>
 ----
 ....
 <.> Use `console` for the highlighting setting.
-<.> Prefix the command line with the dollar sign (`$`).
-<.> Do _not_ prefix output lines.
+<.> Prefix the command line with the dollar sign (`$`) which will copy the line in the 'Copy' functionality in the UI.
+<.> Do _not_ prefix output lines, so they are not copied.
 
 More information on code blocks in the https://docs.antora.org/antora/latest/asciidoc/source/[Antora documentation].
 
