@@ -4,6 +4,37 @@
 The Stackable platform consists of multiple operators that work together. Periodically a platform release is made,
 including all components of the platform at a specific version.
 
+== Release 24.3
+
+=== New / extended platform features
+
+Support for many new product versions::
+Almost all product images have been updated to their latest versions. Some notable examples are Apache Airflow 2.8.1, Trino 422 and Apache Spark 2.5.1. In addition, we started building product binaries from source instead of packaging them from the official releases. This enables greater control over the features and the security aspects of the products. Currently Apache Hadoop and Apache HBase are built from source, other will follow over the couse of the next releases.
+
+Security::
+We put a special ephasis on security in this release. For this purpose we addressed the following topics:
+* Authorization
+* OpenID Connect integration
+* Vulnerability management
+
+Starting with this release, user **authorization** is consistent across all products. The Open Policy Agent has been at the core of the platform since the begining and in this release we enhanced it's capability with the inclusion of a new component called `user-info-fetcher`. It allows for authorization policies to be built on many attributes like organizational group membership, resource assignement and much more. The first major identity provider supported by the `user-info-fetcher` is Keycloak but others will follow.
+
+OpenID Connect is the de-facto authorization standard on the Web and it's making it's way into enterprose environments. Apache Superset and Trino are the first products to add support for it.
+
+TODO: Vulnerability management
+
+Documentation::
+We are constantly working on improving the platform documentation and custom resource definitions are big part of that. The CRD documentation is now generated automatically and can be found at https://crds.stackable.tech.
+
+Command line tools::
+The `stackablectl` command line tool has been overhauled and can now list endpoints provided by the listener operator. Also operator installation is parallelized which considerably speeds up the process of setting up SDP on fresh Kubernetes clusters.
+
+Custom labels for Helm charts::
+In the past, Helm users could not assign custom labels to stackles. This is now possible and it enables better component management with third party tools.
+
+Bugfixes::
+* Spark applications can now be provisioned dynamically without having to fiddle with classpath settings.
+
 == Release 23.11
 
 This release introduces two further elements of platform stability - pod disruption budgets and graceful shutdown specifications - as well as a new management tool and updated product version support. Any known issues related to this release are listed in the <<KI_2311>> section below.
