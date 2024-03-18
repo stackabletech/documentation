@@ -106,7 +106,21 @@ The following product versions are deprecated and will be removed in a later rel
 * Apache ZooKeeper: 3.8.3
 * Open Policy Agent: 0.57.0
 
+N.B. in some cases a newly supported version is also immediately marked as deprecated. This is done to allow an update path from the latest patch of a minor version (e.g. Kafka 2.8.2 --> 3.4.1).
+
 ==== Removed versions
+
+The following product versions are no longer supported (although images for released product versions remain available https://repo.stackable.tech/#browse/browse:docker:v2%2Fstackable[here]):
+
+* Apache Airflow: 2.6.1, 2.6.3
+* Apache Druid: 27.0.0
+* Apache Hadoop: 3.2.2, 3.2.4
+* Apache Hbase: 2.4.12
+* Apache Kafka: 2.8.1, 2.8.2, 3.4.1
+* Open Policy Agent: 0.51.0
+* Apache Spark: 3.4.0
+* Apache Superset: 2.1.0
+* Apache ZooKeeper: 3.8.1
 
 === stackablectl
 
