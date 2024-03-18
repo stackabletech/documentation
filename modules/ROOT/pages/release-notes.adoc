@@ -35,6 +35,33 @@ In the past, Helm users could not assign custom labels to stackles. This is now 
 Bugfixes::
 * Spark applications can now be provisioned dynamically without having to fiddle with classpath settings.
 
+
+== Product versions
+
+=== New versions
+
+=== Deprecated versions
+
+=== Removed versions
+
+== stackablectl
+
+== Supported Kubernetes versions
+
+== Supported OpenShift versions
+
+== Breaking changes
+
+== Upgrade from 23.11
+
+=== Using stackablectl
+
+=== Using Helm
+
+=== Known upgrade issues
+
+==== All operators
+
 == Release 23.11
 
 This release introduces two further elements of platform stability - pod disruption budgets and graceful shutdown specifications - as well as a new management tool and updated product version support. Any known issues related to this release are listed in the <<KI_2311>> section below.
