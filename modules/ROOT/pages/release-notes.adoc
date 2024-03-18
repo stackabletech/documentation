@@ -36,31 +36,31 @@ Bugfixes::
 * Spark applications can now be provisioned dynamically without having to fiddle with classpath settings.
 
 
-== Product versions
+=== Product versions
 
-=== New versions
+==== New versions
 
-=== Deprecated versions
+==== Deprecated versions
 
-=== Removed versions
+==== Removed versions
 
-== stackablectl
+=== stackablectl
 
-== Supported Kubernetes versions
+=== Supported Kubernetes versions
 
-== Supported OpenShift versions
+=== Supported OpenShift versions
 
-== Breaking changes
+=== Breaking changes
 
-== Upgrade from 23.11
+=== Upgrade from 23.11
 
-=== Using stackablectl
+==== Using stackablectl
 
-=== Using Helm
+==== Using Helm
 
-=== Known upgrade issues
+==== Known upgrade issues
 
-==== All operators
+===== All operators
 
 == Release 23.11
 
