@@ -49,10 +49,13 @@ Almost all product images have been updated to their latest versions. Some notab
 Security::
 We put a special ephasis on security in this release. For this purpose we addressed the following topics:
 * Authorization
+* Authentication with Kerberos
 * OpenID Connect integration
 * Vulnerability management
 
 Starting with this release, user **authorization** is consistent across all products. The Open Policy Agent has been at the core of the platform since the begining and in this release we enhanced it's capability with the inclusion of a new component called `user-info-fetcher`. It allows for authorization policies to be built on many attributes like organizational group membership, resource assignement and much more. The first major identity provider supported by the `user-info-fetcher` is Keycloak but others will follow.
+
+Kerberos is the most widely used authentication protocol in the enterprise world. We added support for it in Apache Hive and Apache HBase. Also we added examples for running Apache Spark applications in a Kerberos enabled environment.
 
 OpenID Connect is the de-facto authorization standard on the Web and it's making it's way into enterprose environments. Apache Superset and Trino are the first products to add support for it.
 
@@ -65,7 +68,7 @@ Command line tools::
 The `stackablectl` command line tool has been overhauled and can now list endpoints provided by the listener operator. Also operator installation is parallelized which considerably speeds up the process of setting up SDP on fresh Kubernetes clusters.
 
 Custom labels for Helm charts::
-In the past, Helm users could not assign custom labels to stackles. This is now possible and it enables better component management with third party tools.
+In the past, Helm users could not assign custom labels to stacklets. This is now possible and it enables better component management with third party tools.
 
 Bugfixes::
 * Spark applications can now be provisioned dynamically without having to fiddle with classpath settings.
@@ -75,7 +78,33 @@ Bugfixes::
 
 ==== New versions
 
+The following new product versions are now supported:
+
+* https://github.com/stackabletech/airflow-operator/pull/387[Apache Airflow: 2.7.3, 2.8.1]
+* https://github.com/stackabletech/druid-operator/pull/518[Apache Druid: 28.0.1]
+* https://github.com/stackabletech/kafka-operator/pull/664[Apache Kafka: 3.5.2, 3.6.1]
+* https://github.com/stackabletech/nifi-operator/pull/573[Apache NiFi: 1.25.0]
+* https://github.com/stackabletech/opa-operator/pull/518[Open Policy Agent: 0.61.0]
+* https://github.com/stackabletech/spark-k8s-operator/pull/357[Apache Spark: 3.4.2]
+* https://github.com/stackabletech/spark-k8s-operator/pull/373[Apache Spark: 3.5.1]
+* https://github.com/stackabletech/superset-operator/pull/457[Apache Superset: 2.1.3, 3.0.3, 3.1.0]
+* https://github.com/stackabletech/trino-operator/pull/557[Trino: 442]
+* https://github.com/stackabletech/zookeeper-operator/pull/783[Apache ZooKeeper: 3.8.4]
+* https://github.com/stackabletech/zookeeper-operator/pull/788[Apache ZooKeeper: 3.9.2]
+
 ==== Deprecated versions
+
+The following product versions are deprecated and will be removed in a later release:
+
+* Apache Airflow: 2.7.2, 2.7.3
+* Apache Druid: 27.0.0
+* Apache Kafka: 3.5.1, 3.5.2
+* Apache Nifi: 1.23.2
+* Apache Spark: 3.4.1, 3.5.0
+* Apache Superset: 2.1.1, 3.0.1. 3.0.3
+* Trino: 428
+* Apache ZooKeeper: 3.8.3
+* Open Policy Agent: 0.57.0
 
 ==== Removed versions
 
