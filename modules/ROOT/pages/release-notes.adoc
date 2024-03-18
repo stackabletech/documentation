@@ -151,6 +151,56 @@ This release supports the following OpenShift versions:
 
 You will need to adapt your existing CRDs due to the following breaking changes detailed below.
 
+==== Stackable Operator for Apache Airflow
+
+* https://github.com/stackabletech/airflow-operator/pull/353[Fixed various issues in the CRD structure. `clusterConfig.credentialsSecret` is now mandatory]
+
+.Breaking changes details
+[%collapsible]
+====
+
+Apache Airflow requires a database to store metaddata. The credetials for this database are configured using the `clusterConfig.credentialsSecret` property. This is `airflow-credentials` in the example below.
+
+[source,yaml]
+----
+apiVersion: airflow.stackable.tech/v1alpha1
+kind: AirflowCluster
+metadata:
+  name: airflow
+spec:
+  image:
+    productVersion: "2.8.1"
+  clusterConfig:
+    credentialsSecret: airflow-credentials
+----
+
+The Secret must contain credentials for Airflow `admin` user as well, connection properties to the database and Redis as shown below.
+
+[source,yaml]
+----
+apiVersion: v1
+kind: Secret
+metadata:
+  name: airflow-credentials
+type: Opaque
+stringData:
+  adminUser.username: airflow
+  adminUser.firstname: Airflow
+  adminUser.lastname: Admin
+  adminUser.email: airflow@airflow.com
+  adminUser.password: airflow
+  connections.secretKey: thisISaSECRET_1234
+  connections.sqlalchemyDatabaseUri: postgresql+psycopg2://airflow:airflow@airflow-postgresql/airflow
+  connections.celeryResultBackend: db+postgresql://airflow:airflow@airflow-postgresql/airflow
+  connections.celeryBrokerUrl: redis://:redis@airflow-redis-master:6379/0
+----
+ 
+* https://github.com/stackabletech/airflow-operator/pull/366[Removed legacy node selector on roleGroups]
+
+Assigning role groups to node selector was deprecated in 23.11 and has been removed in this release.
+
+To assign roles and role groups to nodes, use the `config.affinity` property as described in the https://docs.stackable.tech/home/nightly/contributor/adr/adr026-affinities#_introduce_one_dedicated_attribute[documentation].
+
 ==== Stackable Operator for Apache HDFS
 
 * https://github.com/stackabletech/hdfs-operator/pull/450[Support for exposing HDFS clusters to clients outside of Kubernetes] `.spec.clusterConfig.listenerClass` has been split to `.spec.nameNodes.config.listenerClass` and `.spec.dataNodes.config.listenerClass`, migration will be required when using `external-unstable`.
