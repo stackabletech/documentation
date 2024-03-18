@@ -4,6 +4,41 @@
 The Stackable platform consists of multiple operators that work together. Periodically a platform release is made,
 including all components of the platform at a specific version.
 
+////
+Here are the headings you can use for the next release. Saves time checking indentation levels.
+
+== Release YY.M
+
+=== New / extended platform features
+
+=== Product versions
+
+==== New versions
+
+==== Deprecated versions
+
+==== Removed versions
+
+=== stackablectl
+
+=== Supported Kubernetes versions
+
+=== Supported OpenShift versions
+
+=== Breaking changes
+
+=== Upgrade from YY.M
+
+==== Using stackablectl
+
+==== Using Helm
+
+==== Known upgrade issues
+
+===== All operators
+
+////
+
 == Release 24.3
 
 === New / extended platform features
