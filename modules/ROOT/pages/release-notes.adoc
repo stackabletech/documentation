@@ -122,11 +122,30 @@ The following product versions are no longer supported (although images for rele
 * Apache Superset: 2.1.0
 * Apache ZooKeeper: 3.8.1
 
-=== stackablectl
+=== Cockpit and stackablectl
+
+A new https://github.com/stackabletech/stackable-cockpit[project] called Stackable Cockpit has been started. It is a web-based management tool that allows users to interact with the Stackable data platform. The repository also contains the stackablectl command line tool which has been refactored for performance ans stability.
 
 === Supported Kubernetes versions
 
+This release supports the following Kubernetes versions:
+
+* `1.29`
+* `1.28`
+* `1.27`
+
+These Kubernetes versions are no longer supported:
+
+* `1.26`
+* `1.25`
+
+
 === Supported OpenShift versions
+
+This release supports the following OpenShift versions:
+
+* `4.15`
+* `4.14`
 
 === Breaking changes
 
