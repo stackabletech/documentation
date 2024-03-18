@@ -158,8 +158,7 @@ You will need to adapt your existing CRDs due to the following breaking changes 
 .Breaking changes details
 [%collapsible]
 ====
-
-Apache Airflow requires a database to store metaddata. The credetials for this database are configured using the `clusterConfig.credentialsSecret` property. This is `airflow-credentials` in the example below.
+Apache Airflow requires a database to store metadata. The credetials for this database are configured using the `clusterConfig.credentialsSecret` property. This is `airflow-credentials` in the example below.
 
 [source,yaml]
 ----
@@ -194,12 +193,100 @@ stringData:
   connections.celeryResultBackend: db+postgresql://airflow:airflow@airflow-postgresql/airflow
   connections.celeryBrokerUrl: redis://:redis@airflow-redis-master:6379/0
 ----
+====
  
 * https://github.com/stackabletech/airflow-operator/pull/366[Removed legacy node selector on roleGroups]
 
+.Breaking changes details
+[%collapsible]
+====
 Assigning role groups to node selector was deprecated in 23.11 and has been removed in this release.
 
-To assign roles and role groups to nodes, use the `config.affinity` property as described in the https://docs.stackable.tech/home/nightly/contributor/adr/adr026-affinities#_introduce_one_dedicated_attribute[documentation].
+To assign roles and role groups to nodes, use the `config.affinity.nodeAffinity` property as described in the https://docs.stackable.tech/home/nightly/contributor/adr/adr026-affinities#_introduce_one_dedicated_attribute[documentation].
+====
+
+==== Open Policy Agent Operator
+
+* https://github.com/stackabletech/opa-operator/pull/433[Remove legacy `nodeSelector` on rolegroups]
+
+.Breaking changes details
+[%collapsible]
+====
+Assigning role groups to node selector was deprecated in 23.11 and has been removed in this release.
+
+To assign roles and role groups to nodes, use the `config.affinity.nodeAffinity` property as described in the https://docs.stackable.tech/home/nightly/contributor/adr/adr026-affinities#_introduce_one_dedicated_attribute[documentation].
+====
+
+==== Secret operator
+
+* https://github.com/stackabletech/secret-operator/pull/350[`autoTLS` certificate authorities will now be rotated regularly]
+
+This changes the format of the CA secrets. Old secrets will be migrated automatically, but manual intervention will be required to downgrade back to 23.11.x.
+
+==== Stackable Operator for Apache Spark
+
+* https://github.com/stackabletech/spark-k8s-operator/pull/319[Removed version field. Several attributes have been made to mandatory]
+
+.Breaking changes details
+[%collapsible]
+====
+The `spec.version` field has been removed.
+
+The `spec.mode` field is now required and must be set to `cluster`.
+
+The `spec.mainClass` field is now required and must point to a location on ths file system or S3 where the main class is located.
+====
+
+* https://github.com/stackabletech/spark-k8s-operator/pull/355[Remove usage of `userClassPathFirst` properties]
+
+.Breaking changes details
+[%collapsible]
+====
+This is an experimental feature that was introduced to support logging in XML format. The side effect of this removal is that the vector agent cannot aggregate output from the `spark-submit` containers. On the other side, it enables dynamic provisioning of java packages (such as Delta Lake) with Stackable stock images which is much more important. 
+====
+
+==== Stackable Operator for Apache Superset
+
+* https://github.com/stackabletech/superset-operator/pull/429[Fixed various issues in the CRD structure. `clusterConfig.credentialsSecret` is now mandatory]
+
+.Breaking changes details
+[%collapsible]
+====
+Apache Superset requires a database to store metadata. The credentials for this database must be provided with the `clusterConfig.credentialsSecret` property.
+
+For example, given the following Superset cluster snippet:
+[source,yaml]
+----
+apiVersion: superset.stackable.tech/v1alpha1
+kind: SupersetCluster
+metadata:
+  name: superset
+spec:
+  clusterConfig:
+    credentialsSecret: superset-credentials
+...
+----
+
+The Secret `superset-credentials` must contain the following fields:
+[source,yaml]
+----
+apiVersion: v1
+kind: Secret
+metadata:
+  name: superset-credentials
+type: Opaque
+stringData:
+  adminUser.username: admin
+  adminUser.firstname: Superset
+  adminUser.lastname: Admin
+  adminUser.email: admin@superset.com
+  adminUser.password: admin
+  connections.secretKey: thisISaSECRET_1234
+  connections.sqlalchemyDatabaseUri: postgresql://superset:superset@superset-postgresql/superset
+----
+
+====
+
 
 ==== Stackable Operator for Apache HDFS
 
