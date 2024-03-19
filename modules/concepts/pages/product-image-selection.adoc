@@ -89,7 +89,7 @@ spec:
 
 NOTE: If the Kubernetes cluster does not have internet access, a xref:_custom_docker_registry[] or xref:_custom_images[] can be used.
 
-You only need to specify the product version but _can_ also specify an exiplicit Stackable version.
+You only need to specify the product version but _can_ also specify an explicit Stackable version.
 the product version can be found on the xref:operators:supported_versions.adoc[list of supported product versions] or on the product operator documentation page.
 The requirement to specify a product version might be relaxed in the future, as every platform release might ship with a recommended product version, which might be used by default.
 
