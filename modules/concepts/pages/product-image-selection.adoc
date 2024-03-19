@@ -133,7 +133,7 @@ spec:
     productVersion: 3.3.1
 ----
 
-Even though the product version is not used anymore for image selection, you still need to provide it, as the Stackable Operators configure their respective products based on the product version.
+Even though the product version is not used anymore for image selection, you still need to provide it, as the operators configure their respective products based on the product version.
 This affects e.g. configuration properties or available product features.
 Only when the correct product version is given to the operator, the product will work correctly, so you need to provide the product version that you have used in your custom image.
 
