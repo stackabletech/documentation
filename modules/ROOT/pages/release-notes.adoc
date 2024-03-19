@@ -205,6 +205,71 @@ Assigning role groups to node selector was deprecated in 23.11 and has been remo
 To assign roles and role groups to nodes, use the `config.affinity.nodeAffinity` property as described in the https://docs.stackable.tech/home/nightly/contributor/adr/adr026-affinities#_introduce_one_dedicated_attribute[documentation].
 ====
 
+==== Apache HBase
+
+* https://github.com/stackabletech/hbase-operator/pull/438[Removed legacy node selector on roleGroups]
+
+.Breaking changes details
+[%collapsible]
+====
+Assigning role groups to node selector was deprecated in 23.11 and has been removed in this release.
+
+To assign roles and role groups to nodes, use the `config.affinity.nodeAffinity` property as described in the https://docs.stackable.tech/home/nightly/contributor/adr/adr026-affinities#_introduce_one_dedicated_attribute[documentation].
+====
+
+==== Stackable Operator for Apache HDFS
+
+* https://github.com/stackabletech/hdfs-operator/pull/450[Support for exposing HDFS clusters to clients outside of Kubernetes] `.spec.clusterConfig.listenerClass` has been split to `.spec.nameNodes.config.listenerClass` and `.spec.dataNodes.config.listenerClass`, migration will be required when using `external-unstable`.
+
+.Breaking changes details
+[%collapsible]
+====
+This requires a change from e.g.
+
+[source,yaml]
+----
+apiVersion: hdfs.stackable.tech/v1alpha1
+kind: HdfsCluster
+metadata:
+  name: hdfs
+spec:
+  clusterConfig:
+    listenerClass: external-unstable # <1>
+    ...
+----
+
+to:
+
+[source,yaml]
+----
+apiVersion: hdfs.stackable.tech/v1alpha1
+kind: HdfsCluster
+metadata:
+  name: hdfs
+spec:
+  clusterConfig:
+    ...
+  nameNodes:
+    config:
+      listenerClass: external-stable # <2>
+      ...
+    ...
+  dataNodes:
+    config:
+      listenerClass: external-unstable # <3>
+      ...
+  journalNodes:
+    config:
+      ...
+----
+
+<1> Remove the cluster-wide listenerClass
+<2> Add the appropriate listenerClass to the NameNode configuration (external-stable is recommended). You can set these at the role-group level too.
+<3> Add the appropriate listenerClass to the DataNode configuration (external-stable is recommended). You can set these at the role-group level too.
+====
+
+
+
 ==== Open Policy Agent Operator
 
 * https://github.com/stackabletech/opa-operator/pull/433[Remove legacy `nodeSelector` on rolegroups]
@@ -287,57 +352,6 @@ stringData:
 
 ====
 
-
-==== Stackable Operator for Apache HDFS
-
-* https://github.com/stackabletech/hdfs-operator/pull/450[Support for exposing HDFS clusters to clients outside of Kubernetes] `.spec.clusterConfig.listenerClass` has been split to `.spec.nameNodes.config.listenerClass` and `.spec.dataNodes.config.listenerClass`, migration will be required when using `external-unstable`.
-
-.Breaking changes details
-[%collapsible]
-====
-This requires a change from e.g.
-
-[source,yaml]
-----
-apiVersion: hdfs.stackable.tech/v1alpha1
-kind: HdfsCluster
-metadata:
-  name: hdfs
-spec:
-  clusterConfig:
-    listenerClass: external-unstable # <1>
-    ...
-----
-
-to:
-
-[source,yaml]
-----
-apiVersion: hdfs.stackable.tech/v1alpha1
-kind: HdfsCluster
-metadata:
-  name: hdfs
-spec:
-  clusterConfig:
-    ...
-  nameNodes:
-    config:
-      listenerClass: external-stable # <2>
-      ...
-    ...
-  dataNodes:
-    config:
-      listenerClass: external-unstable # <3>
-      ...
-  journalNodes:
-    config:
-      ...
-----
-
-<1> Remove the cluster-wide listenerClass
-<2> Add the appropriate listenerClass to the NameNode configuration (external-stable is recommended). You can set these at the role-group level too.
-<3> Add the appropriate listenerClass to the DataNode configuration (external-stable is recommended). You can set these at the role-group level too.
-====
 
 === Upgrade from 23.11
 
