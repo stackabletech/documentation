@@ -83,7 +83,7 @@ Bugfixes::
 
 
 Product features::
-Following are selected product features provided by new versions available in this release:
+The following are selected product features provided by new versions available in this release:
 
 * Apache Airflow : Introducing Airflow Object Storage and Listener hooks for Datasets plus various bug fixes.
 * Apache Druid : SQL compliance & engine enhancements, ingestion improvements, concurrent data handling.
