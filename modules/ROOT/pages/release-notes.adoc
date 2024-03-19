@@ -488,7 +488,13 @@ helm install --wait zookeeper-operator stackable-stable/zookeeper-operator --ver
 
 ==== Known upgrade issues
 
+In the case of the breaking changes detailed above it will be necessary to update the custom resources and re-apply them.
+
+Additionally, please note the following:
+
 ===== All operators
+
+If you used node selectors to assign Pods to nodes, this will not work anymore. Use the `config.affinity.nodeAffinity` property instead and follow the instructions in the https://docs.stackable.tech/home/nightly/contributor/adr/adr026-affinities#_introduce_one_dedicated_attribute[documentation].
 
 == Release 23.11
 
