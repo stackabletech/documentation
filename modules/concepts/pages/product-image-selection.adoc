@@ -91,7 +91,6 @@ NOTE: If the Kubernetes cluster does not have internet access, a xref:_custom_do
 
 You only need to specify the product version but _can_ also specify an explicit Stackable version.
 the product version can be found on the xref:operators:supported_versions.adoc[list of supported product versions] or on the product operator documentation page.
-The requirement to specify a product version might be relaxed in the future, as every platform release might ship with a recommended product version, which might be used by default.
 
 As images should be updated from time to time (e.g. new base image, security updates), a Stackable version can be provided.
 An image with the Stackable version `23.7.0` is fixed and will never change.
