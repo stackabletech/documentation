@@ -57,7 +57,7 @@ Starting with this release, user **authorization** is consistent across all prod
 
 Kerberos is the most widely used authentication protocol in the enterprise world. We added support for it in Apache Hive and Apache HBase. Also we added examples for running Apache Spark applications in a Kerberos enabled environment.
 
-OpenID Connect is the de-facto authorization standard on the Web and it's making it's way into enterprise environments. Apache Superset and Trino are the first products to add support for it.
+OpenID Connect is the de-facto authorization standard on the Web and it's making its way into enterprise environments. Apache Superset and Trino are the first products to add support for it.
 
 A core component of SDP is the Secret Operator. In this release, the secret operator will rotate automatically generated certificates. The certificate lifetime is also jittered to avoid downtime upon pod restarts.
 
