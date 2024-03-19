@@ -59,6 +59,8 @@ Kerberos is the most widely used authentication protocol in the enterprise world
 
 OpenID Connect is the de-facto authorization standard on the Web and it's making it's way into enterprise environments. Apache Superset and Trino are the first products to add support for it.
 
+A core component of SDP is the Secret Operator. In this release, the secret operator will rotate automatically generated certificates. The certificate lifetime is also jittered to avoid downtime upon pod restarts.
+
 TODO: Vulnerability management
 
 Documentation::
@@ -71,7 +73,11 @@ Custom labels for Helm charts::
 In the past, Helm users could not assign custom labels to stacklets. This is now possible and it enables better component management with third party tools.
 
 Bugfixes::
-* Spark applications can now be provisioned dynamically without having to fiddle with classpath settings.
+* Apache Airflow Operator: Using git-sync with the KubernetesExecutor is now possible.
+* Apache Hadoop Operator: Kerberos principals are now included in the discovery ConfigMap. Also environment variables can now be overridden with the role group's `envOverrides` property. 
+* Apache Spark Operator: applications can now be provisioned dynamically without having to fiddle with classpath settings. Also RBAC permissions have been updated to allow the deletion of ConfigMaps when cleaning up applications.
+* Trino Operator: Add HDFS configuration files to the `hive.config.resources` property when connecting to a HDFS cluster.
+
 
 Product features::
 Following are selected product features provided by new versions available in this release:
