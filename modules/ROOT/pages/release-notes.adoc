@@ -53,7 +53,7 @@ We put a special emphasis on security in this release. For this purpose we addre
 * OpenID Connect integration
 * Vulnerability management
 
-Starting with this release, user **authorization** is consistent across all products. The Open Policy Agent has been at the core of the platform since the beginning and in this release we enhanced it's capability with the inclusion of a new component called `user-info-fetcher`. It allows for authorization policies to be built on many attributes like organizational group membership, resource assignment and much more. The first major identity provider supported by the `user-info-fetcher` is Keycloak but others will follow.
+Starting with this release, user **authorization** is consistent across all products. The Open Policy Agent has been a core component of the platform since the beginning and in this release we enhanced its capability with the inclusion of a new component called `user-info-fetcher`. It allows for authorization policies to be built on many attributes like organizational group membership, resource assignment and much more. The first major identity provider supported by the `user-info-fetcher` is Keycloak but others will follow.
 
 Kerberos is the most widely used authentication protocol in the enterprise world. We added support for it in Apache Hive and Apache HBase. Also we added examples for running Apache Spark applications in a Kerberos enabled environment.
 
