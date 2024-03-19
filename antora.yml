@@ -2,14 +2,15 @@ name: home
 version: "nightly"
 title: Stackable Documentation
 nav:
-  - modules/ROOT/nav.adoc
+  - modules/ROOT/nav1.adoc
   - modules/concepts/nav.adoc
   - modules/demos/nav.adoc
   - modules/tutorials/nav.adoc
   - modules/operators/nav.adoc
+  - modules/ROOT/nav2.adoc # this is for the 'Management' link
   - modules/reference/nav.adoc
   - modules/contributor/nav.adoc
-  - modules/ROOT/nav2.adoc
+  - modules/ROOT/nav3.adoc # this is for the extra bits at the end of the menu
 # The prerelease setting affects version sorting.
 # Set to 'true' for nightly and false otherwise.
 prerelease: true
