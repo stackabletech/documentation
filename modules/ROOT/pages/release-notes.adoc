@@ -63,6 +63,9 @@ A core component of SDP is the Secret Operator. In this release, the secret oper
 
 TODO: Vulnerability management
 
+[IMPORTANT]  
+This is the last release where operators do not enable authentication and encryption by default. To ensure a smooth transition to future releases, we strongly encourage you to enable security features wherever possible in your deployments.
+
 Documentation::
 We are constantly working on improving the platform documentation and custom resource definitions are big part of that. The CRD documentation is now generated automatically and can be found at https://crds.stackable.tech.
 
