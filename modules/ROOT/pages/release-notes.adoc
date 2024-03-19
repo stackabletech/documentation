@@ -55,6 +55,8 @@ We put a special emphasis on security in this release. For this purpose we addre
 
 Starting with this release, user **authorization** is consistent across all products. The Open Policy Agent has been a core component of the platform since the beginning and in this release we enhanced its capability with the inclusion of a new component called `user-info-fetcher`. It allows for authorization policies to be built on many attributes like organizational group membership, resource assignment and much more. The first major identity provider supported by the `user-info-fetcher` is Keycloak but others will follow.
 
+A lot of effort in was spent on enabling policy based authorization (with OPA) within HDFS. This was in important milestone in the platform evolution and is a unique feature that has long been missed by HDFS users and administrators. It requires a Kerberos-enabled cluster as well as the https://github.com/stackabletech/hdfs-utils[HDFS extension] which includes an OPA authorizer and group mapper. This is already bundled in Stackable image of HDFS and can be used by following the xref:hdfs:usage-guide:security.adoc[documentation]. Exact details are available in the https://github.com/stackabletech/hdfs-operator/pull/474[pull request].
+
 Kerberos is the most widely used authentication protocol in the enterprise world. We added support for it in Apache Hive and Apache HBase. Also we added examples for running Apache Spark applications in a Kerberos enabled environment.
 
 OpenID Connect is the de-facto authorization standard on the Web and it's making its way into enterprise environments. Apache Superset and Trino are the first products to add support for it.
@@ -65,6 +67,9 @@ TODO: Vulnerability management
 
 [IMPORTANT]  
 This is the last release where operators do not enable authentication and encryption by default. To ensure a smooth transition to future releases, we strongly encourage you to enable security features wherever possible in your deployments.
+
+Storage::
+HDFS deployments now support __rack awareness__. This is another unique feature that brings the SDP platform closer to feature parity with on-premise HDFS deployments. Of course, the exact meaning of __rack__ is different in Kubernetes environments, but the effect is the same: data nodes are brought closer to the data they are reading and writing thus improving performance and reliability. A new https://github.com/stackabletech/hdfs-topology-provider[topology provider] is bundled with the HDFS image that maps Kubernetes labels to a cluster topology.
 
 Documentation::
 We are constantly working on improving the platform documentation and custom resource definitions are a significant part of that. The CRD documentation is now generated automatically and can be found at https://crds.stackable.tech.
