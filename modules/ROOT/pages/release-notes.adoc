@@ -44,20 +44,20 @@ Here are the headings you can use for the next release. Saves time checking inde
 === New / extended platform features
 
 Support for many new product versions::
-Almost all product images have been updated to their latest versions. Some notable examples are Apache Airflow 2.8.1, Trino 422 and Apache Spark 2.5.1. In addition, we started building product binaries from source instead of packaging them from the official releases. This enables greater control over the features and the security aspects of the products. Currently Apache Hadoop and Apache HBase are built from source, other will follow over the couse of the next releases.
+Almost all product images have been updated to their latest versions. Some notable examples are Apache Airflow 2.8.1, Trino 422 and Apache Spark 2.5.1. In addition, we started building product binaries from source instead of packaging them from the official releases. This enables greater control over the features and the security aspects of the products. Currently Apache Hadoop and Apache HBase are built from source, other will follow over the course of the next releases.
 
 Security::
-We put a special ephasis on security in this release. For this purpose we addressed the following topics:
+We put a special emphasis on security in this release. For this purpose we addressed the following topics:
 * Authorization
 * Authentication with Kerberos
 * OpenID Connect integration
 * Vulnerability management
 
-Starting with this release, user **authorization** is consistent across all products. The Open Policy Agent has been at the core of the platform since the begining and in this release we enhanced it's capability with the inclusion of a new component called `user-info-fetcher`. It allows for authorization policies to be built on many attributes like organizational group membership, resource assignement and much more. The first major identity provider supported by the `user-info-fetcher` is Keycloak but others will follow.
+Starting with this release, user **authorization** is consistent across all products. The Open Policy Agent has been at the core of the platform since the beginning and in this release we enhanced it's capability with the inclusion of a new component called `user-info-fetcher`. It allows for authorization policies to be built on many attributes like organizational group membership, resource assignment and much more. The first major identity provider supported by the `user-info-fetcher` is Keycloak but others will follow.
 
 Kerberos is the most widely used authentication protocol in the enterprise world. We added support for it in Apache Hive and Apache HBase. Also we added examples for running Apache Spark applications in a Kerberos enabled environment.
 
-OpenID Connect is the de-facto authorization standard on the Web and it's making it's way into enterprose environments. Apache Superset and Trino are the first products to add support for it.
+OpenID Connect is the de-facto authorization standard on the Web and it's making it's way into enterprise environments. Apache Superset and Trino are the first products to add support for it.
 
 TODO: Vulnerability management
 
@@ -74,13 +74,13 @@ Bugfixes::
 * Spark applications can now be provisioned dynamically without having to fiddle with classpath settings.
 
 Product features::
-Following are selected product feautures provided by new versions available in this release:
+Following are selected product features provided by new versions available in this release:
 
 * Apache Airflow : Introducing Airflow Object Storage and Listener hooks for Datasets plus various bug fixes.
 * Apache Druid : SQL compliance & engine enhancements, ingestion improvements, concurrent data handling.
 * Apache Kafka: Bug fixes.
-* Apache NiFi:  Improvements and bugfixes. Over 270 issues fixed since version 1.23.2. Adds new components for Slack and Zendesk integraion among others.
-* Open Policy Agent: Performance improvements, bugfixes and security fixes for third-party libraries. Tooling to help prepare existing policies for the upcoming OPA 1.0 release which will incude a new version of the Rego language.
+* Apache NiFi:  Improvements and bugfixes. Over 270 issues fixed since version 1.23.2. Adds new components for Slack and Zendesk integration among others.
+* Open Policy Agent: Performance improvements, bugfixes and security fixes for third-party libraries. Tooling to help prepare existing policies for the upcoming OPA 1.0 release which will include a new version of the Rego language.
 * Apache Spark: 3.5.0 (SDP ships with 3.5.1) added first class support for distributed training and inference support, and enhancement of compatibility for Structured streaming, Spark SQL improvements. Spark Connect is not yet supported in this release.
 * Apache Superset: Latest patch release for the Superset 2.x lineage. Apache Superset 3.1 includes various smaller new features/optimizations e.g. waterfall chart visualization, ECharts bubble chart, improved data set selectors, automatically format SQL queries, and country map visualization improvements.
 * Trino: Lots of improvements and optimization since release 428. Most notably we would like to highlight support for access control with the Open Policy Agent that we ourselves contributed (s.a.)
@@ -137,7 +137,7 @@ The following product versions are no longer supported (although images for rele
 
 === Cockpit and stackablectl
 
-A new https://github.com/stackabletech/stackable-cockpit[project] called Stackable Cockpit has been started. It is a web-based management tool that allows users to interact with the Stackable data platform. The repository also contains the stackablectl command line tool which has been refactored for performance ans stability.
+A new https://github.com/stackabletech/stackable-cockpit[project] called Stackable Cockpit has been started. It is a web-based management tool that allows users to interact with the Stackable data platform. The repository also contains the `stackablectl` command line tool which has been refactored for performance ans stability.
 
 === Supported Kubernetes versions
 
@@ -171,7 +171,7 @@ You will need to adapt your existing CRDs due to the following breaking changes 
 .Breaking changes details
 [%collapsible]
 ====
-Apache Airflow requires a database to store metadata. The credetials for this database are configured using the `clusterConfig.credentialsSecret` property. This is `airflow-credentials` in the example below.
+Apache Airflow requires a database to store metadata. The credentials for this database are configured using the `clusterConfig.credentialsSecret` property. This is `airflow-credentials` in the example below.
 
 [source,yaml]
 ----
