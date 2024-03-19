@@ -73,6 +73,19 @@ In the past, Helm users could not assign custom labels to stacklets. This is now
 Bugfixes::
 * Spark applications can now be provisioned dynamically without having to fiddle with classpath settings.
 
+Product features::
+Following are selected product feautures provided by new versions available in this release:
+
+* Apache Airflow : Introducing Airflow Object Storage and Listener hooks for Datasets plus various bug fixes.
+* Apache Druid : SQL compliance & engine enhancements, ingestion improvements, concurrent data handling.
+* Apache Kafka: Bug fixes.
+* Apache NiFi:  Improvements and bugfixes. Over 270 issues fixed since version 1.23.2. Adds new components for Slack and Zendesk integraion among others.
+* Open Policy Agent: Performance improvements, bugfixes and security fixes for third-party libraries. Tooling to help prepare existing policies for the upcoming OPA 1.0 release which will incude a new version of the Rego language.
+* Apache Spark: 1.5.0 (SDP ships with 1.5.1) added first class support for distributed training and inference support, and enhancement of compatibility for Structured streaming, Spark SQL improvements. Spark Connect is not yet supported in this release.
+* Apache Superset: Latest patch release for the Superset 2.x lineage. Apache Superset 3.1 includes various smaller new features/optimizations e.g. waterfall chart visualization, ECharts bubble chart, improved data set selectors, automatically format SQL queries, and country map visualization improvements.
+* Trino: Lots of improvements and optimization since release 428. Most notably we would like to highlight support for access control with the Open Policy Agent that we ourselves contributed (s.a.)
+in release 438 (#19532). Also, starting from release 440, there is now row filtering and column masking in Open Policy Agent.
+* Apache ZooKeeper: Security and bug fixes.
 
 === Product versions
 
