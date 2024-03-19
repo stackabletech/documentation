@@ -67,7 +67,7 @@ TODO: Vulnerability management
 This is the last release where operators do not enable authentication and encryption by default. To ensure a smooth transition to future releases, we strongly encourage you to enable security features wherever possible in your deployments.
 
 Documentation::
-We are constantly working on improving the platform documentation and custom resource definitions are big part of that. The CRD documentation is now generated automatically and can be found at https://crds.stackable.tech.
+We are constantly working on improving the platform documentation and custom resource definitions are a significant part of that. The CRD documentation is now generated automatically and can be found at https://crds.stackable.tech.
 
 Command line tools::
 The `stackablectl` command line tool has been overhauled and can now list endpoints provided by the listener operator. Also operator installation is parallelized which considerably speeds up the process of setting up SDP on fresh Kubernetes clusters.
