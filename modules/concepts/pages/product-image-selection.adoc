@@ -21,7 +21,7 @@ starting from the simple way of using the default images to explaining how to us
 
 == Product and Stackable version explained
 
-All products of the Stackable Data Platform run on Kubernetes and are managed by Stackable Operators and one operator is responsible for exactly one product like Apache Spark.
+All products of the Stackable Data Platform run on Kubernetes and are managed by Stackable Operators. One operator is responsible for exactly one product, for example Apache Spark, but can manage multiple instances (with different versions) of the product at the same time.
 The operators read the Stacklet definition and deploy appropriate StatefulSets which lead to the creation of Pods, which in the end require _container images_ to run.
 These images contain different tools for initialization jobs and/or the actual product itself and the images are version and architecture specific.
 
