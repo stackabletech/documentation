@@ -195,7 +195,7 @@ spec:
     credentialsSecret: airflow-credentials
 ----
 
-The Secret must contain credentials for Airflow `admin` user as well, connection properties to the database and Redis as shown below.
+The Secret must contain credentials for Airflow `admin` user as well as connection properties to the database and Redis as shown below.
 
 [source,yaml]
 ----
