@@ -1,6 +1,9 @@
-= Supported Product Versions
+= Supported product versions
 
-The latest versions of each of the Stackable Operators support the following product versions:
+Below you find the list of versions that are supported for each product.
+New versions get added every release (and old ones deprecated), read the xref:ROOT:release-notes.adoc[] for each version to see which versions have been added or removed.
+
+Read about xref:concepts:product-image-selection.adoc[] to learn how to use a particular version in your Stacklet, as well as how you can use custom images or a custom registry.
 
 == Apache Airflow
 
