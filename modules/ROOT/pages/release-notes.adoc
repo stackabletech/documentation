@@ -44,61 +44,109 @@ Here are the headings you can use for the next release. Saves time checking inde
 === New / extended platform features
 
 Support for many new product versions::
-Almost all product images have been updated to their latest versions. Some notable examples are Apache Airflow 2.8.1, Trino 422 and Apache Spark 3.5.1. In addition, we started building product binaries from source instead of packaging them from the official releases. This enables greater control over the features and the security aspects of the products. Currently Apache Hadoop and Apache HBase are built from source and others will follow in coming releases.
+Almost all product images have been updated to their latest versions.
+Some notable examples are Apache Airflow 2.8.1, Trino 422 and Apache Spark 3.5.1.
+In addition, we started building some product binaries from source instead of packaging them from the official releases.
+This enables greater control over the features and the security aspects of the products.
+Currently, Apache Hadoop and Apache HBase are built from source and others will follow in coming releases.
 
 Security::
-We put a special emphasis on security in this release. For this purpose we addressed the following topics:
+We put a special emphasis on security in this release.
+For this purpose we addressed the following topics:
 * Authorization
 * Authentication with Kerberos
 * OpenID Connect integration
 * Vulnerability management
 
-Starting with this release, user **authorization** is consistent across all products. The Open Policy Agent has been a core component of the platform since the beginning and in this release we enhanced its capability with the inclusion of a new component called `user-info-fetcher`. It allows for authorization policies to be built on many attributes like organizational group membership, resource assignment and much more. The first major identity provider supported by the `user-info-fetcher` is Keycloak but others will follow.
+Starting with this release, user **authorization** is consistent across all products.
+The Open Policy Agent (OPA) has been a core component of the platform since the beginning and in this release we enhanced its capability with the inclusion of a new component called `user-info-fetcher`.
+It allows for authorization policies to be built on many attributes like organizational group membership, resource assignment and much more.
+The first major identity provider supported by the `user-info-fetcher` is Keycloak but others will follow.
+TODO: Link to documentation
 
-A lot of effort in was spent on enabling policy based authorization (with OPA) within HDFS. This was in important milestone in the platform evolution and is a unique feature that has long been missed by HDFS users and administrators. It requires a Kerberos-enabled cluster as well as the https://github.com/stackabletech/hdfs-utils[HDFS extension] which includes an OPA authorizer and group mapper. This is already bundled in Stackable image of HDFS and can be used by following the xref:hdfs:usage-guide/security.adoc[documentation]. Exact details are available in the https://github.com/stackabletech/hdfs-operator/pull/474[pull request].
+A lot of effort was spent on enabling policy based authorization (with OPA) within HDFS.
+This was in important milestone in the platform evolution and is a unique feature that has long been missed by HDFS users and administrators.
+It requires a Kerberos-enabled cluster as well as the https://github.com/stackabletech/hdfs-utils[HDFS extension] which includes an OPA authorizer and group mapper.
+This is already bundled in Stackable image of HDFS and can be used by following the xref:hdfs:usage-guide/security.adoc[documentation].
+More details are available in the https://github.com/stackabletech/hdfs-operator/pull/474[pull request].
 
-Kerberos is the most widely used authentication protocol in the enterprise world. We added support for it in Apache Hive and Apache HBase. Also we added examples for running Apache Spark applications in a Kerberos enabled environment.
+Kerberos is the most widely used authentication protocol in the enterprise world.
+We added support for it in Apache Hive and Apache HBase.
+We also added examples for running Apache Spark applications in a Kerberos enabled environment.
 
-OpenID Connect is the de-facto authorization standard on the Web and it's making its way into enterprise environments. Apache Superset and Trino are the first products to add support for it.
+OpenID Connect is the de-facto authorization standard on the Web, and it's making its way into enterprise environments.
+Our platform now supports it for Apache Superset and Trino, others will follow.
+TODO: Link to docs
 
-A core component of SDP is the Secret Operator. In this release, the secret operator will rotate automatically generated certificates. The certificate lifetime is also jittered to avoid downtime upon pod restarts.
+A core component of SDP is the Secret Operator.
+In this release, the secret operator will automatically rotate certificates it generates.
+The certificate lifetime is also jittered to avoid all pods restarting around the same time.
 
-TODO: Vulnerability management
+This is also the first release we're publishing SBOMs (Software Bill of Materials) in the https://cyclonedx.org/[CycloneDX] format for.
+We publish these for both our operators and our product images.
+The work on this was https://stackable.tech/en/empowering-rust-projects/[partially funded] by the https://www.sovereigntechfund.de/[Sovereign Tech Fund].
+These SBOMS are published to our OCI registry as signed in-toto attestations and we have written a https://docs.stackable.tech/home/24.3/tutorials/viewing-and-verifying-sboms.html[tutorial] on how you can use it.
+To make it easier to use we have written a https://sboms.stackable.tech[SBOM browser] which allows you to download the raw CycloneDX JSON files as well.
 
-[IMPORTANT]  
-This is the last release where operators do not enable authentication and encryption by default. To ensure a smooth transition to future releases, we strongly encourage you to enable security features wherever possible in your deployments.
+[IMPORTANT]
+In an upcoming release we will enable authentication and encryption by default where possible.
+To ensure a smooth transition to future releases, we strongly encourage you to enable security features wherever possible in your deployments.
+
 
 Storage::
-HDFS deployments now support __rack awareness__. This is another unique feature that brings the SDP platform closer to feature parity with on-premise HDFS deployments. Of course, the exact meaning of __rack__ is different in Kubernetes environments, but the effect is the same: data nodes are brought closer to the data they are reading and writing thus improving performance and reliability. A new https://github.com/stackabletech/hdfs-topology-provider[topology provider] is bundled with the HDFS image that maps Kubernetes labels to a cluster topology.
+HDFS deployments now support __rack awareness__.
+This is another unique feature that brings the SDP platform closer to feature parity with bare metal HDFS deployments.
+Of course, the exact meaning of __rack__ is different in Kubernetes environments, but the effect is the same: DataNodes are brought closer to the data they are reading and writing thus improving performance and reliability.
+A new https://github.com/stackabletech/hdfs-topology-provider[topology provider] is bundled with the HDFS image that maps Kubernetes labels to a cluster topology.
+TODO: Link to docs
 
 Documentation::
-We are constantly working on improving the platform documentation and custom resource definitions are a significant part of that. The CRD documentation is now generated automatically and can be found at https://crds.stackable.tech.
+We are constantly working on improving the platform documentation and custom resource definitions are a significant part of that.
+The CRD documentation is now generated automatically and can be found at https://crds.stackable.tech.
 
 Command line tools::
-The `stackablectl` command line tool has been overhauled and can now list endpoints provided by the listener operator. Also operator installation is parallelized which considerably speeds up the process of setting up SDP on fresh Kubernetes clusters.
+The `stackablectl` command line tool has been overhauled and can now list endpoints provided by the listener operator.
+Also operator installation is parallelized, which considerably speeds up the process of setting up SDP on fresh Kubernetes clusters.
 
 Custom labels for Helm charts::
-In the past, Helm users could not assign custom labels to stacklets. This is now possible and it enables better component management with third party tools.
+In the past, Helm users could not assign custom labels to stacklets.
+This is now possible and it enables better component management with third party tools.
 
 Bugfixes::
 * Apache Airflow Operator: Using git-sync with the KubernetesExecutor is now possible.
-* Apache Hadoop Operator: Kerberos principals are now included in the discovery ConfigMap. Also environment variables can now be overridden with the role group's `envOverrides` property. 
-* Apache Spark Operator: applications can now be provisioned dynamically without having to fiddle with classpath settings. Also RBAC permissions have been updated to allow the deletion of ConfigMaps when cleaning up applications.
+* Apache Hadoop Operator:
+  ** Kerberos principals are now included in the discovery ConfigMap.
+  ** Environment variables can now be overridden with the role group's `envOverrides` property.
+* Apache Spark Operator:
+  ** Applications can now be provisioned dynamically without having to fiddle with classpath settings.
+  ** RBAC permissions have been updated to allow the deletion of ConfigMaps when cleaning up applications.
 * Trino Operator: Add HDFS configuration files to the `hive.config.resources` property when connecting to a HDFS cluster.
 
 
 Product features::
 The following are selected product features provided by new versions available in this release:
 
-* Apache Airflow : Introducing Airflow Object Storage and Listener hooks for Datasets plus various bug fixes.
-* Apache Druid : SQL compliance & engine enhancements, ingestion improvements, concurrent data handling.
+* Apache Airflow: Introducing Airflow Object Storage and Listener hooks for Datasets plus various bug fixes.
+* Apache Druid: SQL compliance & engine enhancements, ingestion improvements, concurrent data handling.
 * Apache Kafka: Bug fixes.
-* Apache NiFi:  Improvements and bugfixes. Over 270 issues fixed since version 1.23.2. Adds new components for Slack and Zendesk integration among others.
-* Open Policy Agent: Performance improvements, bugfixes and security fixes for third-party libraries. Tooling to help prepare existing policies for the upcoming OPA 1.0 release which will include a new version of the Rego language.
-* Apache Spark: 3.5.0 (SDP ships with 3.5.1) added first class support for distributed training and inference support, and enhancement of compatibility for Structured streaming, Spark SQL improvements. Spark Connect is not yet supported in this release.
-* Apache Superset: Latest patch release for the Superset 2.x lineage. Apache Superset 3.1 includes various smaller new features/optimizations e.g. waterfall chart visualization, ECharts bubble chart, improved data set selectors, automatically format SQL queries, and country map visualization improvements.
-* Trino: Lots of improvements and optimization since release 428. Most notably we would like to highlight support for access control with the Open Policy Agent that we ourselves contributed (s.a.)
-in release 438 (#19532). Also, starting from release 440, there is now row filtering and column masking in Open Policy Agent.
+* Apache NiFi:
+  ** Improvements and bugfixes.
+  ** Over 270 issues fixed since version 1.23.2.
+  ** Adds new components for Slack and Zendesk integration among others.
+* Open Policy Agent:
+  ** Performance improvements, bugfixes and security fixes for third-party libraries.
+  ** Tooling to help prepare existing policies for the upcoming OPA 1.0 release, which will include a new version of the Rego language.
+* Apache Spark:
+  ** 3.5.0 (SDP ships with 3.5.1) added first class support for distributed training and inference support, and enhancement of compatibility for Structured streaming, Spark SQL improvements.
+  ** Spark Connect is not yet supported in this release.
+* Apache Superset:
+  ** Latest patch release for the Superset 2.x lineage.
+  ** Apache Superset 3.1 includes various smaller new features/optimizations e.g. waterfall chart visualization, ECharts bubble chart, improved data set selectors, automatically format SQL queries, and country map visualization improvements.
+* Trino:
+  ** Lots of improvements and optimization since release 428.
+  ** Most notably we would like to highlight support for access control with the Open Policy Agent that we ourselves contributed (s.a.) in release 438 (#19532).
+  ** Also, starting from release 440, there is now row filtering and column masking in Open Policy Agent.
+TODO: What is s.a.?
 * Apache ZooKeeper: Security and bug fixes.
 
 === Product versions
@@ -126,14 +174,15 @@ The following product versions are deprecated and will be removed in a later rel
 * Apache Airflow: 2.7.2, 2.7.3
 * Apache Druid: 27.0.0
 * Apache Kafka: 3.5.1, 3.5.2
-* Apache Nifi: 1.23.2
+* Apache NiFi: 1.23.2
 * Apache Spark: 3.4.1, 3.5.0
 * Apache Superset: 2.1.1, 3.0.1. 3.0.3
 * Trino: 428
 * Apache ZooKeeper: 3.8.3
 * Open Policy Agent: 0.57.0
 
-N.B. in some cases a newly supported version is also immediately marked as deprecated. This is done to allow an update path from the latest patch of a minor version (e.g. Kafka 2.8.2 --> 3.4.1).
+N.B. in some cases a newly supported version is also immediately marked as deprecated.
+This is done to allow an update path from the latest patch of a minor version (e.g. Kafka 2.8.2 --> 3.4.1).
 
 ==== Removed versions
 
@@ -142,7 +191,7 @@ The following product versions are no longer supported (although images for rele
 * Apache Airflow: 2.6.1, 2.6.3
 * Apache Druid: 27.0.0
 * Apache Hadoop: 3.2.2, 3.2.4
-* Apache Hbase: 2.4.12
+* Apache HBase: 2.4.12
 * Apache Kafka: 2.8.1, 2.8.2, 3.4.1
 * Open Policy Agent: 0.51.0
 * Apache Spark: 3.4.0
@@ -151,7 +200,9 @@ The following product versions are no longer supported (although images for rele
 
 === Cockpit and stackablectl
 
-A new https://github.com/stackabletech/stackable-cockpit[project] called Stackable Cockpit has been started. It is a web-based management tool that allows users to interact with the Stackable data platform. The repository also contains the `stackablectl` command line tool which has been refactored for performance and stability.
+A new https://github.com/stackabletech/stackable-cockpit[project] called Stackable Cockpit has been started.
+It is a web-based management tool that allows users to interact with the Stackable data platform.
+The repository also contains the `stackablectl` command line tool, which has been refactored for performance and stability.
 
 === Supported Kubernetes versions
 
@@ -185,7 +236,9 @@ You will need to adapt your existing CRDs due to the following breaking changes 
 .Breaking changes details
 [%collapsible]
 ====
-Apache Airflow requires a database to store metadata. The credentials for this database are configured using the `clusterConfig.credentialsSecret` property. This is `airflow-credentials` in the example below.
+Apache Airflow requires a database to store metadata.
+The credentials for this database are configured using the `clusterConfig.credentialsSecret` property.
+This is `airflow-credentials` in the example below.
 
 [source,yaml]
 ----
@@ -221,7 +274,7 @@ stringData:
   connections.celeryBrokerUrl: redis://:redis@airflow-redis-master:6379/0
 ----
 ====
- 
+
 * https://github.com/stackabletech/airflow-operator/pull/366[Removed legacy node selector on roleGroups]
 
 .Breaking changes details
@@ -239,12 +292,12 @@ To assign roles and role groups to nodes, use the `config.affinity.nodeAffinity`
 .Breaking changes details
 [%collapsible]
 ====
-Assigning role groups to node selector was deprecated in 23.11 and has been removed in this release.
+Assigning role groups to node selector was deprecated in SDP 23.11 and has been removed in this release.
 
 To assign roles and role groups to nodes, use the `config.affinity.nodeAffinity` property as described in the https://docs.stackable.tech/home/nightly/contributor/adr/adr026-affinities#_introduce_one_dedicated_attribute[documentation].
 ====
 
-==== Stackable Operator for Apache HDFS
+==== Stackable Operator for Apache Hadoop HDFS
 
 * https://github.com/stackabletech/hdfs-operator/pull/450[Support for exposing HDFS clusters to clients outside of Kubernetes] `.spec.clusterConfig.listenerClass` has been split to `.spec.nameNodes.config.listenerClass` and `.spec.dataNodes.config.listenerClass`, migration will be required when using `external-unstable`.
 
@@ -297,9 +350,10 @@ spec:
 It should be noted that this change is not necessary if you are using the default `spec.clusterConfig.listenerClass: cluster-internal`.
 
 [IMPORTANT]
-Unfortunately, it is not possible to patch existing HDFS stacklets in place. It will be necessary to delete and recreate the HDFS stacklet. No data will be lost during this process.
+Unfortunately, it is not possible to patch existing HDFS stacklets in place.
+It will be necessary to delete and recreate the HDFS stacklet.
+No data will be lost during this process.
 ====
-
 
 
 ==== Open Policy Agent Operator
@@ -309,7 +363,7 @@ Unfortunately, it is not possible to patch existing HDFS stacklets in place. It 
 .Breaking changes details
 [%collapsible]
 ====
-Assigning role groups to node selector was deprecated in 23.11 and has been removed in this release.
+Assigning role groups to node selector was deprecated in SDP 23.11 and has been removed in this release.
 
 To assign roles and role groups to nodes, use the `config.affinity.nodeAffinity` property as described in the https://docs.stackable.tech/home/nightly/contributor/adr/adr026-affinities#_introduce_one_dedicated_attribute[documentation].
 ====
@@ -318,7 +372,8 @@ To assign roles and role groups to nodes, use the `config.affinity.nodeAffinity`
 
 * https://github.com/stackabletech/secret-operator/pull/350[`autoTLS` certificate authorities will now be rotated regularly]
 
-This changes the format of the CA secrets. Old secrets will be migrated automatically, but manual intervention will be required to downgrade back to 23.11.x.
+This changes the format of the CA secrets.
+Old secrets will be migrated automatically, but manual intervention will be required to downgrade back to 23.11.x.
 
 ==== Stackable Operator for Apache Spark
 
@@ -339,7 +394,9 @@ The `spec.mainClass` field is now required and must point to a location on ths f
 .Breaking changes details
 [%collapsible]
 ====
-This is an experimental feature that was introduced to support logging in XML format. The side effect of this removal is that the vector agent cannot aggregate output from the `spark-submit` containers. On the other side, it enables dynamic provisioning of java packages (such as Delta Lake) with Stackable stock images which is much more important. 
+This is an experimental feature that was introduced to support logging in XML format.
+The side effect of this removal is that the vector agent cannot aggregate output from the `spark-submit` containers.
+On the other hand, it enables dynamic provisioning of java packages (such as Delta Lake) with Stackable stock images, which we consider more important.
 ====
 
 ==== Stackable Operator for Apache Superset
@@ -349,7 +406,8 @@ This is an experimental feature that was introduced to support logging in XML fo
 .Breaking changes details
 [%collapsible]
 ====
-Apache Superset requires a database to store metadata. The credentials for this database must be provided with the `clusterConfig.credentialsSecret` property.
+Apache Superset requires a database to store metadata.
+The credentials for this database must be provided with the `clusterConfig.credentialsSecret` property.
 
 For example, given the following Superset cluster snippet:
 [source,yaml]
@@ -470,7 +528,7 @@ release "commons-operator" uninstalled
 # ...
 ----
 
-Afterwards you will need to upgrade the CustomResourceDefinitions (CRDs) installed by the Stackable Platform.
+Afterward you will need to upgrade the CustomResourceDefinitions (CRDs) installed by the Stackable Platform.
 The reason for this is that helm will uninstall the operators but not the CRDs. This can be done using `kubectl replace`:
 
 [source,console]
@@ -526,7 +584,9 @@ Additionally, please note the following:
 
 ===== All operators
 
-If you used node selectors to assign Pods to nodes, this will not work anymore. Use the `config.affinity.nodeAffinity` property instead and follow the instructions in the https://docs.stackable.tech/home/nightly/contributor/adr/adr026-affinities#_introduce_one_dedicated_attribute[documentation].
+If you used node selectors to assign Pods to nodes, this will not work anymore.
+Use the `config.affinity.nodeAffinity` property instead and follow the instructions in the https://docs.stackable.tech/home/nightly/contributor/adr/adr026-affinities#_introduce_one_dedicated_attribute[documentation].
+
 
 == Release 23.11
 
