@@ -236,43 +236,10 @@ You will need to adapt your existing CRDs due to the following breaking changes 
 .Breaking changes details
 [%collapsible]
 ====
-Apache Airflow requires a database to store metadata.
-The credentials for this database are configured using the `clusterConfig.credentialsSecret` property.
-This is `airflow-credentials` in the example below.
-
-[source,yaml]
-----
-apiVersion: airflow.stackable.tech/v1alpha1
-kind: AirflowCluster
-metadata:
-  name: airflow
-spec:
-  image:
-    productVersion: "2.8.1"
-  clusterConfig:
-    credentialsSecret: airflow-credentials
-----
-
-The Secret must contain credentials for Airflow `admin` user as well as connection properties to the database and Redis as shown below.
-
-[source,yaml]
-----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: airflow-credentials
-type: Opaque
-stringData:
-  adminUser.username: airflow
-  adminUser.firstname: Airflow
-  adminUser.lastname: Admin
-  adminUser.email: airflow@airflow.com
-  adminUser.password: airflow
-  connections.secretKey: thisISaSECRET_1234
-  connections.sqlalchemyDatabaseUri: postgresql+psycopg2://airflow:airflow@airflow-postgresql/airflow
-  connections.celeryResultBackend: db+postgresql://airflow:airflow@airflow-postgresql/airflow
-  connections.celeryBrokerUrl: redis://:redis@airflow-redis-master:6379/0
-----
+The following fields used to be optional but are now mandatory:
+* `spec.clusterConfig.credentialsSecret`: Name of the secret containing the credentials for the database.
+* `spec.clusterConfig.exposeConfig`: Set to `true` to export the `AIRFLOW__WEBSERVER__EXPOSE__CONFIG` environment variable.
+* `spec.clusterConfig.loadExamples`: Set to `true` to load example DAGs into the Airflow cluster.
 ====
 
 * https://github.com/stackabletech/airflow-operator/pull/366[Removed legacy node selector on roleGroups]
