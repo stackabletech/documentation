@@ -62,7 +62,7 @@ Starting with this release, user **authorization** is consistent across all prod
 The Open Policy Agent (OPA) has been a core component of the platform since the beginning and in this release we enhanced its capability with the inclusion of a new component called `user-info-fetcher`.
 It allows for authorization policies to be built on many attributes like organizational group membership, resource assignment and much more.
 The first major identity provider supported by the `user-info-fetcher` is Keycloak but others will follow.
-TODO: Link to documentation
+The documentation is available xref:opa:usage-guide/user-info-fetcher.adoc[here]
 
 A lot of effort was spent on enabling policy based authorization (with OPA) within HDFS.
 This was in important milestone in the platform evolution and is a unique feature that has long been missed by HDFS users and administrators.
@@ -75,8 +75,7 @@ We added support for it in Apache Hive and Apache HBase.
 We also added examples for running Apache Spark applications in a Kerberos enabled environment.
 
 OpenID Connect is the de-facto authorization standard on the Web, and it's making its way into enterprise environments.
-Our platform now supports it for Apache Superset and Trino, others will follow.
-TODO: Link to docs
+Our platform now supports it for Apache Superset (xref:superset:usage-guide/security.adoc[documentation]) and Trino (xref:opa:usage-guide/security.adoc[documentation]), others will follow.
 
 A core component of SDP is the Secret Operator.
 In this release, the secret operator will automatically rotate certificates it generates.
@@ -98,7 +97,7 @@ HDFS deployments now support __rack awareness__.
 This is another unique feature that brings the SDP platform closer to feature parity with bare metal HDFS deployments.
 Of course, the exact meaning of __rack__ is different in Kubernetes environments, but the effect is the same: DataNodes are brought closer to the data they are reading and writing thus improving performance and reliability.
 A new https://github.com/stackabletech/hdfs-topology-provider[topology provider] is bundled with the HDFS image that maps Kubernetes labels to a cluster topology.
-TODO: Link to docs
+// TODO: Link to docs - apparently the README in in the linked repository is all there is.
 
 Documentation::
 We are constantly working on improving the platform documentation and custom resource definitions are a significant part of that.
@@ -144,9 +143,8 @@ The following are selected product features provided by new versions available i
   ** Apache Superset 3.1 includes various smaller new features/optimizations e.g. waterfall chart visualization, ECharts bubble chart, improved data set selectors, automatically format SQL queries, and country map visualization improvements.
 * Trino:
   ** Lots of improvements and optimization since release 428.
-  ** Most notably we would like to highlight support for access control with the Open Policy Agent that we ourselves contributed (s.a.) in release 438 (#19532).
+  ** Most notably we would like to highlight support for access control with the Open Policy Agent that we ourselves contributed in release 438 (#19532).
   ** Also, starting from release 440, there is now row filtering and column masking in Open Policy Agent.
-TODO: What is s.a.?
 * Apache ZooKeeper: Security and bug fixes.
 
 === Product versions
