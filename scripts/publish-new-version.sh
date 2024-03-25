@@ -1,9 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# This script updates all the playbook files with the new branches for a given version.
-# The version should be given as major.minor.
-# All the release branches in the operators as well as the docs release branch should already be there.
+# This script should be used as part of the release process of a new platform version.
+# It updates all the playbook files to include the new release branches of the operators
+# as well as the documentation itself (use the make-release-branch.sh script first).
+#
+# These pre-requisites get checked by the script:
+# - all the operators have release branches
+# - the documentation has a release branch with the correct name
+# - main branch of the documentation is checked out, up to date and working directory clean.
+#
+# Run the script without arguments to get the usage instructions.
 
 # Check if yq is installed
 if ! command -v yq &> /dev/null; then
@@ -31,8 +38,9 @@ done
 
 # Check if the required version argument is provided
 if [ -z "$docs_version" ]; then
-echo "Usage: your_script.sh -v <version> [-p]"
-echo "The version needs to be provided as major.minor."
+echo "Usage: publish-new-version.sh -v <version> [-p]"
+echo "The version needs to be provided as <major>.<minor>."
+echo "Use -p to automatically push at the end."
 exit 1
 fi
 
@@ -58,7 +66,9 @@ if ! git rev-parse --quiet --verify "$docs_branch" > /dev/null; then
     exit 1
 fi
 
-read -p "Did you create all the release branches in the operators? (yes/no): " operators_branches_answer
+echo "Did you create all the release branches in the operators?"
+echo "Did you also create a release branch in the demos repository?"
+read -p "(yes/no): " operators_branches_answer
 
 # Convert the user input to lowercase for case-insensitive comparison
 operators_branches_answer_lowercase=$(echo "$operators_branches_answer" | tr '[:upper:]' '[:lower:]')
@@ -109,8 +119,8 @@ for yaml_file in "${playbook_files[@]}"; do
     # Insert the docs_branch
     yq ".content.sources[0].branches |= (.[:$insert_position] + [\"$docs_branch\"] + .[$insert_position:])" -i "$yaml_file"
 
-    # Update all the operator sources.
-    yq "with(.content.sources.[]; select(.url == \"*operator*\") | .branches |= .[:$insert_position] + [\"$operator_branch\"] + .[$insert_position:])" -i "$yaml_file"
+    # Update all the operator and demos sources.
+    yq "with(.content.sources.[]; select(.url |test(\".*(operator|demos).*\")) | .branches |= .[:$insert_position] + [\"$operator_branch\"] + .[$insert_position:])" -i "$yaml_file"
 done
 
 # ------------------------------
@@ -141,10 +151,13 @@ git commit -m "Add release branches to the playbooks for release $docs_version."
 if [ "$push" = true ]; then
     echo "Pushing changes to origin ..."
     git push -u origin "$publish_branch"
+    echo ""
+    echo "The changes have been pushed to GitHub!"
+    echo "Click the link above to create the PR in GitHub, and then verify that the build works with Netlify previews."
+    echo "Once the branch is merged, the changes will automatically be deployed and be live."
 else
+    echo ""
     echo "Skipping push to origin."
+    echo "Please push the branch manually and create  PR."
+    echo "Once the changes are merged, they will automatically be deployed and be live."
 fi
-
-echo "The changes have been pushed to GitHub!"
-echo "Click the link above to create the PR in GitHub, and then verify that the build works with Netlify previews."
-echo "Once the branch is merged, the changes are live."
