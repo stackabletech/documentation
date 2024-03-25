@@ -1,9 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# This script updates all the playbook files with the new branches for a given version.
-# The version should be given as major.minor.
-# All the release branches in the operators as well as the docs release branch should already be there.
+# This script should be used as part of the release process of a new platform version.
+# It updates all the playbook files to include the new release branches of the operators
+# as well as the documentation itself (use the make-release-branch.sh script first).
+#
+# These pre-requisites get checked by the script:
+# - all the operators have release branches
+# - the documentation has a release branch with the correct name
+# - main branched checked out, up to date and working directory clean.
+#
+# Run the script without arguments to get the usage instructions.
 
 # Check if yq is installed
 if ! command -v yq &> /dev/null; then
@@ -33,6 +40,7 @@ done
 if [ -z "$docs_version" ]; then
 echo "Usage: your_script.sh -v <version> [-p]"
 echo "The version needs to be provided as major.minor."
+echo "Use -p to automatically push at the end."
 exit 1
 fi
 

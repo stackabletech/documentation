@@ -1,10 +1,26 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# This script takes a major.minor.patch version and
+# This script creates a new 'release/XX.YY' release branch for the documetation,
+# off of the 'main' branch. 
+#
+# The script checks pre-requisites itself and should be pretty fail-safe.
+# Just run it, and fix the checks if a check fails. But if you want to fix things first,
+# here is what needs to be done before making a release branch:
+#
+# - Write the release notes for the release and have them committed into main.
+# - Have the main branch checked out, and up to date with origin. 
+# - Have a clean working directory.
+#
+# This script takes a major.minor.patch version as an argument and
 # - updates the antora.yml file accordingly
 # - creates a release branch
 # - pushes the release branch
+#
+# Usage:
+# your_script.sh -v <version> [-p]
+# the version is _required_ and -p for push is optional.
+# If you do not push, you have to push manually afterwards with a regular 'git push'
 
 # ------------------------------
 # Args parsing
@@ -26,6 +42,7 @@ done
 if [ -z "$version" ]; then
 echo "Usage: your_script.sh -v <version> [-p]"
 echo "The version needs to be provided as major.minor.patch."
+echo "Use -p to automatically push at the end."
 exit 1
 fi
 
@@ -130,5 +147,7 @@ if [ "$push" = true ]; then
     echo "Pushing changes to origin ..."
     git push origin "$branch_name"
 else
-    echo "Skipping push to origin."
+    echo "Skipping push to origin. You still need to run:"
+    echo "git push origin \"$branch_name\""
+    echo "to complete the process."
 fi
