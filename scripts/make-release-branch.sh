@@ -4,9 +4,7 @@ set -euo pipefail
 # This script creates a new 'release/{major}.{minor}'  branch for the documetation,
 # off of the 'main' branch. 
 #
-# The script checks pre-requisites itself and should be pretty fail-safe.
-# Just run it, and fix the checks if a check fails. But if you want to fix things first,
-# here is what needs to be done before making a release branch:
+# The script reminds you about some pre-requisites before actually running. These are:
 #
 # - Write the release notes for the release and have them committed into main.
 # - Have the main branch checked out, and up to date with origin. 
