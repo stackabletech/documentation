@@ -368,44 +368,8 @@ On the other hand, it enables dynamic provisioning of java packages (such as Del
 
 * https://github.com/stackabletech/superset-operator/pull/429[Fixed various issues in the CRD structure. `clusterConfig.credentialsSecret` is now mandatory]
 
-.Breaking changes details
-[%collapsible]
-====
-Apache Superset requires a database to store metadata.
-The credentials for this database must be provided with the `clusterConfig.credentialsSecret` property.
-
-For example, given the following Superset cluster snippet:
-[source,yaml]
-----
-apiVersion: superset.stackable.tech/v1alpha1
-kind: SupersetCluster
-metadata:
-  name: superset
-spec:
-  clusterConfig:
-    credentialsSecret: superset-credentials
-...
-----
-
-The Secret `superset-credentials` must contain the following fields:
-[source,yaml]
-----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: superset-credentials
-type: Opaque
-stringData:
-  adminUser.username: admin
-  adminUser.firstname: Superset
-  adminUser.lastname: Admin
-  adminUser.email: admin@superset.com
-  adminUser.password: admin
-  connections.secretKey: thisISaSECRET_1234
-  connections.sqlalchemyDatabaseUri: postgresql://superset:superset@superset-postgresql/superset
-----
-
-====
+The configuration for the Superset authentication, operations and listener class is specified within the `spec.clusterConfig` field.
+This field used to be optional but it is now required.
 
 
 === Upgrade from 23.11
