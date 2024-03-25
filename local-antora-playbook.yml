@@ -6,17 +6,16 @@ site:
   robots: allow
   keys:
     enable_tracking: false
-
 urls:
   # This replaces the component version in the URL of the latest stable version with 'stable'
   # i.e. /commons-operator/stable/index.html instead of /commons-operator/0.3/index.html
   latest_version_segment: stable
-
 content:
   sources:
     - url: ./
       branches:
         - HEAD
+        - release/24.3
         - release/23.11
         - release/23.7
         - release/23.4
@@ -39,6 +38,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-24.3
         - release-23.11
         - release-23.7
         - release-23.4
@@ -47,6 +47,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-24.3
         - release-23.11
         - release-23.7
         - release-23.4
@@ -55,6 +56,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-24.3
         - release-23.11
         - release-23.7
         - release-23.4
@@ -64,6 +66,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-24.3
         - release-23.11
         - release-23.7
         - release-23.4
@@ -72,6 +75,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-24.3
         - release-23.11
         - release-23.7
         - release-23.4
@@ -80,6 +84,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-24.3
         - release-23.11
         - release-23.7
         - release-23.4
@@ -88,6 +93,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-24.3
         - release-23.11
         - release-23.7
         - release-23.4
@@ -96,6 +102,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-24.3
         - release-23.11
         - release-23.7
         - release-23.4
@@ -104,6 +111,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-24.3
         - release-23.11
         - release-23.7
         - release-23.4
@@ -112,6 +120,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-24.3
         - release-23.11
         - release-23.7
         - release-23.4
@@ -120,6 +129,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-24.3
         - release-23.11
         - release-23.7
         - release-23.4
@@ -128,6 +138,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-24.3
         - release-23.11
         - release-23.7
         - release-23.4
@@ -136,6 +147,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-24.3
         - release-23.11
         - release-23.7
         - release-23.4
@@ -144,6 +156,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-24.3
         - release-23.11
         - release-23.7
         - release-23.4
@@ -152,20 +165,18 @@ content:
       start_path: docs
       branches:
         - main
+        - release-24.3
         - release-23.11
         - release-23.7
         - release-23.4
         - release-23.1
-
 ui:
   bundle:
     url: ./ui/build/ui-bundle.zip
   supplemental_files: ./supplemental-ui
-
 antora:
   extensions:
     - '@antora/lunr-extension'
-
 asciidoc:
   attributes:
     base-repo: https://github.com/stackabletech
@@ -173,7 +184,6 @@ asciidoc:
     kroki-fetch-diagram: true
     # an external icon. Create a link opening in a new tab like this: http://my-url.com[Text {external-link-icon}^]
     external-link-icon: "<i class=\"fa-solid fa-arrow-up-right-from-square fa-xs\" style=\"margin-left: 3px; vertical-align: baseline;\"></i>"
-
 # the default caching directory is ./.cache/antora
 # Antora caches the git repos, this can sometimes lead to stale content
 # use 'make clean' to remove the build and cache directory
