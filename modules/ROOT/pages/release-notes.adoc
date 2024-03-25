@@ -62,7 +62,7 @@ Starting with this release, user **authorization** is consistent across all prod
 The Open Policy Agent (OPA) has been a core component of the platform since the beginning and in this release we enhanced its capability with the inclusion of a new component called `user-info-fetcher`.
 It allows for authorization policies to be built on many attributes like organizational group membership, resource assignment and much more.
 The first major identity provider supported by the `user-info-fetcher` is Keycloak but others will follow.
-The documentation is available xref:opa:usage-guide/user-info-fetcher.adoc[here]
+For more information, refer to the xref:opa:usage-guide/user-info-fetcher.adoc[User Info Fetcher Usage Guide].
 
 A lot of effort was spent on enabling policy based authorization (with OPA) within HDFS.
 This was in important milestone in the platform evolution and is a unique feature that has long been missed by HDFS users and administrators.
