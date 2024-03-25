@@ -151,10 +151,13 @@ git commit -m "Add release branches to the playbooks for release $docs_version."
 if [ "$push" = true ]; then
     echo "Pushing changes to origin ..."
     git push -u origin "$publish_branch"
+    echo ""
+    echo "The changes have been pushed to GitHub!"
+    echo "Click the link above to create the PR in GitHub, and then verify that the build works with Netlify previews."
+    echo "Once the branch is merged, the changes will automatically be deployed and be live."
 else
+    echo ""
     echo "Skipping push to origin."
+    echo "Please push the branch manually and create  PR."
+    echo "Once the changes are merged, they will automatically be deployed and be live."
 fi
-
-echo "The changes have been pushed to GitHub!"
-echo "Click the link above to create the PR in GitHub, and then verify that the build works with Netlify previews."
-echo "Once the branch is merged, the changes are live."
