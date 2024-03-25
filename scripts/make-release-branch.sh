@@ -66,7 +66,7 @@ docs_version=$(echo "$version" | cut -d. -f1,2)
 
 # Ask the user if they have written release notes and merged them into main
 echo "Release notes for the new version should already be written and commited to the main branch,"
-echo "so the show up in both the nightly and future versions, as well as the new release branch"
+echo "so they show up in both the nightly and future versions, as well as the new release branch"
 echo "that is about the be created."
 read -p "Did you already write release notes and merge them into main? (yes/no): " release_notes_answer
 
