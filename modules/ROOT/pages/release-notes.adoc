@@ -45,7 +45,7 @@ Here are the headings you can use for the next release. Saves time checking inde
 
 Support for many new product versions::
 Almost all product images have been updated to their latest versions.
-Some notable examples are Apache Airflow 2.8.1, Trino 422 and Apache Spark 3.5.1.
+Some notable examples are Apache Airflow 2.8.1, Trino 442 and Apache Spark 3.5.1.
 In addition, we started building some product binaries from source instead of packaging them from the official releases.
 This enables greater control over the features and the security aspects of the products.
 Currently, Apache Hadoop and Apache HBase are built from source and others will follow in coming releases.
