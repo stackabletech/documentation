@@ -75,7 +75,7 @@ We added support for it in Apache Hive and Apache HBase.
 We also added examples for running Apache Spark applications in a Kerberos enabled environment.
 
 OpenID Connect is the de-facto authorization standard on the Web, and it's making its way into enterprise environments.
-Our platform now supports it for Apache Superset (xref:superset:usage-guide/security.adoc[documentation]) and Trino (xref:opa:usage-guide/security.adoc[documentation]), others will follow.
+Our platform now supports it for Apache Superset (xref:superset:usage-guide/security.adoc[documentation]) and Trino (xref:trino:usage-guide/security.adoc[documentation]), others will follow.
 
 A core component of SDP is the Secret Operator.
 In this release, the secret operator will automatically rotate certificates it generates.
