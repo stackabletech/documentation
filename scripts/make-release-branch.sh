@@ -40,8 +40,8 @@ done
 
 # Check if the required version argument is provided
 if [ -z "$version" ]; then
-echo "Usage: your_script.sh -v <version> [-p]"
-echo "The version needs to be provided as major.minor.patch."
+echo "Usage: make-release-branch.sh -v <version> [-p]"
+echo "The version needs to be provided as <major>.<minor>.<patch>."
 echo "Use -p to automatically push at the end."
 exit 1
 fi

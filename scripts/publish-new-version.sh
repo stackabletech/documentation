@@ -39,7 +39,7 @@ done
 # Check if the required version argument is provided
 if [ -z "$docs_version" ]; then
 echo "Usage: publish-new-version.sh -v <version> [-p]"
-echo "The version needs to be provided as major.minor."
+echo "The version needs to be provided as <major>.<minor>."
 echo "Use -p to automatically push at the end."
 exit 1
 fi
