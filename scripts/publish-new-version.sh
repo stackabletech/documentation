@@ -8,7 +8,7 @@ set -euo pipefail
 # These pre-requisites get checked by the script:
 # - all the operators have release branches
 # - the documentation has a release branch with the correct name
-# - main branched checked out, up to date and working directory clean.
+# - main branch of the documentation is checked out, up to date and working directory clean.
 #
 # Run the script without arguments to get the usage instructions.
 
