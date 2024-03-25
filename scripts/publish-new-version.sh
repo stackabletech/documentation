@@ -119,7 +119,7 @@ for yaml_file in "${playbook_files[@]}"; do
     # Insert the docs_branch
     yq ".content.sources[0].branches |= (.[:$insert_position] + [\"$docs_branch\"] + .[$insert_position:])" -i "$yaml_file"
 
-    # Update all the operator sources.
+    # Update all the operator and demos sources.
     yq "with(.content.sources.[]; select(.url |test(\".*(operator|demos).*\")) | .branches |= .[:$insert_position] + [\"$operator_branch\"] + .[$insert_position:])" -i "$yaml_file"
 done
 
