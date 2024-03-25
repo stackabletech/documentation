@@ -30,11 +30,11 @@ Install the Stackable command line utility xref:management:stackablectl:index.ad
 
 The Stackable operators are components that translate the service definitions deployed via Kubernetes into deploy services on the worker nodes. These can be installed on any node that has access to the Kubernetes control plane. In this example we will install them on the controller node.
 
-Stackable operators can be installed using `stackablectl`. Run the following commands to install ZooKeeper, Kafka and NiFi from the Stackable 23.11 release.
+Stackable operators can be installed using `stackablectl`. Run the following commands to install ZooKeeper, Kafka and NiFi from the Stackable 24.3 release.
 
 [source,bash]
 ----
-stackablectl release install -i commons -i secret -i listener -i zookeeper -i kafka -i nifi 23.11
+stackablectl release install -i commons -i secret -i listener -i zookeeper -i kafka -i nifi 24.3
 ----
 
 .Using Helm instead
@@ -53,12 +53,12 @@ Install the operators:
 
 [source,bash]
 ----
-helm install zookeeper-operator stackable-stable/zookeeper-operator --version=23.11.0
-helm install kafka-operator stackable-stable/kafka-operator --version=23.11.0
-helm install secret-operator stackable-stable/secret-operator --version=23.11.0
-helm install listener-operator stackable-stable/listener-operator --version=23.11.0
-helm install commons-operator stackable-stable/commons-operator --version=23.11.0
-helm install nifi-operator stackable-stable/nifi-operator --version=23.11.0
+helm install zookeeper-operator stackable-stable/zookeeper-operator --version=24.3.0
+helm install kafka-operator stackable-stable/kafka-operator --version=24.3.0
+helm install secret-operator stackable-stable/secret-operator --version=24.3.0
+helm install listener-operator stackable-stable/listener-operator --version=24.3.0
+helm install commons-operator stackable-stable/commons-operator --version=24.3.0
+helm install nifi-operator stackable-stable/nifi-operator --version=24.3.0
 ----
 ====
 
@@ -67,12 +67,12 @@ You can check which operators are installed using `stackablectl operator install
 [source,console]
 ----
 OPERATOR              VERSION         NAMESPACE                      STATUS           LAST UPDATED
-commons               23.11.0         default                        deployed         2023-11-30 17:58:32.916032854 +0100 CET
-kafka                 23.11.0         default                        deployed         2023-11-30 17:58:55.036115353 +0100 CET
-listener              23.11.0         default                        deployed         2023-11-30 17:59:18.136775259 +0100 CET
-nifi                  23.11.0         default                        deployed         2023-11-30 17:59:51.927081648 +0100 CET
-secret                23.11.0         default                        deployed         2023-11-30 18:00:05.060241771 +0100 CET
-zookeeper             23.11.0         default                        deployed         2023-11-30 18:00:08.425686918 +0100 CET
+commons               24.3.0         default                        deployed         2024-03-30 17:58:32.916032854 +0100 CET
+kafka                 24.3.0         default                        deployed         2024-03-30 17:58:55.036115353 +0100 CET
+listener              24.3.0         default                        deployed         2024-03-30 17:59:18.136775259 +0100 CET
+nifi                  24.3.0         default                        deployed         2024-03-30 17:59:51.927081648 +0100 CET
+secret                24.3.0         default                        deployed         2024-03-30 18:00:05.060241771 +0100 CET
+zookeeper             24.3.0         default                        deployed         2024-03-30 18:00:08.425686918 +0100 CET
 ----
 
 == Deploying Stackable Services
