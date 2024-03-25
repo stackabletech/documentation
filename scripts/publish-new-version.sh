@@ -66,7 +66,9 @@ if ! git rev-parse --quiet --verify "$docs_branch" > /dev/null; then
     exit 1
 fi
 
-read -p "Did you create all the release branches in the operators? (yes/no): " operators_branches_answer
+echo "Did you create all the release branches in the operators?"
+echo "Did you also create a release branch in the demos repository?"
+read -p "(yes/no): " operators_branches_answer
 
 # Convert the user input to lowercase for case-insensitive comparison
 operators_branches_answer_lowercase=$(echo "$operators_branches_answer" | tr '[:upper:]' '[:lower:]')
@@ -118,7 +120,7 @@ for yaml_file in "${playbook_files[@]}"; do
     yq ".content.sources[0].branches |= (.[:$insert_position] + [\"$docs_branch\"] + .[$insert_position:])" -i "$yaml_file"
 
     # Update all the operator sources.
-    yq "with(.content.sources.[]; select(.url == \"*operator*\") | .branches |= .[:$insert_position] + [\"$operator_branch\"] + .[$insert_position:])" -i "$yaml_file"
+    yq "with(.content.sources.[]; select(.url |test(\".*(operator|demos).*\")) | .branches |= .[:$insert_position] + [\"$operator_branch\"] + .[$insert_position:])" -i "$yaml_file"
 done
 
 # ------------------------------
