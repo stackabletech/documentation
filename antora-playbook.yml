@@ -40,6 +40,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-24.3
         - release-23.11
         - release-23.7
         - release-23.4
