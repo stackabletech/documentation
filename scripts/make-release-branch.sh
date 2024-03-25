@@ -18,7 +18,7 @@ set -euo pipefail
 # - pushes the release branch
 #
 # Usage:
-# your_script.sh -v <version> [-p]
+# make-release-branch.sh -v <version> [-p]
 # the version is _required_ and -p for push is optional.
 # If you do not push, you have to push manually afterwards with a regular 'git push'
 
