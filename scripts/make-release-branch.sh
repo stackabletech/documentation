@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# This script creates a new 'release/XX.YY' release branch for the documetation,
+# This script creates a new 'release/{major}.{minor}'  branch for the documetation,
 # off of the 'main' branch. 
 #
 # The script checks pre-requisites itself and should be pretty fail-safe.
