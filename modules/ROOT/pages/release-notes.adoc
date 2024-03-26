@@ -147,6 +147,11 @@ The following are selected product features provided by new versions available i
   ** Also, starting from release 440, there is now row filtering and column masking in Open Policy Agent.
 * Apache ZooKeeper: Security and bug fixes.
 
+Support for the ARM architecture::
+During the development of this release, we started introducing support for the arm64 architecture.
+Currently support is experimental, and we only provide arm64 images for the previous release (23.11).
+For more information on how to use the ARM images, refer to the xref:concepts:arm64-support.adoc[documentation].
+
 === Product versions
 
 ==== New versions
