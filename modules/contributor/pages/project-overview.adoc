@@ -58,25 +58,26 @@ Two examples are the https://github.com/stackabletech/image-tools[image-tools] u
 
 === Infastructure: T2
 
-https://github.com/stackabletech/t2 - Integration testing across different versions and cloud providers is being developed here.
-
-TODO
+https://github.com/stackabletech/t2[T2 - Test & Troubleshoot Platform] is used for integration testing across different versions and cloud providers, find more information in the README of the repository.
 
 === Issues
 
-https://github.com/stackabletech/issues
-
-This repository exists solely for the purpose of tracking issues related to the Stackable Platform in general. Large topics that impact many or even all of the platform components are discussed here. There is no code in this repository.
+The https://github.com/stackabletech/issues[issues] repository exists solely for the purpose of tracking issues related to the Stackable Platform in general.
+Large topics that impact many or even all of the platform components are discussed here.
+There is no code in this repository.
 
 [[artifact-storage]]
 == Artifact storage
 
-Besides the 
+Where are binaries, Helm Charts and Docker images stored?
 
 [[product-artifacts]]
 === Product artifacts
 
-https://repo.stackable.tech/
+A lot of artifacts are stored in the https://repo.stackable.tech/#browse/browse[Nexus repo].
+Under `packages` you find product binaries, the different `helm-*` stores contain the Helm Charts and Docker images are stored there too.
 
 [[docker-images]]
 === Docker images
+
+Docker images are stored in Nexus as mentioned above, but also in https://oci.stackable.tech - which is where we want to move to in the future.
