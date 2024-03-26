@@ -1,11 +1,14 @@
 = Project overview
+:page-aliases: development_dashboard.adoc, development-dashboard.adoc
 
-* What repositories are there and what do they contain?
-* How do they relate to each other?
-
+The Stackable Data Platform is made up of many different components, with code and tools spread across multiple repositories, and artifacts stored in multiple locations.
+This page gives you a high-level overview of all the technical bits in the Stackable organization.
 
 [[repositories]]
 == Repositories
+
+On GitHub you can find more than a 100 repositories in the https://github.com/orgs/stackabletech/repositories[stackabletech organization].
+Below you find an overview of the majority of these repositories and how they relate to each other.
 
 === Operator repositories, templating, operator-rs
 
@@ -53,7 +56,17 @@ The code to generate this page is found in the https://github.com/stackabletech/
 On top of the mentioned repositories, there are various smaller tools or product extensions that Stackable developed, they are all linked to from relevant places.
 Two examples are the https://github.com/stackabletech/image-tools[image-tools] used to build Docker images and the https://github.com/stackabletech/druid-opa-authorizer/[druid-opa-authorizer] which is a Druid extensions that enables OPA support for Druid.
 
+=== Infastructure: T2
 
+https://github.com/stackabletech/t2 - Integration testing across different versions and cloud providers is being developed here.
+
+TODO
+
+=== Issues
+
+https://github.com/stackabletech/issues
+
+This repository exists solely for the purpose of tracking issues related to the Stackable Platform in general. Large topics that impact many or even all of the platform components are discussed here. There is no code in this repository.
 
 [[artifact-storage]]
 == Artifact storage
