@@ -12,17 +12,16 @@ Below you find an overview of the majority of these repositories and how they re
 
 === Operator repositories, templating, operator-rs
 
+At the core of the Stackable Platform are the Kubernetes operators used to install and manage various data products, like the https://github.com/stackabletech/nifi-operator[nifi-operator] for example.
+You can find all of operators if you https://github.com/orgs/stackabletech/repositories?q=operator[search the organization repositories].
+
 image::project-overview-operators.drawio.svg[]
 
-The majority of the code base exists in the operator repositories, like https://github.com/stackabletech/nifi-operator[nifi-operator] for example.
-You can find all of them if you https://github.com/orgs/stackabletech/repositories?q=operator[search the organization repositories].
-
-All the operators are written in https://www.rust-lang.org/[Rust].
-Code for the operators is always in the `rust` directory.
+All the operators are written in https://www.rust-lang.org/[Rust] and the source code is found in the `rust` directory.
 `tests` contains the integration tests which use https://kuttl.dev/[kuttl] and our own test template https://github.com/stackabletech/beku.py[beku.py].
 Documentation is written in https://antora.org/[Antora] and found in the `docs` directory.
 `deploy` and `docker` contain files used to package the operator into a Docker image and Helm chart.
-Some files in these repositories are actually _templated_, which is explained in the next section.
+Some files in these repositories are actually _templated_:
 
 The https://github.com/stackabletech/operator-templating[operator-templating] repository contains a template for all operator repositories, where shared files are distributed from.
 You can read the README in that repository to find out more about the details.
