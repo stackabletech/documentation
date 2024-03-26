@@ -1,7 +1,7 @@
 {
   "devDependencies": {
-    "@antora/cli": "^3.1.7",
-    "@antora/site-generator": "^3.1.7"
+    "@antora/cli": "^3.2.0-alpha.4",
+    "@antora/site-generator": "^3.2.0-alpha.4"
   },
   "dependencies": {
     "@antora/atlas-extension": "^1.0.0-alpha.2",

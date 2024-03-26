@@ -1,7 +1,7 @@
 ---
 site:
   title: Stackable Documentation
-  url: https://docs.stackable.tech
+  url: https://deploy-preview-574--stackable-docs.netlify.app
   start_page: home::index.adoc
   robots: allow
   keys:
@@ -184,6 +184,8 @@ antora:
     - '@antora/atlas-extension'
 asciidoc:
   attributes:
+    primary-site-manifest-url: ./site-manifest.json
+    # primary-site-url: https://deploy-preview-574--stackable-docs.netlify.app
     base-repo: https://github.com/stackabletech
     plantuml-server-url: http://www.plantuml.com/plantuml
     kroki-fetch-diagram: true
