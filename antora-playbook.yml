@@ -188,7 +188,11 @@ ui:
   supplemental_files: ./supplemental-ui
 antora:
   extensions:
+    # The lunr extension is used for search
     - '@antora/lunr-extension'
+    # The Atlas extension is used to generate a site manifest to allow for partial builds
+    # https://gitlab.com/antora/antora-atlas-extension
+    - '@antora/atlas-extension'
 asciidoc:
   attributes:
     base-repo: https://github.com/stackabletech
