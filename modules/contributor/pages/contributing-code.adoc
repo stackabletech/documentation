@@ -1,16 +1,15 @@
 = Contributing code
 
-:docs-readme: https://github.com/stackabletech/documentation/blob/main/README.adoc
 :templating-repo: https://github.com/stackabletech/operator-templating
 :operator-repo: https://github.com/stackabletech/operator-rs
 :docker-repo: https://github.com/stackabletech/docker-images
-:docs-repo: https://github.com/stackabletech/documentation
 
 == Development Environment
 
 In order to contribute source code, you need an environment that is capable of running the following tools:
 
 * https://git-scm.com/[Git]
+* https://www.gnu.org/software/make/manual/make.html[make]
 * https://www.docker.com/[Docker]
 * https://kind.sigs.k8s.io/[Kind]
 * https://helm.sh/[Helm]
@@ -83,41 +82,12 @@ helm install <operator> deploy/helm/<operator>/
 ----
 . Run the tests from the repository root with `./scripts/run_tests.sh`.
 
+== Adding support for a new product version
 
-== Changes in the operator-templating
+If a new version of a product was added then the following tasks must be performed:
 
-. Files which are common in all operators are handled and rolled out by the {templating-repo}[operator-templating].
-  Follow the steps in <<Preparation>> to check out the repository.
-. Make your changes.
-. Test the changes locally. Create the directory `work`, clone all operators into this directory, and run the `test.sh`
-  script. The changes can be examined with `git status`. When the pull request is later merged into the `main` branch
-  then pull requests with these changes will be created automatically. Depending on the change, it makes sense to run
-  the integration tests for all changed operators. If the tests are not run in this stage and if there is even just one
-  integration test failing in the subsequential generated pull requests then the operator-templating must be adapted
-  which creates again pull requests for all operators. Changes in the GitHub workflow actions cannot be tested until
-  finally merged.
-
-== Contributing to product images
-
-. The code for building the product images can be found in the {docker-repo}[docker-images repository]. Please follow
-  the steps in <<Preparation>>.
-. Make the desired changes.
-. Add an entry to the product image changelog and use the pattern `<product>-stackable<stackable-image-version>` to
-  reference the next image version. The `<stackable-image-version>` follows semantic versioning and is independent of
-  the upstream version.
-. If a new version of a product was added then the following tasks must be performed:
-  * Add the new version to the supported ones in the documentation of the operators (see
-    `docs/modules/\{product name\}/partials/supported-versions.adoc` in the operator repositories).
-  * Update the operator to support the new version if necessary.
-  * Update the examples in the operator to use the new version.
-  * Update the integration tests. The tests should cover the latest patch version of each supported versions.
-. Run the integration tests with the new product image. The image can be built and uploaded to the kind cluster with the
-  following commands:
-+
-[source,bash]
-----
-./build_product_images.py --product <product> --image_version <stackable-image-version>
-kind load docker-image <image-tagged-with-the-major-version> --name=integration-tests
-----
-+
-See the output of `build_product_images.py` to retrieve the image tag for `<image-tagged-with-the-major-version>`.
+* Add the new version to the supported ones in the documentation of the operators (see
+  `docs/modules/\{product name\}/partials/supported-versions.adoc` in the operator repositories).
+* Update the operator to support the new version if necessary.
+* Update the examples in the operator to use the new version.
+* Update the integration tests. The tests should cover the latest patch version of each supported versions.
