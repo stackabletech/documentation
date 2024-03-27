@@ -10,6 +10,7 @@ This page gives you a high-level overview of all the technical bits in the Stack
 On GitHub you can find more than a 100 repositories in the https://github.com/orgs/stackabletech/repositories[stackabletech organization].
 Below you find an overview of the majority of these repositories and how they relate to each other.
 
+[[operator-repositories]]
 === Operator repositories, templating, operator-rs
 
 At the core of the Stackable Platform are the Kubernetes operators used to install and manage various data products, like the https://github.com/stackabletech/nifi-operator[nifi-operator] for example.
@@ -19,7 +20,7 @@ image::project-overview-operators.drawio.svg[]
 
 All the operators are written in https://www.rust-lang.org/[Rust] and the source code is found in the `rust` directory.
 `tests` contains the integration tests which use https://kuttl.dev/[kuttl] and our own test template https://github.com/stackabletech/beku.py[beku.py].
-Documentation is written in https://antora.org/[Antora] and found in the `docs` directory.
+Documentation is written in https://antora.org/[Antora] and found in the `docs` directory, see also <<documentation>> further down the page.
 `deploy` and `docker` contain files used to package the operator into a Docker image and Helm chart.
 Some files in these repositories are actually _templated_:
 
@@ -30,6 +31,7 @@ Whenever common files are changed, a GitHub action is used to distribute the cha
 The https://github.com/stackabletech/operator-rs/[operator-rs] repository contains the common framework library for all operators.
 It is a Rust library that is used by all operators and contains shared structs and shared functionality.
 
+[[docker-images-repository]]
 === docker-images
 
 image::project-overview-docker-images.drawio.svg[]
@@ -38,6 +40,7 @@ The https://github.com/stackabletech/docker-images/[docker-images] repository co
 The actual product artifacts are pulled from the <<product-artifacts, product artifacs store>> and packaged into images.
 The images are pushed into an <<docker-images, image registry>>.
 
+[[documentation]]
 === Documentation
 
 image::project-overview-documentation.drawio.svg[]
@@ -50,15 +53,18 @@ The documentation is found at https://docs.stackable.tech/.
 There is also https://crds.stackable.tech/ where you can find generated documentation for all the CustomResourceDefinitions on the platform.
 The code to generate this page is found in the https://github.com/stackabletech/crddocs[crddocs] repository.
 
+[[tooling-repositories]]
 === Tooling repositories
 
 On top of the mentioned repositories, there are various smaller tools or product extensions that Stackable developed, they are all linked to from relevant places.
 Two examples are the https://github.com/stackabletech/image-tools[image-tools] used to build Docker images and the https://github.com/stackabletech/druid-opa-authorizer/[druid-opa-authorizer] which is a Druid extensions that enables OPA support for Druid.
 
+[[infrastructure-repositories]]
 === Infastructure: T2
 
 https://github.com/stackabletech/t2[T2 - Test & Troubleshoot Platform] is used for integration testing across different versions and cloud providers, find more information in the README of the repository.
 
+[[issues-repository]]
 === Issues
 
 The https://github.com/stackabletech/issues[issues] repository exists solely for the purpose of tracking issues related to the Stackable Platform in general.
