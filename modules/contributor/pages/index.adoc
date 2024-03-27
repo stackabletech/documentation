@@ -10,11 +10,10 @@ This document aims at getting your contribution posted as soon as possible.
 
 == Contribution Workflow
 
-The development of the Stackable Platform takes place on https://github.com/stackabletech[GitHub]. On GitHub, each
-repository has its own issue tracker and since Stackable is a platform, there are several repositories where issues and
-pull-requests can be created. If you already have a good idea where the issue or pull-request belongs, then you can skip
-reading to the contribution steps below. Otherwise, you might want to a have a look at the
-xref:development_dashboard.adoc[] for hints.
+The development of the Stackable Platform takes place on https://github.com/stackabletech[GitHub].
+On GitHub, each repository has its own issue tracker and since Stackable is a platform, there are several repositories where issues and pull requests can be created.
+If you already have a good idea where the issue or pull request belongs, then you can skip reading to the contribution steps below.
+Otherwise, you might want to a have a look at the xref:project-overview.adoc[] for hints.
 
 Contribution steps:
 
@@ -39,22 +38,7 @@ When submitting a pull-request, you might be interested in knowing about the nec
 
 == Repo Walkthrough
 
-Please see the xref:development_dashboard.adoc[] page to get an overview of the most important Git repositories used by
-us.
-
-=== Operator Repositories
-
-At the core of the Stackable Platform are Kubernetes operators used to install and manage various data products.
-Each operator has its own repository, and therefore its own issue tracker and build pipeline.
-Every operator repository contains:
-
-* The operator's source code
-* One or more Custom Resource Definitions owned by the operator
-* `Helm` chart to easily install the operator
-* Documentation
-* `Dockerfile` and related artifacts to generate the operator image
-
-See the xref:development_dashboard.adoc[] for a detailed overview.
+Please see the xref:project-overview.adoc[] page to get an overview of the most important Git repositories used by us.
 
 == Development Environment
 

@@ -1,0 +1,94 @@
+= Project overview
+:page-aliases: development_dashboard.adoc, development-dashboard.adoc
+
+The Stackable Data Platform is made up of many different components, with code and tools spread across multiple repositories, and artifacts stored in multiple locations.
+This page gives you a high-level overview of all the technical bits in the Stackable organization.
+
+[[repositories]]
+== Repositories
+
+On GitHub you can find more than a 100 repositories in the https://github.com/orgs/stackabletech/repositories[stackabletech organization].
+Below you find an overview of the majority of these repositories and how they relate to each other.
+
+[[operator-repositories]]
+=== Operator repositories, templating, operator-rs
+
+At the core of the Stackable Platform are the Kubernetes operators used to install and manage various data products, like the https://github.com/stackabletech/nifi-operator[nifi-operator] for example.
+You can find all of operators if you https://github.com/orgs/stackabletech/repositories?q=operator[search the organization repositories].
+
+image::project-overview-operators.drawio.svg[]
+
+All the operators are written in https://www.rust-lang.org/[Rust] and the source code is found in the `rust` directory.
+`tests` contains the integration tests which use https://kuttl.dev/[kuttl] and our own test template https://github.com/stackabletech/beku.py[beku.py].
+Documentation is written in https://antora.org/[Antora] and found in the `docs` directory, see also <<documentation>> further down the page.
+`deploy` and `docker` contain files used to package the operator into a Docker image and Helm chart.
+Some files in these repositories are actually _templated_:
+
+The https://github.com/stackabletech/operator-templating[operator-templating] repository contains a template for all operator repositories, where shared files are distributed from.
+You can read the README in that repository to find out more about the details.
+Whenever common files are changed, a GitHub action is used to distribute the changes to all operator repositories.
+
+The https://github.com/stackabletech/operator-rs/[operator-rs] repository contains the common framework library for all operators.
+It is a Rust library that is used by all operators and contains shared structs and shared functionality.
+
+[[docker-images-repository]]
+=== docker-images
+
+image::project-overview-docker-images.drawio.svg[]
+
+The https://github.com/stackabletech/docker-images/[docker-images] repository contains Dockerfiles for all the products that are supported by the SDP.
+The actual product artifacts are pulled from the <<product-artifacts, product artifacs store>> and packaged into images.
+The images are pushed into an <<docker-images, image registry>>.
+
+[[management-tooling]]
+=== Management tooling: stackablectl, stackable-cockpit
+
+The `stackablectl` commandline tool and the Stackable Cockpit UI are both found in the https://github.com/stackabletech/stackable-cockpit[stackable-cockpit] repository, and they both share some code.
+The structure of the repository is documented in its README.
+
+[[documentation]]
+=== Documentation
+
+image::project-overview-documentation.drawio.svg[]
+
+The documentation is built with https://antora.org/[Antora] and the playbook file to build it is located in the https://github.com/stackabletech/documentation[documentation] repository, among some common platform documentation.
+The UI for the documentation is found in the https://github.com/stackabletech/documentation-ui[documentation-ui] repository; it is included as a submodule in the documentation repository.
+The documentation pulls in operator documentation files from the operator repositories.
+The documentation is found at https://docs.stackable.tech/.
+
+There is also https://crds.stackable.tech/ where you can find generated documentation for all the CustomResourceDefinitions on the platform.
+The code to generate this page is found in the https://github.com/stackabletech/crddocs[crddocs] repository.
+
+[[tooling-repositories]]
+=== Tooling repositories
+
+On top of the mentioned repositories, there are various smaller tools or product extensions that Stackable developed, they are all linked to from relevant places.
+Two examples are the https://github.com/stackabletech/image-tools[image-tools] used to build Docker images and the https://github.com/stackabletech/druid-opa-authorizer/[druid-opa-authorizer] which is a Druid extensions that enables OPA support for Druid.
+
+[[infrastructure-repositories]]
+=== Infastructure: T2
+
+https://github.com/stackabletech/t2[T2 - Test & Troubleshoot Platform] is used for integration testing across different versions and cloud providers, find more information in the README of the repository.
+
+[[issues-repository]]
+=== Issues
+
+The https://github.com/stackabletech/issues[issues] repository exists solely for the purpose of tracking issues related to the Stackable Platform in general.
+Large topics that impact many or even all of the platform components are discussed here.
+There is no code in this repository.
+
+[[artifact-storage]]
+== Artifact storage
+
+Where are binaries, Helm Charts and Docker images stored?
+
+[[product-artifacts]]
+=== Product artifacts
+
+A lot of artifacts are stored in the https://repo.stackable.tech/#browse/browse[Nexus repo].
+Under `packages` you find product binaries, the different `helm-*` stores contain the Helm Charts and Docker images are stored there too.
+
+[[docker-images]]
+=== Docker images
+
+Docker images are stored in Nexus as mentioned above, but also in https://oci.stackable.tech - which is where we want to move to in the future.
