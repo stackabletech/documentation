@@ -1,3 +1,7 @@
 = Contributing to documentation
 
 This section is still to be written.
+
+All info is here for now: https://app.nuclino.com/Stackable/Engineering/Overview-147afda8-9d93-42ae-8dbe-ad9d3b1a87bd
+
+Will be migrated into the docs.
