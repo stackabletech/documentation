@@ -1,4 +1,4 @@
-= Service discovery implementation guidelines
+= Implementing service discovery
 :page-aliases: service_discovery.adoc, service-discovery.adoc
 :source-highlighter: highlight.js
 :highlightjs-languages: rust

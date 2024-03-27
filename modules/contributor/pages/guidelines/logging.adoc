@@ -2,7 +2,7 @@
 :highlightjs-languages: rust
 :page-aliases: logging.adoc
 
-= Logging aggregation implementation guidelines
+= Implementing log aggregation
 
 For a conceptual overview of logging aggregation, consult the xref:concepts:logging.adoc[logging concept page].
 

@@ -1,4 +1,4 @@
-= Webhook server implementation guidelines
+= Implementing Kubernetes webhooks
 
 == Creating a new binary crate
 
