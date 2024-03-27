@@ -1,0 +1,21 @@
+= Contributing to documentation
+
+:docs-readme: https://github.com/stackabletech/documentation/blob/main/README.adoc
+:templating-repo: https://github.com/stackabletech/operator-templating
+:operator-repo: https://github.com/stackabletech/operator-rs
+:docker-repo: https://github.com/stackabletech/docker-images
+:docs-repo: https://github.com/stackabletech/documentation
+
+
+The documentation is written in https://asciidoctor.org[AsciiDoc] format and processed with https://antora.org[Antora]
+
+Almost all build scripts assume a Unix based environment (preferably Linux).
+
+
+. The Stackable Platform documentation can be found at https://docs.stackable.tech/. The documentation is built with
+  Antora from the sources in the {docs-repo}[documentation repository] and the `docs` directories in the operator
+  repositories. Follow the steps in <<Preparation>> to be able to change the documentation.
+. Make your changes.
+. Build the documentation locally to ensure that the formatting is fine and all links are specified correctly. See the
+  {docs-readme}[`README.adoc`] file for further details and the xref:docs-style-guide.adoc[] for style and formatting
+  guidelines.

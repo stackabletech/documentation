@@ -1,0 +1,121 @@
+= Contributing code
+
+:docs-readme: https://github.com/stackabletech/documentation/blob/main/README.adoc
+:templating-repo: https://github.com/stackabletech/operator-templating
+:operator-repo: https://github.com/stackabletech/operator-rs
+:docker-repo: https://github.com/stackabletech/docker-images
+:docs-repo: https://github.com/stackabletech/documentation
+
+== Development Environment
+
+In order to contribute source code, you need an environment that is capable of running the following tools:
+
+* https://www.docker.com/[Docker]
+* https://kind.sigs.k8s.io/[Kind]
+* https://helm.sh/[Helm]
+* https://kuttl.dev/[Kuttl]
+* https://www.rust-lang.org/[Rust]
+* https://www.python.org/[Python]
+
+Almost all build scripts assume a Unix based environment (preferably Linux).
+
+=== IDEs and Editors
+
+Of course you are free to use whatever works for you best. No editor is perfect but we have positive experience with:
+
+* https://www.jetbrains.com/idea/[IntelliJ Idea] with the `Rust` plug-in
+* https://code.visualstudio.com/[VisualStudio Code] with the `rust-analyzer` extension
+
+For `VisualStudio Code` we also recommend the following extensions:
+
+* https://marketplace.visualstudio.com/items?itemName=tamasfe.even-better-toml[Even Better TOML]
+* https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb[CodeLLDB] (for debugging)
+* https://marketplace.visualstudio.com/items?itemName=usernamehw.errorlens[Error Lens] (inline error messages)
+* https://marketplace.visualstudio.com/items?itemName=asciidoctor.asciidoctor-vscode[AsciiDoc]
+* https://marketplace.visualstudio.com/items?itemName=GitHub.vscode-pull-request-github[GitHub Pull requests and Issues]
+* https://marketplace.visualstudio.com/items?itemName=eamodio.gitlens[GitLens]
+* https://marketplace.visualstudio.com/items?itemName=ms-python.python[Python]
+* https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker[Docker]
+
+== Steps
+
+* Make your desired changes in the according repository and test them manually. Ensure that the code compiles without
+  warnings (`cargo clippy --all-targets`) and that the code is formatted with `cargo fmt`. Also make sure that all
+  changes are made in accordance to the xref:code-style-guide.adoc[source code style guide].
+* If code was added or adapted then please create or adapt the unit tests in the same file as well as the integration
+  tests in the `tests` directory. Ensure that all unit tests run successfully `cargo test`) and all integration tests
+  run successfully (`./scripts/run_tests.sh`). See also <<_changes_in_the_integration_tests>>.
+* Comment your code and check with `cargo doc --document-private-items` that there are no syntax errors.
+* The YAML schemas of the custom resource definitions (CRDs) are rebuilt when the project is compiled (see
+  `rust/operator-binary/build.rs` if changing an operator). These CRDs as well as the product configuration are also
+  required in the Helm chart and the Kubernetes manifest. To ensure that everything is in a consistent state, please
+  execute `make regenerate-charts`.
+* If it is useful for the users of the project to know about the change then it must be added to the changelog. For
+  instance, if only the dependencies in an operator are upgraded but nothing changes for the user then the upgrade
+  should not be added to the changelog. Conversely, if the dependencies in the {operator-repo}[operator framework] are
+  upgraded then changes are probably required in the operators (which are the clients of the framework) and therefore
+  the upgrade must be mentioned in the changelog. The changelog must be formatted according to
+  https://keepachangelog.com/en/1.1.0/[keep a changelog].
+
+== Changes in the integration tests
+
+. Most code changes should also be tested with integration tests. The tests for every operator can be found in the
+  operator repository in the `tests` directory. Follow the steps in <<Preparation>> for the integration tests as well.
+. Create or adapt the tests. Try to mimic the style of the other tests. They are written with https://kuttl.dev/[KUTTL]
+  and using a jinja2 templating mechanism to test multiple product versions at once.
+. Start a test cluster using https://kind.sigs.k8s.io/[kind]. You can also use
+  xref:management:stackablectl:commands/operator.adoc#_install_operator[stackablectl] to install a kind cluster.
+. If changes in an operator are tested then the according version of the operator must be started. The operator can be
+  started outside the cluster with `cargo run -- crd | kubectl apply -f - && cargo run -- run`. This approach allows a
+  fast test develop cycle but has the downside that the RBAC rules are not tested. So a proper Helm installation should
+  be tested before creating a pull request. First a Docker image of the operator must be built locally and uploaded to
+  the kind cluster and then the Helm chart must be installed. This can be achieved in the operator directory with the
+  following commands:
++
+[source,bash]
+----
+docker build --file docker/Dockerfile --tag docker.stackable.tech/stackable/<operator>:<version>-dev .
+kind load docker-image docker.stackable.tech/stackable/<operator>:<version>-dev --name=integration-tests
+helm install <operator> deploy/helm/<operator>/
+----
+
+. Run the tests from the repository root with `./scripts/run_tests.sh`.
+
+
+== Changes in the operator-templating
+
+. Files which are common in all operators are handled and rolled out by the {templating-repo}[operator-templating].
+  Follow the steps in <<Preparation>> to check out the repository.
+. Make your changes.
+. Test the changes locally. Create the directory `work`, clone all operators into this directory, and run the `test.sh`
+  script. The changes can be examined with `git status`. When the pull request is later merged into the `main` branch
+  then pull requests with these changes will be created automatically. Depending on the change, it makes sense to run
+  the integration tests for all changed operators. If the tests are not run in this stage and if there is even just one
+  integration test failing in the subsequential generated pull requests then the operator-templating must be adapted
+  which creates again pull requests for all operators. Changes in the GitHub workflow actions cannot be tested until
+  finally merged.
+
+== Contributing to product images
+
+. The code for building the product images can be found in the {docker-repo}[docker-images repository]. Please follow
+  the steps in <<Preparation>>.
+. Make the desired changes.
+. Add an entry to the product image changelog and use the pattern `<product>-stackable<stackable-image-version>` to
+  reference the next image version. The `<stackable-image-version>` follows semantic versioning and is independent of
+  the upstream version.
+. If a new version of a product was added then the following tasks must be performed:
+  * Add the new version to the supported ones in the documentation of the operators (see
+    `docs/modules/\{product name\}/partials/supported-versions.adoc` in the operator repositories).
+  * Update the operator to support the new version if necessary.
+  * Update the examples in the operator to use the new version.
+  * Update the integration tests. The tests should cover the latest patch version of each supported versions.
+. Run the integration tests with the new product image. The image can be built and uploaded to the kind cluster with the
+  following commands:
++
+[source,bash]
+----
+./build_product_images.py --product <product> --image_version <stackable-image-version>
+kind load docker-image <image-tagged-with-the-major-version> --name=integration-tests
+----
++
+See the output of `build_product_images.py` to retrieve the image tag for `<image-tagged-with-the-major-version>`.
