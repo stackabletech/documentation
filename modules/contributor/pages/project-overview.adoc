@@ -40,6 +40,12 @@ The https://github.com/stackabletech/docker-images/[docker-images] repository co
 The actual product artifacts are pulled from the <<product-artifacts, product artifacs store>> and packaged into images.
 The images are pushed into an <<docker-images, image registry>>.
 
+[[management-tooling]]
+=== Management tooling: stackablectl, stackable-cockpit
+
+The `stackablectl` commandline tool and the Stackable Cockpit UI are both found in the https://github.com/stackabletech/stackable-cockpit[stackable-cockpit] repository, and they both share some code.
+The structure of the repository is documented in its README.
+
 [[documentation]]
 === Documentation
 
