@@ -10,12 +10,15 @@
 
 In order to contribute source code, you need an environment that is capable of running the following tools:
 
+* https://git-scm.com/[Git]
 * https://www.docker.com/[Docker]
 * https://kind.sigs.k8s.io/[Kind]
 * https://helm.sh/[Helm]
 * https://kuttl.dev/[Kuttl]
 * https://www.rust-lang.org/[Rust]
 * https://www.python.org/[Python]
+
+Depending on the repository, you might also need https://go.dev/[Go], https://www.java.com/en/[Java] or other programming language support.
 
 Almost all build scripts assume a Unix based environment (preferably Linux).
 
