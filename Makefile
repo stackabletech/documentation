@@ -1,7 +1,7 @@
 CURRENT_COMMIT := $(shell git rev-parse HEAD)
 
 build-dev: build-ui
-	node_modules/.bin/antora generate local-antora-playbook.yml
+	node_modules/.bin/antora generate only-dev-antora-playbook.yml
 
 build-prod: build-ui
 	node_modules/.bin/antora generate antora-playbook.yml --fetch
