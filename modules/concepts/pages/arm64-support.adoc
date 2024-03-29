@@ -68,10 +68,10 @@ You will need access to a Kubernetes Cluster and to have the stackablectl https:
 git clone git@github.com:stackabletech/demos.git
 ----
 
-==== 2. Checkout ARM64 demo branch (release 23.11.0)
+==== 2. Checkout ARM64 demo branch (release 24.3.0)
 [source,bash]
 ----
-cd demos && git pull && git checkout spike/demos-on-arm
+cd demos && git pull && git checkout feature/demos-24.3.0-multi-arch 
 ----
 
 ==== 3. Install stackable operators (release 24.3.0)
