@@ -50,8 +50,6 @@ NOTE: 23.11.0 is released as arm64 only, 24.3.0 is released as manifest lists wh
 
 === Prepared demos
 
-// TODO: Update Demo section, update demos from main branch first!
-
 WARNING: Usually stackablectl would install all required operators for a demo automatically.
 But stackablectl is not yet aware of multiple architectures so it would install the x86 operators.
 Therefore, if you want to install a demo, you need to always use the `--skip-release` flag for stackablectl.
