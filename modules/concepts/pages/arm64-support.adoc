@@ -4,17 +4,23 @@
 
 WARNING: This is an experimental feature of the Stackable Data Platform (SDP) and still under https://github.com/stackabletech/issues/issues/463[development].
 
+NOTE: 24.3.0 has been released as multi architecture release. We encountered certain limitations as Superset 3.1.0 haven't been build yet and only Airflow 2.6.3 is currently available. 
+
 == Early access
 
-SDP release 23.11.0 has been ported to the ARM64 architecture.
+SDP release 23.11.0 has been ported to the ARM64 architecture. With 24.3.0 we enabled multi architecture. 
 These images are stored within the `stackable-experimental` organization in our https://repo.stackable.tech/#browse/browse:docker:v2%2Fstackable-experimental[Docker repository].
 
 === Available releases
 
-The only release currently available for ARM64 is the early access version mentioned above.
+The only release currently available for ARM64 is the early access versions mentioned above.
 
-Each product image is built using ARM-specific tags to keep them distinct from development/nightly images.
+23.11.0 only brought `arm64` as early access feature, as of 24.3.0 we support multi architecture ( mixed architectures on clusters ).
+
+Each product image is built using architecture-specific tags to keep them distinct from development/nightly images.
 In the future they may be bundled as a manifest list using an automated workflow.
+
+24.7.0 will be released as part of the usual release process directly as multi architecture release.
 
 === Operators
 
@@ -22,7 +28,7 @@ According to our https://docs.stackable.tech/home/stable/airflow/getting_started
 
 [source,bash]
 ----
-helm install commons-operator stackable-stable/commons-operator --namespace stackable-operators --create-namespace --version=23.11.0 --set image.repository=docker.stackable.tech/stackable-experimental/commons-operator
+helm install commons-operator stackable-stable/commons-operator --namespace stackable-operators --create-namespace --version=24.3.0 --set image.repository=docker.stackable.tech/stackable-experimental/commons-operator
 ----
 
 By declaring `--set image.repository=docker.stackable.tech/stackable-experimental/commons-operator` you will overwrite the image selected by default with one located in the organization `stackable-experimental`. The other operators can be installed in the same way.
@@ -36,13 +42,15 @@ To choose an ARM64 image specify the image in the `custom` field as follows:
 ----
 spec:
   image:
-    custom: docker.stackable.tech/stackable-experimental/kafka:3.5.1-stackable23.11.0
-    productVersion: 3.5.1
+    custom: docker.stackable.tech/stackable-experimental/kafka:3.6.1-stackable24.3.0
+    productVersion: 3.6.1
 ----
 
-NOTE: Only 23.11.0 is working at this moment.
+NOTE: 23.11.0 is released as arm64 only, 24.3.0 is released as manifest lists which bundle `x86_64` and `arm64`.
 
 === Prepared demos
+
+// TODO: Update Demo section, update demos from main branch first!
 
 WARNING: Usually stackablectl would install all required operators for a demo automatically.
 But stackablectl is not yet aware of multiple architectures so it would install the x86 operators.
@@ -66,8 +74,8 @@ git clone git@github.com:stackabletech/demos.git
 cd demos && git pull && git checkout spike/demos-on-arm
 ----
 
-==== 3. Install stackable operators (release 23.11.0)
-NOTE: This executes a script where all operators with version 23.11.0 are installed.
+==== 3. Install stackable operators (release 24.3.0)
+NOTE: This executes a script where all operators with version 24.3.0 are installed.
 You can omit this step and only install operators you want by copying the corresponding `helm` command.
 
 [source,bash]
