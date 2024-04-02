@@ -55,6 +55,13 @@ For Antora, the https://antora.zulipchat.com/[Antora Zulip chatroom] is a good p
 
 Building the documentation and also the deployment process on Netlify are documented in the https://github.com/stackabletech/documentation/blob/main/README.adoc[README] file of the documentation repository.
 
+== Executable tutorials
+
+The Getting started guides for each operator are written with an executable script in the background from which the documentation includes excerpts.
+This has the benefit that the tutorials are easily tested.
+When writing a new tutorial, please also write it in this way.
+Have a look at the Getting started guides on how to do this.
+
 == Branch and version structure
 
 All Stackable repositories use https://trunkbaseddevelopment.com/[trunk based development], and so the documentation is also pulled from different release branches.
