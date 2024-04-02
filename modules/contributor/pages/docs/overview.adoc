@@ -1,0 +1,63 @@
+= Documentation overview
+:figure-caption!:
+:antora-docs: https://docs.antora.org/antora/latest/
+:antora-playbook: https://docs.antora.org/antora/latest/playbook/
+:netlify: https://www.netlify.com/
+:diataxis: https://diataxis.fr/
+:documentation: https://github.com/stackabletech/documentation
+
+We use {antora-docs}[Antora] to write our user facing documentation,
+{netlify}[Netlify] to host it and the {diataxis}[Diátaxis] framework as the guide for the structure of the content.
+The main repository for the documentation is the {documentation}[Documentation] repository and
+each operator and other tools have a `docs` directory from which content is pulled in.
+Have a look at the xref:project-overview.adoc[] to learn about the repositories that are involved in providing the documentation.
+
+== Content structure: Diátaxis
+
+The {diataxis}[Diátaxis] framework is a way to classify documentation content into four groups with distinct use cases.
+
+.Source: https://diataxis.fr/
+image::diataxis.png[]
+
+Documentation exists along two axis: _study_ or _work_; _pracital steps_ and _theory_.
+Practical learning happens in tutorials, and they are backed up by conceptual background information (theory).
+On the work oriented side, documentation should contain exhaustive reference information (every commandline flag, every yaml property, their type and whether they are optional or not etc.) as well as narrow, task oriented guides.
+
+At Stackable we have to document the platform as a whole, as well as individual operators.
+Then there is also stackablectl.
+
+**Conceptual** information lives at the platform level in the xref:concepts:index.adoc[] section. Some operators have their own specific concepts such as xref:zookeeper:znodes.adoc[] for ZooKeeper, but most conceptual things apply to all operators (i.e. roles and role groups, resource management, config overrides).
+
+**Tutorials** (learning oriented guides) exist at the xref:tutorials:index.adoc[top level] but there are also the Getting Started guides for all the individual operators.
+Tutorials provide complete set up information and require very little to be there already in contrast to guides (work instead of study oriented) which are more focused on solving specific tasks.
+There are also the xref:demos:index.adoc[Demos] which serve more for study.
+
+**Guides** are also instructional, but focus a narrow topic, something that the user might want to solve in their particular setup.
+For example: "How do I set up Kerberos with HDFS?" or "How do I connect Superset to Druid?"
+The guide has to account for eventualities (i.e. the user is using their own pre-existing ZooKeeper instead of our ZooKeeper. This is not the case for tutorials).
+This kind of information is typically product specific and as such it is put with all the individual operators inside of the Usage guides section.
+
+**Reference** information for the Stackable platform entails all the settings and Options in our YAMLs, which we generate.
+The reference is found at https://crds.stackable.tech/ and generated from the https://github.com/stackabletech/crddocs[crddocs repository].
+
+=== Style guide
+
+The xref:docs/style-guide.adoc[] contains all the information about the writing style, formatting style, naming documents and more.
+
+== Technical bits: Antora, Netlify
+
+{antora-docs}[Antora] uses a {antora-playbook}[playbook] to build the documentation.
+It pulls information from all the individual operators, so their documentation can live in the same repository.
+Antora builds a static website which we serve over {netlify}[Netlify].
+The web template of the documentation is also custom made and is developed in the https://github.com/stackabletech/documentation-ui[documentation-ui] repository.
+
+For Antora, the https://antora.zulipchat.com/[Antora Zulip chatroom] is a good place to get help (besides the documentation)!
+
+Building the documentation and also the deployment process on Netlify are documented in the https://github.com/stackabletech/documentation/blob/main/README.adoc[README] file of the documentation repository.
+
+== Branch and version structure
+
+All Stackable repositories use https://trunkbaseddevelopment.com/[trunk based development], and so the documentation is also pulled from different release branches.
+This means that any changes from the `main` branch that should be published in other versions need to be cherry-picked over into that branch.
+
+Antora recommends using https://docs.antora.org/antora/latest/playbook/content-branches/[branches] to organize different versions of components.

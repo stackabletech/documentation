@@ -5,9 +5,21 @@
 :base-repo: https://github.com/stackabletech
 
 This is the main repository for the documentation of the Stackable platform.
-Have a look at the https://docs.stackable.tech/[live version].
+Have a look at the https://docs.stackable.tech/[live version] and the current https://docs.stackable.tech/home/nightly/[nightly live version].
 
 The documentation is built with https://antora.org[Antora]. This repository hosts the Antora playbook file as well as platform documentation. Other Stackable repos contain 'docs' directories which are pulled in by this repo.
+
+
+== Repository structure
+
+* The `antora.yml` file defines the main `home` https://docs.antora.org/antora/latest/component-version/#docs-component[Component].
+* The various `*-playbook.yml` files are https://docs.antora.org/antora/latest/playbook/[Antora playbook files] used to build the docs, either locally or for production. The playbooks link to all the other repositories that contain content.
+* The `modules` directory contains the platform level documentation content.
+
+
+== Building locally
+
+**Dependencies**: `make`, `npm`.
 
 To build the site, pull submodules, install dependencies and run `make`:
 
@@ -19,6 +31,21 @@ $ make
 ----
 
 NOTE: Antora caches the external content repos in the cache directory (configured to be `./cache`). It will _not_ automatically update those.  Use the `--fetch` flag (`make ANTORAFLAGS=--fetch`) to update all sources, or use `make clean` to delete the `cache` and `build` directory.
+
+== Production deployment
+
+The documentation is deployed on Netlify and is deployed when there is a new commit on the `main` branch, as well as freshly every night.
+If you want to trigger a deploy right now, you can use the _Build and deploy production site_ GitHub action (internal contributors only).
+
+Deployment is run every night to pick up changes in the operator repositories, because these changes do not automatically trigger a new deployment.
+
+@fhennig is responsible for anything Netlify related.
+
+=== Netlify configuration
+
+Netlify is configured with the netlify.toml file inside of the documentation repo. In there, the command make netlify-build is configured as the build command. Further documentation of the build process can then be found in the Makefile.
+
+The build process creates a static site in `build/site` which is then published (as it is configured in the `netlify.toml`).
 
 == Development
 
@@ -40,10 +67,6 @@ The design & layout comes from our https://github.com/stackabletech/documentatio
 
 `LIVERELOAD=true gulp` may be used to recreate the built documentation after each edit. The 'live reload' feature does not work over gitpod currently due to https://github.com/schickling/gulp-webserver/pull/126
 
-=== Remote IDE
+== More useful links
 
-A remote vscode instance can be used via https://gitpod.io/#/github.com/stackabletech/documentation
-
-== Tracking
-
-The documentation UI includes a script for user tracking. The documentation can be built with or without it. Tracking enabled/disabled by setting `site.keys.enable_tracking` to `true` or `false`. The tracking code is in the UI repository in `src/partials/head-scripts.hbs`.
+* The https://github.com/stackabletech/documentation-ui[documentation-ui] repository.

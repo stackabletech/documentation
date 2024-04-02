@@ -1,0 +1,6 @@
+= Contributing to documentation
+:page-alias: contributing-documentation.adoc
+
+Have a look at the documentation section of the xref:project-overview.adoc[] to understand the repositories involved in building the documentation, and read the xref:docs/overview.adoc[] for a overview of the content structure and the tools involved in building the documentation.
+
+To contribute, follow the pull request flow outlined in the xref:index.adoc[].

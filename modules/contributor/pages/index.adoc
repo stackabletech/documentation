@@ -19,7 +19,7 @@ Contributions can come in many different ways, and this document is the entry po
   Again, it is useful to first to a quick search if there is already an issue or other pull request that is similar to yours.
   If that is the case, consider contributing to the existing issue by either adding new feedback or code.
   The steps to contribute a pull request are outlined below, and you should also consult the xref:contributing-code.adoc[] guidelines to make sure your contribution isn't missing anything and follow the <<contributing-workflow>> below.
-* If you want to contribute **documentation**, follow the xref:contributing-documentation.adoc[] guideline, as well as the <<contributing-workflow>> below.
+* If you want to contribute **documentation**, follow the xref:docs/contributing-documentation.adoc[] guideline, as well as the <<contributing-workflow>> below.
 
 == Project overview
 
