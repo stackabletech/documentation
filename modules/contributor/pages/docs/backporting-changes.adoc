@@ -1,0 +1,22 @@
+= Backporting changes
+
+The documentation uses https://trunkbaseddevelopment.com/[trunk based development], so any new content or fixes should first be applied to the `main` branch and then ported to the release branches where the feature/fix also applies.
+
+== Prerequisites
+
+* Make sure your changes are committed to the `main` branch and you have all the latest changes checked out locally on your `main` branch.
+* Have the commit ID of the commit that you want to port to a release branch.
+  You can get the commit ID for example by looking at the log: `git log --oneline -n 5`.
+  The commit ID might look like this: `bc0b08e9`.
+
+== Steps
+
+. Switch to the release branch you want to backport to, for example: `git switch release/23.11`.
+  Make sure the release branch is up to date with the upstream (`git pull`).
+. Cherry-pick the commit with the ID you retrieved earlier: `git cherry-pick bc0b08e9`.
+  In most cases this will work without changes, sometimes you need to do conflict resolution, similar to how you would need to do it for a merge.
+. Push the new commit in the `release/23.11` branch upstream with `git push`.
+  That's it, you're done!
+
+The changes will become visible in the online documentation once the next build is triggered.
+You can either wait for the nightly build, or trigger a build yourself with the https://github.com/stackabletech/documentation/actions/workflows/deploy.yml[Build and deploy production site] GitHub action.
