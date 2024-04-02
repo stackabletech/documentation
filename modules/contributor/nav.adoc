@@ -10,4 +10,5 @@
 ** xref:docs/contributing-documentation.adoc[]
 *** xref:docs/overview.adoc[]
 *** xref:docs/style-guide.adoc[]
+*** xref:docs/releasing-a-new-version.adoc[]
 include::partial$adr-nav.adoc[]
