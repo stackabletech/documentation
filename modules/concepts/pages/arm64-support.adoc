@@ -4,11 +4,12 @@
 
 WARNING: This is an experimental feature of the Stackable Data Platform (SDP) and still under https://github.com/stackabletech/issues/issues/463[development].
 
-NOTE: 24.3.0 has been released as multi architecture release. We encountered certain limitations as Superset 3.1.0 haven't been build yet and only Airflow 2.6.3 is currently available. 
+NOTE: 24.3.0 has been released as a multi architecture release. We encountered certain limitations as Superset 3.1.0 hasn't been build yet and only Airflow 2.6.3 is currently available. 
 
 == Early access
 
-SDP release 23.11.0 has been ported to the ARM64 architecture. With 24.3.0 we enabled multi architecture. 
+SDP release 23.11.0 has been ported to the ARM64 architecture.
+With 24.3.0 we enabled multi architecture. 
 These images are stored within the `stackable-experimental` organization in our https://repo.stackable.tech/#browse/browse:docker:v2%2Fstackable-experimental[Docker repository].
 
 === Available releases
