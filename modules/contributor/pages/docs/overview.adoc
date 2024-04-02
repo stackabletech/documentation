@@ -62,6 +62,18 @@ This has the benefit that the tutorials are easily tested.
 When writing a new tutorial, please also write it in this way.
 Have a look at the Getting started guides on how to do this.
 
+== Templating
+
+There is a templating mechanism in the docs.
+This has been introduced to template in mostly version numbers, so the updating doesn't have to be done by hand. 
+
+Every Operator repo has a script `scripts/docs_templating.sh` and a file with templating variables `docs/templating_vars.yaml`.
+The script applies the variables to all `.j2` files in the `docs` directory.
+
+This is used for getting started scripts, and in there only for versions of operators and for Helm Chart URLs.
+
+Without this templating mechanism, every release these values would need to be updated by hand (or possibly with a search and replace) with is error prone and time consuming.
+
 == Branch and version structure
 
 All Stackable repositories use https://trunkbaseddevelopment.com/[trunk based development], and so the documentation is also pulled from different release branches.
