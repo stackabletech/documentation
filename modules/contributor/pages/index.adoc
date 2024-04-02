@@ -23,7 +23,7 @@ Contributions can come in many different ways, and this document is the entry po
 
 == Project overview
 
-Please see the xref:project-overview.adoc[] page to get an overview of the most important Git repositories used by us.
+Please see the xref:project-overview.adoc[] page to get an overview of the most important Git repositories in the Stackable organization.
 
 [[contributing-workflow]]
 == General pull request guidelines
@@ -32,10 +32,19 @@ All our development is done on https://github.com/stackabletech[GitHub] with a a
 follow the GitHub instructions on how to do this. 
 If you are an external contributor, you will need to fork the repository where you want your change to be made.
 
+=== Signed commits
+
+As a supply chain security policy, all commits and tags in Stackable repositories need to be signed.
+Signed commits ensure authenticity by verifying that a commit has indeed been made by a certain person and integrity to make sure that no data has been changed after the fact.
+
+Read https://stackable.tech/en/notes-on-signed-commits-with-git-and-github/[Notes on Signed Commits with Git and Github] for more information on using signed commits.
+
+=== Instructions
+
 Please make sure that you base your pull request on the latest changes in the `main` branch of the repository if it is a general change you want to see added to the platform, or off of a specific release branch (named `release-23.11` for example) if you want to contribute a fix that is specific to a release.
 At Stackable we use a branch structure based on https://trunkbaseddevelopment.com/[trunk based development].
 
-=== Review preparation
+==== Review preparation
 
 In your pull request, give a comprehensive description of the changes you are making and why, and reference any issues that are relevant to your pull request.
 
@@ -49,7 +58,7 @@ If you follow the xref:contributing-code.adoc[] guide, a lot of checks should al
 Once you are ready for review, request a review from 'stackabletech/developers'.
 If you are an internal contributor, assign yourself to your pull request.
 
-=== Review
+==== Review
 
 During the review phase, a Stackable employee will review your contribution.
 Respond to questions and feedback, and improve your submission if necessary.
@@ -60,3 +69,7 @@ Internal contributors merge them on their own, pull requests from external contr
 
 Once your pull request is merged, you have successfully contributed!
 Congratulations!
+
+== Further reading
+
+Read more about specifically xref:contributing-code.adoc[] or xref:docs/contributing-documentation.adoc[].
