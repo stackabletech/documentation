@@ -1,6 +1,3 @@
-// Header of this document:
-//
-
 = Stackable Documentation
 :base-repo: https://github.com/stackabletech
 
@@ -9,13 +6,11 @@ Have a look at the https://docs.stackable.tech/[live version] and the current ht
 
 The documentation is built with https://antora.org[Antora]. This repository hosts the Antora playbook file as well as platform documentation. Other Stackable repos contain 'docs' directories which are pulled in by this repo.
 
-
 == Repository structure
 
-* The `antora.yml` file defines the main `home` https://docs.antora.org/antora/latest/component-version/#docs-component[Component].
+* The link:antora.yml[`antora.yml`] file defines the main `home` https://docs.antora.org/antora/latest/component-version/#docs-component[Component].
 * The various `*-playbook.yml` files are https://docs.antora.org/antora/latest/playbook/[Antora playbook files] used to build the docs, either locally or for production. The playbooks link to all the other repositories that contain content.
 * The `modules` directory contains the platform level documentation content.
-
 
 == Building locally
 
@@ -68,3 +63,5 @@ The design & layout comes from our https://github.com/stackabletech/documentatio
 == More useful links
 
 * The https://github.com/stackabletech/documentation-ui[documentation-ui] repository.
+* The https://github.com/stackabletech/crddocs[crddocs] repository from which the https://crds.stackable.tech/[CRD reference] is generated.
+* The Stackable https://docs.stackable.tech/home/stable/contributor/[contributor's guide] containing more info on how to contribute to the documentation.
