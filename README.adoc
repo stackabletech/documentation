@@ -37,7 +37,7 @@ NOTE: Antora caches the external content repos in the cache directory (configure
 The documentation is deployed by Netlify on a regular basis or when something is pushed to  the `main` branch.
 To trigger an out of band deployment, use the _Build and deploy production site_ GitHub action (internal contributors only).
 
-Deployment is run every night to pick up changes in the operator repositories, because these changes do not automatically trigger a new deployment.
+Regular (nightly) deployments  are run to pick up changes in the operator repositories. These repositories are not watched by Netlify and thus any changes to the documentation there would be ignored.
 
 @fhennig is responsible for anything Netlify related.
 
