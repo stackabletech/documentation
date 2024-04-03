@@ -34,7 +34,7 @@ NOTE: Antora caches the external content repos in the cache directory (configure
 
 == Production deployment
 
-The documentation is deployed on Netlify and is deployed when there is a new commit on the `main` branch, as well as freshly every night.
+The documentation is deployed by Netlify on a regular basis or when something is pushed to  the `main` branch.
 If you want to trigger a deploy right now, you can use the _Build and deploy production site_ GitHub action (internal contributors only).
 
 Deployment is run every night to pick up changes in the operator repositories, because these changes do not automatically trigger a new deployment.
