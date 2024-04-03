@@ -58,7 +58,7 @@ Building the documentation and also the deployment process on Netlify are docume
 == Executable tutorials
 
 The Getting started guides for each operator are written with an executable script in the background from which the documentation includes excerpts.
-This has the benefit that the tutorials are easily tested.
+This has the benefit that the guides are easily tested.
 When writing a new guide, please also write it in this way.
 Have a look at the existing getting started guides on how to do this.
 
