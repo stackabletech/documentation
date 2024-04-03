@@ -23,7 +23,7 @@ Documentation exists along two axis: _study_ or _work_; _pracital steps_ and _th
 Practical learning happens in tutorials, and they are backed up by conceptual background information (theory).
 On the work oriented side, documentation should contain exhaustive reference information (every commandline flag, every yaml property, their type and whether they are optional or not etc.) as well as narrow, task oriented guides.
 
-At Stackable we have to document the platform as a whole, as well as individual operators.
+At Stackable we have to document the platform as a whole, individual operators, products and command line tools like `stackablectl`.
 Then there is also stackablectl.
 
 **Conceptual** information lives at the platform level in the xref:concepts:index.adoc[] section. Some operators have their own specific concepts such as xref:zookeeper:znodes.adoc[] for ZooKeeper, but most conceptual things apply to all operators (i.e. roles and role groups, resource management, config overrides).
