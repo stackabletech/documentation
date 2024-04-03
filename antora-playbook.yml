@@ -5,7 +5,7 @@ site:
   start_page: home::index.adoc
   robots: allow
   keys:
-    enable_tracking: true
+    enable_tracking: true # this key is used in the documentation-ui
 # URL config settings.
 # docs: https://docs.antora.org/antora/latest/playbook/configure-urls/
 urls:

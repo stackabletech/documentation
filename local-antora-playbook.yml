@@ -5,7 +5,7 @@ site:
   start_page: home::index.adoc
   robots: allow
   keys:
-    enable_tracking: false
+    enable_tracking: false # this key is used in the documentation-ui
 urls:
   # This replaces the component version in the URL of the latest stable version with 'stable'
   # i.e. /commons-operator/stable/index.html instead of /commons-operator/0.3/index.html

@@ -1,0 +1,98 @@
+= Contributing code
+
+:templating-repo: https://github.com/stackabletech/operator-templating
+:operator-repo: https://github.com/stackabletech/operator-rs
+:docker-repo: https://github.com/stackabletech/docker-images
+
+== Development Environment
+
+In order to contribute source code, you need an environment that is capable of running the following tools:
+
+* https://git-scm.com/[Git]
+* https://www.gnu.org/software/make/manual/make.html[make]
+* https://www.docker.com/[Docker]
+* https://kind.sigs.k8s.io/[Kind]
+* https://helm.sh/[Helm]
+* https://kuttl.dev/[Kuttl]
+* https://www.rust-lang.org/[Rust]
+* https://www.python.org/[Python]
+* https://jqlang.github.io/jq/[jq]
+* https://github.com/mikefarah/yq[yq]
+* https://tilt.dev/[Tilt]
+* https://pre-commit.com/[pre-commit] (optional)
+
+Depending on the repository, you might also need https://go.dev/[Go], https://www.java.com/en/[Java] or other programming language support.
+
+Almost all build scripts assume a Unix based environment (preferably Linux).
+
+=== IDEs and Editors
+
+Of course you are free to use whatever works for you best. No editor is perfect but we have positive experience with:
+
+* https://www.jetbrains.com/idea/[IntelliJ Idea] with the `Rust` plug-in
+* https://code.visualstudio.com/[VisualStudio Code] with the `rust-analyzer` extension
+
+For `VisualStudio Code` we also recommend the following extensions:
+
+* https://marketplace.visualstudio.com/items?itemName=tamasfe.even-better-toml[Even Better TOML]
+* https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb[CodeLLDB] (for debugging)
+* https://marketplace.visualstudio.com/items?itemName=usernamehw.errorlens[Error Lens] (inline error messages)
+* https://marketplace.visualstudio.com/items?itemName=asciidoctor.asciidoctor-vscode[AsciiDoc]
+* https://marketplace.visualstudio.com/items?itemName=GitHub.vscode-pull-request-github[GitHub Pull requests and Issues]
+* https://marketplace.visualstudio.com/items?itemName=eamodio.gitlens[GitLens]
+* https://marketplace.visualstudio.com/items?itemName=ms-python.python[Python]
+* https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker[Docker]
+
+== Steps
+
+. Make your desired changes in the according repository and test them manually. Ensure that the code compiles without
+  warnings (`cargo clippy --all-targets`) and that the code is formatted with `cargo fmt`. Also make sure that all
+  changes are made in accordance to the xref:code-style-guide.adoc[source code style guide].
+. If code was added or adapted then please create or adapt the unit tests in the same file as well as the integration
+  tests in the `tests` directory. Ensure that all unit tests run successfully `cargo test`) and all integration tests
+  run successfully (`./scripts/run-tests`). See also <<_changes_in_the_integration_tests>>.
+. Comment your code and check with `cargo doc --document-private-items` that there are no syntax errors.
+. The YAML schemas of the custom resource definitions (CRDs) are rebuilt when the project is compiled (see
+  `rust/operator-binary/build.rs` if changing an operator). These CRDs as well as the product configuration are also
+  required in the Helm chart and the Kubernetes manifest. To ensure that everything is in a consistent state, please
+  execute `make regenerate-charts`.
+. If it is useful for the users of the project to know about the change then it must be added to the changelog. For
+  instance, if only the dependencies in an operator are upgraded but nothing changes for the user then the upgrade
+  should not be added to the changelog. Conversely, if the dependencies in the {operator-repo}[operator framework] are
+  upgraded then changes are probably required in the operators (which are the clients of the framework) and therefore
+  the upgrade must be mentioned in the changelog. The changelog must be formatted according to
+  https://keepachangelog.com/en/1.1.0/[keep a changelog].
+
+== Changes in the integration tests
+
+. Most code changes should also be tested with integration tests. The tests for every operator can be found in the
+  operator repository in the `tests` directory.
+. Create or adapt the tests.
+  Try to mimic the style of the other tests.
+  They are written with https://kuttl.dev/[KUTTL] and our own templating tool https://github.com/stackabletech/beku.py[beku.py] to template tests and test multiple product versions at once.
+. Start a test cluster using https://kind.sigs.k8s.io/[kind].
+. Run your development version of the operator with `make run-dev` (see also xref:testing-on-kubernetes.adoc[] for more information on this).
+  This will deploy the operator directly into the cluster, also using part of the Helm Chart definition and therefore the RBAC rules.
+. When making changes to the Helm Chart, you should however test the Helm Chart explicitly.
+  First a Docker image of the operator must be built locally and uploaded to the kind cluster and then the Helm chart must be installed.
+  This can be achieved in the operator directory with the following commands:
++
+[source,bash]
+----
+docker build --file docker/Dockerfile --tag docker.stackable.tech/stackable/<operator>:<version>-dev .
+kind load docker-image docker.stackable.tech/stackable/<operator>:<version>-dev --name=integration-tests
+helm install <operator> deploy/helm/<operator>/
+----
+. Run the tests from the repository root with `./scripts/run-tests`.
+
+== Adding support for a new product version
+
+If a new version of a product was added then the following tasks must be performed:
+
+* Add the new version in the https://github.com/stackabletech/docker-images[docker-images] repository.
+* Update the operator to support the new version if necessary.
+* Update the examples in the operator to use the new version.
+* Update the integration tests.
+  The tests should cover the latest patch version of each supported versions.
+* Add the new version to the supported ones in the documentation of the operators (see
+  `docs/modules/\{product name\}/partials/supported-versions.adoc` in the operator repositories).

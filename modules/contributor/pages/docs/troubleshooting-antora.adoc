@@ -1,0 +1,6 @@
+= Troubleshooting Antora build errors
+
+* Netlify build error: `Duplicate nav in nightly@home: modules/ROOT/nav.adoc`
+** This probably means that there are two branches of the same repository defined in the Antora playbook, that have the same version set.
+   They both supply a `nav.adoc` file for the same component and version, and Antora doesn't know which one to pick.
+   Make sure that the release branches have the correct version set in their `antora.yml` files and also make sure that the `main` branch is still set to `nightly`.

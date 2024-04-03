@@ -1,4 +1,4 @@
-= OPA connection implementation guidelines
+= Implementing OPA authorization
 :page-aliases: opa_configuration.adoc, opa-configuration.adoc
 :source-highlighter: highlight.js
 :highlightjs-languages: rust
