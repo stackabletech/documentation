@@ -41,7 +41,7 @@ Regular (nightly) deployments  are run to pick up changes in the operator reposi
 
 === Netlify configuration
 
-Netlify is configured with the `[netlify.toml](./netlify.toml)` file inside of the documentation repo. In there, the command `make netlify-build` is configured as the build command. Further documentation of the build process can then be found in the `[Makefile](./Makefile)`.
+Netlify is configured with the netlify.toml[./netlify.toml] file inside of the documentation repo. In there, the command `make netlify-build` is configured as the build command. Further documentation of the build process can then be found in the Makefile[./Makefile].
 
 The build process creates a static site in `build/site` which is then published (as it is configured in the `netlify.toml`).
 
