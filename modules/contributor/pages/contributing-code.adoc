@@ -80,7 +80,7 @@ docker build --file docker/Dockerfile --tag docker.stackable.tech/stackable/<ope
 kind load docker-image docker.stackable.tech/stackable/<operator>:<version>-dev --name=integration-tests
 helm install <operator> deploy/helm/<operator>/
 ----
-. Run the tests from the repository root with `./scripts/run_tests.sh`.
+. Run the tests from the repository root with `./scripts/run-tests`.
 
 == Adding support for a new product version
 
