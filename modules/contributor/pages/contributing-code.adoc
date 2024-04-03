@@ -46,7 +46,7 @@ For `VisualStudio Code` we also recommend the following extensions:
   changes are made in accordance to the xref:code-style-guide.adoc[source code style guide].
 . If code was added or adapted then please create or adapt the unit tests in the same file as well as the integration
   tests in the `tests` directory. Ensure that all unit tests run successfully `cargo test`) and all integration tests
-  run successfully (`./scripts/run_tests.sh`). See also <<_changes_in_the_integration_tests>>.
+  run successfully (`./scripts/run-tests`). See also <<_changes_in_the_integration_tests>>.
 . Comment your code and check with `cargo doc --document-private-items` that there are no syntax errors.
 . The YAML schemas of the custom resource definitions (CRDs) are rebuilt when the project is compiled (see
   `rust/operator-binary/build.rs` if changing an operator). These CRDs as well as the product configuration are also
