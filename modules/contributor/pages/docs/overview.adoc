@@ -33,7 +33,7 @@ There are also the xref:demos:index.adoc[Demos] which serve more for study.
 
 **Guides** are also instructional, but focus a narrow topic, something that the user might want to solve in their particular setup.
 For example: "How do I set up Kerberos with HDFS?" or "How do I connect Superset to Druid?"
-The guide has to account for eventualities (i.e. the user is using their own pre-existing ZooKeeper instead of our ZooKeeper. This is not the case for tutorials).
+The guide has to account for different use-cases (i.e. the user is using their own pre-existing ZooKeeper instead of our ZooKeeper). This is not the case for tutorials.
 Since this kind of information is typically product specific, it is located in the usage guide section of individual operators.
 
 **Reference** information for the Stackable platform entails all the settings and Options in our YAMLs, which we generate.
