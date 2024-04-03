@@ -25,7 +25,7 @@ On the work oriented side, documentation should contain exhaustive reference inf
 
 At Stackable we have to document the platform as a whole, individual operators, products and command line tools like `stackablectl`.
 
-**Conceptual** information lives at the platform level in the xref:concepts:index.adoc[] section. Some operators have their own specific concepts such as xref:zookeeper:znodes.adoc[] for ZooKeeper, but most conceptual things apply to all operators (i.e. roles and role groups, resource management, config overrides).
+**Conceptual** information lives at the platform level in the xref:concepts:index.adoc[] section. Some operators have their own specific concepts such as xref:zookeeper:znodes.adoc[] for ZooKeeper, but most concepts apply to all operators (i.e. roles and role groups, resource management, config overrides).
 
 **Tutorials** (learning oriented guides) exist at the xref:tutorials:index.adoc[top level] but there are also the Getting Started guides for all the individual operators.
 Tutorials provide complete set up information and require very little to be there already in contrast to guides (work instead of study oriented) which are more focused on solving specific tasks.
