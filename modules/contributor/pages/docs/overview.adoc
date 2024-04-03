@@ -29,7 +29,7 @@ At Stackable we have to document the platform as a whole, individual operators, 
 
 **Tutorials** (learning oriented guides) exist at the xref:tutorials:index.adoc[top level] but there are also the Getting Started guides for all the individual operators.
 Tutorials provide complete set up information and require very little to be there already in contrast to guides (work instead of study oriented) which are more focused on solving specific tasks.
-There are also the xref:demos:index.adoc[Demos] which serve more for study.
+There are also the xref:demos:index.adoc[Demos] which are complete solutions that showcase how the platform integrates different products in a unified, reproducible and transparent way.
 
 **Guides** are also instructional, but focus a narrow topic, something that the user might want to solve in their particular setup.
 For example: "How do I set up Kerberos with HDFS?" or "How do I connect Superset to Druid?"
