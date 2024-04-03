@@ -71,10 +71,9 @@ For `VisualStudio Code` we also recommend the following extensions:
   Try to mimic the style of the other tests.
   They are written with https://kuttl.dev/[KUTTL] and our own templating tool https://github.com/stackabletech/beku.py[beku.py] to template tests and test multiple product versions at once.
 . Start a test cluster using https://kind.sigs.k8s.io/[kind].
-. If changes in an operator are tested then the according version of the operator must be started.
-  The operator can be started outside the cluster with `cargo run -- crd | kubectl apply -f - && cargo run -- run`.
-  This approach allows a fast test develop cycle but has the downside that the RBAC rules are not tested.
-  So a proper Helm installation should be tested before creating a pull request.
+. Run your development version of the operator with `make run-dev` (see also xref:testing-on-kubernetes.adoc[] for more information on this).
+  This will deploy the operator directly into the cluster, also using part of the Helm Chart definition and therefore the RBAC rules.
+. When making changes to the Helm Chart, you should however test the Helm Chart explicitly.
   First a Docker image of the operator must be built locally and uploaded to the kind cluster and then the Helm chart must be installed.
   This can be achieved in the operator directory with the following commands:
 +
