@@ -89,8 +89,10 @@ helm install <operator> deploy/helm/<operator>/
 
 If a new version of a product was added then the following tasks must be performed:
 
-* Add the new version to the supported ones in the documentation of the operators (see
-  `docs/modules/\{product name\}/partials/supported-versions.adoc` in the operator repositories).
+* Add the new version in the https://github.com/stackabletech/docker-images[docker-images] repository.
 * Update the operator to support the new version if necessary.
 * Update the examples in the operator to use the new version.
-* Update the integration tests. The tests should cover the latest patch version of each supported versions.
+* Update the integration tests.
+  The tests should cover the latest patch version of each supported versions.
+* Add the new version to the supported ones in the documentation of the operators (see
+  `docs/modules/\{product name\}/partials/supported-versions.adoc` in the operator repositories).
