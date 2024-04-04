@@ -1,13 +1,14 @@
 <article class="doc">
 {{! In antora.yml set asciidoc.attributes.page-end-of-life to true/false}}
 {{#if page.attributes.end-of-life}}
-<div class="unmaintained-version-banner">
-  <b>This version of the Stackable Data Platform is no longer maintained.</b>
-  <br>
+<aside class="end-of-life-banner">
+  <h4>This version of the Stackable Data Platform is no longer maintained.</h4>
   {{#if page.canonicalUrl}}
-  Please read the <a href="{{{page.canonicalUrl}}}">latest version of this page</a> instead.
+  <p>
+    Please read the <a href="{{{page.canonicalUrl}}}">latest version of this page</a> instead.
+  </p>
   {{/if}}
-</div>
+</aside>
 {{/if}}
 {{#with page.title}}
 <h1 class="page">{{{this}}}</h1>
