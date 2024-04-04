@@ -11,3 +11,11 @@ nav:
   - modules/contributor/nav.adoc
   - modules/ROOT/nav2.adoc
 prerelease: false
+asciidoc:
+  attributes:
+    # Whether this version is already end of life.
+    # If true, a banner will be displayed informing the user.
+    end-of-life: false
+    # to make attributes accessible to the UI template, they need to
+    # be prefixed with "page-"
+    page-end-of-life: "{end-of-life}"
