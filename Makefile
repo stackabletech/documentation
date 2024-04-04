@@ -37,4 +37,4 @@ netlify-fetch:
 
 netlify-build: netlify-fetch build-prod
 
-.PHONY: build-dev build-prod build-ui clean netlify-build netlify-fetch
+.PHONY: build-only-dev build-local build-prod build-ui clean netlify-build netlify-fetch
