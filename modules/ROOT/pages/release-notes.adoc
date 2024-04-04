@@ -223,10 +223,13 @@ These Kubernetes versions are no longer supported:
 
 === Supported OpenShift versions
 
-This release supports the following OpenShift versions:
+This release is available in the RedHat Certified Operator Catalog for the following OpenShift versions:
 
 * `4.15`
 * `4.14`
+* `4.13`
+* `4.12`
+* `4.11`
 
 === Breaking changes
 
