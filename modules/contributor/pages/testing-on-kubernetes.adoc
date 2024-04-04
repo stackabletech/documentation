@@ -1,7 +1,6 @@
 = Testing your Code on Kubernetes
 :page-aliases: testing_on_kubernetes.adoc
 
-== Description
 It can sometimes be a bit cumbersome to actually test your code on Kubernetes proper, as there are many moving parts involved.
 You need to compile the code, build helm charts, build and push the container images, etc.
 

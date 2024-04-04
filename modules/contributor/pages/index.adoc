@@ -1,74 +1,75 @@
-= Contributor's Guide
+= Contributor's guide
 
-Welcome to Stackable!
+:gh-pr: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request
+:gh-create-issue: https://docs.github.com/en/issues/tracking-your-work-with-issues/creating-an-issue
 
-This document will show you the steps needed to contribute to the Stackable Platform. Contributions can come in many
-shapes and forms but in this document we'll focus on code and documentation improvements. We'll assume you already know
-what the Stackable Platform is and have a specific issue that you want solved.
+Welcome to Stackable, we're happy to have your contributions!
+Contributions can come in many different ways, and this document is the entry point to point you into the right direction to get your contribution posted as soon as possible.
 
-This document aims at getting your contribution posted as soon as possible.
+* First of all, if you have a **question** and something is unclear and you couldn't find the information you needed, ask a question on https://github.com/orgs/stackabletech/discussions[GitHub discussions].
+  This is the first place you should go to if you don't know where to start.
+* If you found a **bug or a feature request** and you already know where it would need to go, _search for similar issues first_!
+  If you cannot find anything, {gh-create-issue}[create an issue] in the repository that belongs to the component where you found the bug or have the feature request.
+  You can also have a look at the xref:project-overview.adoc[] to find out which repository might be the right place to go to.
+  An issue is also the right tool if you have a suggestion for a fix for a bug but first want to report the bug to raise awareness.
+  When creating a new issue please provide as much information as you consider relevant.
+  Issues can be bug reports, feature requests and so on.
+  The Stackable repositories provide templates to make it easier to submit high-quality issues.
+* If you are already familiar with the xref:project-overview.adoc[] and you have a **particular fix or feature to contribute in code**, you can {gh-pr}[create a pull request] in the specific repository.
+  Again, it is useful to first to a quick search if there is already an issue or other pull request that is similar to yours.
+  If that is the case, consider contributing to the existing issue by either adding new feedback or code.
+  The steps to contribute a pull request are outlined below, and you should also consult the xref:contributing-code.adoc[] guidelines to make sure your contribution isn't missing anything and follow the <<contributing-workflow>> below.
+* If you want to contribute **documentation**, follow the xref:docs/contributing-documentation.adoc[] guideline, as well as the <<contributing-workflow>> below.
 
-== Contribution Workflow
+== Project overview
 
-The development of the Stackable Platform takes place on https://github.com/stackabletech[GitHub].
-On GitHub, each repository has its own issue tracker and since Stackable is a platform, there are several repositories where issues and pull requests can be created.
-If you already have a good idea where the issue or pull request belongs, then you can skip reading to the contribution steps below.
-Otherwise, you might want to a have a look at the xref:project-overview.adoc[] for hints.
+Please see the xref:project-overview.adoc[] page to get an overview of the most important Git repositories in the Stackable organization.
 
-Contribution steps:
+[[contributing-workflow]]
+== General pull request guidelines
 
-. Lookup if an existing issue already covers your problem
-. Submit a new issue. If it is only a trivial change like fixing a typo then an issue is not necessary and a
-  pull-request can be created directly.
-. Submit a pull-request if you want. The necessary steps to successfully create an approvable pull-request are detailed
-  in xref:steps.adoc[].
-. Respond to questions or feedback
-. Improve your submission if necessary
-. Closing your contribution
+All our development is done on https://github.com/stackabletech[GitHub] with a and contributions should be made through {gh-pr}[creating pull requests],
+follow the GitHub instructions on how to do this. 
+If you are an external contributor, you will need to fork the repository where you want your change to be made.
 
-Before submitting a new issue or pull-request, it's always a good idea to check if the issue has already been discussed
-in the past and if there is a resolution for it. If that is the case, consider contributing to the existing issue by
-either adding new feedback or code.
+=== Signed commits
 
-When creating a new issue please provide as much information as you consider relevant. Issues can be bug reports,
-feature requests and so on. The Stackable repositories provide templates to make it easier to submit high-quality
-issues.
+As a supply chain security policy, all commits and tags in Stackable repositories need to be signed.
+Signed commits ensure authenticity by verifying that a commit has indeed been made by a certain person and integrity to make sure that no data has been changed after the fact.
 
-When submitting a pull-request, you might be interested in knowing about the necessary <<Development Environment>>.
+Read https://stackable.tech/en/notes-on-signed-commits-with-git-and-github/[Notes on Signed Commits with Git and Github] for more information on using signed commits.
 
-== Repo Walkthrough
+=== Instructions
 
-Please see the xref:project-overview.adoc[] page to get an overview of the most important Git repositories used by us.
+Please make sure that you base your pull request on the latest changes in the `main` branch of the repository if it is a general change you want to see added to the platform, or off of a specific release branch (named `release-23.11` for example) if you want to contribute a fix that is specific to a release.
+At Stackable we use a branch structure based on https://trunkbaseddevelopment.com/[trunk based development].
 
-== Development Environment
+==== Review preparation
 
-In order to contribute source code, you need an environment that is capable of running the following tools:
+In your pull request, give a comprehensive description of the changes you are making and why, and reference any issues that are relevant to your pull request.
 
-* https://www.docker.com/[Docker]
-* https://kind.sigs.k8s.io/[Kind]
-* https://helm.sh/[Helm]
-* https://kuttl.dev/[Kuttl]
-* https://www.rust-lang.org/[Rust]
-* https://www.python.org/[Python]
+Some repositories have _review checklists_ that are found in the pull request template, for example the operator repositories have these checklists.
+Before requesting a review, make sure to go through the list and ensure that everything is ready for review.
 
-The documentation is written in https://asciidoctor.org[AsciiDoc] format and processed with https://antora.org[Antora]
+Some repositories also have automated checks in place that check code style and general consistency.
+Make sure that all checks are running successfully on your pull request.
+If you follow the xref:contributing-code.adoc[] guide, a lot of checks should already be covered by your development environment setup (this includes things like linters and formatting).
 
-Almost all build scripts assume a Unix based environment (preferably Linux).
+Once you are ready for review, request a review from 'stackabletech/developers'.
+If you are an internal contributor, assign yourself to your pull request.
 
-=== IDEs and Editors
+==== Review
 
-Of course you are free to use whatever works for you best. No editor is perfect but we have positive experience with:
+During the review phase, a Stackable employee will review your contribution.
+Respond to questions and feedback, and improve your submission if necessary.
 
-* https://www.jetbrains.com/idea/[IntelliJ Idea] with the `Rust` plug-in
-* https://code.visualstudio.com/[VisualStudio Code] with the `rust-analyzer` extension
+A single approval of your contribution is sufficient for it to be merged.
+After your pull request is approved, it can be merged.
+Internal contributors merge them on their own, pull requests from external contributors are merged by the approver.
 
-For `VisualStudio Code` we also recommend the following extensions:
+Once your pull request is merged, you have successfully contributed!
+Congratulations!
 
-* https://marketplace.visualstudio.com/items?itemName=tamasfe.even-better-toml[Even Better TOML]
-* https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb[CodeLLDB] (for debugging)
-* https://marketplace.visualstudio.com/items?itemName=usernamehw.errorlens[Error Lens] (inline error messages)
-* https://marketplace.visualstudio.com/items?itemName=asciidoctor.asciidoctor-vscode[AsciiDoc]
-* https://marketplace.visualstudio.com/items?itemName=GitHub.vscode-pull-request-github[GitHub Pull requests and Issues]
-* https://marketplace.visualstudio.com/items?itemName=eamodio.gitlens[GitLens]
-* https://marketplace.visualstudio.com/items?itemName=ms-python.python[Python]
-* https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker[Docker]
+== Further reading
+
+Read more about specifically xref:contributing-code.adoc[] or xref:docs/contributing-documentation.adoc[].
