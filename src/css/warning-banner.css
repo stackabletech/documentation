@@ -1,0 +1,7 @@
+.unmaintained-version-banner {
+  background-color: orange;
+  border-radius: 8px;
+  border: 2px solid darkorange;
+  padding: 10px;
+  margin-top: 50px;  /** adjust based on toolbar height + x */
+}
