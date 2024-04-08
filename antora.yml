@@ -22,9 +22,13 @@ asciidoc:
     # The versions for the CRD docs are either 'nightly' or
     # a full major.minor.patch version like 23.7.1
     crd-docs-version: "nightly"
+    # Whether this version is already end of life.
+    # If true, a banner will be displayed informing the user.
+    end-of-life: false
     # use the attributes below to link to the CRD docs
     crd-docs-base-url: "https://crds.stackable.tech"
     crd-docs: "{crd-docs-base-url}/{crd-docs-version}"
-    # this attribute is an annoying little hack to make the versioned
-    # link accessible to the UI template.
+    # to make attributes accessible to the UI template, they need to
+    # be prefixed with "page-"
     page-crd-docs: "{crd-docs}"
+    page-end-of-life: "{end-of-life}"
