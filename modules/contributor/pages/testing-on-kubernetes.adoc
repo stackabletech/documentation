@@ -30,6 +30,8 @@ The only prerequisite you need to install is the actual Nix package manager - yo
 sh <(curl -L https://nixos.org/nix/install) --daemon
 ----
 
+If you don't want to run an arbitrary shellscript directly from the web, have a look at how to https://nixos.org/manual/nix/stable/installation/installing-binary#installing-from-a-binary-tarball[install from a binary distribution] or the list of https://nix-community.github.io/nix-installers/[maintained packages].
+
 After this is done you also need to add a setting to your Nix config in `/etc/nix/nix.conf`:
 ----
 experimental-features = nix-command
@@ -71,6 +73,11 @@ NOTE: The port used will be different for every repository from the Stackable or
 === Configuring the Registry Used
 If you are using a local Kubernetes like Kind, K3s or similar for your development Tilt will work right out of the box for you, as it will directly push the images to your local Kubernetes cluster (see https://docs.tilt.dev/personal_registry.html for more information).
 
+Due to the way that images are pushed to Kind this can be fairly inefficient, as the whole image will need to be pushed to every Kind node every time, not just changed layers once.
+To work around this, Kind can be https://kind.sigs.k8s.io/docs/user/local-registry/[set up] to use a local registry, to which Tilt can then push the images.
+The easiest way that we found to do this is by using https://github.com/tilt-dev/ctlptl[ctlptl] which enables you to easily set up local Kind, K3s or minikube clusters with a local registry.
+Tilt should then automatically discover this registry from the cluster config and push images there.
+
 If you are using a remote cluster, Tilt will push the generated container images to a remote registry, in order for your Kubernetes to be able to access them.
 We have configured `docker.stackable.tech/sandbox` as the default registry, as this is what all our developers use.
 External contributors will not have access to this registry and need to override this to a registry of their choice.
@@ -83,3 +90,5 @@ Overriding the default registry can be done by providing a file called `tilt_opt
 "default_registry": "docker.stackable.tech/soenkeliebau",
 }
 ----
+
+=== Using Kind with a Local Registry
