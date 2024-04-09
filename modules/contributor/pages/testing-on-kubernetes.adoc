@@ -90,5 +90,3 @@ Overriding the default registry can be done by providing a file called `tilt_opt
 "default_registry": "docker.stackable.tech/soenkeliebau",
 }
 ----
-
-=== Using Kind with a Local Registry
