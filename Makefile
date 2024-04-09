@@ -1,7 +1,10 @@
 CURRENT_COMMIT := $(shell git rev-parse HEAD)
 
-build-dev: build-ui
+build-local: build-ui
 	node_modules/.bin/antora generate local-antora-playbook.yml
+
+build-only-dev: build-ui
+	node_modules/.bin/antora generate only-dev-antora-playbook.yml
 
 build-prod: build-ui
 	node_modules/.bin/antora generate antora-playbook.yml --fetch
@@ -34,4 +37,4 @@ netlify-fetch:
 
 netlify-build: netlify-fetch build-prod
 
-.PHONY: build-dev build-prod build-ui clean netlify-build netlify-fetch
+.PHONY: build-only-dev build-local build-prod build-ui clean netlify-build netlify-fetch
