@@ -3,11 +3,12 @@
 {{#if page.attributes.end-of-life}}
 <aside class="end-of-life-banner">
   <h4>This version of the Stackable Data Platform is no longer maintained.</h4>
-  {{#if page.canonicalUrl}}
   <p>
+    {{#if page.canonicalUrl}}
     Please read the <a href="{{{page.canonicalUrl}}}">latest version of this page</a> instead.
+    {{/if}}
+    The <a href="{{{ relativize (versioned "home" page "policies.html") }}}">lifecycle policies</a> define when a release stops receiving maintenance updates.
   </p>
-  {{/if}}
 </aside>
 {{/if}}
 {{#with page.title}}
