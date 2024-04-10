@@ -1,8 +1,3 @@
-.navbar-brand .navbar-item + .navbar-item {
-  flex-grow: 1;
-  justify-content: flex-end;
-}
-
 @media screen and (min-width: 1024px) {
   #search-input {
     margin-left: 0;

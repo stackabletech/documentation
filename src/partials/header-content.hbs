@@ -1,57 +1,49 @@
 <header class="header">
   <nav class="navbar">
-    <div class="container">
-      <div class="navbar-brand">
-        <a class="navbar-item" href="https://stackable.tech/en/">{{!--site.title--}}<img src="{{{uiRootPath}}}/img/stackable-logo.png"></a>
-        <a class="navbar-item documentation-link" href="{{{or site.homeUrl site.url}}}">Documentation</a>
-        {{#if env.SITE_SEARCH_PROVIDER}}
-        <div class="navbar-item search hide-for-print">
-          <div id="search-field" class="field">
-            <input id="search-input" type="text" placeholder="Search..."{{#if page.home}} autofocus{{/if}}>
-          </div>
-        </div>
-        {{/if}}
-        <button class="navbar-burger" data-target="navbar-sub">
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
-        <a href="https://www.stackable.tech/en/contact/" class="button pull-right">Contact Us</a>
+    <div id="topbar-left" class="navbar-brand">
+      <a class="navbar-item" href="https://stackable.tech/en/">{{!--site.title--}}<img src="{{{uiRootPath}}}/img/stackable-logo.png"></a>
+      <a class="navbar-item documentation-link" href="{{{or site.homeUrl site.url}}}">Documentation</a>
+      {{#if env.SITE_SEARCH_PROVIDER}}
+      <div class="navbar-item search hide-for-print">
       </div>
-      <div id="topbar-nav" class="navbar-menu">
-      </div>
+      {{/if}}
     </div>
-  </nav>
-  <nav id="navbar-sub" class="navbar-sub">
-    <div class="container justify-between">
-      <div class="navlinks flex m-0">
-        {{#> navbar }}
-          navbar.hbs partial not found - you're seeing failover content
-          <a class="navbar-sub-item" href="#">Home</a>
-          <div class="navbar-sub-item drop-down">
-              Operators
-              <div class="drop-down-content">
-                  <a class="drop-down-item" href="#">Operator 1</a>
-                  <a class="drop-down-item" href="#">Operator 2</a>
-              </div>
-          </div>
-        {{/navbar}}
-        <a class="arrow" href="javascript:document.querySelector('.navbar-sub').classList.toggle('open')">
-          <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="arrow-right" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg=""><path fill="currentColor" d="M190.5 66.9l22.2-22.2c9.4-9.4 24.6-9.4 33.9 0L441 239c9.4 9.4 9.4 24.6 0 33.9L246.6 467.3c-9.4 9.4-24.6 9.4-33.9 0l-22.2-22.2c-9.5-9.5-9.3-25 .4-34.3L311.4 296H24c-13.3 0-24-10.7-24-24v-32c0-13.3 10.7-24 24-24h287.4L190.9 101.2c-9.8-9.3-10-24.8-.4-34.3z"></path></svg>
-        </a>
-      </div>
-      {{#with @root.page.versions}}
-      <div class="page-versions">
-        <button class="version-menu-toggle" title="Show other versions of page">{{@root.page.componentVersion.displayVersion}}</button>
-        <div class="version-menu">
-          {{#each this}}
-          <a class="version
-            {{~#if (eq ./version @root.page.version)}} is-current{{/if~}}
-            {{~#if ./missing}} is-missing{{/if}}" href="{{{relativize ./url}}}">{{./displayVersion}}</a>
-          {{/each}}
+    <div class="navbar-menu">
+      {{#> navbar-new }}
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link" href="#">Dummy</a>
+        <div class="navbar-dropdown">
+          <div class="navbar-item"><strong>Core</strong></div>
+          <a class="navbar-item" href="https://gitlab.com/antora/antora">Repository</a>
+          <a class="navbar-item" href="https://gitlab.com/antora/antora/issues">Issue Tracker</a>
+          <hr class="navbar-divider">
+          <div class="navbar-item"><strong>Default UI</strong></div>
+          <a class="navbar-item" href="https://gitlab.com/antora/antora-ui-default">Repository</a>
+          <a class="navbar-item" href="https://gitlab.com/antora/antora-ui-default/issues">Issue Tracker</a>
+          <hr class="navbar-divider">
+          <a class="navbar-item" href="https://gitlab.com/antora/antora/blob/main/contributing.adoc">Contributing</a>
         </div>
       </div>
-      {{/with}}
+      {{/navbar-new}}
     </div>
+    <button class="navbar-burger" data-target="navbar-sub">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    {{#with @root.page.versions}}
+    <div id="topbar-right" class="navbar-menu">
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link button" href="#">{{@root.page.componentVersion.displayVersion}}</a>
+        <div class="navbar-dropdown">
+        {{#each this}}
+          <a class="navbar-item version
+          {{~#if (eq ./version @root.page.version)}} is-current{{/if~}}
+          {{~#if ./missing}} is-missing{{/if}}" href="{{{relativize ./url}}}">{{./displayVersion}}</a>
+        {{/each}}
+        </div>
+      </div>
+    </div>
+    {{/with}}
   </nav>
 </header>
