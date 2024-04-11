@@ -27,7 +27,7 @@
       </div>
       {{/navbar-new}}
     </div>
-    <button class="navbar-burger" data-target="topbar-nav">
+    <button class="navbar-burger" data-target="popup-menu">
       <span></span>
       <span></span>
       <span></span>
@@ -47,4 +47,22 @@
     </div>
     {{/with}}
   </nav>
+  <div id="popup-menu" class="mobile-popup-menu">
+    {{#> navbar-new }}
+    <div class="navbar-item has-dropdown is-hoverable">
+      <a class="navbar-link" href="#">Dummy</a>
+      <div class="navbar-dropdown">
+        <div class="navbar-item"><strong>Core</strong></div>
+        <a class="navbar-item" href="https://gitlab.com/antora/antora">Repository</a>
+        <a class="navbar-item" href="https://gitlab.com/antora/antora/issues">Issue Tracker</a>
+        <hr class="navbar-divider">
+        <div class="navbar-item"><strong>Default UI</strong></div>
+        <a class="navbar-item" href="https://gitlab.com/antora/antora-ui-default">Repository</a>
+        <a class="navbar-item" href="https://gitlab.com/antora/antora-ui-default/issues">Issue Tracker</a>
+        <hr class="navbar-divider">
+        <a class="navbar-item" href="https://gitlab.com/antora/antora/blob/main/contributing.adoc">Contributing</a>
+      </div>
+    </div>
+    {{/navbar-new}}
+  </div>
 </header>
