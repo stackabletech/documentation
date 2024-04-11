@@ -9,7 +9,7 @@
       {{/if}}
       -->
     </div>
-    <div class="navbar-menu">
+    <div id="topbar-nav" class="navbar-menu">
       {{#> navbar-new }}
       <div class="navbar-item has-dropdown is-hoverable">
         <a class="navbar-link" href="#">Dummy</a>
@@ -27,13 +27,13 @@
       </div>
       {{/navbar-new}}
     </div>
-    <button class="navbar-burger" data-target="navbar-sub">
+    <button class="navbar-burger" data-target="topbar-nav">
       <span></span>
       <span></span>
       <span></span>
     </button>
     {{#with @root.page.versions}}
-    <div id="topbar-right" class="navbar-menu">
+    <div id="topbar-right" class="navbar-end">
       <div class="navbar-item has-dropdown is-hoverable">
         <a class="navbar-link button" href="#">{{@root.page.componentVersion.displayVersion}}</a>
         <div class="navbar-dropdown">
