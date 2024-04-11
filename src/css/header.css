@@ -165,12 +165,9 @@ body {
   background: var(--navbar-button-background);
 }
 
-#topbar-left {
-  width: 400px;
-}
-
+#topbar-left,
 #topbar-right {
-  width: 400px;
+  width: 170px;
 }
 
 #topbar-right .navbar-item {
