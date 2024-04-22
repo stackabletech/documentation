@@ -13,3 +13,17 @@
     menu.classList.toggle('is-active')
   }
 })()
+
+;(function () {
+  'use strict'
+
+  var navbarBurger = document.querySelector('.version-button')
+  if (!navbarBurger) return
+  navbarBurger.addEventListener('click', toggleNavbarMenu.bind(navbarBurger))
+
+  function toggleNavbarMenu (e) {
+    e.stopPropagation() // trap event
+    var menu = document.getElementById(this.dataset.target)
+    menu.classList.toggle('is-active')
+  }
+})()

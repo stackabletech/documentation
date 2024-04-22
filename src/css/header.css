@@ -320,6 +320,10 @@ body {
   #topbar-right {
     padding-right: 2rem;
   }
+
+  #version-dropdown.is-active {
+    display: block;
+  }
 }
 
 @media screen and (max-width: 768px) {

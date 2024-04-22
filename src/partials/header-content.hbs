@@ -34,9 +34,9 @@
     </button>
     {{#with @root.page.versions}}
     <div id="topbar-right" class="navbar-end">
-      <div class="navbar-item has-dropdown is-hoverable">
+      <div class="navbar-item has-dropdown is-hoverable version-button" data-target="version-dropdown">
         <a class="navbar-link button" href="#">{{@root.page.componentVersion.displayVersion}}</a>
-        <div class="navbar-dropdown">
+        <div id="version-dropdown" class="navbar-dropdown">
         {{#each this}}
           <a class="navbar-item version
           {{~#if (eq ./version @root.page.version)}} is-current{{/if~}}
