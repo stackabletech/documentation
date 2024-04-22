@@ -3,3 +3,17 @@
 {{#if env.SITE_SEARCH_PROVIDER}}
 {{> search-scripts}}
 {{/if}}
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        new PagefindUI({
+            element: "#search",
+            showSubResults: false,
+            showImages: false,
+            resetStyles: false,
+            ranking: {
+            termSaturation: 0.4,
+            termSimilarity: 10.0
+            }
+        });
+    });
+</script>

@@ -120,3 +120,49 @@
 .search-result-document-hit > a:hover {
   background-color: rgba(69, 142, 225, 0.05);
 }
+
+#search-background {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 10;
+}
+
+#search {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  height: 90vh;
+  width: 955px;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 20px;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 11;
+}
+
+@media screen and (max-width: 1023.5px) {
+  #search {
+    width: 95vw;
+  }
+}
+
+.pagefind-ui,
+.pagefind-ui__form {
+  height: 100%;
+}
+
+.pagefind-ui__drawer {
+  height: calc(100% - 64px * var(--pagefind-ui-scale));
+  overflow: scroll;
+}
+
+.pagefind-ui__search-clear {
+  border: none;
+}

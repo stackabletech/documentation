@@ -34,6 +34,11 @@
     </button>
     {{#with @root.page.versions}}
     <div id="topbar-right" class="navbar-end">
+      <div id="search-button" class="navbar-item">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <div id="search-background"></div>
+        <div id="search"></div>
+      </div>
       <div class="navbar-item has-dropdown is-hoverable version-button" data-target="version-dropdown">
         <a class="navbar-link button" href="#">{{@root.page.componentVersion.displayVersion}}</a>
         <div id="version-dropdown" class="navbar-dropdown">
