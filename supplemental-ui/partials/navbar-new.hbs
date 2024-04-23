@@ -1,0 +1,61 @@
+<a class="navbar-item" href="{{{ relativize (versioned "home" page "index.html") }}}">Documentation</a>
+<div class="navbar-item has-dropdown is-hoverable">
+    <a class="navbar-link" href="#">Platform</a>
+    <div class="navbar-dropdown">
+        <a class="navbar-item" href="{{{ relativize (versioned "home" page "/getting_started.html") }}}">Getting Started</a>
+        <hr class="navbar-divider">
+        <a class="navbar-item" href="{{{ relativize (versioned "home" page "concepts/index.html") }}}">Concepts</a>
+        <a class="navbar-item" href="{{{ relativize (versioned "home" page "demos/index.html") }}}">Demos</a>
+        <a class="navbar-item" href="{{{ relativize (versioned "home" page "tutorials/index.html") }}}">Tutorials</a>
+        <hr class="navbar-divider">
+        {{#if (or (eq page.version "23.1") (eq page.version "23.4") (eq page.version "23.7") (eq page.version "23.11"))}}
+        <a class="navbar-item" href="{{{ relativize (versioned "home" page "reference/index.html") }}}">CRD Reference</a>
+        {{else}}
+        <a class="navbar-item" href="{{{ page.attributes.crd-docs }}}" target="_blank">
+            CRD Reference <i class="fa-solid fa-arrow-up-right-from-square fa-sm" style="margin-left: 5px;"></i>
+        </a>
+        {{/if}}
+        <hr class="navbar-divider">
+        <a class="navbar-item" href="{{{ relativize (versioned "home" page "release-notes.html") }}}">Release Notes</a>
+    </div>
+</div>
+<div class="navbar-item has-dropdown is-hoverable">
+    <a class="navbar-link" href="#">Operators</a>
+    <div class="navbar-dropdown">
+        <a class="navbar-item" href="{{{ relativize (versioned "home" page "operators/index.html") }}}">Overview</a>
+        <hr class="navbar-divider">
+        <a class="navbar-item" href="{{{ relativize (versioned "home" page "airflow/index.html") }}}">Apache Airflow</a>
+        <a class="navbar-item" href="{{{ relativize (versioned "home" page "druid/index.html") }}}">Apache Druid</a>
+        <a class="navbar-item" href="{{{ relativize (versioned "home" page "hbase/index.html") }}}">Apache HBase</a>
+        <a class="navbar-item" href="{{{ relativize (versioned "home" page "hdfs/index.html") }}}">Apache Hadoop HDFS</a>
+        <a class="navbar-item" href="{{{ relativize (versioned "home" page "hive/index.html") }}}">Apache Hive</a>
+        <a class="navbar-item" href="{{{ relativize (versioned "home" page "kafka/index.html") }}}">Apache Kafka</a>
+        <a class="navbar-item" href="{{{ relativize (versioned "home" page "nifi/index.html") }}}">Apache NiFi</a>
+        <a class="navbar-item" href="{{{ relativize (versioned "home" page "spark-k8s/index.html") }}}">Apache Spark on K8S</a>
+        <a class="navbar-item" href="{{{ relativize (versioned "home" page "superset/index.html") }}}">Apache Superset</a>
+        <a class="navbar-item" href="{{{ relativize (versioned "home" page "trino/index.html") }}}">Trino</a>
+        <a class="navbar-item" href="{{{ relativize (versioned "home" page "zookeeper/index.html") }}}">Apache ZooKeeper</a>
+        <hr class="navbar-divider">
+        <a class="navbar-item" href="{{{ relativize (versioned "home" page "opa/index.html") }}}">OpenPolicyAgent</a>
+        <a class="navbar-item" href="{{{ relativize (versioned "home" page "commons-operator/index.html") }}}">Commons</a>
+        <a class="navbar-item" href="{{{ relativize (versioned "home" page "secret-operator/index.html") }}}">Secret</a>
+        <a class="navbar-item" href="{{{ relativize (versioned "home" page "listener-operator/index.html") }}}">Listener</a>
+    </div>
+</div>
+<div class="navbar-item has-dropdown is-hoverable">
+    <a class="navbar-link" href="#">Tools</a>
+    <div class="navbar-dropdown">
+        <a class="navbar-item" href="{{{ relativize (versioned "management" page "cockpit/index.html") }}}">Cockpit</a>
+        <a class="navbar-item" href="{{{ relativize (versioned "management" page "stackablectl/index.html") }}}">stackablectl</a>
+    </div>
+</div>
+<div class="navbar-item has-dropdown is-hoverable">
+    <a class="navbar-link" href="#">Policies and Licenses</a>
+    <div class="navbar-dropdown">
+        <a class="navbar-item" href="{{{ relativize "/home/stable/product-information" }}}">Product Information</a>
+        <a class="navbar-item" href="{{{ relativize (versioned "home" page "policies.html") }}}">Policies</a>
+        <a class="navbar-item" href="{{{ relativize "/home/stable/licenses" }}}">Licenses</a>
+        <a class="navbar-item" href="{{{ relativize "/home/stable/export" }}}">Export Control</a>
+    </div>
+</div>
+<!--<a class="navbar-item" href="{{{ relativize (versioned "home" page "contributor/index.html") }}}">Contributing</a>-->
