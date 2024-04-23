@@ -347,7 +347,7 @@ fn config_file(user: User) -> Result<(), Error> {
 
 All error variants must not include any unnesecarry prefixes or suffixes.
 Examples of such prefixes include (but are not limited to) `FailedTo` and `UnableTo`.
-Furthermore, examples for suffixes are `Error` or `Snafu` 
+Furthermore, examples for suffixes are `Error` or `Snafu`.
 Error variant names must however include verbs or identifiers as a prefix.
 
 [TIP.code-rule,caption=Examples of correct code for this rule]

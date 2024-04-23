@@ -14,7 +14,7 @@ Below you find an overview of the majority of these repositories and how they re
 === Operator repositories, templating, operator-rs
 
 At the core of the Stackable Platform are the Kubernetes operators used to install and manage various data products, like the https://github.com/stackabletech/nifi-operator[nifi-operator] for example.
-You can find all of operators if you https://github.com/orgs/stackabletech/repositories?q=operator[search the organization repositories].
+You can find all of the operators if you https://github.com/orgs/stackabletech/repositories?q=operator[search the organization repositories].
 
 image::project-overview-operators.drawio.svg[]
 
@@ -63,7 +63,7 @@ The code to generate this page is found in the https://github.com/stackabletech/
 === Tooling repositories
 
 On top of the mentioned repositories, there are various smaller tools or product extensions that Stackable developed, they are all linked to from relevant places.
-Two examples are the https://github.com/stackabletech/image-tools[image-tools] used to build Docker images and the https://github.com/stackabletech/druid-opa-authorizer/[druid-opa-authorizer] which is a Druid extensions that enables OPA support for Druid.
+Two examples are the https://github.com/stackabletech/image-tools[image-tools] used to build Docker images and the https://github.com/stackabletech/druid-opa-authorizer/[druid-opa-authorizer] which is a Druid extension that enables OPA support for Druid.
 
 [[infrastructure-repositories]]
 === Infastructure: T2

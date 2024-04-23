@@ -28,7 +28,7 @@ Please see the xref:project-overview.adoc[] page to get an overview of the most 
 [[contributing-workflow]]
 == General pull request guidelines
 
-All our development is done on https://github.com/stackabletech[GitHub] with a and contributions should be made through {gh-pr}[creating pull requests],
+All our development is done on https://github.com/stackabletech[GitHub] and contributions should be made through {gh-pr}[creating pull requests],
 follow the GitHub instructions on how to do this. 
 If you are an external contributor, you will need to fork the repository where you want your change to be made.
 
