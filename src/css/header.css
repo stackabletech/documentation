@@ -166,12 +166,9 @@ body {
   background: var(--navbar-button-background);
 }
 
-#topbar-right .navbar-item {
-  margin-left: auto;
-}
-
 .navbar-end {
   display: flex;
+  justify-content: right;
 }
 
 .navbar,
@@ -343,6 +340,6 @@ body {
 
   #topbar-left,
   #topbar-right {
-    width: 170px;
+    width: 190px;
   }
 }

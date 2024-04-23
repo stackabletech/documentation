@@ -32,13 +32,14 @@
       <span></span>
       <span></span>
     </button>
-    {{#with @root.page.versions}}
     <div id="topbar-right" class="navbar-end">
       <div id="search-button" class="navbar-item">
         <i class="fa-solid fa-magnifying-glass"></i>
         <div id="search-background"></div>
         <div id="search"></div>
       </div>
+      {{#if @root.page.versions}}
+      {{#with @root.page.versions}}
       <div class="navbar-item has-dropdown is-hoverable version-button" data-target="version-dropdown">
         <a class="navbar-link button" href="#">{{@root.page.componentVersion.displayVersion}}</a>
         <div id="version-dropdown" class="navbar-dropdown">
@@ -49,8 +50,13 @@
         {{/each}}
         </div>
       </div>
+      {{/with}}
+      {{else}}
+      <div class="navbar-item has-dropdown is-hoverable version-button">
+        <a class="navbar-link button" href="#">latest</a>
+      </div>
+      {{/if}}
     </div>
-    {{/with}}
   </nav>
   <div id="popup-menu" class="mobile-popup-menu">
     {{#> navbar-new }}
