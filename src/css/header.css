@@ -343,3 +343,7 @@ body {
     width: 190px;
   }
 }
+
+#search-button {
+  cursor: pointer;
+}
