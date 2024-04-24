@@ -78,6 +78,7 @@ body {
   position: relative;
   width: 3rem;
   padding: 0;
+  padding-right: 3.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -237,7 +238,7 @@ body {
   background-color: #fff;
 }
 
-@media screen and (max-width: 1023.5px) {
+@media screen and (max-width: 1199.5px) {
   .navbar-menu {
     display: none;
   }
@@ -314,10 +315,6 @@ body {
     background: var(--navbar-menu_hover-background);
   }
 
-  #topbar-right {
-    padding-right: 2rem;
-  }
-
   #version-dropdown.is-active {
     display: block;
   }
@@ -329,7 +326,7 @@ body {
   }
 }
 
-@media screen and (min-width: 1024px) {
+@media screen and (min-width: 1200px) {
   .navbar-burger {
     display: none;
   }
