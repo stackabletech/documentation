@@ -17,11 +17,11 @@
 ;(function () {
   'use strict'
 
-  var navbarBurger = document.querySelector('.version-button')
-  if (!navbarBurger) return
-  navbarBurger.addEventListener('click', toggleNavbarMenu.bind(navbarBurger))
+  var versionButton = document.querySelector('.version-button')
+  if (!versionButton) return
+  versionButton.addEventListener('click', toggleVersionDropdown.bind(versionButton))
 
-  function toggleNavbarMenu (e) {
+  function toggleVersionDropdown (e) {
     e.stopPropagation() // trap event
     var menu = document.getElementById(this.dataset.target)
     menu.classList.toggle('is-active')
