@@ -4,6 +4,7 @@
 :asciidoc-recommended-practices: https://asciidoctor.org/docs/asciidoc-recommended-practices[AsciiDoc recommended practices]
 :kubernetes-style-guide: https://kubernetes.io/docs/contribute/style/style-guide/[Kubernetes style guide]
 :google-style-guide: https://developers.google.com/style/[Google developer documentation style guide]
+:apache-product-name-usage-guide: https://www.apache.org/foundation/marks/guide[Apache product name usage guide]
 
 This page provides guidelines on how to write documentation for the Stackable platform.
 The guidelines cover overall document structure, text appearance and formatting, as well as writing style, language and grammar.
@@ -116,3 +117,10 @@ use the placeholder:
     DOCS_BASE_URL_PLACEHOLDER/concepts/authentication
 
 When the CRD gets generated, the placeholder will be replaced with a correctly versioned link to the docs.
+
+== Apache product name usage guide
+
+The {apache-product-name-usage-guide} defines how to refer to Apache products correctly.
+Essentially, it must be clear that a product belongs to Apache, and also that i.e. Stackable operators are _not_ official Apache operators.
+The _first_ mention of a product needs to be the full name, i.e. "Apache Spark" instead of just "Spark".
+Also, the first mention of an operator should be "Stackable operator for Apache Spark"; subsequently you can say "Spark operator" if it is clear that the Stackable operator for Apache Spark is meant.
