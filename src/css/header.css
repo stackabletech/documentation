@@ -183,7 +183,6 @@ body {
   outline: none;
   line-height: 1;
   position: relative;
-  width: 3rem;
   padding: 0;
   padding-right: 1.5rem;
   display: none; /** flex */
@@ -293,5 +292,19 @@ body {
 
   #version-dropdown.is-active {
     display: block;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .navbar-burger,
+  #search-button {
+    padding: 0 1rem 0 0;
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .navbar-brand .navbar-item.documentation-link,
+  .navbar-brand .navbar-item.documentation-link::before {
+    display: none;
   }
 }
