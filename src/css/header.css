@@ -1,3 +1,8 @@
+/**
+ * This file handles styling for the menu bar at the top containing the logo, navigation and version selector.
+ * It also handles the mobile version of the menu, as well as the search pop-up.
+ */
+
 html.is-clipped--navbar {
   overflow-y: hidden;
 }
@@ -78,7 +83,7 @@ body {
   position: relative;
   width: 3rem;
   padding: 0;
-  padding-right: 3.5rem;
+  padding-right: 1.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -182,6 +187,12 @@ body {
   align-items: center;
 }
 
+/** center the menu by having the left and right elements of the same size */
+#topbar-left,
+#topbar-right {
+  width: 190px;
+}
+
 .navbar-link::after {
   border-width: 0 0 1px 1px;
   border-style: solid;
@@ -236,6 +247,10 @@ body {
   top: var(--navbar-height);
   width: 100%;
   background-color: #fff;
+}
+
+#search-button {
+  cursor: pointer;
 }
 
 @media screen and (max-width: 1199.5px) {
@@ -320,12 +335,6 @@ body {
   }
 }
 
-@media screen and (max-width: 768px) {
-  .navbar-brand .navbar-item.documentation-link {
-    display: none;
-  }
-}
-
 @media screen and (min-width: 1200px) {
   .navbar-burger {
     display: none;
@@ -334,13 +343,4 @@ body {
   .mobile-popup-menu {
     display: none;
   }
-
-  #topbar-left,
-  #topbar-right {
-    width: 190px;
-  }
-}
-
-#search-button {
-  cursor: pointer;
 }
