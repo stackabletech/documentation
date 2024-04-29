@@ -1,4 +1,4 @@
-* xref:tutorials:index.adoc[]
+* xref:index.adoc[]
 ** xref:authentication_with_openldap.adoc[]
 ** xref:logging-vector-aggregator.adoc[]
 ** xref:enabling-verification-of-image-signatures.adoc[]

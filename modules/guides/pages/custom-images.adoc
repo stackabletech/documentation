@@ -1,0 +1,33 @@
+= Using customized product images
+
+The Stackable operator require a certain structure inside the product images, but modifications can be made.
+This is useful to for example load additional extensions or database drivers into an image.
+
+To deploy a custom image, you will either have to manually load the image into the Kubernetes cluster or you have to deploy it into a custom registry.
+
+== Steps
+
+=== Create your customized image
+
+Use the Stackable images as a base for your image. The images are found at: ... TODO
+
+This is an example of a Dockerfile using the Stackable base: ... TODO
+
+Build the image with the following command: ... TODO
+
+=== Provide the image to the Kubernetes cluster
+
+Either:
+
+* Upload the image to a registry and then pull it from there
+* Manually push the image. For example in kind: ... TODO
+
+
+=== Use your customized image in your Stacklet definition
+
+see also 'product image selection'
+
+you have to use `image.custom`.
+
+note that you have to specify the product version still, because the operator has version specific config settings that it configures on the product.
+

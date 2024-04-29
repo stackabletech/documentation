@@ -6,6 +6,7 @@ nav:
   - modules/concepts/nav.adoc
   - modules/demos/nav.adoc
   - modules/tutorials/nav.adoc
+  - modules/guides/nav.adoc
   - modules/operators/nav.adoc
   - modules/ROOT/nav2.adoc # this is for the 'Management' link
   - modules/reference/nav.adoc
