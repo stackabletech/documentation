@@ -51,7 +51,7 @@ Use the `custom` field to specify your image:
 spec:
   image:
     custom: my.corp/stackable/hive:3.1.3-stackable24.3.0-mysql
-    productVersion: 3.3.1
+    productVersion: 3.1.3
 
 Note that you still need to specify the product version was used in the image, as the operator needs to know which version the product is in to configure it correctly.
 
