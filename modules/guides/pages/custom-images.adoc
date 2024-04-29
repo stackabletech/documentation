@@ -56,6 +56,7 @@ spec:
 Note that you still need to specify the product version was used in the image, as the operator needs to know which version the product is in to configure it correctly.
 
 With this configuration the operator deploys your Stacklet using your custom image.
+
 == Further reading and useful links
 
 * Read about xref:concepts:product-image-selection.adoc[] to learn about other ways of specifying a product version or images, for example how to use a custom registry when mirroring Stackable images.
