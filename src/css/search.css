@@ -1,3 +1,7 @@
+/**
+ * Search pop-up and greyed out background, as well as pagefind CSS modifications.
+ */
+
 #search-background {
   display: none;
   position: fixed;
@@ -24,12 +28,6 @@
   z-index: 11;
 }
 
-@media screen and (max-width: 1023.5px) {
-  #search {
-    width: 95vw;
-  }
-}
-
 .pagefind-ui,
 .pagefind-ui__form {
   height: 100%;
@@ -42,4 +40,10 @@
 
 .pagefind-ui__search-clear {
   border: none;
+}
+
+@media screen and (max-width: 1023.5px) {
+  #search {
+    width: 95vw;
+  }
 }
