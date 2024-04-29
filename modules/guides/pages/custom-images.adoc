@@ -1,5 +1,9 @@
 = Using customized product images
 
+:stackable-docker-registry: https://repo.stackable.tech/#browse/browse:docker:v2%2Fstackable
+:kind: https://kind.sigs.k8s.io/
+:kind-load-image: https://kind.sigs.k8s.io/docs/user/quick-start/#loading-an-image-into-your-cluster
+
 The Stackable operator require a certain structure inside the product images, but modifications can be made.
 This is useful to for example load additional extensions or database drivers into an image.
 
@@ -7,21 +11,42 @@ To deploy a custom image, you will either have to manually load the image into t
 
 == Steps
 
+To use a customized image you have to:
+
+1. Create the customized image using a Stackable base image.
+2. Provide this image into the Kubernetes cluster.
+3. Configure your Stacklet to use the custom image.
+
 === Create your customized image
 
-Use the Stackable images as a base for your image. The images are found at: ... TODO
+The Stackable operators rely on the structure and contents of the product images, so any modifications should be done _on top_ of the Stackable images.
 
-This is an example of a Dockerfile using the Stackable base: ... TODO
+You can find the Stackable Docker images in the {stackable-docker-registry}[Stackable Docker registry].
+Images follow a naming schema: `docker.stackable.tech/stackable/<product>:<product-version>-stackable<stackable-version>` where `<product>` are the products like `druid`, `trino` and `opa`, `<product-version>` are product versions like `28.0.1`, `414` or `0.61.0` and `<stackable-version>` is a Stackable platform version like `23.7` or `24.3.0`.
+The Stackable version can also be `0.0.0-dev` for nightly images.
 
-Build the image with the following command: ... TODO
+To use a Stackable image as a base in your Dockerfile, use the `FROM` clause:
+
+[source]
+----
+FROM docker.stackable.tech/stackable/hive:3.1.3-stackable24.3.0
+
+# ... put your customizations here ...
+----
+
+Build the image like this:
+
+[source,bash]
+docker build -f ./Dockerfile -t docker.stackable.tech/stackable/hive:3.1.3-stackable24.3.0-custom .
+
+You will now have your customized image with the tag `docker.stackable.tech/stackable/hive:3.1.3-stackable24.3.0-custom`.
 
 === Provide the image to the Kubernetes cluster
 
-Either:
+To deploy containers using this image, the Kubernetes cluster needs to be able to access the image.
 
-* Upload the image to a registry and then pull it from there
-* Manually push the image. For example in kind: ... TODO
-
+You can either upload the image into a custom registry and pull it from there - refer to your registry on how to do this - or make the image available to the Kubernetes cluster directly.
+For example, in {kind}[`kind`] you can use the {kind-load-image}[`kind load docker-image`] command to load a local image into the Kind cluster.
 
 === Use your customized image in your Stacklet definition
 
@@ -31,3 +56,7 @@ you have to use `image.custom`.
 
 note that you have to specify the product version still, because the operator has version specific config settings that it configures on the product.
 
+== Further reading and useful links
+
+* product image selection
+* the stackable docker registry overview
