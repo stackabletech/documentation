@@ -41,8 +41,8 @@
 .nav {
   background: var(--nav-background);
   position: relative;
-  top: var(--toolbar-height);
-  height: calc(100% - var(--navbar-sub-height));
+  top: 0;
+  height: 100%;
 }
 
 @media screen and (min-width: 769px) {
@@ -53,11 +53,10 @@
 
 @media screen and (min-width: 1024px) {
   .nav {
-    top: calc(var(--navbar-height) + var(--navbar-sub-height));
+    top: calc(var(--navbar-height));
     box-shadow: none;
     position: sticky;
     height: var(--nav-height--desktop);
-    margin-top: var(--navbar-sub-height);
   }
 }
 

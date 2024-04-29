@@ -13,3 +13,17 @@
     menu.classList.toggle('is-active')
   }
 })()
+
+;(function () {
+  'use strict'
+
+  var versionButton = document.querySelector('.version-button')
+  if (!versionButton) return
+  versionButton.addEventListener('click', toggleVersionDropdown.bind(versionButton))
+
+  function toggleVersionDropdown (e) {
+    e.stopPropagation() // trap event
+    var menu = document.getElementById(this.dataset.target)
+    menu.classList.toggle('is-active')
+  }
+})()
