@@ -26,21 +26,14 @@ Images follow a naming schema: `docker.stackable.tech/stackable/<product>:<produ
 The Stackable version can also be `0.0.0-dev` for nightly images.
 You can use this naming schema together with the xref:operators:supported_versions.adoc[] list to quickly find the base image you need.
 
-To use a Stackable image as a base in your Dockerfile, use the `FROM` clause:
+For example, you might use the `docker.stackable.tech/stackable/hive:3.1.3-stackable24.3.0` image as a base for a modified Apache Hive image where you add a custom database driver.
+Use the `FROM` clause in your Dockerfile to reference the base image.
 
-[source]
-----
-FROM docker.stackable.tech/stackable/hive:3.1.3-stackable24.3.0
+When tagging the image, there are no requirements by the operator, any registry and tag is possible.
+To avoid confusion, do not use the Stackable registry for your custom image, as you cannot push the image there.
+You can also keep the versions in the tag, and simply add a suffix to mark your changes.
 
-# ... put your customizations here ...
-----
-
-Build the image like this:
-
-[source,bash]
-$ docker build -f ./Dockerfile -t docker.stackable.tech/stackable/hive:3.1.3-stackable24.3.0-custom .
-
-You will now have your customized image with the tag `docker.stackable.tech/stackable/hive:3.1.3-stackable24.3.0-custom`.
+For example, for a custom image with a MySQL driver added, you might tag your image with `my.corp/stackable/hive:3.1.3-stackable24.3.0-mysql`.
 
 === Provide the image to the Kubernetes cluster
 
@@ -57,13 +50,12 @@ Use the `custom` field to specify your image:
 [source,yaml]
 spec:
   image:
-    custom: docker.stackable.tech/stackable/hive:3.1.3-stackable24.3.0-custom
+    custom: my.corp/stackable/hive:3.1.3-stackable24.3.0-mysql
     productVersion: 3.3.1
 
 Note that you still need to specify the product version was used in the image, as the operator needs to know which version the product is in to configure it correctly.
 
-With this configuration the operator deploys your Stacklet using the customized image.
-
+With this configuration the operator deploys your Stacklet using your custom image.
 == Further reading and useful links
 
 * Read about xref:concepts:product-image-selection.adoc[] to learn about other ways of specifying a product version or images, for example how to use a custom registry when mirroring Stackable images.
