@@ -12,6 +12,12 @@ build-prod: build-ui
 build-ui:
 	node_modules/.bin/gulp --cwd ui bundle
 
+build-search-index:
+	npx pagefind --site build/site
+
+serve:
+	python3 -m http.server -d build/site
+
 clean:
 	rm -rf build
 	# 'cache' is the configured cache dir in the playbook
@@ -35,6 +41,6 @@ netlify-fetch:
 	# go back to the initial commit to start the build
 	git -c advice.detachedHead=false checkout --recurse-submodules $(CURRENT_COMMIT)
 
-netlify-build: netlify-fetch build-prod
+netlify-build: netlify-fetch build-prod build-search-index
 
 .PHONY: build-only-dev build-local build-prod build-ui clean netlify-build netlify-fetch

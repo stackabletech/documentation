@@ -90,9 +90,6 @@ ui:
   bundle:
     url: ./ui/build/ui-bundle.zip
   supplemental_files: ./supplemental-ui
-antora:
-  extensions:
-    - '@antora/lunr-extension'
 asciidoc:
   attributes:
     base-repo: https://github.com/stackabletech
