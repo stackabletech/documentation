@@ -174,7 +174,7 @@ body {
 }
 
 /**
- * Mobile popup
+ * Mobile popup & burger
  */
 
 .navbar-burger {
@@ -186,7 +186,7 @@ body {
   width: 3rem;
   padding: 0;
   padding-right: 1.5rem;
-  display: flex;
+  display: none; /** flex */
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -269,44 +269,29 @@ body {
   background: var(--navbar-menu_hover-background);
 }
 
-@media screen and (max-width: 1199.5px) {
+.mobile-popup-menu:not(.is-active) {
+  display: none;
+}
+
+/** At this breakpoint, disable the menu and replace it with the burger and pop up menu */
+@media screen and (max-width: 1200px) {
   .navbar-menu {
     display: none;
   }
 
-  .mobile-popup-menu {
-    display: block;
+  .navbar-burger {
+    display: flex;
   }
 
-  .navbar.drop-down-content {
-    display: inherit;
-    position: inherit;
-    top: inherit;
-    left: inherit;
-    padding-top: 7px;
-    padding-bottom: 0;
-    box-shadow: inherit;
+  .mobile-popup-menu {
+    display: block;
   }
 
   .navbar-brand .navbar-item.documentation-link {
     font-size: unset;
   }
 
-  .mobile-popup-menu:not(.is-active) {
-    display: none;
-  }
-
   #version-dropdown.is-active {
     display: block;
-  }
-}
-
-@media screen and (min-width: 1200px) {
-  .navbar-burger {
-    display: none;
-  }
-
-  .mobile-popup-menu {
-    display: none;
   }
 }
