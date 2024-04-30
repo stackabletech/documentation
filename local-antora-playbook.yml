@@ -176,6 +176,8 @@ ui:
     url: ./ui/build/ui-bundle.zip
   supplemental_files: ./supplemental-ui
 asciidoc:
+  extensions:
+    - '@asciidoctor/tabs'
   attributes:
     base-repo: https://github.com/stackabletech
     plantuml-server-url: http://www.plantuml.com/plantuml
