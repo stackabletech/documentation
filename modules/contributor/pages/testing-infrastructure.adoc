@@ -29,15 +29,15 @@ To run the tests just call `scripts/run-tests` in the root of the  operator repo
 
 To run just one test case pass the `--test` option like this:
 
-=====
+----
 ./scripts/run-tests --test smoke
-=====
+----
 
 To skip operator installtion (assume the operator is already installed in the cluster):
 
-=====
+----
 ./scripts/run-tests --skip-release
-=====
+----
 
 There are many more arguments availeble. Use the `--help` argument to find out more about the tool.
 
@@ -47,7 +47,7 @@ The integration tests are located in the `test` directory of the operator reposi
 
 The structure of the tests directory is as follows:
 
-=====
+----
 tests
 ├── test-definition.yaml
 ├── release.yaml
@@ -61,7 +61,7 @@ tests
     ├── kuttl-test.yaml
     └── tests
         └── smoke
-=====
+----
 
 * The `tests` directory contains the test manifest files.
 ** `tests/test-definition.yaml` specifies the variables to use for each test case.
