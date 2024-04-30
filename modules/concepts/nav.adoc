@@ -8,7 +8,6 @@
 ** Resources
 *** xref:resources.adoc[]
 *** xref:s3.adoc[]
-*** xref:pvc.adoc[]
 ** Connectivity
 *** xref:service_discovery.adoc[]
 *** xref:service-exposition.adoc[]

@@ -6,6 +6,9 @@
         <a class="navbar-item" href="{{{ relativize (versioned "home" page "concepts/index.html") }}}">Concepts</a>
         <a class="navbar-item" href="{{{ relativize (versioned "home" page "demos/index.html") }}}">Demos</a>
         <a class="navbar-item" href="{{{ relativize (versioned "home" page "tutorials/index.html") }}}">Tutorials</a>
+        {{#if (not (or (eq page.version "23.1") (eq page.version "23.4") (eq page.version "23.7") (eq page.version "23.11") (eq page.version "24.3")))}}
+        <a class="navbar-item" href="{{{ relativize (versioned "home" page "guides/index.html") }}}">Guides</a>
+        {{/if}}
         <hr class="navbar-divider">
         {{#if (or (eq page.version "23.1") (eq page.version "23.4") (eq page.version "23.7") (eq page.version "23.11"))}}
         <a class="navbar-item" href="{{{ relativize (versioned "home" page "reference/index.html") }}}">CRD Reference</a>

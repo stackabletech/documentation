@@ -84,7 +84,7 @@ The certificate lifetime is also jittered to avoid all pods restarting around th
 This is also the first release we're publishing SBOMs (Software Bill of Materials) in the https://cyclonedx.org/[CycloneDX] format for.
 We publish these for both our operators and our product images.
 The work on this was https://stackable.tech/en/empowering-rust-projects/[partially funded] by the https://www.sovereigntechfund.de/[Sovereign Tech Fund].
-These SBOMS are published to our OCI registry as signed in-toto attestations and we have written a https://docs.stackable.tech/home/24.3/tutorials/viewing-and-verifying-sboms.html[tutorial] on how you can use it.
+These SBOMS are published to our OCI registry as signed in-toto attestations and we have written a xref:guides:viewing-and-verifying-sboms.adoc[guide] on how you can use it.
 To make it easier to use we have written a https://sboms.stackable.tech[SBOM browser] which allows you to download the raw CycloneDX JSON files as well.
 
 [IMPORTANT]
@@ -543,7 +543,7 @@ documentation] for more details.
 
 Signed SDP product images::
 As of this release all Stackable product images are signed (the signing of operator images was delivered in SDP 23.7). Please see this
-xref:tutorials:enabling-verification-of-image-signatures.adoc[tutorial] for more information.
+xref:guides:enabling-verification-of-image-signatures.adoc[tutorial] for more information.
 
 Airflow KubernetesExecutor::
 Airflow clusters can now be configured to use Kubernetes executors, whereby pods are spun up for job tasks and terminated when complete, thus offering an alternative way to use resources without the need for job queuing.
@@ -1352,7 +1352,7 @@ Signed SDP operator images::
 
 As of this release all Stackable operator images are signed (this feature will be added to product images in a
 subsequent release). More information about this, including how to verify the image signatures, can be found in this
-xref:tutorials:enabling-verification-of-image-signatures.adoc[tutorial].
+xref:guides:enabling-verification-of-image-signatures.adoc[guide].
 
 New Versions::
 

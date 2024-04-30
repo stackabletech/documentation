@@ -1,4 +1,5 @@
 = Viewing and verifying SBOMs of the Stackable Data Platform
+:page-aliases: tutorials:viewing-and-verifying-sboms.adoc
 
 With release 24.3 of SDP, we started providing SBOMs (Software Bill of Materials) for our container images. Please note that they currently are in a draft stage and we are continually working on improving them. As a first step, we aim to provide a list of all primary (top level) components and their versions included in each container image. Our SBOMs follow the https://cyclonedx.org/[CycloneDX] standard and are available in JSON format.
 
@@ -7,7 +8,7 @@ You can browse through our SBOMs at https://sboms.stackable.tech/.
 You will find a simple hierarchical structure, one directory per release, containing a list of all container images included in that release. For each container image, one SBOM per version of the image is listed.
 
 This page is a simple wrapper on top of the Stackable OCI registry, where the SBOMs are attached as signed https://github.com/in-toto/attestation[attestations] to the container images. When you click on a link in the SBOM browser, the SBOM is validated, extracted from the container registry, and then downloaded to your device.
-The next step of this tutorial explains the single steps happening under the hood when a link is clicked, and how to do them manually.
+The next step of this guide explains the single steps happening under the hood when a link is clicked, and how to do them manually.
 
 == Verifying and extracting an SBOM manually with cosign
 To verify and extract the SBOM, a tool called https://github.com/sigstore/cosign[cosign] is needed. Please have a look at the https://docs.sigstore.dev/system_config/installation/[installation instructions] in the cosign documentation and choose your preferred installation method. Additionally, https://github.com/jqlang/jq[jq] is used to parse the JSON output of cosign.
@@ -37,7 +38,7 @@ If the identity of the signer matches, you can be sure the contents of the attes
 You can now be sure that the SBOM was attested to the container image you're interested in by a Stackable Github Action workflow, it's even possible to look at the workflow to see how exactly this happened.
 
 == Enabling automatic verification of SBOMs
-Similar to our xref:tutorials:enabling-verification-of-image-signatures.adoc[image signature verification] tutorial, it's possible to enforce that only container images with SBOMs that are signed by Stackable are allowed to run in your cluster. Sigstore's https://docs.sigstore.dev/policy-controller/overview/[Policy Controller] can be used to achieve this.
+Similar to our xref:enabling-verification-of-image-signatures.adoc[image signature verification] guide, it's possible to enforce that only container images with SBOMs that are signed by Stackable are allowed to run in your cluster. Sigstore's https://docs.sigstore.dev/policy-controller/overview/[Policy Controller] can be used to achieve this.
 
 IMPORTANT: Releases prior to SDP 24.3 do not have signed SBOMs. If you are using an older release and enforce SBOM verification, Pods with Stackable images will be prevented from starting.
 
