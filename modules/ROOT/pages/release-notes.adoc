@@ -84,7 +84,7 @@ The certificate lifetime is also jittered to avoid all pods restarting around th
 This is also the first release we're publishing SBOMs (Software Bill of Materials) in the https://cyclonedx.org/[CycloneDX] format for.
 We publish these for both our operators and our product images.
 The work on this was https://stackable.tech/en/empowering-rust-projects/[partially funded] by the https://www.sovereigntechfund.de/[Sovereign Tech Fund].
-These SBOMS are published to our OCI registry as signed in-toto attestations and we have written a https://docs.stackable.tech/home/24.3/tutorials/viewing-and-verifying-sboms.html[tutorial] on how you can use it.
+These SBOMS are published to our OCI registry as signed in-toto attestations and we have written a xref:guides:viewing-and-verifying-sboms.adoc[guide] on how you can use it.
 To make it easier to use we have written a https://sboms.stackable.tech[SBOM browser] which allows you to download the raw CycloneDX JSON files as well.
 
 [IMPORTANT]
@@ -338,7 +338,7 @@ No data will be lost during this process.
 ====
 Assigning role groups to node selector was deprecated in SDP 23.11 and has been removed in this release.
 
-To assign roles and role groups to nodes, use the `config.affinity.nodeAffinity` property as described in the https://docs.stackable.tech/home/nightly/contributor/adr/adr026-affinities#_introduce_one_dedicated_attribute[documentation].
+To assign roles and role groups to nodes, use the `config.affinity.nodeAffinity` property as described in the xref:contributor:adr/ADR026-affinities.adoc#_introduce_one_dedicated_attribute[documentation].
 ====
 
 ==== Secret operator
@@ -522,7 +522,7 @@ Additionally, please note the following:
 ===== All operators
 
 If you used node selectors to assign Pods to nodes, this will not work anymore.
-Use the `config.affinity.nodeAffinity` property instead and follow the instructions in the https://docs.stackable.tech/home/nightly/contributor/adr/adr026-affinities#_introduce_one_dedicated_attribute[documentation].
+Use the `config.affinity.nodeAffinity` property instead and follow the instructions in the xref:contributor:adr/ADR026-affinities.adoc#_introduce_one_dedicated_attribute[documentation].
 
 
 == Release 23.11
