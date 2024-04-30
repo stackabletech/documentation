@@ -1,0 +1,3 @@
+= Guides
+
+The guides in this section are useful to complete particular tasks.
