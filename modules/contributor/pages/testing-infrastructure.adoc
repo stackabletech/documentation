@@ -1,0 +1,45 @@
+= Understanding the integration testing infrastructure
+:python: https://www.python.org/
+:kuttl: https://kuttl.dev/
+:beku: https://github.com/stackabletech/beku.py
+:ci: https://ci.stackable.tech/
+:demos: https://github.com/stackabletech/demos
+
+Each operator repository contains a `tests` directory that contains (templated) tests.
+A test consists of a set of YAML files that are applied to a Kubernetes cluster, and certain conditions are checked.
+This makes it possible to test whether an operator creates the correct resources given a certain Stacklet definition and also whether the deployed product is working correctly.
+
+== Tests structure
+
+* The `tests` directory contains the tests.
+** `tests/test-definition.yaml` contains the definition of the tests.
+   Under the `tests` key in the yaml file, the tests are found, referencing the `dimensions`.
+   The cross product of the dimensions yields all the different variants of tests, this allows for testing - for example - multiple version combinations.
+** `tests/templates/kuttl` contains a directory for each test case.
+   Files in there can be templated, in which case they end with the `j2` extension.
+* The `scripts/run-tests` Python script is used to run tests.
+
+== How to run tests locally
+
+You need to install:
+
+* {python}[Python] to run scripts.
+* {kuttl}[KuTTL] to run the tests.
+* {beku}[beku] our custom test expander.
+* xref:management:stackablectl:installation.adoc[stackablectl] to install operators.
+
+`scripts/run-tests` is used to run the tests, use the `--help` flag to find out more about the tool.
+
+== How to run tests in the CI (Jenkins)
+
+Stackable operators a {ci}[Jenkins instance] where the tests are ran every night. 
+You can also run the tests manually there, for a particular pull request, if you have an account (only internal contributors).
+
+== Adding a new test
+
+To add a new test, add a new directory in `tests/templates/kuttl` and also a corresponding in the `test-defintion.yaml` file.
+Have a look at other tests to familiarize yourself with the general pattern of steps in a test defintion.
+
+== Further reading
+
+Also have a look at the {demos}[Demos] for another way to deploy Stackable components and test them.

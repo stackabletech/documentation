@@ -1,6 +1,7 @@
 * xref:index.adoc[]
 ** xref:project-overview.adoc[]
 ** xref:contributing-code.adoc[]
+*** xref:testing-infrastructure.adoc[]
 *** xref:testing_on_kubernetes.adoc[]
 *** xref:code-style-guide.adoc[]
 *** xref:guidelines/logging.adoc[]
