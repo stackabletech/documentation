@@ -20,3 +20,4 @@
 @import "end-of-life-banner.css";
 @import "link-bar.css";
 @import "vendor/fontawesome.css";
+@import "@asciidoctor/tabs";
