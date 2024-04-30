@@ -302,13 +302,13 @@ spec:
     metadataDatabase:
       postgresql:
         host: postgresql # mandatory
-        port: 5432 # defaults to some port number - depending on wether tls is enabled
+        port: 5432 # defaults to some port number - depending on whether tls is enabled
         database: druid # mandatory
         credentials: postgresql-credentials # mandatory. key username and password
         parameters: {} # optional BTreeMap<String, String>
       mysql:
         host: mysql # mandatory
-        port: XXXX # defaults to some port number - depending on wether tls is enabled
+        port: 3306 # defaults to some port number - depending on whether tls is enabled
         database: druid # mandatory
         credentials: mysql-credentials # mandatory. key username and password
         parameters: {} # optional BTreeMap<String, String>
@@ -329,13 +329,13 @@ spec:
     metadataDatabase:
       postgresql:
         host: postgresql # mandatory
-        port: 5432 # defaults to some port number - depending on wether tls is enabled
+        port: 5432 # defaults to some port number - depending on whether tls is enabled
         database: superset # mandatory
         credentials: postgresql-credentials # mandatory. key username and password
         parameters: {} # optional BTreeMap<String, String>
       mysql:
         host: mysql # mandatory
-        port: XXXX # defaults to some port number - depending on wether tls is enabled
+        port: 3306 # defaults to some port number - depending on whether tls is enabled
         database: superset # mandatory
         credentials: mysql-credentials # mandatory. key username and password
         parameters: {} # optional BTreeMap<String, String>
@@ -350,7 +350,7 @@ spec:
     metadataDatabase:
       postgresql:
         host: postgresql # mandatory
-        port: 5432 # defaults to some port number - depending on wether tls is enabled
+        port: 5432 # defaults to some port number - depending on whether tls is enabled
         database: druid # mandatory
         credentials: postgresql-credentials # mandatory. key username and password
         parameters: {} # optional BTreeMap<String, String>

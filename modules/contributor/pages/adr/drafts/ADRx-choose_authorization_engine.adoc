@@ -11,7 +11,7 @@ v0.1, dd.mm.yyyy
 ** Bernd Fondermann
 ** Oliver Hessel
 ** Sönke Liebau
-* Date: xxx
+* Date: n/a
 
 == Context and Problem Statement
 
