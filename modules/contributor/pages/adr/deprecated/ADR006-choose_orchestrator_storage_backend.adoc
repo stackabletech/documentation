@@ -1,4 +1,4 @@
-= Use xxx as storage backend for the orchestrator
+= Use X as storage backend for the orchestrator
 Sönke Liebau <soenke.liebau@stackable.de>
 v0.1, 19.08.2020
 :status: superseded by ADR7

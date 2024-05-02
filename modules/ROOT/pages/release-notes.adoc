@@ -255,7 +255,7 @@ The following fields used to be optional but are now mandatory:
 ====
 Assigning role groups to node selector was deprecated in 23.11 and has been removed in this release.
 
-To assign roles and role groups to nodes, use the `config.affinity.nodeAffinity` property as described in the https://docs.stackable.tech/home/nightly/contributor/adr/adr026-affinities#_introduce_one_dedicated_attribute[documentation].
+To assign roles and role groups to nodes, use the `config.affinity.nodeAffinity` property as described in the xref:contributor:adr/ADR026-affinities.adoc#_introduce_one_dedicated_attribute[documentation].
 ====
 
 ==== Apache HBase
@@ -267,7 +267,7 @@ To assign roles and role groups to nodes, use the `config.affinity.nodeAffinity`
 ====
 Assigning role groups to node selector was deprecated in SDP 23.11 and has been removed in this release.
 
-To assign roles and role groups to nodes, use the `config.affinity.nodeAffinity` property as described in the https://docs.stackable.tech/home/nightly/contributor/adr/adr026-affinities#_introduce_one_dedicated_attribute[documentation].
+To assign roles and role groups to nodes, use the `config.affinity.nodeAffinity` property as described in the xref:contributor:adr/ADR026-affinities.adoc#_introduce_one_dedicated_attribute[documentation].
 ====
 
 ==== Stackable Operator for Apache Hadoop HDFS
@@ -338,7 +338,7 @@ No data will be lost during this process.
 ====
 Assigning role groups to node selector was deprecated in SDP 23.11 and has been removed in this release.
 
-To assign roles and role groups to nodes, use the `config.affinity.nodeAffinity` property as described in the https://docs.stackable.tech/home/nightly/contributor/adr/adr026-affinities#_introduce_one_dedicated_attribute[documentation].
+To assign roles and role groups to nodes, use the `config.affinity.nodeAffinity` property as described in the xref:contributor:adr/ADR026-affinities.adoc#_introduce_one_dedicated_attribute[documentation].
 ====
 
 ==== Secret operator
@@ -522,7 +522,7 @@ Additionally, please note the following:
 ===== All operators
 
 If you used node selectors to assign Pods to nodes, this will not work anymore.
-Use the `config.affinity.nodeAffinity` property instead and follow the instructions in the https://docs.stackable.tech/home/nightly/contributor/adr/adr026-affinities#_introduce_one_dedicated_attribute[documentation].
+Use the `config.affinity.nodeAffinity` property instead and follow the instructions in the xref:contributor:adr/ADR026-affinities.adoc#_introduce_one_dedicated_attribute[documentation].
 
 
 == Release 23.11
