@@ -38,14 +38,14 @@ To run just one test case pass the `--test` option like this:
 
 [source,console]
 ----
-./scripts/run-tests --test smoke
+$ ./scripts/run-tests --test smoke
 ----
 
 To skip operator installation (assume the operator is already installed in the cluster):
 
 [source,console]
 ----
-./scripts/run-tests --skip-release
+$ ./scripts/run-tests --skip-release
 ----
 
 There are many more arguments available.
