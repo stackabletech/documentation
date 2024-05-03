@@ -19,9 +19,10 @@ Consult the xref:release_notes.adoc[release notes] to find out which specific ve
 
 [#openshift-notes]
 == Notes on OpenShift
+
 SDP operators are certified for the OpenShift platform and can be installed from the OperatorHub.
 
-NOTE: Install the SDP operators in a namespace/project called `stackable-operators`. Installing the operators anywhere else may lead to unwanted effects or even faulty installations. This restriction is caused by limitations in the Operator Bundle Format (OPM) used by OpenShift.
+IMPORTANT: OpenShift installations with FIPS mode enabled are not supported. This is because neither the SDP operators, nor the supported Apache products are FIPS compliant.
 
 === Customizing operator installations
 Depending on the cluster size, you may need to customize the resources requested by the SDP operator Pods. This is possible when installing the operators from the command line. For example, to assign `256Mi` of memory to the Apache Kafka operator, you need to create a custom Subscription as follows:
