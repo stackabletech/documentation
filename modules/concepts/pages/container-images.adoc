@@ -32,14 +32,16 @@ Beyond that, Stackable also adds plugins or extensions that are not shipped by d
 [#multi-platform-support]
 == Multi-platform support
 
-All our images are {multi-platform-images}[multi-platform images], supporting the AMD64 and ARM64 architectures.
+Starting with Stackable release 24.7, all images are {multi-platform-images}[multi-platform images], supporting the AMD64 and ARM64 architectures.
 
-== Differences to upstream images
+== Why not use upstream images?
 
-For some of the products supported on the platform, there are also images distributed by the upstream project.
-However, Stackable operators do not work with these images, because Stackable operators expected a certain file system structure and in some cases additional scripts being present in the image.
+Some (but not all) products on the Stackable Data Platform already provide Docker images upstream.
+For a number of reasons, Stackable does not support these upstream images; Stackable operators only work with Stackable product images (or images using these as base images).
 
-Having Stackable built images means that all images share the same basic structure.
-It also makes it possible to already include certain plugins and extensions (as mentioned above).
+* The structure across different product images upstream is different, which would mean using them would make operator development more difficult, but also would make it more difficult to work with the different images on the platform, as they would all be structured differently.
+* Not all products supply images, so Stackable would already need to build _some_ container images for certain products.
+* For the products that do provide images, the images are still lacking certain plugins or extensions for key features such as xref:operators:monitoring.adoc[] or xref:opa:index.adoc[OpenPolicyAgent support].
+* For some of the products supported on the platform, there are also images distributed by the upstream project.
 
 The operators also do not support all product versions and Stackable has its own xref:ROOT:policies.adoc[support policies] in place, which are also based on the particular versions that are supported.
