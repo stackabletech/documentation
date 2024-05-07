@@ -41,7 +41,7 @@ For a number of reasons, Stackable does not support these upstream images; Stack
 
 * The structure across different product images upstream is different, which would mean using them would make operator development more difficult, but also would make it more difficult to work with the different images on the platform, as they would all be structured differently.
 * Not all products supply images, so Stackable would already need to build _some_ container images for certain products.
-* For the products that do provide images, the images are still lacking certain plugins or extensions for key features such as xref:operators:monitoring.adoc[] or xref:opa:index.adoc[OpenPolicyAgent support].
+* For the products that do provide images, the images are still lacking certain plugins or extensions for key features such as xref:operators:monitoring.adoc[] or xref:opa:index.adoc[OpenPolicyAgent support], or in some instances Stackable images contain patched products.
 * For some of the products supported on the platform, there are also images distributed by the upstream project.
 
 The operators also do not support all product versions and Stackable has its own xref:ROOT:policies.adoc[support policies] in place, which are also based on the particular versions that are supported.
