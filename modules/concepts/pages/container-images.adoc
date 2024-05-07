@@ -16,8 +16,6 @@ Usually these products also only provide a single artifact that is used to run a
 
 Product images are built for xref:operators:supported_versions.adoc[] of products (Not all product versions are supported by all releases).
 
-Also some tool images? TODO
-
 All images are stored in the {stackable-image-registry}[Stackable image registry].
 
 == Image structure and contents
@@ -26,9 +24,7 @@ All our images are built using the {ubi}[Red Hat Universal Base Image (UBI)] min
 To support xref:ROOT:kubernetes.adoc[OpenShift], it is required to use a UBI base image.
 The base image also contains only minimal dependencies and is vetted by RedHat.
 
-Anything added by Stackable during the building of the images is added under the `/stackable` path in the image.
-(TODO: can we elaborate the structure a bit more?)
-This file system structure is the same across all images, which makes the images easier to work with.
+The file system structure is the same across all images, which makes the images easier to work with.
 
 Products are either built from scratch or official artifacts are used.
 Beyond that, Stackable also adds plugins or extensions that are not shipped by default, to support features such as xref:operators:monitoring.adoc[] or xref:opa:index.adoc[OpenPolicyAgent] support.
@@ -40,18 +36,10 @@ All our images are {multi-platform-images}[multi-platform images], supporting th
 
 == Differences to upstream images
 
-When deploying a Stacklet, the operators use product images built by Stackable, not official images, even if there are official images (i.e. Trino offers Docker images).
+For some of the products supported on the platform, there are also images distributed by the upstream project.
+However, Stackable operators do not work with these images, because Stackable operators expected a certain file system structure and in some cases additional scripts being present in the image.
 
-We build our own because ...
+Having Stackable built images means that all images share the same basic structure.
+It also makes it possible to already include certain plugins and extensions (as mentioned above).
 
-* We only support a selection of product versions (found at xref:operators:supported_versions.adoc[]).
-* For some products we bundle plugins or extensions that are not shipped in official images, such as extensions for xref:operators:monitoring.adoc[] or xref:opa:index.adoc[OpenPolicyAgent] support.
-* We use the same file system layout across all operators and products, making it easier to develop and work with the operators.
-
-Stackable offers xref:ROOT:policies.adoc[long-term support] for certain versions, which is something that can only be confidently done when the image that support is offered for is under our control.
-
-Upstream images for i.e. Trino will _not_ work with the Stackable operators.
-
-* Why custom product images?  https://github.com/stackabletech/documentation/issues/585
-
-Which architectures do we support? https://github.com/stackabletech/issues/issues/577
+The operators also do not support all product versions and Stackable has its own xref:ROOT:policies.adoc[support policies] in place, which are also based on the particular versions that are supported.
