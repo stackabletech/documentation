@@ -37,6 +37,14 @@ After this is done you also need to add a setting to your Nix config in `/etc/ni
 experimental-features = nix-command flakes
 ----
 
+It is also recommend to enable parallel builds by also adding the following config:
+----
+max-jobs = 24
+cores = 8
+----
+
+Please adjust the number of `cores` to your system and set the `max-jobs` to e.g. the third of that.
+
 Just installing Nix does not affect your system much, as it keeps all its configuration and installed packages separate from other package managers and you won't even notice it is there, unless you actually start using it.
 
 == Using
