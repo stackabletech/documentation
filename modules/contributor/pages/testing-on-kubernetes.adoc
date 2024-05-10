@@ -37,7 +37,7 @@ After this is done you also need to add a setting to your Nix config in `/etc/ni
 experimental-features = nix-command flakes
 ----
 
-It is also recommend to enable parallel builds by also adding the following config:
+It is also recommended to enable parallel builds by also adding the following configs:
 ----
 max-jobs = 24
 cores = 8
