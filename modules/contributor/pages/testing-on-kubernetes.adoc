@@ -34,7 +34,7 @@ If you don't want to run an arbitrary shellscript directly from the web, have a 
 
 After this is done you also need to add a setting to your Nix config in `/etc/nix/nix.conf`:
 ----
-experimental-features = nix-command
+experimental-features = nix-command flakes
 ----
 
 Just installing Nix does not affect your system much, as it keeps all its configuration and installed packages separate from other package managers and you won't even notice it is there, unless you actually start using it.
