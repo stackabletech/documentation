@@ -32,4 +32,5 @@ https://github.com/stackabletech/stackable-cockpit/blob/main/LICENSE[License] fo
 
 https://github.com/stackabletech/docker-images/blob/main/LICENSE[License] for the product Docker images.
 
-The Docker images are built on the https://catalog.redhat.com/software/containers/ubi8/ubi-minimal/5c359a62bed8bd75a2c3fba8?container-tabs=overview[Red Hat ubi8-minimal base image]. It is https://www.redhat.com/licenses/EULA_Red_Hat_Universal_Base_Image_English_20190422.pdf[licensed seperately].
+The Docker images are built on the https://catalog.redhat.com/software/containers/ubi9-minimal/61832888c0d15aff4912fe0d[Red Hat ubi9-minimal base image].
+It is https://www.redhat.com/licenses/EULA_Red_Hat_Universal_Base_Image_English_20190422.pdf[licensed seperately].
