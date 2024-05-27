@@ -38,8 +38,8 @@ Starting with Stackable release 24.7, all images are {multi-platform-images}[mul
 [#signatures]
 == Image signatures
 
-Image signatures help to ensure the authenticity and integrity of container images.
 All Stackable images are signed. 
+Image signatures help to ensure the authenticity and integrity of container images.
 You can xref:guides:enabling-verification-of-image-signatures.adoc[verify image signatures automatically] in your cluster to make sure that the images you are running are authentic and intact.
 
 == Why not use upstream images?
