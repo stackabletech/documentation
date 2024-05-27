@@ -29,7 +29,7 @@ The file system structure is the same across all images, which makes the images 
 Products are either built from scratch or official artifacts are used.
 Beyond that, Stackable also adds plugins or extensions that are not shipped by default, to support features such as xref:operators:monitoring.adoc[] or xref:opa:index.adoc[OpenPolicyAgent] support.
 
-Since Stackable release 24.3, Stackable provides {stackable-sboms}[SBOMs] for all images.
+Since Stackable release 24.3, {stackable-sboms}[SBOMs] for all images are provided.
 Have a look at the xref:guides:viewing-and-verifying-sboms.adoc[] guide to learn how to use SBOMs.
 
 [#multi-platform-support]
