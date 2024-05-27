@@ -1,0 +1,56 @@
+= Container images
+:ubi: https://catalog.redhat.com/software/base-images
+:multi-platform-images: https://docs.docker.com/build/building/multi-platform/
+:stackable-image-registry: https://repo.stackable.tech/#browse/browse
+:stackable-sboms: https://sboms.stackable.tech/
+
+The core artifacts of the Stackable Data Platform are container images of Kubernetes operators and the products that these operators deploy.
+
+== Images overview
+
+Every operator is packaged into its own image and every product is also packaged into its own, seperate image.
+Products that require multiple different processes to run, such as a coordinator and a worker, still only run off of one image;
+usually these products also only provide a single artifact that is used to run all processes.
+
+Product images are built for xref:operators:supported_versions.adoc[] of products (Not all product versions are supported by all releases).
+
+All images are stored in the {stackable-image-registry}[Stackable image registry].
+
+== Image structure and contents
+
+All our images are built using the {ubi}[Red Hat Universal Base Image (UBI)] minimal as a base image.
+This is a requirement for the platform to achieve xref:ROOT:kubernetes.adoc[OpenShift] certification and be available in the RedHat Certified Operator catalog.
+The base image also contains only minimal dependencies and is vetted by RedHat.
+
+The file system structure is the same across all images, which makes the images easier to work with.
+
+Products are either built from source code or official artifacts are used.
+Beyond that, Stackable also adds plugins or extensions that are not shipped by default, to support features such as xref:operators:monitoring.adoc[] or xref:opa:index.adoc[OpenPolicyAgent] support.
+
+Since Stackable release 24.3, {stackable-sboms}[SBOMs] for all images are provided.
+Have a look at the xref:guides:viewing-and-verifying-sboms.adoc[] guide to learn how to use SBOMs.
+
+[#multi-platform-support]
+== Multi-platform support
+
+Starting with Stackable release 24.7, all images are {multi-platform-images}[multi-platform images], supporting the AMD64 and ARM64 architectures.
+
+[#signatures]
+== Image signatures
+
+All Stackable images are signed. 
+Image signatures help to ensure the authenticity and integrity of container images.
+You can xref:guides:enabling-verification-of-image-signatures.adoc[verify image signatures automatically] in your cluster to make sure that the images you are running are authentic and intact.
+
+== Why not use upstream images?
+
+Some (but not all) products on the Stackable Data Platform already provide Docker images upstream.
+For a number of reasons, Stackable does not support these upstream images; Stackable operators only work with Stackable product images (or images using these as base images).
+Additionally, Stackable does detailed risk and security analysis of all the product versions and images that are supported by the platform.
+
+* The structure across different product images upstream is different, which would mean using them would make operator development more difficult, but also would make it more difficult to work with the different images on the platform, as they would all be structured differently.
+* Not all products supply images, so Stackable would already need to build _some_ container images for certain products.
+* For the products that do provide images, the images are still lacking certain plugins or extensions for key features such as xref:operators:monitoring.adoc[] or xref:opa:index.adoc[OpenPolicyAgent support], or in some instances Stackable images contain patched products.
+* For some of the products supported on the platform, there are also images distributed by the upstream project.
+
+The operators also do not support all product versions and Stackable has its own xref:ROOT:policies.adoc[support policies] in place, which are also based on the particular versions that are supported.
