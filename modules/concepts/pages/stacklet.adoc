@@ -1,0 +1,85 @@
+= Stacklet
+:page-aliases: roles-and-role-groups.adoc
+
+A _Stacklet_ is a deployed product that is managed by a Stackable operator.
+The processes that make up whe product are divided into _roles_ and can be further subdivided into _role groups_.
+
+A Stacklet is defined by a Kubernetes resource that is manged by an operator, for example a DruidCluster, TrinoCluster or SparkApplication.
+The associated operator then creates a number of Kuberenetes resources that are needed to run, configure and expose the software.
+For every operator (for example xref:zookeeper:index.adoc[]) the documentation contains the Stacklet it manages and the resources that it creates.
+The collection of all the resources that make up the functioning product is the Stacklet.
+
+The products are usually deployed with StatefulSets from which Pods are created.
+Configuration is done with ConfigMaps, and the the software is exposed using Services.
+To allow for easier connectivity between Stacklets, some operators also deploy a xref:service-discovery.adoc[] for Stacklets they manage.
+
+CAUTION: Watch out for name collisions when deploying multiple Stacklets in the same namespace! 
+Even though the resource might be different (TrinoCluster, HbaseCluster), there is a name conflict for the discovery ConfigMap if two Stacklets in the same Kubernetes namespace share a name.
+It is best to always use unique names for Stacklets.
+
+Have a look at the <<example, example>> at the end of the page for a YAML example of a HdfsCluster Stacklet.
+
+[#roles]
+== Roles
+
+_Roles_ are the core of a Stacklet, and every Stacklet will have at least one role defined.
+The roles are the diffent types of processes that make up the running product.
+Some products only need one kind of process (and therefore one role) like xref:kafka:index.adoc[Apache Kafka], xref:nifi:index.adoc[Apache NiFi], xref:zookeeper:index.adoc[Apache ZooKeeper] or xref:opa:index.adoc[OPA] while others need multiple different roles, often a combination of worker and coordinator processes, sometimes with a gateway or router process like xref:airflow:index.adoc[Apache Airflow], xref:trino:index.adoc[Trino] or xref:druid:index.adoc[Apache Druid].
+
+The different roles have different configuration and scheduling requirements; for example some roles are more compute and others more memory intensive, some roles should run with many replicas, for others only a single replica is enough.
+Some configuration options only make sense when applied to a particular role.
+
+For example, you only need a single coordinator process with little compute and memory, but many worker processes that then need more compute and memory.
+
+[#role-groups]
+== Role groups
+
+Role groups are a further subdivision of roles, that allow more fine grained control over subsets of replicas that all belong to the same role.
+This is useful again to configure scheduling, i.e. have two role groups run in diffrent regions, or have a "slow" and "fast" process group or similar.
+Role groups are a flexible mechanism that you can adapt to whatever is useful for you, but you can also use just a single role group per role - often this is then called `default` by convention.
+
+Configuration settings can be made at role and role group level.
+Any configuration made at role group level overrides role level settings, as it is more specific.
+
+[#example]
+== Example
+
+HDFS uses three distinct processes that work together to fulfill its duty: NameNodes, DataNodes and JournalNodes.
+With roles you can specify different configuration settings for each of these.
+
+[source,yaml]
+----
+apiVersion: hdfs.stackable.tech/v1alpha1
+kind: HdfsCluster
+metadata:
+  name: simple-hdfs
+spec:
+  journalNodes:
+    roleGroups:
+      default:
+        replicas: 3  # <1>
+  nameNodes:
+    roleGroups:
+      default:
+        replicas: 3
+  dataNodes:
+    config:
+      resources:
+        storage:
+          data:
+            capacity: 1Gi  # <2>
+    roleGroups:
+      default:
+        replicas: 2
+      hiCapacity:  # <3>
+        config:
+          resources:
+            storage:
+              data: 2Gi
+        replicas: 1
+  ...
+----
+
+<1> The JournalNode role with only a single default role group. For the role group 3 replicas are specified, specifying a replica count is optional, the default is 1.
+<2> A common config setting for the DataNodes role. This configuration setting applies only to pods for this role.
+<3> The DataNode role has two role groups, the default group and the hiCapacity group. In it the config setting for the group is overridden with a higher value of 2Gi. This role group has only one replica.
