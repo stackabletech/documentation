@@ -26,7 +26,7 @@ The base image also contains only minimal dependencies and is vetted by RedHat.
 
 The file system structure is the same across all images, which makes the images easier to work with.
 
-Products are either built from scratch or official artifacts are used.
+Products are either built from source code or official artifacts are used.
 Beyond that, Stackable also adds plugins or extensions that are not shipped by default, to support features such as xref:operators:monitoring.adoc[] or xref:opa:index.adoc[OpenPolicyAgent] support.
 
 Since Stackable release 24.3, {stackable-sboms}[SBOMs] for all images are provided.
