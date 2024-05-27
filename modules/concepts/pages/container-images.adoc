@@ -4,9 +4,7 @@
 :stackable-image-registry: https://repo.stackable.tech/#browse/browse
 :stackable-sboms: https://sboms.stackable.tech/
 
-The core artifacts of the Stackable Data Platform are container images of operators and products.
-The operators as well as the deployed Stacklets are all running using container images.
-All images deployed by the SDP are built by Stackable and non-Stackable images - for example official upstream images - are generally not compatible with Stackable operators.
+The core artifacts of the Stackable Data Platform are container images of Kubernetes operators and the products that these operators deploy.
 
 == Images overview
 
