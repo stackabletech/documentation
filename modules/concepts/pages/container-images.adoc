@@ -48,6 +48,7 @@ You can xref:guides:enabling-verification-of-image-signatures.adoc[verify image 
 
 Some (but not all) products on the Stackable Data Platform already provide Docker images upstream.
 For a number of reasons, Stackable does not support these upstream images; Stackable operators only work with Stackable product images (or images using these as base images).
+Additionally, Stackable does detailed risk and security analysis of all the product versions and images that are supported by the platform.
 
 * The structure across different product images upstream is different, which would mean using them would make operator development more difficult, but also would make it more difficult to work with the different images on the platform, as they would all be structured differently.
 * Not all products supply images, so Stackable would already need to build _some_ container images for certain products.
