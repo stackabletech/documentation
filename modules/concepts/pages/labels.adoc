@@ -1,25 +1,26 @@
 = Labels
+:common-labels: https://kubernetes.io/docs/concepts/overview/working-with-objects/common-labels/
 
 Labels are key/value pairs in the metadata of Kubernetes objects that add identifying information to the object.
 They do not have direct semantic implications but can be used to organize and manage resources.
-The `stackablectl` tool, the cockpit and the Helm Charts add labels to the resources that are part of a Stacklet, and the operators add labels to the resources they create.
+The xref:management:stackablectl:index.adoc[`stackablectl`] tool, the cockpit and the Helm Charts add labels to the resources that are part of a xref:stacklet.adoc[Stacklet], and the operators add labels to the resources they create.
 
 == Resource labels added by the operators
 
-Every resource created by a Stackable operator is labelled with a common set of labels.
-Some of these labels are https://kubernetes.io/docs/concepts/overview/working-with-objects/common-labels/[recommended] to use by the Kubernetes documentation.
+Every resource created by a Stackable operator is labeled with a common set of labels.
+Some of these labels are {common-labels}[recommended] to use by the Kubernetes documentation.
 The following labels are added to resources created by our operators:
 
-- `app.kubernetes.io/name` - The name of the product, i.e. `druid` or `zookeeper`.
-- `app.kubernetes.io/version` - The version of the product and Stackable version, i.e. `3.3.4-stackable23.11.0`
-- `app.kubernetes.io/instance` - The name of the Stacklet.
-- `app.kubernetes.io/component` - This is the xref:concepts:roles-and-role-groups.adoc[role] that this resource belongs to.
-- `app.kubernetes.io/role-group` - The name of the xref:concepts:roles-and-role-groups.adoc[role group] that a resource belongs to.
-- `app.kubernetes.io/managed-by` - Which software manages this resource? This will be the operator, i.e. `airflow-operator`.
+* `app.kubernetes.io/name` - The name of the product, i.e. `druid` or `zookeeper`.
+* `app.kubernetes.io/version` - The version of the product and Stackable version, i.e. `3.3.4-stackable23.11.0`
+* `app.kubernetes.io/instance` - The name of the Stacklet.
+* `app.kubernetes.io/component` - This is the xref:stacklet.adoc#roles[role] that this resource belongs to.
+* `app.kubernetes.io/role-group` - The name of the xref:stacklet.adoc#role-groups[role group] that a resource belongs to.
+* `app.kubernetes.io/managed-by` - Which software manages this resource? This will be the operator, i.e. `airflow-operator`.
 
 also this:
 
-- `stackable.tech/vendor` with value `Stackable`
+- `stackable.tech/vendor` with value `Stackable`.
 
 == Labels added by tools
 
@@ -55,4 +56,4 @@ The default set of labels includes:
 
 == Further reading
 
-Have a look at https://docs.stackable.tech/home/nightly/contributor/adr/adr031-resource-labels[] if you want to find out about the design decisions for our labels.
+Have a look at xref:contributor:adr/ADR031-resource-labels.adoc[] if you want to find out about the design decisions for our labels.
