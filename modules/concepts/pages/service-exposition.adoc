@@ -1,41 +1,64 @@
 = Service exposition
+:k8s-service: https://kubernetes.io/docs/concepts/services-networking/service/
+:k8s-service-types: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
 
-All data products expose an interface to the outside world. This interface can be accessed by other products or by end users. Other products accessing the interface can run inside or outside the same Kubernetes cluster. For example, Apache ZooKeeper is a dependency for other products, and it usually needs to be accessible only from within Kubernetes, while Superset is a data analysis product for end users and therefore needs to be accessible from outside the Kubernetes cluster. Users connecting to Superset can be restricted within the local company network, or they can connect over the internet depending on the company security policies and demands.
+All data products expose an interface to the outside world.
+This interface can be accessed by other products or by end users.
+Other products accessing the interface can run inside or outside the same Kubernetes cluster.
+For example, xref:zookeeper:index.adoc[Apache ZooKeeper] is a dependency for other products, and it usually needs to be accessible only from within Kubernetes, while xref:superset:index.adoc[Apache Superset] is a data analysis product for end users and therefore needs to be accessible from outside the Kubernetes cluster.
+Users connecting to Superset can be restricted within the local company network, or they can connect over the internet depending on the company security policies and demands.
 This page gives an overview over the different options for service exposition, when to chose which option and how these options are configured.
 
 == Service exposition options
 
-The service offered by a data product is the utility it is used for, but https://kubernetes.io/docs/concepts/services-networking/service/[Service] also means the Kubernetes resource. The Stackable Data Platform supports three https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types[types of Service]:
+The service offered by a data product is the utility it is used for, but Service also means the {k8s-service}[Kubernetes resource].
+The Stackable Data Platform supports three {k8s-service-types}[types of Service]:
 
 * ClusterIP
 * NodePort
 * LoadBalancer
 
-All custom resources for data products provide a  resource field named `spec.clusterConfig.listenerClass` which determines how the product can be accessed . There are three ListenerClasses, named after the goal for which they are used (more on this in the <<when-to-choose-which-option, next section>>):
+All custom resources for data products provide a  resource field named `spec.clusterConfig.listenerClass` which determines how the product can be accessed.
+There are three ListenerClasses, named after the goal for which they are used (more on this in the <<when-to-choose-which-option, next section>>):
 
 * `cluster-internal` => Use ClusterIP (default)
 * `external-unstable` => Use NodePort
 * `external-stable` => Use LoadBalancer
 
-The `cluster-internal` class exposes the interface of a product by using a ClusterIP Service. This service is only reachable from within the Kubernetes cluster. This setting is the most secure and was chosen as the default for that reason.
+The `cluster-internal` class exposes the interface of a product by using a ClusterIP Service.
+This service is only reachable from within the Kubernetes cluster.
+This setting is the most secure and was chosen as the default for that reason.
 
-NOTE: Not all Operators support all classes. Consult the Operator specific documentation to find out about the supported service types.
+NOTE: Not all operators support all classes.
+Consult the operator specific documentation to find out about the supported service types.
 
-== [[when-to-choose-which-option]]When to choose which option
+[#when-to-choose-which-option]
+== When to choose which option
 
-There are three options, one for internal traffic and two for external access, where internal and external refer to the Kubernetes cluster. Internal means inside of the Kuberenetes cluster, and external means access from outside of it.
+There are three options, one for internal traffic and two for external access, where internal and external refer to the Kubernetes cluster.
+Internal means inside of the Kuberenetes cluster, and external means access from outside of it.
 
 === Internal
 
-`cluster-internal`  is the default class and, the Service behind it is only exposed within Kubernetes. This is useful for middleware products such as xref:zookeeper:index.adoc[Apache ZooKeeper], the xref:hive:index.adoc[Apache Hive metastore] or a xref:kafka:index.adoc[Apache Kafka] cluster used for internal data flow. Products using this ListenerClass are not accessible from outside Kubernetes.
+`cluster-internal` is the default class and, the Service behind it is only exposed within Kubernetes.
+This is useful for middleware products such as xref:zookeeper:index.adoc[Apache ZooKeeper], the xref:hive:index.adoc[Apache Hive metastore] or a xref:kafka:index.adoc[Apache Kafka] cluster used for internal data flow.
+Products using this ListenerClass are not accessible from outside Kubernetes.
 
 === External
 
-External access is needed when a product needs to be accessed from _outside_ of Kubernetes. This is necessary for all end user products such as xref:superset:index.adoc[Apache Superset]. Some tools can expose APIs for data ingestion like xref:kafka:index.adoc[Apache Kafka] or xref:nifi:index.adoc[Apache NiFi]. If data needs to be ingested from outside of the cluster, one of the external listener classes should be chosen.
+External access is needed when a product needs to be accessed from _outside_ of Kubernetes.
+This is necessary for all end user products such as xref:superset:index.adoc[Apache Superset].
+Some tools can expose APIs for data ingestion like xref:kafka:index.adoc[Apache Kafka] or xref:nifi:index.adoc[Apache NiFi].
+If data needs to be ingested from outside of the cluster, one of the external listener classes should be chosen.
 
-When to use `stable` and when to use `unstable`? The `external-unstable` setting exposes a product interface via a Kuberneres NodePort. In this case the service's IP address and port can change if Kubernetes needs to restart or reschedule the Pod to another node.
+When to use `stable` and when to use `unstable`?
+The `external-unstable` setting exposes a product interface via a Kuberneres NodePort.
+In this case the service's IP address and port can change if Kubernetes needs to restart or reschedule the Pod to another node.
 
-The `external-stable` class uses a LoadBalancer. The LoadBalancer is running at a fixed address and is therefore `stable`. Managed Kubernetes services in the cloud usually offer a LoadBalancer, but for an on premise cluster you have to configure a LoadBalancer yourself. For a production setup, it is recommended to use a LoadBalancer or `external-stable` ListenerClass.
+The `external-stable` class uses a LoadBalancer.
+The LoadBalancer is running at a fixed address and is therefore `stable`.
+Managed Kubernetes services in the cloud usually offer a LoadBalancer, but for an on premise cluster you have to configure a LoadBalancer yourself.
+For a production setup, it is recommended to use a LoadBalancer or `external-stable` ListenerClass.
 
 == Outlook
 

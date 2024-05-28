@@ -84,7 +84,7 @@ First, the AuthenticationClass needs to be defined as follows:
 ----
 include::example$authenticationclass-static-authenticationclass.yaml[]
 ----
-<1> The name of the `Secret` containing the credentials
+<1> The name of the Secret containing the credentials
 
 Afterwards the referenced Secret needs to be created:
 
@@ -92,8 +92,8 @@ Afterwards the referenced Secret needs to be created:
 ----
 include::example$authenticationclass-static-secret.yaml[]
 ----
-<1> The name of the `Secret`, which needs to match the `Secret` name specified in the `AuthenticationClass` above
-<2> The namespace of the `Secret`. The `Secret` needs to be in the same namespace as the product that tries to use the static `AuthenticationClass`
+<1> The name of the Secret, which needs to match the Secret name specified in the AuthenticationClass above
+<2> The namespace of the Secret. The Secret needs to be in the same namespace as the product that tries to use the static AuthenticationClass
 
 [#further-reading]
 == Further reading

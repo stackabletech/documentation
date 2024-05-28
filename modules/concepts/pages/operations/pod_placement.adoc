@@ -1,11 +1,15 @@
 = Pod placement
 :page-aliases: ../pod_placement.adoc
 
-Several operators of the Stackable Data Platform permit the configuration of pod affinity as described in the Kubernetes https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/[documentation]. If no affinity is defined in the product's custom resource, the operators apply reasonable defaults that make use of the `preferred_during_scheduling_ignored_during_execution` property. Refer to the operator documentation for details.
+Several operators of the Stackable Data Platform permit the configuration of pod affinity as described in the Kubernetes https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/[documentation].
+If no affinity is defined in the product's custom resource, the operators apply reasonable defaults that make use of the `preferred_during_scheduling_ignored_during_execution` property.
+Refer to the operator documentation for details.
 
-Affinities can be defined at role level, group level or both. When defined at both levels, the two affinities are merged with the group affinity taking precedence. The resulting definition is then added to the corresponding pod template.
+Affinities can be defined at role level, role group level or both.
+When defined at both levels, the two affinities are merged with the role group affinity taking precedence.
+The resulting definition is then added to the corresponding Pod template.
 
-Affinities can be configured by adding an `affinity` property to the product's custom resource, as shown below:
+Affinities can be configured by adding an `affinity` property to the Stacklet as shown below:
 
 [source,yaml]
 ----
@@ -47,12 +51,9 @@ spec:
                 values:
                 - enabled
 ----
-Here the pod placement for the broker Pods of an Apache Kafka cluster is configured as follows:
+Here the Pod placement for the broker Pods of an Apache Kafka cluster is configured as follows:
 
 <1> The pod assignment for all Pods of the `brokers` role.
 <2> No constraint is defined for clustering Pods.
 <3> A `preferred` constraint is defined for spreading `brokers` across cluster nodes. The intent here is to increase availability in case of node failures.
 <4> A `required` constraint for scheduling `brokers` on nodes with the fictional `high-throughput-network` label. Failing to satisfy this constraint will prevent the Kafka cluster from starting up.
-
-
-
