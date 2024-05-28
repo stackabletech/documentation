@@ -2,11 +2,11 @@
 :page-aliases: roles-and-role-groups.adoc
 
 A _Stacklet_ is a deployed product that is managed by a Stackable operator.
-The processes that make up whe product are divided into _roles_ and can be further subdivided into _role groups_.
+The processes that make up the product are divided into _roles_ and can be further subdivided into _role groups_.
 
-A Stacklet is defined by a Kubernetes resource that is manged by an operator, for example a DruidCluster, TrinoCluster or SparkApplication.
-The associated operator then creates a number of Kuberenetes resources that are needed to run, configure and expose the software.
-For every operator (for example xref:zookeeper:index.adoc[]) the documentation contains the Stacklet it manages and the resources that it creates.
+A Stacklet is defined by a Kubernetes resource that is managed by an operator, for example a DruidCluster, TrinoCluster or SparkApplication.
+The associated operator then creates a number of Kubernetes resources that are needed to run, configure and expose the software.
+For every operator (for example xref:zookeeper:index.adoc[]) the documentation describes the Stacklet it manages and the resources that it creates.
 The collection of all the resources that make up the functioning product is the Stacklet.
 
 The products are usually deployed with StatefulSets from which Pods are created.
