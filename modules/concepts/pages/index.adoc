@@ -6,7 +6,7 @@ The xref:overview.adoc[Platform overview] is a good starting point to understand
 
 == General configuration mechanisms
 
-Learn about xref:roles-and-role-groups.adoc[], how product image selection works.
+Learn what a xref:stacklet.adoc[Stacklet] is, what roles and role groups are, how product image selection works.
 There is also the common xref:overrides.adoc[override] mechanism for configuration settings, although this tool should be used with care!
 
 == Resources
