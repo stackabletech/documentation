@@ -12,11 +12,11 @@ Some of these labels are {common-labels}[recommended] to use by the Kubernetes d
 The following labels are added to resources created by our operators:
 
 * `app.kubernetes.io/name` - The name of the product, i.e. `druid` or `zookeeper`.
-* `app.kubernetes.io/version` - The version of the product and Stackable version, i.e. `3.3.4-stackable23.11.0`
+* `app.kubernetes.io/version` - The version of the product and Stackable version, i.e. `3.3.4-stackable24.3.0`
 * `app.kubernetes.io/instance` - The name of the Stacklet.
 * `app.kubernetes.io/component` - This is the xref:stacklet.adoc#roles[role] that this resource belongs to.
 * `app.kubernetes.io/role-group` - The name of the xref:stacklet.adoc#role-groups[role group] that a resource belongs to.
-* `app.kubernetes.io/managed-by` - Which software manages this resource? This will be the operator, i.e. `airflow-operator`.
+* `app.kubernetes.io/managed-by` - Which software manages this resource? This will be the operator, i.e. `kafka-operator`.
 
 also this:
 
