@@ -9,7 +9,7 @@ Every node is running an OPA instance for fast policy evaluation and products ar
 
 == What is OPA?
 // What's OPA? What are Rego Rules?
-OPA is an open source, general purpose policy engine.
+OPA is an open-source, general-purpose policy engine.
 It supports a high-level declarative language called {rego}[Rego].
 Rego enables you to specify complex policies as code and transfer the decision-making processes from your software to OPA.
 Policies written in Rego are called _Rego rules_.
