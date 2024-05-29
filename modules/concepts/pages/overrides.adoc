@@ -86,7 +86,7 @@ spec:
 <1> `envOverrides` at role level.
 <2> `envOverrides` on role group level, takes precedence over the overrides specified at role level.
 
-You can set any environment variable, but every Stacklet supports a different set of environment variables, these are usually documented in the product documentation.
+You can set any environment variable, but every Stacklet supports a different set of environment variables, these are documented in the product documentation.
 All override property values must be strings.
 
 [#pod-overrides]
