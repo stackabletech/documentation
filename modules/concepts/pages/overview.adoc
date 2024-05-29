@@ -27,7 +27,7 @@ It reads this resource and creates Kubernetes resources in accordance with the p
 image::operator_overview.drawio.svg[]
 
 The diagram above shows the custom resource in green. It contains all the configuration needed to create a product instance.
-This includes which services the product should connect to, with how many replicas it should operate and how many resources it should use, among other things.
+This includes which services the product should connect to, with how many replicas it should operate and how much of a given resource it should use, among other things.
 
 [#discovery]
 === Discovery
