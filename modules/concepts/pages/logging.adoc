@@ -27,7 +27,7 @@ This way you can get a detailed view of the operations of a component while view
 
 **Consistent configuration** - Finally, logging should be always configured the same way, no matter which product and which underlying technology is used to produce the logs.
 Logging for each product is configured in the Stacklet resource.
-For advanced log configurations supplying custom, product specific log configuration files is also supported.
+For advanced log configurations, supplying custom product specific log configuration files is also supported.
 
 == Architecture
 
