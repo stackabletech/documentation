@@ -40,7 +40,7 @@ Internal means inside of the Kuberenetes cluster, and external means access from
 
 === Internal
 
-`cluster-internal` is the default class and, the Service behind it is only exposed within Kubernetes.
+`cluster-internal` is the default class and the Service behind it is only reachable from within Kubernetes.
 This is useful for middleware products such as xref:zookeeper:index.adoc[Apache ZooKeeper], xref:hive:index.adoc[Apache Hive metastore], or an xref:kafka:index.adoc[Apache Kafka] cluster used for internal data flow.
 Products using this ListenerClass are not accessible from outside Kubernetes.
 
