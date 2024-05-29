@@ -1,7 +1,7 @@
 = Stackable Data Platform explained
 
 The Stackable Data Platform (SDP) is built on Kubernetes.
-Its core is a collection of Kubernetes operators and custom resource definitions which are designed to work together.
+Its core is a collection of Kubernetes Operators and CustomResourceDefinitions which are designed to work together.
 
 image::overview.drawio.svg[]
 
