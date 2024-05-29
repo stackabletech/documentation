@@ -43,7 +43,7 @@ spec:
   ...
 ----
 <1> `configOverride` on role level.
-<2> The name of the configuration file that the override should be put into. You can find the available files as keys in the ConfigMpas created by the operator.
+<2> The name of the configuration file that the override should be put into. You can find the available files as keys in the ConfigMaps created by the operator.
 <3> All keys must be strings, even if they are integers like in the example here.
 <4> `configOverride` on role group level, takes precedence over overrides at role level.
 
