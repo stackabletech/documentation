@@ -2,9 +2,9 @@
 :k8s-service: https://kubernetes.io/docs/concepts/services-networking/service/
 :k8s-service-types: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
 
-All data products expose an interface to the outside world.
-This interface can be accessed by other products or by end users.
-Other products accessing the interface can run inside or outside the same Kubernetes cluster.
+Data products expose interfaces to the outside world.
+These interfaces (whether UIs, or APIs) can be accessed by other products or by end users.
+Other products accessing the interfaces can run inside or outside of the same Kubernetes cluster.
 For example, xref:zookeeper:index.adoc[Apache ZooKeeper] is a dependency for other products, and it usually needs to be accessible only from within Kubernetes, while xref:superset:index.adoc[Apache Superset] is a data analysis product for end users and therefore needs to be accessible from outside the Kubernetes cluster.
 Users connecting to Superset can be restricted within the local company network, or they can connect over the internet depending on the company security policies and demands.
 This page gives an overview over the different options for service exposition, when to chose which option and how these options are configured.
