@@ -56,4 +56,4 @@ The default set of labels includes:
 
 == Further reading
 
-Have a look at xref:contributor:adr/ADR031-resource-labels.adoc[] if you want to find out about the design decisions for our labels.
+Take a look at xref:contributor:adr/ADR031-resource-labels.adoc[] if you want to find out about the design decisions for our labels.
