@@ -71,7 +71,7 @@ spec:
     roleGroups:
       default:
         replicas: 2
-      hiCapacity:  # <3>
+      highCapacity:  # <3>
         config:
           resources:
             storage:
