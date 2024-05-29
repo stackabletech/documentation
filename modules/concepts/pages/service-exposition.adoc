@@ -18,7 +18,7 @@ The Stackable Data Platform supports three {k8s-service-types}[types of Service]
 * NodePort
 * LoadBalancer
 
-All custom resources for data products provide a  resource field named `spec.clusterConfig.listenerClass` which determines how the product can be accessed.
+All custom resources for data products provide a resource field named `spec.clusterConfig.listenerClass` which determines how the product can be accessed.
 There are three ListenerClasses, named after the goal for which they are used (more on this in the <<when-to-choose-which-option, next section>>):
 
 * `cluster-internal` => Use ClusterIP (default)
