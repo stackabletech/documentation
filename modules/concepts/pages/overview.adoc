@@ -41,7 +41,7 @@ image::discovery.drawio.svg[]
 For example, Apache ZooKeeper is a dependency of many other products, such as Apache HDFS and Apache Druid.
 The HDFS and Druid resources can simply reference the ZooKeeper cluster by name and the operators will use the discovery ConfigMap to configure the Druid and HDFS Pods to connect to the ZooKeeper Service.
 
-You can also create these discovery ConfigMaps yourself to make products discoverable that are not operatored by a Stackable operator.
+You can also create these discovery ConfigMaps yourself to make products discoverable that are not operated by a Stackable operator.
 Learn more about product discovery at xref:service-discovery.adoc[].
 
 [#roles]
