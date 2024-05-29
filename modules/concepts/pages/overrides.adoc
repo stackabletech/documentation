@@ -2,7 +2,7 @@
 :k8s-openapi-deepmerge: https://arnavion.github.io/k8s-openapi/v0.22.x/k8s_openapi/trait.DeepMerge.html
 
 The Stackable operators configure the xref:stacklet.adoc[Stacklets] they are operating with sensible defaults and required settings to enable connectivity and security.
-Other important settings are usually exposed as settings in the Stacklet resource definition for you to tweak directly.
+Other important settings are usually exposed in the Stacklet resource definition for you to configure directly.
 In some cases however, you might want to set certain settings that are not exposed, or override settings that are not exposed but are set by the operator.
 
 The resource definitions of all Stacklets support overrides, specifically for the <<config-overrides, product configuration>>, <<env-overrides, environment variables>>, and the <<pod-overrides, PodSpec>> the operators generate.
