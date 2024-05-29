@@ -3,7 +3,7 @@
 // that include this file.
 Stackable operators handle resource requests in a sligtly different manner than Kubernetes.
 Resource requests are defined on xref:concepts:stacklet.adoc#roles[role] or xref:concepts:stacklet.adoc#role-groups[role group] level.
-On a role level this means that e.g. all workers will use the same resource requests and limits.
+On a role level this means that by default, all workers will use the same resource requests and limits.
 This can be further specified on role group level (which takes priority to the role level) to apply different resources.
 
 This is an example on how to specify CPU and memory resources using the Stackable https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/[Custom Resources]:
