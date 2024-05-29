@@ -58,7 +58,7 @@ In this case the service's IP address and port can change if Kubernetes needs to
 The `external-stable` class uses a LoadBalancer.
 The LoadBalancer is running at a fixed address and is therefore `stable`.
 Managed Kubernetes services in the cloud usually offer a LoadBalancer, but for an on premise cluster you have to configure a LoadBalancer yourself.
-For a production setup, it is recommended to use a LoadBalancer or `external-stable` ListenerClass.
+For a production setup, it is recommended to use a LoadBalancer and the `external-stable` ListenerClass.
 
 == Outlook
 
