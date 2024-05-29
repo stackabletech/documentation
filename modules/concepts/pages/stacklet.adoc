@@ -35,7 +35,7 @@ For example, you only need a single coordinator process with little compute and 
 == Role groups
 
 Role groups are a further subdivision of roles, that allow more fine grained control over subsets of replicas that all belong to the same role.
-This is useful again to configure scheduling, i.e. have two role groups run in diffrent regions, or have a "slow" and "fast" process group or similar.
+This is useful again to configure scheduling, i.e. have two role groups run in different regions, or run on different classes of nodes (eg: faster CPUs, faster disk access, GPU).
 Role groups are a flexible mechanism that you can adapt to whatever is useful for you, but you can also use just a single role group per role - often this is then called `default` by convention.
 
 Configuration settings can be made at role and role group level.
