@@ -27,7 +27,7 @@ The roles are the various components that make up the running product.
 They are called this way, because under the hood, all roles use the same container image, but running with different parameters; sam image, different role.
 Some products have only one running component (and therefore one role) like xref:kafka:index.adoc[Apache Kafka], xref:nifi:index.adoc[Apache NiFi], xref:zookeeper:index.adoc[Apache ZooKeeper] or xref:opa:index.adoc[OPA] while others need multiple different roles, often a combination of worker and coordinator processes, sometimes with a gateway or router process like xref:airflow:index.adoc[Apache Airflow], xref:trino:index.adoc[Trino] or xref:druid:index.adoc[Apache Druid].
 
-The different roles have different configuration and scheduling requirements; for example some roles are more compute and others more memory intensive, some roles should run with many replicas, for others only a single replica is enough.
+The different roles have different configuration and scheduling requirements; for example some roles are resource intensive, some require multiple replicas for consistency/availability/partition-tolerance, and for others, only a single replica is enough.
 Some configuration options only make sense when applied to a particular role.
 
 For example, you only need a single coordinator process with little compute and memory, but many worker processes that then need more compute and memory.
