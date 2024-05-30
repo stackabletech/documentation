@@ -14,8 +14,7 @@ For more information have a look at the Kubernetes https://kubernetes.io/docs/co
 
 ==== Requests
 
-The CPU request defines which containers are allowed to have more CPU resources.
-Larger requests lead to more CPU resources than smaller requests if not enough resources are available.
+The CPU request defines which containers are allowed to have more CPU resources in case of a shortage of compute resources.
 
 ==== Limits
 
