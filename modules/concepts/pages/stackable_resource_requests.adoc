@@ -45,5 +45,5 @@ The role group `resources-from-role-group` has a maximum of `4Gi` memory and `80
 IMPORTANT: For Java products the actual used heap memory is lower than the specified memory limit due to other processes in the Container requiring memory to run as well.
 Currently, 80% of the specified memory limit is passed to the JVM.
 
-For memory only a limit can be specified, which will be set as memory request and limit in the container.
+For memory, only a limit can be specified, which will be set as memory request and limit in the container.
 This is to always guarantee a container the full amount memory during Kubernetes scheduling.
