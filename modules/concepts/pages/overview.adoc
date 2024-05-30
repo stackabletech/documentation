@@ -47,11 +47,11 @@ Learn more about product discovery at xref:service-discovery.adoc[].
 [#roles]
 === Roles
 
-Almost all products that Stackable supports need multiple different processes to run.
-Because they are often still the same software but running with different parameters, Stackable calls them xref:stacklet.adoc#roles[_roles_].
-For example HDFS has three roles: DataNode, NameNode and JournalNode.
-
-All roles are configured together in the custom resource for the product, but they each get their own StatefulSet, ConfigMaps and Service.
+Many of the data products that Stackable supports require multiple different components to run, which together make up the product instance.
+For example an HDFS cluster is made up of DataNodes, NameNodes and JournalNodes.
+Stackable calls the components that make up the product xref:stacklet.adoc#roles[_roles_].
+All roles are configured together in the custom resource for the product and there is a dedicated configuration section for each role.
+Every role is running using the same underlying container image, but with different paremeters and they each get their own StatefulSet, ConfigMaps and Service.
 
 [#deployment]
 == Deployment
