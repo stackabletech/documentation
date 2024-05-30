@@ -7,12 +7,11 @@ These interfaces (whether UIs, or APIs) can be accessed by other products or by 
 Other products accessing the interfaces can run inside or outside of the same Kubernetes cluster.
 For example, xref:zookeeper:index.adoc[Apache ZooKeeper] is a dependency for other products, and it usually needs to be accessible only from within Kubernetes, while xref:superset:index.adoc[Apache Superset] is a data analysis product for end users and therefore needs to be accessible from outside the Kubernetes cluster.
 Users connecting to Superset can be restricted within the local company network, or they can connect over the internet depending on the company security policies and demands.
-This page gives an overview over the different options for service exposition, when to chose which option and how these options are configured.
+This page gives an overview over the different options for service exposition, when to choose which option and how these options are configured.
 
 == Service exposition options
 
-The service offered by a data product is the utility it is used for, but Service also means the {k8s-service}[Kubernetes resource].
-The Stackable Data Platform supports three {k8s-service-types}[types of Service]:
+The Stackable Data Platform supports three {k8s-service-types}[types of Kubernetes Service] for exposing data product endpoints:
 
 * ClusterIP
 * NodePort
