@@ -83,4 +83,4 @@ spec:
 
 <1> The JournalNode role with only a single default role group. For the role group 3 replicas are specified, specifying a replica count is optional, the default is 1.
 <2> A common config setting for the DataNodes role. This configuration setting applies only to Pods for this role.
-<3> The DataNode role has two role groups, the default group and the hiCapacity group. In it the config setting for the group is overridden with a higher value of 2Gi. This role group has only one replica.
+<3> The DataNode role has two role groups, the default group and the highCapacity group. The highCapacity group settings override the role defaults with a higher storage value of 2Gi and only one replica.
