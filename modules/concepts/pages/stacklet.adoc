@@ -45,7 +45,7 @@ Any configuration made at role group level overrides role level settings, as it 
 [#example]
 == Example
 
-HDFS uses three distinct processes that work together to fulfill its duty: NameNodes, DataNodes and JournalNodes.
+HDFS uses three distinct components that work together to fulfill its duty: NameNodes, DataNodes and JournalNodes.
 With roles you can specify different configuration settings for each of these.
 
 [source,yaml]
