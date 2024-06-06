@@ -150,7 +150,7 @@ The following are selected product features provided by new versions available i
 Support for the ARM architecture::
 During the development of this release, we started introducing support for the arm64 architecture.
 Currently support is experimental, and we only provide arm64 images for the previous release (23.11).
-For more information on how to use the ARM images, refer to the xref:concepts:arm64-support.adoc[documentation].
+For more information on how to use the ARM images, refer to the xref:concepts:container-images.adoc#multi-platform-support[documentation].
 
 === Product versions
 
