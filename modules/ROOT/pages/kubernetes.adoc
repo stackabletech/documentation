@@ -161,6 +161,9 @@ https://kubernetes.io/docs/tasks/configure-pod-container/security-context/[some 
 
 `readOnlyRootFilesystem`
 
+* we might be able to fix this in some instances
+* sometimes the software is shitty and its hard to fix
+
 === storageclass and CSI driver reqs.
 
 The secret operator is basically a fake CSI driver that you can request drives from, with certain labels.
