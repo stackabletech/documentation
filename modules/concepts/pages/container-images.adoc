@@ -34,6 +34,7 @@ Have a look at the xref:guides:viewing-and-verifying-sboms.adoc[] guide to learn
 == Multi-platform support
 
 Starting with Stackable release 24.7, all images are {multi-platform-images}[multi-platform images], supporting the AMD64 and ARM64 architectures.
+This means that Docker automatically pulls the correct image for your architecture based on the architecture it detects that it is running on.
 
 [#signatures]
 == Image signatures
