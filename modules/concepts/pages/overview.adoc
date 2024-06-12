@@ -51,7 +51,7 @@ Many of the data products that Stackable supports require multiple different com
 For example an HDFS cluster is made up of DataNodes, NameNodes and JournalNodes.
 Stackable calls the components that make up the product xref:stacklet.adoc#roles[_roles_].
 All roles are configured together in the custom resource for the product and there is a dedicated configuration section for each role.
-Every role is running using the same underlying container image, but with different paremeters and they each get their own StatefulSet, ConfigMaps and Service.
+Every role is running using the same underlying container image, but with different parameters and they each get their own StatefulSet, ConfigMaps and Service.
 
 [#deployment]
 == Deployment
