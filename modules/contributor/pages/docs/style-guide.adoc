@@ -103,6 +103,11 @@ The Google guide also includes it's own list of https://developers.google.com/st
 
 Lastly, these are guidelines and not strict rules to follow. Use your own judgement to clearly communicate and explain - after all this is what documentation is about.
 
+== Images
+
+Please include an alt text when https://docs.asciidoctor.org/asciidoc/latest/macros/images/[embedding images].
+The alt text should describe what can be seen on the picture, to make the documentation more accessible.
+
 == CRD documentation
 
 In general, follow the other guidelines. In particular, use PascalCase for API objects and `code style` for object properties.
