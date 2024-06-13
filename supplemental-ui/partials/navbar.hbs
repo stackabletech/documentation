@@ -1,8 +1,10 @@
 <div class="navbar-item has-dropdown is-hoverable">
     <a class="navbar-link" href="#">Platform</a>
     <div class="navbar-dropdown">
+        {{#if (not (or (eq page.version "23.1") (eq page.version "23.4") (eq page.version "23.7") (eq page.version "23.11") (eq page.version "24.3")))}}
         <a class="navbar-item" href="{{{ relativize (versioned "home" page "/quickstart.html") }}}">Quickstart</a>
         <a class="navbar-item" href="{{{ relativize (versioned "home" page "/kubernetes/index.html") }}}">Kubernetes</a>
+        {{/if}}
         <a class="navbar-item" href="{{{ relativize (versioned "home" page "/getting-started.html") }}}">Getting Started</a>
         <hr class="navbar-divider">
         <a class="navbar-item" href="{{{ relativize (versioned "home" page "concepts/index.html") }}}">Concepts</a>
