@@ -1,0 +1,3 @@
+= Microk8s
+
+Microk8s uses a non-standard Kubelet state directory. Therefore installing secret-operator on Microk8s requires a special treatement. Please read on the xref:secret-operator:installation.adoc#_microk8s[secret-operator installation guide] for details.

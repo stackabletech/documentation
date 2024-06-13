@@ -16,7 +16,8 @@ Stackable is based on Kubernetes and uses this as the control plane to manage cl
 
 == Installing Kubernetes and kubectl
 
-Stackable's control plane is built around Kubernetes. Follow the xref:kubernetes.adoc#local-installation[instructions] on how to set up a local Kubernetes instance if you do not have access to a cluster and install kubectl.
+Stackable's control plane is built around Kubernetes.
+Follow the xref:kubernetes/index.adoc#local-installation[instructions] on how to set up a local Kubernetes instance if you do not have access to a cluster and install `kubectl`.
 
 If you already have kubectl installed, and have access to a Kubernetes cluster, you can skip this step.
 
