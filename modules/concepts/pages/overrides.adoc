@@ -145,3 +145,7 @@ The `podOverrides` will be merged onto the following resources the operators dep
 * StatefulSets containing the products (most of the products)
 * DaemonSets containing the products (currently only OPA)
 * Deployments containing the products (currently no product, but there might be Deployments in the future)
+
+They will *not* be applied to:
+
+* Jobs, that are used to setup systems the product depends on e.g. create a database schema for Superset or Airflow.
