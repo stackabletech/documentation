@@ -28,7 +28,7 @@ Additionally users need to be able to configure their own affinity rules on a ro
 
 During our deliberations we worked out the following main use cases that should be possible with the chosen solution:
 
-1. Leave defaults as set by the operator -> no nodeAffinity oder nodeSelect, podAffinities
+1. Leave defaults as set by the operator -> no nodeAffinity or nodeSelect, podAffinities
 2. Set node affinities, but leave the default pod affinities as set by the operator
 3. Override pod affinities set by the operator with custom ones
 4. Override pod affinities and set node affinities at the same time

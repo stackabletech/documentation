@@ -129,4 +129,4 @@ The `podOverrides` will be merged onto the following resources the operators dep
 
 They will *not* be applied to:
 
-* Jobs, that are used to setup systems the product depends on e.g. create a database schema for Superset oder Airflow.
+* Jobs, that are used to setup systems the product depends on e.g. create a database schema for Superset or Airflow.
