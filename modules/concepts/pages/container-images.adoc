@@ -19,7 +19,7 @@ All images are stored in the {stackable-image-registry}[Stackable image registry
 == Image structure and contents
 
 All our images are built using the {ubi}[Red Hat Universal Base Image (UBI)] minimal as a base image.
-This is a requirement for the platform to achieve xref:ROOT:kubernetes.adoc[OpenShift] certification and be available in the RedHat Certified Operator catalog.
+This is a requirement for the platform to achieve xref:ROOT:kubernetes/openshift.adoc[OpenShift] certification and be available in the RedHat Certified Operator catalog.
 The base image also contains only minimal dependencies and is vetted by RedHat.
 
 The file system structure is the same across all images, which makes the images easier to work with.

@@ -1,0 +1,26 @@
+= IONOS managed Kubernetes
+
+https://cloud.ionos.com/managed/kubernetes
+
+TIP: IONOS also offers a xref:kubernetes/ionos-managed-stackable.adoc[managed Stackable service], which simplifies the usage of Stackable.
+
+There are no special setup steps needed.
+
+. Create Kubernetes cluster
++
+image::managed-k8s/ionos/1.png[]
+
+. Create Nodepool
++
+image::managed-k8s/ionos/2.png[]
+
+. Download kubeconfig
++
+image::managed-k8s/ionos/3.png[]
+
+. Set kubectl context
++
+[source,bash]
+----
+export KUBECONFIG=~/Downloads/kubeconfig.json
+----

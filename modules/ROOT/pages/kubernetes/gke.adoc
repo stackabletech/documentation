@@ -1,0 +1,5 @@
+= Google Kubernetes Engine (GKE)
+
+Autopilot clusters are not suported, as the xref:secret-operator:index.adoc[secret-operator] requires special privileges that are not granted in Autopilot clusters.
+
+Other than that no special steps are needed.

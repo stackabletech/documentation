@@ -1,0 +1,5 @@
+= IONOS managed Stackable
+
+https://cloud.ionos.com/solutions/managed-stackable
+
+> The Managed Stackable Data Platform from IONOS Cloud is designed to enable you to work with maximum efficiency: Simply select the appropriate data management tools for your respective purpose, build individual stacks for yourself or your customers and make all your data productively usable as quickly as possible
