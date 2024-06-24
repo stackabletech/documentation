@@ -1,10 +1,11 @@
 = Cluster operations
 :page-aliases: ../cluster_operations.adoc
 
-Stackable operators offer different cluster operations to control the reconciliation process. This is useful when updating operators, debugging or testing of new settings:
+Stackable operators offer different cluster operations to control the reconciliation process.
+This is useful when updating operators, debugging or testing of new settings:
 
 * `reconciliationPaused` - Stop the operator from reconciling the cluster spec. The status will still be updated.
-* `stopped` - Stop all running pods but keep updating all deployed resources like `ConfigMaps`, `Services` and the cluster status.
+* `stopped` - Stop all running Pods but keep updating all deployed resources like ConfigMaps, Services and the cluster status.
 
 If not specified, `clusterOperation.reconciliationPaused` and `clusterOperation.stopped` default to `false`.
 
@@ -15,26 +16,31 @@ If not specified, `clusterOperation.reconciliationPaused` and `clusterOperation.
 include::example$cluster-operations.yaml[]
 ----
 <1> The `clusterOperation.reconciliationPaused` flag set to `true` stops the operator from reconciling any changes to the cluster spec. The cluster status is still updated.
-<2> The `clusterOperation.stopped` flag set to `true` stops all pods in the cluster. This is done by setting all deployed `StatefulSet` replicas to 0.
+<2> The `clusterOperation.stopped` flag set to `true` stops all pods in the cluster. This is done by setting all deployed StatefulSet replicas to 0.
 
 
-IMPORTANT: When setting `clusterOperation.reconciliationPaused` and `clusterOperation.stopped` to true in the same step, `clusterOperation.reconciliationPaused` will take precedence. This means the cluster will stop reconciling immediately and the `stopped` field is ignored. To avoid this, the cluster should first be stopped and then paused.
+IMPORTANT: When setting `clusterOperation.reconciliationPaused` and `clusterOperation.stopped` to true in the same step, `clusterOperation.reconciliationPaused` will take precedence.
+This means the cluster will stop reconciling immediately and the `stopped` field is ignored.
+To avoid this, the cluster should first be stopped and then paused.
 
-== Service Restarts
+== Service restarts
 
-=== Manual Restarts
+=== Manual restarts
 
-Sometimes it is necessary to restart services deployed in Kubernetes. A service restart should induce as little disruption as possible, ideally none.
+Sometimes it is necessary to restart services deployed in Kubernetes.
+A service restart should induce as little disruption as possible, ideally none.
 
-Most operators create StatefulSet objects for the products they manage and Kubernetes offers a rollout mechanism to restart them. You can use `kubectl rollout restart statefulset` to restart a StatefulSet previously created by an operator.
+Most operators create StatefulSet objects for the products they manage and Kubernetes offers a rollout mechanism to restart them.
+You can use `kubectl rollout restart statefulset` to restart a StatefulSet previously created by an operator.
 
-To illustrate how to use the command line to restart one or more Pods, we will assume you used the Stackable HDFS Operator to deploy an HDFS stacklet called `dumbo`.
+To illustrate how to use the command line to restart one or more Pods, we will assume you used the Stackable HDFS Operator to deploy an HDFS xref:stacklet.adoc[Stacklet] called `dumbo`.
 
-This stacklet will consist, among other things, of three StatefulSets created for each HDFS role: `namenode`, `datanode` and `journalnode`. Let's list them:
+This Stacklet will consist, among other things, of three StatefulSets created for each HDFS role: `namenode`, `datanode` and `journalnode`.
+Let's list them:
 
 [source,shell]
 ----
-❯ kubectl get statefulset -l app.kubernetes.io/instance=dumbo
+$ kubectl get statefulset -l app.kubernetes.io/instance=dumbo
 NAME                        READY   AGE
 dumbo-datanode-default      2/2     4m41s
 dumbo-journalnode-default   1/1     4m41s
@@ -45,7 +51,7 @@ To restart the HDFS DataNode Pods, run:
 
 [source,shell]
 ----
-❯ kubectl rollout restart statefulset dumbo-datanode-default 
+$ kubectl rollout restart statefulset dumbo-datanode-default 
 statefulset.apps/dumbo-datanode-default restarted
 ----
 
@@ -53,18 +59,21 @@ Sometimes you want to restart all Pods of a stacklet and not just individual rol
 
 [source,shell]
 ----
-❯ kubectl rollout restart statefulset --selector app.kubernetes.io/instance=dumbo
+$ kubectl rollout restart statefulset --selector app.kubernetes.io/instance=dumbo
 ----
 
 To wait for all Pods to be running again:
 
 [source,shell]
 ----
-❯ kubectl rollout status statefulset --selector app.kubernetes.io/instance=dumbo
+$ kubectl rollout status statefulset --selector app.kubernetes.io/instance=dumbo
 ----
 
-Here we used the label `app.kubernetes.io/instance=dumbo` to select all Pods that belong to a specific HDFS stacklet. This label is created by the operator and `dumbo` is the name of the HDFS stacklet as specified in the custom resource. You can add more labels to make finer grained restarts.
+Here we used the label `app.kubernetes.io/instance=dumbo` to select all Pods that belong to a specific HDFS Stacklet.
+This label is created by the operator and `dumbo` is the name of the HDFS Stacklet as specified in the custom resource.
+You can add more labels to make finer grained restarts.
 
-== Automatic Restarts
+== Automatic restarts
 
-The Commons Operator of the Stackable Platform may restart Pods automatically, for purposes such as ensuring that TLS certificates are up-to-date. For details, see the xref:commons-operator:index.adoc[Commons Operator documentation].
+The Commons Operator of the Stackable Platform may restart Pods automatically, for purposes such as ensuring that TLS certificates are up-to-date.
+For details, see the xref:commons-operator:index.adoc[Commons Operator documentation].

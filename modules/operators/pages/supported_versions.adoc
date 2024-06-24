@@ -3,7 +3,7 @@
 Below you find the list of versions that are supported for each product.
 New versions get added every release, old ones are deprecated or removed. Read the xref:ROOT:release-notes.adoc[] for each platform version to see which product versions are available.
 
-Read about xref:concepts:product-image-selection.adoc[] to learn how to use a particular version in your Stacklet, as well as how you can use custom images or a custom registry.
+Read about xref:concepts:product-image-selection.adoc[] to learn how to use a particular version in your xref:concepts:stacklet.adoc[], as well as how you can use custom images or a custom registry.
 
 == Apache Airflow
 

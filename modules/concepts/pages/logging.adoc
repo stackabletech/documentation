@@ -1,48 +1,54 @@
 = Logging
 :description: A conceptual explanation of the logging architecture of the Stackable Data Platform, and how it is configured.
 :keywords: logging, observability, log aggregation, Kubernetes, k8s, Vector, Elasticsearch, OpenSearch
+:vector: https://vector.dev/
+:vector-sinks: https://vector.dev/docs/reference/configuration/sinks/#
+:vector-sidecar: https://vector.dev/docs/setup/deployment/roles/#sidecar
+:vector-aggregator: https://vector.dev/docs/setup/deployment/roles/#aggregator
+:vector-agg-install: https://vector.dev/docs/setup/installation/package-managers/helm/#aggregator
+:vector-source-vector: https://vector.dev/docs/reference/configuration/sources/vector/
+:vector-topology-centralized: https://vector.dev/docs/setup/deployment/topologies/#centralized
 
-// Abstract
 Logging is important for observability of the platform.
 Stackable provides human-readable plaintext logs for each running container, as well as aggregated and persisted logs with identical structure across the whole platform.
-Log levels can be set for individual modules and configuration is identical across all products, but custom logging configuration files can be supplied as well.
+Log levels can be set for individual modules and configuration is identical in each xref:stacklet.adoc[Stacklet], but custom logging configuration files can be supplied as well.
 
 image::logging_overview.drawio.svg[]
 
 == Motivation
 
-**Aggregate and persist** - The logging on the platform was designed to aggregate logs from all parts of the platform to make it easy to correlate events from different parts.
-For this, logs should share the same structure, and should be viewable in a central location.
-Logs should also be persisted in a central location, so if a component crashes, the logs are still there to identify the reason.
+**Aggregate and persist** - The logging architecture is designed to aggregate logs from all parts of the platform to simplify correlating events from different Stacklets.
+For this, logs from different sources are configured to share the same structure, and are collected and made viewable in a central location.
+The collected logs are also be persisted centrally, so if a component crashes its logs are still there to investigate the cause of the crash.
 
-**Easy to read on the fly** - At the same time, logs should still be accessible in an easy to read format on the containers, to allow for easy on the fly inspection of each part of the platform.
+**Easy to read on the fly** - At the same time logs are kept accessible in an plain format on the containers, supporting easy on the fly inspection of running Stacklets.
 The logging configuration also supports setting different thresholds for the logs readable on the container and the aggregated logs.
 This way you can get a detailed view of the operations of a component while viewing it on the container, but aggregate logs at a coarser granularity when aggregating across the whole platform.
 
 **Consistent configuration** - Finally, logging should be always configured the same way, no matter which product and which underlying technology is used to produce the logs.
-Logging for each product is configured in the ProductCluster resource.
-It is still supported to supply custom logging configuration files, these are then product specific.
+Logging for each product is configured in the Stacklet resource.
+For advanced log configurations, supplying custom product specific log configuration files is also supported.
 
 == Architecture
 
 Below you can see the overall architecture using ZooKeeper as an example.
-Stackable uses https://vector.dev/[Vector] for log aggregation and any of the supported https://vector.dev/docs/reference/configuration/sinks/[sinks] can be used to persist the logs.
+Stackable uses {vector}[Vector] for log aggregation and any of the supported {vector-sinks}[sinks] can be used to persist the logs.
 
-image::logging_architecture.drawio.svg[]
+image::logging_architecture.drawio.svg[An architecture diagram showing the Kubernetes resources involved in the logging stack]
 
 === Log source
 
-You configure your logging settings in the resource describing the cluster (ZookeeperCluster in this example), seen in the top left in the diagram (see the <<configuration, configuration>> section below).
+You configure your logging settings in the Stacklet definition (ZookeeperCluster in this example), seen in the top left in the diagram (see the <<configuration, configuration>> section below).
 The operator reads this resource and creates the appropriate log configuration files in the ConfigMap which also holds other product configuration.
 The ConfigMap is then mounted into the containers.
-The ZooKeeper Pod has three containers: The `prepare` sidecar container, the `zookeeper` container and the `vector` https://vector.dev/docs/setup/deployment/roles/#sidecar[sidecar container].
-All logs get written into a shared mounted directory, from which the Vector agent reads them and sends them to the Vector https://vector.dev/docs/setup/deployment/roles/#aggregator[aggregator].
+The ZooKeeper Pod has three containers: The `prepare` sidecar container, the `zookeeper` container and the `vector` {vector-sidecar}[sidecar container].
+All logs get written into a shared mounted directory, from which the Vector agent reads them and sends them to the Vector {vector-aggregator}[aggregator].
 
 === Aggregator and sinks
 
-The aggregator is configured to use one or multiple https://vector.dev/docs/reference/configuration/sinks/[sinks] (for example OpenSearch, Elasticsearch), it sends all logs to all sinks.
-If a sink is unavailable, it will buffer the log messages.
-It is also the single point where the sinks are configured, so the sinks are decoupled from the individual product configurations and only needs to be configured in this single location for the whole platform.
+The aggregator is configured to use one or multiple {vector-sinks}[sinks] (for example OpenSearch, Elasticsearch), it sends all logs to all sinks.
+If a sink is unavailable, the aggregator buffers the log messages.
+It is also the single point where the sinks are configured, so the sinks are decoupled from the Stacklet definitions and only need to be configured in this single location for the whole platform.
 
 [#configuration]
 == Configuration
@@ -109,12 +115,12 @@ A typical use case is that the log level for the console is set to a more detail
 **Per container configuration** - A Pod actually consists of multiple containers and you might want different log levels for each of them.
 Also the log levels per module are container specific.
 
-Following the Stackable xref::roles-and-role-groups.adoc[roles and role groups] concept, this configuration fragment can be set either at role or role group level.
+Following the Stackable xref:stacklet.adoc#roles[roles] and xref::stacklet.adoc#roles[role groups] concept, this configuration fragment can be set either at role or role group level.
 
 === Configuring the Aggregator
 
-Follow the https://vector.dev/docs/setup/installation/package-managers/helm/#aggregator[installation instructions] for the aggregator.
-Configure a https://vector.dev/docs/reference/configuration/sources/vector/[Vector source] at adress `0.0.0.0:6000` and configure sinks and additional settings according to your needs.
+Follow the {vector-agg-install}[installation instructions] for the aggregator.
+Configure a {vector-source-vector}[Vector source] at adress `0.0.0.0:6000` and configure sinks and additional settings according to your needs.
 
 === Configuring the aggregator location
 
@@ -123,21 +129,22 @@ The field is called `ADDRESS` and the value could be `vector-aggregator:6000` if
 
 == Custom overrides
 
-As with many parts of the Stackable platform, custom overrides are supported as well, by supplying your own logging configuration file. This is then product specific.
+As with many parts of the Stackable platform, custom overrides are supported as well, by supplying your own logging configuration file.
+This is then product specific.
 
-```yaml
+[source,yaml]
+----
 logging:
   enableVectorAgent: false       // <1>
   containers:
     my-container:
       custom:
         configMap: my-configmap  // <2>
-```
-
-<1> The vector logging agent is not deployed
-<2> A custom logging configuration is loaded from a ConfigMap called `my-configmap`
+----
+<1> The vector logging agent is not deployed.
+<2> A custom logging configuration is loaded from a ConfigMap called `my-configmap`.
 
 == Further reading
 
 To get some hands on experience and see logging in action, try out the xref:demos:logging.adoc[logging demo] or follow the xref:tutorials:logging-vector-aggregator.adoc[logging tutorial].
-The Vector documentation contains more information about the https://vector.dev/docs/setup/deployment/topologies/#centralized[deployment topology] and https://vector.dev/docs/reference/configuration/sinks/[sinks].
+The Vector documentation contains more information about the {vector-topology-centralized}[deployment topology] and {vector-sinks}[sinks] that can be used.
