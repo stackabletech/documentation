@@ -1,5 +1,5 @@
 * https://aws.amazon.com/eks/[Amazon Elastic Kubernetes Service]
-* https://azure.microsoft.com/en-gb/products/kubernetes-service[Microsoft Azure Kubernetes Service]
+* https://azure.microsoft.com/en-gb/products/kubernetes-service[Azure Kubernetes Service]
 * https://cloud.google.com/kubernetes-engine[Google Kubernetes Engine]
 * https://cloud.ionos.com/managed/kubernetes[IONOS Managed Kubernetes]
 * https://www.rancher.com/products/rancher[SUSE Rancher]
