@@ -34,10 +34,12 @@ Click on `Review + Create` to finish the creation
 . Allow incoming traffic
 +
 Even though we made the Kubernetes nodes puclic and have no traffic policy, incoming connections will still be blocked by default.
++
+image::managed-k8s/aks/8.png[]
 You need to go to `Network security group`s and modify the one created for your Kubernetes cluster.
 +
 image::managed-k8s/aks/5.png[]
-Add a new inbound security rule, which allows all incoming connections
+Add a new inbound security rule, which allows all incoming connections.
 +
 image::managed-k8s/aks/6.png[]
 
