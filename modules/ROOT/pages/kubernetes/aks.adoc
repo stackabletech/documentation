@@ -12,7 +12,7 @@ image::managed-k8s/aks/1.png[]
 
 . Update NodePool settings
 +
-We recommend checking `Enable public IP per node`, so that our demos work out of the box as they are using NodePorts for maximum portability.
+It is recommended to check `Enable public IP per node`, so that the Stackable demos work out of the box as they are using NodePorts for maximum portability.
 +
 image::managed-k8s/aks/2.png[]
 +
