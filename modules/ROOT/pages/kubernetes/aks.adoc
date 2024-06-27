@@ -1,6 +1,6 @@
 = Azure Kubernetes Service (AKS)
 
-Automatic Kubernetes Cluster are not suported, as the xref:secret-operator:index.adoc[secret-operator] requires special privileges that are not granted in automatic Kubernetes clusters.
+Automatic Kubernetes clusters are not supported, as the xref:secret-operator:index.adoc[secret-operator] requires special privileges that are not granted in automatic Kubernetes clusters.
 
 https://azure.microsoft.com/en-us/products/kubernetes-service
 
@@ -22,7 +22,7 @@ image::managed-k8s/aks/3.png[]
 
 . Enable public access
 +
-You also need set `Network policy` to `None`, so that your deployed demos are reachable from the Internet.
+You also need set `Network policy` to `None`, so that your deployed demos are reachable from the internet.
 +
 image::managed-k8s/aks/4.png[]
 
@@ -32,7 +32,7 @@ Click on `Review + Create` to finish the creation
 
 . Allow incoming traffic
 +
-Even though we made the Kubernetes nodes puclic and have no traffic policy, incoming connections will still be blocked by default.
+Even though the Kubernetes nodes were configured to be public and have no traffic policy, incoming connections will still be blocked by default.
 +
 image::managed-k8s/aks/8.png[]
 You need to go to `Network security group`s and modify the one created for your Kubernetes cluster.
