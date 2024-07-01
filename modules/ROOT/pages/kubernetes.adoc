@@ -157,6 +157,10 @@ Why?
 
 https://kubernetes.io/docs/tasks/configure-pod-container/security-context/[some info]
 
+==== runAsuser, runAsGroup
+
+TODO
+
 ==== root paths must be rw
 
 `readOnlyRootFilesystem`
