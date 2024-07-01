@@ -1,13 +1,14 @@
 = Allowed Pod disruptions
+:k8s-pdb: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
 
 Any downtime of our products is generally considered to be bad.
 Although downtime can't be prevented 100% of the time - especially if the product does not support High Availability - we can try to do our best to reduce it to an absolute minimum.
 
-Kubernetes has mechanisms to ensure minimal *planned* downtime.
-Please keep in mind, that this only affects planned (voluntary) downtime of Pods - unplanned Kubernetes node crashes can always occur.
+Kubernetes provides mechanisms to ensure minimal *planned* downtime.
+Please keep in mind that this only affects planned (voluntary) downtime of Pods - unplanned Kubernetes node crashes can always occur.
 
-Our product operator will always deploy so-called https://kubernetes.io/docs/tasks/run-application/configure-pdb/[PodDisruptionBudget (PDB)] resources alongside the products.
-For every role that you specify (e.g. HDFS namenodes or Trino workers) a PDB is created.
+Our operators will always deploy so-called {k8s-pdb}[PodDisruptionBudget (PDB)] resources as part of a xref:stacklet.adoc[].
+For every xref:stacklet.adoc#roles[role] that you specify (e.g. HDFS namenodes or Trino workers) a PDB is created.
 
 == Default values
 The defaults depend on the individual product and can be found below the "Operations" usage guide.
@@ -27,13 +28,14 @@ Increasing the number of allowed disruptions and increasing the number of replic
 
 === Multiple replicas to increase performance
 
-For these roles (e.g. HDFS datanodes, HBase regionservers or Trino workers), more than a single Pod is allowed to be unavailable. Otherwise, rolling re-deployments may take very long.
+For these roles (e.g. HDFS datanodes, HBase regionservers or Trino workers), more than a single Pod is allowed to be unavailable.
+Otherwise, rolling re-deployments may take very long.
 
-IMPORTANT: The operators calculate the number of Pods for a given role by adding the number of replicas of every rolegroup that is part of that role.
+IMPORTANT: The operators calculate the number of Pods for a given role by adding the number of replicas of every role group that is part of that role.
 
-In case there are no replicas defined on a rolegroup, one Pod will be assumed for this rolegroup, as the created Kubernetes objects (StatefulSets or Deployments) will default to a single replica as well.
+In case there are no replicas defined on a role group, one Pod will be assumed for this role group, as the created Kubernetes objects (StatefulSets or Deployments) will default to a single replica as well.
 However, in case there are https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/[HorizontalPodAutoscaler] in place, the number of replicas of a rolegroup can change dynamically.
-In this case the operators might falsely assume that rolegroups have fewer Pods than they actually have.
+In this case the operators might falsely assume that role groups have fewer Pods than they actually have.
 This is a pessimistic approach, as the number of allowed disruptions normally stays the same or even increases when the number of Pods increases.
 This should be safe, but in some cases more Pods *could* have been allowed to be unavailable which may increase the duration of rolling re-deployments.
 

@@ -1,19 +1,21 @@
 = Overrides
+:k8s-openapi-deepmerge: https://arnavion.github.io/k8s-openapi/v0.22.x/k8s_openapi/trait.DeepMerge.html
 
-The Stackable Operators configure the products they are operating with sensible defaults and required settings to enable connectivity and security.
-Other important settings are usually exposed as settings in the resource definition.
-In some cases however, you might want to set certain settings that are not exposed, or override settings that the operator has set on the product.
+The Stackable operators configure the xref:stacklet.adoc[Stacklets] they are operating with sensible defaults and required settings to enable connectivity and security.
+Other important settings are usually exposed in the Stacklet resource definition for you to configure directly.
+In some cases however, you might want to configure certain settings that are not exposed or are set by the operator.
 
-The resource definitions of all products support overrides, specifically for the product configuration, environment variables, and the PodSpec the operators generate.
+The resource definitions of all Stacklets support overrides, specifically for the <<config-overrides, product configuration>>, <<env-overrides, environment variables>>, and the <<pod-overrides, PodSpec>> the operators generate.
 
-WARNING: Overriding certain configuration properties can lead to faulty clusters. Overrides should only be used as a last resort!
+WARNING: Overriding certain configuration properties can lead to faulty clusters.
+Overrides should only be used as a last resort!
 
-The cluster definitions also supports overriding configuration aspects, either per xref:roles-and-role-groups.adoc[role or per role group], where the more specific override (role group) has precedence over the less specific one (role).
+The Stacklet definitions support overriding configuration aspects either per xref:stacklet.adoc#roles[role] or xref:stacklet.adoc#role-groups[role group], where the more specific override (role group) has precedence over the less specific one (role).
 
 [#config-overrides]
 == Config overrides
 
-For a xref:roles-and-role-groups.adoc[role or role group], at the same level of `config`, you can specify `configOverrides` for any of the configuration files the product uses.
+For a role or role group, at the same level of `config`, you can specify `configOverrides` for any of the configuration files the product uses.
 
 An example for an HDFS cluster looks as follows:
 
@@ -24,23 +26,31 @@ kind: HdfsCluster
 metadata:
   name: simple-hdfs
 spec:
-  nameNodes: # change to your your role
-    config: # [..]
-    configOverrides: # on role level
-      core-site.xml: # change to your desired configuration file
-        fs.trash.interval: "5"
+  nameNodes:
+    config:
+      ...
+    configOverrides: <1>
+      core-site.xml: <2>
+        fs.trash.interval: "5" <3>
     roleGroups:
       default:
-        config: # [..]
-        configOverrides: # on rolegroup level, takes precedence over the ones specified at role level
+        config:
+          ...
+        configOverrides: <4>
           hdfs-site.xml:
             dfs.namenode.num.checkpoints.retained: "3"
         replicas: 1
+  ...
 ----
+<1> `configOverride` on role level.
+<2> The name of the configuration file that the override should be put into. You can find the available files as keys in the ConfigMaps created by the operator.
+<3> All keys must be strings, even if they are integers like in the example here.
+<4> `configOverride` on role group level, takes precedence over overrides at role level.
 
-The role, as well as the configuration file and configuration settings available depend on the specific product.
+The roles, as well as the configuration file and configuration settings available depend on the specific product.
 All override property values must be strings.
-The properties will be formatted and escaped correctly into the file format used by the product.
+The properties will be formatted and escaped correctly into the file format used by the product, which is again product specific.
+This can be a `.properities` file, XML, YAML or JSON.
 
 You can also set the property to an empty string (`my.property: ""`), which effectively disables the property the operator would write out normally.
 In case of a `.properties` file, this will show up as `my.property=` in the `.properties` file.
@@ -48,7 +58,7 @@ In case of a `.properties` file, this will show up as `my.property=` in the `.pr
 [#env-overrides]
 == Environment variable overrides
 
-For a xref:roles-and-role-groups.adoc[role or role group], at the same level of `config`, you can specify `envOverrides` for any env variable
+For a role or role group, at the same level of `config`, you can specify `envOverrides` for any environment variable.
 
 An example for an HDFS cluster looks as follows:
 
@@ -59,28 +69,32 @@ kind: HdfsCluster
 metadata:
   name: simple-hdfs
 spec:
-  nameNodes: # change to your your role
-    config: # [..]
-    envOverrides: # on role level
+  nameNodes:
+    config:
+      ...
+    envOverrides: <1>
       MY_ENV_VAR: "MY_VALUE"
-    configOverrides: # on role level
-      core-site.xml: # change to your desired configuration file
-        fs.trash.interval: "5"
     roleGroups:
       default:
-        config: # [..]
-        envOverrides: # on rolegroup level, takes precedence over the ones specified at role level
+        config:
+          ...
+        envOverrides: <2>
           MY_ENV_VAR: "MY_VALUE"
         replicas: 1
+  ...
 ----
+<1> `envOverrides` at role level.
+<2> `envOverrides` on role group level, takes precedence over the overrides specified at role level.
 
-You can set any environment variable, but every specific product does support a different set of environment variables.
+You can set any environment variable, but every Stacklet supports a different set of environment variables, these are documented in the product documentation.
 All override property values must be strings.
 
 [#pod-overrides]
 == Pod overrides
 
-For a xref:roles-and-role-groups.adoc[role or role group], at the same level of `config`, you can specify `podOverrides` for any of the attributes you can configure on a Pod.
+For a role or role group, at the same level of `config`, you can specify `podOverrides` for any of the attributes you can configure on a Pod.
+Every Stacklet contains one or more StatefulSets, DaemonSets, or Deployments, which in turn contain a Pod template that is used by Kubernetes to create the Pods that make up the Stacklet.
+The `podOverrides` allow you to specify a fragment of a Pod template that is then overlayed over the one created by the operator.
 
 An example for an HDFS cluster looks as follows:
 
@@ -91,9 +105,10 @@ kind: HdfsCluster
 metadata:
   name: simple-hdfs
 spec:
-  nameNodes: # change to your your role
-    config: # [..]
-    podOverrides: # on role level
+  nameNodes:
+    config:
+      ...
+    podOverrides: <1>
       spec:
         tolerations:
           - key: "key1"
@@ -102,13 +117,17 @@ spec:
             effect: "NoSchedule"
     roleGroups:
       default:
-        config: # [..]
-        podOverrides: # on rolegroup level, takes precedence over the ones specified at role level
+        config:
+          ...
+        podOverrides: <2>
           metadata:
             labels:
               my-custom-label: super-important-label
         replicas: 1
+  ...
 ----
+<1> `podOverrides` at role level.
+<2> `podOverrides` on role group level, takes precedence over the overrides specified at role level.
 
 The `podOverrides` can be any valid `PodTemplateSpec` (which means every property that you can set on a regular Kubernetes Pod).
 
@@ -119,7 +138,7 @@ The priority of how to construct the final Pod submitted to Kubernetes looks as 
 3. PodTemplateSpec given in rolegroup level `podOverrides`
 
 Each of these are combined top to bottom using a deep merge.
-The exact merge algorithm is described in the https://arnavion.github.io/k8s-openapi/v0.18.x/k8s_openapi/trait.DeepMerge.html[k8s-openapi docs], which basically tries to mimic the way Kubernetes merges patches onto objects.
+The exact merge algorithm is described in the {k8s-openapi-deepmerge}[k8s-openapi docs], which basically tries to mimic the way Kubernetes merges patches onto objects.
 
 The `podOverrides` will be merged onto the following resources the operators deploy:
 
@@ -129,4 +148,4 @@ The `podOverrides` will be merged onto the following resources the operators dep
 
 They will *not* be applied to:
 
-* Jobs, that are used to setup systems the product depends on e.g. create a database schema for Superset oder Airflow.
+* Jobs, that are used to setup systems the product depends on e.g. create a database schema for Superset or Airflow.

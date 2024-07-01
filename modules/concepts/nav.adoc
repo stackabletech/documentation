@@ -1,10 +1,9 @@
 * xref:concepts:index.adoc[]
-** xref:overview.adoc[Overview]
+** xref:overview.adoc[Platform overview]
+** xref:stacklet.adoc[]
 ** Common configuration mechanisms
-*** xref:roles-and-role-groups.adoc[]
 *** xref:product_image_selection.adoc[]
 *** xref:overrides.adoc[Advanced: overrides]
-*** xref:arm64-support.adoc[]
 ** Resources
 *** xref:resources.adoc[]
 *** xref:s3.adoc[]

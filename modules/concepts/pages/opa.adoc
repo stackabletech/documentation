@@ -1,28 +1,42 @@
 = OPA authorization
+:opa: https://www.openpolicyagent.org
+:rego: https://www.openpolicyagent.org/docs/latest/policy-language/
+:opa-docs: https://www.openpolicyagent.org/docs/latest/#overview
 
-The Stackable Platform offers policy-based access control via the https://www.openpolicyagent.org[OpenPolicyAgent] (OPA) operator.
-//
-Authorization policies are defined in the Rego language, divided into packages and supplied via ConfigMaps.
-//
+The Stackable Data Platform offers policy-based access control via the {opa}[OpenPolicyAgent] (OPA) operator.
+Authorization policies are defined in the {rego}[Rego] language, divided into packages and supplied via ConfigMaps.
 Every node is running an OPA instance for fast policy evaluation and products are connected to OPA with the xref:service_discovery.adoc[service discovery] mechanism.
 
 == What is OPA?
 // What's OPA? What are Rego Rules?
-OPA is an open source, general purpose policy engine. It supports a high-level declarative language called https://www.openpolicyagent.org/docs/latest/policy-language/[Rego]. Rego enables you to specify complex policies as code and transfer the decision-making processes from your software to OPA. Policies written in Rego are called _Rego rules_.
+OPA is an open-source, general-purpose policy engine.
+It supports a high-level declarative language called {rego}[Rego].
+Rego enables you to specify complex policies as code and transfer the decision-making processes from your software to OPA.
+Policies written in Rego are called _Rego rules_.
 
 // policy requests
-Policy requests are made to a REST API, which allows easy requests from microservices, Kubernetes or CI/CD pipelines. In the request the requester can supply arbitrary structured input data as JSON to supply context information to the policy decision rules. For example the name of the user, resource and action for which an authorization is requested. In this way policy decision-making and policy enforcement are decoupled.
+Policy requests are made to a REST API, which allows easy requests from microservices, Kubernetes or CI/CD pipelines.
+In the request the requester can supply arbitrary structured input data as JSON to supply context information to the policy decision rules.
+For example the name of the user, resource and action for which an authorization is requested.
+In this way policy decision-making and policy enforcement are decoupled.
 
 == How it works
 // How it is deployed
-OPA is run by the xref:opa:index.adoc[Stackable OPA operator]. OPA is deployed with the OpaCluster resource, from which the operator creates a DaemonSet to run an OPA instance on every node of the cluster. Because of this, every Pod making policy requests will always make the request locally, minimizing latency and network traffic.
+OPA is run by the xref:opa:index.adoc[Stackable OPA operator].
+OPA is deployed with the OpaCluster resource, from which the operator creates a DaemonSet to run an OPA instance on every node of the cluster.
+Because of this, every Pod making policy requests will always make the request locally, minimizing latency and network traffic.
 
 === Define policies
 
-OPA by itself does not enforce a specific structure of Rego rules and the packages they are in, but the Stackable platform makes some assumptions. Whenever a product is connected to OPA (see <<_connect_a_product>>), a single package needs to be given, and that package needs to contain specific rules depending on the product. For example for Druid, a single `allow` rule needs to be defined.
+OPA by itself does not enforce a specific structure of Rego rules and the packages they are in, but the Stackable platform makes some assumptions.
+Whenever a product is connected to OPA (see <<_connect_a_product>>), a single package needs to be given, and that package needs to contain specific rules depending on the product.
+For example for Druid, a single `allow` rule needs to be defined.
 
 // Rego rules in config maps
-The Rego rule policies are supplied as ConfigMaps. Multiple ConfigMaps can be used for multiple packages, for example one package for Druid authorization, one package for a Trino development instance and one package for a Trino production instance. ConfigMaps were chosen as an easy to use method of supplying configuration files in a Kubernetes environment. The operator takes care of assembling the ConfigMaps into a policy bundle, every policy ConfigMap must contain a `opa.stackable.tech/bundle` label in order to be processed by the OPA operator.
+The Rego rule policies are supplied as ConfigMaps.
+Multiple ConfigMaps can be used for multiple packages, for example one package for Druid authorization, one package for a Trino development instance and one package for a Trino production instance.
+ConfigMaps were chosen as an easy to use method of supplying configuration files in a Kubernetes environment.
+The operator takes care of assembling the ConfigMaps into a policy bundle, every policy ConfigMap must contain a `opa.stackable.tech/bundle` label in order to be processed by the OPA operator.
 
 Here's an example of a Rego rule package in a ConfigMap:
 
@@ -57,11 +71,12 @@ data:
 The combination of arbitrary input data and the Rego rules enables you to specify and enforce almost any kind of policies.
 You can define powerful policies for e.g. user access for database tables, schemas, columns etc. You can enforce local network traffic, access time periods and many more.
 
-See the https://www.openpolicyagent.org/docs/latest/#overview[OPA documentation] for further examples.
+See the {opa-docs}[OPA documentation] for further examples.
 
 === Connect a product
 
-To connect a product to an OpaCluster, the name of the OpaCluster is needed as well as the name of the policy package to use with this product instance. An operator that supports OPA for its operated product will have a spec section like this:
+To connect a product to an OpaCluster, the name of the OpaCluster is needed as well as the name of the policy package to use with this product instance.
+A Stacklet that supports OPA for its operated product will have a `spec` section like this:
 
 [source, yaml]
 ----
@@ -72,14 +87,17 @@ spec:
     package: my-product // <2>
   ...
 ----
-<1> The reference to the OPA cluster
-<2> The name of the policy package to use for this product
+<1> The reference to the OPA cluster.
+<2> The name of the policy package to use for this product.
 
-The automatic connection is facilitated by the xref:service_discovery.adoc[service discovery mechanism] and no further information about OPA is required. The products query their respective rules via the supplied package name. See <<Further reading>> for links to specific product authorization documentation.
+The automatic connection is facilitated by the xref:service_discovery.adoc[service discovery mechanism] and no further information about OPA is required.
+The products query their respective rules via the supplied package name.
+See <<Further reading>> for links to specific product authorization documentation.
 
 == Further reading
 
-Read more about the xref:opa:index.adoc[]. Read more about product integration with OPA for these products:
+Read more about the xref:opa:index.adoc[].
+Read more about product integration with OPA for these products:
 
 * xref:trino:usage-guide/security.adoc#_authorization[Trino]
 * xref:kafka:usage.adoc[Kafka]

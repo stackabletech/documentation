@@ -1,7 +1,10 @@
 // This is meant to be inlined using the "include" directive in other pages.
 // WARNING: do not add headers here as they can break the structure of pages
 // that include this file.
-Stackable operators handle resource requests in a sligtly different manner than Kubernetes. Resource requests are defined on role or group level. See xref:concepts:roles-and-role-groups.adoc[] for details on these concepts. On a role level this means that e.g. all workers will use the same resource requests and limits. This can be further specified on role group level (which takes priority to the role level) to apply different resources.
+Stackable operators handle resource requests in a sligtly different manner than Kubernetes.
+Resource requests are defined on xref:concepts:stacklet.adoc#roles[role] or xref:concepts:stacklet.adoc#role-groups[role group] level.
+On a role level this means that by default, all workers will use the same resource requests and limits.
+This can be further specified on role group level (which takes priority to the role level) to apply different resources.
 
 This is an example on how to specify CPU and memory resources using the Stackable https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/[Custom Resources]:
 
@@ -35,10 +38,12 @@ spec:
               limit: 4Gi
 ----
 
-In this case, the role group `resources-from-role` will inherit the resources specified on the role level. Resulting in a maximum of `3Gi` memory and `600m` CPU resources.
+In this case, the role group `resources-from-role` will inherit the resources specified on the role level, resulting in a maximum of `3Gi` memory and `600m` CPU resources.
 
-The role group `resources-from-role-group` has maximum of `4Gi` memory and `800m` CPU resources (which overrides the role CPU resources).
+The role group `resources-from-role-group` has a maximum of `4Gi` memory and `800m` CPU resources (which overrides the role CPU resources).
 
-IMPORTANT: For Java products the actual used Heap memory is lower than the specified memory limit due to other processes in the Container requiring memory to run as well. Currently, 80% of the specified memory limits is passed to the JVM.
+IMPORTANT: For Java products the actual used heap memory is lower than the specified memory limit due to other processes in the Container requiring memory to run as well.
+Currently, 80% of the specified memory limit is passed to the JVM.
 
-For memory only a limit can be specified, which will be set as memory request and limit in the Container. This is to always guarantee a Container the full amount memory during Kubernetes scheduling.
+For memory, only a limit can be specified, which will be set as memory request and limit in the container.
+This is to always guarantee a container the full amount memory during Kubernetes scheduling.

@@ -34,7 +34,7 @@ dt {
 [%collapsible%open]
 ====
 For example HDFS consists of 3 roles: Name nodes, journal nodes and data nodes.
-Learn more about xref:concepts:roles-and-role-groups.adoc[].
+Learn more about xref:concepts:stacklet.adoc#roles[roles].
 ====
 
 [[role-group]]Role group <<role-group,{li}>>:: {empty}
@@ -43,7 +43,7 @@ Learn more about xref:concepts:roles-and-role-groups.adoc[].
 [%collapsible%open]
 ====
 A role group can override configuration set at role level, allowing for different configurations for sets of processes.
-Learn more about xref:concepts:roles-and-role-groups.adoc[].
+Learn more about xref:concepts:stacklet.adoc#role-groups[role groups].
 ====
 
 [[stacklet]]Stacklet <<stacklet,{li}>>:: {empty}

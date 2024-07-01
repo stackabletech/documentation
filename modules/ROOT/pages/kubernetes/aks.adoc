@@ -1,0 +1,50 @@
+= Azure Kubernetes Service (AKS)
+
+Automatic Kubernetes clusters are not supported, as the xref:secret-operator:index.adoc[secret-operator] requires special privileges that are not granted in automatic Kubernetes clusters.
+
+https://azure.microsoft.com/en-us/products/kubernetes-service
+
+. Create Kubernetes cluster
++
+Choose an arbitrary name, the default configurations should be fine.
++
+image::managed-k8s/aks/1.png[]
+
+. Update NodePool settings
++
+It is recommended to check `Enable public IP per node`, so that the Stackable demos work out of the box as they are using NodePorts for maximum portability.
++
+image::managed-k8s/aks/2.png[]
++
+In case you don't want to spend more money by having dedicated control-plane nodes, remove the `CriticalAddonsOnly` taint with the trash-button to the right, so that this nodes can also run workloads and not only the dataplane.
++
+image::managed-k8s/aks/3.png[]
+
+. Enable public access
++
+You also need set `Network policy` to `None`, so that your deployed demos are reachable from the internet.
++
+image::managed-k8s/aks/4.png[]
+
+. Create Kubernetes cluster
++
+Click on `Review + Create` to finish the creation
+
+. Allow incoming traffic
++
+Even though the Kubernetes nodes were configured to be public and have no traffic policy, incoming connections will still be blocked by default.
++
+image::managed-k8s/aks/8.png[]
+You need to go to `Network security group`s and modify the one created for your Kubernetes cluster.
++
+image::managed-k8s/aks/5.png[]
+Add a new inbound security rule, which allows all incoming connections.
++
+image::managed-k8s/aks/6.png[]
+
+. Access Kubernetes
++
+Access your Kubernetes by clicking on the `Connect` button and following the instructions.
++
+image::managed-k8s/aks/7.png[]
+

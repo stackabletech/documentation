@@ -1,0 +1,40 @@
+= STACKIT Kubernetes Engine (SKE)
+
+https://www.stackit.de/de/produkt/stackit-kubernetes-engine/
+
+SKE clusters by default have no public IPs assigned to the Kubernetes nodes.
+As of 2024-06-13 marking the nodes as public during the Kubernetes cluster creation is not supported.
+
+As a workaround we create a normal Kubernetes and assign public IP adresses to the Kubernetes nodes.
+
+WARNING: The Kubernetes nodes are ephemeral. When STACKIT decides to reboot your Kubernetes nodes (e.g. to do security updates) they will loose their IP addresses and your services will not be reachable anymore, you need to re-assign the IP addresses.
+To circumvent this problem you can use LoadBalancers instead of NodePorts (which might be more expensive due to additional IP addresses).
+
+. Create Kubernetes cluster
++
+We recommend using at least 50GB disk space for the docker images.
++
+image::managed-k8s/ske/1.png[]
+
+. Wait until Kubernetes is up and running
++
+image::managed-k8s/ske/2.png[]
+
+. List servers
++
+image::managed-k8s/ske/3.png[]
+
+. Assign public IP to *all* Kubernetes nodes
++
+image::managed-k8s/ske/4.png[]
+
+. Download kubeconfig
++
+image::managed-k8s/ske/5.png[]
+
+. Set kubectl context
++
+[source,bash]
+----
+export KUBECONFIG=~/Downloads/my-cluister.yml
+----
