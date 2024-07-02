@@ -34,6 +34,10 @@
   padding: 0;
 }
 
+.pagefind-modular-list-result {
+  padding: calc(21px * var(--pagefind-ui-scale)) 0 calc(28px * var(--pagefind-ui-scale)) !important;
+}
+
 /** Do not display a thumbnail */
 .pagefind-modular-list-thumb {
   display: none;
@@ -44,9 +48,9 @@
 }
 
 .pagefind-modular-list-breadcrumbs {
-  font-size: calc(19px * var(--pagefind-ui-scale));
-  font-weight: 600;
-  margin-top: calc(4px * var(--pagefind-ui-scale));
+  font-size: calc(18px * var(--pagefind-ui-scale));
+  font-weight: 500;
+  margin-top: calc(3px * var(--pagefind-ui-scale));
   margin-bottom: 0;
 }
 

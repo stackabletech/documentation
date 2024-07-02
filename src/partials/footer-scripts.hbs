@@ -26,7 +26,10 @@
 
                 const bcEl = document.createElement("div");
                 bcEl.classList.add("pagefind-modular-list-breadcrumbs");
-                bcEl.innerText = result.meta.breadcrumbs;
+                parts = result.meta.breadcrumbs.split('.').map(part => part.trim()).filter(part => part.length > 0);
+                parts.shift();
+                parts.pop();
+                bcEl.innerText = parts.join(' / ');
                 
                 // Create the child element for the text
                 const textEl = document.createElement("p");
