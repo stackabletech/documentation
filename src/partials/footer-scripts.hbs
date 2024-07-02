@@ -1,12 +1,15 @@
 <script src="{{{uiRootPath}}}/js/site.js"></script>
 <script async src="{{{uiRootPath}}}/js/vendor/highlight.js"></script>
 <script async src="{{{uiRootPath}}}/js/vendor/tabs.js" data-sync-storage-key="preferred-tab"></script>
-{{#if env.SITE_SEARCH_PROVIDER}}
-{{> search-scripts}}
-{{/if}}
 <script>
+    // This script block loads the pagefind search UI.
+    // Some styling is customized, these classes are found in search.css.
     window.addEventListener('DOMContentLoaded', (event) => {
-        const instance = new PagefindModularUI.Instance();
+        const instance = new PagefindModularUI.Instance({
+            ranking: {
+                termSaturation: 0.4,
+                termSimilarity: 10.0
+            }});
         instance.add(new PagefindModularUI.Input({
             containerElement: "#search-input"
         }));
@@ -24,18 +27,19 @@
                 titleEl.classList.add("pagefind-modular-list-title");
                 titleEl.innerText = result.meta.title;
 
-                const bcEl = document.createElement("div");
+                // Create the child element for the breadcrumbs
+                const bcEl = document.createElement("p");
                 bcEl.classList.add("pagefind-modular-list-breadcrumbs");
+                // TODO breadcrumbs are not always defined
                 parts = result.meta.breadcrumbs.split('.').map(part => part.trim()).filter(part => part.length > 0);
                 parts.shift();
                 parts.pop();
                 bcEl.innerText = parts.join(' / ');
                 
-                // Create the child element for the text
+                // Create the child element for the excerpt
                 const textEl = document.createElement("p");
                 textEl.classList.add("pagefind-modular-list-excerpt");
                 textEl.innerHTML = result.excerpt;
-                console.log(result);
                 
                 // Append the title and text elements to the main 'li' element
                 innerEl.appendChild(titleEl);
