@@ -6,6 +6,7 @@
     // Some styling is customized, these classes are found in search.css.
     window.addEventListener('DOMContentLoaded', (event) => {
         const instance = new PagefindModularUI.Instance({
+            // customized rank tuning - see https://pagefind.app/docs/ranking/
             ranking: {
                 termSaturation: 0.4,
                 termSimilarity: 10.0
@@ -30,7 +31,7 @@
                 // Create the child element for the breadcrumbs
                 const bcEl = document.createElement("p");
                 bcEl.classList.add("pagefind-modular-list-breadcrumbs");
-                // TODO breadcrumbs are not always defined
+                // TODO breadcrumbs are not always defined - only access it if it's there
                 parts = result.meta.breadcrumbs.split('.').map(part => part.trim()).filter(part => part.length > 0);
                 parts.shift();
                 parts.pop();
