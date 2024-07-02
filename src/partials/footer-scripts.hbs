@@ -22,11 +22,7 @@
 
                 const innerEl = document.createElement("div");
                 innerEl.classList.add("pagefind-modular-list-inner");
-
-                // Create the child element for the title
-                const titleEl = document.createElement("p");
-                titleEl.classList.add("pagefind-modular-list-title");
-                titleEl.innerText = result.meta.title;
+                el.appendChild(innerEl);
 
                 // Create the child element for the breadcrumbs
                 const bcEl = document.createElement("p");
@@ -35,17 +31,20 @@
                 parts.shift();
                 parts.pop();
                 bcEl.innerText = parts.join(' / ');
+                innerEl.appendChild(bcEl);
+
+                // Create the child element for the title
+                const titleEl = document.createElement("p");
+                titleEl.classList.add("pagefind-modular-list-title");
+                titleEl.innerText = result.meta.title;
+                innerEl.appendChild(titleEl);
                 
                 // Create the child element for the excerpt
                 const textEl = document.createElement("p");
                 textEl.classList.add("pagefind-modular-list-excerpt");
                 textEl.innerHTML = result.excerpt;
-                
-                // Append the title and text elements to the main 'li' element
-                innerEl.appendChild(titleEl);
-                innerEl.appendChild(bcEl);
                 innerEl.appendChild(textEl);
-                el.appendChild(innerEl);
+                
                 return el;
             }
         }));

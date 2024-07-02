@@ -45,6 +45,7 @@
 
 .pagefind-modular-list-inner {
   color: black;
+  margin-top: 0;
 }
 
 .pagefind-modular-list-breadcrumbs {
@@ -52,6 +53,7 @@
   font-weight: 500;
   margin-top: calc(3px * var(--pagefind-ui-scale));
   margin-bottom: 0;
+  color: #515151;
 }
 
 .pagefind-ui__search-clear {
