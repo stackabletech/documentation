@@ -31,8 +31,7 @@
                 // Create the child element for the breadcrumbs
                 const bcEl = document.createElement("p");
                 bcEl.classList.add("pagefind-modular-list-breadcrumbs");
-                // TODO breadcrumbs are not always defined - only access it if it's there
-                parts = result.meta.breadcrumbs.split('.').map(part => part.trim()).filter(part => part.length > 0);
+                parts = (result.meta.breadcrumbs ?? '').split('.').map(part => part.trim()).filter(part => part.length > 0);
                 parts.shift();
                 parts.pop();
                 bcEl.innerText = parts.join(' / ');
