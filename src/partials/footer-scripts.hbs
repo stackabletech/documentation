@@ -6,15 +6,56 @@
 {{/if}}
 <script>
     window.addEventListener('DOMContentLoaded', (event) => {
-        new PagefindUI({
-            element: "#search",
-            showSubResults: false,
-            showImages: false,
-            resetStyles: false,
-            ranking: {
-            termSaturation: 0.4,
-            termSimilarity: 10.0
+        const instance = new PagefindModularUI.Instance();
+        instance.add(new PagefindModularUI.Input({
+            containerElement: "#search-input"
+        }));
+        instance.add(new PagefindModularUI.ResultList({
+            containerElement: "#search-results",
+            resultTemplate: (result) => {
+                const el = document.createElement("li");
+                el.classList.add("pagefind-modular-list-result");
+
+                const innerEl = document.createElement("div");
+                innerEl.classList.add("pagefind-modular-list-inner");
+
+                // Create the child element for the title
+                const titleEl = document.createElement("p");
+                titleEl.classList.add("pagefind-modular-list-title");
+                titleEl.innerText = result.meta.title;
+
+                const bcEl = document.createElement("div");
+                bcEl.classList.add("pagefind-modular-list-breadcrumbs");
+                bcEl.innerText = result.meta.breadcrumbs;
+                
+                // Create the child element for the text
+                const textEl = document.createElement("p");
+                textEl.classList.add("pagefind-modular-list-excerpt");
+                textEl.innerHTML = result.excerpt;
+                console.log(result);
+                
+                // Append the title and text elements to the main 'li' element
+                innerEl.appendChild(titleEl);
+                innerEl.appendChild(bcEl);
+                innerEl.appendChild(textEl);
+                el.appendChild(innerEl);
+                return el;
             }
-        });
+        }));
     });
 </script>
+
+<!--
+{
+    new PagefindUI({
+        element: "#search",
+        showSubResults: false,
+        showImages: false,
+        resetStyles: false,
+        ranking: {
+        termSaturation: 0.4,
+        termSimilarity: 10.0
+        }
+    });
+}
+-->

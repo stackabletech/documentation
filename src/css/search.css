@@ -28,14 +28,26 @@
   z-index: 11;
 }
 
-.pagefind-ui,
-.pagefind-ui__form {
-  height: 100%;
-}
-
-.pagefind-ui__drawer {
+#search-results {
   height: calc(100% - 64px * var(--pagefind-ui-scale));
   overflow: scroll;
+  padding: 0;
+}
+
+/** Do not display a thumbnail */
+.pagefind-modular-list-thumb {
+  display: none;
+}
+
+.pagefind-modular-list-inner {
+  color: black;
+}
+
+.pagefind-modular-list-breadcrumbs {
+  font-size: calc(19px * var(--pagefind-ui-scale));
+  font-weight: 600;
+  margin-top: calc(4px * var(--pagefind-ui-scale));
+  margin-bottom: 0;
 }
 
 .pagefind-ui__search-clear {
