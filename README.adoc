@@ -30,7 +30,7 @@ We have added our own tracking solution into `src/partials/head-scripts.hbs`. It
 We use https://pagefind.app/[pagefind] for search.
 The index is generated as part of the build in the `documentation` repository.
 Various `pagefind-*` tags are used to mark content that should be indexed.
-Only the stable docs are index (no previous versions, no nightly).
+Only the stable docs are indexed (no previous versions, no nightly).
 
 == Code of Conduct
 
