@@ -1,20 +1,52 @@
 <script src="{{{uiRootPath}}}/js/site.js"></script>
 <script async src="{{{uiRootPath}}}/js/vendor/highlight.js"></script>
 <script async src="{{{uiRootPath}}}/js/vendor/tabs.js" data-sync-storage-key="preferred-tab"></script>
-{{#if env.SITE_SEARCH_PROVIDER}}
-{{> search-scripts}}
-{{/if}}
 <script>
+    // This script block loads the pagefind search UI.
+    // Some styling is customized, these classes are found in search.css.
     window.addEventListener('DOMContentLoaded', (event) => {
-        new PagefindUI({
-            element: "#search",
-            showSubResults: false,
-            showImages: false,
-            resetStyles: false,
+        const instance = new PagefindModularUI.Instance({
+            // customized rank tuning - see https://pagefind.app/docs/ranking/
             ranking: {
-            termSaturation: 0.4,
-            termSimilarity: 10.0
+                termSaturation: 0.4,
+                termSimilarity: 10.0
+            }});
+        instance.add(new PagefindModularUI.Input({
+            containerElement: "#search-input"
+        }));
+        instance.add(new PagefindModularUI.ResultList({
+            containerElement: "#search-results",
+            resultTemplate: (result) => {
+                const el = document.createElement("li");
+                el.classList.add("pagefind-modular-list-result");
+
+                const innerEl = document.createElement("div");
+                innerEl.classList.add("pagefind-modular-list-inner");
+                el.appendChild(innerEl);
+
+                // Create the child element for the breadcrumbs
+                const bcEl = document.createElement("p");
+                bcEl.classList.add("pagefind-modular-list-breadcrumbs");
+                parts = (result.meta.breadcrumbs ?? '').split('.').map(part => part.trim()).filter(part => part.length > 0);
+                parts.shift();
+                parts.pop();
+                bcEl.innerText = parts.join(' / ');
+                innerEl.appendChild(bcEl);
+
+                // Create the child element for the title
+                const titleEl = document.createElement("p");
+                titleEl.classList.add("pagefind-modular-list-title");
+                titleEl.innerText = result.meta.title;
+                innerEl.appendChild(titleEl);
+                
+                // Create the child element for the excerpt
+                const textEl = document.createElement("p");
+                textEl.classList.add("pagefind-modular-list-excerpt");
+                textEl.innerHTML = result.excerpt;
+                innerEl.appendChild(textEl);
+                
+                return el;
             }
-        });
+        }));
     });
 </script>

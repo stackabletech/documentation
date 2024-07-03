@@ -35,7 +35,10 @@
       <div id="search-button" class="navbar-item">
         <i class="fa-solid fa-magnifying-glass"></i>
         <div id="search-background"></div>
-        <div id="search"></div>
+        <div id="search">
+          <div id="search-input"></div>
+          <ul id="search-results"></ul>
+        </div>
       </div>
       {{#if @root.page.versions}}
       {{#with @root.page.versions}}

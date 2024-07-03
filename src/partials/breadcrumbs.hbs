@@ -1,6 +1,6 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   {{#if page.breadcrumbs}}
-  <ul>
+  <ul data-pagefind-meta="breadcrumbs">
     {{#with page.componentVersion}}
     {{#if (and ./title (ne ./title @root.page.breadcrumbs.0.content))}}
     <li><a href="{{{relativize ./url}}}">{{{./title}}}</a></li>
