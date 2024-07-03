@@ -26,6 +26,12 @@ We have added our own tracking solution into `src/partials/head-scripts.hbs`. It
 === Highlight.js v10
 [Ticket](https://github.com/stackabletech/documentation/issues/232) - Due to the removal of HTML-passthru in v11 (which we need for [Callouts](https://docs.asciidoctor.org/asciidoc/latest/verbatim/callouts/)) the highlight.js has not been updated from v10. This also affects the Antora Default UI. Both decisions will be revisited when the upstream upgrade is available.
 
+=== Search with pagefind
+We use https://pagefind.app/[pagefind] for search.
+The index is generated as part of the build in the `documentation` repository.
+Various `pagefind-*` tags are used to mark content that should be indexed.
+Only the stable docs are index (no previous versions, no nightly).
+
 == Code of Conduct
 
 The Antora project and its project spaces are governed by our https://gitlab.com/antora/antora/-/blob/HEAD/CODE-OF-CONDUCT.adoc[Code of Conduct].
