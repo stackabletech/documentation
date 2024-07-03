@@ -1,7 +1,8 @@
 {
   "devDependencies": {
     "@antora/cli": "^3.1.7",
-    "@antora/site-generator": "^3.1.7"
+    "@antora/site-generator": "^3.1.7",
+    "pagefind": "^1.1.0"
   },
   "dependencies": {
     "@antora/lunr-extension": "^1.0.0-alpha.8",
@@ -9,5 +10,8 @@
   },
   "workspaces": [
     "ui"
-  ]
+  ],
+  "scripts": {
+    "build-search-index": "npx pagefind --site build/site"
+  }
 }

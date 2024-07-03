@@ -43,12 +43,15 @@ The reference is found at https://crds.stackable.tech/ and generated from the ht
 
 The xref:docs/style-guide.adoc[] contains all the information about the writing style, formatting style, naming documents and more.
 
-== Technical bits: Antora, Netlify
+== Technical bits: Antora, Netlify, Pagefind
 
 {antora-docs}[Antora] uses a {antora-playbook}[playbook] to build the documentation.
 It pulls information from all the individual operators, so their documentation can live in the same repository.
 Antora builds a static website which we serve over {netlify}[Netlify].
 The web template of the documentation is also custom made and is developed in the https://github.com/stackabletech/documentation-ui[documentation-ui] repository.
+
+For search, we use https://pagefind.app/[pagefind] - a static search.
+The search index is generated as part of the build process and no external index is queried during search.
 
 For Antora, the https://antora.zulipchat.com/[Antora Zulip chatroom] is a good place to get help (besides the documentation)!
 
