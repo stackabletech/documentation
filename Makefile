@@ -12,8 +12,9 @@ build-prod: build-ui
 build-ui:
 	node_modules/.bin/gulp --cwd ui bundle
 
+# build the search index and add pagefind files to the output.
 build-search-index:
-	npx pagefind --site build/site
+	npm run build-search-index
 
 serve:
 	python3 -m http.server -d build/site

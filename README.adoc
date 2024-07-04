@@ -4,7 +4,9 @@
 This is the main repository for the documentation of the Stackable platform.
 Have a look at the https://docs.stackable.tech/[live version] and the current https://docs.stackable.tech/home/nightly/[nightly live version].
 
-The documentation is built with https://antora.org[Antora]. This repository hosts the Antora playbook file as well as platform documentation. Other Stackable repos contain 'docs' directories which are pulled in by this repo.
+The documentation is built with https://antora.org[Antora].
+This repository hosts the Antora playbook file as well as platform documentation.
+Other Stackable repos contain 'docs' directories which are pulled in by this repo.
 
 == Repository structure
 
@@ -25,18 +27,23 @@ $ npm ci
 $ make
 ----
 
-NOTE: Antora caches the external content repos in the cache directory (configured to be `./cache`). It will _not_ automatically update those.  Use the `--fetch` flag (`make ANTORAFLAGS=--fetch`) to update all sources, or use `make clean` to delete the `cache` and `build` directory.
+NOTE: Antora caches the external content repos in the cache directory (configured to be `./cache`)
+It will _not_ automatically update those.
+Use the `--fetch` flag (`make ANTORAFLAGS=--fetch`) to update all sources, or use `make clean` to delete the `cache` and `build` directory.
 
 == Production deployment
 
 The documentation is deployed by Netlify on a regular basis or when something is pushed to  the `main` branch.
 To trigger an out of band deployment, use the _Build and deploy production site_ GitHub action (internal contributors only).
 
-Regular (nightly) deployments  are run to pick up changes in the operator repositories. These repositories are not watched by Netlify and thus any changes to the documentation there would be ignored.
+Regular (nightly) deployments  are run to pick up changes in the operator repositories.
+These repositories are not watched by Netlify and thus any changes to the documentation there would be ignored.
 
 === Netlify configuration
 
-Netlify is configured with the link:netlify.toml[`netlify.toml`] file inside of the documentation repo. In there, the command `make netlify-build` is configured as the build command. Further documentation of the build process can then be found in the link:Makefile[`Makefile`].
+Netlify is configured with the link:netlify.toml[`netlify.toml`] file inside of the documentation repo.
+In there, the command `make netlify-build` is configured as the build command.
+Further documentation of the build process can then be found in the link:Makefile[`Makefile`].
 
 The build process creates a static site in `build/site` which is then published (as it is configured in the `netlify.toml`).
 
@@ -58,7 +65,7 @@ NOTE: Antora does not recognize git submodules as git repositories
 
 The design & layout comes from our https://github.com/stackabletech/documentation-ui[UI repository].
 
-`LIVERELOAD=true gulp` may be used to recreate the built documentation after each edit. The 'live reload' feature does not work over gitpod currently due to https://github.com/schickling/gulp-webserver/pull/126
+`LIVERELOAD=true gulp` may be used to recreate the built documentation after each edit.
 
 == More useful links
 
