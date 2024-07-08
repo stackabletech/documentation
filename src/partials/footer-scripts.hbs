@@ -36,8 +36,15 @@
                 // Create the child element for the title
                 const titleEl = document.createElement("p");
                 titleEl.classList.add("pagefind-modular-list-title");
-                titleEl.innerText = result.meta.title;
                 innerEl.appendChild(titleEl);
+
+                // Create the anchor element
+                const linkEl = document.createElement("a");
+                linkEl.classList.add("pagefind-modular-list-link");
+                linkEl.href = result.url;
+                linkEl.innerText = result.meta.title;
+                titleEl.appendChild(linkEl);
+                console.log(result);
                 
                 // Create the child element for the excerpt
                 const textEl = document.createElement("p");
