@@ -13,7 +13,7 @@ build-ui:
 	node_modules/.bin/gulp --cwd ui bundle
 
 build-search-index:
-	npx pagefind --site build/site
+	npm run build-search-index
 
 serve:
 	python3 -m http.server -d build/site
