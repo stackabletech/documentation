@@ -4,8 +4,8 @@
   var SECT_CLASS_RX = /^sect(\d)$/
 
   var navContainer = document.querySelector('.nav-container')
-  if (!navContainer) return
   var navToggle = document.querySelector('.nav-toggle')
+  if (!navContainer && (!navToggle || (navToggle.hidden = true))) return
   var nav = navContainer.querySelector('.nav')
   var navMenuToggle = navContainer.querySelector('.nav-menu-toggle')
 
