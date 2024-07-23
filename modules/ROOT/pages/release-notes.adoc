@@ -43,8 +43,10 @@ Here are the headings you can use for the next release. Saves time checking inde
 
 === New / extended platform features
 
+Reduction of CVEs::
+
 In this release we have worked on significantly reducing the number of vulnerabilities in our product binaries.
-This will be more manageable going forward as we now build all java-based binaries from source, which gives us greater flexibility when creating patches.
+This will be more manageable going forward as we now build all Java-based binaries from source, which gives us greater flexibility when creating patches.
 We tackle this task at different levels:
 
 * bump base images (in this release we are using the UBI9 line of images in place of UBI8)
@@ -54,12 +56,11 @@ We tackle this task at different levels:
 
 NOTE: In this release we have eliminated 75% of all vulnerabilities that were present in the product binaries that were part of release 24.3.
 
-Product versions updates::
-As with most SDP releases, many product images have been updated to their latest versions.
-The LTS version has in many cases also been adjusted in line with our support policy.
-All java-based product binaries are now built from source instead of packaging them from the official releases. The status is summarised below:
+Build products from source::
 
-* Apache Airflow: official release (python-based)
+All Java-based product binaries are now built from source instead of packaging them from the official releases. The status is summarised below:
+
+* Apache Airflow: official release (Python-based)
 * Apache Druid: built from source from release 24.7
 * Apache HBase: built from source from release 24.3
 * Apache HDFS: built from source from release 24.3
@@ -69,10 +70,101 @@ All java-based product binaries are now built from source instead of packaging t
 * Open Policy Agent: built from source from release 24.7
 * Trino: built from source from release 24.7
 * Apache Spark: built from source from release 24.7
-* Apache Superset: official release (python-based)
+* Apache Superset: official release (Python-based)
 * Apache ZooKeeper: built from source from release 24.7
 
+Multi-platform images::
+
+This release is the first official, fully multi-platform release of the Stackable Data Platform. Each image has a manifest list which wraps the architecture-specific image.
+
+Security::
+
+Support added for OIDC with/without TLS has been added to Apache Druid in this release.
+
+NOTE: SDP now provides OIDC-support for Druid, Superset and Trino
+
+In this release we provide experimental HBase 2.6.0 support with a new experimental policy based authorizer (with OPA). Check here for xref:hbase:usage-guide/security.adoc#_authorization[HBase authorization with OPA documentation] but do not rely on its API as it might change in breaking ways during the experimental phase.
+
+[IMPORTANT]
+In an upcoming release we will enable authentication and encryption by default where possible.
+To ensure a smooth transition to future releases, we strongly encourage you to enable security features wherever possible in your deployments.
+
+Documentation::
+
+* Apache Hive and Trino operators: we have provided non-trivial sample Rego rules for these operators, together with an in-depth explanation and links
+
+* Apache Hive: there is now a tutorial on how to load and use external database drivers
+
+* Apache Spark: documentation has been showing how to provision Spark dependencies
+
+Other product features::
+
+The following are selected product features provided by new versions available in this release:
+
+* Apache Airflow: support for modularized DAGs
+
+* Apache Druid: support for specifying and loading additional extensions
+
+* Apache Hive: we now only supply the Hive Metastore. For most users this is an internal change, but is breaking for users with custom logging configurations
+
+* Listener operator: allow users to configure the external traffic policy, which is than passed to the created Service
+
+* Apache Nifi: support specifying the SecretClass that is used to obtain TLS certificates
+
+* Open Policy Agent: support enabling decision logs
+
+* Secret operator: reduce CA default lifetime to one year and log when secrets are created
+
+* Trino: support for row filters and column masks in Rego rules
+
+* Apache ZooKeeper: allow the overriding of the ZNode path by setting status.znodePath
+
+Bugfixes::
+* Apache Druid:
+
+[BREAKING] Move the DB credentials user and password out of the CRD into a secret containing the keys username and password (#557).
+https://github.com/stackabletech/druid-operator/pull/557
+
+[BREAKING??] Remove sed calls to replace KRB REALM in configuration. IMPORTANT: This means the operator will ONLY work with HBase versions that are compiled against Hadoop 3.x as of now (#531)
+https://github.com/stackabletech/hbase-operator/pull/531
+
+BREAKING] Move the metastore user and password DB credentials out of the CRD into a Secret containing the keys username and password (#452).
+https://github.com/stackabletech/hive-operator/pull/452
+
+BREAKING: Remove field/arg controller_config from kafka_controller::Ctx struct and create_controller function (#726).
+https://github.com/stackabletech/kafka-operator/pull/726
+
+Use config-utils for text-replacement of variables in configs. This fixes escaping problems, especially when you have special characters in your password (#627).
+https://github.com/stackabletech/nifi-operator/pull/627
+
+Support enabling decision logs (#555).
+https://github.com/stackabletech/opa-operator/pull/555
+
+[BREAKING] The TLS CA Secret is now installed into the Namespace of the operator (typically stackable-operators), rather than default (#397).
+https://github.com/stackabletech/secret-operator/pull/397
+
+BREAKING (behaviour): Specified CPU resources are now applied correctly (instead of rounding it to the next whole number). This might affect your jobs, as they now e.g. only have 200m CPU resources requested instead of the 1000m it had so far, meaning they might slow down significantly (#408).
+https://github.com/stackabletech/spark-k8s-operator/pull/408
+
+docs: provision spark dependencies
+https://github.com/stackabletech/spark-k8s-operator/pull/409
+
+Don't print Superset admin credentials during startup (#483).
+https://github.com/stackabletech/superset-operator/pull/483
+
+BREAKING: Change the username which triggers graceful shutdown from admin to graceful-shutdown-user for more expressiveness (e.g. in the Trino policies). This is a breaking change because users need to ensure that the user graceful-shutdown-user has the required permissions to initiate a graceful shutdown (#573).
+https://github.com/stackabletech/trino-operator/pull/573
+
+Grant the privileges required for graceful shutdowns to the admin user in the OPA rego rules
+https://github.com/stackabletech/trino-operator/pull/575
+
+
+
+
 === Product versions
+
+As with previous SDP releases, many product images have been updated to their latest versions.
+The LTS version has in many cases also been adjusted in line with our support policy.
 
 ==== New versions
 
@@ -126,7 +218,28 @@ The following product versions are no longer supported (although images for rele
 
 === Supported Kubernetes versions
 
+This release supports the following Kubernetes versions:
+
+* `1.30`
+* `1.29`
+* `1.28`
+
+These Kubernetes versions are no longer supported:
+
+* `1.27`
+
 === Supported OpenShift versions
+
+This release is available in the RedHat Certified Operator Catalog for the following OpenShift versions:
+
+* `4.15`
+* `4.14`
+* `4.13`
+* `4.12`
+
+These OpenShift versions are no longer supported:
+
+* `4.11`
 
 === Breaking changes
 
