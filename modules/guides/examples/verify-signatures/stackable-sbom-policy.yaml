@@ -10,7 +10,7 @@ spec:
         url: https://fulcio.sigstore.dev
         identities:
           - issuer: https://token.actions.githubusercontent.com
-            subjectRegExp: "https://github.com/stackabletech/.+/.github/workflows/build.yml@refs.+"
+            subjectRegExp: "^https://github.com/stackabletech/.+/.github/workflows/.+@refs/tags/\\d[\\d\\.]+$"
       ctlog:
         url: https://rekor.sigstore.dev
       attestations:

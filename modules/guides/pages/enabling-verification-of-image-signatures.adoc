@@ -39,9 +39,11 @@ Add a label for the namespace where you deployed SDP:
 kubectl label namespace stackable policy.sigstore.dev/include=true
 ----
 
-The Policy Controller checks all newly created Pods in this namespace that run any image matching `+++**+++.stackable.tech/+++**+++` (this matches images provided by Stackable) and ensures that these images have been signed by a Stackable Github Action. If the signature of an image is invalid or missing, the policy will deny the pod creation.
+The Policy Controller checks all newly created Pods in this namespace that run any image matching `+++**+++.stackable.tech/+++**+++` (this matches images provided by Stackable) and ensures that these images have been signed by a Stackable Github Action that was tagged with a version number (meaning that this was a release version). If the signature of an image is invalid or missing, the policy will deny the pod creation.
 For a more detailed explanation of the policy options, please refer to the https://docs.sigstore.dev/policy-controller/overview/#configuring-image-patterns[Sigstore documentation].
 If the `subjectRegExp` field in the policy is changed to something like `https://github.com/test/.+`, the policy will deny the creation of pods with Stackable images because the identity of the subject that signed the image (a Stackable Github Action Workflow) will no longer match the expression specified in the policy.
+
+NOTE: If for some reason you are using our `0.0.0-dev` images, the example policy will deny the creation of Pods with these images. To allow creation of these Pods, you can for example relax the policy by changing the `subjectRegExp` field to `^https://github.com/stackabletech/.+/.github/workflows/.+@refs/tags/.+$`. This will only check if an image has been signed by any Github Action of Stackable, regardless of the version. However, this is not recommended for production.
 
 == Verifying image signatures in an air-gapped environment
 
