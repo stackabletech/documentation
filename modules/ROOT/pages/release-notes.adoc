@@ -226,9 +226,20 @@ These OpenShift versions are no longer supported:
 
 === Breaking changes
 
-Of the changes mentioned above, the following are breaking (or could lead to breaking behaviour):
+Of the changes mentioned above, the following are breaking (or could lead to breaking behaviour), and you will need to adapt your existing CRDs accordingly:
 
-* Apache Druid: move the DB credentials user and password out of the CRD into a secret containing the keys username and password
+==== Stackable Operator for Apache Druid
+
+* https://github.com/stackabletech/druid-operator/pull/557[move the DB credentials user and password out of the CRD into a secret containing the keys username and password]
+
+.Breaking changes details
+[%collapsible]
+====
+* `spec.metadataStorageDatabase.user`: This field has been removed.
+* `spec.metadataStorageDatabase.password`: This field has been removed.
+* `spec.metadataStorageDatabase.credentialsSecret`: Name of the secret containing the credentials for the database (i.e. containing `username` and `password` fields).
+====
+
 * Apache HBase: remove sed calls to replace KRB REALM in configuration. IMPORTANT: This means the operator will ONLY work with HBase versions that are compiled against Hadoop 3.x as of now
 * Apache Hive: move the metastore user and password DB credentials out of the CRD into a Secret containing the keys username and password
 * Apache Hive: we now only supply the Hive Metastore. For most users this is an internal change, but is breaking for users with custom logging configurations
