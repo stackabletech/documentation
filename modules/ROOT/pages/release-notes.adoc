@@ -109,6 +109,8 @@ The following are selected product features provided by new versions available i
 
 * Apache HBase: support for exporting snapshots to S3. The HBase image now depends on the Hadoop image and the required AWS JARs are copied from there to the HBase image. The script https://github.com/stackabletech/docker-images/blob/main/hbase/stackable/bin/export-snapshot-to-s3.env[export-snapshot-to-s3] makes exporting easier, and this https://github.com/stackabletech/hbase-operator/tree/main/tests/templates/kuttl/snapshot-export[integration test] shows to use it.
 
+* Apache HBase: support for Omid versions 1.1.1 and 1.1.2
+
 * Apache Hive: we now only supply the Hive Metastore. For most users this is an internal change, but is breaking for users with custom logging configurations
 
 * Listener operator: allow users to configure the external traffic policy, which is than passed to the created Service
@@ -223,7 +225,18 @@ These OpenShift versions are no longer supported:
 
 === Breaking changes
 
-=== Upgrade from YY.M
+Of the changes mentioned above, the following are breaking (or could lead to breaking behaviour):
+
+* Apache Druid: move the DB credentials user and password out of the CRD into a secret containing the keys username and password
+* Apache HBase: remove sed calls to replace KRB REALM in configuration. IMPORTANT: This means the operator will ONLY work with HBase versions that are compiled against Hadoop 3.x as of now
+* Apache Hive: move the metastore user and password DB credentials out of the CRD into a Secret containing the keys username and password
+* Apache Hive: we now only supply the Hive Metastore. For most users this is an internal change, but is breaking for users with custom logging configurations
+* Apache Kafka: remove field/arg controller_config from kafka_controller::Ctx struct and create_controller function
+* Secret operator: the TLS CA Secret is now installed into the Namespace of the operator (typically `stackable-operators`), rather than `default`
+* Apache Spark: CPU resources are now applied correctly (instead of being rounding to the next whole number). This might affect existing jobs, as they may have e.g. only 200m CPU resources requested instead of the 1000m it had thus far, meaning they might slow down significantly (i.e. possible breaking *behaviour*)
+* Trino: change the username which triggers graceful shutdown from `admin` to `graceful-shutdown-user` for greater clarity (e.g. in the Trino policies). This is a breaking change because users need to ensure that `graceful-shutdown-user` has the required permissions to initiate a graceful shutdown. The privileges required for graceful shutdowns are granted to the admin user in the OPA rego rules
+
+=== Upgrade from 24.3
 
 ==== Using stackablectl
 
