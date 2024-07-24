@@ -189,6 +189,13 @@ The following product versions are no longer supported (although images for rele
 
 === stackablectl
 
+The following changes have been made to `stackablectl`:
+
+* a new experimental debug command
+* a pre-built binary for aarch64-unknown-linux-gnu is now available
+* complete error messages are now shown (remedying the truncation of some details in previous releases)
+* use of the latest Go and Rust versions and respective dependencies
+
 === Supported Kubernetes versions
 
 This release supports the following Kubernetes versions:
