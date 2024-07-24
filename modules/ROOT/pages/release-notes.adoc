@@ -60,15 +60,16 @@ This work will continue in the next version and the progress made in this releas
 
 Build products from source::
 
-All Java-based product binaries are now built from source instead of packaging them from the official releases. The status is summarised below:
+All Java-based product binaries are now built from source instead of packaging them from the official releases.
+The status is summarised below:
 
 * Apache Airflow: official release (Python-based)
 * Apache Druid: built from source from release 24.7
 * Apache HBase: built from source from release 24.3
-* Apache HDFS: built from source from release 24.3
+* Apache Hadoop HDFS: built from source from release 24.3
 * Apache Hive: built from source from release 24.7
 * Apache Kafka: built from source from release 24.7
-* Apache Nifi: built from source from release 24.7
+* Apache NiFi: built from source from release 24.7
 * Open Policy Agent: built from source from release 24.7
 * Trino: built from source from release 24.7
 * Apache Spark: built from source from release 24.7
@@ -77,15 +78,18 @@ All Java-based product binaries are now built from source instead of packaging t
 
 Multi-platform images::
 
-This release is the first fully multi-platform release of the Stackable Data Platform. Each image has a manifest list which wraps the architecture-specific image. The status is still experimental, as we work to fine-tune the necessary workflows.
+This release is the first fully multi-platform release of the Stackable Data Platform.
+Each image has a manifest list which wraps the architecture-specific image.
+The status is still experimental, as we work to fine-tune the necessary workflows.
 
 Security::
 
-Support added for OIDC with/without TLS has been added to Apache Druid in this release.
+Support for OIDC with/without TLS has been added to Apache Druid in this release.
 
 NOTE: SDP now provides OIDC-support for Druid, Superset and Trino
 
-In this release we provide experimental HBase 2.6.0 support with a new experimental policy based authorizer (with OPA). Check here for xref:hbase:usage-guide/security.adoc#_authorization[HBase authorization with OPA documentation] but do not rely on its API as it might change in breaking ways during the experimental phase.
+In this release we provide experimental HBase 2.6.0 support with a new experimental policy based authorizer (with OPA).
+Check xref:hbase:usage-guide/security.adoc#_authorization[the documentation on HBase authorization with OPA] but do not rely on its API as it might change in breaking ways during the experimental phase.
 
 [IMPORTANT]
 In an upcoming release we will enable authentication and encryption by default where possible.
@@ -97,7 +101,7 @@ Documentation::
 
 * Apache Hive: there is now a tutorial on how to load and use external database drivers
 
-* Apache Spark: documentation has been showing how to provision Spark dependencies
+* Apache Spark: documentation has been added showing how to provision Spark dependencies
 
 Other product features::
 
@@ -115,9 +119,9 @@ The following are selected product features provided by new versions available i
 
 * Listener operator: allow users to configure the external traffic policy, which is than passed to the created Service
 
-* Apache Nifi: support specifying the SecretClass that is used to obtain TLS certificates
+* Apache NiFi: support specifying the SecretClass that is used to obtain TLS certificates
 
-* Open Policy Agent: support enabling decision logs
+* Open Policy Agent: support enabling decision logs, this was an often requested feature and helps implement audit logging for authorization decisions
 
 * Secret operator: reduce CA default lifetime to one year and log when secrets are created
 
@@ -127,10 +131,10 @@ The following are selected product features provided by new versions available i
 
 Bugfixes::
 * Apache Druid: move the DB credentials user and password out of the CRD into a secret containing the keys username and password
-* Apache HBase: remove sed calls to replace KRB REALM in configuration. IMPORTANT: This means the operator will ONLY work with HBase versions that are compiled against Hadoop 3.x as of now
-* Apache hive: move the metastore user and password DB credentials out of the CRD into a Secret containing the keys username and password
+* Apache HBase: remove sed calls to replace KRB REALM in configuration. IMPORTANT: This means the operator will ONLY work with HBase versions that are compiled against Hadoop 3.x as of now. This is only relevant if you are building your own images.
+* Apache Hive: move the metastore user and password DB credentials out of the CRD into a Secret containing the keys username and password
 * Apache Kafka: remove field/arg controller_config from kafka_controller::Ctx struct and create_controller function
-* Apache Nifi: use config-utils for text-replacement of variables in configs. This fixes escaping problems, especially special characters are included in the password
+* Apache NiFi: use config-utils for text-replacement of variables in configs. This fixes escaping problems, especially when special characters are included in the password
 * Secret operator: the TLS CA Secret is now installed into the Namespace of the operator (typically `stackable-operators`), rather than `default`
 * Apache Spark: CPU resources are now applied correctly (instead of being rounding to the next whole number). This might affect existing jobs, as they may have e.g. only 200m CPU resources requested instead of the 1000m it had thus far, meaning they might slow down significantly
 * Apache Superset: admin credentials are not printed during startup
