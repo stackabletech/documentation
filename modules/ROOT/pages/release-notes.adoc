@@ -77,7 +77,7 @@ All Java-based product binaries are now built from source instead of packaging t
 
 Multi-platform images::
 
-This release is the first official, fully multi-platform release of the Stackable Data Platform. Each image has a manifest list which wraps the architecture-specific image.
+This release is the first fully multi-platform release of the Stackable Data Platform. Each image has a manifest list which wraps the architecture-specific image. The status is still experimental, as we work to fine-tune the necessary workflows.
 
 Security::
 
