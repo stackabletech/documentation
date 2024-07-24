@@ -111,7 +111,7 @@ The following are selected product features provided by new versions available i
 
 * Apache Druid: support for specifying and loading additional extensions
 
-* Apache HBase: support for exporting snapshots to S3. The HBase image now depends on the Hadoop image and the required AWS JARs are copied from there to the HBase image. The script https://github.com/stackabletech/docker-images/blob/main/hbase/stackable/bin/export-snapshot-to-s3.env[export-snapshot-to-s3] makes exporting easier, and this https://github.com/stackabletech/hbase-operator/tree/main/tests/templates/kuttl/snapshot-export[integration test] shows to use it.
+* Apache HBase: support for exporting snapshots to S3. The HBase image now depends on the Hadoop image and the required AWS JARs are copied from there to the HBase image. See the xref:hbase:usage-guide/security.adoc#snapshot-export[documentation] for more information.
 
 * Apache Hive: we now only supply the Hive Metastore. For most users this is an internal change, but is breaking for users with custom logging configurations
 
