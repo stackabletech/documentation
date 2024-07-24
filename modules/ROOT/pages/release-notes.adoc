@@ -78,9 +78,9 @@ The status is summarised below:
 
 Multi-platform images::
 
-This release is the first fully multi-platform release of the Stackable Data Platform.
+This release is the first multi-platform release of the Stackable Data Platform, supporting AMD64 and ARM64 architectures.
 Each image has a manifest list which wraps the architecture-specific image.
-The status is still experimental, as we work to fine-tune the necessary workflows.
+The status is still xref:concepts:multi-platform-support.adoc[experimental], as we work to fine-tune the necessary workflows.
 
 Security::
 

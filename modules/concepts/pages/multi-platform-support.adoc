@@ -1,0 +1,12 @@
+= Multi-platform for SDP
+:description: This page describes multi-platform support for AMD64 and ARM64
+:keywords: Multi-Architecture, infrastructure, docker, image, tags
+:multi-platform-images: https://docs.docker.com/build/building/multi-platform/
+
+WARNING: This status is still experimental, as we work to fine-tune the necessary workflows.
+
+== Description
+
+Starting with Stackable release 24.7, all images are {multi-platform-images}[multi-platform images], supporting the AMD64 and ARM64 architectures.
+Each product image is built for each platform with a specific tag.
+These tags are then bundled as a manifest list using an automated workflow so that the appropriate image can be transparently selected for the active platform/architecture.
