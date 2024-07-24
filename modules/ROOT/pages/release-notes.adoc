@@ -129,7 +129,6 @@ The following are selected product features provided by new versions available i
 
 Bugfixes::
 * Apache Druid: move the DB credentials user and password out of the CRD into a secret containing the keys username and password
-* Apache HBase: remove sed calls to replace KRB REALM in configuration. IMPORTANT: This means the operator will ONLY work with HBase versions that are compiled against Hadoop 3.x as of now. This is only relevant if you are building your own images.
 * Apache Hive: move the metastore user and password DB credentials out of the CRD into a Secret containing the keys username and password
 * Apache Kafka: remove field/arg controller_config from kafka_controller::Ctx struct and create_controller function
 * Apache NiFi: use config-utils for text-replacement of variables in configs. This fixes escaping problems, especially when special characters are included in the password
