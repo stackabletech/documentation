@@ -245,14 +245,17 @@ Uninstall the `24.3` release
 [source,console]
 ----
 $ stackablectl release uninstall 24.3
-[INFO ] Uninstalling release 24.3
-[INFO ] Uninstalling airflow operator
-[INFO ] Uninstalling commons operator
+
+Uninstalled release '24.3'
+
+Use "stackablectl release list" to list available releases.
 # ...
 ----
 
 Afterwards you will need to upgrade the CustomResourceDefinitions (CRDs) installed by the Stackable Platform.
-The reason for this is that helm will uninstall the operators but not the CRDs. This can be done using `kubectl replace`:
+The reason for this is that helm will uninstall the operators but not the CRDs. This can be done using `kubectl replace`.
+
+NOTE: The cluster name for the hello-world operator has been changed in this release so the CRD cannot be patched in-place. For this reason in the snipets below the CRD for this operator will be subject to a `delete` command (plus an `apply` as part of the operator rollout in the new release) instead of a `replace`.
 
 [source]
 ----
@@ -261,7 +264,6 @@ kubectl replace -f https://raw.githubusercontent.com/stackabletech/commons-opera
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/druid-operator/24.7.0/deploy/helm/druid-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/hbase-operator/24.7.0/deploy/helm/hbase-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/hdfs-operator/24.7.0/deploy/helm/hdfs-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/hello-world-operator/24.7.0/deploy/helm/hello-world-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/hive-operator/24.7.0/deploy/helm/hive-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/kafka-operator/24.7.0/deploy/helm/kafka-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/listener-operator/24.7.0/deploy/helm/listener-operator/crds/crds.yaml
@@ -272,6 +274,8 @@ kubectl replace -f https://raw.githubusercontent.com/stackabletech/spark-k8s-ope
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/superset-operator/24.7.0/deploy/helm/superset-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/trino-operator/24.7.0/deploy/helm/trino-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/24.7.0/deploy/helm/zookeeper-operator/crds/crds.yaml
+# N.B. due to change of name
+kubectl delete -f https://raw.githubusercontent.com/stackabletech/hello-world-operator/24.3.0/deploy/helm/hello-world-operator/crds/crds.yaml
 ----
 
 [source,console]
@@ -288,23 +292,10 @@ Install the `24.7` release
 [source,console]
 ----
 $ stackablectl release install 24.7
-[INFO ] Installing release 24.7
-[INFO ] Installing airflow operator in version 24.7.0
-[INFO ] Installing commons operator in version 24.7.0
-[INFO ] Installing druid operator in version 24.7.0
-[INFO ] Installing hbase operator in version 24.7.0
-[INFO ] Installing hdfs operator in version 24.7.0
-[INFO ] Installing hive operator in version 24.7.0
-[INFO ] Installing kafka operator in version 24.7.0
-[INFO ] Installing listener operator in version 24.7.0
-[INFO ] Installing hello-world operator in version 24.7.0
-[INFO ] Installing nifi operator in version 24.7.0
-[INFO ] Installing opa operator in version 24.7.0
-[INFO ] Installing secret operator in version 24.7.0
-[INFO ] Installing spark-k8s operator in version 24.7.0
-[INFO ] Installing superset operator in version 24.7.0
-[INFO ] Installing trino operator in version 24.7.0
-[INFO ] Installing zookeeper operator in version 24.7.0
+
+Installed release '24.7'
+
+Use "stackablectl operator installed" to list installed operators.
 ----
 
 ==== Using Helm
@@ -315,10 +306,10 @@ You can use the following command to uninstall all operators that are part of th
 
 [source,console]
 ----
-$ helm uninstall airflow-operator commons-operator druid-operator hbase-operator hdfs-operator hive-operator kafka-operator listener-operator nifi-operator opa-operator secret-operator spark-k8s-operator superset-operator trino-operator zookeeper-operator
+$ helm uninstall airflow-operator commons-operator druid-operator hbase-operator hdfs-operator hello-world-operator hive-operator kafka-operator listener-operator nifi-operator opa-operator secret-operator spark-k8s-operator superset-operator trino-operator zookeeper-operator
 release "airflow-operator" uninstalled
 release "commons-operator" uninstalled
-# ...
+...
 ----
 
 Afterward you will need to upgrade the CustomResourceDefinitions (CRDs) installed by the Stackable Platform.
@@ -331,7 +322,6 @@ kubectl replace -f https://raw.githubusercontent.com/stackabletech/commons-opera
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/druid-operator/24.7.0/deploy/helm/druid-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/hbase-operator/24.7.0/deploy/helm/hbase-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/hdfs-operator/24.7.0/deploy/helm/hdfs-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/hello-world-operator/24.7.0/deploy/helm/hello-world-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/hive-operator/24.7.0/deploy/helm/hive-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/kafka-operator/24.7.0/deploy/helm/kafka-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/listener-operator/24.7.0/deploy/helm/listener-operator/crds/crds.yaml
@@ -342,6 +332,8 @@ kubectl replace -f https://raw.githubusercontent.com/stackabletech/spark-k8s-ope
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/superset-operator/24.7.0/deploy/helm/superset-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/trino-operator/24.7.0/deploy/helm/trino-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/24.7.0/deploy/helm/zookeeper-operator/crds/crds.yaml
+# N.B. due to change of name
+kubectl delete -f https://raw.githubusercontent.com/stackabletech/hello-world-operator/24.3.0/deploy/helm/hello-world-operator/crds/crds.yaml
 ----
 
 Install the `24.7` release
