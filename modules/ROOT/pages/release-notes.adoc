@@ -240,12 +240,34 @@ Of the changes mentioned above, the following are breaking (or could lead to bre
 * `spec.metadataStorageDatabase.credentialsSecret`: Name of the secret containing the credentials for the database (i.e. containing `username` and `password` fields).
 ====
 
-* Apache HBase: remove sed calls to replace KRB REALM in configuration. IMPORTANT: This means the operator will ONLY work with HBase versions that are compiled against Hadoop 3.x as of now
-* Apache Hive: move the metastore user and password DB credentials out of the CRD into a Secret containing the keys username and password
-* Apache Hive: we now only supply the Hive Metastore. For most users this is an internal change, but is breaking for users with custom logging configurations
+==== Stackable Operator for Apache Hive
+
+* https://github.com/stackabletech/hive-operator/pull/452[move the metastore user and password out of the CRD into a secret containing the keys username and password]
+
+.Breaking changes details
+[%collapsible]
+====
+* `spec.clusterConfig.database.user`: This field has been removed.
+* `spec.clusterConfig.database.password`: This field has been removed.
+* `spec.clusterConfig.database.credentialsSecret`: Name of the secret containing the credentials for the database (i.e. containing `username` and `password` fields).
+====
+
+
+* as mentioned above, https://github.com/stackabletech/hive-operator/pull/447[we now only supply the Hive Metastore]. For most users this is an internal change, but is breaking for users with custom logging configurations
+
+==== Stackable Operator for Apache Kafka
+
 * Apache Kafka: remove field/arg controller_config from kafka_controller::Ctx struct and create_controller function
+
+==== Stackable Secret Operator
+
 * Secret operator: the TLS CA Secret is now installed into the Namespace of the operator (typically `stackable-operators`), rather than `default`
+
+==== Stackable Operator for Apache Spark
+
 * Apache Spark: CPU resources are now applied correctly (instead of being rounding to the next whole number). This might affect existing jobs, as they may have e.g. only 200m CPU resources requested instead of the 1000m it had thus far, meaning they might slow down significantly (i.e. possible breaking *behaviour*)
+
+==== Stackable Operator for Trino
 * Trino: change the username which triggers graceful shutdown from `admin` to `graceful-shutdown-user` for greater clarity (e.g. in the Trino policies). This is a breaking change because users need to ensure that `graceful-shutdown-user` has the required permissions to initiate a graceful shutdown. The privileges required for graceful shutdowns are granted to the admin user in the OPA rego rules
 
 === Upgrade from 24.3
