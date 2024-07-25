@@ -414,6 +414,8 @@ In the case of the breaking changes detailed above it will be necessary to updat
 
 Copy any secrets from the default namespace to that used by the operator, as shown above.
 
+Please note that Java-based products that use the JMX exporter for Prometheus are now built with version https://github.com/prometheus/jmx_exporter/releases/tag/1.0.1[1.0.1], which has breaking changes relevant for any dashboards displaying JVM metrics.
+
 == Release 24.3
 
 === New / extended platform features
