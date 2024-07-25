@@ -392,7 +392,7 @@ helm install --wait zookeeper-operator stackable-stable/zookeeper-operator --ver
 
 ==== Known upgrade issues
 
-===== All operators
+In the case of the breaking changes detailed above it will be necessary to update the custom resources and re-apply them.
 
 == Release 24.3
 
