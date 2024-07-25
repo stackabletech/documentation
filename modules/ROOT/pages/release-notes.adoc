@@ -317,6 +317,15 @@ customresourcedefinition.apiextensions.k8s.io "s3connections.s3.stackable.tech" 
 ...
 ----
 
+If relevant, copy secrets to the operator's namespace. E.g. for `secret-provisioner-tls-ca`:
+
+[source]
+----
+kubectl get secrets secret-provisioner-tls-ca --output=yaml | \
+    sed 's/namespace: .*/namespace: stackable-operators/' | \
+    kubectl create --filename=-
+----
+
 Install the `24.7` release
 
 [source,console]
@@ -366,6 +375,15 @@ kubectl replace -f https://raw.githubusercontent.com/stackabletech/zookeeper-ope
 kubectl delete -f https://raw.githubusercontent.com/stackabletech/hello-world-operator/24.3.0/deploy/helm/hello-world-operator/crds/crds.yaml
 ----
 
+If relevant, copy secrets to the operator's namespace. E.g. for `secret-provisioner-tls-ca`:
+
+[source]
+----
+kubectl get secrets secret-provisioner-tls-ca --output=yaml | \
+    sed 's/namespace: .*/namespace: stackable-operators/' | \
+    kubectl create --filename=-
+----
+
 Install the `24.7` release
 
 [source,console]
@@ -393,6 +411,8 @@ helm install --wait zookeeper-operator stackable-stable/zookeeper-operator --ver
 ==== Known upgrade issues
 
 In the case of the breaking changes detailed above it will be necessary to update the custom resources and re-apply them.
+
+Copy any secrets from the default namespace to that used by the operator, as shown above.
 
 == Release 24.3
 
