@@ -148,7 +148,7 @@ The following new product versions are now supported:
 
 * https://github.com/stackabletech/airflow-operator/pull/461[Apache Airflow: 2.8.4, 2.9.2]
 * https://github.com/stackabletech/druid-operator/pull/583[Apache Druid: 30.0.0 (experimental)]
-* https://github.com/stackabletech/hdfs-operator/pull/545[Apache Hadoop: 3.4.0]
+* https://github.com/stackabletech/hdfs-operator/pull/545[Apache Hadoop: 3.4.0 (experimental)]
 * https://github.com/stackabletech/hbase-operator/pull/506[Apache HBase: 2.4.18, 2.6.0 (experimental)]
 * https://github.com/stackabletech/kafka-operator/pull/723[Apache Kafka: 3.6.2, 3.7.1]
 * https://github.com/stackabletech/nifi-operator/pull/639[Apache NiFi: 1.27.0, 2.0.0-M4 (experimental)]
