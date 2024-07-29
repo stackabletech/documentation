@@ -140,7 +140,7 @@ Bugfixes::
 === Product versions
 
 As with previous SDP releases, many product images have been updated to their latest versions.
-The LTS version has in many cases also been adjusted in line with our support policy.
+The LTS version has in many cases also been adjusted in line with our https://docs.stackable.tech/home/stable/policies[support policy].
 
 ==== New versions
 
