@@ -241,6 +241,11 @@ Of the changes mentioned above, the following are breaking (or could lead to bre
 * `spec.metadataStorageDatabase.credentialsSecret`: Name of the secret containing the credentials for the database (i.e. containing `username` and `password` fields).
 ====
 
+==== Stackable Operator for Apache Hadoop
+
+YARN, Map-reduce and other dependencies not needed by the HDFS operator have been removed from the 24.7.0 images.
+If these dependencies are needed - e.g. for `distcp` commands - then please use the older 24.3.0 images which still contain these libraries.
+
 ==== Stackable Operator for Apache Hive
 
 * https://github.com/stackabletech/hive-operator/pull/452[move the metastore user and password out of the CRD into a secret containing the keys username and password]
