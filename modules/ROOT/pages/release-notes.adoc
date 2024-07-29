@@ -39,6 +39,389 @@ Here are the headings you can use for the next release. Saves time checking inde
 
 ////
 
+== Release 24.7
+
+=== New / extended platform features
+
+Vulnerability management::
+
+In this release we have worked on significantly reducing the number of vulnerabilities in our product binaries.
+This will be more manageable going forward as we now build all Java-based binaries from source, which gives us greater flexibility when creating patches.
+We tackle this task at different levels:
+
+* bump base images (in this release we are using the UBI9 line of images in place of UBI8)
+* bump product versions to take advantage of product security improvements (see the section below for more details)
+* introduce our own patches (to e.g. bump individual dependencies or make changes to the code)
+* exclude product modules that are not relevant (e.g. build Hive to include only the Metastore and not the Hive server)
+
+NOTE: In this release we have eliminated 75% of all vulnerabilities that were present in the product binaries that were part of release 24.3.
+
+This work will continue in the next version and the progress made in this release enables us to do more work in the future (workflow improvements, tooling etc.).
+
+Build products from source::
+
+All Java-based product binaries are now built from source instead of packaging them from the official releases.
+The status is summarised below:
+
+* Apache Airflow: official release (Python-based)
+* Apache Druid: built from source from release 24.7
+* Apache HBase: built from source from release 24.3
+* Apache Hadoop HDFS: built from source from release 24.3
+* Apache Hive: built from source from release 24.7
+* Apache Kafka: built from source from release 24.7
+* Apache NiFi: built from source from release 24.7
+* Open Policy Agent: built from source from release 24.7
+* Trino: built from source from release 24.7
+* Apache Spark: built from source from release 24.7
+* Apache Superset: official release (Python-based)
+* Apache ZooKeeper: built from source from release 24.7
+
+Multi-platform images::
+
+This release is the first multi-platform release of the Stackable Data Platform, supporting AMD64 and ARM64 architectures.
+Each image has a manifest list which wraps the architecture-specific image.
+The status is still xref:concepts:multi-platform-support.adoc[experimental], as we work to fine-tune the necessary workflows.
+
+Security::
+
+Support for OIDC with/without TLS has been added to Apache Druid in this release.
+
+NOTE: SDP now provides OIDC-support for Druid, Superset and Trino
+
+In this release we provide experimental HBase 2.6.0 support with a new experimental policy based authorizer (with OPA).
+Check xref:hbase:usage-guide/security.adoc#_authorization[the documentation on HBase authorization with OPA] but do not rely on its API as it might change in breaking ways during the experimental phase.
+
+[IMPORTANT]
+In an upcoming release we will enable authentication and encryption by default where possible.
+To ensure a smooth transition to future releases, we strongly encourage you to enable security features wherever possible in your deployments.
+
+Documentation::
+
+* Apache Hive and Trino operators: we have provided non-trivial sample Rego rules for these operators, together with an in-depth explanation and links
+
+* Apache Hive: there is now a tutorial on how to load and use external database drivers
+
+* Apache Spark: documentation has been added showing how to provision Spark dependencies
+
+Other product features::
+
+The following are selected product features provided by new versions available in this release:
+
+* Apache Airflow: support for modularized DAGs
+
+* Apache Druid: support for specifying and loading additional extensions
+
+* Apache HBase: support for exporting snapshots to S3. The HBase image now depends on the Hadoop image and the required AWS JARs are copied from there to the HBase image. See the xref:hbase:usage-guide/security.adoc#snapshot-export[documentation] for more information.
+
+* Apache Hive: we now only supply the Hive Metastore. For most users this is an internal change, but is breaking for users with custom logging configurations
+
+* Listener operator: allow users to configure the external traffic policy, which is than passed to the created Service
+
+* Apache NiFi: support specifying the SecretClass that is used to obtain TLS certificates
+
+* Open Policy Agent: support enabling decision logs, this was an often requested feature and helps implement audit logging for authorization decisions
+
+* Secret operator: reduce CA default lifetime to one year and log when secrets are created
+
+* Trino: support for row filters and column masks in Rego rules
+
+* Apache ZooKeeper: allow the overriding of the ZNode path by setting status.znodePath
+
+Bugfixes::
+* Apache Druid: move the DB credentials user and password out of the CRD into a secret containing the keys username and password
+* Apache Hive: move the metastore user and password DB credentials out of the CRD into a Secret containing the keys username and password
+* Apache Kafka: remove field/arg controller_config from kafka_controller::Ctx struct and create_controller function
+* Apache NiFi: use config-utils for text-replacement of variables in configs. This fixes escaping problems, especially when special characters are included in the password
+* Secret operator: for OpenShift clusters, the TLS CA Secret is now installed into the Namespace of the operator (typically `stackable-operators`), rather than `default`
+* Apache Spark: CPU resources are now applied correctly (instead of being rounding to the next whole number). This might affect existing jobs, as they may have e.g. only 200m CPU resources requested instead of the 1000m it had thus far, meaning they might slow down significantly
+* Apache Superset: admin credentials are not printed during startup
+* Trino: change the username which triggers graceful shutdown from `admin` to `graceful-shutdown-user` for greater clarity (e.g. in the Trino policies)
+
+=== Product versions
+
+As with previous SDP releases, many product images have been updated to their latest versions.
+The LTS version has in many cases also been adjusted in line with our https://docs.stackable.tech/home/stable/policies[support policy].
+
+==== New versions
+
+The following new product versions are now supported:
+
+* https://github.com/stackabletech/airflow-operator/pull/461[Apache Airflow: 2.8.4, 2.9.2]
+* https://github.com/stackabletech/druid-operator/pull/583[Apache Druid: 30.0.0 (experimental)]
+* https://github.com/stackabletech/hdfs-operator/pull/545[Apache Hadoop: 3.4.0 (experimental)]
+* https://github.com/stackabletech/hbase-operator/pull/506[Apache HBase: 2.4.18, 2.6.0 (experimental)]
+* https://github.com/stackabletech/kafka-operator/pull/723[Apache Kafka: 3.6.2, 3.7.1]
+* https://github.com/stackabletech/nifi-operator/pull/639[Apache NiFi: 1.27.0, 2.0.0-M4 (experimental)]
+* https://github.com/stackabletech/opa-operator/pull/594[Open Policy Agent: 0.66.0]
+* https://github.com/stackabletech/spark-k8s-operator/pull/426[Apache Spark: 3.4.3, 3.5.1 (Java 11 to 17)]
+* https://github.com/stackabletech/superset-operator/pull/509[Apache Superset: 3.1.3, 4.0.2]
+* https://github.com/stackabletech/trino-operator/pull/609[Trino: 451]
+
+NOTE: We ship Apache Hadoop 3.4.0 as a preview only and do NOT support upgrading from 3.3.x to 3.4.0 at the moment. Please test version 3.4.0 on fresh installations but do not attempt to upgrade to 3.4.0 if you are currently using 3.3.x.
+
+==== Deprecated versions
+
+The following product versions are deprecated and will be removed in a later release:
+
+* Apache Airflow: 2.6.3, 2.8.1, 2.8.4
+* Apache Druid: 28.0.1
+* Apache HBase: 2.4.17
+* Apache Kafka: 3.4.1, 3.6.1
+* Apache NiFi: 1.21.0
+* Open Policy Agent: 0.61.0
+* Apache Spark: 3.4.2, 3.4.3
+* Apache Superset: 2.1.3, 3.1.0, 3.1.3
+* Trino: 414, 442
+* Apache ZooKeeper: 3.8.4
+
+N.B. in some cases a newly supported version is also immediately marked as deprecated.
+This is done to allow an update path from the latest patch of a minor version (e.g. Kafka 2.8.2 --> 3.4.1).
+
+==== Removed versions
+
+The following product versions are no longer supported (although images for released product versions remain available https://repo.stackable.tech/#browse/browse:docker:v2%2Fstackable[here]):
+
+* Apache Airflow: 2.7.2, 2.7.3
+* Apache Druid: 27.0.0
+* Apache Kafka: 3.5.2
+* Apache NiFi: 1.23.2
+* Open Policy Agent: 0.57.0
+* Apache Spark: 3.4.1, 3.5.0
+* Apache Superset: 2.1.1, 3.0.1, 3.0.3
+* Trino: 428
+* Apache ZooKeeper: 3.8.3
+
+=== stackablectl
+
+The following changes have been made to `stackablectl`:
+
+* a new experimental debug command
+* a pre-built binary for aarch64-unknown-linux-gnu is now available
+* complete error messages are now shown (remedying the truncation of some details in previous releases)
+* use of the latest Go and Rust versions and respective dependencies
+
+=== Supported Kubernetes versions
+
+This release supports the following Kubernetes versions:
+
+* `1.30`
+* `1.29`
+* `1.28`
+
+These Kubernetes versions are no longer supported:
+
+* `1.27`
+
+=== Supported OpenShift versions
+
+This release is available in the RedHat Certified Operator Catalog for the following OpenShift versions:
+
+* `4.15`
+* `4.14`
+* `4.13`
+* `4.12`
+
+These OpenShift versions are no longer supported:
+
+* `4.11`
+
+=== Breaking changes
+
+Of the changes mentioned above, the following are breaking (or could lead to breaking behaviour), and you will need to adapt your existing CRDs accordingly:
+
+==== Stackable Operator for Apache Druid
+
+* https://github.com/stackabletech/druid-operator/pull/557[move the DB credentials user and password out of the CRD into a secret containing the keys username and password]
+
+.Breaking changes details
+[%collapsible]
+====
+* `spec.metadataStorageDatabase.user`: This field has been removed.
+* `spec.metadataStorageDatabase.password`: This field has been removed.
+* `spec.metadataStorageDatabase.credentialsSecret`: Name of the secret containing the credentials for the database (i.e. containing `username` and `password` fields).
+====
+
+==== Stackable Operator for Apache Hadoop
+
+YARN, Map-reduce and other dependencies not needed by the HDFS operator have been removed from the 24.7.0 images.
+If these dependencies are needed - e.g. for `distcp` commands - then please use the older 24.3.0 images which still contain these libraries.
+
+==== Stackable Operator for Apache Hive
+
+* https://github.com/stackabletech/hive-operator/pull/452[move the metastore user and password out of the CRD into a secret containing the keys username and password]
+
+.Breaking changes details
+[%collapsible]
+====
+* `spec.clusterConfig.database.user`: This field has been removed.
+* `spec.clusterConfig.database.password`: This field has been removed.
+* `spec.clusterConfig.database.credentialsSecret`: Name of the secret containing the credentials for the database (i.e. containing `username` and `password` fields).
+====
+
+* as mentioned above, https://github.com/stackabletech/hive-operator/pull/447[we now only supply the Hive Metastore]. For most users this is an internal change, but is breaking for users with custom logging configurations
+
+==== Stackable Secret Operator
+
+* https://github.com/stackabletech/secret-operator/pull/397[the TLS CA Secret is now installed into the Namespace of the operator (typically `stackable-operators`), rather than `default`]
+
+==== Stackable Operator for Apache Spark
+
+* https://github.com/stackabletech/spark-k8s-operator/pull/408[CPU resources are now applied correctly (instead of being rounding to the next whole number)]. As mentioned above, this could lead to breaking *behaviour*
+
+==== Stackable Operator for Trino
+
+* https://github.com/stackabletech/trino-operator/pull/573[change the username which triggers graceful shutdown from `admin` to `graceful-shutdown-user` for greater clarity] (e.g. in the Trino policies). This is a breaking change because users need to ensure that `graceful-shutdown-user` has the required permissions to initiate a graceful shutdown. The privileges required for graceful shutdowns are granted to the admin user in the OPA rego rules
+
+=== Upgrade from 24.3
+
+==== Using stackablectl
+
+Uninstall the `24.3` release
+
+[source,console]
+----
+$ stackablectl release uninstall 24.3
+
+Uninstalled release '24.3'
+
+Use "stackablectl release list" to list available releases.
+# ...
+----
+
+Afterwards you will need to upgrade the CustomResourceDefinitions (CRDs) installed by the Stackable Platform.
+The reason for this is that helm will uninstall the operators but not the CRDs. This can be done using `kubectl replace`.
+
+NOTE: The cluster name for the hello-world operator has been changed in this release so the CRD cannot be patched in-place. For this reason in the snipets below the CRD for this operator will be subject to a `delete` command (plus an `apply` as part of the operator rollout in the new release) instead of a `replace`.
+
+[source]
+----
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/airflow-operator/24.7.0/deploy/helm/airflow-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/commons-operator/24.7.0/deploy/helm/commons-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/druid-operator/24.7.0/deploy/helm/druid-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hbase-operator/24.7.0/deploy/helm/hbase-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hdfs-operator/24.7.0/deploy/helm/hdfs-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hive-operator/24.7.0/deploy/helm/hive-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/kafka-operator/24.7.0/deploy/helm/kafka-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/listener-operator/24.7.0/deploy/helm/listener-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/nifi-operator/24.7.0/deploy/helm/nifi-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/opa-operator/24.7.0/deploy/helm/opa-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/secret-operator/24.7.0/deploy/helm/secret-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/24.7.0/deploy/helm/spark-k8s-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/superset-operator/24.7.0/deploy/helm/superset-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/trino-operator/24.7.0/deploy/helm/trino-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/24.7.0/deploy/helm/zookeeper-operator/crds/crds.yaml
+# N.B. due to change of name
+kubectl delete -f https://raw.githubusercontent.com/stackabletech/hello-world-operator/24.3.0/deploy/helm/hello-world-operator/crds/crds.yaml
+----
+
+[source,console]
+----
+customresourcedefinition.apiextensions.k8s.io "airflowclusters.airflow.stackable.tech" replaced
+customresourcedefinition.apiextensions.k8s.io "airflowdbs.airflow.stackable.tech" replaced
+customresourcedefinition.apiextensions.k8s.io "authenticationclasses.authentication.stackable.tech" replaced
+customresourcedefinition.apiextensions.k8s.io "s3connections.s3.stackable.tech" replaced
+...
+----
+
+If relevant, copy secrets to the operator's namespace. E.g. for `secret-provisioner-tls-ca`:
+
+[source]
+----
+kubectl get secrets secret-provisioner-tls-ca --output=yaml | \
+    sed 's/namespace: .*/namespace: stackable-operators/' | \
+    kubectl create --filename=-
+----
+
+Install the `24.7` release
+
+[source,console]
+----
+$ stackablectl release install 24.7
+
+Installed release '24.7'
+
+Use "stackablectl operator installed" to list installed operators.
+----
+
+==== Using Helm
+
+Use `helm list` to list the currently installed operators.
+
+You can use the following command to uninstall all operators that are part of the `24.3` release:
+
+[source,console]
+----
+$ helm uninstall airflow-operator commons-operator druid-operator hbase-operator hdfs-operator hello-world-operator hive-operator kafka-operator listener-operator nifi-operator opa-operator secret-operator spark-k8s-operator superset-operator trino-operator zookeeper-operator
+release "airflow-operator" uninstalled
+release "commons-operator" uninstalled
+...
+----
+
+Afterward you will need to upgrade the CustomResourceDefinitions (CRDs) installed by the Stackable Platform.
+The reason for this is that helm will uninstall the operators but not the CRDs. This can be done using `kubectl replace`:
+
+[source,console]
+----
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/airflow-operator/24.7.0/deploy/helm/airflow-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/commons-operator/24.7.0/deploy/helm/commons-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/druid-operator/24.7.0/deploy/helm/druid-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hbase-operator/24.7.0/deploy/helm/hbase-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hdfs-operator/24.7.0/deploy/helm/hdfs-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hive-operator/24.7.0/deploy/helm/hive-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/kafka-operator/24.7.0/deploy/helm/kafka-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/listener-operator/24.7.0/deploy/helm/listener-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/nifi-operator/24.7.0/deploy/helm/nifi-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/opa-operator/24.7.0/deploy/helm/opa-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/secret-operator/24.7.0/deploy/helm/secret-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/24.7.0/deploy/helm/spark-k8s-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/superset-operator/24.7.0/deploy/helm/superset-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/trino-operator/24.7.0/deploy/helm/trino-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/24.7.0/deploy/helm/zookeeper-operator/crds/crds.yaml
+# N.B. due to change of name
+kubectl delete -f https://raw.githubusercontent.com/stackabletech/hello-world-operator/24.3.0/deploy/helm/hello-world-operator/crds/crds.yaml
+----
+
+If relevant, copy secrets to the operator's namespace. E.g. for `secret-provisioner-tls-ca`:
+
+[source]
+----
+kubectl get secrets secret-provisioner-tls-ca --output=yaml | \
+    sed 's/namespace: .*/namespace: stackable-operators/' | \
+    kubectl create --filename=-
+----
+
+Install the `24.7` release
+
+[source,console]
+----
+helm repo add stackable-stable https://repo.stackable.tech/repository/helm-stable/
+helm repo update stackable-stable
+helm install --wait airflow-operator stackable-stable/airflow-operator --version 24.7.0
+helm install --wait commons-operator stackable-stable/commons-operator --version 24.7.0
+helm install --wait druid-operator stackable-stable/druid-operator --version 24.7.0
+helm install --wait hbase-operator stackable-stable/hbase-operator --version 24.7.0
+helm install --wait hdfs-operator stackable-stable/hdfs-operator --version 24.7.0
+helm install --wait hive-operator stackable-stable/hive-operator --version 24.7.0
+helm install --wait kafka-operator stackable-stable/kafka-operator --version 24.7.0
+helm install --wait listener-operator stackable-stable/listener-operator --version 24.7.0
+helm install --wait hello-world-operator stackable-stable/hello-world-operator --version 24.7.0
+helm install --wait nifi-operator stackable-stable/nifi-operator --version 24.7.0
+helm install --wait opa-operator stackable-stable/opa-operator --version 24.7.0
+helm install --wait secret-operator stackable-stable/secret-operator --version 24.7.0
+helm install --wait spark-k8s-operator stackable-stable/spark-k8s-operator --version 24.7.0
+helm install --wait superset-operator stackable-stable/superset-operator --version 24.7.0
+helm install --wait trino-operator stackable-stable/trino-operator --version 24.7.0
+helm install --wait zookeeper-operator stackable-stable/zookeeper-operator --version 24.7.0
+----
+
+==== Known upgrade issues
+
+In the case of the breaking changes detailed above it will be necessary to update the custom resources and re-apply them.
+
+Copy any secrets from the default namespace to that used by the operator, as shown above.
+
+Please note that Java-based products that use the JMX exporter for Prometheus are now built with version https://github.com/prometheus/jmx_exporter/releases/tag/1.0.1[1.0.1], which has breaking changes relevant for any dashboards displaying JVM metrics.
+
 == Release 24.3
 
 === New / extended platform features

@@ -1,6 +1,5 @@
 = Container images
 :ubi: https://catalog.redhat.com/software/base-images
-:multi-platform-images: https://docs.docker.com/build/building/multi-platform/
 :stackable-image-registry: https://repo.stackable.tech/#browse/browse
 :stackable-sboms: https://sboms.stackable.tech/
 
@@ -33,8 +32,7 @@ Have a look at the xref:guides:viewing-and-verifying-sboms.adoc[] guide to learn
 [#multi-platform-support]
 == Multi-platform support
 
-Starting with Stackable release 24.7, all images are {multi-platform-images}[multi-platform images], supporting the AMD64 and ARM64 architectures.
-This means that Docker automatically pulls the correct image for your architecture based on the architecture it detects that it is running on.
+See our documentation xref:concepts:multi-platform-support.adoc[on multi-platform support] for an overview and the current status.
 
 [#signatures]
 == Image signatures
