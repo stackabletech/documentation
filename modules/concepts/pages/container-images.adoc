@@ -32,7 +32,7 @@ Have a look at the xref:guides:viewing-and-verifying-sboms.adoc[] guide to learn
 [#multi-platform-support]
 == Multi-platform support
 
-See xref:concepts:multi-platform-support.adoc[this] page for an overview and the current status.
+See our documentation xref:concepts:multi-platform-support.adoc[on multi-platform support] for an overview and the current status.
 
 [#signatures]
 == Image signatures
