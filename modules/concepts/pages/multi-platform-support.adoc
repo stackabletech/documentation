@@ -7,9 +7,10 @@ WARNING: This status is still experimental, as we work to fine-tune the necessar
 
 == Description
 
-Starting with Stackable release 24.7, all images support {multi-platform-images}[multi-platform images] the AMD64 and ARM64 architectures.
-Each product image is built for each platform with a specific tag.
-These tags are then bundled as a manifest list using an automated workflow so that the appropriate image can be transparently selected for the active platform/architecture.
+Starting with Stackable release 24.7, all images are {multi-platform-images}[multi-platform images], supporting the AMD64 and ARM64 architectures.
+Each product image is built for each platform with an architecture-specific tag.
+For example, the airflow images with tags `airflow:2.9.2-stackable24.7.0-amd64` and `airflow:2.9.2-stackable24.7.0-arm64` are bundled in the manifest list `airflow:2.9.2-stackable24.7.0` using an automated workflow.
+The appropriate image will then be transparently selected for the active platform/architecture.
 This also enables mixed Kubernetes clusters, with AMD64 and ARM64 nodes being used simultaneously.
 
 NOTE: Superset 2.x (deprecated, and to be removed in a future version) is not available as a multi-platform product image.
