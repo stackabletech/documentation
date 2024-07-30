@@ -1,5 +1,5 @@
 name: home
-version: "nightly"
+version: "24.7"
 title: Stackable Documentation
 nav:
   - modules/ROOT/nav1.adoc
@@ -14,7 +14,7 @@ nav:
   - modules/ROOT/nav3.adoc # this is for the extra bits at the end of the menu
 # The prerelease setting affects version sorting.
 # Set to 'true' for nightly and false otherwise.
-prerelease: true
+prerelease: false
 # The attributes below are specific to this component and version
 # https://docs.antora.org/antora/latest/component-attributes/#hard-set
 asciidoc:
@@ -22,7 +22,7 @@ asciidoc:
     # Keep this version in line with the 'version' key above
     # The versions for the CRD docs are either 'nightly' or
     # a full major.minor.patch version like 23.7.1
-    crd-docs-version: "nightly"
+    crd-docs-version: "24.7.0"
     # Whether this version is already end of life.
     # If true, a banner will be displayed informing the user.
     end-of-life: false
