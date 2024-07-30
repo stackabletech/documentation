@@ -94,7 +94,7 @@ metadata:
   name: simple-zk
 spec:
   image:
-    productVersion: 3.8.3
+    productVersion: 3.9.2
   clusterConfig:
     tls:
       serverSecretClass: null
@@ -129,7 +129,7 @@ metadata:
   name: simple-kafka
 spec:
   image:
-    productVersion: 3.5.1
+    productVersion: 3.7.1
   clusterConfig:
     zookeeperConfigMapName: simple-kafka-znode
     tls:
@@ -172,7 +172,7 @@ metadata:
   name: simple-nifi
 spec:
   image:
-    productVersion: 1.23.2
+    productVersion: 1.27.0
   clusterConfig:
     listenerClass: external-unstable
     zookeeperConfigMapName: simple-nifi-znode
