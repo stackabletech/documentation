@@ -103,7 +103,8 @@ Documentation::
 
 * Apache Spark: documentation has been added showing how to provision Spark dependencies
 
-* Open Policy Agent: N.B. As mentioned in the release 24.3, we will be actively building out the backends supported by the User Info Fetcher. This feature should be therefore be treated as experimental, as implementation details are subject to change as we consolidate and fine-tune the tool.
+* Open Policy Agent: N.B. As mentioned in the release 24.3, we will be actively building out the backends supported by the User Info Fetcher.
+This feature should be therefore be treated as experimental as we continue to extend and consolidate back-end handling and fine-tune the tool in general.
 
 Other product features::
 
