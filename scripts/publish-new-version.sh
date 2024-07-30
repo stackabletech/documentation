@@ -145,7 +145,7 @@ publish_branch="publish-$docs_version"
 git checkout -b "$publish_branch"
 
 git add .
-git commit -m "chore: Add release branches to the playbooks for release $docs_version"
+git commit -m "Add release branches to the playbooks for release $docs_version"
 
 # Push the branch if requested
 if [ "$push" = true ]; then
