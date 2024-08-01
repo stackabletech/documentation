@@ -46,7 +46,7 @@ For example, running a Kafka instance requires the Kafka Operator.
 
 ==== Secret Operator
 
-The xref:home:secret-operator:index.adoc[Secret Operator] is needed by the Stackable Operator for Apache NiFi, as NiFi
+The xref:secret-operator:index.adoc[Secret Operator] is needed by the Stackable Operator for Apache NiFi, as NiFi
 requires the UI to be served via HTTPS. The necessary certificates and keys for this are provided by the Secret Operator
 to the NiFi Pods.
 
@@ -65,7 +65,7 @@ helm install secret-operator stackable-stable/secret-operator
 ==== ZooKeeper Operator
 
 Apache NiFi and Apache Kafka both use Apache ZooKeeper as backing config storage, so the
-xref:home:zookeeper:index.adoc[Stackable Operator for Apache ZooKeeper] has to be installed in order to make sure that a
+xref:zookeeper:index.adoc[Stackable Operator for Apache ZooKeeper] has to be installed in order to make sure that a
 ZooKeeper cluster can be rolled out. There is no need to install multiple ZooKeeper clusters, as NiFi, Kafka and Druid
 can share the same cluster via provisioning a ZNode per backed service.
 
@@ -667,7 +667,7 @@ spec:
 EOF
 
 <1> This is the version of Superset used for this instance. You can find the Superset versions supported by Stackable in
-    the xref:home:superset:index.adoc[Superset Operator documentation].
+    the xref:superset:index.adoc[Superset Operator documentation].
 <2> This is the reference to the Secret you created earlier.
 
 On the first deployment of the Superset cluster, the Operator will also initialize the database. Once the database is initialized, you can connect to the cluster.
