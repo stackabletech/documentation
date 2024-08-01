@@ -47,7 +47,7 @@ Learn more about roles: xref:roles-and-role-groups.adoc[]
 [#deployment]
 == Deployment
 
-All operators and products run as containers in a xref:kubernetes.adoc[Kubernetes cluster]. The operators are deployed with stackablectl (the Stackable CLI) or Helm.
+All operators and products run as containers in a xref:ROOT:kubernetes.adoc[Kubernetes cluster]. The operators are deployed with stackablectl (the Stackable CLI) or Helm.
 
 image::deployment.drawio.svg[]
 
