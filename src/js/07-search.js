@@ -9,7 +9,7 @@
     e.stopPropagation() // trap event
     document.getElementById('search-background').style.display = 'block'
     document.getElementById('search').style.display = 'block'
-    var searchInput = document.querySelector('.pagefind-ui__search-input')
+    var searchInput = document.querySelector('.pagefind-modular-input')
     if (!searchInput) return
     searchInput.focus()
   }
