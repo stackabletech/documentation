@@ -7,7 +7,8 @@ This process has been automated with scripts, which are found in the https://git
 
 The process consists of two steps: 
 
-. Making a new release branch (`make-release-branch.sh`)
-. Publishing the new version by modifying the playbooks (`publish-new-version.sh`)
+. Making a new release branch (`make-release-branch.sh`).
+. Publishing the new version by modifying the playbooks (`publish-new-version.sh`).
 
 Consult the scripts for details about the required steps, as well as prerequisites.
+Furthermore the xref:docs/troubleshooting-antora.adoc[troubleshooting page] can be helpful to understand and fix Antora build errors.
