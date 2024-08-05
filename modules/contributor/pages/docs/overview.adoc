@@ -46,7 +46,7 @@ The guide has to account for different use-cases (i.e. the user is using their o
 Since this kind of information is typically product specific, it is located in the usage guide section of individual operators.
 
 **Reference** information for the Stackable platform entails all the settings and Options in our YAMLs, which we generate.
-The reference is found at {crdsdocs-site} and generated from the {stackable-crddocs-repo}[crddocs repository].
+The reference is found at {crddocs-site} and generated from the {stackable-crddocs-repo}[crddocs repository].
 
 === Style guide
 
