@@ -43,3 +43,12 @@ spec:
       - name: WATCH_NAMESPACE
         value: kafka-namespace
 ----
+
+== Security context constraints
+
+Starting with the release version `24.7.0`, all products run with the `nonroot-v2` security context constraints (SCC) on OpenShift.
+
+Operators (with two exceptions) don't request a spcific SCC to run under. Usually OpenShift will select the `restricted` or `restricted-v2` SCC unless the cluster admins have specifically assigned a different one to the namespace where the operators are running.
+The two exceptions are the secret and the listener operators.
+
+
