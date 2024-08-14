@@ -1,0 +1,27 @@
+= Using tab blocks
+:asciidoctor-tabs-gh: https://github.com/asciidoctor/asciidoctor-tabs
+
+The {asciidoctor-tabs-gh}[`asciidoctor/tabs`] extension is installed, so you can use tab blocks.
+An example can be found in the xref:management:stackablectl:installation.adoc[stackablectl installation instructions].
+
+== Syntax example
+
+[,asciidoc]
+----
+[tabs]
+====
+Tab A:: Contents of Tab A.
+
+Tab B::
++
+Contents of Tab B.
+
+Tab C::
++
+--
+Contents of Tab C.
+
+Contains more than one block.
+--
+====
+----
