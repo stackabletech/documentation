@@ -4,6 +4,8 @@
 The {asciidoctor-tabs-gh}[`asciidoctor/tabs`] extension is installed, so you can use tab blocks.
 An example can be found in the xref:management:stackablectl:installation.adoc[stackablectl installation instructions].
 
+TIP: Be sure to use different block indicators nested admonition blocks so that they don't conflict with the tab blocks.
+
 == Syntax example
 
 [,asciidoc]
