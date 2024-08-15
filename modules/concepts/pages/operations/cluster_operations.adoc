@@ -9,6 +9,9 @@ This is useful when updating operators, debugging or testing of new settings:
 
 If not specified, `clusterOperation.reconciliationPaused` and `clusterOperation.stopped` default to `false`.
 
+WARNING: In case you create a stacklet and set `reconciliationPaused` to `true` during the creation, no resources will be created.
+This is due to the fact that you basically state "Hey xxx-operator, here is an XXXCluster, but please ignore it".
+
 == Example
 
 [source,yaml]
