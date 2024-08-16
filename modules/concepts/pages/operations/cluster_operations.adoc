@@ -9,8 +9,8 @@ This is useful when updating operators, debugging or testing of new settings:
 
 If not specified, `clusterOperation.reconciliationPaused` and `clusterOperation.stopped` default to `false`.
 
-IMPORTANT: In case you create a stacklet and set `reconciliationPaused` to `true` during the creation, no resources will be created.
-This is due to the fact that you basically state "Hey my-operator, here is an MyCluster, but please ignore it".
+IMPORTANT: If you create a stacklet and set `reconciliationPaused` to `true` during the creation, no resources will be created.
+This is due to the fact that you basically state "Hey, my-operator, here is a MyCluster, but please ignore it".
 
 IMPORTANT: When setting `clusterOperation.reconciliationPaused` and `clusterOperation.stopped` to true in the same step, `clusterOperation.reconciliationPaused` will take precedence.
 This means the cluster will stop reconciling immediately and the `stopped` field is ignored.
