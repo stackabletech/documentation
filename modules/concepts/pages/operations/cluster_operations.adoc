@@ -11,7 +11,7 @@ If not specified, `clusterOperation.reconciliationPaused` and `clusterOperation.
 
 [IMPORTANT]
 ===========
-When `reconciliationPaused` is set to `true`, operators will ignore reconciliation events (creations, updated, deletions).
+When `reconciliationPaused` is set to `true`, operators will ignore reconciliation events (creations, updates, deletions).
 
 Furthermore, if you create a stacklet where `reconciliationPaused` is set to `true`, no resources will be created.
 ===========
