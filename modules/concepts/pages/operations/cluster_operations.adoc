@@ -10,15 +10,11 @@ This is useful when updating operators, debugging or testing of new settings:
 If not specified, `clusterOperation.reconciliationPaused` and `clusterOperation.stopped` default to `false`.
 
 [IMPORTANT]
-===========
+====
 When `reconciliationPaused` is set to `true`, operators will ignore reconciliation events (creations, updates, deletions).
 
 Furthermore, if you create a stacklet where `reconciliationPaused` is set to `true`, no resources will be created.
-===========
-
-IMPORTANT: When setting `clusterOperation.reconciliationPaused` and `clusterOperation.stopped` to true in the same step, `clusterOperation.reconciliationPaused` will take precedence.
-This means the cluster will stop reconciling immediately and the `stopped` field is ignored.
-To avoid this, the cluster should first be stopped and then paused.
+====
 
 == Example
 
