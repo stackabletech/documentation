@@ -9,6 +9,22 @@ This is useful when updating operators, debugging or testing of new settings:
 
 If not specified, `clusterOperation.reconciliationPaused` and `clusterOperation.stopped` default to `false`.
 
+[IMPORTANT]
+====
+When `clusterOperation.reconciliationPaused` is set to `true`, operators will ignore reconciliation events (creations, updates, deletions).
+
+Furthermore, if you create a stacklet where `clusterOperation.reconciliationPaused` is set to `true`, no resources will be created.
+====
+
+[IMPORTANT]
+====
+When setting `clusterOperation.reconciliationPaused` and `clusterOperation.stopped` to true in the same step, `clusterOperation.reconciliationPaused` will take precedence.
+
+This means the cluster will stop reconciling immediately and the `stopped` field is ignored.
+
+To avoid this, the cluster should first be stopped and then paused.
+====
+
 == Example
 
 [source,yaml]
@@ -18,10 +34,40 @@ include::example$cluster-operations.yaml[]
 <1> The `clusterOperation.reconciliationPaused` flag set to `true` stops the operator from reconciling any changes to the cluster spec. The cluster status is still updated.
 <2> The `clusterOperation.stopped` flag set to `true` stops all pods in the cluster. This is done by setting all deployed StatefulSet replicas to 0.
 
+== Example usage (updating operator without downtime)
 
-IMPORTANT: When setting `clusterOperation.reconciliationPaused` and `clusterOperation.stopped` to true in the same step, `clusterOperation.reconciliationPaused` will take precedence.
-This means the cluster will stop reconciling immediately and the `stopped` field is ignored.
-To avoid this, the cluster should first be stopped and then paused.
+One example usage of the `reconciliationPaused` feature is to update your operator without all deployed stacklets restarting simultaneously due to the changes the new operator version will apply.
+
+. Disable reconciliation for e.g. ZookeeperCluster
++
+Execute the following command for every stacklet that should not be restarted by the operator update:
++
+[source,shell]
+----
+$ kubectl patch zookeepercluster/simple-zk --patch '{"spec": {"clusterOperation": {"reconciliationPaused": true}}}' --type=merge
+----
+
+. Update operator
++
+[source,shell]
+----
+$ stackablectl operator uninstall zookeeper
+$ # Replace CRD with new version, e.g. kubectl replace -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/24.7.0/deploy/helm/zookeeper-operator/crds/crds.yaml
+$ stackablectl operator install zookeeper=24.7.0 # choose your version
+----
+
+. No Zookeeper Pods have been restarted, they are still using the old image.
+
+. Enable reconciliation again
++
+You can do this step by step for every stacklet you have, so that they will not restart simultaneously
++
+[source,shell]
+----
+$ kubectl patch zookeepercluster/simple-zk --patch '{"spec": {"clusterOperation": {"reconciliationPaused": false}}}' --type=merge
+----
+
+. Zookeeper Pods will restart and pull in the new image
 
 == Service restarts
 
