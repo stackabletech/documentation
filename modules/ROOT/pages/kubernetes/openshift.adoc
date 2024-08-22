@@ -5,8 +5,12 @@ SDP operators are certified for the OpenShift platform and can be installed from
 IMPORTANT: OpenShift installations with FIPS mode enabled are not supported. This is because neither the SDP operators, nor the supported Apache products are FIPS-compliant.
 
 == Customizing operator installations
-Depending on the cluster size, you may need to customize the resources requested by the SDP operator Pods.
-This is possible when installing the operators from the command line.
+
+As described in the https://github.com/operator-framework/operator-lifecycle-manager/blob/master/doc/design/subscription-config.md[Openshift Subscription documentation] you can configure the deployed operators.
+
+E.g. depending on the cluster size, you may need to customize the resources requested by the SDP operator containers.
+This is possible when installing the operators via a Subscription CustomResource.
+
 For example, to assign `256Mi` of memory to the Apache Kafka operator, you need to create a custom Subscription as follows:
 
 [source,yaml]
@@ -43,6 +47,8 @@ spec:
       - name: WATCH_NAMESPACE
         value: kafka-namespace
 ----
+
+IMPORTANT: The described configuration mechanism currently does not work for secret and listener-operator dues to restrictions on deploying DaemonSets.
 
 == Security context constraints
 
