@@ -50,7 +50,7 @@ spec:
         value: kafka-namespace
 ----
 
-IMPORTANT: The described configuration mechanism currently does not work for secret and listener-operator dues to restrictions on deploying DaemonSets.
+IMPORTANT: The described configuration mechanism currently does not work for secret and listener-operator due to restrictions on deploying DaemonSets.
 
 == Security context constraints
 
