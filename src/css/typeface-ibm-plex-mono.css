@@ -3,8 +3,8 @@
   font-style: normal;
   font-weight: 400;
   src:
-    url(~@ibm/plex/IBM-Plex-Mono/fonts/complete/woff2/IBMPlexMono-Regular.woff2) format("woff2"),
-    url(~@ibm/plex/IBM-Plex-Mono/fonts/complete/woff/IBMPlexMono-Regular.woff) format("woff");
+    url(~typeface-ibm-plex-mono/files/ibm-plex-mono-latin-400.woff2) format("woff2"),
+    url(~typeface-ibm-plex-mono/files/ibm-plex-mono-latin-400.woff) format("woff");
 }
 
 @font-face {
@@ -12,6 +12,6 @@
   font-style: normal;
   font-weight: 600;
   src:
-    url(~@ibm/plex/IBM-Plex-Mono/fonts/complete/woff2/IBMPlexMono-SemiBold.woff2) format("woff2"),
-    url(~@ibm/plex/IBM-Plex-Mono/fonts/complete/woff/IBMPlexMono-SemiBold.woff) format("woff");
+    url(~typeface-ibm-plex-mono/files/ibm-plex-mono-latin-600.woff2) format("woff2"),
+    url(~typeface-ibm-plex-mono/files/ibm-plex-mono-latin-600.woff) format("woff");
 }

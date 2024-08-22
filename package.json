@@ -63,6 +63,6 @@
     "vinyl-fs": "^3.0"
   },
   "dependencies": {
-    "@ibm/plex": "^6.4.1"
+    "typeface-ibm-plex-mono": "^1.1.13"
   }
 }
