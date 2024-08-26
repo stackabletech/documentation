@@ -60,7 +60,6 @@
     "require-from-string": "^2.0",
     "stylelint": "^13.13",
     "stylelint-config-standard": "^22",
-    "typeface-roboto-mono": "1.1.13",
     "vinyl-buffer": "^1.0",
     "vinyl-fs": "^3.0"
   }
