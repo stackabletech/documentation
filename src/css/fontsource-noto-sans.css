@@ -1,0 +1,21 @@
+@font-face {
+  font-family: "Noto Sans";
+  font-style: normal;
+  font-weight: 400;
+  src:
+    local("Roboto Mono Regular"),
+    local("RobotoMono-Regular"),
+    url(~@fontsource/noto-sans/files/noto-sans-latin-400-normal.woff2) format("woff2"),
+    url(~@fontsource/noto-sans/files/noto-sans-latin-400-normal.woff) format("woff");
+}
+
+@font-face {
+  font-family: "Noto Sans";
+  font-style: normal;
+  font-weight: 700;
+  src:
+    local("Roboto Mono Medium"),
+    local("RobotoMono-Medium"),
+    url(~@fontsource/noto-sans/files/noto-sans-latin-700-normal.woff2) format("woff2"),
+    url(~@fontsource/noto-sans/files/noto-sans-latin-700-normal.woff) format("woff");
+}

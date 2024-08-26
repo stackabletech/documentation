@@ -21,6 +21,9 @@
   "devDependencies": {
     "@asciidoctor/core": "~2.2",
     "@asciidoctor/tabs": "^1.0.0-beta.6",
+    "@fontsource/ibm-plex-mono": "^5.0.14",
+    "@fontsource/noto-sans": "^5.0.22",
+    "@fontsource/roboto-mono": "^5.0.19",
     "autoprefixer": "^10.4",
     "browser-pack-flat": "^3.4",
     "browserify": "^17.0",
@@ -60,9 +63,5 @@
     "typeface-roboto-mono": "1.1.13",
     "vinyl-buffer": "^1.0",
     "vinyl-fs": "^3.0"
-  },
-  "dependencies": {
-    "typeface-ibm-plex-mono": "^1.1.13",
-    "typeface-noto-sans": "^1.1.13"
   }
 }
