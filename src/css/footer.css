@@ -38,6 +38,13 @@ footer.footer {
 
 .footer-info-item h2 {
   margin-top: 0;
+  font-family: var(--header-font-family);
+  font-weight: var(--heading-font-weight);
+}
+
+.footer-motto {
+  font-family: var(--header-font-family);
+  font-weight: var(--heading-font-weight);
 }
 
 .footer-link-list {

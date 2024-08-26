@@ -32,6 +32,8 @@
   --body-font-weight-bold: 700;
   --monospace-font-family: "Roboto Mono", monospace;
   --monospace-font-weight-bold: 500;
+  --header-font-family: "IBM Plex Mono", sans-serif;
+  --header-font-family-weight: 600; /* semi-bold */
   /* base */
   --body-background: var(--color-white);
   --panel-background: var(--color-background2);
