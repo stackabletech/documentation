@@ -1,7 +1,4 @@
-
-@import "fontsource-noto-sans.css";
-@import "fontsource-ibm-plex-mono.css";
-@import "fontsource-roboto-mono.css";
+@import "fonts.css";
 @import "vars.css";
 @import "base.css";
 @import "body.css";
