@@ -8,9 +8,8 @@
   --color-brand-primary: #1880bd;
   --color-brand-secondary: #b80069;
   --color-text: #182c3d;
-  --color-text-semi-muted: #42525f;
-  --color-text-muted: #858c92;
-  --color-text-light: #afbbc8;
+  --color-text-semi-muted: #6d7c8b;
+  --color-text-muted: #afbbc8;
   --color-background2: #f2f6fa; /* panels, borders, hover backgrounds */
   /* fonts */
   --rem-base: 18; /* used to compute rem value from desired pixel value (e.g., calc(18 / var(--rem-base) * 1rem) = 18px) */
@@ -46,7 +45,7 @@
   --nav-border-color: var(--panel-background);
   --nav-line-height: 1.35;
   --nav-heading-font-color: var(--color-text);
-  --nav-muted-color: var(color-text-semi-muted);
+  --nav-muted-color: var(--color-text-semi-muted);
   --nav-panel-divider-color: var(--color-text);
   --nav-secondary-background: var(--color-smoke-70);
   /* toolbar */
@@ -112,7 +111,7 @@
   --footer-line-height: var(--doc-line-height);
   --footer-background: var(--color-white);
   --footer-font-color: var(--color-text);
-  --footer-copyright-font-color: var(--color-text-light);
+  --footer-copyright-font-color: var(--color-text-muted);
   /* dimensions and positioning */
   --navbar-height: calc(73 / var(--rem-base) * 1rem);
   --navbar-sub-height: calc(45 / var(--rem-base) * 1rem);
