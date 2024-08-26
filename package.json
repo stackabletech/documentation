@@ -23,7 +23,6 @@
     "@asciidoctor/tabs": "^1.0.0-beta.6",
     "@fontsource/ibm-plex-mono": "^5.0.14",
     "@fontsource/noto-sans": "^5.0.22",
-    "@fontsource/roboto-mono": "^5.0.19",
     "autoprefixer": "^10.4",
     "browser-pack-flat": "^3.4",
     "browserify": "^17.0",
@@ -62,5 +61,8 @@
     "stylelint-config-standard": "^22",
     "vinyl-buffer": "^1.0",
     "vinyl-fs": "^3.0"
+  },
+  "dependencies": {
+    "@fontsource/noto-sans-mono": "^5.0.20"
   }
 }

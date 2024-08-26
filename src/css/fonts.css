@@ -49,26 +49,22 @@
     url(~@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-600-normal.woff) format("woff");
 }
 
-/* Roboto Mono - The monospace font for code blocks */
+/* Noto Sans Mono - The monospace font for code blocks */
 
 @font-face {
-  font-family: "Roboto Mono";
+  font-family: "Noto Sans Mono";
   font-style: normal;
   font-weight: 400;
   src:
-    local("Roboto Mono Regular"),
-    local("RobotoMono-Regular"),
-    url(~@fontsource/roboto-mono/files/roboto-mono-latin-400-normal.woff2) format("woff2"),
-    url(~@fontsource/roboto-mono/files/roboto-mono-latin-400-normal.woff) format("woff");
+    url(~@fontsource/noto-sans-mono/files/noto-sans-mono-latin-400-normal.woff2) format("woff2"),
+    url(~@fontsource/noto-sans-mono/files/noto-sans-mono-latin-400-normal.woff) format("woff");
 }
 
 @font-face {
-  font-family: "Roboto Mono";
+  font-family: "Noto Sans Mono";
   font-style: normal;
   font-weight: 500;
   src:
-    local("Roboto Mono Medium"),
-    local("RobotoMono-Medium"),
-    url(~@fontsource/roboto-mono/files/roboto-mono-latin-500-normal.woff2) format("woff2"),
-    url(~@fontsource/roboto-mono/files/roboto-mono-latin-500-normal.woff) format("woff");
+    url(~@fontsource/noto-sans-mono/files/noto-sans-mono-latin-500-normal.woff2) format("woff2"),
+    url(~@fontsource/noto-sans-mono/files/noto-sans-mono-latin-500-normal.woff) format("woff");
 }
