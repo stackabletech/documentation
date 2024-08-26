@@ -35,15 +35,15 @@
   --panel-border-color: var(--color-smoke-90);
   --scrollbar-thumb-color: var(--color-gray-10);
   /* navbar */
-  --navbar-background: var(--color-jet-70);
-  --navbar-font-color: var(--color-white);
-  --navbar_hover-background: var(--color-black);
+  --navbar-background: var(--color-white);
+  --navbar-font-color: var(--color-black);
+  --navbar_hover-background: var(--color-white);
   --navbar-button-background: var(--color-brand-secondary);
   --navbar-button-border-color: var(--color-brand-secondary);
-  --navbar-button-font-color: var(--color-wite);
+  --navbar-button-font-color: var(--color-white);
   --navbar-menu-border-color: var(--panel-border-color);
   --navbar-menu-background: var(--color-white);
-  --navbar-menu-font-color: var(--color-white);
+  --navbar-menu-font-color: var(--color-black);
   --navbar-menu_hover-background: var(--color-smoke-50);
   /* nav */
   --nav-background: var(--panel-background);
