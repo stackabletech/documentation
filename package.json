@@ -63,6 +63,7 @@
     "vinyl-fs": "^3.0"
   },
   "dependencies": {
-    "typeface-ibm-plex-mono": "^1.1.13"
+    "typeface-ibm-plex-mono": "^1.1.13",
+    "typeface-noto-sans": "^1.1.13"
   }
 }

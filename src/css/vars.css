@@ -27,9 +27,9 @@
   --body-font-size--desktop: 1.125em; /* 18px */
   --body-font-size--print: 0.9375em; /* 15px */
   --body-line-height: 1.15;
-  --body-font-color: var(--color-jet-70);
-  --body-font-family: "Titillium Web", sans-serif;
-  --body-font-weight-bold: 600;
+  --body-font-color: var(--color-text);
+  --body-font-family: "Noto Sans", sans-serif;
+  --body-font-weight-bold: 700;
   --monospace-font-family: "Roboto Mono", monospace;
   --monospace-font-weight-bold: 500;
   /* base */
