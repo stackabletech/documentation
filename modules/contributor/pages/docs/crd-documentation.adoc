@@ -1,0 +1,10 @@
+# CRD documentation
+:crds-docs: https://crds.stackable.tech/
+:crddocs-repo: https://github.com/stackabletech/crddocs
+
+The {crds-docs}[CRD documentation] is generated from the CRD manifest files, which are in turn generated from the operator source code.
+All the documentation strings are doc strings in the Rust source code.
+If you want to contribute documentation for a particular field, this needs to be done in doc string of the property on the struct that makes up that part of the CRD.
+
+To change the UI, adjust the HTML template and CSS files in the {crddocs-repo}[crddocs repository].
+Also consult the README in that repository to learn more about how the site is generated.

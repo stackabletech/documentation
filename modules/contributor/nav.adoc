@@ -15,4 +15,5 @@
 *** xref:docs/backporting-changes.adoc[]
 *** xref:docs/releasing-a-new-version.adoc[]
 *** xref:docs/troubleshooting-antora.adoc[]
+*** xref:docs/crd-documentation.adoc[]
 include::partial$adr-nav.adoc[]
