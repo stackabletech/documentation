@@ -23,6 +23,7 @@ body {
   display: flex;
   justify-content: space-between;
   padding: 0 1rem;
+  box-shadow: 0 8px 10px 0 rgba(0, 0, 0, 0.1);
 }
 
 .navbar a {
@@ -142,6 +143,7 @@ body {
 .navbar-dropdown {
   background: var(--navbar-menu-background);
   border: 1px solid var(--navbar-menu-border-color);
+  box-shadow: 0 4px 10px -2px rgba(0, 0, 0, 0.1);
   border-top: none;
   border-radius: 0 0 0.25rem 0.25rem;
   display: none;

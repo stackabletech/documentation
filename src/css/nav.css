@@ -31,6 +31,7 @@
     position: static;
     top: 0;
     visibility: visible;
+    border-right: solid 2px var(--panel-background);
   }
 }
 
@@ -96,6 +97,11 @@ html.is-clipped--nav {
   padding: 0.5rem 0.75rem;
   line-height: var(--nav-line-height);
   position: relative;
+  color: var(--nav-muted-color);
+}
+
+.nav-menu:hover {
+  color: var(--nav-font-color);
 }
 
 .nav-menu h3.title {

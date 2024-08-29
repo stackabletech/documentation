@@ -4,6 +4,7 @@ footer.footer {
   font-size: calc(15 / var(--rem-base) * 1rem);
   line-height: var(--footer-line-height);
   padding: 1.5rem;
+  padding-top: 5rem;
 }
 
 .footer p {
@@ -37,6 +38,13 @@ footer.footer {
 
 .footer-info-item h2 {
   margin-top: 0;
+  font-family: var(--header-font-family);
+  font-weight: var(--heading-font-weight);
+}
+
+.footer-motto {
+  font-family: var(--header-font-family);
+  font-weight: var(--heading-font-weight);
 }
 
 .footer-link-list {
@@ -86,8 +94,8 @@ footer.footer {
 }
 
 .social-icon {
-  background-color: var(--footer-font-color);
-  color: var(--body-font-color);
+  color: var(--footer-font-color);
+  background-color: var(--footer-background);
   border-radius: 50%;
   display: inline-flex;
   align-items: center;
@@ -100,8 +108,8 @@ footer.footer {
 }
 
 .social-icon:hover {
+  color: var(--footer-background);
   background-color: var(--color-brand-primary);
-  color: var(--footer-font-color);
   text-decoration: none;
 }
 
@@ -109,4 +117,8 @@ footer.footer {
   width: 100%;
   height: 1px;
   background-color: var(--footer-font-color);
+}
+
+.copyright-notice {
+  color: var(--footer-copyright-font-color);
 }
