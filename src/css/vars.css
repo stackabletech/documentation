@@ -39,6 +39,7 @@
   --navbar-menu-border-color: var(--panel-border-color);
   --navbar-menu-background: var(--color-white);
   --navbar-menu-font-color: var(--color-text);
+  --navbar-menu-font-color-hover: var(--color-brand-primary);
   --navbar-menu_hover-background: var(--color-background2);
   /* nav */
   --nav-background: var(--color-white);
