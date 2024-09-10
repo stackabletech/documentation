@@ -40,7 +40,7 @@ Learn more about xref:concepts:stacklet.adoc#roles[roles].
 
 [[role-group]]Role group <<role-group,{li}>>:: {empty}
 +
-.A <<role,Role>> is made up of multiple role groups. 
+.A <<role,Role>> is made up of multiple role groups.
 [%collapsible%open]
 ====
 A role group can override configuration set at role level, allowing for different configurations for sets of processes.
