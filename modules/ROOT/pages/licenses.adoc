@@ -1,4 +1,5 @@
 = Licenses for the Stackable Data Platform
+:description: Find licenses for all Stackable Data Platform components, including operators, stackablectl, and Docker images, available on GitHub.
 
 The Stackable Data Platform is open source, and the source code of all the components can be found on GitHub. Licenses are also provided alongside the source code, in a file called `LICENSE`.
 
