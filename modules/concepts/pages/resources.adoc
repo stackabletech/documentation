@@ -1,4 +1,5 @@
 = Resource management
+:description: Learn how to manage CPU, memory, and storage resources for Stackable Data Platform products, including setting requests, limits, and StorageClasses.
 
 The Stackable Data Platform and its xref:operators:index.adoc[operators] deploy their products in https://kubernetes.io/docs/concepts/containers/[containers] within https://kubernetes.io/docs/concepts/workloads/pods/[Pods] using https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/[StatefulSets] or https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/[DaemonSets].
 In order for the Kubernetes scheduler to select a suitable https://kubernetes.io/docs/concepts/architecture/nodes/[Node] for a Pod, https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/[resource] requests and limits for CPU and memory can be specified.

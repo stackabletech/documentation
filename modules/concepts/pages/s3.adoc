@@ -1,4 +1,5 @@
 = S3 resources
+:description: Explore how to configure S3 storage with Stackable using S3Connection and S3Bucket objects, including setup examples, credentials, and TLS configuration.
 
 // -------------- Intro ----------------
 

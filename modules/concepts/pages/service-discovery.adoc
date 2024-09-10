@@ -1,5 +1,6 @@
 = Service discovery ConfigMap
 :page-aliases: service_discovery.adoc
+:description: Learn how Stackable's service discovery ConfigMap enables product connections, providing essential instance info for integration and external connections.
 
 // Abstract
 Stackable operators provide a _service discovery ConfigMap_ for each product instance that is deployed. **This ConfigMap has the same name as the product instance** and contains information about how to connect to the instance. The ConfigMap is used by other Operators to connect products together and can also be used by you, the user, to connect external software to Stackable-operated software.
