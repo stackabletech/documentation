@@ -14,7 +14,7 @@ The products are usually deployed with StatefulSets from which Pods are created.
 Configuration is done with ConfigMaps, and the the software is exposed using Services.
 To allow for easier connectivity between Stacklets, some operators also deploy a xref:service-discovery.adoc[] for Stacklets they manage.
 
-CAUTION: Watch out for name collisions when deploying multiple Stacklets in the same namespace! 
+CAUTION: Watch out for name collisions when deploying multiple Stacklets in the same namespace!
 Even though the resource might be different (TrinoCluster, HbaseCluster), there is a name conflict for the discovery ConfigMap if two Stacklets in the same Kubernetes namespace share a name.
 It is best to always use unique names for Stacklets.
 

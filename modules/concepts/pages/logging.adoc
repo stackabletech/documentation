@@ -94,7 +94,7 @@ spec:
                   level: NONE
             sidecar-container:
               console:
-                level: ERROR 
+                level: ERROR
 ----
 <1> The discovery ConfigMap of the Vector aggregator to publish the logs to. This is set at cluster level.
 <2> The role or role group config containing the logging configuration.

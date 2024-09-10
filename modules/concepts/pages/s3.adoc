@@ -49,7 +49,7 @@ image::s3-overview.drawio.svg[A diagram showing four variations (A, B, C, D) of 
 The diagram above shows four examples of how the objects can be structured.
 
 // Variant A
-Variant A shows all S3 objects inlined in a DruidCluster resource. This is a very convenient way to quickly test something since the entire configuration is encapsulated in a single but potentially large manifest. 
+Variant A shows all S3 objects inlined in a DruidCluster resource. This is a very convenient way to quickly test something since the entire configuration is encapsulated in a single but potentially large manifest.
 
 // Variant B
 In variant B the S3 bucket has been split out into its own resource. It can now be referred to by multiple different tools as well.

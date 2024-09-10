@@ -98,7 +98,7 @@ To restart the HDFS DataNode Pods, run:
 
 [source,shell]
 ----
-$ kubectl rollout restart statefulset dumbo-datanode-default 
+$ kubectl rollout restart statefulset dumbo-datanode-default
 statefulset.apps/dumbo-datanode-default restarted
 ----
 

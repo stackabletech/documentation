@@ -18,7 +18,7 @@ Learn about how to access xref:experimental-arm64-support[ARM64-support].
 
 == Connectivity
 
-Many Platform components depend on other components or expose functionality that you can connect to. 
+Many Platform components depend on other components or expose functionality that you can connect to.
 This connectivity is achived with xref:service-discovery.adoc[service discovery ConfigMaps].
 To access your Stackable operated products from outside the Kuberenetes cluster learn more about xref:service-exposition.adoc[].
 
