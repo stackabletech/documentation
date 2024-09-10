@@ -1,4 +1,7 @@
 = Authentication with OpenLDAP
+:kind: https://kind.sigs.k8s.io/
+:k9s: https://k9scli.io/
+:description: Learn how to set up LDAP authentication for Stackable's Superset and Trino products, including installing OpenLDAP and configuring authentication classes.
 
 The Stackable platform supports user authentication with LDAP in multiple products. This page guides you through setting
 up the configuration necessary to use an existing LDAP installation with Stackable supported products. You can learn
@@ -6,10 +9,10 @@ more about authentication in the Stackable Platform on the xref:concepts:authent
 
 Prerequisites:
 
-* a k8s cluster available, or https://kind.sigs.k8s.io/[kind] installed
+* a k8s cluster available, or {kind}[kind] installed
 * xref:management:stackablectl:index.adoc[] installed
 * basic knowledge of how to create resources in Kubernetes (i.e. `kubectl apply -f <filename>.yaml`) and inspect them
-  (`kubectl get` or a tool like https://k9scli.io/[k9s])
+  (`kubectl get` or a tool like {k9s}[k9s])
 
 == Setup
 
