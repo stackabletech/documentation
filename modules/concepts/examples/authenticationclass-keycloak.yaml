@@ -14,3 +14,8 @@ spec:
       - profile
       principalClaim: preferred_username  # <5>
       providerHint: Keycloak              # <6>
+      tls:                                # <7>
+        verification:
+          server:
+            caCert:
+              webPki: {}                  # <8>
