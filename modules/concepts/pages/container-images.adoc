@@ -2,6 +2,7 @@
 :ubi: https://catalog.redhat.com/software/base-images
 :stackable-image-registry: https://repo.stackable.tech/#browse/browse
 :stackable-sboms: https://sboms.stackable.tech/
+:description: Overview of Stackable’s container images, including structure, multi-platform support, and why upstream images are not used.
 
 The core artifacts of the Stackable Data Platform are container images of Kubernetes operators and the products that these operators deploy.
 

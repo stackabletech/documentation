@@ -1,4 +1,5 @@
 = Graceful shutdown
+:description: Graceful shutdown ensures a controlled, clean shutdown of service instances, allowing time for normal shutdown activities.
 
 Graceful shutdown refers to the managed, controlled shutdown of service instances in the manner intended by the software authors.
 Typically, an instance will receive a signal indicating the intent for the server to shut down, and it will initiate a controlled shutdown.

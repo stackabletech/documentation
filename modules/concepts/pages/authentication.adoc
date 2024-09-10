@@ -1,5 +1,6 @@
 = Authentication
 :keycloak: https://www.keycloak.org/
+:description: Overview of Stackable’s user authentication methods and configuration for LDAP, OIDC, TLS, and Static providers.
 
 The Stackable Platform uses the AuthenticationClass as a central mechanism to handle user authentication across supported products.
 The authentication mechanism needs to be configured only in the AuthenticationClass which is then referenced in the xref:stacklet.adoc[Stacklet] definition.

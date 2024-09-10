@@ -1,5 +1,6 @@
 = Pod placement
 :page-aliases: ../pod_placement.adoc
+:description: Configure pod affinity, anti-affinity, and node affinity for Stackable Data Platform operators using YAML definitions.
 
 Several operators of the Stackable Data Platform permit the configuration of pod affinity as described in the Kubernetes https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/[documentation].
 If no affinity is defined in the product's custom resource, the operators apply reasonable defaults that make use of the `preferred_during_scheduling_ignored_during_execution` property.

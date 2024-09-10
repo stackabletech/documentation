@@ -1,4 +1,5 @@
 = Concepts
+:description: Explore Stackable Data Platform concepts like Stacklets, configuration mechanisms, resources, connectivity, security, and observability.
 
 == Overview
 

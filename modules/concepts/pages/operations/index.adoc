@@ -1,4 +1,5 @@
 = Operations
+:description: Guidance for maintaining Stackable Data Platform installations. Covers service availability, maintenance actions, and performance optimization.
 
 This section of the documentation is intended for the operations teams that maintain a Stackable Data Platform installation.
 It provides you with the necessary details to operate it in a production environment.
