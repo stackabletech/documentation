@@ -1,4 +1,5 @@
 = Kubernetes
+:description: Learn how to install Kubernetes for the Stackable Data Platform. Supported production distributions and local setup options with Kind and K3s.
 
 The Stackable Data Platform runs on Kubernetes, a Kubernetes cluster is a prerequisite to running the platform.
 On this page you will find information on the supported Kubernetes distributions for production as well as how to set up a local test installation to try out parts of the platform right away.
