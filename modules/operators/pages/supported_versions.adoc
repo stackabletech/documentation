@@ -1,4 +1,5 @@
 = Supported product versions
+:description: Find the list of versions that are supported for each product on the Stackable Data Platform.
 
 Below you find the list of versions that are supported for each product.
 New versions get added every release, old ones are deprecated or removed. Read the xref:ROOT:release-notes.adoc[] for each platform version to see which product versions are available.

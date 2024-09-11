@@ -1,6 +1,7 @@
 = Monitoring
 :prometheus: https://prometheus.io/
 :prometheus-operator: https://prometheus-operator.dev/
+:description: Monitor Stackable services with Prometheus. Install via Prometheus Operator or use an existing setup. Configure scraping for Kubernetes services.
 
 Services managed by Stackable support monitoring via {prometheus}[Prometheus].
 
