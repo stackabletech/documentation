@@ -43,6 +43,9 @@ Also - but these recommendations are fairly obvious - https://asciidoctor.org/do
 
 Read the {asciidoc-recommended-practices} for more.
 
+Add a `:description:` to every page.
+It should have 130 to 150 characters and describe the contents of the page.
+
 == Formatting: Kubernetes style guide
 
 Since the Stackable Data Platform is built on Kubernetes, the resources mentioned in our documentation are very similar to the ones mentioned in the Kubernetes documentation, so we follow the {kubernetes-style-guide} for formatting of code, Kubernetes resources and objects. Some examples:
