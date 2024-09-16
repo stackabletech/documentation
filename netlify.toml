@@ -6,3 +6,6 @@
   from = "/home/stable/reference/*"
   to = "https://crds.stackable.tech/"
   status = 301
+
+[[plugins]]
+package = "netlify-plugin-checklinks"
