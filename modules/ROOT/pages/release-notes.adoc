@@ -431,9 +431,10 @@ To upgrade from 1.x to the 2.x series, the following config overrides are necess
 
 ----
 spec:
-  configOverrides:
-    nifi.properties:
-      nifi.flow.configuration.file: /stackable/data/database/flow.json.gz
+  nodes:
+    configOverrides:
+      nifi.properties:
+        nifi.flow.configuration.file: /stackable/data/database/flow.json.gz
 ----
 
 This is necessary because the 2.x versions do not support the XML format for flow definitions anymore.
