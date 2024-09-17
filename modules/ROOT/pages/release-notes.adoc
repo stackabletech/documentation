@@ -436,7 +436,9 @@ spec:
       nifi.flow.configuration.file: /stackable/data/database/flow.json.gz
 ----
 
-This is necessary because the 2.x versions do not support the XML format for flow definitions anymore. Support for the JSON format has been addded in version 1.16 and both formats have been maintained up to version 2.0.
+This is necessary because the 2.x versions do not support the XML format for flow definitions anymore.
+Support for the JSON format has been addded in version 1.16 and both formats have been maintained up to (excluding) version 2.0.
+The next SDP release 24.11 will automatically take care of this step for you.
 
 == Release 24.3
 
