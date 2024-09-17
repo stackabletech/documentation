@@ -427,7 +427,7 @@ Please note that Java-based products that use the JMX exporter for Prometheus ar
 
 Apache Nifi
 
-To upgrade from 1.x to the 2.x series, the following config overrides are necessary:
+To upgrade from 1.27 to the 2.x series, the following config overrides are necessary:
 
 ----
 spec:
