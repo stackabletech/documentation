@@ -296,7 +296,7 @@ The usage of `thiserror` is considered invalid.
 ----
 #[derive(Snafu)]
 enum Error {
-    #[snafu(display("failed to read config file of user {user_name}"))]
+    #[snafu(display("failed to read config file of user {user_name:?}"))]
     FileRead {
         source: std::io::Error,
         user_name: String,
@@ -592,6 +592,60 @@ let memory: CpuQuantity = "0.1".parse();
 let memory: CpuQuantity = "0.5".parse();
 let memory: CpuQuantity = "1".parse();
 let memory: CpuQuantity = "2".parse();
+----
+
+====
+
+== Writing tests
+
+=== Unit test function names
+
+Function names of unit tests must not include the `test_` prefix, because otherwise `cargo test` will produce superfluous output like `memory::test::test_addition::case_1`.
+Instead, use an appropriate name to describe what is being tested.
+The previously mentioned name could for example be renamed to `memory::test::addition::case_1`.
+
+[TIP.code-rule,caption=Examples of correct code for this rule]
+====
+
+[source,rust]
+----
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn parse_valid_api_version() {
+        todo!()
+    }
+
+    #[test]
+    fn parse_invalid_api_version() {
+        todo!()
+    }
+}
+----
+
+====
+
+[WARNING.code-rule,caption=Examples of incorrect code for this rule]
+====
+
+[source,rust]
+----
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn test_valid() {
+        todo!()
+    }
+
+    #[test]
+    fn test_invalid() {
+        todo!()
+    }
+}
 ----
 
 ====
