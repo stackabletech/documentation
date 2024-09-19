@@ -1,5 +1,6 @@
 = Labels
 :common-labels: https://kubernetes.io/docs/concepts/overview/working-with-objects/common-labels/
+:description: Understand resource labeling by Stackable operators and tools like stackablectl and Helm for better management and organization.
 
 Labels are key/value pairs in the metadata of Kubernetes objects that add identifying information to the object.
 They do not have direct semantic implications but can be used to organize and manage resources.

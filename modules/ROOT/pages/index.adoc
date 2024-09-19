@@ -1,10 +1,10 @@
 = Stackable Documentation
 :page-layout: landing
-
 :k8s-operators: https://kubernetes.io/docs/concepts/extend-kubernetes/operator/
 :docs-discussion: https://github.com/stackabletech/community/discussions
 :docs-issues: https://github.com/stackabletech/documentation/issues
 :docs-repo: https://github.com/stackabletech/documentation
+:description: User Documentation for the Stackable Data Platform.
 
 ++++
 <style>
@@ -82,7 +82,7 @@ Run a demo data processing pipeline or follow a tutorial to learn about the plat
 <h3>Concept explanation</h3>
 ++++
 
-Read concept explanation to gain a better understanding of how the Stackable Data platform works, 
+Read concept explanation to gain a better understanding of how the Stackable Data platform works,
 or how a specific feature works.
 
 xref:concepts:index.adoc[]

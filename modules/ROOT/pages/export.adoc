@@ -1,4 +1,5 @@
 = Export Control
+:description: Stackable Data Platform is exempt from US EAR export controls due to its publicly available status and use of standard encryption. Code is open source on GitHub.
 
 == USA
 

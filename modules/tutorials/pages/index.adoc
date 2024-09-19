@@ -1,4 +1,5 @@
 = Tutorials
+:description: Explore Stackable Data Platform tutorials for feature setup, product operators, and getting started guides for Airflow, Druid, HBase, and more.
 
 Tutorials help you learn about a specific aspect of the Stackable Data Platform in a hands-on way.
 

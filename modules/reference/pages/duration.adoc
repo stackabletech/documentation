@@ -1,10 +1,10 @@
 = Duration format
 :page-aliases: concepts:duration.adoc
-
 :rust-duration-max: https://doc.rust-lang.org/std/time/struct.Duration.html#associatedconstant.MAX
 :go-std-time: https://cs.opensource.google/go/go/+/refs/tags/go1.21.2:src/time/format.go;l=1589
 :k8s-cr: https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/
 :go: https://go.dev/
+:description: Understand the human-readable duration format used by Stackable operators, based on Go's time.ParseDuration, with units like days, hours, minutes, and seconds.
 
 All Stackable operators use a human-readable duration format. It very closely resembles the format used by the {go}[Go] programming language - which Kubernetes uses internally.
 Every duration field of a {k8s-cr}[CustomResource], for example, the xref:trino:usage-guide/operations/graceful-shutdown.adoc[`spec.workers.roleConfig.gracefulShutdownTimeout`] field, supports this format.

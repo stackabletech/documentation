@@ -1,7 +1,7 @@
 = Product image selection
 :page-aliases: product_image_selection.adoc
-:description: This page describes the different ways of specifying a product image to use in your product deployment.
 :keywords: Kubernetes, operator, docker, registry, custom image, tags
+:description: Learn how to specify product images for Stackable Data Platform deployments, including using default, custom, or mirrored registries.
 
 To run any product on the Stackable Data Platform, you need to specify which version you want to run in the resource definition (i.e. a SparkApplication or DruidCluster).
 The simplest way to do this is this:

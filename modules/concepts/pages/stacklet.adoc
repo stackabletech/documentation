@@ -1,5 +1,6 @@
 = Stacklet
 :page-aliases: roles-and-role-groups.adoc
+:description: A Stacklet is a managed product in Kubernetes, consisting of roles and role groups. Roles allow general configuration of components, while role groups allow finer-grained control over specific groups of components.
 
 A _Stacklet_ is a deployed product that is managed by a Stackable operator.
 The running instance is made up of multiple pieces of software called _roles_ and can be further subdivided into _role groups_.
@@ -13,7 +14,7 @@ The products are usually deployed with StatefulSets from which Pods are created.
 Configuration is done with ConfigMaps, and the the software is exposed using Services.
 To allow for easier connectivity between Stacklets, some operators also deploy a xref:service-discovery.adoc[] for Stacklets they manage.
 
-CAUTION: Watch out for name collisions when deploying multiple Stacklets in the same namespace! 
+CAUTION: Watch out for name collisions when deploying multiple Stacklets in the same namespace!
 Even though the resource might be different (TrinoCluster, HbaseCluster), there is a name conflict for the discovery ConfigMap if two Stacklets in the same Kubernetes namespace share a name.
 It is best to always use unique names for Stacklets.
 

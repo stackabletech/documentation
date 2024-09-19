@@ -1,6 +1,8 @@
 = Service exposition
 :k8s-service: https://kubernetes.io/docs/concepts/services-networking/service/
 :k8s-service-types: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
+:description: Explore Stackable's service exposition options: ClusterIP for internal access, NodePort for unstable external access, and LoadBalancer for stable external access.
+
 
 Data products expose interfaces to the outside world.
 These interfaces (whether UIs, or APIs) can be accessed by other products or by end users.

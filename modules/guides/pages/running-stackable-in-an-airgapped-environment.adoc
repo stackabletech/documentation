@@ -1,5 +1,6 @@
 = Running Stackable in an air-gapped environment
 :page-aliases: tutorials:running-stackable-in-an-airgapped-environment.adoc
+:description: Learn how to run Stackable in an air-gapped environment by mirroring images, setting up a reverse proxy, and configuring container runtimes.
 
 The main challenge with running Stackable in an air-gapped environment is how to get the artifacts (container images and Helm charts) into the environment. There are a few ways to do this:
 

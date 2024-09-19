@@ -1,5 +1,6 @@
 = TLS server verification
 :page-aliases: tls_server_verification.adoc
+:description: Configure TLS server and mutual authentication with custom or public CA certificates.
 
 A TLS section is part of Stackable CRDs and describes how to connect to a TLS enabled system like LDAP or S3.
 

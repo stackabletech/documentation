@@ -1,5 +1,6 @@
 = Overrides
 :k8s-openapi-deepmerge: https://arnavion.github.io/k8s-openapi/v0.22.x/k8s_openapi/trait.DeepMerge.html
+:description: Stackable operators support configuration overrides for Stacklets, including settings for config files, environment variables, and Pod specifications, with precedence rules.
 
 The Stackable operators configure the xref:stacklet.adoc[Stacklets] they are operating with sensible defaults and required settings to enable connectivity and security.
 Other important settings are usually exposed in the Stacklet resource definition for you to configure directly.

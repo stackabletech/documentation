@@ -1,5 +1,6 @@
 = Viewing and verifying SBOMs of the Stackable Data Platform
 :page-aliases: tutorials:viewing-and-verifying-sboms.adoc
+:description: Learn to view and verify SBOMs for Stackable Data Platform using the CycloneDX standards and cosign. Ensure SBOM authenticity with Policy Controller.
 
 With release 24.3 of SDP, we started providing SBOMs (Software Bill of Materials) for our container images. Please note that they currently are in a draft stage and we are continually working on improving them. As a first step, we aim to provide a list of all primary (top level) components and their versions included in each container image. Our SBOMs follow the https://cyclonedx.org/[CycloneDX] standard and are available in JSON format.
 

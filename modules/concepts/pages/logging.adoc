@@ -8,6 +8,7 @@
 :vector-agg-install: https://vector.dev/docs/setup/installation/package-managers/helm/#aggregator
 :vector-source-vector: https://vector.dev/docs/reference/configuration/sources/vector/
 :vector-topology-centralized: https://vector.dev/docs/setup/deployment/topologies/#centralized
+:description: Learn Stackable's logging setup: human-readable and aggregated logs with Vector, consistent configuration across Stacklets, and custom overrides.
 
 Logging is important for observability of the platform.
 Stackable provides human-readable plaintext logs for each running container, as well as aggregated and persisted logs with identical structure across the whole platform.
@@ -93,7 +94,7 @@ spec:
                   level: NONE
             sidecar-container:
               console:
-                level: ERROR 
+                level: ERROR
 ----
 <1> The discovery ConfigMap of the Vector aggregator to publish the logs to. This is set at cluster level.
 <2> The role or role group config containing the logging configuration.

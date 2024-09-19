@@ -1,8 +1,8 @@
 = Using customized product images
-
 :stackable-docker-registry: https://repo.stackable.tech/#browse/browse:docker:v2%2Fstackable
 :kind: https://kind.sigs.k8s.io/
 :kind-load-image: https://kind.sigs.k8s.io/docs/user/quick-start/#loading-an-image-into-your-cluster
+:description: Customize Stackable product images by modifying base images, deploying to a registry or Kubernetes cluster, and configuring your Stacklet to use them.
 
 The Stackable operator require a certain structure inside the product images, but modifications can be made.
 This is useful to for example load additional extensions or database drivers into an image.

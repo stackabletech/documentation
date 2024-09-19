@@ -2,6 +2,7 @@
 :ubi: https://catalog.redhat.com/software/base-images
 :stackable-image-registry: https://repo.stackable.tech/#browse/browse
 :stackable-sboms: https://sboms.stackable.tech/
+:description: Overview of Stackable’s container images, including structure, multi-platform support, and why upstream images are not used.
 
 The core artifacts of the Stackable Data Platform are container images of Kubernetes operators and the products that these operators deploy.
 
@@ -37,7 +38,7 @@ See our documentation xref:concepts:multi-platform-support.adoc[on multi-platfor
 [#signatures]
 == Image signatures
 
-All Stackable images are signed. 
+All Stackable images are signed.
 Image signatures help to ensure the authenticity and integrity of container images.
 You can xref:guides:enabling-verification-of-image-signatures.adoc[verify image signatures automatically] in your cluster to make sure that the images you are running are authentic and intact.
 

@@ -1,7 +1,7 @@
 = Quickstart
-
 :latest-release: https://github.com/stackabletech/stackable-cockpit/releases/tag/stackablectl-1.0.0-rc2
 :cockpit-releases: https://github.com/stackabletech/stackable-cockpit/releases
+:description: Quickstart guide for Stackable: Install stackablectl, set up a demo, and connect to services like Superset and Trino with easy commands and links.
 
 This is the super-short getting started guide that should enable you to get something up and running in less than three
 minutes (excluding download times).

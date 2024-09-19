@@ -1,4 +1,5 @@
 = Stackable Data Platform explained
+:description: The Stackable Data Platform leverages Kubernetes operators to manage products like ZooKeeper and HDFS, using custom resources for deployment and configuration.
 
 The Stackable Data Platform (SDP) is built on Kubernetes.
 Its core is a collection of Kubernetes Operators and CustomResourceDefinitions which are designed to work together.

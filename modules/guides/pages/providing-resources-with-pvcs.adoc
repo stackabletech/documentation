@@ -3,6 +3,7 @@
 :pvcs: https://kubernetes.io/docs/concepts/storage/persistent-volumes/
 :pvc-capacity: https://kubernetes.io/docs/concepts/storage/persistent-volumes/#capacity
 :pvc-access-modes: https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes
+:description: Learn how to use PersistentVolumeClaims to provide external resources to Stacklets in Kubernetes, including access modes, node selection, and practical examples.
 
 Several of the tools on the Stackable platform can use external resources that the cluster administrator makes available via a PersistentVolume.
 Airflow users can access DAG jobs this way, and Spark users can do the same for data or other job dependencies, to name just two examples.
