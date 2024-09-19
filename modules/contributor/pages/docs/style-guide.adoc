@@ -45,6 +45,7 @@ Read the {asciidoc-recommended-practices} for more.
 
 Add a `:description:` to every page.
 It should have 130 to 150 characters and describe the contents of the page.
+The description is used by search engines in the search result snippets.
 
 == Formatting: Kubernetes style guide
 
