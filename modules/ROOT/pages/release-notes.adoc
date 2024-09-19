@@ -426,6 +426,26 @@ Copy any secrets from the default namespace to that used by the operator, as sho
 
 Please note that Java-based products that use the JMX exporter for Prometheus are now built with version https://github.com/prometheus/jmx_exporter/releases/tag/1.0.1[1.0.1], which has breaking changes relevant for any dashboards displaying JVM metrics.
 
+Apache Nifi
+
+To upgrade from 1.27 to the 2.x series, the following config overrides are necessary in the new cluster's manifest:
+
+----
+spec:
+  image:
+    productVersion: 2.0.0-M4
+  nodes:
+    configOverrides:
+      nifi.properties:
+        nifi.flow.configuration.file: /stackable/data/database/flow.json.gz
+----
+
+IMPORTANT: Do not override this property for the 1.27 cluster version.
+
+This is necessary because the 2.x versions do not support the XML format for flow definitions anymore.
+Support for the JSON format has been addded in version 1.16 and both formats have been maintained up to (excluding) version 2.0.
+The next SDP release 24.11 will automatically take care of this step for you.
+
 == Release 24.3
 
 === New / extended platform features
