@@ -1,6 +1,6 @@
 = Stacklet
 :page-aliases: roles-and-role-groups.adoc
-:description: A Stacklet is a managed product in Kubernetes, consisting of roles and role groups. Roles define components, while role groups allow fine-grained control over configurations.
+:description: A Stacklet is a managed product in Kubernetes, consisting of roles and role groups. Roles allow general configuration of components, while role groups allow finer-grained control over specific groups of components.
 
 A _Stacklet_ is a deployed product that is managed by a Stackable operator.
 The running instance is made up of multiple pieces of software called _roles_ and can be further subdivided into _role groups_.
