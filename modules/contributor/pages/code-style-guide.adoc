@@ -600,9 +600,15 @@ let memory: CpuQuantity = "2".parse();
 
 === Unit test function names
 
-Function names of unit tests must not include the `test_` prefix, because otherwise `cargo test` will produce superfluous output like `memory::test::test_addition::case_1`.
-Instead, use an appropriate name to describe what is being tested.
-The previously mentioned name could for example be renamed to `memory::test::addition::case_1`.
+Function names of unit tests must not include a redundant `test` prefix or
+suffix.
+
+It results in the output of `cargo test` containing superfluous mentions of
+"test", especially when the containing module is called `test`. For example:
+`my_crate::test::test_valid`.
+
+Instead, use an appropriate name to describe what is being tested. The previous
+example could then become: `my_crate::test::parse_valid_api_version`.
 
 [TIP.code-rule,caption=Examples of correct code for this rule]
 ====
