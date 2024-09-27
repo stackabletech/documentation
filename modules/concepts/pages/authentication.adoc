@@ -18,6 +18,7 @@ The following authentication providers are supported:
 * <<LDAP>>: Authenticate users using an LDAP server.
 * <<OIDC>>: Authenticate users using an OpenID connect provider.
 * <<TLS>>: Authenticate users with client TLS certificates.
+* <<Kerberos>>: Authenticate users with Kerberos keytabs.
 * <<Static>>: Authenticate users against a static list of users and passwords in a simple Kubernetes Secret.
 
 [#ldap]
@@ -74,6 +75,17 @@ A sample TLS provider looks as follows:
 [source,yaml]
 ----
 include::example$authenticationclass-tls.yaml[]
+----
+
+[#kerberos]
+=== Kerberos
+The `Kerberos` provider configures a product to authenticate users using Kerberos tickets issued by the Kerberos Key Distribution Center (KDC).
+
+The Kerberos provider defines `kerberosSecretClass` which points to a Kerberos SecretClass that contains the necessary KDC and realm information:
+
+[source,yaml]
+----
+include::example$authenticationclass-kerberos.yaml[]
 ----
 
 [#static]

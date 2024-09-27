@@ -1,0 +1,8 @@
+apiVersion: authentication.stackable.tech/v1alpha1
+kind: AuthenticationClass
+metadata:
+  name: kerberos-auth
+spec:
+  provider:
+    kerberos:
+      kerberosSecretClass: kerberos-auth
