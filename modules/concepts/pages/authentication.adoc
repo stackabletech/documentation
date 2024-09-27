@@ -80,7 +80,6 @@ include::example$authenticationclass-tls.yaml[]
 [#kerberos]
 === Kerberos
 The `Kerberos` provider configures a product to authenticate users using Kerberos tickets issued by the Kerberos Key Distribution Center (KDC).
-
 The Kerberos provider defines `kerberosSecretClass` which points to a Kerberos SecretClass that contains the necessary KDC and realm information:
 
 [source,yaml]
