@@ -275,6 +275,88 @@ If any of the items are commented, all items should be.
 It should however also be noted that there is no requirement to comment fields or variants.
 Comments should only be added if they provide additional information not available from context.
 
+== Comments
+
+General rules apply for both doc comments and developer comments.
+The comments should not exceed a line-width of 100 characters with the exception of URLs.
+Long inline URLs should be avoided.
+Put links onto their own line or reference them with Markdown references instead.
+Comments should always form complete sentences with full stops at the end.
+
+[TIP.code-rule,caption=Examples of correct code for this rule]
+====
+
+[source]
+----
+                    100 characters v
+                                   |
+/// This is my comment which exceeds
+/// the width of 100 characters and|
+/// thus needs to [wrap][1].       |
+///                                |
+/// Another comment where the      |
+/// final dot exceeds the          |
+/// line-width.                    |
+///                                |
+/// [1]: https::example.com/path/to/file.html
+----
+
+'''
+
+[source]
+----
+                    100 characters v
+                                   |
+// This is a dev comment which links
+// to a bunch of PRs. See:         |
+//                                 |
+// - https://example.com/project/pull/123
+// - https://example.com/project/pull/321
+----
+
+====
+
+[WARNING.code-rule,caption=Examples of incorrect code for this rule]
+====
+
+[source]
+----
+                    100 characters v
+                                   |
+/// This is my comment which exceeds the
+/// width of 100 characters and thus needs
+/// to [wrap](https::example.com/path/to/file.html).
+///                                |
+/// Another comment where the      |
+/// final dot exceeds the line-width.
+----
+
+'''
+
+[source]
+----
+                    100 characters v
+                                   |
+// This is a dev comment which links
+// to a bunch of PRs. See: https://example.com/project/pull/123
+// and https://example.com/project/pull/321
+----
+
+====
+
+Additionally, doc comments should follow the structure outlined by the Rust project, which is described https://doc.rust-lang.org/rustdoc/how-to-write-documentation.html#documenting-components[here]:
+
+[source]
+----
+[short sentence explaining what it is]
+
+[more detailed explanation]
+
+[at least one code example that users can copy/paste to try it]
+
+[even more advanced explanations if necessary]
+----
+
 == Error handling
 
 === Choice of error crate and usage
