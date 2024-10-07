@@ -112,6 +112,8 @@ The following are selected product features provided by new versions available i
 
 * Apache Airflow: support for modularized DAGs
 
+NOTE: There is currently a known problem with using git-sync credentials in 24.7. This has been corrected in https://github.com/stackabletech/airflow-operator/pull/489[this] PR and the fix is available in the nightly build and will be released in the next version.
+
 * Apache Druid: support for specifying and loading additional extensions
 
 * Apache HBase: support for exporting snapshots to S3. The HBase image now depends on the Hadoop image and the required AWS JARs are copied from there to the HBase image. See the xref:hbase:usage-guide/security.adoc#snapshot-export[documentation] for more information.
