@@ -77,3 +77,59 @@ Kubernetes control plane is running at https://127.0.0.1:6443
 CoreDNS is running at https://127.0.0.1:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
 Metrics-server is running at https://127.0.0.1:6443/api/v1/namespaces/kube-system/services/https:metrics-server:https/proxy
 ----
+
+== Requirements
+
+To install and use Stackable operators, you Kubernetes cluster needs to meet a few requirements.
+Also, _you_ as the person installing the operators need some permissions to be able to install them.
+
+=== RBAC
+
+The operators need a lot of very "heavy" permissions.
+They need to be able to create ClusterRoles and also the bindings for them, which means that they are very powerful.
+
+What exactly is need?
+
+As a user installing the operators, you will need `get`, `list` and `create` permissions for CustomResourceDefinitions, ClusterRoles, ClusterRoleBindings, StorageClasses and CSIDrivers.
+Also for the Stackable custom resource SecretClass.
+
+Why exactly?
+
+Every operator comes with a custom resource that it manages, and the custom resource definition needs to be applied.
+Then, every operator gets its own ClusterRole that then needs to be bound to the operator Pods.
+A StorageClass is created by the secret and listener operator. Both use StorageClasses as a way to bind Pods and mount information.
+
+Then, the operators themselves need extensive permissions.
+
+
+
+
+=== Network policies
+
+=== securityContext requirements
+
+What does that mean? 
+Why?
+
+https://kubernetes.io/docs/tasks/configure-pod-container/security-context/[some info]
+
+==== runAsuser, runAsGroup
+
+TODO
+
+==== root paths must be rw
+
+`readOnlyRootFilesystem`
+
+* we might be able to fix this in some instances
+* sometimes the software is shitty and its hard to fix
+
+=== storageclass and CSI driver reqs.
+
+The secret operator is basically a fake CSI driver that you can request drives from, with certain labels.
+It has its own storageclass.
+
+This mechanism is used to mount secrets into Pods, across namespaces. 
+The secret operator can also dynamically update secrets, which is useful for example to renew certificates.
+
+The secret operator is a core part of the Stackable Data Platform, and the Platform does not function without it.
