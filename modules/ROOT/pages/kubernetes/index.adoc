@@ -81,4 +81,4 @@ Metrics-server is running at https://127.0.0.1:6443/api/v1/namespaces/kube-syste
 === Configuring the cluster domain
 
 In case a non-default cluster domain is used as described in https://kubernetes.io/docs/tasks/administer-cluster/dns-custom-nameservers/[Customizing DNS Service],
-Stackable operators can be configured accordingly. This is described in detail in this guide xref:cluster-domain.adoc[Configuring the Kubernetes cluster domain].
+Stackable operators can be configured accordingly. This is described in detail in this guide xref:guides:cluster-domain.adoc[Configuring the Kubernetes cluster domain].
