@@ -4,3 +4,4 @@
 ** xref:running-stackable-in-an-airgapped-environment.adoc[]
 ** xref:viewing-and-verifying-sboms.adoc[]
 ** xref:enabling-verification-of-image-signatures.adoc[]
+** xref:cluster-domain.adoc[]
