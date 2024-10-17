@@ -10,15 +10,15 @@ The following steps explain the use of the environment variable and the auto det
 
 == Steps
 
-=== Setting `KUBERNETES_CLUSTER_DOMAIN` variable
+=== Use environment variable
 
-The environment variable `KUBERNETES_CLUSTER_DOMAIN` takes precedence over auto detection. This means that the desired cluster domain can be configured in a Helm values file via the property`kubernetesClusterDomain` or via the install command like:
+The environment variable `KUBERNETES_CLUSTER_DOMAIN` takes precedence over auto detection. This means that the desired cluster domain can be configured in a Helm values file via the property `kubernetesClusterDomain` or via the install command like:
 
 ```
 helm install hive-operator stackable-stable/hive-operator --set kubernetesClusterDomain="my-cluster.local"
 ```
 
-=== Using auto detection
+=== Use auto detection
 
 As a first step, the auto detection is checking the runtime environment of the operator. In most cases this is a clusterized environment like Kubernetes or Openshift.
 This is determined by checking if the `KUBERNETES_SERVICE_HOST` environment variable is set in the operator Pod.
