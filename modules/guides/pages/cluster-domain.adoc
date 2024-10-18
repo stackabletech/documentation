@@ -3,16 +3,17 @@
 :dns-custom-nameservers: https://kubernetes.io/docs/tasks/administer-cluster/dns-custom-nameservers/
 :dns-pod-service: https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/
 
-Stackable operators allow to configure a non-default cluster domain as described in {dns-custom-nameservers}[`Customizing DNS Service`] (and more in {dns-pod-service}[`DNS for Services and Pods`]).
-The configuration is primarily done via and environment variable `KUBERNETES_CLUSTER_DOMAIN`, but there is also a mechansim to auto detect the cluster domain using the `/etc/resolv.conf` file.
+Stackable operators allow to configure a non-default cluster domain as described in {dns-custom-nameservers}[Customizing DNS Service] (and more in {dns-pod-service}[DNS for Services and Pods]).
+The configuration is primarily done via and environment variable `KUBERNETES_CLUSTER_DOMAIN`, but there is also a mechanism to auto detect the cluster domain using the `/etc/resolv.conf` file.
 
-The following steps explain the use of the environment variable and the auto detection mechanism in detail.
+The following steps explain the use of the environment variable and the auto detection mechanism in detail:
 
 == Steps
 
 === Use environment variable
 
-The environment variable `KUBERNETES_CLUSTER_DOMAIN` takes precedence over auto detection. This means that the desired cluster domain can be configured in a Helm values file via the property `kubernetesClusterDomain` or via the install command like:
+The environment variable `KUBERNETES_CLUSTER_DOMAIN` takes precedence over auto detection.
+This means that the desired cluster domain can be configured in a Helm values file via the property `kubernetesClusterDomain` or via the install command like:
 
 ```
 helm install hive-operator stackable-stable/hive-operator --set kubernetesClusterDomain="my-cluster.local"
@@ -37,7 +38,7 @@ Using this example as a base for the cluster domain auto detection, the operator
 
 === Running locally
 
-This section covers the case when both `KUBERNETES_CLUSTER_DOMAIN` and `KUBERNETES_SERVICE_HOST` are not set. This would be the case if the operator is not running in a clusterized environment like e.g. locally a Laptop or PC.
+This section covers the case when both `KUBERNETES_CLUSTER_DOMAIN` and `KUBERNETES_SERVICE_HOST` are not set. This would be the case if the operator is not running in a clusterized environment like e.g. locally on a Laptop or PC.
 Running the operator locally is mostly for development and therefore not relevant for most users.
 
 If running locally, and `KUBERNETES_CLUSTER_DOMAIN` and `KUBERNETES_SERVICE_HOST` are not set, the operator will default its cluster domain to `cluster.local`.
