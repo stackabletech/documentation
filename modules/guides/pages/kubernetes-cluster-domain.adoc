@@ -21,12 +21,14 @@ helm install hive-operator stackable-stable/hive-operator --set kubernetesCluste
 
 === Use auto detection
 
-As a first step, the auto detection is checking the runtime environment of the operator. In most cases this is a clusterized environment like Kubernetes or Openshift.
+If the `KUBERNETES_CLUSTER_DOMAIN` environment variable is not set, the auto detection is checking the runtime environment of the operator.
+In most cases this is a clusterized environment like Kubernetes or Openshift.
 This is determined by checking if the `KUBERNETES_SERVICE_HOST` environment variable is set in the operator Pod.
 
-If clusterized, the auto detection parses the `/etc/resolv.conf` file for the last entry starting with the `search` keyword. Within that `search` entry the shortest option is selected.
+If clusterized, the auto detection parses the `/etc/resolv.conf` file for the last entry starting with the `search` keyword.
+Within that `search` entry the shortest option is selected.
 
-An example for the `/etc/resolv.conf` in a Kubelet looks like:
+An example `/etc/resolv.conf` in a Pod looks like:
 
 ```
 nameserver 10.32.0.10
@@ -34,11 +36,12 @@ search <namespace>.svc.cluster.local svc.cluster.local cluster.local
 options ndots:5
 ```
 
-Using this example as a base for the cluster domain auto detection, the operator would choose the `cluster.local` option.
+Using this example as a base for the cluster domain auto detection, the operator would choose `cluster.local` as cluster domain.
 
 === Running locally
 
-This section covers the case when both `KUBERNETES_CLUSTER_DOMAIN` and `KUBERNETES_SERVICE_HOST` are not set. This would be the case if the operator is not running in a clusterized environment like e.g. locally on a Laptop or PC.
+This section covers the case when both `KUBERNETES_CLUSTER_DOMAIN` and `KUBERNETES_SERVICE_HOST` are not set.
+This would be the case if the operator is not running in a clusterized environment like e.g. locally a Laptop or PC.
 Running the operator locally is mostly for development and therefore not relevant for most users.
 
 If running locally, and `KUBERNETES_CLUSTER_DOMAIN` and `KUBERNETES_SERVICE_HOST` are not set, the operator will default its cluster domain to `cluster.local`.
