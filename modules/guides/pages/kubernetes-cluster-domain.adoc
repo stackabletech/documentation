@@ -12,4 +12,4 @@ This environment variable can be configured via the helm values property `kubern
 helm install <product>-operator stackable-stable/<product>-operator --set kubernetesClusterDomain="my-cluster.local"
 ```
 
-If the environment variable `KUBERNETES_CLUSTER_DOMAIN` (or the helm property `kubernetesClusterDomain`) are not set / overriden, the operator will default its cluster domain to `cluster.local`.
+If the environment variable `KUBERNETES_CLUSTER_DOMAIN` (or the helm property `kubernetesClusterDomain`) are not set / overriden, the operator will default the cluster domain to `cluster.local`.
