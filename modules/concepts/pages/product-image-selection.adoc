@@ -14,7 +14,7 @@ spec:
     # stackableVersion: 24.3.0 optional <.>
 ----
 <.> The version of your product - consult the product operator documentation to find out about supported product versions.
-<.> The version of the Stackable Data Platform. If you omit it, the operator will use it's own version together with the product version to select the product image.
+<.> The version of the Stackable Data Platform. If you omit it, the operator will use it's own version together with the product version to select the product image. It is recommended to omit this field, so that you are always using the correct, compatible version of the product image.
 
 This page explains the different ways of specifying product images and the components that are involved,
 starting from the simple way of using the default images to explaining how to use custom or mirrored registries as well as custom images.
