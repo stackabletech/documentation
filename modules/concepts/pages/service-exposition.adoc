@@ -63,5 +63,8 @@ For a production setup, it is recommended to use a LoadBalancer and the `externa
 
 == Outlook
 
-These listener classes are hardcoded to expose certain Service types and do not offer any additional configuration.
-In a future release, the `ListenerClass` provided by the xref:listener-operator:index.adoc[listener-operator] will allow you to create your own listener class variants, with more granual configuration options.
+For most of the Stackable operators, these listener classes are hardcoded to expose certain Service types and do not offer any additional configuration.
+However, some operators support specifying custom xref:listener-operator:listenerclass.adoc[ListenerClass]es with more granular configuration options, via the xref:listener-operator:index.adoc[listener-operator].
+In a future release, all Stackable operators are planned to be migrated over to this system.
+
+For more information on what is supported by any individual operator, please see that operator's documentation.
