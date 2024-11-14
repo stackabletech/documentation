@@ -10,17 +10,15 @@ site:
 # docs: https://docs.antora.org/antora/latest/playbook/configure-urls/
 urls:
   # The symbolic name of the latest stable version, and how to redirect from/to it.
-  # with 'redirect:to', the _actual_ version link is a redirect, and the _actual_ link 
+  # with 'redirect:to', the _actual_ version link is a redirect, and the _actual_ link
   # contains the symbolic name, i.e. stable.
-  # As the user browses the latest docs, there will be 'stable' in the links. Also 
+  # As the user browses the latest docs, there will be 'stable' in the links. Also
   # search engines will see the 'stable' link and index those pages, so if we release
   # a new version, these links will be already in the index, which is good.
   # Linking to the latest version by version number is still possible, and after the
   # latest version is not latest anymore, the redirect is instead the actual URL.
   latest_version_segment: stable
   latest_version_segment_strategy: redirect:to
-  # We deploy our site on netlify, so we use their redirect config mechanism
-  redirect_facility: netlify
 content:
   sources:
     - url: .
