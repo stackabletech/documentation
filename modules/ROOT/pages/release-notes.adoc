@@ -40,6 +40,36 @@ Here are the headings you can use for the next release. Saves time checking inde
 
 ////
 
+== Release 24.11
+
+=== New / extended platform features
+
+=== Product versions
+
+==== New versions
+
+==== Deprecated versions
+
+==== Removed versions
+
+=== stackablectl
+
+=== Supported Kubernetes versions
+
+=== Supported OpenShift versions
+
+=== Breaking changes
+
+=== Upgrade from 24.7
+
+==== Using stackablectl
+
+==== Using Helm
+
+==== Known upgrade issues
+
+===== All operators
+
 == Release 24.7
 
 === New / extended platform features
