@@ -48,9 +48,21 @@ Here are the headings you can use for the next release. Saves time checking inde
 
 ==== New versions
 
+The following new product versions are now supported:
+
+* Apache Airflow: https://github.com/stackabletech/airflow-operator/pull/494[2.9.3 (LTS)], https://github.com/stackabletech/airflow-operator/pull/512[2.10.2 (experimental)]
+
 ==== Deprecated versions
 
+The following product versions are deprecated and will be removed in a later release:
+
+* Apache Airflow: 2.9.2
+
 ==== Removed versions
+
+The following product versions are no longer supported (although images for released product versions remain available https://repo.stackable.tech/#browse/browse:docker:v2%2Fstackable[here]):
+
+* Apache Airflow: 2.8.4, 2.8.1, 2.6.3
 
 === stackablectl
 
