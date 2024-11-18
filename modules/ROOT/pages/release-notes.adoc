@@ -60,6 +60,7 @@ The following new product versions are now supported:
 * Apache Hive: https://github.com/stackabletech/hive-operator/pull/508[4.0.0 (experimental)]
 * Apache Kafka: https://github.com/stackabletech/kafka-operator/pull/753/[3.8.0]
 * Apache NiFi: https://github.com/stackabletech/nifi-operator/pull/702[2.0.0 (experimental)]
+* Open Policy Agent: https://github.com/stackabletech/opa-operator/pull/616[0.67.1]
 
 ==== Deprecated versions
 
@@ -67,6 +68,7 @@ The following product versions are deprecated and will be removed in a later rel
 
 * Apache Airflow: 2.9.2
 * Apache Druid: 26.0.0
+* Open Policy Agent: 0.66.0
 
 ==== Removed versions
 
@@ -76,6 +78,7 @@ The following product versions are no longer supported (although images for rele
 * Apache Druid: 28.0.1
 * Apache Kafka: 3.6.2, 3.6.1, 3.4.1
 * Apache NiFi: 2.0.0-M4, 1.25.0, 1.21.0
+* Open Policy Agent: 0.61.0
 
 === stackablectl
 
