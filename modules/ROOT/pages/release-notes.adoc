@@ -57,7 +57,8 @@ The following new product versions are now supported:
 
 * Apache Airflow: https://github.com/stackabletech/airflow-operator/pull/494[2.9.3 (LTS)], https://github.com/stackabletech/airflow-operator/pull/512[2.10.2 (experimental)]
 * Apache Druid: https://github.com/stackabletech/druid-operator/pull/631[30.0.0 (LTS)]
-* 
+* Apache Hive: https://github.com/stackabletech/hive-operator/pull/508[4.0.0 (experimental)]
+* Apache Kafka: https://github.com/stackabletech/kafka-operator/pull/753/[3.8.0]
 
 ==== Deprecated versions
 
@@ -72,6 +73,7 @@ The following product versions are no longer supported (although images for rele
 
 * Apache Airflow: 2.8.4, 2.8.1, 2.6.3
 * Apache Druid: 28.0.1
+* Apache Kafka: 3.6.2, 3.6.1, 3.4.1
 
 === stackablectl
 
