@@ -44,6 +44,14 @@ Here are the headings you can use for the next release. Saves time checking inde
 
 === New / extended platform features
 
+Improved Authentication:
+
+In this release we introduced several authentication mechanisms in different products:
+
+* Apache Airflow: https://github.com/stackabletech/airflow-operator/issues/337[OIDC support]
+* Apache Kafka: https://github.com/stackabletech/kafka-operator/issues/655[Kerberos support]
+* Apache NiFi: https://github.com/stackabletech/nifi-operator/issues/633[OIDC support]
+
 === Product versions
 
 As with previous SDP releases, many product images have been updated to their latest versions.
