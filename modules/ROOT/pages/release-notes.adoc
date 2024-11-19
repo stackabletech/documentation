@@ -55,10 +55,29 @@ In this release we introduced several authentication mechanisms in different pro
 Improved Authorization:
 
 * The performance of the https://docs.stackable.tech/home/stable/hdfs/usage-guide/security.html#_authorization[OPA Authorizer] has been greatly improved. This _can_ be a breaking change so please make sure to read the https://github.com/stackabletech/hdfs-utils/releases/tag/v0.4.0[release notes] of the hdfs-utils for details
+* The User Info Fetcher HTTP API has been replaced with a Rego library, please see https://docs.stackable.tech/home/nightly/opa/usage-guide/user-info-fetcher#_user_info_fetcher_api for more information
 
 Monitoring:
 
 * In SDP 24.7 we upgraded the version of [JMX Exporter](https://github.com/prometheus/jmx_exporter) from 0.20 to 1.0.1. This is the tool which allows us to expose JMX as Prometheus metrics and is in use for Hadoop, HBase, Hive, Kafka, Spark, Trino and ZooKeeper. Unfortunately the version 1.0.1 has a severe performance degradation which has been [fixed upstream](https://github.com/prometheus/jmx_exporter/pull/1009) but is not released yet. This SDP release 24.11 contains a fixed version bringing performance back to normal levels.
+
+Security:
+
+* The Stackable Data Platform now supports provisioning TLS certificates using cert-manager.
+* Added support for customizing sAMAccountName generation 
+
+Listener:
+
+* The Stackable Operator for Kafka now uses the Stackable Listener Operator, allowing connectivity to be customized.
+
+Misc:
+
+* Apache NiFi: allow users to configure allowed hosts when NiFi is running behind a proxy. The proxy host check is now turned off by default. Documentation: https://docs.stackable.tech/home/nightly/nifi/usage_guide/security#host-header-check
+
+Bug fixes:
+
+* Apache Spark Operator: Ensure Spark applications are submitted only once. Reconciling applications after the corresponding Job objects have been recycled doesn't lead to the creation of new Job objects. This behavior was triggered by different situations, such as when the operator was restarted.
+* Apache Spark Operator: Environment variables can now be overridden with the role group’s envOverrides property.
 
 === Product versions
 
