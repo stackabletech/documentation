@@ -52,6 +52,14 @@ In this release we introduced several authentication mechanisms in different pro
 * Apache Kafka: https://github.com/stackabletech/kafka-operator/issues/655[Kerberos support]
 * Apache NiFi: https://github.com/stackabletech/nifi-operator/issues/633[OIDC support]
 
+Improved Authorization:
+
+* The performance of the https://docs.stackable.tech/home/stable/hdfs/usage-guide/security.html#_authorization[OPA Authorizer] has been greatly improved. This _can_ be a breaking change so please make sure to read the https://github.com/stackabletech/hdfs-utils/releases/tag/v0.4.0[release notes] of the hdfs-utils for details
+
+Monitoring:
+
+* In SDP 24.7 we upgraded the version of [JMX Exporter](https://github.com/prometheus/jmx_exporter) from 0.20 to 1.0.1. This is the tool which allows us to expose JMX as Prometheus metrics and is in use for Hadoop, HBase, Hive, Kafka, Spark, Trino and ZooKeeper. Unfortunately the version 1.0.1 has a severe performance degradation which has been [fixed upstream](https://github.com/prometheus/jmx_exporter/pull/1009) but is not released yet. This SDP release 24.11 contains a fixed version bringing performance back to normal levels.
+
 === Product versions
 
 As with previous SDP releases, many product images have been updated to their latest versions.
@@ -98,7 +106,28 @@ The following product versions are no longer supported (although images for rele
 
 === Supported Kubernetes versions
 
+This release supports the following Kubernetes versions:
+
+* `1.31`
+* `1.30`
+* `1.29`
+
+These Kubernetes versions are no longer supported:
+
+* `1.26`
+* `1.25` as we removed internal forks required to support Kubernetes `1.25` and below. This includes OpenShift `4.12`, which is using Kubernetes `1.25`.
+
 === Supported OpenShift versions
+
+This release is available in the RedHat Certified Operator Catalog for the following OpenShift versions:
+
+* `4.15`
+* `4.14`
+
+These OpenShift versions are no longer supported:
+
+* `4.13`
+* `4.12`
 
 === Breaking changes
 
