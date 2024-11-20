@@ -64,7 +64,7 @@ Monitoring:
 Security:
 
 * The Stackable Data Platform now supports provisioning TLS certificates using cert-manager.
-* Added support for customizing sAMAccountName generation 
+* Added support for customizing sAMAccountName generation
 
 Listener:
 
