@@ -55,7 +55,7 @@ In this release we introduced several authentication mechanisms in different pro
 Improved Authorization:
 
 * The performance of the https://docs.stackable.tech/home/stable/hdfs/usage-guide/security.html#_authorization[OPA Authorizer] has been greatly improved. This _can_ be a breaking change so please make sure to read the hdfs-utils https://github.com/stackabletech/hdfs-utils/releases/tag/v0.4.0[release notes] for details.
-* The User Info Fetcher HTTP API has been replaced with a Rego library. Please see https://docs.stackable.tech/home/nightly/opa/usage-guide/user-info-fetcher#_user_info_fetcher_api for more information
+* The User Info Fetcher HTTP API has been replaced with a Rego library. Please see https://docs.stackable.tech/home/nightly/opa/usage-guide/user-info-fetcher#_user_info_fetcher_api[user-info-fetcher API] for more information.
 
 Logging:
 
@@ -67,7 +67,7 @@ Monitoring:
 
 Security:
 
-* The Stackable Data Platform now supports provisioning TLS certificates using cert-manager.
+* The Stackable Data Platform now supports provisioning TLS certificates using cert-manager ().
 * Added support for customizing sAMAccountName generation in secret operator.
 
 Listener:
@@ -80,14 +80,14 @@ Operations:
 
 Misc:
 
-* Apache NiFi: permit users to configure allowed hosts when NiFi is running behind a proxy. The proxy host check is now turned off by default. Documentation: https://docs.stackable.tech/home/nightly/nifi/usage_guide/security#host-header-check
+* Apache NiFi: permit users to configure allowed hosts when NiFi is running behind a proxy. The proxy host check is now turned off by default. See documentation https://docs.stackable.tech/home/nightly/nifi/usage_guide/security#host-header-check[here].
 
 Bug fixes:
 
 * Apache Spark Operator: Ensure Spark applications are submitted only once. Reconciling applications after the corresponding Job objects have been recycled doesn't lead to the creation of new Job objects. This behavior was triggered by different situations, such as when the operator was restarted.
 * Apache Spark Operator: Environment variables can now be overridden with the role group’s envOverrides property.
 * Trino, Spark, HBase, Airflow: These used to have https://github.com/stackabletech/issues/issues/548[issues] where config and environment variable overrides would not always work as expected, this has now been fixed
-* The cluster domain (default `cluster.local`) which caused problems in non-default cluster setups can now be configured in all operators using the ENV variable `KUBERNETES_CLUSTER_DOMAIN` or setting the helm value `kubernetesClusterDomain` during installation as described [here](https://docs.stackable.tech/home/nightly/guides/kubernetes-cluster-domain).
+* The cluster domain (default `cluster.local`) which caused problems in non-default cluster setups can now be configured in all operators using the ENV variable `KUBERNETES_CLUSTER_DOMAIN` or setting the helm value `kubernetesClusterDomain` during installation as described https://docs.stackable.tech/home/nightly/guides/kubernetes-cluster-domain[here].
 
 === Product versions
 
@@ -132,6 +132,8 @@ The following product versions are no longer supported (although images for rele
 * Apache ZooKeeper: 3.8.4
 
 === stackablectl
+
+* Bump Rust dependencies to fix critical vulnerability in quinn-proto, see https://github.com/advisories/GHSA-vr26-jcq5-fjj8[CVE-2024-45311] (https://github.com/stackabletech/stackable-cockpit/pull/318).
 
 === Supported Kubernetes versions
 
