@@ -108,6 +108,7 @@ Bug fixes::
 * The cluster domain (default `cluster.local`) which caused problems in non-default cluster setups can now be configured in all operators using the ENV variable `KUBERNETES_CLUSTER_DOMAIN` or setting the helm value `kubernetesClusterDomain` during installation as described https://docs.stackable.tech/home/nightly/guides/kubernetes-cluster-domain[here].
 * Apache Airflow: In release 24.7 Airflow did not propagate git credentials correctly to the gitsync containers. This has now been corrected and works for both celery- and kubernetes workers.
 * Operators now do not stop reconciling existing clusters if one of the https://github.com/stackabletech/issues/issues/211[cluster objects cannot be deserialized].
+* Apache HBase: The operator now does not https://github.com/stackabletech/hbase-operator/pull/584[ignore the `hbaseRootdir` config property at role level].
 
 === Product versions
 
