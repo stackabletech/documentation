@@ -67,12 +67,23 @@ Monitoring::
 
 Security::
 
-* The Stackable Data Platform now supports provisioning TLS certificates using cert-manager. 
+* The Stackable Data Platform now supports provisioning TLS certificates using cert-manager.
 * Added support for customizing sAMAccountName generation in secret operator.
+* The Stackable Secret Operator now requests permission to read Listeners, which is required to provision secrets for listener volumes with `listeners.stackable.tech/listener-name`.
+
+Commons::
+
+* Pod Enrichment is now deprecated, and will be removed in the next release. Once removed, the SDP will no longer set any `enrichment.stackable.tech/` annotations on Pods.
 
 Listener::
 
 * The Stackable Operator for Kafka now uses the Stackable Listener Operator, allowing connectivity to be customized.
+* The `ListenerClass.spec.serviceAnnotations` are now correctly propagated to created Service objects.
+* Listeners can now be configured to use either IP addresses or DNS hostnames.
+
+Dependencies::
+
+* Apache HBase: The hadoop-azure module was added to the image and is contained in the classpath. This makes it possible to use the Azure Data Lake Storage Gen2 (ADLS) instead of HDFS. See the usage guide for detailed information. 
 
 Operations::
 
@@ -81,6 +92,13 @@ Operations::
 Misc::
 
 * Apache NiFi: permit users to configure allowed hosts when NiFi is running behind a proxy. The proxy host check is now turned off by default. See documentation https://docs.stackable.tech/home/nightly/nifi/usage_guide/security#host-header-check[here].
+* Apache Airflow: Allow custom arbitrary python code in webserver_config.py.
+* Apache Superset: Allow custom arbitrary python code in superset_config.py
+
+Images::
+
+* Our Docker images now exclusively make use of numeric user IDs in `USER` statements allowing the use of `securityContext.runAsNonRoot`
+* The group id of all files relevant to our products is now set to `0`. This allows the images to be used with any arbitrary user as every container user will always belong to the root group (`0`). This is especially useful on OpenShift when trying to move to the `restricted-v2` SecurityContextConstraint (SCC), Stackable currently defaults to the `nonroot-v2` SCC but we plan on migrating to `restricted-v2` in the future
 
 Bug fixes::
 
@@ -88,6 +106,7 @@ Bug fixes::
 * Apache Spark Operator: Environment variables can now be overridden with the role group’s envOverrides property.
 * Trino, Spark, HBase, Airflow: These used to have https://github.com/stackabletech/issues/issues/548[issues] where config and environment variable overrides would not always work as expected, this has now been fixed
 * The cluster domain (default `cluster.local`) which caused problems in non-default cluster setups can now be configured in all operators using the ENV variable `KUBERNETES_CLUSTER_DOMAIN` or setting the helm value `kubernetesClusterDomain` during installation as described https://docs.stackable.tech/home/nightly/guides/kubernetes-cluster-domain[here].
+* Apache Airflow: In release 24.7 Airflow did not propagate git credentials correctly to the gitsync containers. This has now been corrected and works for both celery- and kubernetes workers.
 
 === Product versions
 
@@ -161,6 +180,10 @@ These OpenShift versions are no longer supported:
 * `4.12`
 
 === Breaking changes
+
+==== Listener operator
+
+* BREAKING: All ListenerClasses now default to using DNS hostnames, previously NodePort ListenerClasses (such as external-unstable) would use IP addresses. Hence, all Nodes must now have resolvable hostnames, or the NodePort ListenerClasses must be configured to set .spec.preferredAddressType: IP.
 
 === Upgrade from 24.7
 
