@@ -114,6 +114,7 @@ Bug fixes::
 * Apache Airflow: In release 24.7 Airflow did not propagate git credentials correctly to the gitsync containers. This has now been corrected and works for both celery- and kubernetes workers.
 * Operators now do not stop reconciling existing clusters if one of the https://github.com/stackabletech/issues/issues/211[cluster objects cannot be deserialized].
 * Apache HBase: The operator now does not https://github.com/stackabletech/hbase-operator/pull/584[ignore the `hbaseRootdir` config property at role level].
+* Apache Kakfa: The bootstrap Kafka service is now included in https://github.com/stackabletech/kafka-operator/pull/741[certificate SANs].
 
 === Product versions
 
