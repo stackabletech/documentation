@@ -44,6 +44,10 @@ Here are the headings you can use for the next release. Saves time checking inde
 
 === New / extended platform features
 
+Vulnerabilities::
+
+* More than 142 CVEs were fixed in the Stackable product images. This included 11 CVEs of critical and 55 CVEs of High severity.
+
 Improved Authentication::
 
 In this release we introduced several authentication mechanisms in different products:
