@@ -46,7 +46,7 @@ Here are the headings you can use for the next release. Saves time checking inde
 
 Vulnerabilities::
 
-* More than 142 CVEs were fixed in the Stackable product images. This included 11 CVEs of critical and 55 CVEs of High severity.
+* More than 142 CVEs were fixed in the Stackable product images. This includes 11 CVEs of critical and 55 CVEs of high severity.
 
 Improved Authentication::
 
