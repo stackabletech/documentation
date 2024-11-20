@@ -94,6 +94,7 @@ Misc::
 * Apache NiFi: permit users to configure allowed hosts when NiFi is running behind a proxy. The proxy host check is now turned off by default. See documentation https://docs.stackable.tech/home/nightly/nifi/usage_guide/security#host-header-check[here].
 * Apache Airflow: Allow custom arbitrary python code in webserver_config.py.
 * Apache Superset: Allow custom arbitrary python code in superset_config.py
+* The size of the operator deployed CRDs was reduced significantly https://github.com/stackabletech/issues/issues/627[here].
 
 Images::
 
