@@ -44,7 +44,7 @@ Here are the headings you can use for the next release. Saves time checking inde
 
 === New / extended platform features
 
-Improved Authentication:
+Improved Authentication::
 
 In this release we introduced several authentication mechanisms in different products:
 
@@ -52,37 +52,37 @@ In this release we introduced several authentication mechanisms in different pro
 * Apache Kafka: https://github.com/stackabletech/kafka-operator/issues/655[Kerberos support]
 * Apache NiFi: https://github.com/stackabletech/nifi-operator/issues/633[OIDC support]
 
-Improved Authorization:
+Improved Authorization::
 
 * The performance of the https://docs.stackable.tech/home/stable/hdfs/usage-guide/security.html#_authorization[OPA Authorizer] has been greatly improved. This _can_ be a breaking change so please make sure to read the hdfs-utils https://github.com/stackabletech/hdfs-utils/releases/tag/v0.4.0[release notes] for details.
 * The User Info Fetcher HTTP API has been replaced with a Rego library. Please see https://docs.stackable.tech/home/nightly/opa/usage-guide/user-info-fetcher#_user_info_fetcher_api[user-info-fetcher API] for more information.
 
-Logging:
+Logging::
 
 * Apache NiFi: The ephemeral EmptyDir Volumes used to store log files before being aggregated have their size increased from a default of 33 MiB to 500 MiB. Additionally the interval in which Logback checks if the maximum log file size has been reached was lowered from 60 seconds to 5 seconds.
 
-Monitoring:
+Monitoring::
 
 * In SDP 24.7 we upgraded the version of [JMX Exporter](https://github.com/prometheus/jmx_exporter) from 0.20 to 1.0.1. This is the tool which allows us to expose JMX metrics in Prometheus and is in use for Hadoop, HBase, Hive, Kafka, Spark, Trino and ZooKeeper. Unfortunately the version 1.0.1 has a severe performance degradation which has been [fixed upstream](https://github.com/prometheus/jmx_exporter/pull/1009) but is not yet released. This SDP release 24.11 contains a fixed version bringing performance back to normal levels.
 
-Security:
+Security::
 
-* The Stackable Data Platform now supports provisioning TLS certificates using cert-manager ().
+* The Stackable Data Platform now supports provisioning TLS certificates using cert-manager. 
 * Added support for customizing sAMAccountName generation in secret operator.
 
-Listener:
+Listener::
 
 * The Stackable Operator for Kafka now uses the Stackable Listener Operator, allowing connectivity to be customized.
 
-Operations:
+Operations::
 
 * The Stackable Operator for HDFS now supports upgrading existing HDFS installations. This process requires some manual intervention, however.
 
-Misc:
+Misc::
 
 * Apache NiFi: permit users to configure allowed hosts when NiFi is running behind a proxy. The proxy host check is now turned off by default. See documentation https://docs.stackable.tech/home/nightly/nifi/usage_guide/security#host-header-check[here].
 
-Bug fixes:
+Bug fixes::
 
 * Apache Spark Operator: Ensure Spark applications are submitted only once. Reconciling applications after the corresponding Job objects have been recycled doesn't lead to the creation of new Job objects. This behavior was triggered by different situations, such as when the operator was restarted.
 * Apache Spark Operator: Environment variables can now be overridden with the role group’s envOverrides property.
