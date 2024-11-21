@@ -10,7 +10,11 @@ Here are the headings you can use for the next release. Saves time checking inde
 
 == Release YY.M
 
-=== New / extended platform features
+=== New platform features
+
+=== Platform improvements
+
+=== Platform deprecations
 
 === Product versions
 
@@ -36,20 +40,13 @@ Here are the headings you can use for the next release. Saves time checking inde
 
 ==== Known upgrade issues
 
-===== All operators
-
 ////
 
 == Release 24.11
 
-=== New / extended platform features
+=== New platform features
 
-Vulnerabilities::
-
-* More than 142 CVEs were fixed in the Stackable product images.
-  This includes 11 critical and 55 high-severity CVEs.
-
-Improved Authentication::
+Authentication::
 
 In this release we introduced several authentication mechanisms in different products:
 
@@ -57,51 +54,27 @@ In this release we introduced several authentication mechanisms in different pro
 * Apache Kafka: https://github.com/stackabletech/kafka-operator/issues/655[Kerberos support]
 * Apache NiFi: https://github.com/stackabletech/nifi-operator/issues/633[OIDC support]
 
-Improved Authorization::
-
-* The performance of the https://docs.stackable.tech/home/stable/hdfs/usage-guide/security.html#\_authorization[OPA Authorizer] has been greatly improved.
-  This _can_ be a breaking change so please make sure to read the hdfs-utils https://github.com/stackabletech/hdfs-utils/releases/tag/v0.4.0[release notes] for details.
-* The User Info Fetcher HTTP API has been replaced with a Rego library. Please see https://docs.stackable.tech/home/nightly/opa/usage-guide/user-info-fetcher#_user_info_fetcher_api[user-info-fetcher API] for more information.
-
-Logging::
-
-* Apache NiFi: The ephemeral EmptyDir Volumes used to store log files before being aggregated have their size increased from a default of 33 MiB to 500 MiB.
-  Additionally the interval in which Logback checks if the maximum log file size has been reached was lowered from 60 seconds to 5 seconds.
-
-Monitoring::
-
-* https://github.com/prometheus/jmx_exporter[JMX Exporter] is a tool which allows us to expose JMX metrics as Prometheus metrics.
-  It is used by the following products: Hadoop, HBase, Hive, Kafka, Spark, Trino and ZooKeeper.
-  In the previous SDP release (24.7) we upgraded JMX Exporter from 0.20 to 1.0.1.
-  Unfortunately version 1.0.1 has a severe performance degradation which has been https://github.com/prometheus/jmx_exporter/pull/1009[fixed upstream] but is not yet released.
-  This SDP release (24.11) contains a fixed version bringing performance back to normal levels.
-
 Security::
 
 * The Stackable Data Platform now supports provisioning TLS certificates using https://cert-manager.io/[cert-manager].
 * Added support for customizing `sAMAccountName` generation in secret operator.
 * The Stackable Secret Operator now requests permission to read Listeners, which is required to provision secrets for listener volumes with the `listeners.stackable.tech/listener-name` annotation.
 
-Commons::
-
-* Pod Enrichment is now deprecated, and will be removed in the next release. Once removed, the SDP will no longer set any `enrichment.stackable.tech/` annotations on Pods.
-
 Listener::
 
 * The Stackable Operator for Kafka now uses the Stackable Listener Operator, allowing connectivity to be customized.
-* The `ListenerClass.spec.serviceAnnotations` are now correctly propagated to created Service objects.
 * Listeners can now be configured to use either IP addresses or fully qualified domain names (FQDNs).
 
 Dependencies::
 
-* Apache HBase: The hadoop-azure module was added to the image and is contained in the classpath.
-  This makes it possible to use the Azure Data Lake Storage Gen2 (ADLS) instead of HDFS.
-  See the xref:hbase:usage-guide/adls.adoc[usage guide] for detailed information.
+Apache HBase: The hadoop-azure module was added to the image and is contained in the classpath.
+This makes it possible to use the Azure Data Lake Storage Gen2 (ADLS) instead of HDFS.
+See the xref:hbase:usage-guide/adls.adoc[usage guide] for detailed information.
 
 Operations::
 
-* The Stackable Operator for HDFS now supports upgrading existing HDFS installations.
-  However, this process requires some manual intervention as described https://docs.stackable.tech/home/nightly/hdfs/usage-guide/upgrading/[here].
+The Stackable Operator for HDFS now supports upgrading existing HDFS installations.
+However, this process requires some manual intervention as described https://docs.stackable.tech/home/nightly/hdfs/usage-guide/upgrading/[here].
 
 Misc::
 
@@ -110,15 +83,50 @@ Misc::
   See documentation xref:nifi:usage_guide/security#host-header-check[here].
 * Apache Airflow: Allow custom arbitrary python code in `webserver_config.py`.
 * Apache Superset: Allow custom arbitrary python code in `superset_config.py`.
-* The size of the operator deployed CRDs was reduced significantly https://github.com/stackabletech/issues/issues/627[here].
 
 Images::
+
+Support the `restricted-v2` SecurityContextConstraint (SCC) in OpenShift.
+Stackable currently defaults to the `nonroot-v2` SCC but we plan on migrating to the `restricted-v2` SCC in the future.
 
 * Our Docker images now exclusively make use of numeric user IDs in `USER` statements allowing the use of `securityContext.runAsNonRoot`
 * The group id of all files relevant to our products is now set to `0`.
   This allows the images to be run with an arbitrary user as every container user will always belong to the root group (`0`).
-  This is required on OpenShift when migrating to the `restricted-v2` SecurityContextConstraint (SCC).
-Stackable currently defaults to the `nonroot-v2` SCC but we plan on migrating to the `restricted-v2` SCC in the future.
+  This is required on OpenShift when migrating to the `restricted-v2` SCC.
+
+=== Platform improvements
+
+Vulnerabilities::
+
+More than 142 CVEs were fixed in the Stackable product images.
+This includes 11 critical and 55 high-severity CVEs.
+
+Authorization::
+
+* The performance of the https://docs.stackable.tech/home/stable/hdfs/usage-guide/security.html#\_authorization[OPA Authorizer] has been greatly improved.
+  This _can_ be a breaking change so please make sure to read the hdfs-utils https://github.com/stackabletech/hdfs-utils/releases/tag/v0.4.0[release notes] for details.
+* The User Info Fetcher HTTP API has been replaced with a Rego library. Please see https://docs.stackable.tech/home/nightly/opa/usage-guide/user-info-fetcher#_user_info_fetcher_api[user-info-fetcher API] for more information.
+
+Logging::
+
+Apache NiFi: The ephemeral EmptyDir Volumes used to store log files before being aggregated have their size increased from a default of 33 MiB to 500 MiB.
+Additionally the interval in which Logback checks if the maximum log file size has been reached was lowered from 60 seconds to 5 seconds.
+
+Monitoring::
+
+https://github.com/prometheus/jmx_exporter[JMX Exporter] is a tool which allows us to expose JMX metrics as Prometheus metrics.
+It is used by the following products: Hadoop, HBase, Hive, Kafka, Spark, Trino and ZooKeeper.
+In the previous SDP release (24.7) we upgraded JMX Exporter from 0.20 to 1.0.1.
+Unfortunately version 1.0.1 has a severe performance degradation which has been https://github.com/prometheus/jmx_exporter/pull/1009[fixed upstream] but is not yet released.
+This SDP release (24.11) contains a fixed version bringing performance back to normal levels.
+
+Listener::
+
+The `ListenerClass.spec.serviceAnnotations` are now correctly propagated to created Service objects.
+
+Misc::
+
+The size of the operator deployed CRDs was reduced significantly (see: https://github.com/stackabletech/issues/issues/627[stackabletech/issues#627]).
 
 Bug fixes::
 
@@ -133,6 +141,13 @@ Bug fixes::
 * Operators now do not stop reconciling existing clusters if one of the https://github.com/stackabletech/issues/issues/211[cluster objects cannot be deserialized].
 * Apache HBase: The operator now does not https://github.com/stackabletech/hbase-operator/pull/584[ignore the `hbaseRootdir` config property at role level].
 * Apache Kakfa: The bootstrap Kafka service is now included in https://github.com/stackabletech/kafka-operator/pull/741[certificate SANs].
+
+=== Platform deprecations
+
+Commons::
+
+Pod Enrichment is now deprecated, and will be removed in the next release.
+Once removed, the SDP will no longer set any `enrichment.stackable.tech/` annotations on Pods.
 
 === Product versions
 
@@ -211,8 +226,8 @@ These OpenShift versions are no longer supported:
 
 ==== Listener operator
 
-* BREAKING: All ListenerClasses now default to using DNS hostnames, previously NodePort ListenerClasses (such as external-unstable) would use IP addresses.
-  Hence, all Nodes must now have resolvable hostnames, or the NodePort ListenerClasses must be configured to set `.spec.preferredAddressType: IP`.
+BREAKING: All ListenerClasses now default to using DNS hostnames, previously NodePort ListenerClasses (such as external-unstable) would use IP addresses.
+Hence, all Nodes must now have resolvable hostnames, or the NodePort ListenerClasses must be configured to set `.spec.preferredAddressType: IP`.
 
 === Upgrade from 24.7
 
