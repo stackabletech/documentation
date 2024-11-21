@@ -58,12 +58,14 @@ In this release we introduced several authentication mechanisms in different pro
 
 Improved Authorization::
 
-* The performance of the https://docs.stackable.tech/home/stable/hdfs/usage-guide/security.html#\_authorization[OPA Authorizer] has been greatly improved. This _can_ be a breaking change so please make sure to read the hdfs-utils https://github.com/stackabletech/hdfs-utils/releases/tag/v0.4.0[release notes] for details.
+* The performance of the https://docs.stackable.tech/home/stable/hdfs/usage-guide/security.html#\_authorization[OPA Authorizer] has been greatly improved.
+  This _can_ be a breaking change so please make sure to read the hdfs-utils https://github.com/stackabletech/hdfs-utils/releases/tag/v0.4.0[release notes] for details.
 * The User Info Fetcher HTTP API has been replaced with a Rego library. Please see https://docs.stackable.tech/home/nightly/opa/usage-guide/user-info-fetcher#_user_info_fetcher_api[user-info-fetcher API] for more information.
 
 Logging::
 
-* Apache NiFi: The ephemeral EmptyDir Volumes used to store log files before being aggregated have their size increased from a default of 33 MiB to 500 MiB. Additionally the interval in which Logback checks if the maximum log file size has been reached was lowered from 60 seconds to 5 seconds.
+* Apache NiFi: The ephemeral EmptyDir Volumes used to store log files before being aggregated have their size increased from a default of 33 MiB to 500 MiB.
+  Additionally the interval in which Logback checks if the maximum log file size has been reached was lowered from 60 seconds to 5 seconds.
 
 Monitoring::
 
@@ -91,11 +93,14 @@ Listener::
 
 Dependencies::
 
-* Apache HBase: The hadoop-azure module was added to the image and is contained in the classpath. This makes it possible to use the Azure Data Lake Storage Gen2 (ADLS) instead of HDFS. See the xref:hbase:usage-guide/adls.adoc[usage guide] for detailed information.
+* Apache HBase: The hadoop-azure module was added to the image and is contained in the classpath.
+  This makes it possible to use the Azure Data Lake Storage Gen2 (ADLS) instead of HDFS.
+  See the xref:hbase:usage-guide/adls.adoc[usage guide] for detailed information.
 
 Operations::
 
-* The Stackable Operator for HDFS now supports upgrading existing HDFS installations. However, this process requires some manual intervention as described https://docs.stackable.tech/home/nightly/hdfs/usage-guide/upgrading/[here].
+* The Stackable Operator for HDFS now supports upgrading existing HDFS installations.
+  However, this process requires some manual intervention as described https://docs.stackable.tech/home/nightly/hdfs/usage-guide/upgrading/[here].
 
 Misc::
 
@@ -109,15 +114,21 @@ Misc::
 Images::
 
 * Our Docker images now exclusively make use of numeric user IDs in `USER` statements allowing the use of `securityContext.runAsNonRoot`
-* The group id of all files relevant to our products is now set to `0`. This allows the images to be used with any arbitrary user as every container user will always belong to the root group (`0`). This is especially useful on OpenShift when trying to move to the `restricted-v2` SecurityContextConstraint (SCC), Stackable currently defaults to the `nonroot-v2` SCC but we plan on migrating to `restricted-v2` in the future
+* The group id of all files relevant to our products is now set to `0`.
+  This allows the images to be run with an arbitrary user as every container user will always belong to the root group (`0`).
+  This is required on OpenShift when migrating to the `restricted-v2` SecurityContextConstraint (SCC).
+Stackable currently defaults to the `nonroot-v2` SCC but we plan on migrating to the `restricted-v2` SCC in the future.
 
 Bug fixes::
 
-* Apache Spark Operator: Ensure Spark applications are submitted only once. Reconciling applications after the corresponding Job objects have been recycled doesn't lead to the creation of new Job objects. This behavior was triggered by different situations, such as when the operator was restarted.
+* Apache Spark Operator: Ensure Spark applications are submitted only once.
+  Reconciling applications after the corresponding Job objects have been recycled doesn't lead to the creation of new Job objects.
+  This behavior was triggered by different situations, such as when the operator was restarted.
 * Apache Spark Operator: Environment variables can now be overridden with the role group’s envOverrides property.
 * Trino, Spark, HBase, Airflow: These used to have https://github.com/stackabletech/issues/issues/548[issues] where config and environment variable overrides would not always work as expected, this has now been fixed
-* The cluster domain (default `cluster.local`) which caused problems in non-default cluster setups can now be configured in all operators using the ENV variable `KUBERNETES_CLUSTER_DOMAIN` or setting the helm value `kubernetesClusterDomain` during installation as described https://docs.stackable.tech/home/nightly/guides/kubernetes-cluster-domain[here].
-* Apache Airflow: In release 24.7 Airflow did not propagate git credentials correctly to the gitsync containers. This has now been corrected and works for both celery- and kubernetes workers.
+* The cluster domain (default `cluster.local`) which caused problems in non-default cluster setups can now be configured in all operators using the ENV variable `KUBERNETES_CLUSTER_DOMAIN` or setting the helm value `kubernetesClusterDomain` during installation as described in https://docs.stackable.tech/home/nightly/guides/kubernetes-cluster-domain[Configuring the Kubernetes cluster domain].
+* Apache Airflow: In release 24.7 Airflow did not propagate git credentials correctly to the gitsync containers.
+  This has now been corrected and works for both celery- and kubernetes workers.
 * Operators now do not stop reconciling existing clusters if one of the https://github.com/stackabletech/issues/issues/211[cluster objects cannot be deserialized].
 * Apache HBase: The operator now does not https://github.com/stackabletech/hbase-operator/pull/584[ignore the `hbaseRootdir` config property at role level].
 * Apache Kakfa: The bootstrap Kafka service is now included in https://github.com/stackabletech/kafka-operator/pull/741[certificate SANs].
@@ -180,7 +191,8 @@ This release supports the following Kubernetes versions:
 These Kubernetes versions are no longer supported:
 
 * `1.26`
-* `1.25` as we removed internal forks required to support Kubernetes `1.25` and below. This includes OpenShift `4.12`, which is using Kubernetes `1.25`.
+* `1.25` as we removed internal forks required to support Kubernetes `1.25` and below.
+  This includes OpenShift `4.12`, which is using Kubernetes `1.25`.
 
 === Supported OpenShift versions
 
@@ -198,7 +210,8 @@ These OpenShift versions are no longer supported:
 
 ==== Listener operator
 
-* BREAKING: All ListenerClasses now default to using DNS hostnames, previously NodePort ListenerClasses (such as external-unstable) would use IP addresses. Hence, all Nodes must now have resolvable hostnames, or the NodePort ListenerClasses must be configured to set .spec.preferredAddressType: IP.
+* BREAKING: All ListenerClasses now default to using DNS hostnames, previously NodePort ListenerClasses (such as external-unstable) would use IP addresses.
+  Hence, all Nodes must now have resolvable hostnames, or the NodePort ListenerClasses must be configured to set `.spec.preferredAddressType: IP`.
 
 === Upgrade from 24.7
 
@@ -217,7 +230,8 @@ Use "stackablectl release list" to list available releases.
 ----
 
 Afterwards you will need to upgrade the CustomResourceDefinitions (CRDs) installed by the Stackable Platform.
-The reason for this is that helm will uninstall the operators but not the CRDs. This can be done using `kubectl replace`.
+The reason for this is that helm will uninstall the operators but not the CRDs.
+This can be done using `kubectl replace`.
 
 [source]
 ----
