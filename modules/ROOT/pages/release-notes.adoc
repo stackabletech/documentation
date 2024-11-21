@@ -167,6 +167,7 @@ The following product versions are no longer supported (although images for rele
 === stackablectl
 
 * Bump Rust dependencies to fix critical vulnerability in quinn-proto, see https://github.com/advisories/GHSA-vr26-jcq5-fjj8[CVE-2024-45311] (https://github.com/stackabletech/stackable-cockpit/pull/318).
+* We now provide additional completions for Nushell and Elvish, support using SOCK5 and HTTP proxies, and improved the sorting of release versions.
 
 === Supported Kubernetes versions
 
