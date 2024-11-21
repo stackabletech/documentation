@@ -95,7 +95,7 @@ Dependencies::
 
 Operations::
 
-* The Stackable Operator for HDFS now supports upgrading existing HDFS installations. This process requires some manual intervention, however.
+* The Stackable Operator for HDFS now supports upgrading existing HDFS installations. However, this process requires some manual intervention as described https://docs.stackable.tech/home/nightly/hdfs/usage-guide/upgrading/[here].
 
 Misc::
 
