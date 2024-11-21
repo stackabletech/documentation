@@ -59,6 +59,7 @@ Security::
 * The Stackable Data Platform now supports provisioning TLS certificates using https://cert-manager.io/[cert-manager].
 * Added support for customizing `sAMAccountName` generation in secret operator.
 * The Stackable Secret Operator now requests permission to read Listeners, which is required to provision secrets for listener volumes with the `listeners.stackable.tech/listener-name` annotation.
+* The RSA key length for generated key pairs now can be customized to 2048, 3072 and 4096 bits. The default is 2048 bit. 
 
 Listener::
 
@@ -111,6 +112,7 @@ Logging::
 
 Apache NiFi: The ephemeral EmptyDir Volumes used to store log files before being aggregated have their size increased from a default of 33 MiB to 500 MiB.
 Additionally the interval in which Logback checks if the maximum log file size has been reached was lowered from 60 seconds to 5 seconds.
+Apache NiFi: Support disabling the create-reporting-task Job as well as podOverrides on that Job.
 
 Monitoring::
 
@@ -133,14 +135,14 @@ Bug fixes::
 * Apache Spark Operator: Ensure Spark applications are submitted only once.
   Reconciling applications after the corresponding Job objects have been recycled doesn't lead to the creation of new Job objects.
   This behavior was triggered by different situations, such as when the operator was restarted.
-* Apache Spark Operator: Environment variables can now be overridden with the role group’s envOverrides property.
-* Trino, Spark, HBase, Airflow: These used to have https://github.com/stackabletech/issues/issues/548[issues] where config and environment variable overrides would not always work as expected, this has now been fixed
+* Trino, Spark, HBase, Airflow: These used to have https://github.com/stackabletech/issues/issues/548[issues] where config and environment variable overrides would not always work as expected, this has now been fixed.
 * The cluster domain (default `cluster.local`) which caused problems in non-default cluster setups can now be configured in all operators using the ENV variable `KUBERNETES_CLUSTER_DOMAIN` or setting the helm value `kubernetesClusterDomain` during installation as described in https://docs.stackable.tech/home/nightly/guides/kubernetes-cluster-domain[Configuring the Kubernetes cluster domain].
 * Apache Airflow: In release 24.7 Airflow did not propagate git credentials correctly to the gitsync containers.
   This has now been corrected and works for both celery- and kubernetes workers.
 * Operators now do not stop reconciling existing clusters if one of the https://github.com/stackabletech/issues/issues/211[cluster objects cannot be deserialized].
 * Apache HBase: The operator now does not https://github.com/stackabletech/hbase-operator/pull/584[ignore the `hbaseRootdir` config property at role level].
 * Apache Kakfa: The bootstrap Kafka service is now included in https://github.com/stackabletech/kafka-operator/pull/741[certificate SANs].
+* Trino: Do not print credentials to STDOUT during startup.
 
 === Platform deprecations
 
