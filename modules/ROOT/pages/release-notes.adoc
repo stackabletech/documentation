@@ -59,7 +59,7 @@ Security::
 * The Stackable Data Platform now supports provisioning TLS certificates using https://cert-manager.io/[cert-manager].
 * Added support for customizing `sAMAccountName` generation in secret operator.
 * The Stackable Secret Operator now requests permission to read Listeners, which is required to provision secrets for listener volumes with the `listeners.stackable.tech/listener-name` annotation.
-* The RSA key length for generated key pairs now can be customized to 2048, 3072 and 4096 bits. The default is 2048 bit. 
+* The RSA key length for generated key pairs now can be customized to 2048, 3072 and 4096 bits. The default is 2048 bit.
 
 Listener::
 
