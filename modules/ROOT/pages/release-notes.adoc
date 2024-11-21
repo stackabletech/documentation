@@ -367,7 +367,7 @@ helm install --wait zookeeper-operator stackable-stable/zookeeper-operator --ver
 > todo: Malte: This is not really an upgrade issue?
 * The Apache NiFi operator currently cannot share an https://github.com/stackabletech/nifi-operator/issues/716[OIDC AuthenticationClass with other products].
   This is due to an inconsistent implementation in the NiFi operator.
-* Apache NiFi: For the experimental NiFi version `2.0.0`, the `PrometheusReportingTask`, use to activate a Prometheus metrics endpoint, was removed. 
+* Apache NiFi: For the experimental NiFi version `2.0.0`, the `PrometheusReportingTask`, use to activate a Prometheus metrics endpoint, was removed.
   NiFi now has its own API to directly access metrics. In contrast to previous versions, the metrics endpoints now requires authentication which is
   not supported by the Stackable operator for Apache NiFi in this release.
 
