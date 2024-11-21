@@ -58,7 +58,7 @@ In this release we introduced several authentication mechanisms in different pro
 
 Improved Authorization::
 
-* The performance of the https://docs.stackable.tech/home/stable/hdfs/usage-guide/security.html#_authorization[OPA Authorizer] has been greatly improved. This _can_ be a breaking change so please make sure to read the hdfs-utils https://github.com/stackabletech/hdfs-utils/releases/tag/v0.4.0[release notes] for details.
+* The performance of the https://docs.stackable.tech/home/stable/hdfs/usage-guide/security.html#\_authorization[OPA Authorizer] has been greatly improved. This _can_ be a breaking change so please make sure to read the hdfs-utils https://github.com/stackabletech/hdfs-utils/releases/tag/v0.4.0[release notes] for details.
 * The User Info Fetcher HTTP API has been replaced with a Rego library. Please see https://docs.stackable.tech/home/nightly/opa/usage-guide/user-info-fetcher#_user_info_fetcher_api[user-info-fetcher API] for more information.
 
 Logging::
