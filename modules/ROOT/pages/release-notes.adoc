@@ -89,7 +89,7 @@ Listener::
 
 * The Stackable Operator for Kafka now uses the Stackable Listener Operator, allowing connectivity to be customized.
 * The `ListenerClass.spec.serviceAnnotations` are now correctly propagated to created Service objects.
-* Listeners can now be configured to use either IP addresses or DNS hostnames.
+* Listeners can now be configured to use either IP addresses or fully qualified domain names (FQDNs).
 
 Dependencies::
 
