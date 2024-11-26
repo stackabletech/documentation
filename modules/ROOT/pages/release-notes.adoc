@@ -91,7 +91,7 @@ Operations::
 The Stackable Operator for HDFS now supports upgrading existing HDFS installations.
 However, this process requires some manual intervention as described in xref:hdfs:usage-guide/upgrading.adoc[Upgrading HDFS].
 
-Misc::
+Miscellaneous::
 
 * Apache NiFi: Permit users to configure allowed hosts when NiFi is running behind a proxy.
   The proxy host check is now disabled by default.
@@ -140,7 +140,7 @@ Listener::
 
 The `ListenerClass.spec.serviceAnnotations` are now correctly propagated to created Service objects.
 
-Misc::
+Miscellaneous::
 
 The size of the operator deployed CRDs was reduced significantly (see: https://github.com/stackabletech/issues/issues/627[stackabletech/issues#627]).
 
