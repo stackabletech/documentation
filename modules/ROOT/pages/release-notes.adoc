@@ -104,7 +104,7 @@ Images::
 Support the `restricted-v2` SecurityContextConstraint (SCC) in OpenShift.
 Stackable currently defaults to the `nonroot-v2` SCC but we plan on migrating to the `restricted-v2` SCC in the future.
 
-* Our Docker images now exclusively make use of numeric user IDs in `USER` statements allowing the use of `securityContext.runAsNonRoot`
+* Our Docker images now exclusively make use of numeric user IDs in `USER` statements allowing the use of `securityContext.runAsNonRoot`.
 * The group id of all files relevant to our products is now set to `0`.
   This allows the images to be run with an arbitrary user as every container user will always belong to the root group (`0`).
   This is required on OpenShift when migrating to the `restricted-v2` SCC.
