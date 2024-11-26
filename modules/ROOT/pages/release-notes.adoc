@@ -245,14 +245,33 @@ Of the changes mentioned above, the following are breaking (or could lead to bre
 
 ==== Kafka operator
 
-* Existing services will be migrated to the new format. Clients will need to re-read settings from the discovery configmap.
-* Kafka is now only accessible from within the Kubernetes cluster by default. Set listener classes manually to expose it to the outside world (again).
-* To complete an upgrade to this kafka-operator, all existing Kafka StatefulSets must be deleted manually. This will cause some downtime.
+* Existing Kafka clusters will need to be migrated to using the Listener Operator.
+  Kafka clients will need to re-read settings from the discovery configmap (restart required).
+  Existing Kafka StatefulSets must be deleted manually. This will cause some downtime.
+* Kafka is now only accessible from within the Kubernetes cluster by default.
 
 .Breaking changes details
 [%collapsible]
 ====
-* `spec.blah`: Describe a change.
+Migrating Kafka clusters to use the Listener Operator is done by deleting the Kafka StatefulSet after the new Stackable Operator for Kafka has been installed, by running the following:
+
+[source,console]
+....
+kubectl delete --all-namespaces StatefulSet --selector=app.kubernetes.io/managed-by=kafka.stackable.tech_kafkacluster
+....
+
+The operator will then recreate it.
+Please note that the Kafka cluster will be unavailable during the procedure.
+
+After the upgrade, Kafka clusters will default to only being accessible from inside the Kubernetes cluster.
+
+To make the cluster accessible from the outside, set the following _before deleting the StatefulSet_:
+
+* `KafkaCluster.spec.brokers.config.bootstrapListenerClass: external-stable`
+* `KafkaCluster.spec.brokers.config.brokerListenerClass: external-unstable`
+
+Please note that this upgrade will randomize the address that users will have to connect to, so any external clients must re-read it from the discovery configuration after the upgrade has been completed.
+This can be done by restarting the client.
 ====
 
 ==== Listener operator
