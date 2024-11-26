@@ -32,6 +32,20 @@ Here are the headings you can use for the next release. Saves time checking inde
 
 === Breaking changes
 
+Of the changes mentioned above, the following are breaking (or could lead to breaking behaviour), and you will need to adapt your existing CRDs accordingly:
+
+==== Stackable Operator for Example Product
+
+* Description of the change 1
+* Description of the change 2
+
+.Breaking changes details
+[%collapsible]
+====
+* `spec.a`: This field has been removed.
+* `spec.b`: This field has been changed to a number.
+====
+
 === Upgrade from YY.M
 
 ==== Using stackablectl
