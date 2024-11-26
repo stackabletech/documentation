@@ -243,6 +243,18 @@ These OpenShift versions are no longer supported:
 
 Of the changes mentioned above, the following are breaking (or could lead to breaking behaviour), and you will need to adapt your existing CRDs accordingly:
 
+==== Kafka operator
+
+* Existing services will be migrated to the new format. Clients will need to re-read settings from the discovery configmap.
+* Kafka is now only accessible from within the Kubernetes cluster by default. Set listener classes manually to expose it to the outside world (again).
+* To complete an upgrade to this kafka-operator, all existing Kafka StatefulSets must be deleted manually. This will cause some downtime.
+
+.Breaking changes details
+[%collapsible]
+====
+* `spec.blah`: Describe a change.
+====
+
 ==== Listener operator
 
 All ListenerClasses now default to using Fully Qualified Domain Names (FQDNs).
