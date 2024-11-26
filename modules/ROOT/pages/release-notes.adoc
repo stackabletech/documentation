@@ -75,7 +75,7 @@ See the xref:hbase:usage-guide/adls.adoc[usage guide] for detailed information.
 Operations::
 
 The Stackable Operator for HDFS now supports upgrading existing HDFS installations.
-However, this process requires some manual intervention as described in xref:hbase:usage-guide/upgrading.adoc[Upgrading HDFS].
+However, this process requires some manual intervention as described in xref:hdfs:usage-guide/upgrading.adoc[Upgrading HDFS].
 
 Misc::
 
@@ -105,7 +105,7 @@ This includes 11 critical and 55 high-severity CVEs.
 Authorization::
 
 * The performance of the xref:hdfs:usage-guide/security.html#_authorization[OPA Authorizer] has been greatly improved.
-  This _can_ be a breaking change so please make sure to read the hdfs-utils https://github.com/stackabletech/hdfs-utils/releases/tag/v0.4.0[release notes] for details.
+  This <em>can</em> be a breaking change so please make sure to read the hdfs-utils https://github.com/stackabletech/hdfs-utils/releases/tag/v0.4.0[release notes] for details.
 * The User Info Fetcher HTTP API has been replaced with a Rego library. Please see xref:opa:usage-guide/user-info-fetcher#_user_info_fetcher_api[user-info-fetcher API] for more information.
 
 Logging::
@@ -137,7 +137,7 @@ Bug fixes::
   This behavior was triggered by different situations, such as when the operator was restarted.
 * Trino, Spark, HBase, Airflow: These used to have https://github.com/stackabletech/issues/issues/548[issues] where config and environment variable overrides would not always work as expected, this has now been fixed.
 * The cluster domain (default `cluster.local`) which caused problems in non-default cluster setups can now be configured in all operators.
-  Either set the ENV variable `KUBERNETES_CLUSTER_DOMAIN` or the helm value `kubernetesClusterDomain` during installation as described in xref:guides/kubernetes-cluster-domain.adoc[Configuring the Kubernetes cluster domain].
+  Either set the ENV variable `KUBERNETES_CLUSTER_DOMAIN` or the helm value `kubernetesClusterDomain` during installation as described in xref:guides:kubernetes-cluster-domain.adoc[Configuring the Kubernetes cluster domain].
 * Apache Airflow: In release 24.7 Airflow did not propagate git credentials correctly to the gitsync containers.
   This has now been corrected and works for both celery- and kubernetes workers.
 * Operators now do not stop reconciling existing clusters if one of the https://github.com/stackabletech/issues/issues/211[cluster objects cannot be deserialized].
@@ -157,7 +157,7 @@ Once removed, the SDP will no longer set any `enrichment.stackable.tech/` annota
 As with previous SDP releases, many product images have been updated to their latest versions.
 The LTS version has in many cases also been adjusted in line with our xref:ROOT:policies.adoc[support policy].
 
-Refer to the xref:operators/supported_versions.adoc[supported versions] documentation for a complete overview including LTS versions or deprecations.
+Refer to the xref:operators:supported_versions.adoc[supported versions] documentation for a complete overview including LTS versions or deprecations.
 
 ==== New versions
 
