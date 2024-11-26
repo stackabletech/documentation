@@ -38,7 +38,7 @@ Here are the headings you can use for the next release. Saves time checking inde
 
 ==== Using Helm
 
-==== Known upgrade issues
+=== Known issues
 
 ////
 
@@ -361,15 +361,19 @@ helm install --wait trino-operator stackable-stable/trino-operator --version 24.
 helm install --wait zookeeper-operator stackable-stable/zookeeper-operator --version 24.11.0
 ----
 
-==== Known upgrade issues
+=== Known issues
 
-> todo: mention JMX Exporter? Malte: Its mentioned in the Monitoring section and not really an upgrade issue?
-> todo: Malte: This is not really an upgrade issue?
 * The Apache NiFi operator currently cannot share an https://github.com/stackabletech/nifi-operator/issues/716[OIDC AuthenticationClass with other products].
   This is due to an inconsistent implementation in the NiFi operator.
 * Apache NiFi: For the experimental NiFi version `2.0.0`, the `PrometheusReportingTask`, use to activate a Prometheus metrics endpoint, was removed.
   NiFi now has its own API to directly access metrics. In contrast to previous versions, the metrics endpoints now requires authentication which is
   not supported by the Stackable operator for Apache NiFi in this release.
+* https://github.com/stackabletech/issues/issues/675[serviceAccount and roleBinding objects can accidentally get deleted]:
+  During the release, a bug was reported which affects multiple deployments of the same product sharing a namespace.
+  This is actively being worked on and will appear in a patch release.
+* https://github.com/stackabletech/operator-rs/pull/910[fix!: Correctly construct OIDC endpoints]:
+  During the release, it was discovered that some OIDC endpoint URLs were constructed in a way that was not compatible with some tooling.
+  This has been fixed and will appear in a patch release.
 
 == Release 24.7
 
