@@ -104,7 +104,7 @@ This includes 11 critical and 55 high-severity CVEs.
 
 Authorization::
 
-* The performance of the xref:hdfs:usage-guide/security.html#_authorization[OPA Authorizer] has been greatly improved.
+* The performance of the xref:hdfs:usage-guide/security.adoc#_authorization[OPA Authorizer] has been greatly improved.
   This <em>can</em> be a breaking change so please make sure to read the hdfs-utils https://github.com/stackabletech/hdfs-utils/releases/tag/v0.4.0[release notes] for details.
 * The User Info Fetcher HTTP API has been replaced with a Rego library. Please see xref:opa:usage-guide/user-info-fetcher#_user_info_fetcher_api[user-info-fetcher API] for more information.
 
