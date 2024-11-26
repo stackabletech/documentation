@@ -1,6 +1,7 @@
 * xref:quickstart.adoc[]
 * xref:kubernetes/index.adoc[]
 ** xref:kubernetes/aks.adoc[]
+** xref:kubernetes/eks.adoc[]
 ** xref:kubernetes/gke.adoc[]
 ** xref:kubernetes/huawei-cloud.adoc[]
 ** xref:kubernetes/ibm-cloud.adoc[]
