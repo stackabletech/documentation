@@ -273,7 +273,6 @@ kubectl replace -f https://raw.githubusercontent.com/stackabletech/commons-opera
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/druid-operator/24.11.0/deploy/helm/druid-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/hbase-operator/24.11.0/deploy/helm/hbase-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/hdfs-operator/24.11.0/deploy/helm/hdfs-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/hello-world-operator/24.11.0/deploy/helm/hello-world-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/hive-operator/24.11.0/deploy/helm/hive-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/kafka-operator/24.11.0/deploy/helm/kafka-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/listener-operator/24.11.0/deploy/helm/listener-operator/crds/crds.yaml
@@ -314,7 +313,7 @@ You can use the following command to uninstall all operators that are part of th
 
 [source,console]
 ----
-$ helm uninstall airflow-operator commons-operator druid-operator hbase-operator hdfs-operator hello-world-operator hive-operator kafka-operator listener-operator nifi-operator opa-operator secret-operator spark-k8s-operator superset-operator trino-operator zookeeper-operator
+$ helm uninstall airflow-operator commons-operator druid-operator hbase-operator hdfs-operator hive-operator kafka-operator listener-operator nifi-operator opa-operator secret-operator spark-k8s-operator superset-operator trino-operator zookeeper-operator
 release "airflow-operator" uninstalled
 release "commons-operator" uninstalled
 ...
@@ -330,7 +329,6 @@ kubectl replace -f https://raw.githubusercontent.com/stackabletech/commons-opera
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/druid-operator/24.11.0/deploy/helm/druid-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/hbase-operator/24.11.0/deploy/helm/hbase-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/hdfs-operator/24.11.0/deploy/helm/hdfs-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/hello-world-operator/24.11.0/deploy/helm/hello-world-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/hive-operator/24.11.0/deploy/helm/hive-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/kafka-operator/24.11.0/deploy/helm/kafka-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/listener-operator/24.11.0/deploy/helm/listener-operator/crds/crds.yaml
@@ -366,7 +364,6 @@ helm install --wait hdfs-operator stackable-stable/hdfs-operator --version 24.11
 helm install --wait hive-operator stackable-stable/hive-operator --version 24.11.0
 helm install --wait kafka-operator stackable-stable/kafka-operator --version 24.11.0
 helm install --wait listener-operator stackable-stable/listener-operator --version 24.11.0
-helm install --wait hello-world-operator stackable-stable/hello-world-operator --version 24.11.0
 helm install --wait nifi-operator stackable-stable/nifi-operator --version 24.11.0
 helm install --wait opa-operator stackable-stable/opa-operator --version 24.11.0
 helm install --wait secret-operator stackable-stable/secret-operator --version 24.11.0
