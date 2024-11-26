@@ -59,7 +59,7 @@ Security::
 * The Stackable Data Platform now supports provisioning TLS certificates using https://cert-manager.io/[cert-manager].
 * Added support for customizing `sAMAccountName` generation in secret operator.
 * The Stackable Secret Operator now requests permission to read Listeners, which is required to provision secrets for listener volumes with the `listeners.stackable.tech/listener-name` annotation.
-* The RSA key length for generated key pairs now can be customized to 2048, 3072 and 4096 bits. The default is 2048 bit.
+* The RSA key length for generated key pairs can now be customized to 2048, 3072 or 4096 bits. The default is 2048 bits.
 
 Listener::
 
@@ -110,9 +110,9 @@ Authorization::
 
 Logging::
 
-Apache NiFi: The ephemeral EmptyDir Volumes used to store log files before being aggregated have their size increased from a default of 33 MiB to 500 MiB.
-Additionally the interval in which Logback checks if the maximum log file size has been reached was lowered from 60 seconds to 5 seconds.
-Apache NiFi: Support disabling the create-reporting-task Job as well as podOverrides on that Job.
+Apache NiFi: The default size of ephemeral EmptyDir Volumes used to store log files before aggregation has been increased from 33 MiB to 500 MiB.
+Additionally the interval in which Logback checks if the maximum log file size has been reached has been reduced from 60 seconds to 5 seconds.
+Apache NiFi: the create-reporting-task Job (and podOverrides on that Job) can now be disabled.
 
 Monitoring::
 
@@ -135,7 +135,7 @@ Bug fixes::
 * Apache Spark Operator: Ensure Spark applications are submitted only once.
   Reconciling applications after the corresponding Job objects have been recycled doesn't lead to the creation of new Job objects.
   This behavior was triggered by different situations, such as when the operator was restarted.
-* Trino, Spark, HBase, Airflow: These used to have https://github.com/stackabletech/issues/issues/548[issues] where config and environment variable overrides would not always work as expected, this has now been fixed.
+* Trino, Spark, HBase, Airflow: The https://github.com/stackabletech/issues/issues/548[issues] where config and environment variable overrides did not work consistently have now been fixed.
 * The cluster domain (default `cluster.local`) which caused problems in non-default cluster setups can now be configured in all operators.
   Either set the ENV variable `KUBERNETES_CLUSTER_DOMAIN` or the helm value `kubernetesClusterDomain` during installation as described in xref:guides:kubernetes-cluster-domain.adoc[Configuring the Kubernetes cluster domain].
 * Apache Airflow: In release 24.7 Airflow did not propagate git credentials correctly to the gitsync containers.
@@ -197,7 +197,7 @@ The following product versions are no longer supported (although images for rele
 === stackablectl
 
 * Bump Rust dependencies to fix critical vulnerability in quinn-proto, see https://github.com/advisories/GHSA-vr26-jcq5-fjj8[CVE-2024-45311] (https://github.com/stackabletech/stackable-cockpit/pull/318).
-* We now provide additional completions for Nushell and Elvish, support using SOCK5 and HTTP proxies, and improved the sorting of release versions.
+* We now provide additional completions for Nushell and Elvish, support using SOCK5 and HTTP proxies, and have improved the sorting of release versions.
 
 === Supported Kubernetes versions
 
@@ -366,9 +366,9 @@ helm install --wait zookeeper-operator stackable-stable/zookeeper-operator --ver
 
 * The Apache NiFi operator currently cannot share an https://github.com/stackabletech/nifi-operator/issues/716[OIDC AuthenticationClass with other products].
   This is due to an inconsistent implementation in the NiFi operator.
-* Apache NiFi: For the experimental NiFi version `2.0.0`, the `PrometheusReportingTask`, use to activate a Prometheus metrics endpoint, was removed.
-  NiFi now has its own API to directly access metrics. In contrast to previous versions, the metrics endpoints now requires authentication which is
-  not supported by the Stackable operator for Apache NiFi in this release.
+* Apache NiFi: For the experimental NiFi version `2.0.0`, the `PrometheusReportingTask` (which was used to activate a Prometheus metrics endpoint) has been removed.
+  NiFi now has its own API to directly access metrics. In contrast to previous versions, the metrics endpoints now requires authentication.
+  This is not supported by the Stackable operator for Apache NiFi in this release.
 * https://github.com/stackabletech/issues/issues/675[serviceAccount and roleBinding objects can accidentally get deleted]:
   During the release, a bug was reported which affects multiple deployments of the same product sharing a namespace.
   This is actively being worked on and will appear in a patch release.
