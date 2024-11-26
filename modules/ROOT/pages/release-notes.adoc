@@ -241,10 +241,20 @@ These OpenShift versions are no longer supported:
 
 === Breaking changes
 
+Of the changes mentioned above, the following are breaking (or could lead to breaking behaviour), and you will need to adapt your existing CRDs accordingly:
+
 ==== Listener operator
 
-BREAKING: All ListenerClasses now default to using DNS hostnames, previously NodePort ListenerClasses (such as external-unstable) would use IP addresses.
-Hence, all Nodes must now have resolvable hostnames, or the NodePort ListenerClasses must be configured to set `.spec.preferredAddressType: IP`.
+All ListenerClasses now default to using Fully Qualified Domain Names (FQDNs). 
+Previously, NodePort ListenerClasses (such as external-unstable) would use the IP addresses.
+
+All Nodes must now have resolvable hostnames, or the NodePort ListenerClasses must be configured with `spec.preferredAddressType: IP`.
+
+.Breaking changes details
+[%collapsible]
+====
+* `spec.preferredAddressType`: Defaults to `HostnameConservative`, but can be set to `Hostname` or `IP`.
+====
 
 === Upgrade from 24.7
 
