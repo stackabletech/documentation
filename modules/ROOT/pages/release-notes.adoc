@@ -136,7 +136,8 @@ Bug fixes::
   Reconciling applications after the corresponding Job objects have been recycled doesn't lead to the creation of new Job objects.
   This behavior was triggered by different situations, such as when the operator was restarted.
 * Trino, Spark, HBase, Airflow: These used to have https://github.com/stackabletech/issues/issues/548[issues] where config and environment variable overrides would not always work as expected, this has now been fixed.
-* The cluster domain (default `cluster.local`) which caused problems in non-default cluster setups can now be configured in all operators using the ENV variable `KUBERNETES_CLUSTER_DOMAIN` or setting the helm value `kubernetesClusterDomain` during installation as described in https://docs.stackable.tech/home/nightly/guides/kubernetes-cluster-domain[Configuring the Kubernetes cluster domain].
+* The cluster domain (default `cluster.local`) which caused problems in non-default cluster setups can now be configured in all operators.
+  Either set the ENV variable `KUBERNETES_CLUSTER_DOMAIN` or the helm value `kubernetesClusterDomain` during installation as described in https://docs.stackable.tech/home/nightly/guides/kubernetes-cluster-domain[Configuring the Kubernetes cluster domain].
 * Apache Airflow: In release 24.7 Airflow did not propagate git credentials correctly to the gitsync containers.
   This has now been corrected and works for both celery- and kubernetes workers.
 * Operators now do not stop reconciling existing clusters if one of the https://github.com/stackabletech/issues/issues/211[cluster objects cannot be deserialized].
