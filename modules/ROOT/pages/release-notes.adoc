@@ -110,9 +110,9 @@ Authorization::
 
 Logging::
 
-Apache NiFi: The default size of ephemeral EmptyDir Volumes used to store log files before aggregation has been increased from 33 MiB to 500 MiB.
-Additionally the interval in which Logback checks if the maximum log file size has been reached has been reduced from 60 seconds to 5 seconds.
-Apache NiFi: the create-reporting-task Job (and podOverrides on that Job) can now be disabled.
+* Apache NiFi: The default size of ephemeral EmptyDir Volumes used to store log files before aggregation has been increased from 33 MiB to 500 MiB.
+  Additionally the interval in which Logback checks if the maximum log file size has been reached has been reduced from 60 seconds to 5 seconds.
+* Apache NiFi: the create-reporting-task Job (and podOverrides on that Job) can now be disabled.
 
 Monitoring::
 
