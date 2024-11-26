@@ -245,7 +245,7 @@ Of the changes mentioned above, the following are breaking (or could lead to bre
 
 ==== Listener operator
 
-All ListenerClasses now default to using Fully Qualified Domain Names (FQDNs). 
+All ListenerClasses now default to using Fully Qualified Domain Names (FQDNs).
 Previously, NodePort ListenerClasses (such as external-unstable) would use the IP addresses.
 
 All Nodes must now have resolvable hostnames, or the NodePort ListenerClasses must be configured with `spec.preferredAddressType: IP`.
@@ -387,9 +387,12 @@ helm install --wait zookeeper-operator stackable-stable/zookeeper-operator --ver
 
 * The Apache NiFi operator currently cannot share an https://github.com/stackabletech/nifi-operator/issues/716[OIDC AuthenticationClass with other products].
   This is due to an inconsistent implementation in the NiFi operator.
-* Apache NiFi: For the experimental NiFi version `2.0.0`, the `PrometheusReportingTask` (which was used to activate a Prometheus metrics endpoint) has been removed.
+* Apache NiFi: In the experimental NiFi version `2.0.0`, the `PrometheusReportingTask` (which was used to activate a Prometheus metrics endpoint) has been removed.
   NiFi now has its own API to directly access metrics. In contrast to previous versions, the metrics endpoints now requires authentication.
   This is not supported by the Stackable operator for Apache NiFi in this release.
+* Apache NiFi: In the experimental NiFi version `2.0.0`, some processors have been renamed or have a different class path since NiFi 1.x.x.
+  Flows affected by these changes will need manually updating.
+  See https://cwiki.apache.org/confluence/display/NIFI/Release+Notes#ReleaseNotes-Version2.0.0[NiFi 2.0.0 Release Notes] for further details.
 * https://github.com/stackabletech/issues/issues/675[serviceAccount and roleBinding objects can accidentally get deleted]:
   During the release, a bug was reported which affects multiple deployments of the same product sharing a namespace.
   This is actively being worked on and will appear in a patch release.
