@@ -422,7 +422,6 @@ The status is still xref:concepts:multi-platform-support.adoc[experimental], as 
 Security::
 
 Support for OIDC with/without TLS has been added to Apache Druid in this release.
-* Apache Druid: 26.0.0
 NOTE: SDP now provides OIDC-support for Druid, Superset and Trino
 
 In this release we provide experimental HBase 2.6.0 support with a new experimental policy based authorizer (with OPA).
