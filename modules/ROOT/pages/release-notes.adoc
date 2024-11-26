@@ -57,7 +57,7 @@ In this release we introduced several authentication mechanisms in different pro
 Security::
 
 * The Stackable Data Platform now supports provisioning TLS certificates using https://cert-manager.io/[cert-manager].
-* Added support for customizing `sAMAccountName` generation in secret operator.
+* Support has been added for customizing `sAMAccountName` generation in secret operator.
 * The Stackable Secret Operator now requests permission to read Listeners, which is required to provision secrets for listener volumes with the `listeners.stackable.tech/listener-name` annotation.
 * The RSA key length for generated key pairs can now be customized to 2048, 3072 or 4096 bits. The default is 2048 bits.
 
