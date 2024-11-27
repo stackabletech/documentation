@@ -1,0 +1,17 @@
+= Amazon Elastic Kubernetes Service (EKS)
+
+Please make sure that you have a default StorageClass in your cluster, so that PVCs will be provisioned.
+
+You can list available StorageClasses using the command
+
+```bash
+➜  ~ kubectl get storageclasses
+NAME                       PROVISIONER                RECLAIMPOLICY   VOLUMEBINDINGMODE      ALLOWVOLUMEEXPANSION   AGE
+gp2 (default)              kubernetes.io/aws-ebs      Delete          WaitForFirstConsumer   false                  9h
+```
+
+In case you don't have a StorageClass marked as `default`, you can change a StorageClass to the default using the following command (make sure to update it to your StorageClass name):
+
+```bash
+➜  ~ kubectl patch storageclass gp2 -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+```
