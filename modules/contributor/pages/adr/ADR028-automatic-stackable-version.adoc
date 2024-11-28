@@ -14,6 +14,8 @@ Technical Story: https://github.com/stackabletech/issues/issues/404
 
 Note: This ADR expands on parts of xref:adr/ADR023-product-image-selection.adoc[]
 
+Note: The current state of image versioning is documented in xref:concepts:product-image-selection.adoc[this concept guide].
+
 == Context and Problem Statement
 
 // Describe the context and problem statement, e.g., in free form using two to three sentences. You may want to articulate the problem in form of a question.

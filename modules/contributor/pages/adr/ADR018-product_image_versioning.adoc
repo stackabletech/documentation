@@ -14,6 +14,13 @@ v0.1, 04.05.2022
 ** Natalie Klestrup-Röjiezon
 * Date: 04.05.2022
 
+[IMPORTANT]
+====
+Please note that this ADR was overruled in the meantime.
+We decided to release operators and product images in lockstep, with the primary reason being the maintenance and distribution of compatibility matrices is complex both for us and customers.
+The current state of image versioning is documented in xref:concepts:product-image-selection.adoc[this concept guide].
+====
+
 == Glossary
 
 [cols="20%,80%"]
