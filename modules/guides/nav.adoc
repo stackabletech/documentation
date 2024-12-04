@@ -5,3 +5,4 @@
 ** xref:viewing-and-verifying-sboms.adoc[]
 ** xref:enabling-verification-of-image-signatures.adoc[]
 ** xref:kubernetes-cluster-domain.adoc[]
+** xref:secret-lifetime.adoc[]
