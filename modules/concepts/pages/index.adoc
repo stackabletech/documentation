@@ -30,7 +30,7 @@ It also includes xref:tls-server-verification.adoc[].
 == Operations
 
 The xref:operations/index.adoc[operations] section is directed at platform maintainers.
-It covers xref:operations/cluster_operations.adoc[starting, stopping and restarts] of products, xref:operations/graceful_shutdown.adoc[] and other topics related to maintenance and ensuring stability of the platform operation.
+It covers xref:operations/cluster_operations.adoc[starting, stopping and restarts] of products, xref:operations/graceful_shutdown.adoc[] and other topics related to maintenance and ensuring stability and availability of the platform operation.
 
 == Observability
 
