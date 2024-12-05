@@ -27,7 +27,7 @@ Make sure to go through the following checklist to achieve the maximum level of 
    Although we try our best to reduce the impact of disruptions, some tools simply don't support HA setups.
    One example is the Trino coordinator - if you restart it, all running queries will fail.
    Many products use temporary credentials (such as TLS certificates), which have a short lifetime by default for maximum security.
-   Please read on xref:operations/temporary_credentials_lifetime.adoc[] on how you can increase the lifetime of this temporary credentials too avoid frequent restarts.
+   The xref:operations/temporary_credentials_lifetime.adoc[] page describes how you can increase the lifetime of this temporary credentials too avoid frequent restarts.
 
 == Maintenance actions
 
