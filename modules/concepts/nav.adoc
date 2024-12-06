@@ -20,6 +20,7 @@
 *** xref:operations/pod_disruptions.adoc[]
 *** xref:operations/pod_placement.adoc[]
 *** xref:operations/graceful_shutdown.adoc[]
+*** xref:operations/temporary_credentials_lifetime.adoc[]
 ** Observability
 *** xref:labels.adoc[]
 *** xref:logging.adoc[]
