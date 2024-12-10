@@ -123,4 +123,4 @@ You can add more labels to make finer grained restarts.
 == Automatic restarts
 
 The Commons Operator of the Stackable Platform may restart Pods automatically, for purposes such as ensuring that TLS certificates are up-to-date.
-For details, see the xref:commons-operator:index.adoc[Commons Operator documentation].
+For details, see xref:operations/temporary_credentials_lifetime.adoc[] as well as the xref:commons-operator:index.adoc[Commons Operator documentation].

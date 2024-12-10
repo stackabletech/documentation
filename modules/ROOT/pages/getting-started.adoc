@@ -32,11 +32,11 @@ Install the Stackable command line utility xref:management:stackablectl:index.ad
 
 The Stackable operators are components that translate the service definitions deployed via Kubernetes into deploy services on the worker nodes. These can be installed on any node that has access to the Kubernetes control plane. In this example we will install them on the controller node.
 
-Stackable operators can be installed using `stackablectl`. Run the following commands to install ZooKeeper, Kafka and NiFi from the Stackable 24.7 release.
+Stackable operators can be installed using `stackablectl`. Run the following commands to install ZooKeeper, Kafka and NiFi from the Stackable 24.11 release.
 
 [source,bash]
 ----
-stackablectl release install -i commons -i secret -i listener -i zookeeper -i kafka -i nifi 24.7
+stackablectl release install -i commons -i secret -i listener -i zookeeper -i kafka -i nifi 24.11
 ----
 
 .Using Helm instead
@@ -55,12 +55,12 @@ Install the operators:
 
 [source,bash]
 ----
-helm install zookeeper-operator stackable-stable/zookeeper-operator --version=24.7.0
-helm install kafka-operator stackable-stable/kafka-operator --version=24.7.0
-helm install secret-operator stackable-stable/secret-operator --version=24.7.0
-helm install listener-operator stackable-stable/listener-operator --version=24.7.0
-helm install commons-operator stackable-stable/commons-operator --version=24.7.0
-helm install nifi-operator stackable-stable/nifi-operator --version=24.7.0
+helm install zookeeper-operator stackable-stable/zookeeper-operator --version=24.11.0
+helm install kafka-operator stackable-stable/kafka-operator --version=24.11.0
+helm install secret-operator stackable-stable/secret-operator --version=24.11.0
+helm install listener-operator stackable-stable/listener-operator --version=24.11.0
+helm install commons-operator stackable-stable/commons-operator --version=24.11.0
+helm install nifi-operator stackable-stable/nifi-operator --version=24.11.0
 ----
 ====
 
@@ -69,12 +69,12 @@ You can check which operators are installed using `stackablectl operator install
 [source,console]
 ----
 OPERATOR              VERSION         NAMESPACE                      STATUS           LAST UPDATED
-commons               24.7.0         default                        deployed         2024-03-30 17:58:32.916032854 +0100 CET
-kafka                 24.7.0         default                        deployed         2024-03-30 17:58:55.036115353 +0100 CET
-listener              24.7.0         default                        deployed         2024-03-30 17:59:18.136775259 +0100 CET
-nifi                  24.7.0         default                        deployed         2024-03-30 17:59:51.927081648 +0100 CET
-secret                24.7.0         default                        deployed         2024-03-30 18:00:05.060241771 +0100 CET
-zookeeper             24.7.0         default                        deployed         2024-03-30 18:00:08.425686918 +0100 CET
+commons               24.11.0         default                        deployed         2024-11-30 17:58:32.916032854 +0100 CET
+kafka                 24.11.0         default                        deployed         2024-11-30 17:58:55.036115353 +0100 CET
+listener              24.11.0         default                        deployed         2024-11-30 17:59:18.136775259 +0100 CET
+nifi                  24.11.0         default                        deployed         2024-11-30 17:59:51.927081648 +0100 CET
+secret                24.11.0         default                        deployed         2024-11-30 18:00:05.060241771 +0100 CET
+zookeeper             24.11.0         default                        deployed         2024-11-30 18:00:08.425686918 +0100 CET
 ----
 
 == Deploying Stackable Services
@@ -130,7 +130,7 @@ metadata:
   name: simple-kafka
 spec:
   image:
-    productVersion: 3.7.1
+    productVersion: 3.8.0
   clusterConfig:
     zookeeperConfigMapName: simple-kafka-znode
     tls:
@@ -279,13 +279,11 @@ Apache NiFi provides a web interface and the easiest way to test it is to view t
 To access the web interface we first need to get the ip address and port Nifi is listening on.
 To get the IP address we need to connect to (in this case `172.18.0.2`), run:
 
-[source,bash]
+[source,console]
 ----
-kubectl get nodes -o wide
-----
-----
-NAME                       STATUS   ROLES           AGE     VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION    CONTAINER-RUNTIME
-quickstart-control-plane   Ready    control-plane   9m59s   v1.25.3   172.18.0.2    <none>        Ubuntu 22.04.1 LTS   5.14.0-1052-oem   containerd://1.6.9
+$ kubectl get nodes -o wide
+NAME                       STATUS   ROLES           AGE     VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE                         KERNEL-VERSION   CONTAINER-RUNTIME
+quickstart-control-plane   Ready    control-plane   4d18h   v1.30.0   172.18.0.2    <none>        Debian GNU/Linux 12 (bookworm)   6.11.3           containerd://1.7.15
 ----
 
 
