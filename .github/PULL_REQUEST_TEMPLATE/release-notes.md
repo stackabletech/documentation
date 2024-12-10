@@ -1,7 +1,7 @@
 ---
 name: Release Notes
 about: This template can be used to track the progress of the SDP Release Notes compilation
-title: "chore(tracking): Release Notes for SDP XX.(X)X"
+title: "chore(tracking): Release Notes for SDP YY.(M)M.X"
 assignees: ''
 ---
 
@@ -28,9 +28,9 @@ assignees: ''
 - [ ] Upgrade guide: Document how to use stackablectl to uninstall all and install new release
 - [ ] Upgrade guide: Document how to use helm to uninstall all and install new release
 - [ ] Upgrade guide: Every breaking change of all our operators
-- [ ] Upgrade guide: List dropped supported product versions (if there are some)
-- [ ] Upgrade guide: List dropped supported operators (if there are some)
-- [ ] Upgrade guide: List supported k8s versions
+- [ ] Upgrade guide: List removed product versions (if there are any)
+- [ ] Upgrade guide: List removed operators (if there are any)
+- [ ] Upgrade guide: List supported Kubernetes versions
 ```
 
 Once the above items are complete, the following checks need to be done
