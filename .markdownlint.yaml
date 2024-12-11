@@ -21,3 +21,6 @@ MD024:
 
 # MD032/blanks-around-lists
 MD032: false
+
+# MD028/no-blanks-blockquote
+MD028: false

@@ -1,20 +1,13 @@
----
-name: Release Notes
-about: This template can be used to track the progress of the SDP Release Notes compilation
-title: "chore(tracking): Release Notes for SDP YY.M.X"
-assignees: ''
----
-
 <!--
     DO NOT REMOVE THIS COMMENT. It is intended for people who might copy/paste from the previous release issue.
-    This was created by an issue template: https://github.com/stackabletech/issues/issues/new/choose.
+    This was created by an PR template: https://github.com/stackabletech/documentation/tree/main/.github/PULL_REQUEST_TEMPLATE/release-notes.md.
 -->
+
+<!-- Release placeholders YY.M.X should be replaced. -->
+# Release Notes for SDP YY.M.X
 
 > [!CAUTION]
 > Please assign the applicable `scheduled-for/YY.M.X` label.
-
-<!-- Release placeholders YY.M.X should be replaced. -->
-## Release Notes for SDP YY.M.X
 
 > [!TIP]
 > - Use the commented out template headings in [release-notes][template].
