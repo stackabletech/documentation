@@ -37,8 +37,7 @@ assignees: ''
 - [ ] Upgrade guide: List supported Kubernetes versions
 ```
 
-Once the above items are complete, the following checks need to be done
-Each task focuses on a specific element
+Each of the following tasks focuses on a specific goal and should be done once the items above have been completed.
 
 ```[tasklist]
 #### Release note review tasks
