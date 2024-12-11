@@ -1,7 +1,7 @@
 ---
 name: Release Notes
 about: This template can be used to track the progress of the SDP Release Notes compilation
-title: "chore(tracking): Release Notes for SDP YY.(M)M.X"
+title: "chore(tracking): Release Notes for SDP YY.M.X"
 assignees: ''
 ---
 
@@ -10,7 +10,11 @@ assignees: ''
     This was created by an issue template: https://github.com/stackabletech/issues/issues/new/choose.
 -->
 
-## Release Notes for SDP XX.(X)X
+> [!CAUTION]
+> Please assign the applicable `scheduled-for/YY.M.X` label.
+
+<!-- Release placeholders YY.M.X should be replaced. -->
+## Release Notes for SDP YY.M.X
 
 > [!TIP]
 > - Use the commented out template headings in [release-notes][template].
@@ -21,8 +25,8 @@ assignees: ''
 
 ```[tasklist]
 #### Release note compilation tasks
-- [ ] Check [Issues](https://github.com/search?q=org%3Astackabletech+label%3Arelease-note%2Crelease-note%2Faction-required+label%3Arelease%2FYYYY-MM%2Cscheduled-for%2FYYYY-MM&type=issues&ref=advsearch) for Product and Platform release notes
-- [ ] Check [PRs](https://github.com/search?q=org%3Astackabletech+label%3Arelease-note%2Crelease-note%2Faction-required+label%3Arelease%2FYYYY-MM%2Cscheduled-for%2FYYYY-MM&type=pullrequests&ref=advsearch) for Product and Platform release notes
+- [ ] Check [Issues](https://github.com/search?q=org%3Astackabletech+label%3Arelease-note%2Crelease-note%2Faction-required+label%3Arelease%YY.M.X%2Cscheduled-for%YY.M.X&type=issues&ref=advsearch) for Product and Platform release notes
+- [ ] Check [PRs](https://github.com/search?q=org%3Astackabletech+label%3Arelease-note%2Crelease-note%2Faction-required+label%3Arelease%YY.M.X%2Cscheduled-for%YY.M.X&type=pullrequests&ref=advsearch) for Product and Platform release notes
 - [ ] Optionally check the [Changelogs](https://github.com/search?q=org%3Astackabletech+path%3A*CHANGELOG.md+%22YY.MM.X%22&type=code&ref=advsearch) in case release notes were missed
 - [ ] Compile list of new product versions that are supported and compile a list of new product features to include in the Release Highlights
 - [ ] Upgrade guide: Document how to use stackablectl to uninstall all and install new release
