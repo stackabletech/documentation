@@ -20,7 +20,7 @@ Follow any of these guides to get started with a specific product.
 * xref:hive:getting_started/index.adoc[Stackable Operator for Apache Hive]
 * xref:kafka:getting_started/index.adoc[Stackable Operator for Apache Kafka]
 * xref:nifi:getting_started/index.adoc[Stackable Operator for Apache NiFi]
-* xref:opa:getting_started/index.adoc[Stackable Operator for Apache OpenPolicyAgent]
+* xref:opa:getting_started/index.adoc[Stackable Operator for OpenPolicyAgent]
 * xref:spark-k8s:getting_started/index.adoc[Stackable Operator for Apache Spark]
 * xref:superset:getting_started/index.adoc[Stackable Operator for Apache Superset]
 * xref:trino:getting_started/index.adoc[Stackable Operator for Trino]
