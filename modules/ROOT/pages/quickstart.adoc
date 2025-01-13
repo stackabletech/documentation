@@ -1,5 +1,5 @@
 = Quickstart
-:latest-release: https://github.com/stackabletech/stackable-cockpit/releases/tag/stackablectl-1.0.0-rc2
+:latest-release: https://github.com/stackabletech/stackable-cockpit/releases/tag/stackablectl-24.11.1
 :cockpit-releases: https://github.com/stackabletech/stackable-cockpit/releases
 :description: Quickstart guide for Stackable: Install stackablectl, set up a demo, and connect to services like Superset and Trino with easy commands and links.
 
@@ -17,9 +17,9 @@ rename the file to `stackablectl`. You can also use the following command:
 
 [source,console]
 ----
-wget -O stackablectl https://github.com/stackabletech/stackable-cockpit/releases/download/stackablectl-1.0.0-rc2/stackablectl-x86_64-unknown-linux-gnu
+wget -O stackablectl https://github.com/stackabletech/stackable-cockpit/releases/download/stackablectl-24.11.1/stackablectl-x86_64-unknown-linux-gnu
 # or
-curl -L -o stackablectl https://github.com/stackabletech/stackable-cockpit/releases/download/stackablectl-1.0.0-rc2/stackablectl-x86_64-unknown-linux-gnu
+curl -L -o stackablectl https://github.com/stackabletech/stackable-cockpit/releases/download/stackablectl-24.11.1/stackablectl-x86_64-unknown-linux-gnu
 ----
 
 Mark the binary as executable:

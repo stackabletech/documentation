@@ -2,7 +2,7 @@
   "devDependencies": {
     "@antora/cli": "^3.1.7",
     "@antora/site-generator": "^3.1.7",
-    "pagefind": "^1.1.0"
+    "pagefind": "^1.1.1"
   },
   "dependencies": {
     "@antora/lunr-extension": "^1.0.0-alpha.8",

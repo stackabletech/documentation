@@ -2,6 +2,10 @@ name: Build site
 
 on:
   pull_request:
+    paths-ignore:
+      - .github/PULL_REQUEST_TEMPLATES/**
+      - .github/ISSUE_TEMPLATES/**
+      - scripts/**
 
 jobs:
 

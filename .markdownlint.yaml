@@ -18,3 +18,9 @@ MD013:
 MD024:
   # Only check sibling headings
   siblings_only: true
+
+# MD032/blanks-around-lists
+MD032: false
+
+# MD028/no-blanks-blockquote
+MD028: false
