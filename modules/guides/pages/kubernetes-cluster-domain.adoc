@@ -1,5 +1,5 @@
 = Configuring the Kubernetes cluster domain
-:description: Configure Stackable operators to use a different cluster domain other than 'cluster.local'.
+:description: Configure Stackable operators to use a different cluster domain other than 'cluster.local.'.
 :dns-custom-nameservers: https://kubernetes.io/docs/tasks/administer-cluster/dns-custom-nameservers/
 :dns-pod-service: https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/
 
@@ -9,7 +9,9 @@ The cluster domain can be configured using an environment variable `KUBERNETES_C
 This environment variable can be configured via the helm values property `kubernetesClusterDomain` during the installation of the operators.
 
 ```
-helm install <product>-operator stackable-stable/<product>-operator --set kubernetesClusterDomain="my-cluster.local"
+helm install <product>-operator stackable-stable/<product>-operator --set kubernetesClusterDomain="my.domain."
 ```
 
-If the environment variable `KUBERNETES_CLUSTER_DOMAIN` (or the helm property `kubernetesClusterDomain`) are not set / overriden, the operator will default the cluster domain to `cluster.local`.
+Note that if you specify a custom cluster domain we recommend adding a trailing dot (`my.domain.` instead of `my.domain`) to reduce DNS requests (see https://github.com/stackabletech/issues/issues/656 for details).
+
+If the environment variable `KUBERNETES_CLUSTER_DOMAIN` (or the helm property `kubernetesClusterDomain`) are not set / overriden, the operator will default the cluster domain to `cluster.local.`.
