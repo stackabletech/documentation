@@ -163,7 +163,8 @@ As some JVM arguments are mutually exclusive (think of `-Xmx123m` and `-Xmx456m`
 The merging mechanism is applied <operator generated> <- <role user specified> <- <rolegroup user specified> and works as follows:
 
 1. All arguments listed in user specified `remove` are removed from operator generated
-2. All arguments matching any regex from user `removeRegex` are removed from operator generated
+2. All arguments matching any regex from user removeRegex are removed from operator generated.
+   The regex needs to match the entire argument, not only a substring
 3. All arguments from user specified `add` are added to operator
 
 You can check the resulting effective JVM arguments by looking at the ConfigMap containing the config for the roleGroup (although some tools read the JVM arguments from environmental variables).
