@@ -14,7 +14,7 @@ Here are the headings you can use for the next release. Saves time checking inde
 
 Operations::
 
-Users can now configure the lifetime of self signed certificates directly in the product's custom resources which influences the frequency of pod restarts.
+Users can now configure the lifetime of self-signed certificates directly in the product's custom resources which influences the frequency of pod restarts.
 Details can be found at xref:operations/temporary_credentials lifetime.adoc[]
 
 === Platform improvements
