@@ -63,7 +63,7 @@ Of the changes mentioned above, the following are breaking (or could lead to bre
 Operations::
 
 Users can now configure the lifetime of self-signed certificates directly in the product's custom resources which influences the frequency of pod restarts.
-Details can be found at xref:operations/temporary_credentials lifetime.adoc[]
+Details can be found at xref:concepts:operations/temporary_credentials_lifetime.adoc[]
 
 === Platform improvements
 
