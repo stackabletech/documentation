@@ -12,6 +12,54 @@ Here are the headings you can use for the next release. Saves time checking inde
 
 === New platform features
 
+=== Platform improvements
+
+=== Platform deprecations
+
+=== Product versions
+
+==== New versions
+
+==== Deprecated versions
+
+==== Removed versions
+
+=== stackablectl
+
+=== Supported Kubernetes versions
+
+=== Supported OpenShift versions
+
+=== Breaking changes
+
+Of the changes mentioned above, the following are breaking (or could lead to breaking behaviour), and you will need to adapt your existing CRDs accordingly:
+
+==== Stackable Operator for Example Product
+
+* Description of the change 1
+* Description of the change 2
+
+.Breaking changes details
+[%collapsible]
+====
+* `spec.a`: This field has been removed.
+* `spec.b`: This field has been changed to a number.
+====
+
+=== Upgrade from YY.M
+
+==== Using stackablectl
+
+==== Using Helm
+
+=== Known issues
+
+////
+
+== Release 25.3
+
+=== New platform features
+
 Operations::
 
 Users can now configure the lifetime of self-signed certificates directly in the product's custom resources which influences the frequency of pod restarts.
@@ -59,7 +107,6 @@ Of the changes mentioned above, the following are breaking (or could lead to bre
 
 === Known issues
 
-////
 
 == Release 24.11
 
