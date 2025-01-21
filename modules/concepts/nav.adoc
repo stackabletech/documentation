@@ -24,4 +24,5 @@
 ** Observability
 *** xref:labels.adoc[]
 *** xref:logging.adoc[]
+*** xref:containerdebug.adoc[]
 ** xref:container-images.adoc[]

@@ -1,0 +1,23 @@
+= Container environment
+
+All Stackable-managed products regularly log information about their operating
+environment, such as available disk interfaces and network interfaces.
+
+This logging is performed by our https://github.com/stackabletech/containerdebug[containerdebug] tool.
+
+NOTE: This tool is intended as a debugging aid, and the particular information or
+format should not be considered stable.
+
+== Interval
+
+This runs every minute. It can also be triggered manually, by running the
+`containerdebug` command, inside of the main product container.
+
+== Output
+
+This information is logged to the Kubernetes pod logs (readable via `kubectl logs <pod>`)
+and to the xref:logging.adoc#architecture[shared Stackable log dir]
+(for pickup by the Vector log agent).
+
+Additionally, it is written as JSON to `/stackable/log/containerdebug-state.json`.
+This file only contains the output from the _latest_ containerdebug run.

@@ -30,6 +30,7 @@ This way you can get a detailed view of the operations of a component while view
 Logging for each product is configured in the Stacklet resource.
 For advanced log configurations, supplying custom product specific log configuration files is also supported.
 
+[#architecture]
 == Architecture
 
 Below you can see the overall architecture using ZooKeeper as an example.
