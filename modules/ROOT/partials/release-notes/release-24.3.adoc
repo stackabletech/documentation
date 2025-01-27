@@ -1,0 +1,485 @@
+== Release 24.3
+
+=== 24.3.0
+
+Released on 2024-03-27.
+
+==== New / extended platform features
+
+Support for many new product versions::
+Almost all product images have been updated to their latest versions.
+Some notable examples are Apache Airflow 2.8.1, Trino 442 and Apache Spark 3.5.1.
+In addition, we started building some product binaries from source instead of packaging them from the official releases.
+This enables greater control over the features and the security aspects of the products.
+Currently, Apache Hadoop and Apache HBase are built from source and others will follow in coming releases.
+
+Security::
+We put a special emphasis on security in this release.
+For this purpose we addressed the following topics:
+* Authorization
+* Authentication with Kerberos
+* OpenID Connect integration
+* Vulnerability management
+
+Starting with this release, user **authorization** is consistent across all products.
+The Open Policy Agent (OPA) has been a core component of the platform since the beginning and in this release we enhanced its capability with the inclusion of a new component called `user-info-fetcher`.
+It allows for authorization policies to be built on many attributes like organizational group membership, resource assignment and much more.
+The first major identity provider supported by the `user-info-fetcher` is Keycloak but others will follow.
+For more information, refer to the xref:opa:usage-guide/user-info-fetcher.adoc[User Info Fetcher Usage Guide].
+
+A lot of effort was spent on enabling policy based authorization (with OPA) within HDFS.
+This was in important milestone in the platform evolution and is a unique feature that has long been missed by HDFS users and administrators.
+It requires a Kerberos-enabled cluster as well as the https://github.com/stackabletech/hdfs-utils[HDFS extension] which includes an OPA authorizer and group mapper.
+This is already bundled in Stackable image of HDFS and can be used by following the xref:hdfs:usage-guide/security.adoc[documentation].
+More details are available in the https://github.com/stackabletech/hdfs-operator/pull/474[pull request].
+
+Kerberos is the most widely used authentication protocol in the enterprise world.
+We added support for it in Apache Hive and Apache HBase.
+We also added examples for running Apache Spark applications in a Kerberos enabled environment.
+
+OpenID Connect is the de-facto authorization standard on the Web, and it's making its way into enterprise environments.
+Our platform now supports it for Apache Superset (xref:superset:usage-guide/security.adoc[documentation]) and Trino (xref:trino:usage-guide/security.adoc[documentation]), others will follow.
+
+A core component of SDP is the Secret Operator.
+In this release, the secret operator will automatically rotate certificates it generates.
+The certificate lifetime is also jittered to avoid all pods restarting around the same time.
+
+This is also the first release we're publishing SBOMs (Software Bill of Materials) in the https://cyclonedx.org/[CycloneDX] format for.
+We publish these for both our operators and our product images.
+The work on this was https://stackable.tech/en/empowering-rust-projects/[partially funded] by the https://www.sovereigntechfund.de/[Sovereign Tech Fund].
+These SBOMS are published to our OCI registry as signed in-toto attestations and we have written a xref:guides:viewing-and-verifying-sboms.adoc[guide] on how you can use it.
+To make it easier to use we have written a https://sboms.stackable.tech[SBOM browser] which allows you to download the raw CycloneDX JSON files as well.
+
+[IMPORTANT]
+In an upcoming release we will enable authentication and encryption by default where possible.
+To ensure a smooth transition to future releases, we strongly encourage you to enable security features wherever possible in your deployments.
+
+
+Storage::
+HDFS deployments now support __rack awareness__.
+This is another unique feature that brings the SDP platform closer to feature parity with bare metal HDFS deployments.
+Of course, the exact meaning of __rack__ is different in Kubernetes environments, but the effect is the same: DataNodes are brought closer to the data they are reading and writing thus improving performance and reliability.
+A new https://github.com/stackabletech/hdfs-topology-provider[topology provider] is bundled with the HDFS image that maps Kubernetes labels to a cluster topology.
+// TODO: Link to docs - apparently the README in in the linked repository is all there is.
+
+Documentation::
+We are constantly working on improving the platform documentation and custom resource definitions are a significant part of that.
+The CRD documentation is now generated automatically and can be found at https://crds.stackable.tech.
+
+Command line tools::
+The `stackablectl` command line tool has been overhauled and can now list endpoints provided by the listener operator.
+Also operator installation is parallelized, which considerably speeds up the process of setting up SDP on fresh Kubernetes clusters.
+
+Custom labels for Helm charts::
+In the past, Helm users could not assign custom labels to stacklets.
+This is now possible and it enables better component management with third party tools.
+
+Bugfixes::
+* Apache Airflow Operator: Using git-sync with the KubernetesExecutor is now possible.
+* Apache Hadoop Operator:
+  ** Kerberos principals are now included in the discovery ConfigMap.
+  ** Environment variables can now be overridden with the role group's `envOverrides` property.
+* Apache Spark Operator:
+  ** Applications can now be provisioned dynamically without having to fiddle with classpath settings.
+  ** RBAC permissions have been updated to allow the deletion of ConfigMaps when cleaning up applications.
+* Trino Operator: Add HDFS configuration files to the `hive.config.resources` property when connecting to a HDFS cluster.
+
+
+Product features::
+The following are selected product features provided by new versions available in this release:
+
+* Apache Airflow: Introducing Airflow Object Storage and Listener hooks for Datasets plus various bug fixes.
+* Apache Druid: SQL compliance & engine enhancements, ingestion improvements, concurrent data handling.
+* Apache Kafka: Bug fixes.
+* Apache NiFi:
+  ** Improvements and bugfixes.
+  ** Over 270 issues fixed since version 1.23.2.
+  ** Adds new components for Slack and Zendesk integration among others.
+* Open Policy Agent:
+  ** Performance improvements, bugfixes and security fixes for third-party libraries.
+  ** Tooling to help prepare existing policies for the upcoming OPA 1.0 release, which will include a new version of the Rego language.
+* Apache Spark:
+  ** 3.5.0 (SDP ships with 3.5.1) added first class support for distributed training and inference support, and enhancement of compatibility for Structured streaming, Spark SQL improvements.
+  ** Spark Connect is not yet supported in this release.
+* Apache Superset:
+  ** Latest patch release for the Superset 2.x lineage.
+  ** Apache Superset 3.1 includes various smaller new features/optimizations e.g. waterfall chart visualization, ECharts bubble chart, improved data set selectors, automatically format SQL queries, and country map visualization improvements.
+* Trino:
+  ** Lots of improvements and optimization since release 428.
+  ** Most notably we would like to highlight support for access control with the Open Policy Agent that we ourselves contributed in release 438 (#19532).
+  ** Also, starting from release 440, there is now row filtering and column masking in Open Policy Agent.
+* Apache ZooKeeper: Security and bug fixes.
+
+Support for the ARM architecture::
+During the development of this release, we started introducing support for the arm64 architecture.
+Currently support is experimental, and we only provide arm64 images for the previous release (23.11).
+For more information on how to use the ARM images, refer to the xref:concepts:container-images.adoc#multi-platform-support[documentation].
+
+==== Product versions
+
+===== New versions
+
+The following new product versions are now supported:
+
+* https://github.com/stackabletech/airflow-operator/pull/387[Apache Airflow: 2.7.3, 2.8.1]
+* https://github.com/stackabletech/druid-operator/pull/518[Apache Druid: 28.0.1]
+* https://github.com/stackabletech/kafka-operator/pull/664[Apache Kafka: 3.5.2, 3.6.1]
+* https://github.com/stackabletech/nifi-operator/pull/573[Apache NiFi: 1.25.0]
+* https://github.com/stackabletech/opa-operator/pull/518[Open Policy Agent: 0.61.0]
+* https://github.com/stackabletech/spark-k8s-operator/pull/357[Apache Spark: 3.4.2]
+* https://github.com/stackabletech/spark-k8s-operator/pull/373[Apache Spark: 3.5.1]
+* https://github.com/stackabletech/superset-operator/pull/457[Apache Superset: 2.1.3, 3.0.3, 3.1.0]
+* https://github.com/stackabletech/trino-operator/pull/557[Trino: 442]
+* https://github.com/stackabletech/zookeeper-operator/pull/783[Apache ZooKeeper: 3.8.4]
+* https://github.com/stackabletech/zookeeper-operator/pull/788[Apache ZooKeeper: 3.9.2]
+
+===== Deprecated versions
+
+The following product versions are deprecated and will be removed in a later release:
+
+* Apache Airflow: 2.7.2, 2.7.3
+* Apache Druid: 27.0.0
+* Apache Kafka: 3.5.1, 3.5.2, 3.6.2
+* Apache NiFi: 1.23.2
+* Apache Spark: 3.4.1, 3.5.0
+* Apache Superset: 2.1.1, 3.0.1. 3.0.3
+* Trino: 428
+* Apache ZooKeeper: 3.8.3
+* Open Policy Agent: 0.57.0
+
+N.B. in some cases a newly supported version is also immediately marked as deprecated.
+This is done to allow an update path from the latest patch of a minor version (e.g. Kafka 2.8.2 --> 3.4.1).
+
+===== Removed versions
+
+The following product versions are no longer supported (although images for released product versions remain available https://repo.stackable.tech/#browse/browse:docker:v2%2Fstackable[here]):
+
+* Apache Airflow: 2.6.1, 2.6.3
+* Apache Druid: 27.0.0
+* Apache Hadoop: 3.2.2, 3.2.4
+* Apache HBase: 2.4.12
+* Apache Kafka: 2.8.1, 2.8.2, 3.4.1
+* Open Policy Agent: 0.51.0
+* Apache Spark: 3.4.0
+* Apache Superset: 2.1.0
+* Apache ZooKeeper: 3.8.1
+
+==== Cockpit and stackablectl
+
+A new https://github.com/stackabletech/stackable-cockpit[project] called Stackable Cockpit has been started.
+It is a web-based management tool that allows users to interact with the Stackable data platform.
+The repository also contains the `stackablectl` command line tool, which has been refactored for performance and stability.
+
+==== Supported Kubernetes versions
+
+This release supports the following Kubernetes versions:
+
+* `1.29`
+* `1.28`
+* `1.27`
+
+These Kubernetes versions are no longer supported:
+
+* `1.26`
+* `1.25`
+
+==== Supported OpenShift versions
+
+This release is available in the RedHat Certified Operator Catalog for the following OpenShift versions:
+
+* `4.15`
+* `4.14`
+* `4.13`
+* `4.12`
+* `4.11`
+
+==== Breaking changes
+
+You will need to adapt your existing CRDs due to the following breaking changes detailed below.
+
+===== Stackable Operator for Apache Airflow
+
+* https://github.com/stackabletech/airflow-operator/pull/353[Fixed various issues in the CRD structure. `clusterConfig.credentialsSecret` is now mandatory]
+
+.Breaking changes details
+[%collapsible]
+====
+The following fields used to be optional but are now mandatory:
+* `spec.clusterConfig.credentialsSecret`: Name of the secret containing the credentials for the database.
+* `spec.clusterConfig.exposeConfig`: Set to `true` to export the `AIRFLOW__WEBSERVER__EXPOSE__CONFIG` environment variable.
+* `spec.clusterConfig.loadExamples`: Set to `true` to load example DAGs into the Airflow cluster.
+====
+
+* https://github.com/stackabletech/airflow-operator/pull/366[Removed legacy node selector on roleGroups]
+
+.Breaking changes details
+[%collapsible]
+====
+Assigning role groups to node selector was deprecated in 23.11 and has been removed in this release.
+
+To assign roles and role groups to nodes, use the `config.affinity.nodeAffinity` property as described in the xref:contributor:adr/ADR026-affinities.adoc#_introduce_one_dedicated_attribute[documentation].
+====
+
+===== Stackable Operator for Apache HBase
+
+* https://github.com/stackabletech/hbase-operator/pull/438[Removed legacy node selector on roleGroups]
+
+.Breaking changes details
+[%collapsible]
+====
+Assigning role groups to node selector was deprecated in SDP 23.11 and has been removed in this release.
+
+To assign roles and role groups to nodes, use the `config.affinity.nodeAffinity` property as described in the xref:contributor:adr/ADR026-affinities.adoc#_introduce_one_dedicated_attribute[documentation].
+====
+
+===== Stackable Operator for Apache Hadoop HDFS
+
+* https://github.com/stackabletech/hdfs-operator/pull/450[Support for exposing HDFS clusters to clients outside of Kubernetes] `.spec.clusterConfig.listenerClass` has been split to `.spec.nameNodes.config.listenerClass` and `.spec.dataNodes.config.listenerClass`, migration will be required when using `external-unstable`.
+
+.Breaking changes details
+[%collapsible]
+====
+This requires a change from e.g.
+
+[source,yaml]
+----
+apiVersion: hdfs.stackable.tech/v1alpha1
+kind: HdfsCluster
+metadata:
+  name: hdfs
+spec:
+  clusterConfig:
+    listenerClass: external-unstable # <1>
+    ...
+----
+
+to:
+
+[source,yaml]
+----
+apiVersion: hdfs.stackable.tech/v1alpha1
+kind: HdfsCluster
+metadata:
+  name: hdfs
+spec:
+  clusterConfig:
+    ...
+  nameNodes:
+    config:
+      listenerClass: external-unstable # <2>
+      ...
+    ...
+  dataNodes:
+    config:
+      listenerClass: external-unstable # <3>
+      ...
+  journalNodes:
+    config:
+      ...
+----
+
+<1> Remove the cluster-wide listenerClass
+<2> Add the `external-unstable` listenerClass to the `nameNodes` role. You can set these at the role-group level too.
+<3> Add the `external-unstable` listenerClass to the `dataNodes` role. You can set these at the role-group level too.
+
+It should be noted that this change is not necessary if you are using the default `spec.clusterConfig.listenerClass: cluster-internal`.
+
+[IMPORTANT]
+Unfortunately, it is not possible to patch existing HDFS stacklets in place.
+It will be necessary to delete and recreate the HDFS stacklet.
+No data will be lost during this process.
+====
+
+
+==== Open Policy Agent Operator
+
+* https://github.com/stackabletech/opa-operator/pull/433[Remove legacy `nodeSelector` on rolegroups]
+
+.Breaking changes details
+[%collapsible]
+====
+Assigning role groups to node selector was deprecated in SDP 23.11 and has been removed in this release.
+
+To assign roles and role groups to nodes, use the `config.affinity.nodeAffinity` property as described in the xref:contributor:adr/ADR026-affinities.adoc#_introduce_one_dedicated_attribute[documentation].
+====
+
+===== Secret operator
+
+* https://github.com/stackabletech/secret-operator/pull/350[`autoTLS` certificate authorities will now be rotated regularly]
+
+This changes the format of the CA secrets.
+Old secrets will be migrated automatically, but manual intervention will be required to downgrade back to 23.11.x.
+
+===== Stackable Operator for Apache Spark
+
+* https://github.com/stackabletech/spark-k8s-operator/pull/319[Removed version field. Several attributes have been made to mandatory]
+
+.Breaking changes details
+[%collapsible]
+====
+The `spec.version` field has been removed.
+
+The `spec.mode` field is now required and must be set to `cluster`.
+
+The `spec.mainClass` field is now required and must point to a location on ths file system or S3 where the main class is located.
+====
+
+* https://github.com/stackabletech/spark-k8s-operator/pull/355[Remove usage of `userClassPathFirst` properties]
+
+.Breaking changes details
+[%collapsible]
+====
+This is an experimental feature that was introduced to support logging in XML format.
+The side effect of this removal is that the vector agent cannot aggregate output from the `spark-submit` containers.
+On the other hand, it enables dynamic provisioning of java packages (such as Delta Lake) with Stackable stock images, which we consider more important.
+====
+
+===== Stackable Operator for Apache Superset
+
+* https://github.com/stackabletech/superset-operator/pull/429[Fixed various issues in the CRD structure. `clusterConfig.credentialsSecret` is now mandatory]
+
+The configuration for the Superset authentication, operations and listener class is specified within the `spec.clusterConfig` field.
+This field used to be optional but it is now required.
+
+==== Upgrade from 23.11
+
+===== Using stackablectl
+
+Uninstall the `23.11` release
+
+[source,console]
+----
+$ stackablectl release uninstall 23.11
+[INFO ] Uninstalling release 23.11
+[INFO ] Uninstalling airflow operator
+[INFO ] Uninstalling commons operator
+# ...
+----
+
+Afterwards you will need to upgrade the CustomResourceDefinitions (CRDs) installed by the Stackable Platform.
+The reason for this is that helm will uninstall the operators but not the CRDs. This can be done using `kubectl replace`:
+
+[source]
+----
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/airflow-operator/24.3.0/deploy/helm/airflow-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/commons-operator/24.3.0/deploy/helm/commons-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/druid-operator/24.3.0/deploy/helm/druid-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hbase-operator/24.3.0/deploy/helm/hbase-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hdfs-operator/24.3.0/deploy/helm/hdfs-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hello-world-operator/24.3.0/deploy/helm/hello-world-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hive-operator/24.3.0/deploy/helm/hive-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/kafka-operator/24.3.0/deploy/helm/kafka-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/listener-operator/24.3.0/deploy/helm/listener-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/nifi-operator/24.3.0/deploy/helm/nifi-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/opa-operator/24.3.0/deploy/helm/opa-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/secret-operator/24.3.0/deploy/helm/secret-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/24.3.0/deploy/helm/spark-k8s-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/superset-operator/24.3.0/deploy/helm/superset-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/trino-operator/24.3.0/deploy/helm/trino-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/24.3.0/deploy/helm/zookeeper-operator/crds/crds.yaml
+----
+
+[source,console]
+----
+customresourcedefinition.apiextensions.k8s.io "airflowclusters.airflow.stackable.tech" replaced
+customresourcedefinition.apiextensions.k8s.io "airflowdbs.airflow.stackable.tech" replaced
+customresourcedefinition.apiextensions.k8s.io "authenticationclasses.authentication.stackable.tech" replaced
+customresourcedefinition.apiextensions.k8s.io "s3connections.s3.stackable.tech" replaced
+...
+----
+
+Install the `24.3` release
+
+[source,console]
+----
+$ stackablectl release install 24.3
+[INFO ] Installing release 23.11
+[INFO ] Installing airflow operator in version 24.3.0
+[INFO ] Installing commons operator in version 24.3.0
+[INFO ] Installing druid operator in version 24.3.0
+[INFO ] Installing hbase operator in version 24.3.0
+[INFO ] Installing hdfs operator in version 24.3.0
+[INFO ] Installing hive operator in version 24.3.0
+[INFO ] Installing kafka operator in version 24.3.0
+[INFO ] Installing listener operator in version 24.3.0
+[INFO ] Installing hello-world operator in version 24.3.0
+[INFO ] Installing nifi operator in version 24.3.0
+[INFO ] Installing opa operator in version 24.3.0
+[INFO ] Installing secret operator in version 24.3.0
+[INFO ] Installing spark-k8s operator in version 24.3.0
+[INFO ] Installing superset operator in version 24.3.0
+[INFO ] Installing trino operator in version 24.3.0
+[INFO ] Installing zookeeper operator in version 24.3.0
+----
+
+===== Using Helm
+
+Use `helm list` to list the currently installed operators.
+
+You can use the following command to uninstall all operators that are part of the `23.11` release:
+
+[source,console]
+----
+$ helm uninstall airflow-operator commons-operator druid-operator hbase-operator hdfs-operator hive-operator kafka-operator listener-operator nifi-operator opa-operator secret-operator spark-k8s-operator superset-operator trino-operator zookeeper-operator
+release "airflow-operator" uninstalled
+release "commons-operator" uninstalled
+# ...
+----
+
+Afterward you will need to upgrade the CustomResourceDefinitions (CRDs) installed by the Stackable Platform.
+The reason for this is that helm will uninstall the operators but not the CRDs. This can be done using `kubectl replace`:
+
+[source,console]
+----
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/airflow-operator/24.3.0/deploy/helm/airflow-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/commons-operator/24.3.0/deploy/helm/commons-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/druid-operator/24.3.0/deploy/helm/druid-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hbase-operator/24.3.0/deploy/helm/hbase-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hdfs-operator/24.3.0/deploy/helm/hdfs-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hello-world-operator/24.3.0/deploy/helm/hello-world-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hive-operator/24.3.0/deploy/helm/hive-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/kafka-operator/24.3.0/deploy/helm/kafka-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/listener-operator/24.3.0/deploy/helm/listener-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/nifi-operator/24.3.0/deploy/helm/nifi-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/opa-operator/24.3.0/deploy/helm/opa-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/secret-operator/24.3.0/deploy/helm/secret-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/24.3.0/deploy/helm/spark-k8s-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/superset-operator/24.3.0/deploy/helm/superset-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/trino-operator/24.3.0/deploy/helm/trino-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/24.3.0/deploy/helm/zookeeper-operator/crds/crds.yaml
+----
+
+Install the `24.3` release
+
+[source,console]
+----
+helm repo add stackable-stable https://repo.stackable.tech/repository/helm-stable/
+helm repo update stackable-stable
+helm install --wait airflow-operator stackable-stable/airflow-operator --version 24.3.0
+helm install --wait commons-operator stackable-stable/commons-operator --version 24.3.0
+helm install --wait druid-operator stackable-stable/druid-operator --version 24.3.0
+helm install --wait hbase-operator stackable-stable/hbase-operator --version 24.3.0
+helm install --wait hdfs-operator stackable-stable/hdfs-operator --version 24.3.0
+helm install --wait hive-operator stackable-stable/hive-operator --version 24.3.0
+helm install --wait kafka-operator stackable-stable/kafka-operator --version 24.3.0
+helm install --wait listener-operator stackable-stable/listener-operator --version 24.3.0
+helm install --wait hello-world-operator stackable-stable/hello-world-operator --version 24.3.0
+helm install --wait nifi-operator stackable-stable/nifi-operator --version 24.3.0
+helm install --wait opa-operator stackable-stable/opa-operator --version 24.3.0
+helm install --wait secret-operator stackable-stable/secret-operator --version 24.3.0
+helm install --wait spark-k8s-operator stackable-stable/spark-k8s-operator --version 24.3.0
+helm install --wait superset-operator stackable-stable/superset-operator --version 24.3.0
+helm install --wait trino-operator stackable-stable/trino-operator --version 24.3.0
+helm install --wait zookeeper-operator stackable-stable/zookeeper-operator --version 24.3.0
+----
+
+===== Known upgrade issues
+
+In the case of the breaking changes detailed above it will be necessary to update the custom resources and re-apply them.
+
+Additionally, please note the following:
+
+====== All operators
+
+If you used node selectors to assign Pods to nodes, this will not work anymore.
+Use the `config.affinity.nodeAffinity` property instead and follow the instructions in the xref:contributor:adr/ADR026-affinities.adoc#_introduce_one_dedicated_attribute[documentation].

@@ -1,0 +1,383 @@
+== Release 24.11
+
+=== 24.11.1
+
+
+
+=== 24.11.0
+
+Released on 2024-11-28.
+Also consult the release notes for the 24.11.1 patch release above.
+
+==== New platform features
+
+Authentication::
+
+In this release we introduced several authentication mechanisms in different products:
+
+* Apache Airflow: https://github.com/stackabletech/airflow-operator/issues/337[OIDC support]
+* Apache Kafka: https://github.com/stackabletech/kafka-operator/issues/655[Kerberos support]
+* Apache NiFi: https://github.com/stackabletech/nifi-operator/issues/633[OIDC support]
+
+Security::
+
+* The Stackable Data Platform now supports provisioning TLS certificates using https://cert-manager.io/[cert-manager].
+* Support has been added for customizing `sAMAccountName` generation in secret operator.
+* The Stackable Secret Operator now requests permission to read Listeners, which is required to provision secrets for listener volumes with the `listeners.stackable.tech/listener-name` annotation.
+* The RSA key length for generated key pairs can now be customized to 2048, 3072 or 4096 bits. The default is 2048 bits.
+
+Listener::
+
+* The Stackable Operator for Kafka now uses the Stackable Listener Operator, allowing connectivity to be customized.
+* Listeners can now be configured to use either IP addresses or fully qualified domain names (FQDNs).
+
+Dependencies::
+
+Apache HBase: The hadoop-azure module was added to the image and is contained in the classpath.
+This makes it possible to use the Azure Data Lake Storage Gen2 (ADLS) instead of HDFS.
+See the xref:hbase:usage-guide/adls.adoc[usage guide] for detailed information.
+
+Operations::
+
+The Stackable Operator for HDFS now supports upgrading existing HDFS installations.
+However, this process requires some manual intervention as described in xref:hdfs:usage-guide/upgrading.adoc[Upgrading HDFS].
+
+Miscellaneous::
+
+* Apache NiFi: Permit users to configure allowed hosts when NiFi is running behind a proxy.
+  The proxy host check is now disabled by default.
+  See documentation xref:nifi:usage_guide/security#host-header-check[here].
+* Apache Airflow: Allow custom arbitrary python code in `webserver_config.py`.
+* Apache Superset: Allow custom arbitrary python code in `superset_config.py`.
+
+Images::
+
+Support the `restricted-v2` SecurityContextConstraint (SCC) in OpenShift.
+Stackable currently defaults to the `nonroot-v2` SCC but we plan on migrating to the `restricted-v2` SCC in the future.
+
+* Our Docker images now exclusively make use of numeric user IDs in `USER` statements allowing the use of `securityContext.runAsNonRoot`.
+* The group id of all files relevant to our products is now set to `0`.
+  This allows the images to be run with an arbitrary user as every container user will always belong to the root group (`0`).
+  This is required on OpenShift when migrating to the `restricted-v2` SCC.
+
+==== Platform improvements
+
+Vulnerabilities::
+
+More than 142 CVEs were fixed in the Stackable product images.
+This includes 11 critical and 55 high-severity CVEs.
+
+Authorization::
+
+* The performance of the xref:hdfs:usage-guide/security.adoc#\_authorization[HDFS OPA Authorizer] has been greatly improved.
+  This can in some cases be a breaking change so please make sure to read the hdfs-utils https://github.com/stackabletech/hdfs-utils/releases/tag/v0.4.0[release notes] for details.
+* The User Info Fetcher HTTP API has been replaced with a Rego library. Please see xref:opa:usage-guide/user-info-fetcher#_user_info_fetcher_api[user-info-fetcher API] for more information.
+
+Logging::
+
+* Apache NiFi: The default size of ephemeral EmptyDir Volumes used to store log files before aggregation has been increased from 33 MiB to 500 MiB.
+  Additionally the interval in which Logback checks if the maximum log file size has been reached has been reduced from 60 seconds to 5 seconds.
+* Apache NiFi: the create-reporting-task Job (and podOverrides on that Job) can now be disabled.
+
+Monitoring::
+
+https://github.com/prometheus/jmx_exporter[JMX Exporter] is a tool which allows us to expose JMX metrics as Prometheus metrics.
+It is used by the following products: Hadoop, HBase, Hive, Kafka, Spark, Trino and ZooKeeper.
+In the previous SDP release (24.7) we upgraded JMX Exporter from 0.20 to 1.0.1.
+Unfortunately version 1.0.1 has a severe performance degradation which has been https://github.com/prometheus/jmx_exporter/pull/1009[fixed upstream] but is not yet released.
+This SDP release (24.11) contains a fixed version bringing performance back to normal levels.
+
+Listener::
+
+The `ListenerClass.spec.serviceAnnotations` are now correctly propagated to created Service objects.
+
+Miscellaneous::
+
+The size of the operator deployed CRDs was reduced significantly (see: https://github.com/stackabletech/issues/issues/627[stackabletech/issues#627]).
+
+Bug fixes::
+
+* Apache Spark: Ensure Spark applications are submitted only once.
+  Reconciling applications after the corresponding Job objects have been recycled doesn't lead to the creation of new Job objects.
+  This behavior was triggered by different situations, such as when the operator was restarted.
+* Trino, Spark, HBase, Airflow: The https://github.com/stackabletech/issues/issues/548[issues] where config and environment variable overrides did not work consistently have now been fixed.
+* The cluster domain (default `cluster.local`) which caused problems in non-default cluster setups can now be configured in all operators.
+  Either set the ENV variable `KUBERNETES_CLUSTER_DOMAIN` or the helm value `kubernetesClusterDomain` during installation as described in xref:guides:kubernetes-cluster-domain.adoc[Configuring the Kubernetes cluster domain].
+* Apache Airflow: In release 24.7 Airflow did not propagate git credentials correctly to the gitsync containers.
+  This has now been corrected and works for both celery- and kubernetes workers.
+* Operators now do not stop reconciling existing clusters if one of the https://github.com/stackabletech/issues/issues/211[cluster objects cannot be deserialized].
+* Apache HBase: The operator now does not https://github.com/stackabletech/hbase-operator/pull/584[ignore the `hbaseRootdir` config property at role level].
+* Apache Kafka: The bootstrap Kafka service is now included in https://github.com/stackabletech/kafka-operator/pull/741[certificate SANs].
+* Trino: Do not print credentials to STDOUT during startup.
+
+==== Platform deprecations
+
+Commons::
+
+Pod Enrichment is now deprecated, and will be removed in the next release.
+Once removed, the SDP will no longer set any `enrichment.stackable.tech/` annotations on Pods.
+
+==== Product versions
+
+As with previous SDP releases, many product images have been updated to their latest versions.
+The LTS version has in many cases also been adjusted in line with our xref:ROOT:policies.adoc[support policy].
+
+Refer to the xref:operators:supported_versions.adoc[supported versions] documentation for a complete overview including LTS versions or deprecations.
+
+===== New versions
+
+The following new product versions are now supported:
+
+* Apache Airflow: https://github.com/stackabletech/airflow-operator/pull/494[2.9.3 (LTS)], https://github.com/stackabletech/airflow-operator/pull/512[2.10.2 (experimental)]
+* Apache Druid: https://github.com/stackabletech/druid-operator/pull/631[30.0.0 (LTS)]
+* Apache Hive: https://github.com/stackabletech/hive-operator/pull/508[4.0.0 (experimental)]
+* Apache Kafka: https://github.com/stackabletech/kafka-operator/pull/753/[3.8.0]
+* Apache NiFi: https://github.com/stackabletech/nifi-operator/pull/702[2.0.0 (experimental)]
+* Open Policy Agent: https://github.com/stackabletech/opa-operator/pull/616[0.67.1]
+* Trino: https://github.com/stackabletech/trino-operator/pull/638[455]
+* Apache Spark: https://github.com/stackabletech/spark-k8s-operator/pull/459[3.5.2 (LTS)]
+
+===== Deprecated versions
+
+The following product versions are deprecated and will be removed in a later release:
+
+* Apache Airflow: 2.9.2
+* Apache Druid: 26.0.0
+* Open Policy Agent: 0.66.0
+
+===== Removed versions
+
+The following product versions are no longer supported (although images for released product versions remain available https://repo.stackable.tech/#browse/browse:docker:v2%2Fstackable[here]):
+
+* Apache Airflow: 2.8.4, 2.8.1, 2.6.3
+* Apache Druid: 28.0.1
+* Apache Kafka: 3.6.2, 3.6.1, 3.4.1
+* Apache NiFi: 2.0.0-M4, 1.25.0, 1.21.0
+* Open Policy Agent: 0.61.0
+* Trino: 442, 414
+* Apache Spark: 3.4.3, 3.4.2
+* Apache Superset: 3.1.3, 3.1.0, 2.1.3
+* Apache ZooKeeper: 3.8.4
+
+==== stackablectl
+
+* Bump Rust dependencies to fix critical vulnerability in quinn-proto, see https://github.com/advisories/GHSA-vr26-jcq5-fjj8[CVE-2024-45311] (https://github.com/stackabletech/stackable-cockpit/pull/318).
+* We now provide additional completions for Nushell and Elvish, support using SOCK5 and HTTP proxies, and have improved the sorting of release versions.
+
+==== Supported Kubernetes versions
+
+This release supports the following Kubernetes versions:
+
+* `1.31`
+* `1.30`
+* `1.29`
+
+These Kubernetes versions are no longer supported:
+
+* `1.26`
+* `1.25` as we removed internal forks required to support Kubernetes `1.25` and below.
+  This includes OpenShift `4.12`, which is using Kubernetes `1.25`.
+
+==== Supported OpenShift versions
+
+This release is available in the RedHat Certified Operator Catalog for the following OpenShift versions:
+
+* `4.15`
+* `4.14`
+
+These OpenShift versions are no longer supported:
+
+* `4.13`
+* `4.12`
+
+==== Breaking changes
+
+Of the changes mentioned above, the following are breaking (or could lead to breaking behaviour), and you will need to adapt your existing CRDs accordingly:
+
+===== Kafka operator
+
+* Existing Kafka clusters will need to be migrated to using the Listener Operator.
+  Kafka clients will need to re-read settings from the discovery configmap (restart required).
+  Existing Kafka StatefulSets must be deleted manually. This will cause some downtime.
+* Kafka is now only accessible from within the Kubernetes cluster by default.
+
+.Breaking changes details
+[%collapsible]
+====
+Migrating Kafka clusters to use the Listener Operator is done by deleting the Kafka StatefulSet after the new Stackable Operator for Kafka has been installed, by running the following:
+
+[source,console]
+....
+kubectl delete --all-namespaces StatefulSet --selector=app.kubernetes.io/managed-by=kafka.stackable.tech_kafkacluster
+....
+
+The operator will then recreate it.
+Please note that the Kafka cluster will be unavailable during the procedure.
+
+After the upgrade, Kafka clusters will default to only being accessible from inside the Kubernetes cluster.
+
+To make the cluster accessible from the outside, set the following _before deleting the StatefulSet_:
+
+* `KafkaCluster.spec.brokers.config.bootstrapListenerClass: external-stable`
+* `KafkaCluster.spec.brokers.config.brokerListenerClass: external-unstable`
+
+Please note that this upgrade will randomize the address that users will have to connect to, so any external clients must re-read it from the discovery configuration after the upgrade has been completed.
+This can be done by restarting the client.
+====
+
+===== Listener operator
+
+All ListenerClasses now default to using Fully Qualified Domain Names (FQDNs).
+Previously, NodePort ListenerClasses (such as external-unstable) would use the IP addresses.
+
+All Nodes must now have resolvable hostnames, or the NodePort ListenerClasses must be configured with `spec.preferredAddressType: IP`.
+
+.Breaking changes details
+[%collapsible]
+====
+* `spec.preferredAddressType`: Defaults to `HostnameConservative`, but can be set to `Hostname` or `IP`.
+====
+
+==== Upgrade from 24.7
+
+===== Using stackablectl
+
+Uninstall the `24.7` release
+
+[source,console]
+----
+$ stackablectl release uninstall 24.7
+
+Uninstalled release '24.7'
+
+Use "stackablectl release list" to list available releases.
+# ...
+----
+
+Afterwards you will need to upgrade the CustomResourceDefinitions (CRDs) installed by the Stackable Platform.
+The reason for this is that helm will uninstall the operators but not the CRDs.
+This can be done using `kubectl replace`.
+
+[source]
+----
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/airflow-operator/24.11.0/deploy/helm/airflow-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/commons-operator/24.11.0/deploy/helm/commons-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/druid-operator/24.11.0/deploy/helm/druid-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hbase-operator/24.11.0/deploy/helm/hbase-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hdfs-operator/24.11.0/deploy/helm/hdfs-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hive-operator/24.11.0/deploy/helm/hive-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/kafka-operator/24.11.0/deploy/helm/kafka-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/listener-operator/24.11.0/deploy/helm/listener-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/nifi-operator/24.11.0/deploy/helm/nifi-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/opa-operator/24.11.0/deploy/helm/opa-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/secret-operator/24.11.0/deploy/helm/secret-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/24.11.0/deploy/helm/spark-k8s-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/superset-operator/24.11.0/deploy/helm/superset-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/trino-operator/24.11.0/deploy/helm/trino-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/24.11.0/deploy/helm/zookeeper-operator/crds/crds.yaml
+----
+
+[source,console]
+----
+customresourcedefinition.apiextensions.k8s.io "airflowclusters.airflow.stackable.tech" replaced
+customresourcedefinition.apiextensions.k8s.io "airflowdbs.airflow.stackable.tech" replaced
+customresourcedefinition.apiextensions.k8s.io "authenticationclasses.authentication.stackable.tech" replaced
+customresourcedefinition.apiextensions.k8s.io "s3connections.s3.stackable.tech" replaced
+...
+----
+
+Install the `24.11` release
+
+[source,console]
+----
+$ stackablectl release install 24.11
+
+Installed release '24.11'
+
+Use "stackablectl operator installed" to list installed operators.
+----
+
+===== Using Helm
+
+Use `helm list` to list the currently installed operators.
+
+You can use the following command to uninstall all operators that are part of the `24.3` release:
+
+[source,console]
+----
+$ helm uninstall airflow-operator commons-operator druid-operator hbase-operator hdfs-operator hive-operator kafka-operator listener-operator nifi-operator opa-operator secret-operator spark-k8s-operator superset-operator trino-operator zookeeper-operator
+release "airflow-operator" uninstalled
+release "commons-operator" uninstalled
+...
+----
+
+Afterward you will need to upgrade the CustomResourceDefinitions (CRDs) installed by the Stackable Platform.
+The reason for this is that helm will uninstall the operators but not the CRDs. This can be done using `kubectl replace`:
+
+[source]
+----
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/airflow-operator/24.11.0/deploy/helm/airflow-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/commons-operator/24.11.0/deploy/helm/commons-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/druid-operator/24.11.0/deploy/helm/druid-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hbase-operator/24.11.0/deploy/helm/hbase-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hdfs-operator/24.11.0/deploy/helm/hdfs-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hive-operator/24.11.0/deploy/helm/hive-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/kafka-operator/24.11.0/deploy/helm/kafka-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/listener-operator/24.11.0/deploy/helm/listener-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/nifi-operator/24.11.0/deploy/helm/nifi-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/opa-operator/24.11.0/deploy/helm/opa-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/secret-operator/24.11.0/deploy/helm/secret-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/24.11.0/deploy/helm/spark-k8s-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/superset-operator/24.11.0/deploy/helm/superset-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/trino-operator/24.11.0/deploy/helm/trino-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/24.11.0/deploy/helm/zookeeper-operator/crds/crds.yaml
+----
+
+[source,console]
+----
+customresourcedefinition.apiextensions.k8s.io "airflowclusters.airflow.stackable.tech" replaced
+customresourcedefinition.apiextensions.k8s.io "airflowdbs.airflow.stackable.tech" replaced
+customresourcedefinition.apiextensions.k8s.io "authenticationclasses.authentication.stackable.tech" replaced
+customresourcedefinition.apiextensions.k8s.io "s3connections.s3.stackable.tech" replaced
+...
+----
+
+Install the `24.11` release
+
+[source,console]
+----
+helm repo add stackable-stable https://repo.stackable.tech/repository/helm-stable/
+helm repo update stackable-stable
+helm install --wait airflow-operator stackable-stable/airflow-operator --version 24.11.0
+helm install --wait commons-operator stackable-stable/commons-operator --version 24.11.0
+helm install --wait druid-operator stackable-stable/druid-operator --version 24.11.0
+helm install --wait hbase-operator stackable-stable/hbase-operator --version 24.11.0
+helm install --wait hdfs-operator stackable-stable/hdfs-operator --version 24.11.0
+helm install --wait hive-operator stackable-stable/hive-operator --version 24.11.0
+helm install --wait kafka-operator stackable-stable/kafka-operator --version 24.11.0
+helm install --wait listener-operator stackable-stable/listener-operator --version 24.11.0
+helm install --wait nifi-operator stackable-stable/nifi-operator --version 24.11.0
+helm install --wait opa-operator stackable-stable/opa-operator --version 24.11.0
+helm install --wait secret-operator stackable-stable/secret-operator --version 24.11.0
+helm install --wait spark-k8s-operator stackable-stable/spark-k8s-operator --version 24.11.0
+helm install --wait superset-operator stackable-stable/superset-operator --version 24.11.0
+helm install --wait trino-operator stackable-stable/trino-operator --version 24.11.0
+helm install --wait zookeeper-operator stackable-stable/zookeeper-operator --version 24.11.0
+----
+
+==== Known issues
+
+* The Apache NiFi operator currently cannot share an https://github.com/stackabletech/nifi-operator/issues/716[OIDC AuthenticationClass with other products].
+  This is due to an inconsistent implementation in the NiFi operator.
+* Apache NiFi: In the experimental NiFi version `2.0.0`, the `PrometheusReportingTask` (which was used to activate a Prometheus metrics endpoint) has been removed.
+  NiFi now has its own API to directly access metrics. In contrast to previous versions, the metrics endpoints now requires authentication.
+  This is not supported by the Stackable operator for Apache NiFi in this release.
+* Apache NiFi: In the experimental NiFi version `2.0.0`, some processors have been renamed or have a different class path since NiFi 1.x.x.
+  Flows affected by these changes will need manually updating.
+  See https://cwiki.apache.org/confluence/display/NIFI/Release+Notes#ReleaseNotes-Version2.0.0[NiFi 2.0.0 Release Notes] for further details.
+* https://github.com/stackabletech/issues/issues/675[serviceAccount and roleBinding objects can accidentally get deleted]:
+  During the release, a bug was reported which affects multiple deployments of the same product sharing a namespace.
+  This is actively being worked on and will appear in a patch release.
+* https://github.com/stackabletech/operator-rs/pull/910[fix!: Correctly construct OIDC endpoints]:
+  During the release, it was discovered that some OIDC endpoint URLs were constructed in a way that was not compatible with some tooling.
+  This has been fixed and will appear in a patch release.
