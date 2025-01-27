@@ -2,12 +2,30 @@
 
 === 24.11.1
 
+Released on 2024-01-20.
+This patch release fixes two issues that were discovered since the <<24.11.0>> release.
 
+==== Breaking Changes
+
+Distinct ServiceAccounts are now used for the Stacklets so that multiple Stacklets of the same product can be deployed in one namespace.
+Existing Stacklets will use the newly created ServiceAccounts after restart.
+
+WARNING: Manually adapted ServiceAccounts must be updated.
+
+==== Other fixes
+
+The following operators have been fixed to work correctly with OpenID Connect rootPaths with and without trailing slashes:
+
+* Nifi Operator
+* Trino Operator
+* Druid Operator
+* Airflow Operator
+* Superset Operator
 
 === 24.11.0
 
 Released on 2024-11-28.
-Also consult the release notes for the 24.11.1 patch release above.
+Also consult the release notes for the <<24.11.1>> patch release above.
 
 ==== New platform features
 
