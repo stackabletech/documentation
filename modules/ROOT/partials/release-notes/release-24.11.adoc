@@ -14,13 +14,13 @@ WARNING: Manually adapted ServiceAccounts must be updated.
 
 ==== Other fixes
 
-The following operators have been fixed to work correctly with OpenID Connect rootPaths with and without trailing slashes:
-
-* Nifi Operator
-* Trino Operator
-* Druid Operator
-* Airflow Operator
-* Superset Operator
+* Secret Operator Helm chart: The secret migration job required for upgrading from SDP 24.3 to 24.7, can now be omitted by setting the Helm value secretMigrationJob.enabled to false.
+* The following operators have been fixed to work correctly with OpenID Connect rootPaths with and without trailing slashes:
+** Nifi Operator
+** Trino Operator
+** Druid Operator
+** Airflow Operator
+** Superset Operator
 
 === 24.11.0
 
