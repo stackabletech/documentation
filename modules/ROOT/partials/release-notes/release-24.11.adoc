@@ -22,11 +22,31 @@ WARNING: Manually adapted ServiceAccounts must be updated.
 ** Airflow Operator
 ** Superset Operator
 
-==== Upgrade from 24.11.0
+==== Upgrade to the 24.11.1 patch release
+
+[NOTE]
+====
+These instructions apply to upgrades from `24.7.0` and `24.11.0`.
+In the examples below, we will show an upgrade from `24.11.0`.
+====
 
 ===== Using stackablectl
 
-Upgrade the CustomResourceDefinitions (CRDs) installed by the Stackable Platform:
+Uninstall the `24.11` release
+
+[source,console]
+----
+$ stackablectl release uninstall 24.11
+
+Uninstalled release '24.11'
+
+Use "stackablectl release list" to list available releases.
+# ...
+----
+
+Afterwards you will need to upgrade the CustomResourceDefinitions (CRDs) installed by the Stackable Platform.
+The reason for this is that helm will uninstall the operators but not the CRDs.
+This can be done using `kubectl replace`.
 
 [source]
 ----
@@ -56,7 +76,7 @@ customresourcedefinition.apiextensions.k8s.io "s3connections.s3.stackable.tech" 
 ...
 ----
 
-Upgrade the `24.11` release
+Install the `24.11` release
 
 [source,console]
 ----
@@ -69,7 +89,20 @@ Use "stackablectl operator installed" to list installed operators.
 
 ===== Using Helm
 
-Upgrade the CustomResourceDefinitions (CRDs) installed by the Stackable Platform:
+Use `helm list` to list the currently installed operators.
+
+You can use the following command to uninstall all operators that are part of the `24.11` release:
+
+[source,console]
+----
+$ helm uninstall airflow-operator commons-operator druid-operator hbase-operator hdfs-operator hive-operator kafka-operator listener-operator nifi-operator opa-operator secret-operator spark-k8s-operator superset-operator trino-operator zookeeper-operator
+release "airflow-operator" uninstalled
+release "commons-operator" uninstalled
+...
+----
+
+Afterward you will need to upgrade the CustomResourceDefinitions (CRDs) installed by the Stackable Platform.
+The reason for this is that helm will uninstall the operators but not the CRDs. This can be done using `kubectl replace`:
 
 [source]
 ----
@@ -99,27 +132,27 @@ customresourcedefinition.apiextensions.k8s.io "s3connections.s3.stackable.tech" 
 ...
 ----
 
-Upgrade the `24.11` release
+Install the `24.11` release
 
 [source,console]
 ----
 helm repo add stackable-stable https://repo.stackable.tech/repository/helm-stable/
 helm repo update stackable-stable
-helm upgrade --install --wait airflow-operator stackable-stable/airflow-operator --version 24.11.1
-helm upgrade --install --wait commons-operator stackable-stable/commons-operator --version 24.11.1
-helm upgrade --install --wait druid-operator stackable-stable/druid-operator --version 24.11.1
-helm upgrade --install --wait hbase-operator stackable-stable/hbase-operator --version 24.11.1
-helm upgrade --install --wait hdfs-operator stackable-stable/hdfs-operator --version 24.11.1
-helm upgrade --install --wait hive-operator stackable-stable/hive-operator --version 24.11.1
-helm upgrade --install --wait kafka-operator stackable-stable/kafka-operator --version 24.11.1
-helm upgrade --install --wait listener-operator stackable-stable/listener-operator --version 24.11.1
-helm upgrade --install --wait nifi-operator stackable-stable/nifi-operator --version 24.11.1
-helm upgrade --install --wait opa-operator stackable-stable/opa-operator --version 24.11.1
-helm upgrade --install --wait secret-operator stackable-stable/secret-operator --version 24.11.1
-helm upgrade --install --wait spark-k8s-operator stackable-stable/spark-k8s-operator --version 24.11.1
-helm upgrade --install --wait superset-operator stackable-stable/superset-operator --version 24.11.1
-helm upgrade --install --wait trino-operator stackable-stable/trino-operator --version 24.11.1
-helm upgrade --install --wait zookeeper-operator stackable-stable/zookeeper-operator --version 24.11.1
+helm install --wait airflow-operator stackable-stable/airflow-operator --version 24.11.1
+helm install --wait commons-operator stackable-stable/commons-operator --version 24.11.1
+helm install --wait druid-operator stackable-stable/druid-operator --version 24.11.1
+helm install --wait hbase-operator stackable-stable/hbase-operator --version 24.11.1
+helm install --wait hdfs-operator stackable-stable/hdfs-operator --version 24.11.1
+helm install --wait hive-operator stackable-stable/hive-operator --version 24.11.1
+helm install --wait kafka-operator stackable-stable/kafka-operator --version 24.11.1
+helm install --wait listener-operator stackable-stable/listener-operator --version 24.11.1
+helm install --wait nifi-operator stackable-stable/nifi-operator --version 24.11.1
+helm install --wait opa-operator stackable-stable/opa-operator --version 24.11.1
+helm install --wait secret-operator stackable-stable/secret-operator --version 24.11.1
+helm install --wait spark-k8s-operator stackable-stable/spark-k8s-operator --version 24.11.1
+helm install --wait superset-operator stackable-stable/superset-operator --version 24.11.1
+helm install --wait trino-operator stackable-stable/trino-operator --version 24.11.1
+helm install --wait zookeeper-operator stackable-stable/zookeeper-operator --version 24.11.1
 ----
 
 === 24.11.0
