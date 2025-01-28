@@ -22,7 +22,7 @@ WARNING: Manually adapted ServiceAccounts must be updated.
 ** Airflow Operator
 ** Superset Operator
 
-==== Upgrade from 24.11.1
+==== Upgrade from 24.11.0
 
 ===== Using stackablectl
 
