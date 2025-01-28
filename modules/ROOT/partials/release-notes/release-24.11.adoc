@@ -2,12 +2,163 @@
 
 === 24.11.1
 
+Released on 2024-01-20.
+This patch release fixes two issues that were discovered since the <<_24_11_0>> release.
 
+==== Breaking Changes
+
+Distinct ServiceAccounts are now used for the Stacklets so that multiple Stacklets of the same product can be deployed in one namespace.
+Existing Stacklets will use the newly created ServiceAccounts after restart.
+
+WARNING: Manually adapted ServiceAccounts must be updated.
+
+==== Other fixes
+
+* Secret Operator Helm chart: The secret migration job required for upgrading from SDP 24.3 to 24.7 can now be omitted by setting the Helm value `secretMigrationJob.enabled` to false.
+* The following operators have been fixed to work correctly with OpenID Connect rootPaths with and without trailing slashes:
+** Nifi Operator
+** Trino Operator
+** Druid Operator
+** Airflow Operator
+** Superset Operator
+
+==== Upgrade to the 24.11.1 patch release
+
+[NOTE]
+====
+These instructions apply to upgrades from `24.7.0` and `24.11.0`.
+In the examples below, we will show an upgrade from `24.11.0`.
+====
+
+===== Using stackablectl
+
+Uninstall the `24.11` release
+
+[source,console]
+----
+$ stackablectl release uninstall 24.11
+
+Uninstalled release '24.11'
+
+Use "stackablectl release list" to list available releases.
+# ...
+----
+
+Afterwards you will need to upgrade the CustomResourceDefinitions (CRDs) installed by the Stackable Platform.
+The reason for this is that helm will uninstall the operators but not the CRDs.
+This can be done using `kubectl replace`.
+
+[source]
+----
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/airflow-operator/24.11.1/deploy/helm/airflow-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/commons-operator/24.11.1/deploy/helm/commons-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/druid-operator/24.11.1/deploy/helm/druid-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hbase-operator/24.11.1/deploy/helm/hbase-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hdfs-operator/24.11.1/deploy/helm/hdfs-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hive-operator/24.11.1/deploy/helm/hive-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/kafka-operator/24.11.1/deploy/helm/kafka-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/listener-operator/24.11.1/deploy/helm/listener-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/nifi-operator/24.11.1/deploy/helm/nifi-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/opa-operator/24.11.1/deploy/helm/opa-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/secret-operator/24.11.1/deploy/helm/secret-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/24.11.1/deploy/helm/spark-k8s-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/superset-operator/24.11.1/deploy/helm/superset-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/trino-operator/24.11.1/deploy/helm/trino-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/24.11.1/deploy/helm/zookeeper-operator/crds/crds.yaml
+----
+
+[source,console]
+----
+customresourcedefinition.apiextensions.k8s.io "airflowclusters.airflow.stackable.tech" replaced
+customresourcedefinition.apiextensions.k8s.io "airflowdbs.airflow.stackable.tech" replaced
+customresourcedefinition.apiextensions.k8s.io "authenticationclasses.authentication.stackable.tech" replaced
+customresourcedefinition.apiextensions.k8s.io "s3connections.s3.stackable.tech" replaced
+...
+----
+
+Install the `24.11` release
+
+[source,console]
+----
+$ stackablectl release install 24.11
+
+Installed release '24.11'
+
+Use "stackablectl operator installed" to list installed operators.
+----
+
+===== Using Helm
+
+Use `helm list` to list the currently installed operators.
+
+You can use the following command to uninstall all operators that are part of the `24.11` release:
+
+[source,console]
+----
+$ helm uninstall airflow-operator commons-operator druid-operator hbase-operator hdfs-operator hive-operator kafka-operator listener-operator nifi-operator opa-operator secret-operator spark-k8s-operator superset-operator trino-operator zookeeper-operator
+release "airflow-operator" uninstalled
+release "commons-operator" uninstalled
+...
+----
+
+Afterward you will need to upgrade the CustomResourceDefinitions (CRDs) installed by the Stackable Platform.
+The reason for this is that helm will uninstall the operators but not the CRDs. This can be done using `kubectl replace`:
+
+[source]
+----
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/airflow-operator/24.11.1/deploy/helm/airflow-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/commons-operator/24.11.1/deploy/helm/commons-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/druid-operator/24.11.1/deploy/helm/druid-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hbase-operator/24.11.1/deploy/helm/hbase-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hdfs-operator/24.11.1/deploy/helm/hdfs-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hive-operator/24.11.1/deploy/helm/hive-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/kafka-operator/24.11.1/deploy/helm/kafka-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/listener-operator/24.11.1/deploy/helm/listener-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/nifi-operator/24.11.1/deploy/helm/nifi-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/opa-operator/24.11.1/deploy/helm/opa-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/secret-operator/24.11.1/deploy/helm/secret-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/24.11.1/deploy/helm/spark-k8s-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/superset-operator/24.11.1/deploy/helm/superset-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/trino-operator/24.11.1/deploy/helm/trino-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/24.11.1/deploy/helm/zookeeper-operator/crds/crds.yaml
+----
+
+[source,console]
+----
+customresourcedefinition.apiextensions.k8s.io "airflowclusters.airflow.stackable.tech" replaced
+customresourcedefinition.apiextensions.k8s.io "airflowdbs.airflow.stackable.tech" replaced
+customresourcedefinition.apiextensions.k8s.io "authenticationclasses.authentication.stackable.tech" replaced
+customresourcedefinition.apiextensions.k8s.io "s3connections.s3.stackable.tech" replaced
+...
+----
+
+Install the `24.11` release
+
+[source,console]
+----
+helm repo add stackable-stable https://repo.stackable.tech/repository/helm-stable/
+helm repo update stackable-stable
+helm install --wait airflow-operator stackable-stable/airflow-operator --version 24.11.1
+helm install --wait commons-operator stackable-stable/commons-operator --version 24.11.1
+helm install --wait druid-operator stackable-stable/druid-operator --version 24.11.1
+helm install --wait hbase-operator stackable-stable/hbase-operator --version 24.11.1
+helm install --wait hdfs-operator stackable-stable/hdfs-operator --version 24.11.1
+helm install --wait hive-operator stackable-stable/hive-operator --version 24.11.1
+helm install --wait kafka-operator stackable-stable/kafka-operator --version 24.11.1
+helm install --wait listener-operator stackable-stable/listener-operator --version 24.11.1
+helm install --wait nifi-operator stackable-stable/nifi-operator --version 24.11.1
+helm install --wait opa-operator stackable-stable/opa-operator --version 24.11.1
+helm install --wait secret-operator stackable-stable/secret-operator --version 24.11.1
+helm install --wait spark-k8s-operator stackable-stable/spark-k8s-operator --version 24.11.1
+helm install --wait superset-operator stackable-stable/superset-operator --version 24.11.1
+helm install --wait trino-operator stackable-stable/trino-operator --version 24.11.1
+helm install --wait zookeeper-operator stackable-stable/zookeeper-operator --version 24.11.1
+----
 
 === 24.11.0
 
 Released on 2024-11-28.
-Also consult the release notes for the 24.11.1 patch release above.
+Also consult the release notes for the <<_24_11_1>> patch release above.
 
 ==== New platform features
 
@@ -301,7 +452,7 @@ Use "stackablectl operator installed" to list installed operators.
 
 Use `helm list` to list the currently installed operators.
 
-You can use the following command to uninstall all operators that are part of the `24.3` release:
+You can use the following command to uninstall all operators that are part of the `24.7` release:
 
 [source,console]
 ----
