@@ -3,7 +3,7 @@
 === 24.11.1
 
 Released on 2024-01-20.
-This patch release fixes two issues that were discovered since the <<24.11.0>> release.
+This patch release fixes two issues that were discovered since the <<_24_11_0>> release.
 
 ==== Breaking Changes
 
@@ -125,7 +125,7 @@ helm upgrade --install --wait zookeeper-operator stackable-stable/zookeeper-oper
 === 24.11.0
 
 Released on 2024-11-28.
-Also consult the release notes for the <<24.11.1>> patch release above.
+Also consult the release notes for the <<_24_11_1>> patch release above.
 
 ==== New platform features
 
