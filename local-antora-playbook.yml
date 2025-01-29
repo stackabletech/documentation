@@ -14,7 +14,7 @@ content:
   sources:
     - url: ./
       branches:
-        - HEAD
+        - release/24.11
         - release/24.7
         - release/24.3
         - release/23.11
@@ -29,7 +29,7 @@ content:
     - url: https://github.com/stackabletech/demos.git
       start_path: docs
       branches:
-        - main
+        - release-24.11
         - release-24.7
         - release-24.3
         - release-23.11
@@ -40,7 +40,7 @@ content:
     - url: https://github.com/stackabletech/commons-operator.git
       start_path: docs
       branches:
-        - main
+        - release-24.11
         - release-24.7
         - release-24.3
         - release-23.11
@@ -50,7 +50,7 @@ content:
     - url: https://github.com/stackabletech/secret-operator.git
       start_path: docs
       branches:
-        - main
+        - release-24.11
         - release-24.7
         - release-24.3
         - release-23.11
@@ -60,7 +60,7 @@ content:
     - url: https://github.com/stackabletech/listener-operator.git
       start_path: docs
       branches:
-        - main
+        - release-24.11
         - release-24.7
         - release-24.3
         - release-23.11
@@ -71,7 +71,7 @@ content:
     - url: https://github.com/stackabletech/airflow-operator.git
       start_path: docs
       branches:
-        - main
+        - release-24.11
         - release-24.7
         - release-24.3
         - release-23.11
@@ -81,7 +81,7 @@ content:
     - url: https://github.com/stackabletech/druid-operator.git
       start_path: docs
       branches:
-        - main
+        - release-24.11
         - release-24.7
         - release-24.3
         - release-23.11
@@ -91,7 +91,7 @@ content:
     - url: https://github.com/stackabletech/hbase-operator.git
       start_path: docs
       branches:
-        - main
+        - release-24.11
         - release-24.7
         - release-24.3
         - release-23.11
@@ -101,7 +101,7 @@ content:
     - url: https://github.com/stackabletech/hdfs-operator.git
       start_path: docs
       branches:
-        - main
+        - release-24.11
         - release-24.7
         - release-24.3
         - release-23.11
@@ -111,7 +111,7 @@ content:
     - url: https://github.com/stackabletech/hive-operator.git
       start_path: docs
       branches:
-        - main
+        - release-24.11
         - release-24.7
         - release-24.3
         - release-23.11
@@ -121,7 +121,7 @@ content:
     - url: https://github.com/stackabletech/kafka-operator.git
       start_path: docs
       branches:
-        - main
+        - release-24.11
         - release-24.7
         - release-24.3
         - release-23.11
@@ -131,7 +131,7 @@ content:
     - url: https://github.com/stackabletech/nifi-operator.git
       start_path: docs
       branches:
-        - main
+        - release-24.11
         - release-24.7
         - release-24.3
         - release-23.11
@@ -141,7 +141,7 @@ content:
     - url: https://github.com/stackabletech/opa-operator.git
       start_path: docs
       branches:
-        - main
+        - release-24.11
         - release-24.7
         - release-24.3
         - release-23.11
@@ -151,7 +151,7 @@ content:
     - url: https://github.com/stackabletech/spark-k8s-operator.git
       start_path: docs
       branches:
-        - main
+        - release-24.11
         - release-24.7
         - release-24.3
         - release-23.11
@@ -161,7 +161,7 @@ content:
     - url: https://github.com/stackabletech/superset-operator.git
       start_path: docs
       branches:
-        - main
+        - release-24.11
         - release-24.7
         - release-24.3
         - release-23.11
@@ -171,7 +171,7 @@ content:
     - url: https://github.com/stackabletech/trino-operator.git
       start_path: docs
       branches:
-        - main
+        - release-24.11
         - release-24.7
         - release-24.3
         - release-23.11
@@ -181,7 +181,7 @@ content:
     - url: https://github.com/stackabletech/zookeeper-operator.git
       start_path: docs
       branches:
-        - main
+        - release-24.11
         - release-24.7
         - release-24.3
         - release-23.11

@@ -1,0 +1,104 @@
+== Release 22.6
+
+This is our first release of the Stackable Data Platform, bringing Kubernetes operators for 12 products as well as <<stackablectl>>, the commandline tool to easily install data products in Kubernetes Operators spin up production ready product applications.
+Also, there are some common features across all operators, such as monitoring, service discovery and configuration overrides.
+Find the <<Platform features>>, <<stackablectl,stackablectl features>> and <<operators>> below.
+
+Please report any issues you find in the specific operator repositories or in our dedicated github.com/stackabletech/issues/[issues] repository.
+You may also join us in our https://slack.stackable.tech[Slack] community or https://stackable.tech[contact us via our homepage].
+
+While we are very proud of this release it is our first one and we'll add new features and fix bugs all the time and will have regular releases from now on.
+
+=== 22.6.0
+
+==== Platform features
+
+Easily install production ready data applications::
+
+Using a familiar declarative approach, users can easily install data applications such as Apache Kafka or Trino across multiple cloud Kubernetes providers or on their own data centers.
+The installation process is fully automated while also providing the flexibility for the user to tune relevant aspects of each application.
+
+Monitoring::
+
+All products have monitoring with prometheus enabled.
+xref:operators:monitoring.adoc[Learn more]
+
+Service discovery::
+
+Products on the Stackable platform use service discovery to easily interconnect with each other.
+xref:concepts:service_discovery.adoc[Learn more]
+
+Configuration overrides::
+
+All operators support configuration overrides, these are documented in the specific operator documentation pages.
+
+Common S3 configuration::
+
+Many products support connecting to S3 to load and/or store data.
+There is a common resource for S3 connections and buckets across all operators that can be reused.
+xref:concepts:s3.adoc[Learn more]
+
+Roles and role groups::
+
+To support hybrid hardware clusters, the Stackable platform uses the concept of role groups.
+Services and applications can be configured to maximize hardware efficiency.
+
+Standardized::
+
+Learn once reuse everywhere.
+We use the same conventions in all our operators.
+Configure your LDAP or S3 connections once and reuse them everywhere.
+All our operators reuse the same CRD structure as well.
+
+[#stackablectl]
+==== stackablectl
+
+xref:management:stackablectl:index.adoc[stackablectl] is used to install and interact with the operators, either individually or with multiple at once.
+
+[#operators]
+==== Operators
+
+This is the list of all operators in this current release, with their versions for this release.
+
+.*Products*
+* xref:airflow:index.adoc[] (0.4.0)
+** Load DAGs from ConfigMaps or PersistentVolumeClaims
+* xref:druid:index.adoc[] (0.6.0)
+** S3 and HDFS as deep storage options
+** ingestion from S3 buckets
+** authorization using OPA
+* xref:hbase:index.adoc[] (0.3.0)
+* xref:hdfs:index.adoc[] (0.4.0)
+* xref:hive:index.adoc[] (0.6.0)
+** Hive Metastore can index S3
+* xref:kafka:index.adoc[] (0.6.0)
+** Seamless integration with NiFi and Druid
+** Supports OPA authorization
+* xref:nifi:index.adoc[] (0.6.0)
+* xref:spark-k8s:index.adoc[] (0.3.0)
+* xref:superset:index.adoc[] (0.5.0)
+** connects to Druid as a backend
+** Supports LDAP authentication
+* xref:trino:index.adoc[] (0.4.0)
+** Supports OPA and file-based authorization
+** Connects to the Hive Metastore
+** Query data from S3
+** TLS support
+* xref:zookeeper:index.adoc[] (0.10.0)
+** Supports creating ZNodes with CRDs
+
+Read up on the xref:operators:supported_versions.adoc[supported versions] for each of these products.
+
+.*Supporting operators*
+* xref:opa:index.adoc[] (0.9.0)
+** Create RegoRules in ConfigMaps
+* xref:commons-operator:index.adoc[] (0.2.0)
+* xref:secret-operator:index.adoc[] (0.5.0)
+
+==== Supported Kubernetes versions
+
+This release supports the following Kubernetes versions:
+
+* `1.23`
+* `1.22`
+* `1.21`
