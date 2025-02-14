@@ -16,11 +16,7 @@ include::partial$supported-kubernetes-distributions.adoc[]
 
 In case a Kubernetes provider needs some special tuning or we have some tips for it, it has a subpage below this page.
 
-In this version of the SDP, the following Kubernetes versions are supported:
-
-include::partial$supported-kubernetes-versions.adoc[]
-
-Consult the xref:release_notes.adoc[release notes] to find out which specific versions are supported for the Stackable Data Platform you are using.
+Consult the xref:release_notes.adoc[release notes] to find out which specific Kubernetes versions are supported for the Stackable Data Platform you are using.
 
 [#local-installation]
 == Installing a testinging/development Kubernetes instance locally

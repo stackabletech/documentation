@@ -102,9 +102,10 @@ components.
 
 === Kubernetes
 
-A Kubernetes cluster is required to install the Stackable Data Platform. The supported Kubernetes versions are:
+A Kubernetes cluster is required to install the Stackable Data Platform.
+The supported Kubernetes versions for each platform release can be found here:
 
-include::partial$supported-kubernetes-versions.adoc[]
+xref:release-notes.adoc[SDP Release notes]
 
 There are various Kubernetes distributions. Stackable supports:
 

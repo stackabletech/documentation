@@ -333,6 +333,7 @@ These Kubernetes versions are no longer supported:
 
 This release is available in the RedHat Certified Operator Catalog for the following OpenShift versions:
 
+* `4.16`
 * `4.15`
 * `4.14`
 

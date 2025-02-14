@@ -1,7 +1,0 @@
-// The Kubernetes versions supported by all operators
-// This is a separate file to refer to the version at multiple places
-// in the documentation
-
-- 1.28
-- 1.27
-- 1.26
