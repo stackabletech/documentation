@@ -155,6 +155,18 @@ helm install --wait trino-operator stackable-stable/trino-operator --version 24.
 helm install --wait zookeeper-operator stackable-stable/zookeeper-operator --version 24.11.1
 ----
 
+==== Supported OpenShift versions
+
+This release is available in the RedHat Certified Operator Catalog for the following OpenShift versions:
+
+* `4.16`
+* `4.14`
+
+These OpenShift versions are no longer supported:
+
+* `4.13`
+* `4.12`
+
 === 24.11.0
 
 Released on 2024-11-28.
@@ -328,18 +340,6 @@ These Kubernetes versions are no longer supported:
 * `1.26`
 * `1.25` as we removed internal forks required to support Kubernetes `1.25` and below.
   This includes OpenShift `4.12`, which is using Kubernetes `1.25`.
-
-==== Supported OpenShift versions
-
-This release is available in the RedHat Certified Operator Catalog for the following OpenShift versions:
-
-* `4.15`
-* `4.14`
-
-These OpenShift versions are no longer supported:
-
-* `4.13`
-* `4.12`
 
 ==== Breaking changes
 
