@@ -10,7 +10,7 @@ format should not be considered stable.
 
 == Interval
 
-The tool collects and logs the state of the container every minute. It can also
+The tool collects and logs the state of the container every 30 minutes. It can also
 be triggered manually, by running the `containerdebug` command inside of the
 main product container.
 
