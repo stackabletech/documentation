@@ -85,10 +85,109 @@ Where are binaries, Helm Charts and Docker images stored?
 [[product-artifacts]]
 === Product artifacts
 
-A lot of artifacts are stored in the https://repo.stackable.tech/#browse/browse[Nexus repo].
-Under `packages` you find product binaries, the different `helm-*` stores contain the Helm Charts and Docker images are stored there too.
+A lot of artifacts are stored in the https://oci.stackable.tech[OCI registry]. Currently, those artifacts can be browsed by calling the API.
+
+The following command lists all the different projects the artifacts are distributed across:
+
+[source,console]
+----
+$ curl -X GET --header 'Accept: application/json' 'https://oci.stackable.tech/api/v2.0/projects/' | jq '.[] | .name'
+"library"
+"sandbox"
+"sdp"
+"sdp-charts"
+"stackable"
+"stackable-charts"
+----
+
+`sdp` contains the product and operator Docker images. The Helm Charts for the operators are found under `sdp-charts`. Some artifacts like the
+product binaries are stored in the https://repo.stackable.tech/#browse/browse[Nexus repo] under `packages`.
+
+List the Helm Charts in `sdp-charts`:
+
+[source,console]
+----
+$ curl -X GET --header 'Accept: application/json' 'https://oci.stackable.tech/api/v2.0/projects/sdp-charts/repositories?page_size=20' | jq '.[] | .name'
+----
+
+List all available versions of a specific Helm Chart, e.g. the zookeeper-operator:
+
+[source,console]
+----
+$ curl -X GET --header 'Accept: application/json' 'https://oci.stackable.tech/api/v2.0/projects/sdp-charts/repositories/zookeeper-operator/artifacts' | jq '.[] | .tags[].name'
+"0.0.0-dev"
+"0.0.0-pr919"
+"0.0.0-pr917"
+"24.11.1"
+"24.11.1-rc2"
+"24.11.1-rc1"
+"24.11.0"
+"24.7.0"
+"24.3.0"
+----
 
 [[docker-images]]
 === Docker images
 
-Docker images are stored in Nexus as mentioned above, but also in https://oci.stackable.tech - which is where we want to move to in the future.
+Docker images are stored in https://oci.stackable.tech as mentioned above. To list all the available repositories in a project, for example in
+the `sdp` project, run this command:
+
+[source,console]
+----
+$ curl -X GET --header 'Accept: application/json' 'https://oci.stackable.tech/api/v2.0/projects/sdp/repositories?page=1' | jq '.[] | .name'
+"sdp/statsd_exporter"
+"sdp/stackable-cockpit"
+"sdp/product1"
+"sdp/git-sync/git-sync"
+"sdp/sig-storage/csi-provisioner"
+"sdp/sig-storage/csi-node-driver-registrar"
+"sdp/kcat"
+"sdp/java-devel"
+"sdp/vector"
+"sdp/hello-world"
+----
+
+Since the API is using pagination it might be necessary to increment the `page` in the command to see additional results.
+
+It is also possible to list all the available image tags for a repository of choice. The following command shows the tags of the `trino` repository:
+
+[source,console]
+----
+$ curl -X GET --header 'Accept: application/json' 'https://oci.stackable.tech/api/v2.0/projects/sdp/repositories/trino/artifacts?page=1&page_size=25' | jq '.[] | select(.extra_attrs.config != {}) | .tags[]?.name'
+"470-stackable0.0.0-dev"
+"451-stackable0.0.0-dev"
+"455-stackable0.0.0-dev"
+"470-stackable0.0.0-dev-arm64"
+"455-stackable0.0.0-dev-arm64"
+"451-stackable0.0.0-dev-arm64"
+"470-stackable0.0.0-dev-amd64"
+"455-stackable0.0.0-dev-amd64"
+"451-stackable0.0.0-dev-amd64"
+"469-stackable0.0.0-dev"
+"469-stackable0.0.0-dev-arm64"
+"469-stackable0.0.0-dev-amd64"
+"451-stackable24.11.1"
+"455-stackable24.11.1"
+----
+
+Similar to the previous command, the API call uses pagination again. So the `page` value in the command can be incremented to see more results. Here the `page_size`
+parameter was also used to increase the results per page.
+
+Another possibility, instead of using `curl`, would be the https://github.com/google/go-containerregistry/blob/main/cmd/crane/README.md[crane tool], which can also be used
+to browse the tags when given the path to a repository.
+
+[source,console]
+----
+$ crane ls -O oci.stackable.tech/sdp/trino
+414-stackable0.0.0-dev
+414-stackable0.0.0-dev-amd64
+414-stackable0.0.0-dev-arm64
+414-stackable24.3.0
+414-stackable24.7.0
+414-stackable24.7.0-amd64
+414-stackable24.7.0-arm64
+428-stackable0.0.0-dev
+428-stackable0.0.0-dev-amd64
+428-stackable0.0.0-dev-arm64
+...
+----
