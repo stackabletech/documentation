@@ -1,0 +1,5 @@
+= JupyterHub
+:description: A tutorial on how to configure various aspects of JupyterHub on Kubernetes.
+:keywords: notebook, JupyterHub, Kubernetes, k8s, Spark, HDFS, S3
+
+This tutorial illustrates various configuration settings when using JupyterHub on Kubernetes.
