@@ -1,6 +1,6 @@
 = Container images
 :ubi: https://catalog.redhat.com/software/base-images
-:stackable-image-registry: https://repo.stackable.tech/#browse/browse
+:stackable-image-registry: https://oci.stackable.tech/
 :stackable-sboms: https://sboms.stackable.tech/
 :description: Overview of Stackable’s container images, including structure, multi-platform support, and why upstream images are not used.
 

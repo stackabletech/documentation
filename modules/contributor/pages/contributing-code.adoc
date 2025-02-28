@@ -79,8 +79,8 @@ For `VisualStudio Code` we also recommend the following extensions:
 +
 [source,bash]
 ----
-docker build --file docker/Dockerfile --tag docker.stackable.tech/stackable/<operator>:<version>-dev .
-kind load docker-image docker.stackable.tech/stackable/<operator>:<version>-dev --name=integration-tests
+docker build --file docker/Dockerfile --tag oci.stackable.tech/sdp/<operator>:<version>-dev .
+kind load docker-image oci.stackable.tech/sdp/<operator>:<version>-dev --name=integration-tests
 helm install <operator> deploy/helm/<operator>/
 ----
 . Run the tests from the repository root with `./scripts/run-tests`.

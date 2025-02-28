@@ -87,7 +87,7 @@ The easiest way that we found to do this is by using https://github.com/tilt-dev
 Tilt should then automatically discover this registry from the cluster config and push images there.
 
 If you are using a remote cluster, Tilt will push the generated container images to a remote registry, in order for your Kubernetes to be able to access them.
-We have configured `docker.stackable.tech/sandbox` as the default registry, as this is what all our developers use.
+We have configured `oci.stackable.tech/sandbox` as the default registry, as this is what all our developers use.
 External contributors will not have access to this registry and need to override this to a registry of their choice.
 
 Overriding the default registry can be done by providing a file called `tilt_options.json` in the same directory as the Tiltfile.
