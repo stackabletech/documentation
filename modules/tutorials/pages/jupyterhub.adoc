@@ -2,4 +2,250 @@
 :description: A tutorial on how to configure various aspects of JupyterHub on Kubernetes.
 :keywords: notebook, JupyterHub, Kubernetes, k8s, Spark, HDFS, S3
 
-This tutorial illustrates various configuration settings when using JupyterHub on Kubernetes.
+.Drop-down example
+[%collapsible]
+====
+xxx:
+
+[source,console]
+----
+xxx
+----
+====
+
+This tutorial illustrates various scenarios and configuration options when using JupyterHub on Kubernetes.
+The custom resources and configuration settings that are discussed here are based on the xref:demos:jupyterhub-keycloak.adoc[JupyterHub-Keycloak demo], so you may find it helpful to have that demo running to reference things as you read through this tutorial.
+
+== Keycloak
+
+Keycloak is installed using a https://github.com/stackabletech/demos/blob/feat/keycloak-jupyterhub/stacks/jupyterhub-keycloak/keycloak.yaml[Deployment] that loads realm configuration mounted as a ConfigMap.
+
+=== Services
+
+In the demo, the keycloak and jupyter hub service (proxy-public) ports are fixed e.g.
+
+[source,yaml]
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: keycloak
+  labels:
+    app: keycloak
+spec:
+  type: NodePort
+  selector:
+    app: keycloak
+  ports:
+    - name: https
+      port: 8443
+      targetPort: 8443
+      nodePort: 31093 # <1>
+----
+
+<1> Static value for the purposed of the demo.
+
+They are:
+
+- `31093` for keycloak
+- `31095` for jupyterhub/proxy-public
+
+The keycloak and jupyterhub endpoints are defined in the jupyter hub chart values i.e. for the purposes of the demo (that does not use any pre-defined DNS settings), the ports have to be known before the jupyter hub components are deployed.
+
+This can be achieved by having the keycloak deployment write out its co-ordinates into a ConfigMap during start-up, which can then be referenced by the JupyterHub chart like this:
+
+[source,yaml]
+---
+options:
+  hub:
+    config:
+      ...
+    extraEnv:
+      ...
+      KEYCLOAK_NODEPORT_URL:
+        valueFrom:
+          configMapKeyRef:
+            name: keycloak-address
+            key: keycloakAddress # <1>
+      KEYCLOAK_NODE_IP:
+        valueFrom:
+          configMapKeyRef:
+            name: keycloak-address
+            key: keycloakNodeIp
+    ...
+    extraConfig:
+      ...
+      03-set-endpoints: |
+        import os
+        from oauthenticator.generic import GenericOAuthenticator
+        keycloak_url = os.getenv("KEYCLOAK_NODEPORT_URL")  # <2>
+        ...
+        keycloak_node_ip = os.getenv("KEYCLOAK_NODE_IP")
+        ...
+        c.GenericOAuthenticator.oauth_callback_url: f"http://{keycloak_node_ip}:31095/hub/oauth_callback"  # <3>
+        c.GenericOAuthenticator.authorize_url = f"https://{keycloak_url}/realms/demo/protocol/openid-connect/auth"
+        c.GenericOAuthenticator.token_url = f"https://{keycloak_url}/realms/demo/protocol/openid-connect/token"
+        c.GenericOAuthenticator.userdata_url = f"https://{keycloak_url}/realms/demo/protocol/openid-connect/userinfo"
+----
+
+<1> endpoint information read from the ConfigMap
+<2> this information is passed to a variable in one of the start-up config scripts...
+<3> ...and then used for JupyterHub settings
+
+=== Discovery
+
+As mentioned above, keycloak writes out it endpoint information to ConfigMap, like this:
+
+[source,yaml]
+----
+---
+apiVersion: apps/v1
+kind: Deployment
+...
+    spec:
+      containers:
+        ...
+        - name: create-configmap
+          resources: {}
+          image: oci.stackable.tech/sdp/testing-tools:0.2.0-stackable0.0.0-dev
+          command: ["/bin/bash", "-c"]
+          args:
+            - |
+              pid=
+              trap 'echo SIGINT; [[ $pid ]] && kill $pid; exit' SIGINT
+              trap 'echo SIGTERM; [[ $pid ]] && kill $pid; exit' SIGTERM
+
+              while :
+              do
+                echo "Determining Keycloak public reachable address"
+                KEYCLOAK_ADDRESS=$(kubectl get svc keycloak -o json | jq -r --argfile endpoints <(kubectl get endpoints keycloak -o json) --argfile nodes <(kubectl get nodes -o json) '($nodes.items[] | select(.metadata.name == $endpoints.subsets[].addresses[].nodeName) | .status.addresses | map(select(.type == "ExternalIP" or .type == "InternalIP")) | min_by(.type) | .address | tostring) + ":" + (.spec.ports[] | select(.name == "https") | .nodePort | tostring)')
+                echo "Found Keycloak running at $KEYCLOAK_ADDRESS"
+
+                if [ ! -z "$KEYCLOAK_ADDRESS" ]; then
+                  KEYCLOAK_HOSTNAME="$(echo $KEYCLOAK_ADDRESS | grep -oP '^[^:]+')"
+                  KEYCLOAK_PORT="$(echo $KEYCLOAK_ADDRESS | grep -oP '[0-9]+$')"
+
+                  cat << EOF | kubectl apply -f -
+                    apiVersion: v1
+                    kind: ConfigMap
+                    metadata:
+                      name: keycloak-address
+                    data:
+                      keycloakAddress: "$KEYCLOAK_HOSTNAME:$KEYCLOAK_PORT"
+                      keycloakNodeIp: "$KEYCLOAK_HOSTNAME"
+              EOF
+                fi
+
+                sleep 30 & pid=$!
+                wait
+              done
+----
+
+=== Security
+
+We create a keystore with a self-generated and self-signed certificate and mount it so that the keystore file can be used when starting keycloak:
+
+[source,yaml]
+----
+    spec:
+      containers:
+        - name: keycloak
+          ...
+          args:
+            - start
+            - --hostname-strict=false
+            - --https-key-store-file=/tls/keystore.p12 # <3>
+            - --https-key-store-password=changeit
+            - --import-realm
+          volumeMounts:
+            - name: tls
+              mountPath: /tls/ # <2>
+        ...
+      volumes:
+        ...
+        - name: tls
+          ephemeral:
+            volumeClaimTemplate:
+              metadata:
+                annotations:
+                  secrets.stackable.tech/class: tls # <1>
+                  secrets.stackable.tech/format: tls-pkcs12
+                  secrets.stackable.tech/format.compatibility.tls-pkcs12.password: changeit
+                  secrets.stackable.tech/scope: service=keycloak,node
+              spec:
+                storageClassName: secrets.stackable.tech
+                accessModes:
+                  - ReadWriteOnce
+                resources:
+                  requests:
+                    storage: "1"
+----
+
+<1> Create a volume holding the self-signed certificate information
+<2> Mount this volume for keycloak to use
+<3> Pass the keystore file as an argument on start-up
+
+For the self-signed certificate to be accepted during the handshake between JupyterHub and Keycloak it is important to create the jupyterhub-side certificate using the same secret class, although the format can be a different one:
+
+[source,yaml]
+----
+    extraVolumes:
+      - name: tls-ca-cert
+        ephemeral:
+          volumeClaimTemplate:
+            metadata:
+              annotations:
+                secrets.stackable.tech/class: tls
+            spec:
+              storageClassName: secrets.stackable.tech
+              accessModes:
+                - ReadWriteOnce
+              resources:
+                requests:
+                  storage: "1"
+----
+
+=== Realm
+
+The Keycloak https://github.com/stackabletech/demos/blob/feat/keycloak-jupyterhub/stacks/jupyterhub-keycloak/keycloak-realm-config.yaml for the demo basically contains a set of users and groups, along with a simple client definition:
+
+[source,yaml]
+----
+"clients" : [ {
+    "clientId": "jupyterhub",
+    "enabled": true,
+    "protocol": "openid-connect",
+    "clientAuthenticatorType": "client-secret",
+    "secret": ...,
+    "redirectUris" : [ "*" ],
+    "webOrigins" : [ "*" ],
+    "standardFlowEnabled": true
+  } ]
+----
+
+Not that the standard flow is enabled and no other OAuth-specific settings are required.
+Wildcards are used for redirectUris and webOrigins, mainly for the sake of simplicity: in production environments this would typically be limited or filtered in an appropriate way.
+
+== JupyterHub
+
+=== Authentication
+
+==== Native Authenticator
+
+==== OAuth Authenticator (Keycloak)
+
+=== Certificates
+
+=== Driver Service
+
+=== Endpoints
+
+=== Profiles
+
+== Images
+
+== Example Notebook
+
+=== Provisos
+
+=== Overview
