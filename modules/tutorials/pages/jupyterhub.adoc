@@ -224,21 +224,60 @@ The Keycloak https://github.com/stackabletech/demos/blob/feat/keycloak-jupyterhu
 ----
 
 Not that the standard flow is enabled and no other OAuth-specific settings are required.
-Wildcards are used for redirectUris and webOrigins, mainly for the sake of simplicity: in production environments this would typically be limited or filtered in an appropriate way.
+Wildcards are used for `redirectUris` and `webOrigins`, mainly for the sake of simplicity: in production environments this would typically be limited or filtered in an appropriate way.
 
 == JupyterHub
 
 === Authentication
 
+This tutorial covers two methods of authentication: Native and OAuth.
+Other implementations are documented https://jupyterhub.readthedocs.io/en/stable/reference/authenticators.html[here].
+
 ==== Native Authenticator
+
+This tutorial and the accompanying demo assume that Keycloak is used for user authentication.
+However, a simpler alternative is to use the Native Authenticator that allows users to be added "on-the-fly".
+
+[source,yaml]
+----
+options:
+  hub:
+    config:
+      Authenticator:
+        allow_all: true
+        admin_users:
+          - admin
+      JupyterHub:
+        authenticator_class: nativeauthenticator.NativeAuthenticator
+      NativeAuthenticator:
+        open_signup: true
+  proxy:
+    ...
+----
+
+Users must either be included in an `allowed_users` list, or the property `allow_all` must be set to `true`.
+The creation of new users will be checked against these settings and refused if appropriate.
+If an admin_users property is defined, then associated users will see an additional tab on the JupyterHub home screen, allowing them to carry out user management actions (e.g. create user groups and assign users to them, assign users to the admin role, delete users).
+
+NOTE: The above applies to version 4.x of the JupyterHub Helm chart.
+Version 3.x does not impose these limitations and users can be added and used without any constraints.
 
 ==== OAuth Authenticator (Keycloak)
 
+To authenticate against a Keycloak instance it is necessary to provide the following:
+
+* configuration for GenericOAuthenticator
+* certificates that can be used between JupyterHub and Keycloak
+* several URls (callback, authorize etc.) necessary for the authentication handshake
+** in this tutorial these URls will be defined dynamically using start-up scripts, a ConfigMap and environment variables
+
+=== GenericOAuthenticator
+
 === Certificates
 
-=== Driver Service
-
 === Endpoints
+
+=== Driver Service
 
 === Profiles
 
