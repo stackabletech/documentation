@@ -14,7 +14,7 @@ xxx
 ====
 
 This tutorial illustrates various scenarios and configuration options when using JupyterHub on Kubernetes.
-The custom resources and configuration settings that are discussed here are based on the xref:demos:jupyterhub-keycloak.adoc[JupyterHub-Keycloak demo], so you may find it helpful to have that demo running to reference things as you read through this tutorial.
+The custom resources and configuration settings that are discussed here are based on the JupyterHub-Keycloak demo, so you may find it helpful to have that demo running to reference things as you read through this tutorial.
 
 == Keycloak
 
