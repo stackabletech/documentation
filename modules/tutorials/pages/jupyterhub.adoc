@@ -352,9 +352,130 @@ If the default file is not overwritten, but is mounted to a new file in the same
 
 === Endpoints
 
-=== Driver Service
+The Helm chart for JupyterHub allows us to augment the standard configuration with one or more scripts.
+As mentioned in an earlier section, we want to define the endpoints dynamically - by making use of the ConfigMap written out by the Keycloak Deployment - and we can do this by adding a script under `extraConfig`:
+
+[source,yaml]
+----
+   extraConfig:
+      ...
+      03-set-endpoints: |
+        import os
+        from oauthenticator.generic import GenericOAuthenticator
+        keycloak_url = os.getenv("KEYCLOAK_NODEPORT_URL")  # <2>
+        ...
+        keycloak_node_ip = os.getenv("KEYCLOAK_NODE_IP")
+        ...
+        c.GenericOAuthenticator.oauth_callback_url: f"http://{keycloak_node_ip}:31095/hub/oauth_callback"  # <3>
+        c.GenericOAuthenticator.authorize_url = f"https://{keycloak_url}/realms/demo/protocol/openid-connect/auth"
+        c.GenericOAuthenticator.token_url = f"https://{keycloak_url}/realms/demo/protocol/openid-connect/token"
+        c.GenericOAuthenticator.userdata_url = f"https://{keycloak_url}/realms/demo/protocol/openid-connect/userinfo"
+----
+
+=== Driver Service (Spark)
+
+NOTE: when using Spark, please the `Provisos` section below.
+
+In the same way, we can use another script to define a driver service for each user.
+This is essential when using Spark from within a JupyterHUb notebook so that executor pods can be spawned from the user's kernel in a user-specific way.
+This script instructs JupyterHub to use `KubeSpawner` to create a service referenced by the UID of the parent Pod.
+
+[source,yaml]
+----
+   extraConfig:
+     ...
+     02-create-spark-driver-service-hook: |
+        # Thanks to https://github.com/jupyterhub/kubespawner/pull/644
+        from jupyterhub.utils import exponential_backoff
+        from kubespawner import KubeSpawner
+        from kubespawner.objects import make_owner_reference
+        from kubernetes_asyncio.client.models import V1ServicePort
+        from functools import partial
+
+        async def after_pod_created_hook(spawner: KubeSpawner, pod: dict):
+          owner_reference = make_owner_reference(
+            pod["metadata"]["name"], pod["metadata"]["uid"]
+          )
+          service_manifest = spawner.get_service_manifest(owner_reference)
+
+          service_manifest.spec.type = "ClusterIP"
+          service_manifest.spec.clusterIP = "None" # Headless Services is all we need
+          service_manifest.spec.ports += [
+            V1ServicePort(name='spark-ui',            port=4040, target_port=4040),
+            V1ServicePort(name='spark-driver',        port=2222, target_port=2222),
+            V1ServicePort(name='spark-block-manager', port=7777, target_port=7777)
+          ]
+
+          await exponential_backoff(
+              partial(
+                  spawner._ensure_not_exists,
+                  "service",
+                  service_manifest.metadata.name,
+              ),
+              f"Failed to delete service {service_manifest.metadata.name}",
+          )
+          await exponential_backoff(
+              partial(spawner._make_create_resource_request, "service", service_manifest),
+              f"Failed to create service {service_manifest.metadata.name}",
+          )
+
+        c.KubeSpawner.after_pod_created_hook = after_pod_created_hook
+----
 
 === Profiles
+
+The `singleuser.profileList` section of the Helm chart values allows us to define notebook profiles by setting the CPU, Memory and Image combinations that can be selected. For instance, the profiles below allows to select 2/4/... CPUs, 4/8/... GB RAM and between two images.
+
+ singleuser:
+    ...
+    profileList:
+      - display_name: "Default"
+        description: "Default profile"
+        default: true
+        profile_options:
+          cpu:
+            display_name: CPU
+            choices:
+              "2":
+                display_name: "2"
+                kubespawner_override:
+                  cpu_guarantee: 2
+                  cpu_limit: 2
+              "4":
+                display_name: "4"
+                kubespawner_override:
+                  cpu_guarantee: 4
+                  cpu_limit: 4
+              ...
+          memory:
+            display_name: Memory
+            choices:
+              "4 GB":
+                display_name: "4 GB"
+                kubespawner_override:
+                  mem_guarantee: "4G"
+                  mem_limit: "4G"
+              "8 GB":
+                display_name: "8 GB"
+                kubespawner_override:
+                  mem_guarantee: "8G"
+                  mem_limit: "8G"
+              ...
+          image:
+            display_name: Image
+            choices:
+              "quay.io/jupyter/pyspark-notebook:python-3.11.9":
+                display_name: "quay.io/jupyter/pyspark-notebook:python-3.11.9"
+                kubespawner_override:
+                  image: "quay.io/jupyter/pyspark-notebook:python-3.11.9"
+              "quay.io/jupyter/pyspark-notebook:spark-3.5.2":
+                display_name: "quay.io/jupyter/pyspark-notebook:spark-3.5.2"
+                kubespawner_override:
+                  image: "quay.io/jupyter/pyspark-notebook:spark-3.5.2"
+
+These options are then displayed as drop-down lists for the user once logged in:
+
+image::jupyterhub/server-options.png[Server options]
 
 == Images
 
