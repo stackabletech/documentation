@@ -2,17 +2,6 @@
 :description: A tutorial on how to configure various aspects of JupyterHub on Kubernetes.
 :keywords: notebook, JupyterHub, Kubernetes, k8s, Spark, HDFS, S3
 
-.Drop-down example
-[%collapsible]
-====
-xxx:
-
-[source,console]
-----
-xxx
-----
-====
-
 This tutorial illustrates various scenarios and configuration options when using JupyterHub on Kubernetes.
 The custom resources and configuration settings that are discussed here are based on the JupyterHub-Keycloak demo, so you may find it helpful to have that demo running to reference things as you read through this tutorial.
 
@@ -55,7 +44,7 @@ The keycloak and jupyterhub endpoints are defined in the jupyter hub chart value
 This can be achieved by having the keycloak deployment write out its co-ordinates into a ConfigMap during start-up, which can then be referenced by the JupyterHub chart like this:
 
 [source,yaml]
----
+----
 options:
   hub:
     config:
@@ -94,8 +83,11 @@ options:
 
 === Discovery
 
-As mentioned above, keycloak writes out it endpoint information to ConfigMap, like this:
+As mentioned above, keycloak writes out its endpoint information to a ConfigMap, shown in the code section below.
 
+.Writing the ConfigMap
+[%collapsible]
+====
 [source,yaml]
 ----
 ---
@@ -140,6 +132,8 @@ kind: Deployment
                 wait
               done
 ----
+====
+
 
 === Security
 
@@ -255,12 +249,16 @@ options:
     ...
 ----
 
+image::../images/jupyterhub/sign-up.png[Create a user]
+
 Users must either be included in an `allowed_users` list, or the property `allow_all` must be set to `true`.
 The creation of new users will be checked against these settings and refused if appropriate.
 If an admin_users property is defined, then associated users will see an additional tab on the JupyterHub home screen, allowing them to carry out user management actions (e.g. create user groups and assign users to them, assign users to the admin role, delete users).
 
+image::../images/jupyterhub/admin-user.png[Admin tab]
+
 NOTE: The above applies to version 4.x of the JupyterHub Helm chart.
-Version 3.x does not impose these limitations and users can be added and used without any constraints.
+Version 3.x does not impose these limitations and users can be added and used without specifying `allowed_users` or `allow_all`.
 
 ==== OAuth Authenticator (Keycloak)
 
@@ -273,7 +271,84 @@ To authenticate against a Keycloak instance it is necessary to provide the follo
 
 === GenericOAuthenticator
 
+This section of the JupyterHub values specifies that we are using GenericOAuthenticator for our authentication.
+
+[source,yaml]
+----
+...
+  hub:
+    config:
+      Authenticator:
+        # don't filter here: delegate to Keycloak
+        allow_all: true # <1>
+        admin_users:
+          - isla.williams # <2>
+      GenericOAuthenticator:
+        client_id: jupyterhub
+        client_secret: ...
+        username_claim: preferred_username
+        scope:
+          - openid # <3>
+      JupyterHub:
+        authenticator_class: generic-oauth # <4>
+...
+----
+
+<1> We need to either provide a list of users using `allowed_users`, or to explicitly allow _all_ users, as done here.
+We will delegate this to Keycloak so that we do not have to maintain users in two places.
+<2> Each admin user will have access to an "Admin" tab on the JupyterHub UI where certain user-management actions can be carried out.
+<3> Define the Keycloak scope
+<4> Specifies which authenticator class to use
+
+The endpoints can be defined directly under `GenericOAuthenticator` as well, though for our purposes we will set them in a configuration script (see below).
+
 === Certificates
+
+The demo uses a self-signed certificate that needs to be accepted by JupyterHub.
+This involves:
+
+* mounting a secret created with the same secret class as used for the self-signed certificate used by Keycloak
+* make this secret available to JupyterHub
+* it may also be necessary to point python at this specific certificate
+
+This can be seen below:
+
+[source,yaml]
+----
+    extraEnv: # <1>
+      CACERT: /etc/ssl/certs/ca-certificates.crt
+      CERT: /etc/ssl/certs/ca-certificates.crt
+      CURLOPT_CAINFO: /etc/ssl/certs/ca-certificates.crt
+      ...
+    extraVolumes:
+      - name: tls-ca-cert # <2>
+        ephemeral:
+          volumeClaimTemplate:
+            metadata:
+              annotations:
+                secrets.stackable.tech/class: tls
+            spec:
+              storageClassName: secrets.stackable.tech
+              accessModes:
+                - ReadWriteOnce
+              resources:
+                requests:
+                  storage: "1"
+    extraVolumeMounts:
+      - name: tls-ca-cert
+        # Alternative: mount to another filename in this folder and call update-ca-certificates
+        mountPath: /etc/ssl/certs/ca-certificates.crt # <3>
+        subPath: ca.crt
+      - name: tls-ca-cert
+        mountPath: /usr/local/lib/python3.12/site-packages/certifi/cacert.pem # <4>
+        subPath: ca.crt
+----
+
+<1> Specify which certificate(s) should be used internally (in the code above this is using the default certificate, but is included for the sake of completion)
+<2> Create the certificate with the same secret class (`tls`) as Keycloak
+<3> Mount this certificate.
+If the default file is not overwritten, but is mounted to a new file in the same directory, then the certificates should be updated by calling e.g. `update-ca-certificates`.
+<4> ensure python is using the same certificate.
 
 === Endpoints
 
