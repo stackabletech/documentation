@@ -249,13 +249,13 @@ options:
     ...
 ----
 
-image::../images/jupyterhub/sign-up.png[Create a user]
+image::jupyterhub/sign-up.png[Create a user]
 
 Users must either be included in an `allowed_users` list, or the property `allow_all` must be set to `true`.
 The creation of new users will be checked against these settings and refused if appropriate.
 If an admin_users property is defined, then associated users will see an additional tab on the JupyterHub home screen, allowing them to carry out user management actions (e.g. create user groups and assign users to them, assign users to the admin role, delete users).
 
-image::../images/jupyterhub/admin-user.png[Admin tab]
+image::jupyterhub/admin-user.png[Admin tab]
 
 NOTE: The above applies to version 4.x of the JupyterHub Helm chart.
 Version 3.x does not impose these limitations and users can be added and used without specifying `allowed_users` or `allow_all`.
