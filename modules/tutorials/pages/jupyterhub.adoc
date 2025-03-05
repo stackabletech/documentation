@@ -375,7 +375,7 @@ As mentioned in an earlier section, we want to define the endpoints dynamically 
 
 === Driver Service (Spark)
 
-NOTE: when using Spark, please the `Provisos` section below.
+NOTE: When using Spark from within a notebook, please the `Provisos` section below.
 
 In the same way, we can use another script to define a driver service for each user.
 This is essential when using Spark from within a JupyterHUb notebook so that executor pods can be spawned from the user's kernel in a user-specific way.
@@ -538,3 +538,54 @@ These Pods in turn can mount *all* volumes and Secrets in that namespace.
 To prevent this from breaking user separation, it is planned to use an OPA gatekeeper to define OPA rules that restrict what the created executor Pods can mount. This is not yet implemented in the demo nor reflected in this tutorial.
 
 === Overview
+
+The notebook starts a distributed Spark cluster, which runs until the notebook kernel is stopped.
+In order to connect to the S3 backend, the following settings must be configured in the Spark session:
+
+[source, python]
+----
+    ...
+    .config("spark.hadoop.fs.s3a.endpoint", "http://minio:9000/")
+    .config("spark.hadoop.fs.s3a.path.style.access", "true")
+    .config("spark.hadoop.fs.s3a.access.key", ...)
+    .config("spark.hadoop.fs.s3a.secret.key", ...)
+    .config("spark.hadoop.fs.s3a.aws.credentials.provider", "org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider")
+    .config("spark.jars.packages", "org.apache.hadoop:hadoop-client-api:3.3.4,org.apache.hadoop:hadoop-client-runtime:3.3.4,org.apache.hadoop:hadoop-aws:3.3.4,org.apache.hadoop:hadoop-common:3.3.4,com.amazonaws:aws-java-sdk-bundle:1.12.162")
+     ...
+----
+
+Since the notebook image does not include any AWS or Hadoop libraries, these are listed under `spark.jars.packages`.
+How these libraries are handled can be seen by looking at the logs for the user pod and the executor pods that are spawned when the Spark session is created.
+In the notebook pod (e.g. `jupyter-isla-williams---14730816`) we see that JupyterHub uses Ivy to fetch each library and resolve the dependencies:
+
+[source, console]
+----
+:: loading settings :: url = jar:file:/usr/local/spark-3.5.2-bin-hadoop3/jars/ivy-2.5.1.jar!/org/apache/ivy/core/settings/ivysettings.xml
+Ivy Default Cache set to: /home/jovyan/.ivy2/cache
+The jars for the packages stored in: /home/jovyan/.ivy2/jars
+org.apache.hadoop#hadoop-client-api added as a dependency
+org.apache.hadoop#hadoop-client-runtime added as a dependency
+org.apache.hadoop#hadoop-aws added as a dependency
+org.apache.hadoop#hadoop-common added as a dependency
+com.amazonaws#aws-java-sdk-bundle added as a dependency
+:: resolving dependencies :: org.apache.spark#spark-submit-parent-bf8973c2-1a2f-425e-a272-2ef86cb852f8;1.0
+	confs: [default]
+	found org.apache.hadoop#hadoop-client-api;3.3.4 in central
+	found org.xerial.snappy#snappy-java;1.1.8.2 in central
+    ...
+----
+
+And in the executor, we see from the logs (simplified for clarity) that the user-specific driver service is used to provide these libraries.
+The executor connects to the service and then iterates through the list of resolved dependencies, fetching each package to a temporary folder (`/var/data/spark-bfed3050-5f63-441d-9799-a196d7b54ce9/spark-a03b09a7-869e-4778-ac04-fa935bbca5ab`) before copying it to the working folder (`/opt/spark/work-dir`):
+[source, console]
+----
+Successfully created connection to jupyter-isla-williams---14730816/10.96.29.131:2222
+Created local directory at /var/data/spark-bfed3050-5f63-441d-9799-a196d7b54ce9/blockmgr-5b70510d-7d4d-452f-818a-2a02bd0d4227
+Connecting to driver: spark://CoarseGrainedScheduler@jupyter-isla-williams---14730816:2222
+Successfully registered with driver
+Fetching spark://jupyter-isla-williams---14730816:2222/files/org.checkerframework_checker-qual-2.5.2.jar with timestamp 1741174390840
+Fetching spark://jupyter-isla-williams---14730816:2222/files/org.checkerframework_checker-qual-2.5.2.jar to /var/data/spark-bfed3050-5f63-441d-9799-a196d7b54ce9/spark-a03b09a7-869e-4778-ac04-fa935bbca5ab/fetchFileTemp8701341596301771486.tmp
+Copying /var/data/spark-bfed3050-5f63-441d-9799-a196d7b54ce9/spark-a03b09a7-869e-4778-ac04-fa935bbca5ab/1075326831741174390840_cache to /opt/spark/work-dir/./org.checkerframework_checker-qual-2.5.2.jar
+----
+
+Once the Spark session has been created, the notebook reads data from S3, performs a simple aggregation and re-writes it in different formats.
