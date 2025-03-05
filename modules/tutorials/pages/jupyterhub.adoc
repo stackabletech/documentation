@@ -8,11 +8,12 @@ The example notebook is used to demonstrate simple read/write interactions with 
 
 == Keycloak
 
-Keycloak is installed using a https://github.com/stackabletech/demos/blob/feat/keycloak-jupyterhub/stacks/jupyterhub-keycloak/keycloak.yaml[Deployment] that loads realm configuration mounted as a ConfigMap.
+Keycloak is installed using a https://github.com/stackabletech/demos/blob/main/stacks/jupyterhub-keycloak/keycloak.yaml[Deployment] that loads realm configuration mounted as a ConfigMap.
 
+[#services]
 === Services
 
-In the demo, the keycloak and jupyter hub service (proxy-public) ports are fixed e.g.
+In the demo, the keycloak and jupyter hub service (`proxy-public`) ports are fixed e.g.
 
 [source,yaml]
 ---
@@ -84,7 +85,7 @@ options:
 
 === Discovery
 
-As mentioned above, keycloak writes out its endpoint information to a ConfigMap, shown in the code section below.
+As mentioned above in <<services, Services>>, keycloak writes out its endpoint information to a ConfigMap, shown in the code section below.
 
 .Writing the ConfigMap
 [%collapsible]
@@ -202,7 +203,7 @@ For the self-signed certificate to be accepted during the handshake between Jupy
 
 === Realm
 
-The Keycloak https://github.com/stackabletech/demos/blob/feat/keycloak-jupyterhub/stacks/jupyterhub-keycloak/keycloak-realm-config.yaml for the demo basically contains a set of users and groups, along with a simple client definition:
+The Keycloak https://github.com/stackabletech/demos/blob/main/stacks/jupyterhub-keycloak/keycloak-realm-config.yaml for the demo basically contains a set of users and groups, along with a simple client definition:
 
 [source,yaml]
 ----
@@ -218,8 +219,8 @@ The Keycloak https://github.com/stackabletech/demos/blob/feat/keycloak-jupyterhu
   } ]
 ----
 
-Not that the standard flow is enabled and no other OAuth-specific settings are required.
-Wildcards are used for `redirectUris` and `webOrigins`, mainly for the sake of simplicity: in production environments this would typically be limited or filtered in an appropriate way.
+Note that the standard flow is enabled and no other OAuth-specific settings are required.
+Wildcards are used for `redirectUris` and `webOrigins`, mainly for the sake of simplicity: in production environments these would typically be limited or filtered in an appropriate way.
 
 == JupyterHub
 
@@ -254,7 +255,7 @@ image::jupyterhub/sign-up.png[Create a user]
 
 Users must either be included in an `allowed_users` list, or the property `allow_all` must be set to `true`.
 The creation of new users will be checked against these settings and refused if appropriate.
-If an admin_users property is defined, then associated users will see an additional tab on the JupyterHub home screen, allowing them to carry out user management actions (e.g. create user groups and assign users to them, assign users to the admin role, delete users).
+If an `admin_users` property is defined, then associated users will see an additional tab on the JupyterHub home screen, allowing them to carry out certain user management actions (e.g. create user groups and assign users to them, assign users to the admin role, delete users).
 
 image::jupyterhub/admin-user.png[Admin tab]
 
@@ -297,11 +298,11 @@ This section of the JupyterHub values specifies that we are using GenericOAuthen
 
 <1> We need to either provide a list of users using `allowed_users`, or to explicitly allow _all_ users, as done here.
 We will delegate this to Keycloak so that we do not have to maintain users in two places.
-<2> Each admin user will have access to an "Admin" tab on the JupyterHub UI where certain user-management actions can be carried out.
+<2> Each admin user will have access to an Admin tab on the JupyterHub UI where certain user-management actions can be carried out.
 <3> Define the Keycloak scope
 <4> Specifies which authenticator class to use
 
-The endpoints can be defined directly under `GenericOAuthenticator` as well, though for our purposes we will set them in a configuration script (see below).
+The endpoints can be defined directly under `GenericOAuthenticator` as well, though for our purposes we will set them in a configuration script (see <<endpoints, Endpoints>> below).
 
 === Certificates
 
@@ -351,10 +352,11 @@ This can be seen below:
 If the default file is not overwritten, but is mounted to a new file in the same directory, then the certificates should be updated by calling e.g. `update-ca-certificates`.
 <4> ensure python is using the same certificate.
 
+[#endpoints]
 === Endpoints
 
 The Helm chart for JupyterHub allows us to augment the standard configuration with one or more scripts.
-As mentioned in an earlier section, we want to define the endpoints dynamically - by making use of the ConfigMap written out by the Keycloak Deployment - and we can do this by adding a script under `extraConfig`:
+As mentioned in the <<services, Services>> section above, we want to define the endpoints dynamically - by making use of the ConfigMap written out by the Keycloak Deployment - and we can do this by adding a script under `extraConfig`:
 
 [source,yaml]
 ----
@@ -373,9 +375,10 @@ As mentioned in an earlier section, we want to define the endpoints dynamically 
         c.GenericOAuthenticator.userdata_url = f"https://{keycloak_url}/realms/demo/protocol/openid-connect/userinfo"
 ----
 
+[#driver]
 === Driver Service (Spark)
 
-NOTE: When using Spark from within a notebook, please the `Provisos` section below.
+NOTE: When using Spark from within a notebook, please the <<provisos, Provisos>> section below.
 
 In the same way, we can use another script to define a driver service for each user.
 This is essential when using Spark from within a JupyterHUb notebook so that executor pods can be spawned from the user's kernel in a user-specific way.
@@ -425,7 +428,7 @@ This script instructs JupyterHub to use `KubeSpawner` to create a service refere
 
 === Profiles
 
-The `singleuser.profileList` section of the Helm chart values allows us to define notebook profiles by setting the CPU, Memory and Image combinations that can be selected. For instance, the profiles below allows to select 2/4/... CPUs, 4/8/... GB RAM and between two images.
+The `singleuser.profileList` section of the Helm chart values allows us to define notebook profiles by setting the CPU, Memory and Image combinations that can be selected. For instance, the profiles below allows us to select `2/4/...` CPUs, `4/8/...` GB RAM and to select one of two images.
 
 [source,yaml]
 ----
@@ -524,13 +527,14 @@ USER spark
 ====
 
 NOTE: The example notebook in the demo will start a distributed Spark cluster, whereby the notebook acts as the driver which spawns a number of executors.
-The driver uses the user-specific driver service (see above) to pass job dependencies to each executor.
+The driver uses the user-specific <<driver, driver service>> to pass job dependencies to each executor.
 The Spark versions of these dependencies must be the same, or else serialization errors can occur.
 This is increasingly likely in cases where Java or Scala classes do not have a specified `serialVersionUID`, in which case one will be calculated at runtime based on the contents of each class (method signatures etc.): if the contents of these class files have been changed, then the UID may differ between driver and executor.
 To avoid this, care needs to be taken to use images for the notebook and the Spark job that are using a common Spark build.
 
 == Example Notebook
 
+[#provisos]
 === Provisos
 
 WARNING: When running a distributed Spark cluster from within a JupyterHub notebook, the notebook acts as the driver and requests executors Pods from k8s.
@@ -588,4 +592,4 @@ Fetching spark://jupyter-isla-williams---14730816:2222/files/org.checkerframewor
 Copying /var/data/spark-bfed3050-5f63-441d-9799-a196d7b54ce9/spark-a03b09a7-869e-4778-ac04-fa935bbca5ab/1075326831741174390840_cache to /opt/spark/work-dir/./org.checkerframework_checker-qual-2.5.2.jar
 ----
 
-Once the Spark session has been created, the notebook reads data from S3, performs a simple aggregation and re-writes it in different formats.
+Once the Spark session has been created, the notebook reads data from S3, performs a simple aggregation and re-writes it in different formats. Further comments can be found in the notebook itself.
