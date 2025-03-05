@@ -3,7 +3,7 @@
 :keywords: notebook, JupyterHub, Kubernetes, k8s, Apache Spark, HDFS, S3
 
 This tutorial illustrates various scenarios and configuration options when using JupyterHub on Kubernetes.
-The custom resources and configuration settings that are discussed here are based on the JupyterHub-Keycloak demo, so you may find it helpful to have that demo running to reference things as you read through this tutorial.
+The custom resources and configuration settings that are discussed here are based on the xref:demos:jupyterhub-keycloak.adoc[JupyterHub-Keycloak demo], so you may find it helpful to have that demo running to reference the various https://github.com/stackabletech/demos/blob/main/stacks/jupyterhub-keycloak[resources] as you read through this tutorial.
 The example notebook is used to demonstrate simple read/write interactions with an S3 storage backend using Apache Spark.
 
 == Keycloak
@@ -79,9 +79,14 @@ options:
         c.GenericOAuthenticator.userdata_url = f"https://{keycloak_url}/realms/demo/protocol/openid-connect/userinfo"
 ----
 
-<1> endpoint information read from the ConfigMap
-<2> this information is passed to a variable in one of the start-up config scripts...
-<3> ...and then used for JupyterHub settings
+<1> Endpoint information read from the ConfigMap
+<2> This information is passed to a variable in one of the start-up config scripts
+<3> And then used for JupyterHub settings (this is where port `31095` is hard-coded for the proxy service)
+
+NOTE: The node port IP found in the ConfigMap `keycloak-address` can be used for opening the JupyterHb UI.
+On Kind this can be any node - not necessarily the one where the proxy Pod is running.
+This is due to the way in which Docker networking is used within the cluster.
+On other clusters it might be necessary to use the exact Node on which the proxy is running.
 
 === Discovery
 
@@ -135,7 +140,6 @@ kind: Deployment
               done
 ----
 ====
-
 
 === Security
 
@@ -203,7 +207,7 @@ For the self-signed certificate to be accepted during the handshake between Jupy
 
 === Realm
 
-The Keycloak https://github.com/stackabletech/demos/blob/main/stacks/jupyterhub-keycloak/keycloak-realm-config.yaml for the demo basically contains a set of users and groups, along with a simple client definition:
+The Keycloak https://github.com/stackabletech/demos/blob/main/stacks/jupyterhub-keycloak/keycloak-realm-config.yaml[realm configuration] for the demo basically contains a set of users and groups, along with a JupyterHub client definition:
 
 [source,yaml]
 ----
@@ -273,7 +277,7 @@ To authenticate against a Keycloak instance it is necessary to provide the follo
 
 === GenericOAuthenticator
 
-This section of the JupyterHub values specifies that we are using GenericOAuthenticator for our authentication.
+This section of the JupyterHub configuration specifies that we are using GenericOAuthenticator for our authentication:
 
 [source,yaml]
 ----
@@ -296,8 +300,8 @@ This section of the JupyterHub values specifies that we are using GenericOAuthen
 ...
 ----
 
-<1> We need to either provide a list of users using `allowed_users`, or to explicitly allow _all_ users, as done here.
-We will delegate this to Keycloak so that we do not have to maintain users in two places.
+<1> We need to either provide a list of users using `allowed_users`, or to explicitly allow _all_ users, as done here
+We will delegate this to Keycloak so that we do not have to maintain users in two places
 <2> Each admin user will have access to an Admin tab on the JupyterHub UI where certain user-management actions can be carried out.
 <3> Define the Keycloak scope
 <4> Specifies which authenticator class to use
@@ -348,9 +352,9 @@ This can be seen below:
 
 <1> Specify which certificate(s) should be used internally (in the code above this is using the default certificate, but is included for the sake of completion)
 <2> Create the certificate with the same secret class (`tls`) as Keycloak
-<3> Mount this certificate.
+<3> Mount this certificate
 If the default file is not overwritten, but is mounted to a new file in the same directory, then the certificates should be updated by calling e.g. `update-ca-certificates`.
-<4> ensure python is using the same certificate.
+<4> Ensure python is using the same certificate
 
 [#endpoints]
 === Endpoints
@@ -365,11 +369,11 @@ As mentioned in the <<services, Services>> section above, we want to define the 
       03-set-endpoints: |
         import os
         from oauthenticator.generic import GenericOAuthenticator
-        keycloak_url = os.getenv("KEYCLOAK_NODEPORT_URL")  # <2>
+        keycloak_url = os.getenv("KEYCLOAK_NODEPORT_URL")
         ...
         keycloak_node_ip = os.getenv("KEYCLOAK_NODE_IP")
         ...
-        c.GenericOAuthenticator.oauth_callback_url: f"http://{keycloak_node_ip}:31095/hub/oauth_callback"  # <3>
+        c.GenericOAuthenticator.oauth_callback_url: f"http://{keycloak_node_ip}:31095/hub/oauth_callback"
         c.GenericOAuthenticator.authorize_url = f"https://{keycloak_url}/realms/demo/protocol/openid-connect/auth"
         c.GenericOAuthenticator.token_url = f"https://{keycloak_url}/realms/demo/protocol/openid-connect/token"
         c.GenericOAuthenticator.userdata_url = f"https://{keycloak_url}/realms/demo/protocol/openid-connect/userinfo"
@@ -428,7 +432,7 @@ This script instructs JupyterHub to use `KubeSpawner` to create a service refere
 
 === Profiles
 
-The `singleuser.profileList` section of the Helm chart values allows us to define notebook profiles by setting the CPU, Memory and Image combinations that can be selected. For instance, the profiles below allows us to select `2/4/...` CPUs, `4/8/...` GB RAM and to select one of two images.
+The `singleuser.profileList` section of the Helm chart values allows us to define notebook profiles by setting the CPU, Memory and Image combinations that can be selected. For instance, the profiles below allows us to select 2/4/etc. CPUs, 4/8/etc. GB RAM and to select one of two images.
 
 [source,yaml]
 ----
@@ -528,8 +532,8 @@ USER spark
 
 NOTE: The example notebook in the demo will start a distributed Spark cluster, whereby the notebook acts as the driver which spawns a number of executors.
 The driver uses the user-specific <<driver, driver service>> to pass job dependencies to each executor.
-The Spark versions of these dependencies must be the same, or else serialization errors can occur.
-This is increasingly likely in cases where Java or Scala classes do not have a specified `serialVersionUID`, in which case one will be calculated at runtime based on the contents of each class (method signatures etc.): if the contents of these class files have been changed, then the UID may differ between driver and executor.
+The Spark versions of these dependencies must be the same on both the driver and executor, or else serialization errors can occur.
+For Java or Scala classes that do not have a specified `serialVersionUID`, one will be calculated at runtime based on the contents of each class (method signatures etc.): if the contents of these class files have been changed, then the UID may differ between driver and executor.
 To avoid this, care needs to be taken to use images for the notebook and the Spark job that are using a common Spark build.
 
 == Example Notebook
