@@ -538,4 +538,3 @@ These Pods in turn can mount *all* volumes and Secrets in that namespace.
 To prevent this from breaking user separation, it is planned to use an OPA gatekeeper to define OPA rules that restrict what the created executor Pods can mount. This is not yet implemented in the demo nor reflected in this tutorial.
 
 === Overview
-
