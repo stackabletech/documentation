@@ -1,9 +1,10 @@
 = JupyterHub
 :description: A tutorial on how to configure various aspects of JupyterHub on Kubernetes.
-:keywords: notebook, JupyterHub, Kubernetes, k8s, Spark, HDFS, S3
+:keywords: notebook, JupyterHub, Kubernetes, k8s, Apache Spark, HDFS, S3
 
 This tutorial illustrates various scenarios and configuration options when using JupyterHub on Kubernetes.
 The custom resources and configuration settings that are discussed here are based on the JupyterHub-Keycloak demo, so you may find it helpful to have that demo running to reference things as you read through this tutorial.
+The example notebook is used to demonstrate simple read/write interactions with an S3 storage backend using Apache Spark.
 
 == Keycloak
 
@@ -426,6 +427,8 @@ This script instructs JupyterHub to use `KubeSpawner` to create a service refere
 
 The `singleuser.profileList` section of the Helm chart values allows us to define notebook profiles by setting the CPU, Memory and Image combinations that can be selected. For instance, the profiles below allows to select 2/4/... CPUs, 4/8/... GB RAM and between two images.
 
+[source,yaml]
+----
  singleuser:
     ...
     profileList:
@@ -472,6 +475,7 @@ The `singleuser.profileList` section of the Helm chart values allows us to defin
                 display_name: "quay.io/jupyter/pyspark-notebook:spark-3.5.2"
                 kubespawner_override:
                   image: "quay.io/jupyter/pyspark-notebook:spark-3.5.2"
+----
 
 These options are then displayed as drop-down lists for the user once logged in:
 
@@ -479,8 +483,59 @@ image::jupyterhub/server-options.png[Server options]
 
 == Images
 
+The demo uses the following images:
+
+* Notebook images
+** `quay.io/jupyter/pyspark-notebook:spark-3.5.2`
+** `quay.io/jupyter/pyspark-notebook:python-3.11.9`
+* Spark image
+** `oci.stackable.tech/sandbox/spark:3.5.2-python311` (custom image adding python 3.11, built on `spark:3.5.2-scala2.12-java17-ubuntu`)
+
+.Dockerfile for the custom image
+[%collapsible]
+====
+[source, dockerfile]
+----
+FROM spark:3.5.2-scala2.12-java17-ubuntu
+
+USER root
+
+RUN set -ex; \
+    apt-get update; \
+    # Install dependencies for Python 3.11
+    apt-get install -y \
+    software-properties-common \
+    && apt-get update && apt-get install -y \
+    python3.11 \
+    python3.11-venv \
+    python3.11-dev \
+    && rm -rf /var/lib/apt/lists/*; \
+    # Install pip manually for Python 3.11
+    curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
+    python3.11 get-pip.py && \
+    rm get-pip.py
+
+# Make Python 3.11 the default Python version
+RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1 \
+    && update-alternatives --install /usr/bin/pip pip /usr/local/bin/pip3 1
+
+USER spark
+----
+====
+
+NOTE: The example notebook in the demo will start a distributed Spark cluster, whereby the notebook acts as the driver which spawns a number of executors.
+The driver uses the user-specific driver service (see above) to pass job dependencies to each executor.
+The Spark versions of these dependencies must be the same, or else serialization errors can occur.
+This is increasingly likely in cases where Java or Scala classes do not have a specified `serialVersionUID`, in which case one will be calculated at runtime based on the contents of each class (method signatures etc.): if the contents of these class files have been changed, then the UID may differ between driver and executor.
+To avoid this, care needs to be taken to use images for the notebook and the Spark job that are using a common Spark build.
+
 == Example Notebook
 
 === Provisos
 
+WARNING: When running a distributed Spark cluster from within a JupyterHub notebook, the notebook acts as the driver and requests executors Pods from k8s.
+These Pods in turn can mount *all* volumes and Secrets in that namespace.
+To prevent this from breaking user separation, it is planned to use an OPA gatekeeper to define OPA rules that restrict what the created executor Pods can mount. This is not yet implemented in the demo nor reflected in this tutorial.
+
 === Overview
+
