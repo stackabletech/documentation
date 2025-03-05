@@ -75,7 +75,7 @@ At the bottom of this page in the <<_common_scenarios, common scenarios>> sectio
 
 == Stackable provided images
 
-If your Kubernetes cluster has internet access, the easiest way is to use the publicly available images from the https://docker.stackable.tech/[Image registry hosted by Stackable] (as has been noted at the beginning of the page):
+If your Kubernetes cluster has internet access, the easiest way is to use the publicly available images from the https://oci.stackable.tech/[Image registry hosted by Stackable] (as has been noted at the beginning of the page):
 
 [source,yaml]
 ----
@@ -99,7 +99,7 @@ Security updates within a release line will result in patch version bumps in the
 If you don't specify the Stackable version, the operator will use its own version, e.g. `23.7.0`.
 When using a nightly operator or a `pr` version, it will use the nightly `0.0.0-dev` image.
 
-All the available images (with their product and stackable version) can be found in our https://repo.stackable.tech/#browse/browse:docker:v2%2Fstackable[docker repository].
+All the available images (with their product and stackable version) can be found in our https://oci.stackable.tech/api/v2.0/projects/sdp[OCI registry]. Information on how to browse the registry can be found xref:contributor:project-overview.adoc#docker-images[here]).
 
 == Custom docker registry
 
@@ -117,7 +117,7 @@ spec:
     repo: my.corp/myteam/stackable
 ----
 
-This will change the image from the default Stackable repository `docker.stackable.tech/stackable/kafka:3.3.1-stackable23.7.0` to `my.corp/myteam/stackable/kafka:3.3.1-stackable23.7.0`.
+This will change the image from the default Stackable repository `oci.stackable.tech/sdp/kafka:3.3.1-stackable23.7.0` to `my.corp/myteam/stackable/kafka:3.3.1-stackable23.7.0`.
 
 == [[customimages]] Custom images
 
@@ -140,7 +140,7 @@ Only when the correct product version is given to the operator, the product will
 Using custom images has a few limitations that users should be aware of:
 
 * The images will *have* to have the same structures that Stackable operators expect.
-This should usually be ensured by specifying a Stackable image in the `FROM` clause of the Dockerfile (all the available images can be found in our https://repo.stackable.tech/#browse/browse:docker:v2%2Fstackable[docker repository] - the schema is typically: `docker.stackable.tech/stackable/<product>:<product-version>-stackable<stackable-version>`).
+This should usually be ensured by specifying a Stackable image in the `FROM` clause of the Dockerfile (all the available images can be found in our https://oci.stackable.tech/api/v2.0/projects/sdp[OCI registry] - the schema is typically: `oci.stackable.tech/sdp/<product>:<product-version>-stackable<stackable-version>`. Information on how to browse the registry can be found xref:contributor:project-overview.adoc#docker-images[here]).
 
 * Images will have to be upgraded for every new Stackable release to follow structural changes that Stackable may have made to their images.
 When deriving images from official Stackable images this will mean updating the version of the image in the `FROM` clause to the correct Stackable release.

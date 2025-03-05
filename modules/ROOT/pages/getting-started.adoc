@@ -44,23 +44,18 @@ stackablectl release install -i commons -i secret -i listener -i zookeeper -i ka
 ====
 NOTE: These examples assume Helm version 3. They will not work with Helm version 2.
 
-Add the stackable-stable Helm Chart repository:
-
-[source,bash]
-----
-helm repo add stackable-stable https://repo.stackable.tech/repository/helm-stable/
-----
+`helm repo` subcommands are not supported for OCI registries. The operators are installed directly, without adding the Helm Chart repository first.
 
 Install the operators:
 
 [source,bash]
 ----
-helm install zookeeper-operator stackable-stable/zookeeper-operator --version=24.11.1
-helm install kafka-operator stackable-stable/kafka-operator --version=24.11.1
-helm install secret-operator stackable-stable/secret-operator --version=24.11.1
-helm install listener-operator stackable-stable/listener-operator --version=24.11.1
-helm install commons-operator stackable-stable/commons-operator --version=24.11.1
-helm install nifi-operator stackable-stable/nifi-operator --version=24.11.1
+helm install zookeeper-operator oci://oci.stackable.tech/sdp-charts/zookeeper-operator --version=24.11.1
+helm install kafka-operator oci://oci.stackable.tech/sdp-charts/kafka-operator --version=24.11.1
+helm install secret-operator oci://oci.stackable.tech/sdp-charts/secret-operator --version=24.11.1
+helm install listener-operator oci://oci.stackable.tech/sdp-charts/listener-operator --version=24.11.1
+helm install commons-operator oci://oci.stackable.tech/sdp-charts/commons-operator --version=24.11.1
+helm install nifi-operator oci://oci.stackable.tech/sdp-charts/nifi-operator --version=24.11.1
 ----
 ====
 
