@@ -34,7 +34,7 @@ spec:
       nodePort: 31093 # <1>
 ----
 
-<1> Static value for the purposes of the demo.
+<1> Static value for the purposes of the demo
 
 They are:
 
@@ -302,7 +302,7 @@ This section of the JupyterHub configuration specifies that we are using Generic
 
 <1> We need to either provide a list of users using `allowed_users`, or to explicitly allow _all_ users, as done here.
 We will delegate this to Keycloak so that we do not have to maintain users in two places
-<2> Each admin user will have access to an Admin tab on the JupyterHub UI where certain user-management actions can be carried out.
+<2> Each admin user will have access to an Admin tab on the JupyterHub UI where certain user-management actions can be carried out
 <3> Define the Keycloak scope
 <4> Specifies which authenticator class to use
 
@@ -352,8 +352,7 @@ This can be seen below:
 
 <1> Specify which certificate(s) should be used internally (in the code above this is using the default certificate, but is included for the sake of completion)
 <2> Create the certificate with the same secret class (`tls`) as Keycloak
-<3> Mount this certificate
-If the default file is not overwritten, but is mounted to a new file in the same directory, then the certificates should be updated by calling e.g. `update-ca-certificates`.
+<3> Mount this certificate: if the default file is not overwritten, but is mounted to a new file in the same directory, then the certificates should be updated by calling e.g. `update-ca-certificates`
 <4> Ensure python is using the same certificate
 
 [#endpoints]
@@ -382,7 +381,7 @@ As mentioned in the <<services, Services>> section above, we want to define the 
 [#driver]
 === Driver Service (Spark)
 
-NOTE: When using Spark from within a notebook, please the <<provisos, Provisos>> section below.
+NOTE: When using Spark from within a notebook, please take note of the <<provisos, Provisos>> section below.
 
 In the same way, we can use another script to define a driver service for each user.
 This is essential when using Spark from within a JupyterHub notebook so that executor Pods can be spawned from the user's kernel in a user-specific way.
@@ -432,7 +431,7 @@ This script instructs JupyterHub to use `KubeSpawner` to create a service refere
 
 === Profiles
 
-The `singleuser.profileList` section of the Helm chart values allows us to define notebook profiles by setting the CPU, Memory and Image combinations that can be selected. For instance, the profiles below allows us to select 2/4/etc. CPUs, 4/8/etc. GB RAM and to select one of two images.
+The `singleuser.profileList` section of the Helm chart values allows us to define notebook profiles by setting the CPU, Memory and Image combinations that can be selected. For instance, the profiles below allows us to select 2/4/etc. CPUs, 4/8/etc. GB RAM and to choose between one of two images.
 
 [source,yaml]
 ----
@@ -541,9 +540,9 @@ To avoid this, care needs to be taken to use images for the notebook and the Spa
 [#provisos]
 === Provisos
 
-WARNING: When running a distributed Spark cluster from within a JupyterHub notebook, the notebook acts as the driver and requests executors Pods from k8s.
+WARNING: When running a distributed Spark cluster from within a JupyterHub notebook, the notebook acts as the driver and requests executor Pods from k8s.
 These Pods in turn can mount *all* volumes and Secrets in that namespace.
-To prevent this from breaking user separation, it is planned to use an OPA gatekeeper to define OPA rules that restrict what the created executor Pods can mount. This is not yet implemented in the demo nor reflected in this tutorial.
+To prevent this from breaking user isolation, it is planned to use an OPA gatekeeper to define OPA rules that restrict what the created executor Pods can mount. This is not yet implemented in the demo nor reflected in this tutorial.
 
 === Overview
 
