@@ -1,0 +1,598 @@
+= JupyterHub
+:description: A tutorial on how to configure various aspects of JupyterHub on Kubernetes.
+:keywords: notebook, JupyterHub, Kubernetes, k8s, Apache Spark, HDFS, S3
+
+This tutorial illustrates various scenarios and configuration options when using JupyterHub on Kubernetes.
+The Custom Resources and configuration settings that are discussed here are based on the xref:demos:jupyterhub-keycloak.adoc[JupyterHub-Keycloak demo], so you may find it helpful to have that demo running to reference the various https://github.com/stackabletech/demos/blob/main/stacks/jupyterhub-keycloak[Resource definitions] as you read through this tutorial.
+The example notebook is used to demonstrate simple read/write interactions with an S3 storage backend using Apache Spark.
+
+== Keycloak
+
+Keycloak is installed using a https://github.com/stackabletech/demos/blob/main/stacks/jupyterhub-keycloak/keycloak.yaml[Deployment] that loads its realm configuration mounted as a ConfigMap.
+
+[#services]
+=== Services
+
+In the demo, the Keycloak and JupyterHub service (`proxy-public`) ports are fixed e.g.
+
+[source,yaml]
+----
+apiVersion: v1
+kind: Service
+metadata:
+  name: keycloak
+  labels:
+    app: keycloak
+spec:
+  type: NodePort
+  selector:
+    app: keycloak
+  ports:
+    - name: https
+      port: 8443
+      targetPort: 8443
+      nodePort: 31093 # <1>
+----
+
+<1> Static value for the purposes of the demo
+
+They are:
+
+- `31093` for Keycloak
+- `31095` for JupyterHub/proxy-public
+
+The Keycloak and JupyterHub endpoints are defined in the JupyterHub chart values i.e. for the purposes of the demo (that does not use any pre-defined DNS settings), the ports have to be known before the JupyterHub components are deployed.
+
+This can be achieved by having the Keycloak Deployment write out its node URL and node IP into a ConfigMap during start-up, which can then be referenced by the JupyterHub chart like this:
+
+[source,yaml]
+----
+options:
+  hub:
+    config:
+      ...
+    extraEnv:
+      ...
+      KEYCLOAK_NODEPORT_URL:
+        valueFrom:
+          configMapKeyRef:
+            name: keycloak-address
+            key: keycloakAddress # <1>
+      KEYCLOAK_NODE_IP:
+        valueFrom:
+          configMapKeyRef:
+            name: keycloak-address
+            key: keycloakNodeIp
+    ...
+    extraConfig:
+      ...
+      03-set-endpoints: |
+        import os
+        from oauthenticator.generic import GenericOAuthenticator
+        keycloak_url = os.getenv("KEYCLOAK_NODEPORT_URL")  # <2>
+        ...
+        keycloak_node_ip = os.getenv("KEYCLOAK_NODE_IP")
+        ...
+        c.GenericOAuthenticator.oauth_callback_url: f"http://{keycloak_node_ip}:31095/hub/oauth_callback"  # <3>
+        c.GenericOAuthenticator.authorize_url = f"https://{keycloak_url}/realms/demo/protocol/openid-connect/auth"
+        c.GenericOAuthenticator.token_url = f"https://{keycloak_url}/realms/demo/protocol/openid-connect/token"
+        c.GenericOAuthenticator.userdata_url = f"https://{keycloak_url}/realms/demo/protocol/openid-connect/userinfo"
+----
+
+<1> Endpoint information read from the ConfigMap
+<2> This information is passed to a variable in one of the start-up config scripts
+<3> And then used for JupyterHub settings (this is where port `31095` is hard-coded for the proxy service)
+
+NOTE: The node port IP found in the ConfigMap `keycloak-address` can be used for opening the JupyterHub UI.
+On Kind this can be any node - not necessarily the one where the proxy Pod is running.
+This is due to the way in which Docker networking is used within the cluster.
+On other clusters it might be necessary to use the exact node on which the proxy is running.
+
+=== Discovery
+
+As mentioned above in <<services, Services>>, a Keycloak sidecar Container writes out its endpoint information to a ConfigMap, shown in the code section below.
+
+.Writing the ConfigMap
+[%collapsible]
+====
+[source,yaml]
+----
+---
+apiVersion: apps/v1
+kind: Deployment
+...
+    spec:
+      containers:
+        ...
+        - name: create-configmap
+          resources: {}
+          image: oci.stackable.tech/sdp/testing-tools:0.2.0-stackable0.0.0-dev
+          command: ["/bin/bash", "-c"]
+          args:
+            - |
+              pid=
+              trap 'echo SIGINT; [[ $pid ]] && kill $pid; exit' SIGINT
+              trap 'echo SIGTERM; [[ $pid ]] && kill $pid; exit' SIGTERM
+
+              while :
+              do
+                echo "Determining Keycloak public reachable address"
+                KEYCLOAK_ADDRESS=$(kubectl get svc keycloak -o json | jq -r --argfile endpoints <(kubectl get endpoints keycloak -o json) --argfile nodes <(kubectl get nodes -o json) '($nodes.items[] | select(.metadata.name == $endpoints.subsets[].addresses[].nodeName) | .status.addresses | map(select(.type == "ExternalIP" or .type == "InternalIP")) | min_by(.type) | .address | tostring) + ":" + (.spec.ports[] | select(.name == "https") | .nodePort | tostring)')
+                echo "Found Keycloak running at $KEYCLOAK_ADDRESS"
+
+                if [ ! -z "$KEYCLOAK_ADDRESS" ]; then
+                  KEYCLOAK_HOSTNAME="$(echo $KEYCLOAK_ADDRESS | grep -oP '^[^:]+')"
+                  KEYCLOAK_PORT="$(echo $KEYCLOAK_ADDRESS | grep -oP '[0-9]+$')"
+
+                  cat << EOF | kubectl apply -f -
+                    apiVersion: v1
+                    kind: ConfigMap
+                    metadata:
+                      name: keycloak-address
+                    data:
+                      keycloakAddress: "$KEYCLOAK_HOSTNAME:$KEYCLOAK_PORT"
+                      keycloakNodeIp: "$KEYCLOAK_HOSTNAME"
+              EOF
+                fi
+
+                sleep 30 & pid=$!
+                wait
+              done
+----
+====
+
+=== Security
+
+We create a keystore with a self-generated and self-signed certificate and mount it so that the keystore file can be used when starting Keycloak:
+
+[source,yaml]
+----
+    spec:
+      containers:
+        - name: keycloak
+          ...
+          args:
+            - start
+            - --hostname-strict=false
+            - --https-key-store-file=/tls/keystore.p12 # <3>
+            - --https-key-store-password=changeit
+            - --import-realm
+          volumeMounts:
+            - name: tls
+              mountPath: /tls/ # <2>
+        ...
+      volumes:
+        ...
+        - name: tls
+          ephemeral:
+            volumeClaimTemplate:
+              metadata:
+                annotations:
+                  secrets.stackable.tech/class: tls # <1>
+                  secrets.stackable.tech/format: tls-pkcs12
+                  secrets.stackable.tech/format.compatibility.tls-pkcs12.password: changeit
+                  secrets.stackable.tech/scope: service=keycloak,node
+              spec:
+                storageClassName: secrets.stackable.tech
+                accessModes:
+                  - ReadWriteOnce
+                resources:
+                  requests:
+                    storage: "1"
+----
+
+<1> Create a volume holding the self-signed certificate information
+<2> Mount this volume for Keycloak to use
+<3> Pass the keystore file as an argument on start-up
+
+For the self-signed certificate to be accepted during the handshake between JupyterHub and Keycloak it is important to create the JupyterHub-side certificate using the same SecretClass, although the format can be a different one:
+
+[source,yaml]
+----
+    extraVolumes:
+      - name: tls-ca-cert
+        ephemeral:
+          volumeClaimTemplate:
+            metadata:
+              annotations:
+                secrets.stackable.tech/class: tls
+            spec:
+              storageClassName: secrets.stackable.tech
+              accessModes:
+                - ReadWriteOnce
+              resources:
+                requests:
+                  storage: "1"
+----
+
+=== Realm
+
+The Keycloak https://github.com/stackabletech/demos/blob/main/stacks/jupyterhub-keycloak/keycloak-realm-config.yaml[realm configuration] for the demo basically contains a set of users and groups, along with a JupyterHub client definition:
+
+[source,yaml]
+----
+"clients" : [ {
+    "clientId": "jupyterhub",
+    "enabled": true,
+    "protocol": "openid-connect",
+    "clientAuthenticatorType": "client-secret",
+    "secret": ...,
+    "redirectUris" : [ "*" ],
+    "webOrigins" : [ "*" ],
+    "standardFlowEnabled": true
+  } ]
+----
+
+Note that the standard flow is enabled and no other OAuth-specific settings are required.
+Wildcards are used for `redirectUris` and `webOrigins`, mainly for the sake of simplicity: in production environments these would typically be limited or filtered in an appropriate way.
+
+== JupyterHub
+
+=== Authentication
+
+This tutorial covers two methods of authentication: Native and OAuth.
+Other implementations are documented https://jupyterhub.readthedocs.io/en/stable/reference/authenticators.html[here].
+
+==== Native Authenticator
+
+This tutorial and the accompanying demo assume that Keycloak is used for user authentication.
+However, a simpler alternative is to use the Native Authenticator that allows users to be added "on-the-fly".
+
+[source,yaml]
+----
+options:
+  hub:
+    config:
+      Authenticator:
+        allow_all: true
+        admin_users:
+          - admin
+      JupyterHub:
+        authenticator_class: nativeauthenticator.NativeAuthenticator
+      NativeAuthenticator:
+        open_signup: true
+  proxy:
+    ...
+----
+
+image::jupyterhub/sign-up.png[Create a user]
+
+Users must either be included in an `allowed_users` list, or the property `allow_all` must be set to `true`.
+The creation of new users will be checked against these settings and refused if appropriate.
+If an `admin_users` property is defined, then associated users will see an additional tab on the JupyterHub home screen, allowing them to carry out certain user management actions (e.g. create user groups and assign users to them, assign users to the admin role, delete users).
+
+image::jupyterhub/admin-user.png[Admin tab]
+
+NOTE: The above applies to version 4.x of the JupyterHub Helm chart.
+Version 3.x does not impose these limitations and users can be added and used without specifying `allowed_users` or `allow_all`.
+
+==== OAuth Authenticator (Keycloak)
+
+To authenticate against a Keycloak instance it is necessary to provide the following:
+
+* configuration for GenericOAuthenticator
+* certificates that can be used between JupyterHub and Keycloak
+* several URLs (callback, authorize etc.) necessary for the authentication handshake
+** in this tutorial these URLs will be defined dynamically using start-up scripts, a ConfigMap and environment variables
+
+=== GenericOAuthenticator
+
+This section of the JupyterHub configuration specifies that we are using GenericOAuthenticator for our authentication:
+
+[source,yaml]
+----
+...
+  hub:
+    config:
+      Authenticator:
+        # don't filter here: delegate to Keycloak
+        allow_all: true # <1>
+        admin_users:
+          - isla.williams # <2>
+      GenericOAuthenticator:
+        client_id: jupyterhub
+        client_secret: ...
+        username_claim: preferred_username
+        scope:
+          - openid # <3>
+      JupyterHub:
+        authenticator_class: generic-oauth # <4>
+...
+----
+
+<1> We need to either provide a list of users using `allowed_users`, or to explicitly allow _all_ users, as done here.
+We will delegate this to Keycloak so that we do not have to maintain users in two places
+<2> Each admin user will have access to an Admin tab on the JupyterHub UI where certain user-management actions can be carried out
+<3> Define the Keycloak scope
+<4> Specifies which authenticator class to use
+
+The endpoints can be defined directly under `GenericOAuthenticator` as well, though for our purposes we will set them in a configuration script (see <<endpoints, Endpoints>> below).
+
+=== Certificates
+
+The demo uses a self-signed certificate that needs to be accepted by JupyterHub.
+This involves:
+
+* mounting a Secret created with the same SecretClass as used for the self-signed certificate used by Keycloak
+* make this Secret available to JupyterHub
+* it may also be necessary to point Python at this specific certificate
+
+This can be seen below:
+
+[source,yaml]
+----
+    extraEnv: # <1>
+      CACERT: /etc/ssl/certs/ca-certificates.crt
+      CERT: /etc/ssl/certs/ca-certificates.crt
+      CURLOPT_CAINFO: /etc/ssl/certs/ca-certificates.crt
+      ...
+    extraVolumes:
+      - name: tls-ca-cert # <2>
+        ephemeral:
+          volumeClaimTemplate:
+            metadata:
+              annotations:
+                secrets.stackable.tech/class: tls
+            spec:
+              storageClassName: secrets.stackable.tech
+              accessModes:
+                - ReadWriteOnce
+              resources:
+                requests:
+                  storage: "1"
+    extraVolumeMounts:
+      - name: tls-ca-cert
+        # Alternative: mount to another filename in this folder and call update-ca-certificates
+        mountPath: /etc/ssl/certs/ca-certificates.crt # <3>
+        subPath: ca.crt
+      - name: tls-ca-cert
+        mountPath: /usr/local/lib/python3.12/site-packages/certifi/cacert.pem # <4>
+        subPath: ca.crt
+----
+
+<1> Specify which certificate(s) should be used internally (in the code above this is using the default certificate, but is included for the sake of completion)
+<2> Create the certificate with the same SecretClass (`tls`) as Keycloak
+<3> Mount this certificate: if the default file is not overwritten, but is mounted to a new file in the same directory, then the certificates should be updated by calling e.g. `update-ca-certificates`
+<4> Ensure Python is using the same certificate
+
+[#endpoints]
+=== Endpoints
+
+The Helm chart for JupyterHub allows us to augment the standard configuration with one or more scripts.
+As mentioned in the <<services, Services>> section above, we want to define the endpoints dynamically - by making use of the ConfigMap written out by the Keycloak Deployment - and we can do this by adding a script under `extraConfig`:
+
+[source,yaml]
+----
+   extraConfig:
+      ...
+      03-set-endpoints: |
+        import os
+        from oauthenticator.generic import GenericOAuthenticator
+        keycloak_url = os.getenv("KEYCLOAK_NODEPORT_URL")
+        ...
+        keycloak_node_ip = os.getenv("KEYCLOAK_NODE_IP")
+        ...
+        c.GenericOAuthenticator.oauth_callback_url: f"http://{keycloak_node_ip}:31095/hub/oauth_callback"
+        c.GenericOAuthenticator.authorize_url = f"https://{keycloak_url}/realms/demo/protocol/openid-connect/auth"
+        c.GenericOAuthenticator.token_url = f"https://{keycloak_url}/realms/demo/protocol/openid-connect/token"
+        c.GenericOAuthenticator.userdata_url = f"https://{keycloak_url}/realms/demo/protocol/openid-connect/userinfo"
+----
+
+[#driver]
+=== Driver Service (Spark)
+
+NOTE: When using Spark from within a notebook, please take note of the <<provisos, Provisos>> section below.
+
+In the same way, we can use another script to define a driver service for each user.
+This is essential when using Spark from within a JupyterHub notebook so that executor Pods can be spawned from the user's kernel in a user-specific way.
+This script instructs JupyterHub to use `KubeSpawner` to create a service referenced by the UID of the parent Pod.
+
+[source,yaml]
+----
+   extraConfig:
+     ...
+     02-create-spark-driver-service-hook: |
+        # Thanks to https://github.com/jupyterhub/kubespawner/pull/644
+        from jupyterhub.utils import exponential_backoff
+        from kubespawner import KubeSpawner
+        from kubespawner.objects import make_owner_reference
+        from kubernetes_asyncio.client.models import V1ServicePort
+        from functools import partial
+
+        async def after_pod_created_hook(spawner: KubeSpawner, pod: dict):
+          owner_reference = make_owner_reference(
+            pod["metadata"]["name"], pod["metadata"]["uid"]
+          )
+          service_manifest = spawner.get_service_manifest(owner_reference)
+
+          service_manifest.spec.type = "ClusterIP"
+          service_manifest.spec.clusterIP = "None" # Headless Services is all we need
+          service_manifest.spec.ports += [
+            V1ServicePort(name='spark-ui',            port=4040, target_port=4040),
+            V1ServicePort(name='spark-driver',        port=2222, target_port=2222),
+            V1ServicePort(name='spark-block-manager', port=7777, target_port=7777)
+          ]
+
+          await exponential_backoff(
+              partial(
+                  spawner._ensure_not_exists,
+                  "service",
+                  service_manifest.metadata.name,
+              ),
+              f"Failed to delete service {service_manifest.metadata.name}",
+          )
+          await exponential_backoff(
+              partial(spawner._make_create_resource_request, "service", service_manifest),
+              f"Failed to create service {service_manifest.metadata.name}",
+          )
+
+        c.KubeSpawner.after_pod_created_hook = after_pod_created_hook
+----
+
+=== Profiles
+
+The `singleuser.profileList` section of the Helm chart values allows us to define notebook profiles by setting the CPU, memory and image combinations that can be selected. For instance, the profiles below allows us to select 2/4/etc. CPUs, 4/8/etc. GB RAM and to choose between one of two images.
+
+[source,yaml]
+----
+ singleuser:
+    ...
+    profileList:
+      - display_name: "Default"
+        description: "Default profile"
+        default: true
+        profile_options:
+          cpu:
+            display_name: CPU
+            choices:
+              "2":
+                display_name: "2"
+                kubespawner_override:
+                  cpu_guarantee: 2
+                  cpu_limit: 2
+              "4":
+                display_name: "4"
+                kubespawner_override:
+                  cpu_guarantee: 4
+                  cpu_limit: 4
+              ...
+          memory:
+            display_name: Memory
+            choices:
+              "4 GB":
+                display_name: "4 GB"
+                kubespawner_override:
+                  mem_guarantee: "4G"
+                  mem_limit: "4G"
+              "8 GB":
+                display_name: "8 GB"
+                kubespawner_override:
+                  mem_guarantee: "8G"
+                  mem_limit: "8G"
+              ...
+          image:
+            display_name: Image
+            choices:
+              "quay.io/jupyter/pyspark-notebook:python-3.11.9":
+                display_name: "quay.io/jupyter/pyspark-notebook:python-3.11.9"
+                kubespawner_override:
+                  image: "quay.io/jupyter/pyspark-notebook:python-3.11.9"
+              "quay.io/jupyter/pyspark-notebook:spark-3.5.2":
+                display_name: "quay.io/jupyter/pyspark-notebook:spark-3.5.2"
+                kubespawner_override:
+                  image: "quay.io/jupyter/pyspark-notebook:spark-3.5.2"
+----
+
+These options are then displayed as drop-down lists for the user once logged in:
+
+image::jupyterhub/server-options.png[Server options]
+
+== Images
+
+The demo uses the following images:
+
+* Notebook images
+** `quay.io/jupyter/pyspark-notebook:spark-3.5.2`
+** `quay.io/jupyter/pyspark-notebook:python-3.11.9`
+* Spark image
+** `oci.stackable.tech/sandbox/spark:3.5.2-python311` (custom image adding python 3.11, built on `spark:3.5.2-scala2.12-java17-ubuntu`)
+
+.Dockerfile for the custom image
+[%collapsible]
+====
+[source, dockerfile]
+----
+FROM spark:3.5.2-scala2.12-java17-ubuntu
+
+USER root
+
+RUN set -ex; \
+    apt-get update; \
+    # Install dependencies for Python 3.11
+    apt-get install -y \
+    software-properties-common \
+    && apt-get update && apt-get install -y \
+    python3.11 \
+    python3.11-venv \
+    python3.11-dev \
+    && rm -rf /var/lib/apt/lists/*; \
+    # Install pip manually for Python 3.11
+    curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
+    python3.11 get-pip.py && \
+    rm get-pip.py
+
+# Make Python 3.11 the default Python version
+RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1 \
+    && update-alternatives --install /usr/bin/pip pip /usr/local/bin/pip3 1
+
+USER spark
+----
+====
+
+NOTE: The example notebook in the demo will start a distributed Spark cluster, whereby the notebook acts as the driver which spawns a number of executors.
+The driver uses the user-specific <<driver, driver service>> to pass dependencies to each executor.
+The Spark versions of these dependencies must be the same on both the driver and executor, or else serialization errors can occur.
+For Java or Scala classes that do not have a specified `serialVersionUID`, one will be calculated at runtime based on the contents of each class (method signatures etc.): if the contents of these class files have been changed, then the UID may differ between driver and executor.
+To avoid this, care needs to be taken to use images for the notebook and Spark that are using a common Spark build.
+
+== Example Notebook
+
+[#provisos]
+=== Provisos
+
+WARNING: When running a distributed Spark cluster from within a JupyterHub notebook, the notebook acts as the driver and requests executor Pods from Kubernetes.
+These Pods in turn can mount *all* volumes and Secrets in that namespace.
+To prevent this from breaking user isolation, it is planned to use an OPA gatekeeper to define OPA rules that restrict what the created executor Pods can mount. This is not yet implemented in the demo nor reflected in this tutorial.
+
+=== Overview
+
+The notebook starts a distributed Spark cluster, which runs until the notebook kernel is stopped.
+In order to connect to the S3 backend, the following settings must be configured in the Spark session:
+
+[source, python]
+----
+    ...
+    .config("spark.hadoop.fs.s3a.endpoint", "http://minio:9000/")
+    .config("spark.hadoop.fs.s3a.path.style.access", "true")
+    .config("spark.hadoop.fs.s3a.access.key", ...)
+    .config("spark.hadoop.fs.s3a.secret.key", ...)
+    .config("spark.hadoop.fs.s3a.aws.credentials.provider", "org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider")
+    .config("spark.jars.packages", "org.apache.hadoop:hadoop-client-api:3.3.4,org.apache.hadoop:hadoop-client-runtime:3.3.4,org.apache.hadoop:hadoop-aws:3.3.4,org.apache.hadoop:hadoop-common:3.3.4,com.amazonaws:aws-java-sdk-bundle:1.12.162")
+     ...
+----
+
+Since the notebook image does not include any AWS or Hadoop libraries, these are listed under `spark.jars.packages`.
+How these libraries are handled can be seen by looking at the logs for the user Pod and the executor Pods that are spawned when the Spark session is created.
+In the notebook Pod (e.g. `jupyter-isla-williams---14730816`) we see that JupyterHub uses Ivy to fetch each library and resolve the dependencies:
+
+[source, console]
+----
+:: loading settings :: url = jar:file:/usr/local/spark-3.5.2-bin-hadoop3/jars/ivy-2.5.1.jar!/org/apache/ivy/core/settings/ivysettings.xml
+Ivy Default Cache set to: /home/jovyan/.ivy2/cache
+The jars for the packages stored in: /home/jovyan/.ivy2/jars
+org.apache.hadoop#hadoop-client-api added as a dependency
+org.apache.hadoop#hadoop-client-runtime added as a dependency
+org.apache.hadoop#hadoop-aws added as a dependency
+org.apache.hadoop#hadoop-common added as a dependency
+com.amazonaws#aws-java-sdk-bundle added as a dependency
+:: resolving dependencies :: org.apache.spark#spark-submit-parent-bf8973c2-1a2f-425e-a272-2ef86cb852f8;1.0
+	confs: [default]
+	found org.apache.hadoop#hadoop-client-api;3.3.4 in central
+	found org.xerial.snappy#snappy-java;1.1.8.2 in central
+    ...
+----
+
+And in the executor, we see from the logs (simplified for clarity) that the user-specific driver service is used to provide these libraries.
+The executor connects to the service and then iterates through the list of resolved dependencies, fetching each package to a temporary folder (`/var/data/spark-bfed3050-5f63-441d-9799-a196d7b54ce9/spark-a03b09a7-869e-4778-ac04-fa935bbca5ab`) before copying it to the working folder (`/opt/spark/work-dir`):
+[source, console]
+----
+Successfully created connection to jupyter-isla-williams---14730816/10.96.29.131:2222
+Created local directory at /var/data/spark-bfed3050-5f63-441d-9799-a196d7b54ce9/blockmgr-5b70510d-7d4d-452f-818a-2a02bd0d4227
+Connecting to driver: spark://CoarseGrainedScheduler@jupyter-isla-williams---14730816:2222
+Successfully registered with driver
+Fetching spark://jupyter-isla-williams---14730816:2222/files/org.checkerframework_checker-qual-2.5.2.jar with timestamp 1741174390840
+Fetching spark://jupyter-isla-williams---14730816:2222/files/org.checkerframework_checker-qual-2.5.2.jar to /var/data/spark-bfed3050-5f63-441d-9799-a196d7b54ce9/spark-a03b09a7-869e-4778-ac04-fa935bbca5ab/fetchFileTemp8701341596301771486.tmp
+Copying /var/data/spark-bfed3050-5f63-441d-9799-a196d7b54ce9/spark-a03b09a7-869e-4778-ac04-fa935bbca5ab/1075326831741174390840_cache to /opt/spark/work-dir/./org.checkerframework_checker-qual-2.5.2.jar
+----
+
+Once the Spark session has been created, the notebook reads data from S3, performs a simple aggregation and re-writes it in different formats. Further comments can be found in the notebook itself.
