@@ -86,7 +86,7 @@ options:
 NOTE: The node port IP found in the ConfigMap `keycloak-address` can be used for opening the JupyterHub UI.
 On Kind this can be any node - not necessarily the one where the proxy Pod is running.
 This is due to the way in which Docker networking is used within the cluster.
-On other clusters it might be necessary to use the exact Node on which the proxy is running.
+On other clusters it might be necessary to use the exact node on which the proxy is running.
 
 === Discovery
 
@@ -313,8 +313,8 @@ The endpoints can be defined directly under `GenericOAuthenticator` as well, tho
 The demo uses a self-signed certificate that needs to be accepted by JupyterHub.
 This involves:
 
-* mounting a secret created with the same secret class as used for the self-signed certificate used by Keycloak
-* make this secret available to JupyterHub
+* mounting a Secret created with the same SecretClass as used for the self-signed certificate used by Keycloak
+* make this Secret available to JupyterHub
 * it may also be necessary to point Python at this specific certificate
 
 This can be seen below:
@@ -351,9 +351,9 @@ This can be seen below:
 ----
 
 <1> Specify which certificate(s) should be used internally (in the code above this is using the default certificate, but is included for the sake of completion)
-<2> Create the certificate with the same secret class (`tls`) as Keycloak
+<2> Create the certificate with the same SecretClass (`tls`) as Keycloak
 <3> Mount this certificate: if the default file is not overwritten, but is mounted to a new file in the same directory, then the certificates should be updated by calling e.g. `update-ca-certificates`
-<4> Ensure python is using the same certificate
+<4> Ensure Python is using the same certificate
 
 [#endpoints]
 === Endpoints
@@ -530,10 +530,10 @@ USER spark
 ====
 
 NOTE: The example notebook in the demo will start a distributed Spark cluster, whereby the notebook acts as the driver which spawns a number of executors.
-The driver uses the user-specific <<driver, driver service>> to pass job dependencies to each executor.
+The driver uses the user-specific <<driver, driver service>> to pass dependencies to each executor.
 The Spark versions of these dependencies must be the same on both the driver and executor, or else serialization errors can occur.
 For Java or Scala classes that do not have a specified `serialVersionUID`, one will be calculated at runtime based on the contents of each class (method signatures etc.): if the contents of these class files have been changed, then the UID may differ between driver and executor.
-To avoid this, care needs to be taken to use images for the notebook and the Spark job that are using a common Spark build.
+To avoid this, care needs to be taken to use images for the notebook and Spark that are using a common Spark build.
 
 == Example Notebook
 
