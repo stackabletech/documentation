@@ -3,7 +3,7 @@
 :keywords: notebook, JupyterHub, Kubernetes, k8s, Apache Spark, HDFS, S3
 
 This tutorial illustrates various scenarios and configuration options when using JupyterHub on Kubernetes.
-The custom resources and configuration settings that are discussed here are based on the xref:demos:jupyterhub-keycloak.adoc[JupyterHub-Keycloak demo], so you may find it helpful to have that demo running to reference the various https://github.com/stackabletech/demos/blob/main/stacks/jupyterhub-keycloak[resources] as you read through this tutorial.
+The custom Resources and configuration settings that are discussed here are based on the xref:demos:jupyterhub-keycloak.adoc[JupyterHub-Keycloak demo], so you may find it helpful to have that demo running to reference the various https://github.com/stackabletech/demos/blob/main/stacks/jupyterhub-keycloak[resources] as you read through this tutorial.
 The example notebook is used to demonstrate simple read/write interactions with an S3 storage backend using Apache Spark.
 
 == Keycloak
@@ -13,7 +13,7 @@ Keycloak is installed using a https://github.com/stackabletech/demos/blob/main/s
 [#services]
 === Services
 
-In the demo, the keycloak and jupyter hub service (`proxy-public`) ports are fixed e.g.
+In the demo, the Keycloak and JupyterHub service (`proxy-public`) ports are fixed e.g.
 
 [source,yaml]
 ---
@@ -38,12 +38,12 @@ spec:
 
 They are:
 
-- `31093` for keycloak
+- `31093` for Keycloak
 - `31095` for jupyterhub/proxy-public
 
-The keycloak and jupyterhub endpoints are defined in the jupyter hub chart values i.e. for the purposes of the demo (that does not use any pre-defined DNS settings), the ports have to be known before the jupyter hub components are deployed.
+The Keycloak and JupyterHub endpoints are defined in the JupyterHub chart values i.e. for the purposes of the demo (that does not use any pre-defined DNS settings), the ports have to be known before the JupyterHub components are deployed.
 
-This can be achieved by having the keycloak deployment write out its node URL and node IP into a ConfigMap during start-up, which can then be referenced by the JupyterHub chart like this:
+This can be achieved by having the Keycloak Deployment write out its node URL and node IP into a ConfigMap during start-up, which can then be referenced by the JupyterHub chart like this:
 
 [source,yaml]
 ----
@@ -90,7 +90,7 @@ On other clusters it might be necessary to use the exact Node on which the proxy
 
 === Discovery
 
-As mentioned above in <<services, Services>>, a Keycloak sidecar container writes out its endpoint information to a ConfigMap, shown in the code section below.
+As mentioned above in <<services, Services>>, a Keycloak sidecar Container writes out its endpoint information to a ConfigMap, shown in the code section below.
 
 .Writing the ConfigMap
 [%collapsible]
@@ -143,7 +143,7 @@ kind: Deployment
 
 === Security
 
-We create a keystore with a self-generated and self-signed certificate and mount it so that the keystore file can be used when starting keycloak:
+We create a keystore with a self-generated and self-signed certificate and mount it so that the keystore file can be used when starting Keycloak:
 
 [source,yaml]
 ----
@@ -182,10 +182,10 @@ We create a keystore with a self-generated and self-signed certificate and mount
 ----
 
 <1> Create a volume holding the self-signed certificate information
-<2> Mount this volume for keycloak to use
+<2> Mount this volume for Keycloak to use
 <3> Pass the keystore file as an argument on start-up
 
-For the self-signed certificate to be accepted during the handshake between JupyterHub and Keycloak it is important to create the jupyterhub-side certificate using the same secret class, although the format can be a different one:
+For the self-signed certificate to be accepted during the handshake between JupyterHub and Keycloak it is important to create the JupyterHub-side certificate using the same secret class, although the format can be a different one:
 
 [source,yaml]
 ----
@@ -385,7 +385,7 @@ As mentioned in the <<services, Services>> section above, we want to define the 
 NOTE: When using Spark from within a notebook, please the <<provisos, Provisos>> section below.
 
 In the same way, we can use another script to define a driver service for each user.
-This is essential when using Spark from within a JupyterHub notebook so that executor pods can be spawned from the user's kernel in a user-specific way.
+This is essential when using Spark from within a JupyterHub notebook so that executor Pods can be spawned from the user's kernel in a user-specific way.
 This script instructs JupyterHub to use `KubeSpawner` to create a service referenced by the UID of the parent Pod.
 
 [source,yaml]
@@ -563,8 +563,8 @@ In order to connect to the S3 backend, the following settings must be configured
 ----
 
 Since the notebook image does not include any AWS or Hadoop libraries, these are listed under `spark.jars.packages`.
-How these libraries are handled can be seen by looking at the logs for the user pod and the executor pods that are spawned when the Spark session is created.
-In the notebook pod (e.g. `jupyter-isla-williams---14730816`) we see that JupyterHub uses Ivy to fetch each library and resolve the dependencies:
+How these libraries are handled can be seen by looking at the logs for the user Pod and the executor Pods that are spawned when the Spark session is created.
+In the notebook Pod (e.g. `jupyter-isla-williams---14730816`) we see that JupyterHub uses Ivy to fetch each library and resolve the dependencies:
 
 [source, console]
 ----
