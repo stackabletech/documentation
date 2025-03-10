@@ -16,7 +16,7 @@ Keycloak is installed using a https://github.com/stackabletech/demos/blob/main/s
 In the demo, the Keycloak and JupyterHub service (`proxy-public`) ports are fixed e.g.
 
 [source,yaml]
----
+----
 apiVersion: v1
 kind: Service
 metadata:
@@ -185,7 +185,7 @@ We create a keystore with a self-generated and self-signed certificate and mount
 <2> Mount this volume for Keycloak to use
 <3> Pass the keystore file as an argument on start-up
 
-For the self-signed certificate to be accepted during the handshake between JupyterHub and Keycloak it is important to create the JupyterHub-side certificate using the same secret class, although the format can be a different one:
+For the self-signed certificate to be accepted during the handshake between JupyterHub and Keycloak it is important to create the JupyterHub-side certificate using the same SecretClass, although the format can be a different one:
 
 [source,yaml]
 ----
@@ -272,8 +272,8 @@ To authenticate against a Keycloak instance it is necessary to provide the follo
 
 * configuration for GenericOAuthenticator
 * certificates that can be used between JupyterHub and Keycloak
-* several URls (callback, authorize etc.) necessary for the authentication handshake
-** in this tutorial these URls will be defined dynamically using start-up scripts, a ConfigMap and environment variables
+* several URLs (callback, authorize etc.) necessary for the authentication handshake
+** in this tutorial these URLs will be defined dynamically using start-up scripts, a ConfigMap and environment variables
 
 === GenericOAuthenticator
 
@@ -315,7 +315,7 @@ This involves:
 
 * mounting a secret created with the same secret class as used for the self-signed certificate used by Keycloak
 * make this secret available to JupyterHub
-* it may also be necessary to point python at this specific certificate
+* it may also be necessary to point Python at this specific certificate
 
 This can be seen below:
 
@@ -431,7 +431,7 @@ This script instructs JupyterHub to use `KubeSpawner` to create a service refere
 
 === Profiles
 
-The `singleuser.profileList` section of the Helm chart values allows us to define notebook profiles by setting the CPU, Memory and Image combinations that can be selected. For instance, the profiles below allows us to select 2/4/etc. CPUs, 4/8/etc. GB RAM and to choose between one of two images.
+The `singleuser.profileList` section of the Helm chart values allows us to define notebook profiles by setting the CPU, memory and image combinations that can be selected. For instance, the profiles below allows us to select 2/4/etc. CPUs, 4/8/etc. GB RAM and to choose between one of two images.
 
 [source,yaml]
 ----
@@ -540,7 +540,7 @@ To avoid this, care needs to be taken to use images for the notebook and the Spa
 [#provisos]
 === Provisos
 
-WARNING: When running a distributed Spark cluster from within a JupyterHub notebook, the notebook acts as the driver and requests executor Pods from k8s.
+WARNING: When running a distributed Spark cluster from within a JupyterHub notebook, the notebook acts as the driver and requests executor Pods from Kubernetes.
 These Pods in turn can mount *all* volumes and Secrets in that namespace.
 To prevent this from breaking user isolation, it is planned to use an OPA gatekeeper to define OPA rules that restrict what the created executor Pods can mount. This is not yet implemented in the demo nor reflected in this tutorial.
 
