@@ -3,7 +3,7 @@
 :keywords: notebook, JupyterHub, Kubernetes, k8s, Apache Spark, HDFS, S3
 
 This tutorial illustrates various scenarios and configuration options when using JupyterHub on Kubernetes.
-The custom Resources and configuration settings that are discussed here are based on the xref:demos:jupyterhub-keycloak.adoc[JupyterHub-Keycloak demo], so you may find it helpful to have that demo running to reference the various https://github.com/stackabletech/demos/blob/main/stacks/jupyterhub-keycloak[resources] as you read through this tutorial.
+The Custom Resources and configuration settings that are discussed here are based on the xref:demos:jupyterhub-keycloak.adoc[JupyterHub-Keycloak demo], so you may find it helpful to have that demo running to reference the various https://github.com/stackabletech/demos/blob/main/stacks/jupyterhub-keycloak[Resource definitions] as you read through this tutorial.
 The example notebook is used to demonstrate simple read/write interactions with an S3 storage backend using Apache Spark.
 
 == Keycloak
@@ -34,12 +34,12 @@ spec:
       nodePort: 31093 # <1>
 ----
 
-<1> Static value for the purposed of the demo.
+<1> Static value for the purposes of the demo.
 
 They are:
 
 - `31093` for Keycloak
-- `31095` for jupyterhub/proxy-public
+- `31095` for JupyterHub/proxy-public
 
 The Keycloak and JupyterHub endpoints are defined in the JupyterHub chart values i.e. for the purposes of the demo (that does not use any pre-defined DNS settings), the ports have to be known before the JupyterHub components are deployed.
 
