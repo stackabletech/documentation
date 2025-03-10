@@ -8,7 +8,7 @@ The example notebook is used to demonstrate simple read/write interactions with 
 
 == Keycloak
 
-Keycloak is installed using a https://github.com/stackabletech/demos/blob/main/stacks/jupyterhub-keycloak/keycloak.yaml[Deployment] that loads realm configuration mounted as a ConfigMap.
+Keycloak is installed using a https://github.com/stackabletech/demos/blob/main/stacks/jupyterhub-keycloak/keycloak.yaml[Deployment] that loads its realm configuration mounted as a ConfigMap.
 
 [#services]
 === Services
@@ -43,7 +43,7 @@ They are:
 
 The keycloak and jupyterhub endpoints are defined in the jupyter hub chart values i.e. for the purposes of the demo (that does not use any pre-defined DNS settings), the ports have to be known before the jupyter hub components are deployed.
 
-This can be achieved by having the keycloak deployment write out its co-ordinates into a ConfigMap during start-up, which can then be referenced by the JupyterHub chart like this:
+This can be achieved by having the keycloak deployment write out its node URL and node IP into a ConfigMap during start-up, which can then be referenced by the JupyterHub chart like this:
 
 [source,yaml]
 ----
@@ -83,14 +83,14 @@ options:
 <2> This information is passed to a variable in one of the start-up config scripts
 <3> And then used for JupyterHub settings (this is where port `31095` is hard-coded for the proxy service)
 
-NOTE: The node port IP found in the ConfigMap `keycloak-address` can be used for opening the JupyterHb UI.
+NOTE: The node port IP found in the ConfigMap `keycloak-address` can be used for opening the JupyterHub UI.
 On Kind this can be any node - not necessarily the one where the proxy Pod is running.
 This is due to the way in which Docker networking is used within the cluster.
 On other clusters it might be necessary to use the exact Node on which the proxy is running.
 
 === Discovery
 
-As mentioned above in <<services, Services>>, keycloak writes out its endpoint information to a ConfigMap, shown in the code section below.
+As mentioned above in <<services, Services>>, a Keycloak sidecar container writes out its endpoint information to a ConfigMap, shown in the code section below.
 
 .Writing the ConfigMap
 [%collapsible]
@@ -300,7 +300,7 @@ This section of the JupyterHub configuration specifies that we are using Generic
 ...
 ----
 
-<1> We need to either provide a list of users using `allowed_users`, or to explicitly allow _all_ users, as done here
+<1> We need to either provide a list of users using `allowed_users`, or to explicitly allow _all_ users, as done here.
 We will delegate this to Keycloak so that we do not have to maintain users in two places
 <2> Each admin user will have access to an Admin tab on the JupyterHub UI where certain user-management actions can be carried out.
 <3> Define the Keycloak scope
@@ -385,7 +385,7 @@ As mentioned in the <<services, Services>> section above, we want to define the 
 NOTE: When using Spark from within a notebook, please the <<provisos, Provisos>> section below.
 
 In the same way, we can use another script to define a driver service for each user.
-This is essential when using Spark from within a JupyterHUb notebook so that executor pods can be spawned from the user's kernel in a user-specific way.
+This is essential when using Spark from within a JupyterHub notebook so that executor pods can be spawned from the user's kernel in a user-specific way.
 This script instructs JupyterHub to use `KubeSpawner` to create a service referenced by the UID of the parent Pod.
 
 [source,yaml]
