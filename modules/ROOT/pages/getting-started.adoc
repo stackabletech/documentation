@@ -168,7 +168,7 @@ metadata:
   name: simple-nifi
 spec:
   image:
-    productVersion: 2.2.0
+    productVersion: 1.28.1
   clusterConfig:
     listenerClass: external-unstable
     zookeeperConfigMapName: simple-nifi-znode
