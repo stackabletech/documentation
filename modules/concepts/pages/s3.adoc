@@ -266,6 +266,21 @@ tls:
         secretClass: s3-certificate-class
 ----
 
+== Region override
+
+The `S3Connection` and `S3Bucket` bucket region defaults to `us-east-1`.
+If your bucket is in a different region, please set it accordingly.
+
+NOTE: This is mostly useful for AWS S3 buckets, though other implementation might define their own regions.
+
+[source,yaml]
+----
+...
+host: s3.amazonaws.com
+region:
+  name: eu-central-1
+----
+
 == What's next
 
 Read the {crd-docs}/s3.stackable.tech/s3bucket/v1alpha1/[S3Bucket CRD reference] and the {crd-docs}/s3.stackable.tech/s3connection/v1alpha1/[S3Connection CRD reference].
