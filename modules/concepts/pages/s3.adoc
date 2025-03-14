@@ -268,7 +268,7 @@ tls:
 
 == Region override
 
-The `S3Connection` and `S3Bucket` bucket region defaults to `us-east-1`.
+The `S3Connection` bucket region defaults to `us-east-1`.
 If your bucket is in a different region, please set it accordingly.
 
 NOTE: This is mostly useful for AWS S3 buckets, though other implementation might define their own regions.
