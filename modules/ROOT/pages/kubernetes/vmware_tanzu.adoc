@@ -1,5 +1,5 @@
 = VMware Tanzu
 
 VMware Tanzu uses a non-standard Kubelet state directory.
-Therefore installing secret-operator and listener-operator on VMware Tanzu requires a special treatment.
-Please read on the xref:secret-operator:installation.adoc#_vmware_tanzu[secret-operator installation guide] and the xref:listener-operator:installation.adoc#_vmware_tanzu[listener-operator installation guide] for details.
+Therefore, installing the secret-operator and listener-operator on VMware Tanzu requires special handling.
+Please refer to the xref:secret-operator:installation.adoc#_vmware_tanzu[secret-operator installation guide] and the xref:listener-operator:installation.adoc#_vmware_tanzu[listener-operator installation guide] for details.
