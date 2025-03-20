@@ -14,7 +14,7 @@ The following distributions are supported for a production setup of the Stackabl
 
 include::partial$supported-kubernetes-distributions.adoc[]
 
-Kubernetes distributions tested either by us or by other users are listed below;
+Kubernetes distributions tested either by us or by other users are listed below:
 
 include::partial$tested-kubernetes-distributions.adoc[]
 
