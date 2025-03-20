@@ -107,9 +107,14 @@ The supported Kubernetes versions for each platform release can be found here:
 
 xref:release-notes.adoc[SDP Release notes]
 
-There are various Kubernetes distributions. Stackable supports:
+There are various Kubernetes distributions.
+The following distributions are supported for a production setup of the Stackable Data Platform:
 
 include::partial$supported-kubernetes-distributions.adoc[]
+
+These Kubernetes distributions are not officially tested by us but based on community feedback have been known to work. Some might require extra steps, please refer to the detailed pages for more information. Please contact us if you're interested in official support for any of these:
+
+include::partial$tested-kubernetes-distributions.adoc[]
 
 === Product specific dependencies
 

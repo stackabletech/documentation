@@ -10,4 +10,5 @@
 ** xref:kubernetes/microk8s.adoc[]
 ** xref:kubernetes/openshift.adoc[]
 ** xref:kubernetes/ske.adoc[]
+** xref:kubernetes/vmware_tanzu.adoc[]
 * xref:getting-started.adoc[]
