@@ -1,4 +1,6 @@
-= Huawei cloud
+= Huawei Cloud Container Engine (CCE)
+
+https://www.huaweicloud.com/intl/en-us/product/cce.html
 
 Huawei Cloud uses a non-standard Kubelet state directory.
 Therefore, installing the secret-operator and listener-operator on Huawei Cloud requires special handling.

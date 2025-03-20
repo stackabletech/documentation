@@ -1,8 +1,8 @@
 = Azure Kubernetes Service (AKS)
 
-Automatic Kubernetes clusters are not supported, as the xref:secret-operator:index.adoc[secret-operator] requires special privileges that are not granted in automatic Kubernetes clusters.
-
 https://azure.microsoft.com/en-us/products/kubernetes-service
+
+Automatic Kubernetes clusters are not supported, as the xref:secret-operator:index.adoc[secret-operator] requires special privileges that are not granted in automatic Kubernetes clusters.
 
 . Create Kubernetes cluster
 +
