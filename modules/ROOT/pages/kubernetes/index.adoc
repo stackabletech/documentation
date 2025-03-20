@@ -14,6 +14,10 @@ The following distributions are supported for a production setup of the Stackabl
 
 include::partial$supported-kubernetes-distributions.adoc[]
 
+Kubernetes distributions tested either by us or by other users are listed below;
+
+include::partial$tested-kubernetes-distributions.adoc[]
+
 In case a Kubernetes provider needs some special tuning or we have some tips for it, it has a subpage below this page.
 
 Consult the xref:release_notes.adoc[release notes] to find out which specific Kubernetes versions are supported for the Stackable Data Platform you are using.

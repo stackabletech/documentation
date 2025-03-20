@@ -1,9 +1,10 @@
-* https://aws.amazon.com/eks/[Amazon Elastic Kubernetes Service]
+* xref:kubernetes/eks.adoc[Amazon Elastic Kubernetes Service]
 * xref:kubernetes/aks.adoc[Azure Kubernetes Service]
 * xref:kubernetes/gke.adoc[Google Kubernetes Engine]
 * xref:kubernetes/ionos-managed-k8s.adoc[IONOS Managed Kubernetes]
 * xref:kubernetes/ionos-managed-stackable.adoc[IONOS Managed Stackable]
+* https://kind.sigs.k8s.io/[kind]
+* xref:kubernetes/microk8s.adoc[MicroK8s]
 * xref:kubernetes/openshift.adoc[Red Hat OpenShift]
-* xref:kubernetes/ske.adoc[STACKIT Kubernetes Engine] (with the exception of missing public NodePorts)
-* https://www.rancher.com/products/rancher[SUSE Rancher]
 * https://www.suse.com/products/k3s/[SUSE K3S]
+* https://www.rancher.com/products/rancher[SUSE Rancher]

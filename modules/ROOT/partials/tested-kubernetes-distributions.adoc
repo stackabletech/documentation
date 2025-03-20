@@ -1,0 +1,5 @@
+* xref:kubernetes/huawei-cloud.adoc[Huawei Cloud]
+* xref:kubernetes/ibm-cloud.adoc[IBM Cloud]
+* xref:kubernetes/ske.adoc[STACKIT Kubernetes Engine] (with the exception of missing public NodePorts)
+* xref:kubernetes/vmware_tanzu.adoc[VMware Tanzu]
+* https://www.oracle.com/cloud/cloud-native/kubernetes-engine/[Oracle Kubernetes Engine (OKE)]
