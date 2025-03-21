@@ -1,5 +1,7 @@
 = Microk8s
 
+https://microk8s.io/
+
 Microk8s uses a non-standard Kubelet state directory.
-Therefore, installing the secret-operator and listener-operator on Microk8s requires special handling.
+For this reason the secret-operator and listener-operator on Microk8s require special handling.
 Please refer to the xref:secret-operator:installation.adoc#_microk8s[secret-operator installation guide] and the xref:listener-operator:installation.adoc#_microk8s[listener-operator installation guide] for details.
