@@ -3,5 +3,5 @@
 https://www.ibm.com/products/kubernetes-service
 
 IBM Cloud Kubernetes Service uses a non-standard Kubelet state directory.
-Therefore, installing the secret-operator and listener-operator on IBM Cloud Kubernetes Service requires  special handling.
+For this reason the secret-operator and listener-operator on IBM Cloud Kubernetes Service require special handling.
 Please refer to the xref:secret-operator:installation.adoc#_ibm_cloud[secret-operator installation guide] and the xref:listener-operator:installation.adoc#_ibm_cloud[listener-operator installation guide] for details.
