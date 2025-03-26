@@ -26,6 +26,11 @@ Observability::
 
 Products now log information about their container environment, on startup and on an interval after that. xref:concepts:containerdebug.adoc[]
 
+NiFi::
+
+Add Hadoop libraries for accessing Azure and GCP.
+See https://github.com/stackabletech/docker-images/pull/943[docker-images#943].
+
 ==== Platform improvements
 
 General::
