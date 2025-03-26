@@ -11,7 +11,9 @@ Released on 2025-03-21.
 
 Security::
 
-Additional trust roots can be specified in an `autoTls` SecretClass. See xref:secret-operator:secretclass.adoc[Documentation].
+* Additional trust roots can be specified in an `autoTls` SecretClass. See xref:secret-operator:secretclass.adoc[Documentation].
+* The Stackable Secret Operator's `experimentalCertManager` backend now supports specifying custom key lengths.
+  The `autoTls` backend has supported this since 24.11.
 
 ==== Platform improvements
 
