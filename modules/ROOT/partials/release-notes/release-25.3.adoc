@@ -28,6 +28,11 @@ The default memory limits have been increased for following roles:
 
 NOTE: Upgrades to existing deployments could cause memory limits to be reached on the node/namespace.
 
+Bug fixes::
+
+* Previously, pods with a Listener volume were stuck in an "Unknown" state after their node was restarted.
+  With this release, Listener volumes are correctly republished and the pods restart as expected.
+
 ==== Platform deprecations
 
 ==== Product versions
