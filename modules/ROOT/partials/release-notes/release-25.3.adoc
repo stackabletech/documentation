@@ -93,6 +93,12 @@ This release is available in the RedHat Certified Operator Catalog for the follo
 
 Of the changes mentioned above, the following are breaking (or could lead to breaking behaviour), and you will need to adapt your existing CRDs accordingly:
 
+===== General
+
+S3 bucket `region` can now be configured for `S3Connection`, `S3Bucket`, and inline S3 references. It defaults to `us-east-1`.
+
+NOTE: Products that use the Hadoop S3 implementation previously defaulted to `us-east-2`, so if there are bucket connectivity problems, you will need to set the region `us-east-2` explicitly.
+
 ===== Trino operator
 
 Trino now uses the native S3 implementation which has the following requirements for S3 connections:
