@@ -89,6 +89,16 @@ This release is available in the RedHat Certified Operator Catalog for the follo
 
 Of the changes mentioned above, the following are breaking (or could lead to breaking behaviour), and you will need to adapt your existing CRDs accordingly:
 
+===== Trino operator
+
+Trino now uses the native S3 implementation which has the following requirements for S3 connections:
+
+* TLS is always enabled and cannot be disabled.
+* Client-side encryption is not supported. Server-side encryption (SSE) is the recommended alternative.
+* Multipart (non-streaming) writes and upload are not supported.
+
+Legacy S3 support (via Hadoop) has been disabled and will be removed in a future version of Trino.
+
 ===== Stackable Operator for Example Product
 
 * Description of the change 1
