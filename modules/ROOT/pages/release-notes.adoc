@@ -6,6 +6,7 @@
 The Stackable platform consists of multiple operators that work together. Periodically a platform release is made,
 including all components of the platform at a specific version.
 
+include::partial$release-notes/release-25.3.adoc[]
 include::partial$release-notes/release-24.11.adoc[]
 include::partial$release-notes/release-24.7.adoc[]
 include::partial$release-notes/release-24.3.adoc[]
