@@ -20,6 +20,14 @@ Authorization::
 OPA Rego rules no longer require the `future.keywords` import.
 They have been stabilised in OPA 1.0 and are now implicitly imported.
 
+Druid::
+
+The default memory limits have been increased for following roles:
+* Coordinator: From `512Mi` to `768Mi`
+* Middle Manager: From `1Gi` to `1500Mi`.
+
+NOTE: Upgrades to existing deployments could cause memory limits to be reached on the node/namespace.
+
 ==== Platform deprecations
 
 ==== Product versions
@@ -103,6 +111,13 @@ Of the changes mentioned above, the following are breaking (or could lead to bre
 S3 bucket `region` can now be configured for `S3Connection`, `S3Bucket`, and inline S3 references. It defaults to `us-east-1`.
 
 NOTE: Products that use the Hadoop S3 implementation previously defaulted to `us-east-2`, so if there are bucket connectivity problems, you will need to set the region `us-east-2` explicitly.
+
+===== Druid operator
+
+NOTE: All Druid versions are affected.
+
+If druid-opa-authorizer is used, `input.user` needs to be replaced by `input.authenticationResult.identity` in applicable Rego rules.
+Change in https://github.com/stackabletech/druid-opa-authorizer/pull/85[Add authenticationResponse context to OpaInput].
 
 ===== OPA operator
 
