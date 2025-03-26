@@ -66,7 +66,24 @@ The following product versions are no longer supported (although images for rele
 
 ==== Supported Kubernetes versions
 
+This release supports the following Kubernetes versions:
+
+* `1.32`
+* `1.31`
+* `1.30`
+
+These Kubernetes versions are no longer supported:
+
+* `1.29`
+
 ==== Supported OpenShift versions
+
+This release is available in the RedHat Certified Operator Catalog for the following OpenShift versions:
+
+* `4.17`
+* `4.16`
+* `4.15`
+* `4.14`
 
 ==== Breaking changes
 
