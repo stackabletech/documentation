@@ -33,7 +33,9 @@ See https://github.com/stackabletech/docker-images/pull/943[docker-images#943].
 
 ==== Platform improvements
 
-General::
+===== General
+
+====== OCI Registry
 
 Starting with this release, our OCI registry located at `oci.stackable.tech` was promoted to stable.
 This means that our operators, the product image selection and tools will use the registry by default instead of the previous Docker repository located at `docker.stackable.tech`.
@@ -58,6 +60,12 @@ $ helm repo add stackable-stable https://repo.stackable.tech/repository/helm-sta
 $ helm repo update stackable-stable
 $ helm install --wait airflow-operator stackable-stable/airflow-operator --version 25.3 --set image.repository=docker.stackable.tech/stackable/airflow-operator
 ----
+
+====== DNS lookup performance
+
+Users can now opt-in to experimental support for improved DNS performance by specifying a fully qualified domain name (with a trailing dot) as Kubernetes cluster domain for our operators.
+This can reduce the amount of DNS queries within the cluster, but might have side effects, hence we consider the support experimental for now.
+Take a look at xref:guides:kubernetes-cluster-domain.adoc[our documentation] to find out how to enable this improvement.
 
 Authorization::
 
