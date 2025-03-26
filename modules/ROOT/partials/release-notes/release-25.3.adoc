@@ -79,6 +79,12 @@ Bug fixes::
 
 ==== Platform deprecations
 
+===== Kafka operator
+
+The `-nodeport` discovery ConfigMaps have been deprecated for removal.
+Use the primary discovery CMs instead.
+See the https://github.com/stackabletech/kafka-operator/issues/765[deprecation tracking issue ]for more information.
+
 ==== Product versions
 
 As with previous SDP releases, many product images have been updated to their latest versions.
