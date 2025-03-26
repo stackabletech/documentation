@@ -17,6 +17,10 @@ Security::
 * Users can now configure the lifetime of self-signed certificates directly in the product's custom resources which influences the frequency of pod restarts.
   Details can be found at xref:concepts:operations/temporary_credentials_lifetime.adoc[].
 
+Observability::
+
+Products now log information about their container environment, on startup and on an interval after that. xref:concepts:containerdebug.adoc[]
+
 ==== Platform improvements
 
 Authorization::
