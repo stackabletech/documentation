@@ -16,11 +16,28 @@ Released on YYYY-MM-DD.
 
 ==== Product versions
 
+As with previous SDP releases, many product images have been updated to their latest versions.
+The LTS version has in many cases also been adjusted in line with our xref:ROOT:policies.adoc[support policy].
+
+Refer to the xref:operators:supported_versions.adoc[supported versions] documentation for a complete overview including LTS versions or deprecations.
+
 ===== New versions
+
+The following new product versions are now supported:
+
+* ...
 
 ===== Deprecated versions
 
+The following product versions are deprecated and will be removed in a later release:
+
+* ...
+
 ===== Removed versions
+
+The following product versions are no longer supported (although images for released product versions remain available https://repo.stackable.tech/#browse/browse:docker:v2%2Fstackable[here]):
+
+* ...
 
 ==== stackablectl
 
