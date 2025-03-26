@@ -23,6 +23,32 @@ Products now log information about their container environment, on startup and o
 
 ==== Platform improvements
 
+General::
+
+Starting with this release, our OCI registry located at `oci.stackable.tech` was promoted to stable.
+This means that our operators, the product image selection and tools will use the registry by default instead of the previous Docker repository located at `docker.stackable.tech`.
+
+[NOTE]
+====
+To ease the transition, operator images, product images, and operator Helm charts are published both on the old Docker repository as well as the new OCI registry.
+Subsequent releases will **only** be published on `oci.stackable.tech`.
+====
+
+Using the old Docker repository is still possible:
+
+* Products can use the old images by setting the `spec.image.repo` to `docker.stackable.tech/stackable` in the respective product CustomResource.
+* Our `stackablectl` tool can pull Helm charts from the old repository by providing the `--chart-source repo` argument during operator installs.
+  Unfortunately, some Helm chart values point to the OCI registry and `stackablectl` doesn't support overriding these values.
+  Use `helm` directly instead.
+* Operators can be installed via `helm install` with a custom `image.repository` value set.
+
+[source,console]
+----
+$ helm repo add stackable-stable https://repo.stackable.tech/repository/helm-stable/
+$ helm repo update stackable-stable
+$ helm install --wait airflow-operator stackable-stable/airflow-operator --version 25.3 --set image.repository=docker.stackable.tech/stackable/airflow-operator
+----
+
 Authorization::
 
 OPA Rego rules no longer require the `future.keywords` import.
