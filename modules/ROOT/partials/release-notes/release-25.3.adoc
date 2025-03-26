@@ -15,6 +15,11 @@ Additional trust roots can be specified in an `autoTls` SecretClass. See xref:se
 
 ==== Platform improvements
 
+Authorization::
+
+OPA Rego rules no longer require the `future.keywords` import.
+They have been stabilised in OPA 1.0 and are now implicitly imported.
+
 ==== Platform deprecations
 
 ==== Product versions
@@ -98,6 +103,11 @@ Of the changes mentioned above, the following are breaking (or could lead to bre
 S3 bucket `region` can now be configured for `S3Connection`, `S3Bucket`, and inline S3 references. It defaults to `us-east-1`.
 
 NOTE: Products that use the Hadoop S3 implementation previously defaulted to `us-east-2`, so if there are bucket connectivity problems, you will need to set the region `us-east-2` explicitly.
+
+===== OPA operator
+
+* Using `if` for all rules and `contains` for multi-value rules is now mandatory.
+* `strict` mode is now enabled by default. For more upgrade information, read the https://www.openpolicyagent.org/docs/latest/v0-upgrade/#upgrading-rego[Upgrading Rego] section of the official documentation.
 
 ===== Trino operator
 
