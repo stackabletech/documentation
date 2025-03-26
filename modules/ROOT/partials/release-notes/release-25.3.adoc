@@ -31,10 +31,15 @@ They have been stabilised in OPA 1.0 and are now implicitly imported.
 Druid::
 
 The default memory limits have been increased for following roles:
+
 * Coordinator: From `512Mi` to `768Mi`
 * Middle Manager: From `1Gi` to `1500Mi`.
 
 NOTE: Upgrades to existing deployments could cause memory limits to be reached on the node/namespace.
+
+Hive::
+
+The the default memory reservation of Hive metastore has been increased from `512Mi` to `768Mi` to avoid OOMKilled events.
 
 Bug fixes::
 
