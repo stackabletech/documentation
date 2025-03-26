@@ -9,6 +9,10 @@ Released on 2025-03-21.
 
 ==== New platform features
 
+Security::
+
+Additional trust roots can be specified in an `autoTls` SecretClass. See xref:secret-operator:secretclass.adoc[Documentation].
+
 ==== Platform improvements
 
 ==== Platform deprecations
