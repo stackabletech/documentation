@@ -125,6 +125,11 @@ S3 bucket `region` can now be configured for `S3Connection`, `S3Bucket`, and inl
 
 NOTE: Products that use the Hadoop S3 implementation previously defaulted to `us-east-2`, so if there are bucket connectivity problems, you will need to set the region `us-east-2` explicitly.
 
+===== Airflow operator
+
+The field `.spec.clusterConfig.dagsGitSync[].wait` changed from `uint8` to our human-readable `Duration` type.
+If you have specified a time without a unit, eg: `wait: 20`, you will need to add the applicable unit, eg: `wait: 20s`.
+
 ===== Druid operator
 
 NOTE: All Druid versions are affected.
