@@ -9,12 +9,12 @@ Released on 2025-03-21.
 
 ==== New platform features
 
-General::
+===== General
 
 Operators deployed by Helm will contain an extra pod annotation: `checksum/config`.
 This field triggers a rollout of Deployments when the ConfigMap contents change.
 
-Security::
+===== Security
 
 * Additional trust roots can be specified in an `autoTls` SecretClass. See xref:secret-operator:secretclass.adoc[Documentation].
 * The Stackable Secret Operator's `experimentalCertManager` backend now supports specifying custom key lengths.
@@ -22,11 +22,11 @@ Security::
 * Users can now configure the lifetime of self-signed certificates directly in the product's custom resources which influences the frequency of pod restarts.
   Details can be found at xref:concepts:operations/temporary_credentials_lifetime.adoc[].
 
-Observability::
+===== Observability
 
 Products now log information about their container environment, on startup and on an interval after that. xref:concepts:containerdebug.adoc[]
 
-NiFi::
+===== NiFi
 
 Add Hadoop libraries for accessing Azure and GCP.
 See https://github.com/stackabletech/docker-images/pull/943[docker-images#943].
@@ -67,12 +67,12 @@ Users can now opt-in to experimental support for improved DNS performance by spe
 This can reduce the amount of DNS queries within the cluster, but might have side effects, hence we consider the support experimental for now.
 Take a look at xref:guides:kubernetes-cluster-domain.adoc[our documentation] to find out how to enable this improvement.
 
-Authorization::
+===== Authorization
 
 OPA Rego rules no longer require the `future.keywords` import.
 They have been stabilised in OPA 1.0 and are now implicitly imported.
 
-Druid::
+===== Druid
 
 The default memory limits have been increased for following roles:
 
@@ -81,11 +81,11 @@ The default memory limits have been increased for following roles:
 
 NOTE: Upgrades to existing deployments could cause memory limits to be reached on the node/namespace.
 
-Hive::
+===== Hive
 
 The the default memory reservation of Hive metastore has been increased from `512Mi` to `768Mi` to avoid OOMKilled events.
 
-Bug fixes::
+===== Bug fixes
 
 * Previously, pods with a Listener volume were stuck in an "Unknown" state after their node was restarted.
   With this release, Listener volumes are correctly republished and the pods restart as expected.

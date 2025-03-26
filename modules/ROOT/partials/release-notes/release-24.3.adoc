@@ -6,14 +6,14 @@ Released on 2024-03-27.
 
 ==== New / extended platform features
 
-Support for many new product versions::
+===== Support for many new product versions
 Almost all product images have been updated to their latest versions.
 Some notable examples are Apache Airflow 2.8.1, Trino 442 and Apache Spark 3.5.1.
 In addition, we started building some product binaries from source instead of packaging them from the official releases.
 This enables greater control over the features and the security aspects of the products.
 Currently, Apache Hadoop and Apache HBase are built from source and others will follow in coming releases.
 
-Security::
+===== Security
 We put a special emphasis on security in this release.
 For this purpose we addressed the following topics:
 * Authorization
@@ -55,26 +55,26 @@ In an upcoming release we will enable authentication and encryption by default w
 To ensure a smooth transition to future releases, we strongly encourage you to enable security features wherever possible in your deployments.
 
 
-Storage::
+===== Storage
 HDFS deployments now support __rack awareness__.
 This is another unique feature that brings the SDP platform closer to feature parity with bare metal HDFS deployments.
 Of course, the exact meaning of __rack__ is different in Kubernetes environments, but the effect is the same: DataNodes are brought closer to the data they are reading and writing thus improving performance and reliability.
 A new https://github.com/stackabletech/hdfs-topology-provider[topology provider] is bundled with the HDFS image that maps Kubernetes labels to a cluster topology.
 // TODO: Link to docs - apparently the README in in the linked repository is all there is.
 
-Documentation::
+===== Documentation
 We are constantly working on improving the platform documentation and custom resource definitions are a significant part of that.
 The CRD documentation is now generated automatically and can be found at https://crds.stackable.tech.
 
-Command line tools::
+===== Command line tools
 The `stackablectl` command line tool has been overhauled and can now list endpoints provided by the listener operator.
 Also operator installation is parallelized, which considerably speeds up the process of setting up SDP on fresh Kubernetes clusters.
 
-Custom labels for Helm charts::
+===== Custom labels for Helm charts
 In the past, Helm users could not assign custom labels to stacklets.
 This is now possible and it enables better component management with third party tools.
 
-Bugfixes::
+===== Bugfixes
 * Apache Airflow Operator: Using git-sync with the KubernetesExecutor is now possible.
 * Apache Hadoop Operator:
   ** Kerberos principals are now included in the discovery ConfigMap.
@@ -85,7 +85,7 @@ Bugfixes::
 * Trino Operator: Add HDFS configuration files to the `hive.config.resources` property when connecting to a HDFS cluster.
 
 
-Product features::
+===== Product features
 The following are selected product features provided by new versions available in this release:
 
 * Apache Airflow: Introducing Airflow Object Storage and Listener hooks for Datasets plus various bug fixes.
@@ -110,7 +110,7 @@ The following are selected product features provided by new versions available i
   ** Also, starting from release 440, there is now row filtering and column masking in Open Policy Agent.
 * Apache ZooKeeper: Security and bug fixes.
 
-Support for the ARM architecture::
+===== Support for the ARM architecture
 During the development of this release, we started introducing support for the arm64 architecture.
 Currently support is experimental, and we only provide arm64 images for the previous release (23.11).
 For more information on how to use the ARM images, refer to the xref:concepts:container-images.adoc#multi-platform-support[documentation].
