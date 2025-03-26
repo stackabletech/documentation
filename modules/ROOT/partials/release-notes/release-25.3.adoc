@@ -9,6 +9,11 @@ Released on 2025-03-21.
 
 ==== New platform features
 
+General::
+
+Operators deployed by Helm will contain an extra pod annotation: `checksum/config`.
+This field triggers a rollout of Deployments when the ConfigMap contents change.
+
 Security::
 
 * Additional trust roots can be specified in an `autoTls` SecretClass. See xref:secret-operator:secretclass.adoc[Documentation].
