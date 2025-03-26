@@ -3,10 +3,10 @@
 
 == Release YY.M
 
+=== YY.M.X
+
 Released on YYYY-MM-DD.
 (Optional description / introduction)
-
-=== YY.M.X
 
 ==== New platform features
 
