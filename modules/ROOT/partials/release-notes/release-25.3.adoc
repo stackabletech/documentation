@@ -234,14 +234,16 @@ Change in https://github.com/stackabletech/druid-opa-authorizer/pull/85[druid-op
 ===== OPA operator
 
 * Using `if` for all rules and `contains` for multi-value rules is now mandatory.
-* `strict` mode is now enabled by default. For more upgrade information, read the https://www.openpolicyagent.org/docs/latest/v0-upgrade/#upgrading-rego[Upgrading Rego] section of the official documentation.
+* `strict` mode is now enabled by default.
+  For more upgrade information, read the https://www.openpolicyagent.org/docs/latest/v0-upgrade/#upgrading-rego[Upgrading Rego] section of the official documentation.
 
 ===== Trino operator
 
 Trino now uses the native S3 implementation which has the following requirements for S3 connections:
 
 * TLS is always enabled and cannot be disabled.
-* Client-side encryption is not supported. Server-side encryption (SSE) is the recommended alternative.
+* Client-side encryption is not supported.
+  Server-side encryption (SSE) is the recommended alternative.
 * Multipart (non-streaming) writes and upload are not supported.
 
 Legacy S3 support (via Hadoop) has been disabled and will be removed in a future version of Trino.
@@ -320,7 +322,8 @@ release "commons-operator" uninstalled
 ----
 
 Afterward you will need to upgrade the CustomResourceDefinitions (CRDs) installed by the Stackable Platform.
-The reason for this is that helm will uninstall the operators but not the CRDs. This can be done using `kubectl replace`:
+The reason for this is that helm will uninstall the operators but not the CRDs.
+This can be done using `kubectl replace`:
 
 [source]
 ----
