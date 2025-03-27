@@ -246,18 +246,6 @@ Trino now uses the native S3 implementation which has the following requirements
 
 Legacy S3 support (via Hadoop) has been disabled and will be removed in a future version of Trino.
 
-===== Stackable Operator for Example Product
-
-* Description of the change 1
-* Description of the change 2
-
-.Breaking changes details
-[%collapsible]
-====
-* `spec.a`: This field has been removed.
-* `spec.b`: This field has been changed to a number.
-====
-
 ==== Upgrade from 24.11
 
 ===== Using stackablectl
