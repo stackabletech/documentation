@@ -11,8 +11,10 @@ Released on 2025-03-21.
 
 ===== General
 
-Operators deployed by Helm will contain an extra pod annotation: `checksum/config`.
-This field triggers a rollout of Deployments when the ConfigMap contents change.
+* Operators deployed by Helm will contain an extra pod annotation: `checksum/config`.
+  This field triggers a rollout of Deployments when the ConfigMap contents change.
+* Operators for Java products now support setting JVM arguments.
+  See the xref:concepts:overrides[override concept page] and https://github.com/stackabletech/issues/issues/584[issues#584].
 
 ===== Authorization
 
