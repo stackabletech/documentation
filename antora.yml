@@ -15,7 +15,7 @@ asciidoc:
   attributes:
     # Whether this version is already end of life.
     # If true, a banner will be displayed informing the user.
-    end-of-life: false
+    end-of-life: true
     # to make attributes accessible to the UI template, they need to
     # be prefixed with "page-"
     page-end-of-life: "{end-of-life}"
