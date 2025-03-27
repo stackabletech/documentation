@@ -229,7 +229,7 @@ If you have specified a time without a unit, eg: `wait: 20`, you will need to ad
 NOTE: All Druid versions are affected.
 
 If druid-opa-authorizer is used, `input.user` needs to be replaced by `input.authenticationResult.identity` in applicable Rego rules.
-Change in https://github.com/stackabletech/druid-opa-authorizer/pull/85[Add authenticationResponse context to OpaInput].
+Change in https://github.com/stackabletech/druid-opa-authorizer/pull/85[druid-opa-authorizer#85].
 
 ===== OPA operator
 
