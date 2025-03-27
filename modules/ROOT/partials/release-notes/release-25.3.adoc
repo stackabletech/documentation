@@ -14,6 +14,13 @@ Released on 2025-03-21.
 Operators deployed by Helm will contain an extra pod annotation: `checksum/config`.
 This field triggers a rollout of Deployments when the ConfigMap contents change.
 
+===== Authorization
+
+* Apache Airflow: Authorization can now be delegated to an Open Policy Agent.
+  See https://github.com/stackabletech/airflow-operator/issues/446[airflow-operator#446].
+* Apache Superset: Support Open Policy Agent role mapping.
+  See https://github.com/stackabletech/superset-operator/pull/582[superset-operator#582].
+
 ===== Security
 
 * Additional trust roots can be specified in an `autoTls` SecretClass. See xref:secret-operator:secretclass.adoc[Documentation].
