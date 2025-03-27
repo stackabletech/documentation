@@ -67,6 +67,11 @@ Users can now opt-in to experimental support for improved DNS performance by spe
 This can reduce the amount of DNS queries within the cluster, but might have side effects, hence we consider the support experimental for now.
 Take a look at xref:guides:kubernetes-cluster-domain.adoc[our documentation] to find out how to enable this improvement.
 
+===== Vulnerabilities
+
+41 CVEs were fixed in the Stackable product images.
+This includes 6 critical and 16 high-severity CVEs.
+
 ===== Authorization
 
 OPA Rego rules no longer require the `future.keywords` import.
