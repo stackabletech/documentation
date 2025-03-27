@@ -13,37 +13,37 @@ While we are very proud of this release it is our first one and we'll add new fe
 
 ==== Platform features
 
-Easily install production ready data applications::
+===== Easily install production ready data applications
 
 Using a familiar declarative approach, users can easily install data applications such as Apache Kafka or Trino across multiple cloud Kubernetes providers or on their own data centers.
 The installation process is fully automated while also providing the flexibility for the user to tune relevant aspects of each application.
 
-Monitoring::
+===== Monitoring
 
 All products have monitoring with prometheus enabled.
 xref:operators:monitoring.adoc[Learn more]
 
-Service discovery::
+===== Service discovery
 
 Products on the Stackable platform use service discovery to easily interconnect with each other.
 xref:concepts:service_discovery.adoc[Learn more]
 
-Configuration overrides::
+===== Configuration overrides
 
 All operators support configuration overrides, these are documented in the specific operator documentation pages.
 
-Common S3 configuration::
+===== Common S3 configuration
 
 Many products support connecting to S3 to load and/or store data.
 There is a common resource for S3 connections and buckets across all operators that can be reused.
 xref:concepts:s3.adoc[Learn more]
 
-Roles and role groups::
+===== Roles and role groups
 
 To support hybrid hardware clusters, the Stackable platform uses the concept of role groups.
 Services and applications can be configured to maximize hardware efficiency.
 
-Standardized::
+===== Standardized
 
 Learn once reuse everywhere.
 We use the same conventions in all our operators.

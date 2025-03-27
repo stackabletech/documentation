@@ -1,0 +1,404 @@
+// Here are the headings you can use for the next release. Saves time checking indentation levels.
+// Take a look at release 24.11 to see how to structure patch releases.
+
+== Release 25.3
+
+=== 25.3.0
+
+Released on 2025-03-21.
+
+==== New platform features
+
+===== General
+
+* Operators deployed by Helm will contain an extra pod annotation: `checksum/config`.
+  This field triggers a rollout of Deployments when the ConfigMap contents change.
+* Operators for Java products now support setting JVM arguments.
+  See the xref:concepts:overrides.adoc[override concept page] and https://github.com/stackabletech/issues/issues/584[issues#584].
+
+===== Authorization
+
+* Apache Airflow: Authorization can now be delegated to an Open Policy Agent.
+  See https://github.com/stackabletech/airflow-operator/issues/446[airflow-operator#446].
+* Apache Superset: Support Open Policy Agent role mapping.
+  See https://github.com/stackabletech/superset-operator/pull/582[superset-operator#582].
+
+===== Security
+
+* Additional trust roots can be specified in an `autoTls` SecretClass.
+  See the xref:secret-operator:secretclass.adoc[`autoTls` backend documentation].
+* The Stackable Secret Operator's `experimentalCertManager` backend now supports specifying custom key lengths.
+  The `autoTls` backend has supported this since 24.11.
+* Users can now configure the lifetime of self-signed certificates directly in the product's custom resources which influences the frequency of pod restarts.
+  Details can be found on the xref:concepts:operations/temporary_credentials_lifetime.adoc[temporary credentials lifetime page].
+
+===== Observability
+
+Products now log information about their xref:concepts:containerdebug.adoc[container environment], on startup and on an interval after that.
+
+===== NiFi
+
+Add Hadoop libraries for accessing Azure and GCP.
+See https://github.com/stackabletech/docker-images/pull/943[docker-images#943].
+
+==== Platform improvements
+
+===== General
+
+====== OCI Registry
+
+Starting with this release, our OCI registry located at `oci.stackable.tech` was promoted to stable.
+This means that our operators, the product image selection and tools will use the registry by default instead of the previous Docker repository located at `docker.stackable.tech`.
+
+[NOTE]
+====
+To ease the transition, operator images, product images, and operator Helm charts are published both on the old Docker repository as well as the new OCI registry.
+Subsequent releases will **only** be published on `oci.stackable.tech`.
+====
+
+Using the old Docker repository is still possible:
+
+* Products can use the old images by setting the `spec.image.repo` to `docker.stackable.tech/stackable` in the respective product CustomResource.
+* Our `stackablectl` tool can pull Helm charts from the old repository by providing the `--chart-source repo` argument during operator installs.
+  Unfortunately, some Helm chart values point to the OCI registry and `stackablectl` doesn't support overriding these values.
+  Use `helm` directly instead.
+* Operators can be installed via `helm install` with a custom `image.repository` value set.
+
+[source,console]
+----
+$ helm repo add stackable-stable https://repo.stackable.tech/repository/helm-stable/
+$ helm repo update stackable-stable
+$ helm install --wait airflow-operator stackable-stable/airflow-operator --version 25.3 --set image.repository=docker.stackable.tech/stackable/airflow-operator
+----
+
+====== DNS lookup performance
+
+Users can now opt-in to experimental support for improved DNS performance by specifying a fully qualified domain name (with a trailing dot) as Kubernetes cluster domain for our operators.
+This can reduce the amount of DNS queries within the cluster, but might have side effects, hence we consider the support experimental for now.
+Take a look at xref:guides:kubernetes-cluster-domain.adoc[our documentation] to find out how to enable this improvement.
+
+===== Vulnerabilities
+
+41 CVEs were fixed in the Stackable product images.
+This includes 6 critical and 16 high-severity CVEs.
+
+===== Authorization
+
+OPA Rego rules no longer require the `future.keywords` import.
+They have been stabilized in OPA 1.0 and are now implicitly imported.
+
+===== Druid
+
+The default memory limits have been increased for following roles.
+See https://github.com/stackabletech/druid-operator/pull/685[druid-operator#685].
+
+* Coordinator: From `512Mi` to `768Mi`
+* Middle Manager: From `1Gi` to `1500Mi`.
+
+NOTE: Upgrades to existing deployments could cause memory limits to be reached on the node/namespace.
+
+===== Hive
+
+The the default memory reservation of Hive metastore has been increased from `512Mi` to `768Mi` to avoid OOMKilled events.
+See https://github.com/stackabletech/hive-operator/pull/578[hive-operator#578].
+
+===== Bug fixes
+
+* Previously, pods with a Listener volume were stuck in an "Unknown" state after their node was restarted.
+  With this release, Listener volumes are correctly republished and the pods restart as expected.
+  See https://github.com/stackabletech/listener-operator/issues/262[listener-operator#262].
+* In 24.11 we used a custom build of jmx_exporter to resolve a https://github.com/stackabletech/issues/issues/649[performance degradation].
+  In this release, Java products ship with the fixed upstream https://github.com/prometheus/jmx_exporter/releases/tag/1.1.0[jmx_exporter 1.1.0] which includes https://github.com/prometheus/jmx_exporter/pull/1009[the fix].
+
+==== Platform deprecations
+
+===== Kafka operator
+
+The `-nodeport` discovery ConfigMaps have been deprecated for removal.
+Use the primary discovery CMs instead.
+See the https://github.com/stackabletech/kafka-operator/issues/765[deprecation tracking issue ]for more information.
+
+==== Product versions
+
+As with previous SDP releases, many product images have been updated to their latest versions.
+The LTS version has in many cases also been adjusted in line with our xref:ROOT:policies.adoc[support policy].
+
+Refer to the xref:operators:supported_versions.adoc[supported versions] documentation for a complete overview including LTS versions or deprecations.
+
+===== New versions
+
+The following new product versions are now supported:
+
+* Apache Airflow: https://github.com/stackabletech/docker-images/issues/1017[2.10.4]
+* Apache Druid: https://github.com/stackabletech/docker-images/issues/965[31.0.1], https://github.com/stackabletech/docker-images/issues/965[30.0.1 (LTS)]
+* Apache Hadoop: https://github.com/stackabletech/docker-images/issues/1018[3.4.1 (LTS)]
+* Apache HBase: https://github.com/stackabletech/docker-images/issues/972[2.6.1 (LTS)]
+* Apache Hive:  https://github.com/stackabletech/docker-images/issues/1019[4.0.0 (LTS)], https://github.com/stackabletech/docker-images/issues/1019[4.0.1 (experimental)]
+* Apache Kafka: https://github.com/stackabletech/docker-images/issues/968[3.7.2 (LTS)], https://github.com/stackabletech/docker-images/issues/968[3.9.0]
+* Apache NiFi: https://github.com/stackabletech/docker-images/issues/966[1.28.1], https://github.com/stackabletech/docker-images/issues/966[2.2.0 (experimental)]
+* Apache Spark: https://github.com/stackabletech/docker-images/issues/1016[3.5.5 (LTS)]
+* Apache Superset: https://github.com/stackabletech/docker-images/issues/970[4.1.1]
+* Apache ZooKeeper: https://github.com/stackabletech/docker-images/issues/1020[3.9.3 (LTS)]
+* Open Policy Agent: https://github.com/stackabletech/docker-images/issues/998[1.0.1]
+* Trino: https://github.com/stackabletech/docker-images/issues/971[470]
+
+===== Deprecated versions
+
+The following product versions are deprecated and will be removed in a later release:
+
+* Apache Druid: https://github.com/stackabletech/docker-images/issues/965[30.0.0]
+* Apache Hadoop: https://github.com/stackabletech/docker-images/issues/1018[3.4.0]
+* Apache HBase: https://github.com/stackabletech/docker-images/issues/972[2.4.18]
+* Apache Hive: https://github.com/stackabletech/docker-images/issues/1019[3.1.3]
+* Apache Kafka: https://github.com/stackabletech/docker-images/issues/968[3.8.0], https://github.com/stackabletech/docker-images/issues/968[3.7.1]
+* Apache Spark: https://github.com/stackabletech/docker-images/issues/1016[3.5.2]
+* Apache ZooKeeper: https://github.com/stackabletech/docker-images/issues/1020[3.9.2]
+* Open Policy Agent: https://github.com/stackabletech/docker-images/issues/969[0.67.1]
+* Trino: https://github.com/stackabletech/docker-images/issues/971[455]
+
+===== Removed versions
+
+The following product versions are no longer supported (although images for released product versions remain available https://repo.stackable.tech/#browse/browse:docker:v2%2Fstackable[here]):
+
+* Apache Airflow: https://github.com/stackabletech/docker-images/issues/1017[2.10.2], https://github.com/stackabletech/docker-images/issues/1017[2.9.2]
+* Apache Druid: https://github.com/stackabletech/docker-images/issues/965[26.0.0]
+* Apache HBase: https://github.com/stackabletech/docker-images/issues/972[2.6.0]
+* Apache NiFi: https://github.com/stackabletech/docker-images/issues/966[2.0.0]
+* Apache Spark: https://github.com/stackabletech/docker-images/issues/1016[3.5.1]
+* Open Policy Agent: https://github.com/stackabletech/docker-images/issues/969[0.66.0]
+
+==== stackablectl
+
+* A new demo called `jupyterhub-keycloak` was added and is available via `stackablectl`.
+  The JupyterHub-Keycloak integration demo offers a comprehensive and secure multi-user data science environment on Kubernetes, integrating Single Sign-on Jupyter notebooks with Stackable Spark and S3 storage.
+  The demo can be installed by running `stackablectl demo install jupyterhub-keycloak`.
+  See https://github.com/stackabletech/demos/pull/155[demos#155] and https://github.com/stackabletech/documentation/pull/715[documentation#715].
+* Demos and stacks are now versioned and the main branch is considered unstable.
+  `stackablectl` by default installs the latest stable demo and/or stack.
+  A specific release can be targeted by providing the `--release` argument.
+  See https://github.com/stackabletech/stackable-cockpit/pull/340[stackable-cockpit#340].
+* Add new argument --chart-source so that operator charts can be pulled either from an OCI registry (the default) or from a index.yaml-based repository.
+  See https://github.com/stackabletech/stackable-cockpit/pull/344[stackable-cockpit#344].
+* Use `rustls-native-certs` so that `stackablectl` can be used in environments with internal PKI.
+  See  https://github.com/stackabletech/stackable-cockpit/pull/351[stackable-cockpit#351].
+* Use `heritage` label when looking up the `minio-console` stacklet.
+  See https://github.com/stackabletech/stackable-cockpit/pull/364[stackable-cockpit#364].
+* Improve tracing and log output.
+  See https://github.com/stackabletech/stackable-cockpit/pull/365[stackable-cockpit#365].
+
+==== Supported Kubernetes versions
+
+This release supports the following Kubernetes versions:
+
+* `1.32`
+* `1.31`
+* `1.30`
+
+These Kubernetes versions are no longer supported:
+
+* `1.29`
+
+==== Supported OpenShift versions
+
+This release is available in the RedHat Certified Operator Catalog for the following OpenShift versions:
+
+* `4.17`
+* `4.16`
+* `4.15`
+* `4.14`
+
+==== Breaking changes
+
+Of the changes mentioned above, the following are breaking (or could lead to breaking behaviour), and you will need to adapt your existing CRDs accordingly:
+
+===== General
+
+S3 bucket `region` can now be configured for `S3Connection`, `S3Bucket`, and inline S3 references.
+It defaults to `us-east-1`.
+See the https://github.com/stackabletech/issues/issues/696[tracking issue].
+
+NOTE: Products that use the Hadoop S3 implementation previously defaulted to `us-east-2`, so if there are bucket connectivity problems, you will need to set the region `us-east-2` explicitly.
+
+===== Airflow operator
+
+The field `.spec.clusterConfig.dagsGitSync[].wait` changed from `uint8` to our human-readable xref:reference:duration.adoc[`Duration`] type.
+If you have specified a time without a unit, eg: `wait: 20`, you will need to add the applicable unit, eg: `wait: 20s`.
+
+===== Druid operator
+
+NOTE: All Druid versions are affected.
+
+If druid-opa-authorizer is used, `input.user` needs to be replaced by `input.authenticationResult.identity` in applicable Rego rules.
+Change in https://github.com/stackabletech/druid-opa-authorizer/pull/85[druid-opa-authorizer#85].
+
+===== OPA operator
+
+* Using `if` for all rules and `contains` for multi-value rules is now mandatory.
+* `strict` mode is now enabled by default.
+  For more upgrade information, read the https://www.openpolicyagent.org/docs/latest/v0-upgrade/#upgrading-rego[Upgrading Rego] section of the official documentation.
+
+===== Trino operator
+
+Trino now uses the native S3 implementation which has the following requirements for S3 connections:
+
+* TLS is always enabled and cannot be disabled.
+* Client-side encryption is not supported.
+  Server-side encryption (SSE) is the recommended alternative.
+* Multipart (non-streaming) writes and upload are not supported.
+
+Legacy S3 support (via Hadoop) has been disabled and will be removed in a future version of Trino.
+
+==== Upgrade from 24.11
+
+===== Using stackablectl
+
+Uninstall the `24.11` release
+
+[source,console]
+----
+$ stackablectl release uninstall 24.11
+
+Uninstalled release '24.11'
+
+Use "stackablectl release list" to list available releases.
+# ...
+----
+
+Afterwards you will need to upgrade the CustomResourceDefinitions (CRDs) installed by the Stackable Platform.
+The reason for this is that helm will uninstall the operators but not the CRDs.
+This can be done using `kubectl replace`.
+
+[source]
+----
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/airflow-operator/25.3.0/deploy/helm/airflow-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/commons-operator/25.3.0/deploy/helm/commons-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/druid-operator/25.3.0/deploy/helm/druid-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hbase-operator/25.3.0/deploy/helm/hbase-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hdfs-operator/25.3.0/deploy/helm/hdfs-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hive-operator/25.3.0/deploy/helm/hive-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/kafka-operator/25.3.0/deploy/helm/kafka-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/listener-operator/25.3.0/deploy/helm/listener-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/nifi-operator/25.3.0/deploy/helm/nifi-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/opa-operator/25.3.0/deploy/helm/opa-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/secret-operator/25.3.0/deploy/helm/secret-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/25.3.0/deploy/helm/spark-k8s-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/superset-operator/25.3.0/deploy/helm/superset-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/trino-operator/25.3.0/deploy/helm/trino-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/25.3.0/deploy/helm/zookeeper-operator/crds/crds.yaml
+----
+
+[source,console]
+----
+customresourcedefinition.apiextensions.k8s.io "airflowclusters.airflow.stackable.tech" replaced
+customresourcedefinition.apiextensions.k8s.io "authenticationclasses.authentication.stackable.tech" replaced
+customresourcedefinition.apiextensions.k8s.io "s3connections.s3.stackable.tech" replaced
+...
+----
+
+Install the `25.3` release
+
+[source,console]
+----
+$ stackablectl release install 25.3
+
+Installed release '25.3'
+
+Use "stackablectl operator installed" to list installed operators.
+----
+
+===== Using Helm
+
+Use `helm list` to list the currently installed operators.
+
+You can use the following command to uninstall all operators that are part of the `24.11` release:
+
+[source,console]
+----
+$ helm uninstall airflow-operator commons-operator druid-operator hbase-operator hdfs-operator hive-operator kafka-operator listener-operator nifi-operator opa-operator secret-operator spark-k8s-operator superset-operator trino-operator zookeeper-operator
+release "airflow-operator" uninstalled
+release "commons-operator" uninstalled
+...
+----
+
+Afterward you will need to upgrade the CustomResourceDefinitions (CRDs) installed by the Stackable Platform.
+The reason for this is that helm will uninstall the operators but not the CRDs.
+This can be done using `kubectl replace`:
+
+[source]
+----
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/airflow-operator/25.3.0/deploy/helm/airflow-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/commons-operator/25.3.0/deploy/helm/commons-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/druid-operator/25.3.0/deploy/helm/druid-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hbase-operator/25.3.0/deploy/helm/hbase-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hdfs-operator/25.3.0/deploy/helm/hdfs-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hive-operator/25.3.0/deploy/helm/hive-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/kafka-operator/25.3.0/deploy/helm/kafka-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/listener-operator/25.3.0/deploy/helm/listener-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/nifi-operator/25.3.0/deploy/helm/nifi-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/opa-operator/25.3.0/deploy/helm/opa-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/secret-operator/25.3.0/deploy/helm/secret-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/25.3.0/deploy/helm/spark-k8s-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/superset-operator/25.3.0/deploy/helm/superset-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/trino-operator/25.3.0/deploy/helm/trino-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/25.3.0/deploy/helm/zookeeper-operator/crds/crds.yaml
+----
+
+[source,console]
+----
+customresourcedefinition.apiextensions.k8s.io "airflowclusters.airflow.stackable.tech" replaced
+customresourcedefinition.apiextensions.k8s.io "authenticationclasses.authentication.stackable.tech" replaced
+customresourcedefinition.apiextensions.k8s.io "s3connections.s3.stackable.tech" replaced
+...
+----
+
+Install the `25.3` release
+
+[source,console]
+----
+helm repo add stackable-stable https://repo.stackable.tech/repository/helm-stable/
+helm repo update stackable-stable
+helm install --wait airflow-operator stackable-stable/airflow-operator --version 25.3.0
+helm install --wait commons-operator stackable-stable/commons-operator --version 25.3.0
+helm install --wait druid-operator stackable-stable/druid-operator --version 25.3.0
+helm install --wait hbase-operator stackable-stable/hbase-operator --version 25.3.0
+helm install --wait hdfs-operator stackable-stable/hdfs-operator --version 25.3.0
+helm install --wait hive-operator stackable-stable/hive-operator --version 25.3.0
+helm install --wait kafka-operator stackable-stable/kafka-operator --version 25.3.0
+helm install --wait listener-operator stackable-stable/listener-operator --version 25.3.0
+helm install --wait nifi-operator stackable-stable/nifi-operator --version 25.3.0
+helm install --wait opa-operator stackable-stable/opa-operator --version 25.3.0
+helm install --wait secret-operator stackable-stable/secret-operator --version 25.3.0
+helm install --wait spark-k8s-operator stackable-stable/spark-k8s-operator --version 25.3.0
+helm install --wait superset-operator stackable-stable/superset-operator --version 25.3.0
+helm install --wait trino-operator stackable-stable/trino-operator --version 25.3.0
+helm install --wait zookeeper-operator stackable-stable/zookeeper-operator --version 25.3.0
+----
+
+==== Known issues
+
+===== Hive operator
+
+In Hive 4.0.1 with Kerberos enabled, health checks cause excessive error logs:
+
+[source]
+----
+ERROR [Metastore-Handler-Pool: Thread-65] server.TThreadPoolServer: Thrift Error occurred during processing of message.
+----
+
+This is because the health check doesn't complete SASL authentication.
+The error is ignorable, though it can be hidden with the following configuration:
+
+[source,yaml]
+----
+spec:
+  metastore:
+    config:
+      logging:
+        containers:
+          hive:
+            loggers:
+              org.apache.thrift.server.TThreadPoolServer:
+                level: NONE
+----
+
+NOTE: This will suppress all logging from `TThreadPoolServer`, including log events that might be useful for diagnosing issues.

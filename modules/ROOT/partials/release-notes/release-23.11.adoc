@@ -11,45 +11,45 @@ Released 2023-11-30.
 
 The following new major platform features were added:
 
-PodDisruptionBudgets::
+===== PodDisruptionBudgets
 Kubernetes has mechanisms to ensure minimal planned downtime.
 Our product operators deploy so-called PodDisruptionBudget (PDB) resources alongside the products.
 For every role that you specify (e.g. HDFS namenodes or Trino workers) a PDB is created.
 This will determine the extent to which roles for a given application may be inactive at any given time.
 See xref:concepts:operations/pod_disruptions.adoc[the documentation] for more details.
 
-Graceful shutdown::
+===== Graceful shutdown
 Graceful shutdown refers to the managed, controlled shutdown of service instances in the manner intended by the software authors.
 Typically, an instance will receive a signal indicating the intent for the server to shut down, and it will initiate a controlled shutdown.
 Our operators configure a sensible amount of time Pods are granted to properly shut down without disrupting the availability of the product.
 See xref:concepts:operations/graceful_shutdown.adoc[the documentation] for more details.
 
-Signed SDP product images::
+===== Signed SDP product images
 As of this release all Stackable product images are signed (the signing of operator images was delivered in SDP 23.7).
 Please see this xref:guides:enabling-verification-of-image-signatures.adoc[tutorial] for more information.
 
-Airflow KubernetesExecutor::
+===== Airflow KubernetesExecutor
 Airflow clusters can now be configured to use Kubernetes executors, whereby pods are spun up for job tasks and terminated when complete, thus offering an alternative way to use resources without the need for job queuing.
 
-Overridable Java security settings::
+===== Overridable Java security settings
 For JVM-based products (i.e. Druid, HBase, HDFS, Hive, Kafka, NiFi, Spark, Trino and ZooKeeper) it is now possible to provide custom security settings that override the default values.
 This allows the user to control things such as DNS lookup caches.
 
-Stackable Cockpit::
+===== Stackable Cockpit
 This release includes a very early preview version of Stackable Cockpit, a browser-based management tool which interacts with the Stackable data platform to display e.g. deployed stacklets and their status.
 
-stackablectl::
+===== stackablectl
 Our command line tool has been re-worked to use the same backbone as Stackable Cockpit: you can find out about the recent enhancements by visiting the online xref:management:stackablectl:index.adoc[documentation].
 
-Listener operator::
+===== Listener operator
 The listener-operator was introduced in release 23.1 and the associated ServiceType field in 23.4.
 In this release we introduce configurable ListenerClass _presets_ that map to the service types appropriate for different environments.
 This is discussed in more detail in the xref:listener-operator:listenerclass.adoc[documentation].
 
-Openshift certification::
+===== Openshift certification
 All Stackable operators in the 23.11 release have been certified for Openshift versions 4.11-4.13 and can be installed directly from the OperatorHub UI: image:openshift_operatorhub.png[OperatorHub in Openshift portal]
 
-Product features::
+===== Product features
 
 Additionally, there are some other individual product features that are noteworthy:
 
@@ -692,7 +692,6 @@ kubectl replace -f https://raw.githubusercontent.com/stackabletech/zookeeper-ope
 [source,console]
 ----
 customresourcedefinition.apiextensions.k8s.io "airflowclusters.airflow.stackable.tech" replaced
-customresourcedefinition.apiextensions.k8s.io "airflowdbs.airflow.stackable.tech" replaced
 customresourcedefinition.apiextensions.k8s.io "authenticationclasses.authentication.stackable.tech" replaced
 customresourcedefinition.apiextensions.k8s.io "s3connections.s3.stackable.tech" replaced
 ...
