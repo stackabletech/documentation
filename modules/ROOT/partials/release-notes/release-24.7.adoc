@@ -285,7 +285,6 @@ kubectl delete -f https://raw.githubusercontent.com/stackabletech/hello-world-op
 [source,console]
 ----
 customresourcedefinition.apiextensions.k8s.io "airflowclusters.airflow.stackable.tech" replaced
-customresourcedefinition.apiextensions.k8s.io "airflowdbs.airflow.stackable.tech" replaced
 customresourcedefinition.apiextensions.k8s.io "authenticationclasses.authentication.stackable.tech" replaced
 customresourcedefinition.apiextensions.k8s.io "s3connections.s3.stackable.tech" replaced
 ...
