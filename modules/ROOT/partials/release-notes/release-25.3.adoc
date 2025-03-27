@@ -149,6 +149,23 @@ The following product versions are no longer supported (although images for rele
 
 ==== stackablectl
 
+* A new demo called `jupyterhub-keycloak` was added and is available via `stackablectl`.
+  The JupyterHub-Keycloak integration demo offers a comprehensive and secure multi-user data science environment on Kubernetes, integrating Single Sign-on Jupyter notebooks with Stackable Spark and S3 storage.
+  The demo can be installed by running `stackablectl demo install jupyterhub-keycloak`.
+  See https://github.com/stackabletech/demos/pull/155[demos#155] and https://github.com/stackabletech/documentation/pull/715[documentation#715].
+* Demos and stacks are now versioned and the main branch is considered unstable.
+  `stackablectl` by default installs the latest stable demo and/or stack.
+  A specific release can be targeted by providing the `--release` argument.
+  See https://github.com/stackabletech/stackable-cockpit/pull/340[stackable-cockpit#340].
+* Add new argument --chart-source so that operator charts can be pulled either from an OCI registry (the default) or from a index.yaml-based repository.
+  See https://github.com/stackabletech/stackable-cockpit/pull/344[stackable-cockpit#344].
+* Use `rustls-native-certs` so that `stackablectl` can be used in environments with internal PKI.
+  See  https://github.com/stackabletech/stackable-cockpit/pull/351[stackable-cockpit#351].
+* Use `heritage` label when looking up the `minio-console` stacklet.
+  See https://github.com/stackabletech/stackable-cockpit/pull/364[stackable-cockpit#364].
+* Improve tracing and log output.
+  See https://github.com/stackabletech/stackable-cockpit/pull/365[stackable-cockpit#365].
+
 ==== Supported Kubernetes versions
 
 This release supports the following Kubernetes versions:
