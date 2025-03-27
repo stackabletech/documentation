@@ -25,15 +25,16 @@ Released on 2025-03-21.
 
 ===== Security
 
-* Additional trust roots can be specified in an `autoTls` SecretClass. See xref:secret-operator:secretclass.adoc[Documentation].
+* Additional trust roots can be specified in an `autoTls` SecretClass.
+  See the xref:secret-operator:secretclass.adoc[`autoTls` backend documentation].
 * The Stackable Secret Operator's `experimentalCertManager` backend now supports specifying custom key lengths.
   The `autoTls` backend has supported this since 24.11.
 * Users can now configure the lifetime of self-signed certificates directly in the product's custom resources which influences the frequency of pod restarts.
-  Details can be found at xref:concepts:operations/temporary_credentials_lifetime.adoc[].
+  Details can be found on the xref:concepts:operations/temporary_credentials_lifetime.adoc[temporary credentials lifetime page].
 
 ===== Observability
 
-Products now log information about their container environment, on startup and on an interval after that. xref:concepts:containerdebug.adoc[]
+Products now log information about their xref:concepts:containerdebug.adoc[container environment], on startup and on an interval after that.
 
 ===== NiFi
 
@@ -88,7 +89,8 @@ They have been stabilised in OPA 1.0 and are now implicitly imported.
 
 ===== Druid
 
-The default memory limits have been increased for following roles:
+The default memory limits have been increased for following roles.
+See https://github.com/stackabletech/druid-operator/pull/685[druid-operator#685].
 
 * Coordinator: From `512Mi` to `768Mi`
 * Middle Manager: From `1Gi` to `1500Mi`.
@@ -98,11 +100,13 @@ NOTE: Upgrades to existing deployments could cause memory limits to be reached o
 ===== Hive
 
 The the default memory reservation of Hive metastore has been increased from `512Mi` to `768Mi` to avoid OOMKilled events.
+See https://github.com/stackabletech/hive-operator/pull/578[hive-operator#578].
 
 ===== Bug fixes
 
 * Previously, pods with a Listener volume were stuck in an "Unknown" state after their node was restarted.
   With this release, Listener volumes are correctly republished and the pods restart as expected.
+  See https://github.com/stackabletech/listener-operator/issues/262[listener-operator#262].
 * In 24.11 we used a custom build of jmx_exporter to resolve a https://github.com/stackabletech/issues/issues/649[performance degredation].
   In this release, Java products ship with the fixed upstream https://github.com/prometheus/jmx_exporter/releases/tag/1.1.0[jmx_exporter 1.1.0] which includes https://github.com/prometheus/jmx_exporter/pull/1009[the fix].
 
@@ -209,13 +213,15 @@ Of the changes mentioned above, the following are breaking (or could lead to bre
 
 ===== General
 
-S3 bucket `region` can now be configured for `S3Connection`, `S3Bucket`, and inline S3 references. It defaults to `us-east-1`.
+S3 bucket `region` can now be configured for `S3Connection`, `S3Bucket`, and inline S3 references.
+It defaults to `us-east-1`.
+See the https://github.com/stackabletech/issues/issues/696[tracking issue].
 
 NOTE: Products that use the Hadoop S3 implementation previously defaulted to `us-east-2`, so if there are bucket connectivity problems, you will need to set the region `us-east-2` explicitly.
 
 ===== Airflow operator
 
-The field `.spec.clusterConfig.dagsGitSync[].wait` changed from `uint8` to our human-readable `Duration` type.
+The field `.spec.clusterConfig.dagsGitSync[].wait` changed from `uint8` to our human-readable xref:reference:duration.adoc[`Duration`] type.
 If you have specified a time without a unit, eg: `wait: 20`, you will need to add the applicable unit, eg: `wait: 20s`.
 
 ===== Druid operator
