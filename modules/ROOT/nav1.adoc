@@ -11,6 +11,7 @@
 ** xref:kubernetes/microk8s.adoc[]
 ** xref:kubernetes/oke.adoc[]
 ** xref:kubernetes/openshift.adoc[]
+** xref:kubernetes/ovh-mks.adoc[]
 ** xref:kubernetes/plusserver.adoc[]
 ** xref:kubernetes/ske.adoc[]
 ** xref:kubernetes/suse-k3s.adoc[]

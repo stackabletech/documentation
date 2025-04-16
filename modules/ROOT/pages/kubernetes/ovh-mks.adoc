@@ -1,0 +1,7 @@
+= OVH Managed Kubernetes Service (MKS)
+
+https://www.ovhcloud.com/en/public-cloud/kubernetes/
+
+The Stackable Data Platform should install normally on the OVH MKS out of the box.
+
+As with all cloud environments, we recommend configuring the xref:listener-operator:index.adoc[] to use the xref:listener-operator:listenerclass.adoc#preset-ephemeral-nodes[`ephemeral-nodes` preset]. Otherwise, Pods may fail to be rescheduled if their existing Nodes are deleted due to rescaling or rolling system upgrades.
