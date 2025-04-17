@@ -1,0 +1,32 @@
+= Telemetry signals in operators
+
+Since SDP 25.7.0, all Stackable operators emit multiple signals for telemetry data.
+Currently supported signals are:
+
+* Console logs in plain and JSON format
+* (Rolling) file logs in JSON format
+* OpenTelemetry logs exported via OTLP
+* OpenTelemetry traces exported via OTLP
+
+Every signal can be toggled and customized using Helm values.
+All fields are grouped under the top-level `telemetry` section.
+The following sections describe the available fields their default and supported values.
+
+== Console logs
+
+This signal prints log messages at the selected level and in the selected format to STDOUT.
+These logs are useful for quick debugging.
+For a more complete debugging experience, we recommend the OpenTelemetry signals.
+
+[source,yaml]
+----
+telemetry:
+  consoleLog:
+    enabled: true # true, false
+    level: null   # error, warning, info, debug, trace
+    format: null  # plain, json
+----
+
+== File logs
+
+== OpenTelemetry logs and traces
