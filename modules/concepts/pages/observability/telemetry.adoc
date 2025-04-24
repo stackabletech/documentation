@@ -22,10 +22,14 @@ For a more complete debugging experience, we recommend the OpenTelemetry signals
 ----
 telemetry:
   consoleLog:
-    enabled: true # true, false
-    level: null   # error, warning, info, debug, trace
-    format: null  # plain, json
+    enabled: true # <1>
+    level: null   # <2>
+    format: null  # <3>
 ----
+
+<1> Boolean: `true, false`
+<2> Enum: `error, warning, info, debug, trace`
+<3> Enum: `plain, json`
 
 == File logs
 
