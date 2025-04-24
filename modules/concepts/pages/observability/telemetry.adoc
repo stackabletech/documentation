@@ -33,4 +33,22 @@ telemetry:
 
 == File logs
 
+This signal writes log messages at the selected level in JSON to (rolling) log file(s).
+These logs can be picked up by log aggregation systems, like Vector.
+
+[source,yaml]
+----
+telemetry:
+  fileLog:
+    enabled: false         # <1>
+    level: null            # <2>
+    rotationPeriod: hourly # <3>
+    maxFiles: 6            # <4>
+----
+
+<1> Boolean: `true, false`
+<2> Enum: `error, warning, info, debug, trace`
+<3> Enum: `never, daily, hourly, minutely`
+<4> Unsigned Integer
+
 == OpenTelemetry logs and traces
