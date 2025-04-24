@@ -29,8 +29,8 @@ telemetry:
 ----
 
 <1> Boolean: `true, false`
-<2> Enum: `error, warning, info, debug, trace`
-<3> Enum: `plain, json`
+<2> Enum: `error, warning, info, debug, trace` - operator defaults to `info`
+<3> Enum: `plain, json` - operator defaults to `plain`
 
 == File logs
 
@@ -48,7 +48,7 @@ telemetry:
 ----
 
 <1> Boolean: `true, false`
-<2> Enum: `error, warning, info, debug, trace`
+<2> Enum: `error, warning, info, debug, trace` - operator defaults to `info`
 <3> Enum: `never, daily, hourly, minutely`
 <4> Unsigned Integer
 
@@ -71,5 +71,5 @@ telemetry:
 ----
 
 <1> Boolean: `true, false`
-<2> Enum: `error, warning, info, debug, trace`
+<2> Enum: `error, warning, info, debug, trace` - operator defaults to `info`
 <3> String: E.g. `my-collector:4317`
