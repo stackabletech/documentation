@@ -10,7 +10,8 @@ Currently supported signals are:
 
 Every signal can be toggled and customized using Helm values.
 All fields are grouped under the top-level `telemetry` section.
-The following sections describe the available fields their default and supported values.
+
+NOTE: The following sections describe the available fields their default and supported values.
 
 == Console logs
 
