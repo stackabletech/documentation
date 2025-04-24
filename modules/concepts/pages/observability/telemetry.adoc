@@ -1,12 +1,10 @@
 = Telemetry signals in operators
 
-Since SDP 25.7.0, all Stackable operators emit multiple signals for telemetry data.
-Currently supported signals are:
+Since SDP 25.7.0, all Stackable operators emit telemetry data in the following ways:
 
-* Console logs in plain and JSON format
-* (Rolling) file logs in JSON format
-* OpenTelemetry logs exported via OTLP
-* OpenTelemetry traces exported via OTLP
+* logs (via console, file, and OTLP export)
+* metrics (not yet available, will most likely be an OTLP export)
+* traces (via OTLP export)
 
 Every signal can be toggled and customized using Helm values.
 All fields are grouped under the top-level `telemetry` section.
