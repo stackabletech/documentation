@@ -52,3 +52,23 @@ telemetry:
 <4> Unsigned Integer
 
 == OpenTelemetry logs and traces
+
+These two signal export OpenTelemetry logs and traces to OTLP enabled collectors.
+These signals can be visualized using tools, like Grafana, Loki, and Jaeger.
+
+[source,yaml]
+----
+telemetry:
+  otelLogExporter:
+    enabled: false # <1>
+    level: null    # <2>
+    endpoint: null # <3>
+  otelTraceExporter:
+    enabled: false # <1>
+    level: null    # <2>
+    endpoint: null # <3>
+----
+
+<1> Boolean: `true, false`
+<2> Enum: `error, warning, info, debug, trace`
+<3> String: E.g. `my-collector:4317`
