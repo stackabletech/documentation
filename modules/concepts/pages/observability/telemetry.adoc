@@ -2,10 +2,12 @@
 
 Since SDP 25.7.0, all Stackable operators emit telemetry data in the following ways:
 
-* logs (via console, file, and OTLP export)
-* traces (via OTLP export)
+* Console logs in plain and JSON format
+* File logs in JSON format (with the option of Rolling files)
+* OpenTelemetry logs exported via OTLP
+* OpenTelemetry traces exported via OTLP
 
-Every signal can be toggled and customized using Helm values.
+Every subscriber can be toggled and customized using Helm values.
 All fields are grouped under the top-level `telemetry` section.
 
 NOTE: The following sections describe the available fields their default and supported values.
