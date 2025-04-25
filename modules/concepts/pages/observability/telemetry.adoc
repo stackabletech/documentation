@@ -10,7 +10,19 @@ Since SDP 25.7.0, all Stackable operators emit telemetry data in the following w
 Every subscriber can be toggled and customized using Helm values.
 All fields are grouped under the top-level `telemetry` section.
 
-NOTE: The following sections describe the available fields their default and supported values.
+[NOTE]
+====
+The following sections describe the available fields as well as their default and supported values.
+If the Helm values explained below are not overridden, the following operator defaults apply:
+
+* Levels for all signals are set to `INFO`.
+* Console logs are enabled
+* File logs are disabled
+* File logs rotation period is set to `Never`
+* File logs max files is unset
+* OpenTelemetry logs and traces are disabled
+* OTLP endpoints are set to `http://localhost:4317`
+====
 
 == Console logs
 
@@ -28,8 +40,8 @@ telemetry:
 ----
 
 <1> Boolean: `true, false`
-<2> Enum: `error, warning, info, debug, trace` - operator defaults to `info`
-<3> Enum: `plain, json` - operator defaults to `plain`
+<2> Enum: `error, warning, info, debug, trace`
+<3> Enum: `plain, json`
 
 == File logs
 
@@ -47,7 +59,7 @@ telemetry:
 ----
 
 <1> Boolean: `true, false`
-<2> Enum: `error, warning, info, debug, trace` - operator defaults to `info`
+<2> Enum: `error, warning, info, debug, trace`
 <3> Enum: `never, daily, hourly, minutely`
 <4> Unsigned Integer
 
@@ -70,5 +82,5 @@ telemetry:
 ----
 
 <1> Boolean: `true, false`
-<2> Enum: `error, warning, info, debug, trace` - operator defaults to `info`
+<2> Enum: `error, warning, info, debug, trace`
 <3> String: E.g. `my-collector:4317`
