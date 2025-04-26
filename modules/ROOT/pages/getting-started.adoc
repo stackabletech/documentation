@@ -235,7 +235,7 @@ If all has gone well then you will have successfully deployed a Stackable cluste
 
 === Apache ZooKeeper
 
-We can test ZooKeeper by running the ZooKeeper CLI shell. The easiest way to do this is to run the CLI shell on the pod that is running ZooKeeper. It might be necassary to determine and set the port.
+We can test ZooKeeper by running the ZooKeeper CLI shell. The easiest way to do this is to run the CLI shell on the pod that is running ZooKeeper. It might be necessary to determine and set the port.
 
 [source,bash]
 ----
