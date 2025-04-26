@@ -35,7 +35,7 @@ The following product versions are deprecated and will be removed in a later rel
 
 ===== Removed versions
 
-The following product versions are no longer supported (although images for released product versions remain available https://repo.stackable.tech/#browse/browse:docker:v2%2Fstackable[here]):
+The following product versions are no longer supported (although images for released product versions remain available https://oci.stackable.tech/[here,window=_blank]. Information on how to browse the registry can be found xref:contributor:project-overview.adoc#docker-images[here,window=_blank].):
 
 * ...
 
@@ -181,25 +181,25 @@ customresourcedefinition.apiextensions.k8s.io "s3connections.s3.stackable.tech" 
 
 Install the `YY.M` release
 
+NOTE: `helm repo` subcommands are not supported for OCI registries. The operators are installed directly, without adding the Helm Chart repository first.
+
 [source,console]
 ----
-helm repo add stackable-stable https://repo.stackable.tech/repository/helm-stable/
-helm repo update stackable-stable
-helm install --wait airflow-operator stackable-stable/airflow-operator --version OO.M.X
-helm install --wait commons-operator stackable-stable/commons-operator --version OO.M.X
-helm install --wait druid-operator stackable-stable/druid-operator --version OO.M.X
-helm install --wait hbase-operator stackable-stable/hbase-operator --version OO.M.X
-helm install --wait hdfs-operator stackable-stable/hdfs-operator --version OO.M.X
-helm install --wait hive-operator stackable-stable/hive-operator --version OO.M.X
-helm install --wait kafka-operator stackable-stable/kafka-operator --version OO.M.X
-helm install --wait listener-operator stackable-stable/listener-operator --version OO.M.X
-helm install --wait nifi-operator stackable-stable/nifi-operator --version OO.M.X
-helm install --wait opa-operator stackable-stable/opa-operator --version OO.M.X
-helm install --wait secret-operator stackable-stable/secret-operator --version OO.M.X
-helm install --wait spark-k8s-operator stackable-stable/spark-k8s-operator --version OO.M.X
-helm install --wait superset-operator stackable-stable/superset-operator --version OO.M.X
-helm install --wait trino-operator stackable-stable/trino-operator --version OO.M.X
-helm install --wait zookeeper-operator stackable-stable/zookeeper-operator --version OO.M.X
+helm install --wait airflow-operator oci://oci.stackable.tech/sdp-charts/airflow-operator --version OO.M.X
+helm install --wait commons-operator oci://oci.stackable.tech/sdp-charts/commons-operator --version OO.M.X
+helm install --wait druid-operator oci://oci.stackable.tech/sdp-charts/druid-operator --version OO.M.X
+helm install --wait hbase-operator oci://oci.stackable.tech/sdp-charts/hbase-operator --version OO.M.X
+helm install --wait hdfs-operator oci://oci.stackable.tech/sdp-charts/hdfs-operator --version OO.M.X
+helm install --wait hive-operator oci://oci.stackable.tech/sdp-charts/hive-operator --version OO.M.X
+helm install --wait kafka-operator oci://oci.stackable.tech/sdp-charts/kafka-operator --version OO.M.X
+helm install --wait listener-operator oci://oci.stackable.tech/sdp-charts/listener-operator --version OO.M.X
+helm install --wait nifi-operator oci://oci.stackable.tech/sdp-charts/nifi-operator --version OO.M.X
+helm install --wait opa-operator oci://oci.stackable.tech/sdp-charts/opa-operator --version OO.M.X
+helm install --wait secret-operator oci://oci.stackable.tech/sdp-charts/secret-operator --version OO.M.X
+helm install --wait spark-k8s-operator oci://oci.stackable.tech/sdp-charts/spark-k8s-operator --version OO.M.X
+helm install --wait superset-operator oci://oci.stackable.tech/sdp-charts/superset-operator --version OO.M.X
+helm install --wait trino-operator oci://oci.stackable.tech/sdp-charts/trino-operator --version OO.M.X
+helm install --wait zookeeper-operator oci://oci.stackable.tech/sdp-charts/zookeeper-operator --version OO.M.X
 ----
 
 ==== Known issues
