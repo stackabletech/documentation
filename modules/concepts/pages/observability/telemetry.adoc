@@ -46,7 +46,7 @@ telemetry:
 == File logs
 
 This signal writes log messages at the selected level in JSON to (rolling) log file(s).
-These logs can be picked up by log aggregation systems, like Vector.
+These logs can be picked up by a log aggregation system, like Vector.
 
 [source,yaml]
 ----
