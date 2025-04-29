@@ -3,7 +3,7 @@
 :keywords: Kubernetes, operator, docker, registry, custom image, tags
 :description: Learn how to specify product images for Stackable Data Platform deployments, including using default, custom, or mirrored registries.
 
-To run any product on the Stackable Data Platform, you need to specify which version you want to run in the resource definition (e.g., a `SparkApplication` or `DruidCluster`).
+To run any product on the Stackable Data Platform, you need to specify the desired version in the resource definition (e.g., a `SparkApplication` or `DruidCluster`).
 The simplest way to do this is as follows:
 
 [source,yaml]
@@ -16,7 +16,7 @@ spec:
 <.> The version of your product.
 Consult the product operator documentation to find out about supported product versions.
 <.> The version of the Stackable Data Platform.
-If you omit it, the operator will use its own version together with the product version to select the product image.
+If omitted, the operator will use its own version along with the product version to select the product image.
 It is recommended to omit this field to ensure you are always using the correct, compatible version of the product image.
 
 == Product and Stackable version explained
@@ -58,7 +58,7 @@ However, since the last digit of the Stackable version is considered a patch lev
 So, an operator of version _25.7.x_ will be compatible with all images of version _25.7.y_ release line.
 This allows for shorter update cycles for users when new image versions are released that may contain security fixes.
 
-The following paragraphs explain the available settings and how they work.
+The following sections explain the available settings and how they work.
 At the bottom of this page, in the <<_common_scenarios, common scenarios>> section, some common update scenarios are explained as examples.
 
 == Stackable provided images
@@ -133,11 +133,11 @@ Only when the correct product version is given to the operator will the product 
 
 Using custom images has a few limitations that users should be aware of:
 
-* The images will _have_ to have the same structures that Stackable operators expect.
+* The images must have the same structures that Stackable operators expect.
 This should usually be ensured by specifying a Stackable image in the `FROM` clause of the Dockerfile (all the available images can be found in our https://oci.stackable.tech/api/v2.0/projects/sdp[Stackable OCI registry] - the schema is typically: `oci.stackable.tech/sdp/<product>:<product-version>-stackable<stackable-version>`.
 Information on how to browse the registry can be found in the xref:contributor:project-overview.adoc#docker-images[Docker images section of the project overview]).
 
-* Images will have to be upgraded for every new Stackable release to follow structural changes that Stackable may have made to their images.
+* Images will need to be upgraded for every new Stackable release to follow structural changes that Stackable may have made to their images.
 When deriving images from official Stackable images, this will mean updating the version of the image in the `FROM` clause to the correct Stackable release.
 
 * It is not possible to update the Stackable Platform to a new version without changing the deployed cluster definitions when using custom images.
