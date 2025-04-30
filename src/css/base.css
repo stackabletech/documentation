@@ -122,9 +122,16 @@ body ::-webkit-scrollbar-thumb {
   display: flex;
   position: relative;
   width: 100%;
-  /* We couldn't agree if we want this or not. So we settled on trying 1920px for now */
-  /* See https://github.com/stackabletech/documentation-ui/pull/78 for details */
-  max-width: 1920px;
+  /*
+    We couldn't agree if we want this or not.
+    We tried 1920px, it was way to wide, so it got dropped back to 1480px,
+    which is should be a good middle ground between 1280px and 1920px.
+
+    See
+    - https://github.com/stackabletech/documentation-ui/pull/78
+    - https://github.com/stackabletech/documentation-ui/pull/132
+  */
+  max-width: 1480px;
   margin: 0 auto;
 }
 
