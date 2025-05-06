@@ -1,0 +1,7 @@
+* xref:kubernetes/huawei-cloud.adoc[]
+* xref:kubernetes/ibm-cloud.adoc[]
+* xref:kubernetes/ovh-mks.adoc[]
+* xref:kubernetes/plusserver.adoc[]
+* xref:kubernetes/ske.adoc[] (with the exception of missing public NodePorts)
+* xref:kubernetes/vmware_tanzu.adoc[]
+* xref:kubernetes/oke.adoc[]

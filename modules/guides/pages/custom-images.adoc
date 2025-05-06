@@ -1,37 +1,37 @@
 = Using customized product images
-:stackable-docker-registry: https://repo.stackable.tech/#browse/browse:docker:v2%2Fstackable
+:stackable-oci-registry: https://oci.stackable.tech/api/v2.0/projects/sdp
 :kind: https://kind.sigs.k8s.io/
 :kind-load-image: https://kind.sigs.k8s.io/docs/user/quick-start/#loading-an-image-into-your-cluster
 :description: Customize Stackable product images by modifying base images, deploying to a registry or Kubernetes cluster, and configuring your Stacklet to use them.
 
-The Stackable operator require a certain structure inside the product images, but modifications can be made.
-This is useful to for example load additional extensions or database drivers into an image.
+The Stackable operators require a certain structure inside the product images, but modifications can be made.
+This is useful for loading additional extensions or database drivers into an image or make any other required changes.
 
-To deploy a custom image, you will either have to manually load the image into the Kubernetes cluster or you have to deploy it into a custom registry.
+To deploy a custom image, you will either have to manually load the image into the Kubernetes cluster or deploy it into a custom registry.
 
 == Steps
 
-To use a customized image you have to:
+To use a customized image, you need to:
 
 1. Create the customized image using a Stackable base image.
-2. Provide this image into the Kubernetes cluster.
+2. Provide this image to the Kubernetes cluster.
 3. Configure your Stacklet to use the custom image.
 
 === Create your customized image
 
 The Stackable operators rely on the structure and contents of the product images, so any modifications need to be done using the Stackable images as base images.
 
-You can find the Stackable Docker images in the {stackable-docker-registry}[Stackable Docker registry].
-Images follow a naming schema: `docker.stackable.tech/stackable/<product>:<product-version>-stackable<stackable-version>` where `<product>` are the products like `druid`, `trino` and `opa`, `<product-version>` are product versions like `28.0.1`, `414` or `0.61.0` and `<stackable-version>` is a Stackable platform version like `23.7` or `24.3.0`.
+You can find the Stackable Docker images in the {stackable-oci-registry}[Stackable OCI registry].
+Images follow a naming schema: `oci.stackable.tech/sdp/<product>:<product-version>-stackable<stackable-version>` where `<product>` includes products like `druid`, `trino`, and `opa`, `<product-version>` are product versions like `28.0.1` (i.e. Apache Druid 28.0.1), `414`, or `0.61.0`, and `<stackable-version>` is a Stackable platform version like `25.3.0` or `25.7.0`.
 The Stackable version can also be `0.0.0-dev` for nightly images.
 You can use this naming schema together with the xref:operators:supported_versions.adoc[] list to quickly find the base image you need.
 
-For example, you might use the `docker.stackable.tech/stackable/hive:3.1.3-stackable24.3.0` image as a base for a modified Apache Hive image where you add a custom database driver.
+For example, you might use the `oci.stackable.tech/sdp/hive:3.1.3-stackable24.3.0` image as a base for a modified Apache Hive image where you add a custom database driver.
 Use the `FROM` clause in your Dockerfile to reference the base image.
 
 When tagging the image, there are no requirements by the operator, any registry and tag is possible.
 To avoid confusion, do not use the Stackable registry for your custom image, as you cannot push the image there.
-You can also keep the versions in the tag, and simply add a suffix to mark your changes.
+You can also keep the versions in the tag and simply add a suffix to mark your changes.
 
 For example, for a custom image with a MySQL driver added, you might tag your image with `my.corp/stackable/hive:3.1.3-stackable24.3.0-mysql`.
 
@@ -39,8 +39,8 @@ For example, for a custom image with a MySQL driver added, you might tag your im
 
 To deploy containers using this image, the Kubernetes cluster needs to be able to access the image.
 
-You can either upload the image into a custom registry and pull it from there - refer to your registry on how to do this - or make the image available to the Kubernetes cluster directly.
-For example, in {kind}[`kind`] you can use the {kind-load-image}[`kind load docker-image`] command to load a local image into the Kind cluster.
+You can either upload the image into a custom registry and pull it from there — refer to your registry documentation on how to do this — or make the image available to the Kubernetes cluster directly.
+For example, in {kind}[`kind`], you can use the {kind-load-image}[`kind load docker-image`] command to load a local image into the Kind cluster.
 
 === Use your customized image in your Stacklet definition
 
@@ -48,16 +48,19 @@ To use the customized image in your Stacklet, adjust the xref:concepts:product-i
 Use the `custom` field to specify your image:
 
 [source,yaml]
+----
 spec:
   image:
     custom: my.corp/stackable/hive:3.1.3-stackable24.3.0-mysql
     productVersion: 3.1.3
+----
 
-Note that you still need to specify the product version was used in the image for the operator  to configure it correctly.
+Note that you still need to specify the product version used in the image for the operator to configure it correctly.
 
-With this configuration the operator deploys your Stacklet using your custom image.
+With this configuration, the operator deploys your Stacklet using your custom image.
 
 == Further reading and useful links
 
-* Read about xref:concepts:product-image-selection.adoc[] to learn about other ways of specifying a product version or images, for example how to use a custom registry when mirroring Stackable images.
-* Have a look at the {stackable-docker-registry}[Stackable Docker registry] to find out which images are available to use as a base.
+* Read about xref:concepts:product-image-selection.adoc[] to learn about other ways of specifying a product version or images, for example, how to use a custom registry when mirroring Stackable images.
+* Have a look at the {stackable-oci-registry}[Stackable OCI registry] to find out which images are available to use as a base.
+Information on how to browse the registry can be found xref:contributor:project-overview.adoc#docker-images[here].

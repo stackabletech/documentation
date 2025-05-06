@@ -20,7 +20,7 @@ The focus in this platform release is on the support of offline (or on-premise) 
 
 The following new major platform features were added:
 
-Product image selection::
+===== Product image selection
 
 Product image selection has been expanded to cover different scenarios:
 
@@ -32,7 +32,7 @@ These options are described in more detail xref:contributor:adr/ADR023-product-i
 
 *N.B.* this is a breaking change across all operators as `spec.version` has been replaced by `spec.image`.
 
-Logging Aggregation::
+===== Logging Aggregation
 
 Component activity within the platform is logged in a way that makes it difficult to find, persist and consolidate this information.
 Log configuration is also a challenge.
@@ -47,19 +47,19 @@ In this release this has been added to the following components:
 
 Support for other products will be added in future releases.
 
-New Versions::
+===== New Versions
 
 The following new product version is now supported:
 
 * https://github.com/stackabletech/trino-operator/pull/358[Trino 403]
 
-Deprecated Versions::
+===== Deprecated Versions
 
 The following product version is no longer supported:
 
 * https://github.com/stackabletech/druid-operator/pull/339[Druid 0.22.1]
 
-Product features::
+===== Product features
 
 Additionally, there are some individual product features that are noteworthy
 

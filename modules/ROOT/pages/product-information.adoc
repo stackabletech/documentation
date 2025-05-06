@@ -54,15 +54,15 @@ Stackable components.
 === Operators and products
 
 All operators are supplied in container images. The products are also deployed in container images. The docker images
-are available for download here: https://repo.stackable.tech/#browse/browse:docker[]
+are available for download here: https://oci.stackable.tech/[]. Information on how to browse the images can be found xref:contributor:project-overview.adoc#docker-images[here].
 
 Stackable supports installing the Operators via https://helm.sh/[Helm] or with <<stackablectl>>. Every Operator includes
 installation instructions in the Getting started guide.
 
 ==== Helm Charts
 
-The Helm Charts can be found here: https://repo.stackable.tech/#browse/browse:helm-stable[] Using the Helm Charts
-requires Helm version 3 or above.
+The Helm Charts can be found here: https://oci.stackable.tech/api/v2.0/projects/sdp-charts[] Using the Helm Charts
+requires Helm version 3 or above. Information on how to browse the OCI repository for Helm Charts is described xref:contributor:project-overview.adoc#product-artifacts[here].
 
 
 [#stackablectl-installation]
@@ -107,9 +107,14 @@ The supported Kubernetes versions for each platform release can be found here:
 
 xref:release-notes.adoc[SDP Release notes]
 
-There are various Kubernetes distributions. Stackable supports:
+There are various Kubernetes distributions.
+The following distributions are supported for a production setup of the Stackable Data Platform:
 
 include::partial$supported-kubernetes-distributions.adoc[]
+
+These Kubernetes distributions are not officially tested by us but based on community feedback have been known to work. Some might require extra steps, please refer to the detailed pages for more information. Please contact us if you're interested in official support for any of these:
+
+include::partial$tested-kubernetes-distributions.adoc[]
 
 === Product specific dependencies
 

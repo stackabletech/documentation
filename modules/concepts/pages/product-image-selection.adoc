@@ -3,127 +3,121 @@
 :keywords: Kubernetes, operator, docker, registry, custom image, tags
 :description: Learn how to specify product images for Stackable Data Platform deployments, including using default, custom, or mirrored registries.
 
-To run any product on the Stackable Data Platform, you need to specify which version you want to run in the resource definition (i.e. a SparkApplication or DruidCluster).
-The simplest way to do this is this:
+To run any product on the Stackable Data Platform, you need to specify the desired version in the resource definition (e.g., a `SparkApplication` or `DruidCluster`).
+The simplest way to do this is as follows:
 
 [source,yaml]
 ----
 spec:
   image:
     productVersion: 1.2.3 <.>
-    # stackableVersion: 24.3.0 optional <.>
+    # stackableVersion: 25.7.0 # optional <.>
 ----
-<.> The version of your product - consult the product operator documentation to find out about supported product versions.
-<.> The version of the Stackable Data Platform. If you omit it, the operator will use it's own version together with the product version to select the product image. It is recommended to omit this field, so that you are always using the correct, compatible version of the product image.
-
-This page explains the different ways of specifying product images and the components that are involved,
-starting from the simple way of using the default images to explaining how to use custom or mirrored registries as well as custom images.
+<.> The version of your product.
+Consult the product operator documentation to find out about supported product versions.
+<.> The version of the Stackable Data Platform.
+If omitted, the operator will use its own version along with the product version to select the product image.
+It is recommended to omit this field to ensure you are always using the correct, compatible version of the product image.
 
 == Product and Stackable version explained
 
-All products of the Stackable Data Platform run on Kubernetes and are managed by Stackable Operators. One operator is responsible for exactly one product, for example Apache Spark, but can manage multiple instances (with different versions) of the product at the same time.
-The operators transform a Stacklet definition (for example a SparkApplication object) into Kubernetes native objects. Some of these objects are Pods and they  require _container images_ to run.
-These images contain different tools for initialization jobs and/or the actual product itself and the images are version and architecture specific.
+All products of the Stackable Data Platform run on Kubernetes and are managed by Stackable Operators.
+Each operator is responsible for one product, such as Apache Spark, but can manage multiple instances (with different versions) of the product simultaneously.
+The operators transform a Stacklet definition (e.g., a `SparkApplication` object) into Kubernetes-native objects.
+Some of these objects are Pods, which require _container images_ to run.
+These images contain various tools for initialization jobs and/or the actual product itself and are version and architecture-specific.
 
-Stackable uses two separate versions to describe the images that are provided as part of the platform:
-
+Stackable uses two separate versions to describe the images provided as part of the platform:
 
 **Product version** +
-This is the version of the product which this image provides, so this could for example be Kafka 3.3.1.
+This is the version of the product that the image provides, such as Kafka 3.9.0.
 
 TIP: You can find all products and their supported versions in the xref:operators:supported_versions.adoc[supported versions overview].
-You can also find the supported versions per product on each operator page, for example for xref:kafka:index.adoc#_supported_versions[Apache Kafka].
-New versions, deprecations and removals are announced in the xref:ROOT:release-notes.adoc[release notes].
+You can also find the supported versions per product on each operator page, for example, for xref:kafka:index.adoc#_supported_versions[Apache Kafka].
+New versions, deprecations, and removals are announced in the xref:ROOT:release-notes.adoc[Stackable Data Platform release notes].
 
 **Stackable version** +
-This version is used to track changes to the structure of the image containing the product (in the version specified by _product version_).
-Stackable operators expect to find a very specific structure in the images they use to roll out the products.
-This can be things like startup scripts being present, parameters these startup scripts expect, presence or location of extra libraries and similar things.
-In order for our operators to work as intended every operator has to be used with images from the same release line as this operator.
+This version tracks changes to the structure of the image containing the product (in the version specified by the _product version_).
+Stackable operators expect to find a specific file and folder structure in the images they use to roll out the products.
+This can include things like startup scripts, parameters these scripts expect, the presence or location of extra libraries, and similar aspects.
+For our operators to work as intended, every operator must be used with images from the same release line as the operator.
 
-What this means is, that for example the Stackable Operator for Apache HBase will by default try to use images with the same Stackable version, the following table shows a few examples to make this clearer:
-
+This means, for example, that the Stackable Operator for Apache HBase will, by default, try to use images with the same Stackable version.
+The following table provides a few examples to clarify this:
 
 |===
-|Operator version |HBase version |Image
+| Operator version | HBase version | Image
 
-|23.4.0
-|3.3.0
-|hbase:3.3.0-stackable23.4.0
-
-|23.4.0
-|3.3.1
-|hbase:3.3.1-stackable23.4.0
-
-|23.7.0
-|3.3.0
-|hbase:3.3.0-stackable23.7.0
-
-|23.7.0
-|3.3.1
-|hbase:3.3.1-stackable23.7.0
+| 23.4.0 | 3.3.0 | hbase:3.3.0-stackable23.4.0
+| 23.4.0 | 3.3.1 | hbase:3.3.1-stackable23.4.0
+| 23.7.0 | 3.3.0 | hbase:3.3.0-stackable23.7.0
+| 23.7.0 | 3.3.1 | hbase:3.3.1-stackable23.7.0
 |===
 
+However, since the last digit of the Stackable version is considered a patch level indicator, operators will be compatible with all images from the same release line.
+So, an operator of version _25.7.x_ will be compatible with all images of version _25.7.y_ release line.
+This allows for shorter update cycles for users when new image versions are released that may contain security fixes.
 
-However, since the last digit of the Stackable version is considered to be a patch level indicator, operators will be compatible with all images from the same release line.
-So an operator of version _23.4.x_ will be compatible with all images of version _23.4.y_.
-This is intended to allow shorter update cycles for users, when new image versions are released that may contain security fixes.
-
-The following paragraphs explain the available settings and how they work.
-
-At the bottom of this page in the <<_common_scenarios, common scenarios>> section some common update scenarios are explained as examples.
+The following sections explain the available settings and how they work.
+At the bottom of this page, in the <<_common_scenarios, common scenarios>> section, some common update scenarios are explained as examples.
 
 == Stackable provided images
 
-If your Kubernetes cluster has internet access, the easiest way is to use the publicly available images from the https://docker.stackable.tech/[Image registry hosted by Stackable] (as has been noted at the beginning of the page):
+If your Kubernetes cluster has internet access, the easiest way is to use the publicly available images from the https://oci.stackable.tech/[Stackable Image Registry].
+
+TIP: All our images are also mirrored to our https://quay.io/organization/stackable[Stackable Quay.io organization].
 
 [source,yaml]
 ----
 spec:
   image:
-    productVersion: 3.3.1 <.>
-    # stackableVersion: 23.7.0 # optional <.>
+    productVersion: 3.9.0 <.>
+    # stackableVersion: 25.7.0 # optional <.>
 ----
-<.> The version of your product - consult the product operator documentation to find out about supported product versions.
-<.> The version of the Stackable Data Platform - simply omit this to use the operator version.
+<.> The version of your product.
+Consult the product operator documentation to find out about supported product versions.
+<.> The version of the Stackable Data Platform.
+Simply omit this to use the operator version.
 
-NOTE: If the Kubernetes cluster does not have internet access, a xref:_custom_docker_registry[] or xref:_custom_images[] can be used.
+NOTE: If the Kubernetes cluster does not have internet access, you can use a xref:_custom_docker_registry[] or xref:_custom_images[].
 
-You only need to specify the product version but _can_ also specify an explicit Stackable version.
-the product version can be found on the xref:operators:supported_versions.adoc[list of supported product versions] or on the product operator documentation page.
+You only need to specify the product version, but you _can_ also specify an explicit Stackable version.
+The product version can be found on the xref:operators:supported_versions.adoc[list of supported product versions] or on the product operator documentation page.
 
-As images should be updated from time to time (e.g. new base image, security updates), a Stackable version can be provided.
-An image with the Stackable version `23.7.0` is fixed and will never change.
-Security updates within a release line will result in patch version bumps in the Stackable version to e.g. `23.7.1`.
+As images should be updated from time to time (e.g., new base image, security updates), a Stackable version can be provided.
+An image with the Stackable version `25.7.0` is fixed and will never change.
+Security updates within a release line will result in patch version bumps in the Stackable version, for example, to `25.7.1`.
 
-If you don't specify the Stackable version, the operator will use its own version, e.g. `23.7.0`.
+If you don't specify the Stackable version, the operator will use its own version, e.g., `25.7.0`.
 When using a nightly operator or a `pr` version, it will use the nightly `0.0.0-dev` image.
 
-All the available images (with their product and stackable version) can be found in our https://repo.stackable.tech/#browse/browse:docker:v2%2Fstackable[docker repository].
+All the available images (with their product and Stackable versions) can be found in our https://oci.stackable.tech/api/v2.0/projects/sdp[Stackable OCI registry].
+Information on how to browse the registry can be found in the xref:contributor:project-overview.adoc#docker-images[Docker images section of the project overview].
 
 == Custom docker registry
 
-Custom docker registries can be used to fetch the image from a local image registry rather than from the internet.
-The perquisite is that you mirror all the required images the same way (with the same name and tag) as the images provided by Stackable.
+Custom Docker registries can be used to fetch the image from a local image registry rather than from the internet.
+The prerequisite is that you mirror all the required images in the same way (with the same name and tag) as the images provided by Stackable.
 
-Afterwards you can use the following snippet to configure your custom docker repo:
+Afterward, you can use the following snippet to configure your custom Docker repo:
 
 [source,yaml]
 ----
 spec:
   image:
     productVersion: 3.3.1
-    stackableVersion: 23.7.0
-    repo: my.corp/myteam/stackable
+    stackableVersion: 25.7.0 # Optional
+    repo: my.corp/myteam/stackable <.>
 ----
+<.> We recommend not including a slash at the end while we plan on https://github.com/stackabletech/operator-rs/issues/1020[improving the situation].
 
-This will change the image from the default Stackable repository `docker.stackable.tech/stackable/kafka:3.3.1-stackable23.7.0` to `my.corp/myteam/stackable/kafka:3.3.1-stackable23.7.0`.
+This will change the image from the default Stackable repository `oci.stackable.tech/sdp/kafka:3.3.1-stackable23.7.0` to `my.corp/myteam/stackable/kafka:3.3.1-stackable23.7.0`.
 
 == [[customimages]] Custom images
 
 Custom images can be used to fetch arbitrary images from local or public registries.
-In comparison to the xref:_custom_docker_registry[], this allows to provide self-hosted or user-created images (e.g. user extended Stackable images).
-If your image has other tags or names than the ones provided by Stackable you need to use this option.
+Unlike the xref:_custom_docker_registry[], this allows you to provide self-hosted or user-created images (e.g., user-extended Stackable images).
+If your image has different tags or names than those provided by Stackable, you need to use this option.
 
 [source,yaml]
 ----
@@ -134,32 +128,34 @@ spec:
 ----
 
 Even though the product version is not used anymore for image selection, you still need to provide it, as the operators configure their respective products based on the product version.
-This affects e.g. configuration properties or available product features.
-Only when the correct product version is given to the operator, the product will work correctly, so you need to provide the product version that you have used in your custom image.
+This affects configuration properties or available product features.
+Only when the correct product version is given to the operator will the product work correctly, so you need to provide the product version that you have used in your custom image.
 
 Using custom images has a few limitations that users should be aware of:
 
-* The images will *have* to have the same structures that Stackable operators expect.
-This should usually be ensured by specifying a Stackable image in the `FROM` clause of the Dockerfile (all the available images can be found in our https://repo.stackable.tech/#browse/browse:docker:v2%2Fstackable[docker repository] - the schema is typically: `docker.stackable.tech/stackable/<product>:<product-version>-stackable<stackable-version>`).
+* The images must have the same structures that Stackable operators expect.
+This should usually be ensured by specifying a Stackable image in the `FROM` clause of the Dockerfile (all the available images can be found in our https://oci.stackable.tech/api/v2.0/projects/sdp[Stackable OCI registry] - the schema is typically: `oci.stackable.tech/sdp/<product>:<product-version>-stackable<stackable-version>`.
+Information on how to browse the registry can be found in the xref:contributor:project-overview.adoc#docker-images[Docker images section of the project overview]).
 
-* Images will have to be upgraded for every new Stackable release to follow structural changes that Stackable may have made to their images.
-When deriving images from official Stackable images this will mean updating the version of the image in the `FROM` clause to the correct Stackable release.
+* Images will need to be upgraded for every new Stackable release to follow structural changes that Stackable may have made to their images.
+When deriving images from official Stackable images, this will mean updating the version of the image in the `FROM` clause to the correct Stackable release.
 
 * It is not possible to update the Stackable Platform to a new version without changing the deployed cluster definitions when using custom images.
 The recommended process here is:
 
-** Set `reconciliationPaused` to `true` in your product cluster (see xref:operations/cluster_operations.adoc[])
-** Update Stackable platform
-** Change custom images in cluster specifications
-** Set `reconciliationPaused` to `false` again to start reconciliation again
+** Set `reconciliationPaused` to `true` in your product cluster (see xref:operations/cluster_operations.adoc[cluster operations documentation]).
+** Update the Stackable platform.
+** Change custom images in cluster specifications.
+** Set `reconciliationPaused` to `false` again to start reconciliation.
 
-## [[common_scenarios]] Common Scenarios
+== [[common_scenarios]] Common scenarios
 
-### Planned platform updates
-This is probably the most common scenario, users do not specify a Stackable version, and thus the operators always pick the image from their exact release.
-Updates happen by updating Stackable Operators, which will in turn restart the products with the new images.
+=== Planned platform updates
 
-#### Config
+This is probably the most common scenario, where users do not specify a Stackable version, and thus the operators always pick the image from their exact release.
+Updates happen by updating Stackable Operators, which will, in turn, restart the products with the new images.
+
+==== Config
 
 [source,yaml]
 ----
@@ -168,13 +164,14 @@ spec:
     productVersion: 3.3.1
 ----
 
-### Custom images / pinned images
-When a setup requires the utmost stability, and it is preferable for things to break, rather than run with a different image version that for example has not been certified.
-Or when a user requires custom libraries / code in the images they run and build their own images derived from official Stackable images, this is the only possible way to do this.
+=== Custom images / pinned images
 
-Please see the warnings in <<customimages, custom images section>> above for how to upgrade in this scenario.
+When a setup requires the utmost stability, and it is preferable for things to break rather than run with a different image version that, for example, has not been certified, or when a user requires custom libraries or code in the images they run and builds their own images derived from official Stackable images, this is the only possible way to do this.
 
-#### Config
+Please see the warnings in the <<customimages, custom images section>> above for how to upgrade in this scenario.
+
+==== Config
+
 [source,yaml]
 ----
 spec:

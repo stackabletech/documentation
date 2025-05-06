@@ -29,19 +29,19 @@ It is recommended to install <<Release 23.4.1>> instead, as it contains relevant
 
 The following new major platform features were added:
 
-Cluster Operation::
+===== Cluster Operation
 
 The first part of xref:concepts:operations/cluster_operations.adoc[Cluster operations] was rolled out in every applicable Stackable Operator.
 This supports pausing the cluster reconciliation and stopping the cluster completely.
 Pausing reconciliation will not apply any changes to the Kubernetes resources (e.g. when changing the custom resource).
 Stopping the cluster will set all replicas of StatefulSets, Deployments or DaemonSets to zero and therefore result in the deletion of all Pods belonging to that cluster (not the PVCs).
 
-Status Field::
+===== Status Field
 
 Operators of the Stackable Data Platform create, manage and delete Kubernetes resources: in order to easily query the health state of the products - and react accordingly - Stackable Operators use several predefined condition types to capture different aspects of a product's availability.
 See this xref:contributor:adr/ADR027-status[ADR] for more information.
 
-Default / Custom Affinities::
+===== Default / Custom Affinities
 
 In Kubernetes there are different ways to influence how Pods are assigned to Nodes.
 In some cases it makes sense to co-locate certain services that communicate a lot with each other, such as HBase regionservers with HDFS datanodes.
@@ -50,13 +50,13 @@ There may also be additional requirements e.g. placing important services - such
 This release implements default affinities that should suffice for many scenarios out-of-the box, while also allowing for custom affinity rules at a role and/or role-group level.
 See this xref:contributor:adr/ADR026-affinities.adoc[ADR] for more information.
 
-Log Aggregation::
+===== Log Aggregation
 
 The logging framework (added to the platform in Release 23.1) offers a consistent custom resource configuration and a separate, persisted sink (defaulting to OpenSearch).
 This has now been rolled out across all products.
 See this xref:contributor:adr/adr025-logging_architecture[ADR] and this xref:concepts:logging.adoc[concepts page] for more information.
 
-Service Type::
+===== Service Type
 
 The Service type can now be specified in all products.
 This currently differentiates between the internal ClusterIP and the external NodePort and is forward compatible with the xref:listener-operator:listenerclass.adoc[ListenerClass] for the automatic exposure of Services via the Listener Operator.
@@ -64,15 +64,15 @@ This change is not backwards compatible with older platform releases.
 For security reasons, the default is set to the cluster-internal (ClusterIP) ListenerClass.
 A cluster can be exposed outside of Kubernetes by setting clusterConfig.listenerClass to external-unstable (NodePort) or external-stable (LoadBalancer).
 
-New Versions::
+===== New Versions
 
 No new product versions are supported in this platform release.
 
-Deprecated Versions::
+===== Deprecated Versions
 
 No product versions have been deprecated in this platform release.
 
-Product features::
+===== Product features
 
 Additionally, there are some individual product features that are noteworthy:
 

@@ -10,7 +10,7 @@ The main features focus on OpenShift support and security.
 
 The following new major platform features were added:
 
-OpenShift compatibility::
+===== OpenShift compatibility
 
 We have made continued progress towards OpenShift compability, and the following operators can now be previewed on OpenShift.
 Further improvements are expected in future releases, but no stability or compatibility guarantees are currently made for OpenShift clusters.
@@ -20,7 +20,7 @@ Further improvements are expected in future releases, but no stability or compat
 * https://github.com/stackabletech/hdfs-operator/pull/225[Apache HDFS]
 * https://github.com/stackabletech/spark-k8s-operator/pull/126[Apache Spark on K8s]
 
-Support for internal and external TLS::
+===== Support for internal and external TLS
 
 The following operators support operating the products at a maximal level of transport security by using TLS certificates to secure internal and external communication:
 
@@ -28,7 +28,7 @@ The following operators support operating the products at a maximal level of tra
 * https://github.com/stackabletech/kafka-operator/pull/442[Apache Kafka]
 * https://github.com/stackabletech/zookeeper-operator/pull/479[Apache ZooKeeper]
 
-LDAP authentication::
+===== LDAP authentication
 
 Use a central LDAP server to manage all of your user identities in a single place.
 The following operators added support for LDAP authentication:

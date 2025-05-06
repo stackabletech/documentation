@@ -3,16 +3,28 @@
 :page-aliases: release_notes.adoc
 :description: Learn about the latest features and changes in the release notes for the Stackable Data Platform.
 
-The Stackable platform consists of multiple operators that work together. Periodically a platform release is made,
-including all components of the platform at a specific version.
+The Stackable Data Platform consists of multiple operators that work together.
+Periodically a platform release is made, including all components of the platform at a specific version.
+
+// WARNING: Please keep the empty newlines, otherwise headings are broken.
+include::partial$release-notes/release-25.3.adoc[]
 
 include::partial$release-notes/release-24.11.adoc[]
+
 include::partial$release-notes/release-24.7.adoc[]
+
 include::partial$release-notes/release-24.3.adoc[]
+
 include::partial$release-notes/release-23.11.adoc[]
+
 include::partial$release-notes/release-23.7.adoc[]
+
 include::partial$release-notes/release-23.4.adoc[]
+
 include::partial$release-notes/release-23.1.adoc[]
+
 include::partial$release-notes/release-22.11.adoc[]
+
 include::partial$release-notes/release-22.9.adoc[]
+
 include::partial$release-notes/release-22.6.adoc[]

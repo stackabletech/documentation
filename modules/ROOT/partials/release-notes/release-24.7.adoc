@@ -6,7 +6,7 @@ Released on 2024-07-25.
 
 ==== New / extended platform features
 
-Vulnerability management::
+===== Vulnerability management
 
 In this release we have worked on significantly reducing the number of vulnerabilities in our product binaries.
 This will be more manageable going forward as we now build all Java-based binaries from source, which gives us greater flexibility when creating patches.
@@ -21,7 +21,7 @@ NOTE: In this release we have eliminated 75% of all vulnerabilities that were pr
 
 This work will continue in the next version and the progress made in this release enables us to do more work in the future (workflow improvements, tooling etc.).
 
-Build products from source::
+===== Build products from source
 
 All Java-based product binaries are now built from source instead of packaging them from the official releases.
 The status is summarised below:
@@ -39,13 +39,13 @@ The status is summarised below:
 * Apache Superset: official release (Python-based)
 * Apache ZooKeeper: built from source from release 24.7
 
-Multi-platform images::
+===== Multi-platform images
 
 This release is the first multi-platform release of the Stackable Data Platform, supporting AMD64 and ARM64 architectures.
 Each image has a manifest list which wraps the architecture-specific image.
 The status is still xref:concepts:multi-platform-support.adoc[experimental], as we work to fine-tune the necessary workflows.
 
-Security::
+===== Security
 
 Support for OIDC with/without TLS has been added to Apache Druid in this release.
 
@@ -58,7 +58,7 @@ Check xref:hbase:usage-guide/security.adoc#_authorization[the documentation on H
 In an upcoming release we will enable authentication and encryption by default where possible.
 To ensure a smooth transition to future releases, we strongly encourage you to enable security features wherever possible in your deployments.
 
-Documentation::
+===== Documentation
 
 * Apache Hive and Trino operators: we have provided non-trivial sample Rego rules for these operators, together with an in-depth explanation and links
 
@@ -69,7 +69,7 @@ Documentation::
 * Open Policy Agent: N.B. As mentioned in the release 24.3, we will be actively building out the backends supported by the User Info Fetcher.
 This feature should be therefore be treated as experimental as we continue to extend and consolidate back-end handling and fine-tune the tool in general.
 
-Other product features::
+===== Other product features
 
 The following are selected product features provided by new versions available in this release:
 
@@ -95,7 +95,7 @@ NOTE: There is currently a known problem with using git-sync credentials in 24.7
 
 * Apache ZooKeeper: allow the overriding of the ZNode path by setting status.znodePath
 
-Bugfixes::
+===== Bugfixes
 * Apache Druid: move the DB credentials user and password out of the CRD into a secret containing the keys username and password
 * Apache Hive: move the metastore user and password DB credentials out of the CRD into a Secret containing the keys username and password
 * Apache Kafka: remove field/arg controller_config from kafka_controller::Ctx struct and create_controller function
@@ -285,7 +285,6 @@ kubectl delete -f https://raw.githubusercontent.com/stackabletech/hello-world-op
 [source,console]
 ----
 customresourcedefinition.apiextensions.k8s.io "airflowclusters.airflow.stackable.tech" replaced
-customresourcedefinition.apiextensions.k8s.io "airflowdbs.airflow.stackable.tech" replaced
 customresourcedefinition.apiextensions.k8s.io "authenticationclasses.authentication.stackable.tech" replaced
 customresourcedefinition.apiextensions.k8s.io "s3connections.s3.stackable.tech" replaced
 ...

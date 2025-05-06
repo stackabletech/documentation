@@ -151,5 +151,6 @@ Learn more about the tooling that supports the Stackable Data Platform; the `sta
 
 == Release Notes
 
-The Stackable platform consists of multiple operators that work together. Periodically a platform release is made,
-including all components of the platform at a specific version. See the latest release notes xref:release_notes.adoc[here].
+The *Stackable Data Platform (SDP)* consists of multiple Kubernetes operators working together.
+Periodically a platform release is made, including all components of the platform at a specific version.
+See the xref:release_notes.adoc[release notes] for all the details on what has changed in our releases.

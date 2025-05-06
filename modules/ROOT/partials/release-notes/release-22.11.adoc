@@ -9,7 +9,7 @@ This is the third release of the Stackable Data Platform, which this time focuse
 
 The following new major platform features were added:
 
-CPU and memory limits configurable::
+===== CPU and memory limits configurable
 
 The operators now https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/[request] resources from Kubernetes for the products and required CPU and memory can now also be configured for all products.
 If your product instances are less performant after the update, the new defaults might be set too low and we recommend to xref:kafka:usage-guide/storage-resources.adoc[set custom requests] for your cluster.
@@ -24,7 +24,7 @@ If your product instances are less performant after the update, the new defaults
 * https://github.com/stackabletech/airflow-operator/pull/167[Apache Airflow]
 * https://github.com/stackabletech/superset-operator/pull/273[Apache Superset]
 
-Orphaned Resources::
+===== Orphaned Resources
 
 The operators now properly clean up after scaling down products.
 This means for example deleting StatefulSets that were left over after scaling down.
@@ -37,7 +37,7 @@ This means for example deleting StatefulSets that were left over after scaling d
 * https://github.com/stackabletech/trino-operator/pull/310[Trino]
 * https://github.com/stackabletech/airflow-operator/pull/174[Apache Airflow]
 
-New Versions::
+===== New Versions
 
 New product versions are supported.
 
@@ -47,7 +47,7 @@ New product versions are supported.
 * https://github.com/stackabletech/druid-operator/pull/317[Apache Druid 24.0.0]
 * https://github.com/stackabletech/airflow-operator/pull/179[Apache Airflow 2.4.1]
 
-Product features::
+===== Product features
 
 Additionally there are some individual product features that are noteworthy
 

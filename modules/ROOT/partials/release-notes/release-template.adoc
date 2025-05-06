@@ -3,10 +3,10 @@
 
 == Release YY.M
 
+=== YY.M.X
+
 Released on YYYY-MM-DD.
 (Optional description / introduction)
-
-=== YY.M.X
 
 ==== New platform features
 
@@ -16,17 +16,50 @@ Released on YYYY-MM-DD.
 
 ==== Product versions
 
+As with previous SDP releases, many product images have been updated to their latest versions.
+The LTS version has in many cases also been adjusted in line with our xref:ROOT:policies.adoc[support policy].
+
+Refer to the xref:operators:supported_versions.adoc[supported versions] documentation for a complete overview including LTS versions or deprecations.
+
 ===== New versions
+
+The following new product versions are now supported:
+
+* ...
 
 ===== Deprecated versions
 
+The following product versions are deprecated and will be removed in a later release:
+
+* ...
+
 ===== Removed versions
+
+The following product versions are no longer supported (although images for released product versions remain available https://oci.stackable.tech/[here,window=_blank]. Information on how to browse the registry can be found xref:contributor:project-overview.adoc#docker-images[here,window=_blank].):
+
+* ...
 
 ==== stackablectl
 
 ==== Supported Kubernetes versions
 
+This release supports the following Kubernetes versions:
+
+* `1.XX`
+
+These Kubernetes versions are no longer supported:
+
+* `1.XX`
+
 ==== Supported OpenShift versions
+
+This release is available in the RedHat Certified Operator Catalog for the following OpenShift versions:
+
+* `4.XX`
+
+These OpenShift versions are no longer supported:
+
+* `4.XX`
 
 ==== Breaking changes
 
@@ -48,6 +81,125 @@ Of the changes mentioned above, the following are breaking (or could lead to bre
 
 ===== Using stackablectl
 
+Uninstall the `OO.M` release
+
+[source,console]
+----
+$ stackablectl release uninstall OO.M
+
+Uninstalled release 'OO.M'
+
+Use "stackablectl release list" to list available releases.
+# ...
+----
+
+Afterwards you will need to upgrade the CustomResourceDefinitions (CRDs) installed by the Stackable Platform.
+The reason for this is that helm will uninstall the operators but not the CRDs.
+This can be done using `kubectl replace`.
+
+[source]
+----
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/airflow-operator/OO.M.X/deploy/helm/airflow-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/commons-operator/OO.M.X/deploy/helm/commons-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/druid-operator/OO.M.X/deploy/helm/druid-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hbase-operator/OO.M.X/deploy/helm/hbase-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hdfs-operator/OO.M.X/deploy/helm/hdfs-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hive-operator/OO.M.X/deploy/helm/hive-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/kafka-operator/OO.M.X/deploy/helm/kafka-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/listener-operator/OO.M.X/deploy/helm/listener-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/nifi-operator/OO.M.X/deploy/helm/nifi-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/opa-operator/OO.M.X/deploy/helm/opa-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/secret-operator/OO.M.X/deploy/helm/secret-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/OO.M.X/deploy/helm/spark-k8s-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/superset-operator/OO.M.X/deploy/helm/superset-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/trino-operator/OO.M.X/deploy/helm/trino-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/OO.M.X/deploy/helm/zookeeper-operator/crds/crds.yaml
+----
+
+[source,console]
+----
+customresourcedefinition.apiextensions.k8s.io "airflowclusters.airflow.stackable.tech" replaced
+customresourcedefinition.apiextensions.k8s.io "authenticationclasses.authentication.stackable.tech" replaced
+customresourcedefinition.apiextensions.k8s.io "s3connections.s3.stackable.tech" replaced
+...
+----
+
+Install the `YY.M` release
+
+[source,console]
+----
+$ stackablectl release install YY.M
+
+Installed release 'YY.M'
+
+Use "stackablectl operator installed" to list installed operators.
+----
+
 ===== Using Helm
+
+Use `helm list` to list the currently installed operators.
+
+You can use the following command to uninstall all operators that are part of the `OO.M` release:
+
+[source,console]
+----
+$ helm uninstall airflow-operator commons-operator druid-operator hbase-operator hdfs-operator hive-operator kafka-operator listener-operator nifi-operator opa-operator secret-operator spark-k8s-operator superset-operator trino-operator zookeeper-operator
+release "airflow-operator" uninstalled
+release "commons-operator" uninstalled
+...
+----
+
+Afterward you will need to upgrade the CustomResourceDefinitions (CRDs) installed by the Stackable Platform.
+The reason for this is that helm will uninstall the operators but not the CRDs. This can be done using `kubectl replace`:
+
+[source]
+----
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/airflow-operator/OO.M.X/deploy/helm/airflow-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/commons-operator/OO.M.X/deploy/helm/commons-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/druid-operator/OO.M.X/deploy/helm/druid-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hbase-operator/OO.M.X/deploy/helm/hbase-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hdfs-operator/OO.M.X/deploy/helm/hdfs-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hive-operator/OO.M.X/deploy/helm/hive-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/kafka-operator/OO.M.X/deploy/helm/kafka-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/listener-operator/OO.M.X/deploy/helm/listener-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/nifi-operator/OO.M.X/deploy/helm/nifi-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/opa-operator/OO.M.X/deploy/helm/opa-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/secret-operator/OO.M.X/deploy/helm/secret-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/OO.M.X/deploy/helm/spark-k8s-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/superset-operator/OO.M.X/deploy/helm/superset-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/trino-operator/OO.M.X/deploy/helm/trino-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/OO.M.X/deploy/helm/zookeeper-operator/crds/crds.yaml
+----
+
+[source,console]
+----
+customresourcedefinition.apiextensions.k8s.io "airflowclusters.airflow.stackable.tech" replaced
+customresourcedefinition.apiextensions.k8s.io "authenticationclasses.authentication.stackable.tech" replaced
+customresourcedefinition.apiextensions.k8s.io "s3connections.s3.stackable.tech" replaced
+...
+----
+
+Install the `YY.M` release
+
+NOTE: `helm repo` subcommands are not supported for OCI registries. The operators are installed directly, without adding the Helm Chart repository first.
+
+[source,console]
+----
+helm install --wait airflow-operator oci://oci.stackable.tech/sdp-charts/airflow-operator --version OO.M.X
+helm install --wait commons-operator oci://oci.stackable.tech/sdp-charts/commons-operator --version OO.M.X
+helm install --wait druid-operator oci://oci.stackable.tech/sdp-charts/druid-operator --version OO.M.X
+helm install --wait hbase-operator oci://oci.stackable.tech/sdp-charts/hbase-operator --version OO.M.X
+helm install --wait hdfs-operator oci://oci.stackable.tech/sdp-charts/hdfs-operator --version OO.M.X
+helm install --wait hive-operator oci://oci.stackable.tech/sdp-charts/hive-operator --version OO.M.X
+helm install --wait kafka-operator oci://oci.stackable.tech/sdp-charts/kafka-operator --version OO.M.X
+helm install --wait listener-operator oci://oci.stackable.tech/sdp-charts/listener-operator --version OO.M.X
+helm install --wait nifi-operator oci://oci.stackable.tech/sdp-charts/nifi-operator --version OO.M.X
+helm install --wait opa-operator oci://oci.stackable.tech/sdp-charts/opa-operator --version OO.M.X
+helm install --wait secret-operator oci://oci.stackable.tech/sdp-charts/secret-operator --version OO.M.X
+helm install --wait spark-k8s-operator oci://oci.stackable.tech/sdp-charts/spark-k8s-operator --version OO.M.X
+helm install --wait superset-operator oci://oci.stackable.tech/sdp-charts/superset-operator --version OO.M.X
+helm install --wait trino-operator oci://oci.stackable.tech/sdp-charts/trino-operator --version OO.M.X
+helm install --wait zookeeper-operator oci://oci.stackable.tech/sdp-charts/zookeeper-operator --version OO.M.X
+----
 
 ==== Known issues

@@ -1,4 +1,6 @@
-= OpenShift
+= Red Hat OpenShift
+
+https://www.redhat.com/en/technologies/cloud-computing/openshift
 
 SDP operators are certified for the OpenShift platform and can be installed from the OperatorHub.
 
