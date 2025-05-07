@@ -1,0 +1,86 @@
+= Telemetry signals in operators
+
+Since SDP 25.7.0, all Stackable operators emit telemetry data in the following ways:
+
+* Console logs in plain and JSON format
+* File logs in JSON format (with the option of Rolling files)
+* OpenTelemetry logs exported via OTLP
+* OpenTelemetry traces exported via OTLP
+
+Every subscriber can be toggled and customized using Helm values.
+All fields are grouped under the top-level `telemetry` section.
+
+[NOTE]
+====
+The following sections describe the available fields as well as their default and supported values.
+If the Helm values explained below are not overridden, the following operator defaults apply:
+
+* Levels for all signals are set to `INFO`.
+* Console logs are enabled
+* File logs are disabled
+* File logs rotation period is set to `Never`
+* File logs max files is unset
+* OpenTelemetry logs and traces are disabled
+* OTLP endpoints are set to `http://localhost:4317`
+====
+
+== Console logs
+
+This signal prints log messages at the selected level and in the selected format to STDOUT.
+These logs are useful for quick debugging.
+For a more complete debugging experience, we recommend the OpenTelemetry signals.
+
+[source,yaml]
+----
+telemetry:
+  consoleLog:
+    enabled: true # <1>
+    level: null   # <2>
+    format: null  # <3>
+----
+
+<1> Boolean: `true, false`
+<2> Enum: `error, warning, info, debug, trace`
+<3> Enum: `plain, json`
+
+== File logs
+
+This signal writes log messages at the selected level in JSON to (rolling) log file(s).
+These logs can be picked up by a log aggregation system, like Vector.
+
+[source,yaml]
+----
+telemetry:
+  fileLog:
+    enabled: false         # <1>
+    level: null            # <2>
+    rotationPeriod: hourly # <3>
+    maxFiles: 6            # <4>
+----
+
+<1> Boolean: `true, false`
+<2> Enum: `error, warning, info, debug, trace`
+<3> Enum: `never, daily, hourly, minutely`
+<4> Unsigned Integer
+
+== OpenTelemetry logs and traces
+
+These two signal export OpenTelemetry logs and traces to OTLP enabled collectors.
+These signals can be visualized using tools, like Grafana, Loki, and Jaeger.
+
+[source,yaml]
+----
+telemetry:
+  otelLogExporter:
+    enabled: false # <1>
+    level: null    # <2>
+    endpoint: null # <3>
+  otelTraceExporter:
+    enabled: false # <1>
+    level: null    # <2>
+    endpoint: null # <3>
+----
+
+<1> Boolean: `true, false`
+<2> Enum: `error, warning, info, debug, trace`
+<3> String: E.g. `my-collector:4317`
