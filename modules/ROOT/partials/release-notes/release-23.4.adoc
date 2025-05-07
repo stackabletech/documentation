@@ -54,7 +54,7 @@ See this xref:contributor:adr/ADR026-affinities.adoc[ADR] for more information.
 
 The logging framework (added to the platform in Release 23.1) offers a consistent custom resource configuration and a separate, persisted sink (defaulting to OpenSearch).
 This has now been rolled out across all products.
-See this xref:contributor:adr/adr025-logging_architecture[ADR] and this xref:concepts:logging.adoc[concepts page] for more information.
+See this xref:contributor:adr/adr025-logging_architecture[ADR] and this xref:concepts:observability/logging.adoc[concepts page] for more information.
 
 ===== Service Type
 

@@ -34,7 +34,7 @@ Released on 2025-03-21.
 
 ===== Observability
 
-Products now log information about their xref:concepts:containerdebug.adoc[container environment], on startup and on an interval after that.
+Products now log information about their xref:concepts:observability/containerdebug.adoc[container environment], on startup and on an interval after that.
 
 ===== NiFi
 

@@ -37,7 +37,7 @@ These options are described in more detail xref:contributor:adr/ADR023-product-i
 Component activity within the platform is logged in a way that makes it difficult to find, persist and consolidate this information.
 Log configuration is also a challenge.
 To address these two issues a logging framework has been added to the platform, offering a consistent custom resource configuration and a separate, persisted sink (the current implementation support OpenSearch).
-This is discussed in more detail xref:contributor:adr/ADR025-logging_architecture.adoc[in this ADR] and xref:concepts:logging.adoc[on this concepts page].
+This is discussed in more detail xref:contributor:adr/ADR025-logging_architecture.adoc[in this ADR] and xref:concepts:observability/logging.adoc[on this concepts page].
 
 In this release this has been added to the following components:
 
