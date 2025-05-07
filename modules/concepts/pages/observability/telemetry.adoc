@@ -1,4 +1,4 @@
-= Operational telemetry signals in operators
+= Telemetry signals in operators
 
 [NOTE]
 ====
