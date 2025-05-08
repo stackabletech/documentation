@@ -4,7 +4,7 @@
 
 = Implementing log aggregation
 
-For a conceptual overview of logging aggregation, consult the xref:concepts:logging.adoc[logging concept page].
+For a conceptual overview of logging aggregation, consult the xref:concepts:observability/logging.adoc[logging concept page].
 
 == Overview
 

@@ -1,5 +1,12 @@
 = Telemetry signals in operators
 
+[NOTE]
+====
+Telemetry data is useful for your own observability and monitoring systems.
+There is no "call-home" functionality.
+Data is not exported out of the container unless explicitly configured.
+====
+
 Since SDP 25.7.0, all Stackable operators emit telemetry data in the following ways:
 
 * Console logs in plain and JSON format

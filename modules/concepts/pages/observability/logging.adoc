@@ -1,4 +1,5 @@
 = Logging
+:page-aliases: logging.adoc
 :description: A conceptual explanation of the logging architecture of the Stackable Data Platform, and how it is configured.
 :keywords: logging, observability, log aggregation, Kubernetes, k8s, Vector, Elasticsearch, OpenSearch
 :vector: https://vector.dev/

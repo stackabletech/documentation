@@ -67,7 +67,7 @@ and apply it:
 [source,bash]
 include::example$logging-aggregator/main.sh[tag=zk]
 
-TIP: You can learn more about how to configure logging in a product at the xref:concepts:logging.adoc[logging concept documentation].
+TIP: You can learn more about how to configure logging in a product at the xref:concepts:observability/logging.adoc[logging concept documentation].
 
 == Watch the logs
 
@@ -112,4 +112,4 @@ Congratulations, this concludes the tutorial!
 
 == What's next?
 
-Look into different sink configurations which are more suited to production use in the https://vector.dev/docs/reference/configuration/sinks/[sinks overview documetation] or learn more about how logging works on the platform in the xref:concepts:logging.adoc[concepts documentation].
+Look into different sink configurations which are more suited to production use in the https://vector.dev/docs/reference/configuration/sinks/[sinks overview documetation] or learn more about how logging works on the platform in the xref:concepts:observability/logging.adoc[concepts documentation].

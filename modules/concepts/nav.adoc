@@ -22,8 +22,8 @@
 *** xref:operations/graceful_shutdown.adoc[]
 *** xref:operations/temporary_credentials_lifetime.adoc[]
 ** Observability
-*** xref:labels.adoc[Labels]
-*** xref:logging.adoc[Logging]
-*** xref:containerdebug.adoc[Container environment]
+*** xref:observability/labels.adoc[Labels]
+*** xref:observability/logging.adoc[Logging]
+*** xref:observability/containerdebug.adoc[Container environment]
 *** xref:observability/telemetry.adoc[Telemetry]
 ** xref:container-images.adoc[]
