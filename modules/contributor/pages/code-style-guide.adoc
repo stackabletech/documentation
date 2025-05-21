@@ -531,6 +531,41 @@ enum Error {
 . `unable to read config file from ...` to indicate that the file could not be loaded (for example because the file doesn't exist).
 . `unable to parse value ...` to indicate that parsing a user provided value failed (for example because it didn't conform to the expected syntax).
 
+=== Using `unwrap`
+
+Generally, it is not recommended to use `unwrap` (or any other method which consumes the error) in any fallible code path.
+Instead, proper error handling like above should be used.
+There are however cases, where it is fine to use `unwrap` or friends.
+
+One such an example is when compiling regular expressions inside const/static environments.
+For such cases code must use `expect` instead of `unwrap` to provide additional context why a particular piece of code should never fail.
+
+// Do we want to mention that this is enforced via clippy and that we actually enable that lint in our repos?
+
+[TIP.code-rule,caption=Examples of correct code for this rule]
+====
+
+[source,rust]
+----
+static VERSION_REGEX: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r".*").expect("failed to compile regex")
+});
+----
+
+====
+
+[WARNING.code-rule,caption=Examples of incorrect code for this rule]
+====
+
+[source,rust]
+----
+static VERSION_REGEX: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r".*").unwrap()
+});
+----
+
+====
+
 == String formatting
 
 === Named versus unnamed format string identifiers
@@ -733,6 +768,30 @@ mod test {
     fn test_invalid() {
         todo!()
     }
+}
+----
+
+====
+
+=== Using `unwrap`
+
+The usage of `unwrap` in unit tests is not recommended for the same reasons as mentioned above, but allowed.
+
+[TIP.code-rule,caption=Examples of correct code for this rule]
+====
+
+[source,rust]
+----
+#[test]
+fn deserialize() {
+    let input: String = serde_yaml::from_str("my string").expect("input string must deserialize");
+    assert_eq(&input, "my string");
+}
+
+#[test]
+fn serialize() {
+    let serialized = serde_yaml::to_string(&String::from("my string")).unwrap();
+    println!("{serialized}");
 }
 ----
 
