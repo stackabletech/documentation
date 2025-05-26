@@ -533,12 +533,14 @@ enum Error {
 
 === Using `unwrap`
 
-Generally, it is not recommended to use `unwrap` (or any other method which consumes the error) in any fallible code path.
-Instead, proper error handling like above should be used.
+The `unwrap` function must not be used in any fallible code paths.
+Instead, proper error handling like above should be used, unless there is a valid reason to use `expect` described below.
+Using https://doc.rust-lang.org/std/result/enum.Result.html#method.unwrap_or[`unwrap_or`], https://doc.rust-lang.org/std/result/enum.Result.html#method.unwrap_or_default[`unwrap_or_default`] or https://doc.rust-lang.org/std/result/enum.Result.html#method.unwrap_or_else[`unwrap_or_else`] is allowed because these functions will not panic.
+
 There are however cases, where it is fine to use `unwrap` or friends.
 
-One such an example is when compiling regular expressions inside const/static environments.
-For such cases code must use `expect` instead of `unwrap` to provide additional context why a particular piece of code should never fail.
+The `expect` function can be used when external factors cannot influence whether a panic will happen. For example, when compiling regular expressions inside const/static environments.
+For such cases code must use `expect` instead of `unwrap` to provide additional context for why a particular piece of code should never fail.
 
 // Do we want to mention that this is enforced via clippy and that we actually enable that lint in our repos?
 
@@ -775,7 +777,7 @@ mod test {
 
 === Using `unwrap`
 
-The usage of `unwrap` in unit tests is not recommended for the same reasons as mentioned above, but allowed.
+The usage of `unwrap` in unit tests is also not allowed for the same reasons as mentioned above.
 
 [TIP.code-rule,caption=Examples of correct code for this rule]
 ====
