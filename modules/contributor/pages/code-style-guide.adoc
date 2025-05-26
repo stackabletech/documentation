@@ -791,7 +791,15 @@ fn deserialize() {
     let input: String = serde_yaml::from_str("my string").expect("input string must deserialize");
     assert_eq(&input, "my string");
 }
+----
 
+====
+
+[WARNING.code-rule,caption=Examples of incorrect code for this rule]
+====
+
+[source,rust]
+----
 #[test]
 fn serialize() {
     let serialized = serde_yaml::to_string(&String::from("my string")).unwrap();
