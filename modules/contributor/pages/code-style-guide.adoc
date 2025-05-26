@@ -533,11 +533,13 @@ enum Error {
 
 === Using `unwrap`
 
+:unwrap_or: https://doc.rust-lang.org/std/result/enum.Result.html#method.unwrap_or
+:unwrap_or_default: https://doc.rust-lang.org/std/result/enum.Result.html#method.unwrap_or_default
+:unwrap_or_else: https://doc.rust-lang.org/std/result/enum.Result.html#method.unwrap_or_else
+
 The `unwrap` function must not be used in any fallible code paths.
 Instead, proper error handling like above should be used, unless there is a valid reason to use `expect` described below.
-Using https://doc.rust-lang.org/std/result/enum.Result.html#method.unwrap_or[`unwrap_or`], https://doc.rust-lang.org/std/result/enum.Result.html#method.unwrap_or_default[`unwrap_or_default`] or https://doc.rust-lang.org/std/result/enum.Result.html#method.unwrap_or_else[`unwrap_or_else`] is allowed because these functions will not panic.
-
-There are however cases, where it is fine to use `unwrap` or friends.
+Using link:{unwrap_or}[`unwrap_or`], link:{unwrap_or_default}[`unwrap_or_default`] or link:{unwrap_or_else}[`unwrap_or_else`] is allowed because these functions will not panic.
 
 The `expect` function can be used when external factors cannot influence whether a panic will happen. For example, when compiling regular expressions inside const/static environments.
 For such cases code must use `expect` instead of `unwrap` to provide additional context for why a particular piece of code should never fail.
