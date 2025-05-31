@@ -235,14 +235,11 @@ If all has gone well then you will have successfully deployed a Stackable cluste
 
 === Apache ZooKeeper
 
-We can test ZooKeeper by running the ZooKeeper CLI shell. The easiest way to do this is to run the CLI shell on the pod that is running ZooKeeper. It might be necessary to determine and set the port.
+We can test ZooKeeper by running the ZooKeeper CLI shell. The easiest way to do this is to run the CLI shell on the pod that is running ZooKeeper.
 
 [source,bash]
 ----
-kubectl exec -i -t simple-zk-server-primary-0 -- bin/zkCli.sh
-# optional, determine the port
-PORT=$(kubectl get pod simple-zk-server-primary-0 -o=jsonpath='{.spec.containers[0].ports[0].containerPort}')
-echo $PORT
+PORT="$(kubectl get pod simple-zk-server-primary-0 -o=json | jq '.spec.containers[].ports[] | select(.name == "zk") | .containerPort')"
 kubectl exec -i -t simple-zk-server-primary-0 -- bin/zkCli.sh -server "localhost:$PORT"
 ----
 
