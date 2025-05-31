@@ -239,7 +239,8 @@ We can test ZooKeeper by running the ZooKeeper CLI shell. The easiest way to do 
 
 [source,bash]
 ----
-kubectl exec -i -t simple-zk-server-primary-0 -- bin/zkCli.sh
+PORT="$(kubectl get pod simple-zk-server-primary-0 -o=json | jq '.spec.containers[].ports[] | select(.name == "zk") | .containerPort')"
+kubectl exec -i -t simple-zk-server-primary-0 -- bin/zkCli.sh -server "localhost:$PORT"
 ----
 
 The shell should connect automatically to the ZooKeeper server running on the pod. You can run the `ls /` command to see the list of znodes in the root path, which should include those created by Apache Kafka and Apache NiFi.
