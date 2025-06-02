@@ -552,7 +552,7 @@ For such cases code must use `expect` instead of `unwrap` to provide additional 
 [source,rust]
 ----
 static VERSION_REGEX: LazyLock<Regex> = LazyLock::new(|| {
-    Regex::new(r".*").expect("failed to compile regex")
+    Regex::new(r".*").expect("valid regular expression")
 });
 ----
 
