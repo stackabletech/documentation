@@ -531,6 +531,45 @@ enum Error {
 . `unable to read config file from ...` to indicate that the file could not be loaded (for example because the file doesn't exist).
 . `unable to parse value ...` to indicate that parsing a user provided value failed (for example because it didn't conform to the expected syntax).
 
+=== Using `unwrap`
+
+:unwrap_or: https://doc.rust-lang.org/std/result/enum.Result.html#method.unwrap_or
+:unwrap_or_default: https://doc.rust-lang.org/std/result/enum.Result.html#method.unwrap_or_default
+:unwrap_or_else: https://doc.rust-lang.org/std/result/enum.Result.html#method.unwrap_or_else
+
+The `unwrap` function must not be used in any code.
+Instead, proper error handling like above should be used, unless there is a valid reason to use `expect` described below.
+Using link:{unwrap_or}[`unwrap_or`], link:{unwrap_or_default}[`unwrap_or_default`] or link:{unwrap_or_else}[`unwrap_or_else`] is allowed because these functions will not panic.
+
+The `expect` function can be used when external factors cannot influence whether a panic will happen. For example, when compiling regular expressions inside const/static environments.
+For such cases code must use `expect` instead of `unwrap` to provide additional context for why a particular piece of code should never fail.
+
+// Do we want to mention that this is enforced via clippy and that we actually enable that lint in our repos?
+
+[TIP.code-rule,caption=Examples of correct code for this rule]
+====
+
+[source,rust]
+----
+static VERSION_REGEX: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r".*").expect("valid regular expression")
+});
+----
+
+====
+
+[WARNING.code-rule,caption=Examples of incorrect code for this rule]
+====
+
+[source,rust]
+----
+static VERSION_REGEX: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r".*").unwrap()
+});
+----
+
+====
+
 == String formatting
 
 === Named versus unnamed format string identifiers
@@ -733,6 +772,38 @@ mod test {
     fn test_invalid() {
         todo!()
     }
+}
+----
+
+====
+
+=== Using `unwrap`
+
+The usage of `unwrap` in unit tests is also not allowed for the same reasons as mentioned above.
+
+[TIP.code-rule,caption=Examples of correct code for this rule]
+====
+
+[source,rust]
+----
+#[test]
+fn deserialize() {
+    let input: String = serde_yaml::from_str("my string").expect("constant input string must deserialize");
+    assert_eq(&input, "my string");
+}
+----
+
+====
+
+[WARNING.code-rule,caption=Examples of incorrect code for this rule]
+====
+
+[source,rust]
+----
+#[test]
+fn serialize() {
+    let serialized = serde_yaml::to_string(&String::from("my string")).unwrap();
+    println!("{serialized}");
 }
 ----
 
