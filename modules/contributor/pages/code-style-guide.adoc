@@ -537,7 +537,7 @@ enum Error {
 :unwrap_or_default: https://doc.rust-lang.org/std/result/enum.Result.html#method.unwrap_or_default
 :unwrap_or_else: https://doc.rust-lang.org/std/result/enum.Result.html#method.unwrap_or_else
 
-The `unwrap` function must not be used in any fallible code paths.
+The `unwrap` function must not be used in any code.
 Instead, proper error handling like above should be used, unless there is a valid reason to use `expect` described below.
 Using link:{unwrap_or}[`unwrap_or`], link:{unwrap_or_default}[`unwrap_or_default`] or link:{unwrap_or_else}[`unwrap_or_else`] is allowed because these functions will not panic.
 
@@ -788,7 +788,7 @@ The usage of `unwrap` in unit tests is also not allowed for the same reasons as 
 ----
 #[test]
 fn deserialize() {
-    let input: String = serde_yaml::from_str("my string").expect("input string must deserialize");
+    let input: String = serde_yaml::from_str("my string").expect("constant input string must deserialize");
     assert_eq(&input, "my string");
 }
 ----
