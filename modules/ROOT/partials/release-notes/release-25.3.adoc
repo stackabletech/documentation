@@ -112,6 +112,10 @@ See https://github.com/stackabletech/hive-operator/pull/578[hive-operator#578].
   See https://github.com/stackabletech/secret-operator/pull/566[secret-operator#566].
 * In 24.11 we used a custom build of jmx_exporter to resolve a https://github.com/stackabletech/issues/issues/649[performance degradation].
   In this release, Java products ship with the fixed upstream https://github.com/prometheus/jmx_exporter/releases/tag/1.1.0[jmx_exporter 1.1.0] which includes https://github.com/prometheus/jmx_exporter/pull/1009[the fix].
+* In 24.11, HDFS metrics suffixed with `+_total+`, `+_created+`, and `+_info+` were not exported by the jmx_exporter.
+  With this release, metrics suffixed with `+_total+`, e.g. `+hadoop_namenode_files_total+`, are emitted again.
+  Metrics originally suffixed with `+_created+` and `+_info+` are now suffixed with `+_created_+` and `+_info_+` to be OpenMetrics compliant.
+  See https://github.com/stackabletech/hdfs-operator/issues/634[hdfs-operator#634].
 
 ==== Platform deprecations
 
