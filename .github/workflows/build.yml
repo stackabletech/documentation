@@ -21,4 +21,4 @@ jobs:
           node-version: '20'
           cache: 'npm'
       - run: npm ci
-      - run: make ANTORAFLAGS=--fetch
+      - run: make ANTORAFLAGS=--fetch build-local
