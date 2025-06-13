@@ -125,7 +125,7 @@ metadata:
   name: simple-kafka
 spec:
   image:
-    productVersion: 3.9.0
+    productVersion: 3.9.1
   clusterConfig:
     zookeeperConfigMapName: simple-kafka-znode
     tls:

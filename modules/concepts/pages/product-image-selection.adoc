@@ -30,7 +30,7 @@ These images contain various tools for initialization jobs and/or the actual pro
 Stackable uses two separate versions to describe the images provided as part of the platform:
 
 **Product version** +
-This is the version of the product that the image provides, such as Kafka 3.9.0.
+This is the version of the product that the image provides, such as Kafka 3.9.1
 
 TIP: You can find all products and their supported versions in the xref:operators:supported_versions.adoc[supported versions overview].
 You can also find the supported versions per product on each operator page, for example, for xref:kafka:index.adoc#_supported_versions[Apache Kafka].
@@ -71,7 +71,7 @@ TIP: All our images are also mirrored to our https://quay.io/organization/stacka
 ----
 spec:
   image:
-    productVersion: 3.9.0 <.>
+    productVersion: 3.9.1 <.>
     # stackableVersion: 25.7.0 # optional <.>
 ----
 <.> The version of your product.
