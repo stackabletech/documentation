@@ -5,6 +5,11 @@ echo "Installing ZooKeeper Operator"
 stackablectl release install -i secret -i commons -i listener -i zookeeper 23.11
 # end::zk-op[]
 
+# tag::vector-helm-repo[]
+helm repo add vector https://helm.vector.dev
+helm repo update
+# end::vector-helm-repo[]
+
 # tag::vector-agg[]
 helm install \
   --wait \

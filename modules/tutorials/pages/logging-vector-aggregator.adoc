@@ -31,6 +31,11 @@ include::example$logging-aggregator/vector-aggregator-values.yaml[]
 <1> define a source of `type` `vector` which listens to incoming log messages at port 6000.
 <2> define a `console` sink, logging all received logs to `stderr`.
 
+Add the Vector Helm repository if you haven't done so already:
+
+[source,bash]
+include::example$logging-aggregator/main.sh[tag=vector-helm-repo]
+
 Deploy Vector with these values using Helm:
 
 [source,bash]
