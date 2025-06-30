@@ -4,6 +4,8 @@
 
 With release 24.3 of SDP, we started providing SBOMs (Software Bill of Materials) for our container images. Please note that they currently are in a draft stage and we are continually working on improving them. As a first step, we aim to provide a list of all primary (top level) components and their versions included in each container image. Our SBOMs follow the https://cyclonedx.org/[CycloneDX] standard and are available in JSON format.
 
+NOTE: Starting with SDP 25.7, we now embed the exact source code used to build each product directly into our images. You can find the source code in files ending with `-src.tar.gz` within the `/stackable` directory of each image.
+
 You can browse through our SBOMs at https://sboms.stackable.tech/.
 
 You will find a simple hierarchical structure, one directory per release, containing a list of all container images included in that release. For each container image, one SBOM per version of the image is listed.
