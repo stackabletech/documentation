@@ -20,6 +20,7 @@ To shorten these, we have settled on a tool called https://github.com/kolloch/cr
 This tool uses the https://nixos.org/[Nix package manager] to cache intermediate build steps and only recompile what has actually changed, thus significantly shortening build times.
 
 == Installation
+
 Due to the nature of how Nix works, all the setup steps are defined in the operator repositories and automatically applied when you start using this workflow.
 
 The only prerequisite you need to install is the actual Nix package manager - you can find installation instructions and additional documentation on the https://nixos.org/download.html[Nix website].
@@ -46,6 +47,12 @@ cores = 8
 Please adjust the number of `cores` to your system and set the `max-jobs` to e.g. the third of that.
 
 Just installing Nix does not affect your system much, as it keeps all its configuration and installed packages separate from other package managers and you won't even notice it is there, unless you actually start using it.
+
+=== macOS
+
+The Docker images need to be built on a Linux host. Nix can automatically delegate the build to a remote worker, but it must be configured to do so.
+
+https://github.com/stackabletech/nix-docker-builder can set this up for you.
 
 == Using
 

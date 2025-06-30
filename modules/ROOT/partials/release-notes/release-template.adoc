@@ -81,6 +81,17 @@ Of the changes mentioned above, the following are breaking (or could lead to bre
 
 ===== Using stackablectl
 
+====== Upgrade with a single command
+
+Starting with stackablectl Release 1.0.0 the multiple consecutive commands described below can be shortened to just one command, which executes exactly those steps on its own.
+
+[source,console]
+----
+$ stackablectl release upgrade YY.M
+----
+
+====== Upgrade with multiple consecutive commands
+
 Uninstall the `OO.M` release
 
 [source,console]

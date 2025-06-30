@@ -1,5 +1,10 @@
 CURRENT_COMMIT := $(shell git rev-parse HEAD)
 
+# Build from local worktrees. Only one version is built: "latest".
+# Assumes all repos have the same parent directory.
+build-truly-local: build-ui
+	node_modules/.bin/antora generate truly-local-playbook.yml
+
 build-local: build-ui
 	node_modules/.bin/antora generate local-antora-playbook.yml
 
