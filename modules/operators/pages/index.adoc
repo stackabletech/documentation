@@ -142,7 +142,7 @@ xref:nifi:index.adoc[Read more]
 <h3 id="opensearch"><a class="anchor" href="#opensearch"></a>OpenSearch</h3>
 ++++
 
-OpenSearch is a search and analytics suite that makes it easy to ingest, search, visualize, and analyze data.
+OpenSearch is a powerful search and analytics engine built on Apache Lucene.
 
 xref:opensearch:index.adoc[Read more]
 
