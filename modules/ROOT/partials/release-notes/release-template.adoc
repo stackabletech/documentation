@@ -77,7 +77,7 @@ Of the changes mentioned above, the following are breaking (or could lead to bre
 * `spec.b`: This field has been changed to a number.
 ====
 
-==== Upgrade from YY.M
+==== Upgrade from OO.M
 
 ===== Using stackablectl
 
@@ -110,21 +110,21 @@ This can be done using `kubectl replace`.
 
 [source]
 ----
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/airflow-operator/OO.M.X/deploy/helm/airflow-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/commons-operator/OO.M.X/deploy/helm/commons-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/druid-operator/OO.M.X/deploy/helm/druid-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/hbase-operator/OO.M.X/deploy/helm/hbase-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/hdfs-operator/OO.M.X/deploy/helm/hdfs-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/hive-operator/OO.M.X/deploy/helm/hive-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/kafka-operator/OO.M.X/deploy/helm/kafka-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/listener-operator/OO.M.X/deploy/helm/listener-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/nifi-operator/OO.M.X/deploy/helm/nifi-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/opa-operator/OO.M.X/deploy/helm/opa-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/secret-operator/OO.M.X/deploy/helm/secret-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/OO.M.X/deploy/helm/spark-k8s-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/superset-operator/OO.M.X/deploy/helm/superset-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/trino-operator/OO.M.X/deploy/helm/trino-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/OO.M.X/deploy/helm/zookeeper-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/airflow-operator/YY.M.X/deploy/helm/airflow-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/commons-operator/YY.M.X/deploy/helm/commons-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/druid-operator/YY.M.X/deploy/helm/druid-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hbase-operator/YY.M.X/deploy/helm/hbase-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hdfs-operator/YY.M.X/deploy/helm/hdfs-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hive-operator/YY.M.X/deploy/helm/hive-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/kafka-operator/YY.M.X/deploy/helm/kafka-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/listener-operator/YY.M.X/deploy/helm/listener-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/nifi-operator/YY.M.X/deploy/helm/nifi-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/opa-operator/YY.M.X/deploy/helm/opa-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/secret-operator/YY.M.X/deploy/helm/secret-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/YY.M.X/deploy/helm/spark-k8s-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/superset-operator/YY.M.X/deploy/helm/superset-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/trino-operator/YY.M.X/deploy/helm/trino-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/YY.M.X/deploy/helm/zookeeper-operator/crds/crds.yaml
 ----
 
 [source,console]
@@ -165,21 +165,21 @@ The reason for this is that helm will uninstall the operators but not the CRDs. 
 
 [source]
 ----
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/airflow-operator/OO.M.X/deploy/helm/airflow-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/commons-operator/OO.M.X/deploy/helm/commons-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/druid-operator/OO.M.X/deploy/helm/druid-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/hbase-operator/OO.M.X/deploy/helm/hbase-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/hdfs-operator/OO.M.X/deploy/helm/hdfs-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/hive-operator/OO.M.X/deploy/helm/hive-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/kafka-operator/OO.M.X/deploy/helm/kafka-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/listener-operator/OO.M.X/deploy/helm/listener-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/nifi-operator/OO.M.X/deploy/helm/nifi-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/opa-operator/OO.M.X/deploy/helm/opa-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/secret-operator/OO.M.X/deploy/helm/secret-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/OO.M.X/deploy/helm/spark-k8s-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/superset-operator/OO.M.X/deploy/helm/superset-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/trino-operator/OO.M.X/deploy/helm/trino-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/OO.M.X/deploy/helm/zookeeper-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/airflow-operator/YY.M.X/deploy/helm/airflow-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/commons-operator/YY.M.X/deploy/helm/commons-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/druid-operator/YY.M.X/deploy/helm/druid-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hbase-operator/YY.M.X/deploy/helm/hbase-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hdfs-operator/YY.M.X/deploy/helm/hdfs-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hive-operator/YY.M.X/deploy/helm/hive-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/kafka-operator/YY.M.X/deploy/helm/kafka-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/listener-operator/YY.M.X/deploy/helm/listener-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/nifi-operator/YY.M.X/deploy/helm/nifi-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/opa-operator/YY.M.X/deploy/helm/opa-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/secret-operator/YY.M.X/deploy/helm/secret-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/YY.M.X/deploy/helm/spark-k8s-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/superset-operator/YY.M.X/deploy/helm/superset-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/trino-operator/YY.M.X/deploy/helm/trino-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/YY.M.X/deploy/helm/zookeeper-operator/crds/crds.yaml
 ----
 
 [source,console]
@@ -196,21 +196,21 @@ NOTE: `helm repo` subcommands are not supported for OCI registries. The operator
 
 [source,console]
 ----
-helm install --wait airflow-operator oci://oci.stackable.tech/sdp-charts/airflow-operator --version OO.M.X
-helm install --wait commons-operator oci://oci.stackable.tech/sdp-charts/commons-operator --version OO.M.X
-helm install --wait druid-operator oci://oci.stackable.tech/sdp-charts/druid-operator --version OO.M.X
-helm install --wait hbase-operator oci://oci.stackable.tech/sdp-charts/hbase-operator --version OO.M.X
-helm install --wait hdfs-operator oci://oci.stackable.tech/sdp-charts/hdfs-operator --version OO.M.X
-helm install --wait hive-operator oci://oci.stackable.tech/sdp-charts/hive-operator --version OO.M.X
-helm install --wait kafka-operator oci://oci.stackable.tech/sdp-charts/kafka-operator --version OO.M.X
-helm install --wait listener-operator oci://oci.stackable.tech/sdp-charts/listener-operator --version OO.M.X
-helm install --wait nifi-operator oci://oci.stackable.tech/sdp-charts/nifi-operator --version OO.M.X
-helm install --wait opa-operator oci://oci.stackable.tech/sdp-charts/opa-operator --version OO.M.X
-helm install --wait secret-operator oci://oci.stackable.tech/sdp-charts/secret-operator --version OO.M.X
-helm install --wait spark-k8s-operator oci://oci.stackable.tech/sdp-charts/spark-k8s-operator --version OO.M.X
-helm install --wait superset-operator oci://oci.stackable.tech/sdp-charts/superset-operator --version OO.M.X
-helm install --wait trino-operator oci://oci.stackable.tech/sdp-charts/trino-operator --version OO.M.X
-helm install --wait zookeeper-operator oci://oci.stackable.tech/sdp-charts/zookeeper-operator --version OO.M.X
+helm install --wait airflow-operator oci://oci.stackable.tech/sdp-charts/airflow-operator --version YY.M.X
+helm install --wait commons-operator oci://oci.stackable.tech/sdp-charts/commons-operator --version YY.M.X
+helm install --wait druid-operator oci://oci.stackable.tech/sdp-charts/druid-operator --version YY.M.X
+helm install --wait hbase-operator oci://oci.stackable.tech/sdp-charts/hbase-operator --version YY.M.X
+helm install --wait hdfs-operator oci://oci.stackable.tech/sdp-charts/hdfs-operator --version YY.M.X
+helm install --wait hive-operator oci://oci.stackable.tech/sdp-charts/hive-operator --version YY.M.X
+helm install --wait kafka-operator oci://oci.stackable.tech/sdp-charts/kafka-operator --version YY.M.X
+helm install --wait listener-operator oci://oci.stackable.tech/sdp-charts/listener-operator --version YY.M.X
+helm install --wait nifi-operator oci://oci.stackable.tech/sdp-charts/nifi-operator --version YY.M.X
+helm install --wait opa-operator oci://oci.stackable.tech/sdp-charts/opa-operator --version YY.M.X
+helm install --wait secret-operator oci://oci.stackable.tech/sdp-charts/secret-operator --version YY.M.X
+helm install --wait spark-k8s-operator oci://oci.stackable.tech/sdp-charts/spark-k8s-operator --version YY.M.X
+helm install --wait superset-operator oci://oci.stackable.tech/sdp-charts/superset-operator --version YY.M.X
+helm install --wait trino-operator oci://oci.stackable.tech/sdp-charts/trino-operator --version YY.M.X
+helm install --wait zookeeper-operator oci://oci.stackable.tech/sdp-charts/zookeeper-operator --version YY.M.X
 ----
 
 ==== Known issues
