@@ -2,7 +2,8 @@
 :page-aliases: getting_started.adoc
 :description: Learn how to set up and test a Stackable Data Platform with Apache ZooKeeper, Kafka, and NiFi using Kubernetes. Ideal for lab environments.
 
-One of the best ways of getting started with a new platform is to try it out. Any big data platform has a lot of moving parts and getting some hands on keyboard time with it helps reinforce learning.
+One of the best ways of getting started with a new platform is to try it out.
+Any big data platform has a lot of moving parts and getting some hands on keyboard time with it helps reinforce learning.
 
 == About this guide
 
@@ -13,7 +14,8 @@ Firstly, let's cover whether this *Getting Started* guide is right for you. This
 
 == Overview
 
-Stackable is based on Kubernetes and uses this as the control plane to manage clusters. In this guide we will build a simple cluster with 3 services; Apache ZooKeeper, Apache Kafka and Apache NiFi.
+Stackable is based on Kubernetes and uses this as the control plane to manage clusters.
+In this guide we will build a simple cluster with 3 services; Apache ZooKeeper, Apache Kafka and Apache NiFi.
 
 == Installing Kubernetes and kubectl
 
@@ -30,7 +32,9 @@ Install the Stackable command line utility xref:management:stackablectl:index.ad
 
 === Installing Stackable Operators
 
-The Stackable operators are components that translate the service definitions deployed via Kubernetes into deploy services on the worker nodes. These can be installed on any node that has access to the Kubernetes control plane. In this example we will install them on the controller node.
+The Stackable operators are components that translate the service definitions deployed via Kubernetes into deploy services on the worker nodes.
+These can be installed on any node that has access to the Kubernetes control plane.
+In this example we will install them on the controller node.
 
 Stackable operators can be installed using `stackablectl`.
 Run the following commands to install ZooKeeper, Kafka and NiFi from the Stackable 25.7 release.
@@ -45,7 +49,8 @@ stackablectl release install -i commons -i secret -i listener -i zookeeper -i ka
 ====
 NOTE: These examples assume Helm version 3. They will not work with Helm version 2.
 
-`helm repo` subcommands are not supported for OCI registries. The operators are installed directly, without adding the Helm Chart repository first.
+`helm repo` subcommands are not supported for OCI registries.
+The operators are installed directly, without adding the Helm Chart repository first.
 
 Install the operators:
 
@@ -75,7 +80,8 @@ zookeeper             25.7.0         default                        deployed    
 
 == Deploying Stackable Services
 
-At this point you've successfully deployed Kubernetes and the Stackable operators we need and are ready to deploy services to the cluster. To do this we provide service descriptions to Kubernetes for each of the services we wish to deploy.
+At this point you've successfully deployed Kubernetes and the Stackable operators we need and are ready to deploy services to the cluster.
+To do this we provide service descriptions to Kubernetes for each of the services we wish to deploy.
 
 === Apache ZooKeeper
 
@@ -114,7 +120,8 @@ EOF
 
 === Apache Kafka
 
-We will deploy an Apache Kafka broker that depends on the ZooKeeper service we just deployed. The zookeeperReference property below points to the namespace and name we gave to the ZooKeeper service deployed previously.
+We will deploy an Apache Kafka broker that depends on the ZooKeeper service we just deployed.
+The zookeeperReference property below points to the namespace and name we gave to the ZooKeeper service deployed previously.
 
 [source,bash]
 ----
@@ -208,7 +215,8 @@ stringData:
 EOF
 ----
 
-You can check the status of the services using `kubectl get pods`. This will retrieve the status of all pods running in the default namespace.
+You can check the status of the services using `kubectl get pods`.
+This will retrieve the status of all pods running in the default namespace.
 
 ----
 NAME                                                       READY   STATUS    RESTARTS   AGE
@@ -228,7 +236,8 @@ simple-zk-server-primary-0                                 1/1     Running   0  
 zookeeper-operator-deployment-7bcdcbb558-xc77h             1/1     Running   0          13m
 ----
 
-Since this is the first time that each of these services has been deployed to these nodes, it will take some time to download the software from the Stackable repository and deploy the services. Once all the pods are in the running state your cluster is ready to use.
+Since this is the first time that each of these services has been deployed to these nodes, it will take some time to download the software from the Stackable repository and deploy the services.
+Once all the pods are in the running state your cluster is ready to use.
 
 == Testing your cluster
 
@@ -236,14 +245,16 @@ If all has gone well then you will have successfully deployed a Stackable cluste
 
 === Apache ZooKeeper
 
-We can test ZooKeeper by running the ZooKeeper CLI shell. The easiest way to do this is to run the CLI shell on the pod that is running ZooKeeper.
+We can test ZooKeeper by running the ZooKeeper CLI shell.
+The easiest way to do this is to run the CLI shell on the pod that is running ZooKeeper.
 
 [source,bash]
 ----
 kubectl exec -i -t simple-zk-server-primary-0 -- bin/zkCli.sh
 ----
 
-The shell should connect automatically to the ZooKeeper server running on the pod. You can run the `ls /` command to see the list of znodes in the root path, which should include those created by Apache Kafka and Apache NiFi.
+The shell should connect automatically to the ZooKeeper server running on the pod.
+You can run the `ls /` command to see the list of znodes in the root path, which should include those created by Apache Kafka and Apache NiFi.
 
 ----
 [zk: localhost:2181(CONNECTED) 0] ls /
@@ -261,7 +272,8 @@ kubectl exec -i -t simple-kafka-broker-brokers-0 -c kafka -- \
   bin/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic demo
 ----
 
-You should see the message, "Created topic demo." on the console. Now let's check to see if it was actually created:
+You should see the message, "Created topic demo." on the console.
+Now let's check to see if it was actually created:
 
 [source,bash]
 ----
@@ -299,7 +311,8 @@ Browse to the address of your Kubernetes node on port `31931` e.g. https://172.1
 
 image:nifi_login_screen.png[The Apache NiFi web interface login screen]
 
-If a password has not been specified for the admin user the Apache NiFi operator will automatically generate the admin user credentials with a random password and store it as a Kubernetes secret in order to provide some security out of the box. In the example above we have provided our own secret, but you can retrieve and confirm this password for the `admin` user with the following kubectl command.
+If a password has not been specified for the admin user the Apache NiFi operator will automatically generate the admin user credentials with a random password and store it as a Kubernetes secret in order to provide some security out of the box.
+In the example above we have provided our own secret, but you can retrieve and confirm this password for the `admin` user with the following kubectl command.
 
 [source,bash]
 ----
