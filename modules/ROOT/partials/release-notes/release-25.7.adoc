@@ -72,6 +72,37 @@ The Stackable Listener Operator can now use custom xref:listener-operator:listen
 
 ==== Platform improvements
 
+===== General
+
+* All products that are built from source in SDP, which is at the time of this release everything except Airflow and Superset, now have a version suffix to indicate they include custom modifications made by Stackable.
+  The suffix the same as for SDP container images, so Zookeeper 3.9.3 in SDP 25.7.0 will for example report `3.9.3-stackable25.7.0` as its version.
+  See https://github.com/stackabletech/docker-images/issues/1068[docker-images#1068].
+* The Stackable operators for Apache Airflow, Apache Druid, Apache HBase, Apache Hadoop, Apache Hive, Apache NiFi, Apache Spark, Apache ZooKeeper, and Trino are now integrated with the Stackable listener operator.
+  This is a breaking change across the board.
+  Consult the breaking changes section for more details.
+
+===== Vulnerabilities
+
+230 CVEs were fixed in the Stackable product images.
+This includes 3 critical and 97 high-severity CVEs.
+
+===== Apache Hadoop
+
+Various setting defaults have been updated for better performance and reliability.
+See https://github.com/stackabletech/hdfs-operator/issues/685[hdfs-operator#685].
+
+===== Apache NiFi
+
+* The operator now emits a warning for deprecated sensitive property algorithms in NiFi version 1.x.x and errors out for version 2.x.x if an unsupported sensitive properties algorithm is used.
+  See the official https://nifi.apache.org/docs/nifi-docs/html/administration-guide.html#property-encryption-algorithms[NiFi documentation] and https://github.com/stackabletech/nifi-operator/issues/791[nifi-operator#791].
+* Re-add Iceberg support to NiFi 2.4.0, which was removed upstream starting with version 2.0.0.
+  See xref:nifi:usage_guide/writing-to-iceberg-tables.adoc[NiFi Iceberg documentation] and https://github.com/stackabletech/nifi-operator/issues/738[nifi-operator#738].
+
+===== Apache ZooKeeper
+
+The image for Apache ZooKeeper backports various 3.9.4 changes into the supported 3.9.3 version.
+See https://github.com/stackabletech/docker-images/issues/1143[docker-images#1143].
+
 ==== Platform deprecations
 
 ==== Product versions
