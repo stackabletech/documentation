@@ -139,6 +139,22 @@ xref:nifi:index.adoc[Read more]
 ++++
 
 ++++
+<h3 id="opensearch"><a class="anchor" href="#opensearch"></a>OpenSearch</h3>
+++++
+
+OpenSearch is a search and analytics suite that makes it easy to ingest, search, visualize, and analyze data.
+
+xref:opensearch:index.adoc[Read more]
+
+++++
+</div>
+++++
+
+++++
+<div class="box">
+++++
+
+++++
 <h3 id="spark"><a class="anchor" href="#spark"></a>Apache Spark</h3>
 ++++
 

@@ -45,6 +45,8 @@ content:
       start_path: docs
     - url: ../opa-operator/
       start_path: docs
+    - url: ../opensearch-operator/
+      start_path: docs
     - url: ../spark-k8s-operator/
       start_path: docs
     - url: ../superset-operator/
