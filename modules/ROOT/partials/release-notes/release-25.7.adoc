@@ -108,7 +108,6 @@ See https://github.com/stackabletech/docker-images/issues/1143[docker-images#114
 ==== Product versions
 
 As with previous SDP releases, many product images have been updated to their latest versions.
-The LTS version has in many cases also been adjusted in line with our xref:ROOT:policies.adoc[support policy].
 
 Refer to the xref:operators:supported_versions.adoc[supported versions] documentation for a complete overview including LTS versions or deprecations.
 
@@ -116,21 +115,49 @@ Refer to the xref:operators:supported_versions.adoc[supported versions] document
 
 The following new product versions are now supported:
 
-* ...
+* Apache Airflow: https://github.com/stackabletech/docker-images/issues/1074[2.10.5], https://github.com/stackabletech/docker-images/issues/1074[3.0.1 (experimental)]
+* Apache Druid: https://github.com/stackabletech/docker-images/issues/1075[33.0.0]
+* Apache HBase: https://github.com/stackabletech/docker-images/issues/1076[2.6.2]
+* Apache Kafka: https://github.com/stackabletech/docker-images/issues/1078[4.0.0 (experimental)^1^]
+* Apache NiFi: https://github.com/stackabletech/docker-images/issues/1079[2.4.0]
+* Apache Superset: https://github.com/stackabletech/docker-images/issues/1081[4.1.2]
+* Open Policy Agent: https://github.com/stackabletech/docker-images/issues/1084[1.4.2]
+* Trino: https://github.com/stackabletech/docker-images/issues/1082[476]
 
 ===== Deprecated versions
 
 The following product versions are deprecated and will be removed in a later release:
 
-* ...
+* Apache Airflow: https://github.com/stackabletech/docker-images/issues/1074[2.10.4]
+* Apache Druid: https://github.com/stackabletech/docker-images/issues/1075[31.0.1]
+* Apache Hbase: https://github.com/stackabletech/docker-images/issues/1076[2.6.1]
+* Apache Superset: https://github.com/stackabletech/docker-images/issues/1081[4.2.1]
+* Open Policy Agent: https://github.com/stackabletech/docker-images/issues/1084[1.0.1]
+* Trino: https://github.com/stackabletech/docker-images/issues/1082[470]
 
 ===== Removed versions
 
-The following product versions are no longer supported (although images for released product versions remain available https://oci.stackable.tech/[here,window=_blank]. Information on how to browse the registry can be found xref:contributor:project-overview.adoc#docker-images[here,window=_blank].):
+The following product versions are no longer supported.
+These images for released product versions remain available https://oci.stackable.tech/[here,window=_blank]
+Information on how to browse the registry can be found xref:contributor:project-overview.adoc#docker-images[here,window=_blank]
 
-* ...
+* Apache Druid: https://github.com/stackabletech/docker-images/issues/1075[30.0.0]
+* Apache Hbase: https://github.com/stackabletech/docker-images/issues/1076[2.4.18]
+* Apache Hadoop: https://github.com/stackabletech/docker-images/issues/1077[3.3.4], https://github.com/stackabletech/docker-images/issues/1077[3.4.0], https://github.com/stackabletech/docker-images/issues/1077[3.3.6^2^]
+* Apache Kafka: https://github.com/stackabletech/docker-images/issues/1078[3.7.1], https://github.com/stackabletech/docker-images/issues/1078[3.8.0]
+* Apache NiFi: https://github.com/stackabletech/docker-images/issues/1079[2.2.0 (experimental)]
+* Apache Spark: https://github.com/stackabletech/docker-images/issues/1080[3.5.2]
+* Apache ZooKeeper: https://github.com/stackabletech/docker-images/issues/1083[3.9.2]
+* Open Policy Agent: https://github.com/stackabletech/docker-images/issues/1084[0.67.1]
+* Trino:  https://github.com/stackabletech/docker-images/issues/1082[455]
 
-==== stackablectl
+'''
+
+[.small]
+--
+. Unused in SDP, see https://github.com/stackabletech/kafka-operator/issues/690[kafka-operator#690] and https://github.com/stackabletech/docker-images/pull/1117[docker-images#1117]
+. Remove support for 3.3.6, it is still required by HBase, Hive, and Spark in this release.
+--
 
 ==== Supported Kubernetes versions
 
