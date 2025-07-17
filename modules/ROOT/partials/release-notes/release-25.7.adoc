@@ -10,6 +10,66 @@ Released on YYYY-MM-DD.
 
 ==== New platform features
 
+===== General
+
+====== Security
+
+Users (and services) can now use the new TrustStore resource to request the trust root certificates associated with a SecretClass.
+See the xref:secret-operator:truststore.adoc[TrustStore documentation] and https://github.com/stackabletech/secret-operator/issues/410[secret-operator#410].
+
+====== Automatic cluster domain detection
+
+The default Kubernetes cluster domain name is now fetched from the kubelet API unless explicitly configured.
+Operators are now required to have the RBAC permission to get nodes/proxy in the apiGroup `""`.
+The helm-charts takes care of this.
+
+The CLI argument `--kubernetes-node-name` or env variable `KUBERNETES_NODE_NAME` needs to be set.
+The helm-charts takes care of this.
+
+See https://github.com/stackabletech/issues/issues/662[issues#662].
+
+====== Observability
+
+* All operators support sending OpenTelemetry logs and traces.
+* All operators use unified CLI arguments and environment variables to configure the exporters.
+* All operators allow exporter configuration via Helm values.
+* All exporters are disabled by default, except for console logs, which remain enabled by default.
+
+Additionally see the official xref:concepts:observability/telemetry.adoc[telemetry documentation page] and the tracking issue https://github.com/stackabletech/issues/issues/639[issues#639] for further details.
+
+===== Apache Airflow
+
+The recent release of Airflow 3 brings with it a raft of changes - with both new features and significant changes to architecture.
+SDP offers early experimental support for Airflow 3.0.1 as of SDP 25.7.
+This gives users the chance to use the new UI, to https://airflow.apache.org/docs/apache-airflow/3.0.1/installation/upgrading_to_airflow3.html#step-3-dag-authors-check-your-airflow-dags-for-compatibility[update] their DAGs and to test the new OPA authenticator.
+See https://github.com/stackabletech/docker-images/issues/1074[docker-images#1074].
+
+===== Apache NiFi
+
+* Starting with NiFi 2.0, custom Python extensions are supported.
+  See https://github.com/stackabletech/nifi-operator/issues/739[nifi-operator#739] and documentation on xref:nifi:usage_guide/custom-components.adoc[custom components].
+* Custom NiFi Archives (NARs) and Python components can be loaded from Git repositories with git-sync.
+  See https://github.com/stackabletech/nifi-operator/issues/739[nifi-operator#739] and documentation on xref:nifi:usage_guide/custom-components.adoc[custom components].
+* The Stackable operator for Apache NiFi now supports using Kubernetes for cluster coordination and storage, rather than ZooKeeper.
+  (Requires NiFi 2.x, migrating existing installs is currently not supported)
+  See xref:nifi:usage_guide/clustering.adoc#backend-kubernetes[NiFi backend documentation] and https://github.com/stackabletech/nifi-operator/issues/737[nifi-operator#737].
+* Rolling upgrades are now supported between NiFi 2 versions.
+  This is the default update strategy for NiFi 2 clusters.
+  See the xref:nifi:usage_guide/updating.adoc[NiFi updating documentation] and https://github.com/stackabletech/nifi-operator/issues/736[nifi-operator#736].
+* The Stackable operator for Apache NiFi now supports authorization using the Open Policy Agent (OPA).
+  See the xref:nifi:usage_guide/security.adoc#authorization-opa[NiFi authorization documentation] and https://github.com/stackabletech/issues/issues/47[issues#47].
+
+===== Apache Spark
+
+This release adds experimental support for Spark Connect.
+The Spark operator watches for SparkConnectServer custom resources.
+Preliminary documentation is xref:spark-k8s:usage-guide/spark-connect.adoc[available] and the existing xref:demos:jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data.adoc[Taxi Data Anomaly Detection demo] has been retrofitted to use a JupterLab client running against a Spark Connect server.
+Also see https://github.com/stackabletech/spark-k8s-operator/issues/284[spark-k8s-operator#284].
+
+===== Stackable listener operator
+
+The Stackable Listener Operator can now use custom xref:listener-operator:listenerclass.adoc#servicetype-loadbalancer-class[LoadBalancer classes] and https://kubernetes.io/docs/concepts/services-networking/service/#load-balancer-nodeport-allocation[disable NodePort allocation].
+
 ==== Platform improvements
 
 ==== Platform deprecations
