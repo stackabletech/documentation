@@ -18,8 +18,8 @@
 
 ## Release note compilation tasks
 
-- [ ] Check [Issues](https://github.com/search?q=org%3Astackabletech+label%3Arelease-note%2Crelease-note%2Faction-required+label%3Arelease%YY.M.X%2Cscheduled-for%YY.M.X&type=issues) for Product and Platform release notes
-- [ ] Check [PRs](https://github.com/search?q=org%3Astackabletech+label%3Arelease-note%2Crelease-note%2Faction-required+label%3Arelease%YY.M.X%2Cscheduled-for%YY.M.X&type=pullrequests) for Product and Platform release notes
+- [ ] Check [Issues](https://github.com/search?q=org%3Astackabletech+label%3Arelease-note%2Crelease-note%2Faction-required+label%3Arelease%2FYY.M.X%2Cscheduled-for%2FYY.M.X&type=issues) for Product and Platform release notes
+- [ ] Check [PRs](https://github.com/search?q=org%3Astackabletech+label%3Arelease-note%2Crelease-note%2Faction-required+label%3Arelease%2FYY.M.X%2Cscheduled-for%2FYY.M.X&type=pullrequests) for Product and Platform release notes
 - [ ] Optionally check the [Changelogs](https://github.com/search?q=org%3Astackabletech+path%3A*CHANGELOG.md+%22YY.M.X%22&type=code) in case release notes were missed
 - [ ] Compile list of new product versions that are supported and compile a list of new product features to include in the Release Highlights
 - [ ] Upgrade guide: Document how to use stackablectl to uninstall all and install new release
