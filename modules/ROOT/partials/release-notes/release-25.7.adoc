@@ -194,17 +194,52 @@ These OpenShift versions are no longer supported:
 
 Of the changes mentioned above, the following are breaking (or could lead to breaking behaviour), and you will need to adapt your existing CRDs accordingly:
 
-===== Stackable Operator for Example Product
+===== General
 
-* Description of the change 1
-* Description of the change 2
+* As mentioned in the platform improvements section, many of our product operators now integrate with the listener-operator.
+  See the overall tracking issue https://github.com/stackabletech/issues/issues/692[issues#692] and https://github.com/stackabletech/issues/issues/692#issuecomment-3068662411[comment] summarizing the breaking changes.
+  - *Apache Airflow and Apache Superset:*
+    Listener classes are now declared at role level: this replaces the previous implementation where this was defined at cluster level and used a specific role service.
+    Metrics are not exposed via the listener service and are - as previously - only available within the cluster.
+    The service naming has been changed to reflect this.
+    See https://github.com/stackabletech/issues/issues/692#issuecomment-2854266967[issues#692 (comment)].
+  - *Apache Druid:* TBD.
+  - *Apache HBase:*: TBD.
+  - *Apache Hive:*
+    Introduces a listener service on the `metastore` role level.
+    Additionally, a `-headless` service for internal communications as well as a `-metrics` service for monitoring is introduced at the role group level.
+    See https://github.com/stackabletech/hive-operator/issues/566[hive-operator#566].
+  - *Apache NiFi:* TBD.
+  - *Apache Spark:*
+    The history server UI is now exposed using listeners instead of services created by the operator directly.
+    This implementation also changed the CRD by moving the `spec.clusterConfig.listenerClass` field to `spec.node.config.listenerClass`.
+    The new and experimental Spark connect servers in this release are also exposed using listeners in the same fashion as the history server.
+    See https://github.com/stackabletech/issues/issues/692#issuecomment-2847025199[issues#692 (comment)].
+  - *Apache ZooKeeper:*
+    ListenerClasses are now defined in `spec.server.roleConfig.listenerClass`.
+    Metrics are no longer exposed by the listener Service and are instead now defined on a dedicated ClusterIP service per RoleGroup (eg: `my-zk-server-default-metrics`).
+    A separate Headless Service is now created for each RoleGroup for internal communications (eg: access to the leader and leader-election).
+    See https://github.com/stackabletech/issues/issues/692#issuecomment-3034672506[issues#692 (comment)].
+  - *Trino:*
+    Coordinator Listener classes are now declared at role level `spec.coordinators.roleConfig.listenerClass` instead of `spec.clusterConfig.listenerClass`.
+    Both Coordinators and Workers have two services at role group level, a headless service called `<cluster>-<role>-<rolegroup>-headless` and a service for metrics called `<cluster>-<role>-<rolegroup>-metrics`.
+    See xref:trino:usage-guide/listenerclass.adoc[Trino ListenerClass documentation] and https://github.com/stackabletech/issues/issues/692#issuecomment-3001089387[issues#692 (comment)].
+* The `lastUpdatedTime` was removed from the `ClusterStatus` of each operator.
+  Users previously relying on this value should migrate to `lastTransitionTime`.
+  See https://github.com/stackabletech/operator-rs/issues/1032[operator-rs#1032] and https://github.com/stackabletech/operator-rs/pull/1054[operator-rs#1054].
 
-.Breaking changes details
-[%collapsible]
-====
-* `spec.a`: This field has been removed.
-* `spec.b`: This field has been changed to a number.
-====
+===== Container images
+
+The `oci.stackable.tech/sdp/kcat` image has been discontinued starting with SDP 25.7.0.
+Use `oci.stackable.tech/sdp/kafka-testing-tools` instead, which includes kcat.
+Existing `oci.stackable.tech/sdp/kcat` images for previous SDP releases remain available.
+See https://github.com/stackabletech/docker-images/pull/1124[docker-images#1124].
+
+===== Stackable Operator for Apache Kafka
+
+The `-nodeport` discovery ConfigMap has been deprecated in 25.3.0 and is removed as of this release.
+Use the primary discovery ConfigMap instead.
+See https://github.com/stackabletech/kafka-operator/pull/868[kafka-operator#868].
 
 ==== Upgrade from 25.3
 
