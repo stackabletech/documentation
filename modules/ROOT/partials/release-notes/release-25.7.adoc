@@ -83,9 +83,38 @@ The Stackable Listener Operator can now use custom xref:listener-operator:listen
 * All products that are built from source in SDP, which is at the time of this release everything except Airflow and Superset, now have a version suffix to indicate they include custom modifications made by Stackable.
   The suffix the same as for SDP container images, so Zookeeper 3.9.3 in SDP 25.7.0 will for example report `3.9.3-stackable25.7.0` as its version.
   See https://github.com/stackabletech/docker-images/issues/1068[docker-images#1068].
-* The Stackable operators for Apache Airflow, Apache Druid, Apache HBase, Apache Hadoop, Apache Hive, Apache NiFi, Apache Spark, Apache ZooKeeper, and Trino are now integrated with the Stackable listener operator.
-  This is a breaking change across the board.
-  Consult the breaking changes section for more details.
+* *Breaking:* The Stackable operators for Apache Airflow, Apache Druid, Apache HBase, Apache Hadoop, Apache Hive, Apache NiFi, Apache Spark, Apache ZooKeeper, and Trino are now integrated with the Stackable listener operator.
+  See the overall tracking issue https://github.com/stackabletech/issues/issues/692[issues#692] and https://github.com/stackabletech/issues/issues/692#issuecomment-3068662411[comment] summarizing the breaking changes.
+** *Apache Airflow and Apache Superset:*
+Listener classes are now declared at role level: this replaces the previous implementation where this was defined at cluster level and used a specific role service.
+Metrics are not exposed via the listener service and are - as previously - only available within the cluster.
+The service naming has been changed to reflect this.
+See https://github.com/stackabletech/issues/issues/692#issuecomment-2854266967[issues#692 (comment)].
+** *Apache Druid:* TBD.
+** *Apache HBase:*: TBD.
+** *Apache Hive:*
+  Introduces a listener service on the `metastore` role level.
+  Additionally, a `-headless` service for internal communications as well as a `-metrics` service for monitoring is introduced at the role group level.
+  See https://github.com/stackabletech/hive-operator/issues/566[hive-operator#566].
+** *Apache NiFi:* TBD.
+** *Apache Spark:*
+  The history server UI is now exposed using listeners instead of services created by the operator directly.
+  This implementation also changed the CRD by moving the `spec.clusterConfig.listenerClass` field to `spec.node.config.listenerClass`.
+  The new and experimental Spark connect servers in this release are also exposed using listeners in the same fashion as the history server.
+  See https://github.com/stackabletech/issues/issues/692#issuecomment-2847025199[issues#692 (comment)].
+** *Apache ZooKeeper:*
+  ListenerClasses are now defined in `spec.server.roleConfig.listenerClass`.
+  Metrics are no longer exposed by the listener Service and are instead now defined on a dedicated ClusterIP service per RoleGroup (eg: `my-zk-server-default-metrics`).
+  A separate Headless Service is now created for each RoleGroup for internal communications (eg: access to the leader and leader-election).
+  See https://github.com/stackabletech/issues/issues/692#issuecomment-3034672506[issues#692 (comment)].
+** *Trino:*
+  Coordinator Listener classes are now declared at role level `spec.coordinators.roleConfig.listenerClass` instead of `spec.clusterConfig.listenerClass`.
+  Both Coordinators and Workers have two services at role group level, a headless service called `<cluster>-<role>-<rolegroup>-headless` and a service for metrics called`<cluster>-<role>-<rolegroup>-metrics`.
+  See xref:trino:usage-guide/listenerclass.adoc[Trino ListenerClass documentation] and https://github.com/stackabletech/issues/issues/692#issuecomment-3001089387[issues#692 (comment)].
+* Our containers include a tool which regularly logs relevant system information to aid in debugging.
+  This was introduced in SDP 25.3.0 and was running every minute.
+  The signal to noise ratio was off which is why we are switching to run this every 30min in this release.
+  See https://github.com/stackabletech/docker-images/pull/1128[docker-images#1128].
 
 ===== Vulnerabilities
 
@@ -94,8 +123,10 @@ This includes 3 critical and 97 high-severity CVEs.
 
 ===== Apache Hadoop
 
-Various setting defaults have been updated for better performance and reliability.
-See https://github.com/stackabletech/hdfs-operator/issues/685[hdfs-operator#685].
+* Various setting defaults have been updated for better performance and reliability.
+  See https://github.com/stackabletech/hdfs-operator/issues/685[hdfs-operator#685].
+* The operator now defaults `dfs.encrypt.data.transfer.cipher.suite` to `AES/CTR/NoPadding` to improve security and performance.
+  See https://github.com/stackabletech/hdfs-operator/pull/693[hdfs-operator#693].
 
 ===== Apache NiFi
 
@@ -106,12 +137,63 @@ See https://github.com/stackabletech/hdfs-operator/issues/685[hdfs-operator#685]
 
 ===== Apache ZooKeeper
 
-The image for Apache ZooKeeper backports various 3.9.4 changes into the supported 3.9.3 version.
-See https://github.com/stackabletech/docker-images/issues/1143[docker-images#1143].
+* The image for Apache ZooKeeper backports various 3.9.4 changes into the supported 3.9.3 version.
+  See https://github.com/stackabletech/docker-images/issues/1143[docker-images#1143].
+* Prometheus support was added using the built-in Prometheus provider in Apache ZooKeeper.
+  This appends another port (native-metrics).
+  To access the metrics this port in combination with the `/metrics` endpoint can be used.
+  See https://github.com/stackabletech/zookeeper-operator/pull/955[zookeeper-operator#955].
 
 ==== Platform deprecations
 
-==== Product versions
+===== Apache Hadoop
+
+The built-in Prometheus servlet is now enabled by default and metrics are available under the `/prom` path of all UI services.
+The metrics exposed by the JMX exporter are now considered deprecated and will be removed in a future release.
+See https://github.com/stackabletech/hdfs-operator/pull/695[hdfs-operator#695].
+
+===== Apache Spark
+
+This release enables the built in Prometheus servlet for metric scraping.
+The existing JMX exporter is still enabled but it is deprecated and it will be removed in a future release.
+See https://github.com/stackabletech/spark-k8s-operator/pull/584[spark-k8s-operator#584].
+
+==== Platform removals
+
+===== General
+
+* Remove CSI registration path migration job (init-container) from secret-operator DaemonSet.
+  See https://github.com/stackabletech/secret-operator/pull/610[secret-operator#610].
+* This release removes support for previously deprecated product service accounts.
+  Deprecated service accounts named `<product_name>-serviceaccount` are ignored.
+  Instead, product workloads use service accounts named `<resource_name>-serviceaccount` where `resource_name` is the stacklet (or cluster) name as defined in the cluster resource.
+  See https://github.com/stackabletech/operator-rs/pull/1060[operator-rs#1060].
+* *Breaking:*
+  The `lastUpdatedTime` was removed from the `ClusterStatus` of each operator.
+  Users previously relying on this value should migrate to `lastTransitionTime`.
+  See https://github.com/stackabletech/operator-rs/issues/1032[operator-rs#1032] and https://github.com/stackabletech/operator-rs/pull/1054[operator-rs#1054].
+
+===== Container images
+
+*Breaking:*
+The `oci.stackable.tech/sdp/kcat` image has been discontinued starting with SDP 25.7.0.
+Use `oci.stackable.tech/sdp/kafka-testing-tools` instead, which includes kcat.
+Existing `oci.stackable.tech/sdp/kcat` images for previous SDP releases remain available.
+See https://github.com/stackabletech/docker-images/pull/1124[docker-images#1124].
+
+===== Apache HBase
+
+Starting with this release, support for HBase 2.4.x has been removed.
+This includes metrics exposed via the JMX exporter.
+All supported HBase versions expose metrics via the built in Prometheus servlet.
+See https://github.com/stackabletech/hbase-operator/pull/672[hbase-operator#672].
+
+===== Apache ZooKeeper
+
+*Breaking:*
+The `-nodeport` discovery ConfigMap has been deprecated in 25.3.0 and is removed as of this release.
+Use the primary discovery ConfigMap instead.
+See https://github.com/stackabletech/kafka-operator/pull/868[kafka-operator#868].
 
 As with previous SDP releases, many product images have been updated to their latest versions.
 
@@ -190,57 +272,6 @@ These OpenShift versions are no longer supported:
 
 * `4.15`
 * `4.14`
-
-==== Breaking changes
-
-Of the changes mentioned above, the following are breaking (or could lead to breaking behaviour), and you will need to adapt your existing CRDs accordingly:
-
-===== General
-
-* As mentioned in the platform improvements section, many of our product operators now integrate with the listener-operator.
-  See the overall tracking issue https://github.com/stackabletech/issues/issues/692[issues#692] and https://github.com/stackabletech/issues/issues/692#issuecomment-3068662411[comment] summarizing the breaking changes.
-  - *Apache Airflow and Apache Superset:*
-    Listener classes are now declared at role level: this replaces the previous implementation where this was defined at cluster level and used a specific role service.
-    Metrics are not exposed via the listener service and are - as previously - only available within the cluster.
-    The service naming has been changed to reflect this.
-    See https://github.com/stackabletech/issues/issues/692#issuecomment-2854266967[issues#692 (comment)].
-  - *Apache Druid:* TBD.
-  - *Apache HBase:*: TBD.
-  - *Apache Hive:*
-    Introduces a listener service on the `metastore` role level.
-    Additionally, a `-headless` service for internal communications as well as a `-metrics` service for monitoring is introduced at the role group level.
-    See https://github.com/stackabletech/hive-operator/issues/566[hive-operator#566].
-  - *Apache NiFi:* TBD.
-  - *Apache Spark:*
-    The history server UI is now exposed using listeners instead of services created by the operator directly.
-    This implementation also changed the CRD by moving the `spec.clusterConfig.listenerClass` field to `spec.node.config.listenerClass`.
-    The new and experimental Spark connect servers in this release are also exposed using listeners in the same fashion as the history server.
-    See https://github.com/stackabletech/issues/issues/692#issuecomment-2847025199[issues#692 (comment)].
-  - *Apache ZooKeeper:*
-    ListenerClasses are now defined in `spec.server.roleConfig.listenerClass`.
-    Metrics are no longer exposed by the listener Service and are instead now defined on a dedicated ClusterIP service per RoleGroup (eg: `my-zk-server-default-metrics`).
-    A separate Headless Service is now created for each RoleGroup for internal communications (eg: access to the leader and leader-election).
-    See https://github.com/stackabletech/issues/issues/692#issuecomment-3034672506[issues#692 (comment)].
-  - *Trino:*
-    Coordinator Listener classes are now declared at role level `spec.coordinators.roleConfig.listenerClass` instead of `spec.clusterConfig.listenerClass`.
-    Both Coordinators and Workers have two services at role group level, a headless service called `<cluster>-<role>-<rolegroup>-headless` and a service for metrics called `<cluster>-<role>-<rolegroup>-metrics`.
-    See xref:trino:usage-guide/listenerclass.adoc[Trino ListenerClass documentation] and https://github.com/stackabletech/issues/issues/692#issuecomment-3001089387[issues#692 (comment)].
-* The `lastUpdatedTime` was removed from the `ClusterStatus` of each operator.
-  Users previously relying on this value should migrate to `lastTransitionTime`.
-  See https://github.com/stackabletech/operator-rs/issues/1032[operator-rs#1032] and https://github.com/stackabletech/operator-rs/pull/1054[operator-rs#1054].
-
-===== Container images
-
-The `oci.stackable.tech/sdp/kcat` image has been discontinued starting with SDP 25.7.0.
-Use `oci.stackable.tech/sdp/kafka-testing-tools` instead, which includes kcat.
-Existing `oci.stackable.tech/sdp/kcat` images for previous SDP releases remain available.
-See https://github.com/stackabletech/docker-images/pull/1124[docker-images#1124].
-
-===== Stackable Operator for Apache Kafka
-
-The `-nodeport` discovery ConfigMap has been deprecated in 25.3.0 and is removed as of this release.
-Use the primary discovery ConfigMap instead.
-See https://github.com/stackabletech/kafka-operator/pull/868[kafka-operator#868].
 
 ==== Upgrade from 25.3
 
