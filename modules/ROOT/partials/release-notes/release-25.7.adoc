@@ -113,7 +113,10 @@ Metrics are not exposed via the listener service and are - as previously - only 
 The service naming has been changed to reflect this.
 See https://github.com/stackabletech/issues/issues/692#issuecomment-2854266967[issues#692 (comment)].
 ** *Apache Druid:* TBD.
-** *Apache HBase:*: TBD.
+** *Apache HBase:*:
+   Coordinator Listener classes are now declared at role level `spec.<role>.config.listenerClass` instead of `spec.clusterConfig.listenerClass`.
+   HBase has been patched so that the URLs in the UI screens now use listener endpoints (which are externally reachable as long as the appropriate listenerClass has been selected).
+   See xref:hbase:usage-guide/listenerclass.adoc[HBase ListenerClass documentation] and https://github.com/stackabletech/issues/issues/692#issuecomment-3089441868[docker-images#692 (comment)].
 ** *Apache Hive:*
   Introduces a listener service on the `metastore` role level.
   Additionally, a `-headless` service for internal communications as well as a `-metrics` service for monitoring is introduced at the role group level.
