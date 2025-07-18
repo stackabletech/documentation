@@ -237,6 +237,13 @@ Afterwards you will need to upgrade the CustomResourceDefinitions (CRDs) install
 The reason for this is that helm will uninstall the operators but not the CRDs.
 This can be done using `kubectl replace`.
 
+[IMPORTANT]
+====
+The Stackable secret operator CRD needs to be applied in addition to being replaced, because it introduces the new TrustStore custom resource.
+The commands below are adjusted accordingly.
+This issue is also mentioned in the known issues section below.
+====
+
 [source]
 ----
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/airflow-operator/25.7.0/deploy/helm/airflow-operator/crds/crds.yaml
@@ -249,7 +256,8 @@ kubectl replace -f https://raw.githubusercontent.com/stackabletech/kafka-operato
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/listener-operator/25.7.0/deploy/helm/listener-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/nifi-operator/25.7.0/deploy/helm/nifi-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/opa-operator/25.7.0/deploy/helm/opa-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/secret-operator/25.7.0/deploy/helm/secret-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/secret-operator/25.7.0/deploy/helm/secret-operator/crds/crds.yaml || true
+kubectl apply -f https://raw.githubusercontent.com/stackabletech/secret-operator/25.7.0/deploy/helm/secret-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/25.7.0/deploy/helm/spark-k8s-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/superset-operator/25.7.0/deploy/helm/superset-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/trino-operator/25.7.0/deploy/helm/trino-operator/crds/crds.yaml
@@ -290,7 +298,14 @@ release "commons-operator" uninstalled
 ----
 
 Afterward you will need to upgrade the CustomResourceDefinitions (CRDs) installed by the Stackable Platform.
-The reason for this is that helm will uninstall the operators but not the CRDs. This can be done using `kubectl replace`:
+The reason for this is that helm will uninstall the operators but not the CRDs. This can be done using `kubectl replace`.
+
+[IMPORTANT]
+====
+The Stackable secret operator CRD needs to be applied in addition to being replaced, because it introduces the new TrustStore custom resource.
+The commands below are adjusted accordingly.
+This issue is also mentioned in the known issues section below.
+====
 
 [source]
 ----
@@ -304,7 +319,8 @@ kubectl replace -f https://raw.githubusercontent.com/stackabletech/kafka-operato
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/listener-operator/25.7.0/deploy/helm/listener-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/nifi-operator/25.7.0/deploy/helm/nifi-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/opa-operator/25.7.0/deploy/helm/opa-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/secret-operator/25.7.0/deploy/helm/secret-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/secret-operator/25.7.0/deploy/helm/secret-operator/crds/crds.yaml || true
+kubectl apply -f https://raw.githubusercontent.com/stackabletech/secret-operator/25.7.0/deploy/helm/secret-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/25.7.0/deploy/helm/spark-k8s-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/superset-operator/25.7.0/deploy/helm/superset-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/trino-operator/25.7.0/deploy/helm/trino-operator/crds/crds.yaml
