@@ -8,6 +8,11 @@
 Released on YYYY-MM-DD.
 (Optional description / introduction)
 
+[NOTE]
+====
+The SDP 25.7.0 release is the first release which  will **only** be published on `oci.stackable.tech`.
+====
+
 ==== New platform features
 
 ===== General
