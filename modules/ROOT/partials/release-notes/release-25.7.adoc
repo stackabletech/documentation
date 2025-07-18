@@ -13,6 +13,15 @@ Released on YYYY-MM-DD.
 The SDP 25.7.0 release is the first release which  will **only** be published on `oci.stackable.tech`.
 ====
 
+[NOTE]
+====
+In previous releases, releases of the `stackablectl` CLI tool were synced with platform releases.
+The tool itself was never tied to a particular version of SDP.
+As such, it was decided to version `stackablectl` independently.
+// TODO (@Techassi): Actually create and link that page
+Starting with this release, the release notes for `stackablectl` are located on a separate page.
+====
+
 ==== New platform features
 
 ===== General
