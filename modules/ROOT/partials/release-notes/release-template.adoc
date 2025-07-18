@@ -161,7 +161,8 @@ release "commons-operator" uninstalled
 ----
 
 Afterward you will need to upgrade the CustomResourceDefinitions (CRDs) installed by the Stackable Platform.
-The reason for this is that helm will uninstall the operators but not the CRDs. This can be done using `kubectl replace`:
+The reason for this is that helm will uninstall the operators but not the CRDs.
+This can be done using `kubectl replace`.
 
 [source]
 ----
