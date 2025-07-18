@@ -28,8 +28,11 @@ Starting with this release, the release notes for `stackablectl` are located on 
 
 ====== Security
 
-Users (and services) can now use the new TrustStore resource to request the trust root certificates associated with a SecretClass.
-See the xref:secret-operator:truststore.adoc[TrustStore documentation] and https://github.com/stackabletech/secret-operator/issues/410[secret-operator#410].
+* Users (and services) can now use the new TrustStore resource to request the trust root certificates associated with a SecretClass.
+  See the xref:secret-operator:truststore.adoc[TrustStore documentation] and https://github.com/stackabletech/secret-operator/issues/410[secret-operator#410].
+* Add support for format-specific annotations to override secret file names.
+  Names can be customized using secret volume annotations which are listed xref:secret-operator:volume.adoc[in our documentation].
+  See https://github.com/stackabletech/secret-operator/pull/572[secret-operator#572].
 
 ====== Automatic cluster domain detection
 
@@ -48,8 +51,14 @@ See https://github.com/stackabletech/issues/issues/662[issues#662].
 * All operators use unified CLI arguments and environment variables to configure the exporters.
 * All operators allow exporter configuration via Helm values.
 * All exporters are disabled by default, except for console logs, which remain enabled by default.
+* Customization via Helm values is supported for all exporters.
 
 Additionally see the official xref:concepts:observability/telemetry.adoc[telemetry documentation page] and the tracking issue https://github.com/stackabletech/issues/issues/639[issues#639] for further details.
+
+====== AuthZ
+
+The user-info-fetcher backend now supports fetching user groups from Microsoft Entra (experimental).
+See https://github.com/stackabletech/opa-operator/pull/712[opa-operator#712].
 
 ===== Apache Airflow
 
@@ -58,6 +67,7 @@ Additionally see the official xref:concepts:observability/telemetry.adoc[telemet
   This gives users the chance to use the new UI, to https://airflow.apache.org/docs/apache-airflow/3.0.1/installation/upgrading_to_airflow3.html#step-3-dag-authors-check-your-airflow-dags-for-compatibility[update] their DAGs and to test the new OPA authenticator.
   See https://github.com/stackabletech/docker-images/issues/1074[docker-images#1074].
 * Set the default `airflow.task` log level to `INFO` to not spam the Airflow UI with task logs.
+  See https://github.com/stackabletech/airflow-operator/pull/649[airflow-operator#649].
 
 ===== Apache NiFi
 
@@ -146,6 +156,8 @@ This includes 3 critical and 97 high-severity CVEs.
   See the official https://nifi.apache.org/docs/nifi-docs/html/administration-guide.html#property-encryption-algorithms[NiFi documentation] and https://github.com/stackabletech/nifi-operator/issues/791[nifi-operator#791].
 * Re-add Iceberg support to NiFi 2.4.0, which was removed upstream starting with version 2.0.0.
   See xref:nifi:usage_guide/writing-to-iceberg-tables.adoc[NiFi Iceberg documentation] and https://github.com/stackabletech/nifi-operator/issues/738[nifi-operator#738].
+* Update patch that allows bypassing the host header validation starting with NiFi 2.4.0.
+  See https://github.com/stackabletech/docker-images/pull/1125[docker-images#1125].
 
 ===== Apache ZooKeeper
 
