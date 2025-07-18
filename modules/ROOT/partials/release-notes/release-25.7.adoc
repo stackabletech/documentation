@@ -108,34 +108,34 @@ The Stackable Listener Operator can now use custom xref:listener-operator:listen
 * *Breaking:* The Stackable operators for Apache Airflow, Apache Druid, Apache HBase, Apache Hadoop, Apache Hive, Apache NiFi, Apache Spark, Apache ZooKeeper, and Trino are now integrated with the Stackable listener operator.
   See the overall tracking issue https://github.com/stackabletech/issues/issues/692[issues#692] and https://github.com/stackabletech/issues/issues/692#issuecomment-3068662411[comment] summarizing the breaking changes.
 ** *Apache Airflow and Apache Superset:*
-Listener classes are now declared at role level: this replaces the previous implementation where this was defined at cluster level and used a specific role service.
-Metrics are not exposed via the listener service and are - as previously - only available within the cluster.
-The service naming has been changed to reflect this.
-See https://github.com/stackabletech/issues/issues/692#issuecomment-2854266967[issues#692 (comment)].
+   Listener classes are now declared at role level: this replaces the previous implementation where this was defined at cluster level and used a specific role service.
+   Metrics are not exposed via the listener service and are - as previously - only available within the cluster.
+   The service naming has been changed to reflect this.
+   See https://github.com/stackabletech/issues/issues/692#issuecomment-2854266967[issues#692 (comment)].
 ** *Apache Druid:* TBD.
 ** *Apache HBase:*:
    Coordinator Listener classes are now declared at role level `spec.<role>.config.listenerClass` instead of `spec.clusterConfig.listenerClass`.
    HBase has been patched so that the URLs in the UI screens now use listener endpoints (which are externally reachable as long as the appropriate listenerClass has been selected).
    See xref:hbase:usage-guide/listenerclass.adoc[HBase ListenerClass documentation] and https://github.com/stackabletech/issues/issues/692#issuecomment-3089441868[docker-images#692 (comment)].
 ** *Apache Hive:*
-  Introduces a listener service on the `metastore` role level.
-  Additionally, a `-headless` service for internal communications as well as a `-metrics` service for monitoring is introduced at the role group level.
-  See https://github.com/stackabletech/hive-operator/issues/566[hive-operator#566].
+   Introduces a listener service on the `metastore` role level.
+   Additionally, a `-headless` service for internal communications as well as a `-metrics` service for monitoring is introduced at the role group level.
+   See https://github.com/stackabletech/hive-operator/issues/566[hive-operator#566].
 ** *Apache NiFi:* TBD.
 ** *Apache Spark:*
-  The history server UI is now exposed using listeners instead of services created by the operator directly.
-  This implementation also changed the CRD by moving the `spec.clusterConfig.listenerClass` field to `spec.node.config.listenerClass`.
-  The new and experimental Spark connect servers in this release are also exposed using listeners in the same fashion as the history server.
-  See https://github.com/stackabletech/issues/issues/692#issuecomment-2847025199[issues#692 (comment)].
+   The history server UI is now exposed using listeners instead of services created by the operator directly.
+   This implementation also changed the CRD by moving the `spec.clusterConfig.listenerClass` field to `spec.node.config.listenerClass`.
+   The new and experimental Spark connect servers in this release are also exposed using listeners in the same fashion as the history server.
+   See https://github.com/stackabletech/issues/issues/692#issuecomment-2847025199[issues#692 (comment)].
 ** *Apache ZooKeeper:*
-  ListenerClasses are now defined in `spec.server.roleConfig.listenerClass`.
-  Metrics are no longer exposed by the listener Service and are instead now defined on a dedicated ClusterIP service per RoleGroup (eg: `my-zk-server-default-metrics`).
-  A separate Headless Service is now created for each RoleGroup for internal communications (eg: access to the leader and leader-election).
-  See https://github.com/stackabletech/issues/issues/692#issuecomment-3034672506[issues#692 (comment)].
+   ListenerClasses are now defined in `spec.server.roleConfig.listenerClass`.
+   Metrics are no longer exposed by the listener Service and are instead now defined on a dedicated ClusterIP service per RoleGroup (eg: `my-zk-server-default-metrics`).
+   A separate Headless Service is now created for each RoleGroup for internal communications (eg: access to the leader and leader-election).
+   See https://github.com/stackabletech/issues/issues/692#issuecomment-3034672506[issues#692 (comment)].
 ** *Trino:*
-  Coordinator Listener classes are now declared at role level `spec.coordinators.roleConfig.listenerClass` instead of `spec.clusterConfig.listenerClass`.
-  Both Coordinators and Workers have two services at role group level, a headless service called `<cluster>-<role>-<rolegroup>-headless` and a service for metrics called`<cluster>-<role>-<rolegroup>-metrics`.
-  See xref:trino:usage-guide/listenerclass.adoc[Trino ListenerClass documentation] and https://github.com/stackabletech/issues/issues/692#issuecomment-3001089387[issues#692 (comment)].
+   Coordinator Listener classes are now declared at role level `spec.coordinators.roleConfig.listenerClass` instead of `spec.clusterConfig.listenerClass`.
+   Both Coordinators and Workers have two services at role group level, a headless service called `<cluster>-<role>-<rolegroup>-headless` and a service for metrics called `<cluster>-<role>-<rolegroup>-metrics`.
+   See xref:trino:usage-guide/listenerclass.adoc[Trino ListenerClass documentation] and https://github.com/stackabletech/issues/issues/692#issuecomment-3001089387[issues#692 (comment)].
 * Our containers include a tool which regularly logs relevant system information to aid in debugging.
   This was introduced in SDP 25.3.0 and was running every minute.
   The signal to noise ratio was off which is why we are switching to run this every 30min in this release.
