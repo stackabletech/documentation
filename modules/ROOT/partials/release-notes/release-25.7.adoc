@@ -44,10 +44,11 @@ Additionally see the official xref:concepts:observability/telemetry.adoc[telemet
 
 ===== Apache Airflow
 
-The recent release of Airflow 3 brings with it a raft of changes - with both new features and significant changes to architecture.
-SDP offers early experimental support for Airflow 3.0.1 as of SDP 25.7.
-This gives users the chance to use the new UI, to https://airflow.apache.org/docs/apache-airflow/3.0.1/installation/upgrading_to_airflow3.html#step-3-dag-authors-check-your-airflow-dags-for-compatibility[update] their DAGs and to test the new OPA authenticator.
-See https://github.com/stackabletech/docker-images/issues/1074[docker-images#1074].
+* The recent release of Airflow 3 brings with it a raft of changes - with both new features and significant changes to architecture.
+  SDP offers early experimental support for Airflow 3.0.1 as of SDP 25.7.
+  This gives users the chance to use the new UI, to https://airflow.apache.org/docs/apache-airflow/3.0.1/installation/upgrading_to_airflow3.html#step-3-dag-authors-check-your-airflow-dags-for-compatibility[update] their DAGs and to test the new OPA authenticator.
+  See https://github.com/stackabletech/docker-images/issues/1074[docker-images#1074].
+* Set the default `airflow.task` log level to `INFO` to not spam the Airflow UI with task logs.
 
 ===== Apache NiFi
 
