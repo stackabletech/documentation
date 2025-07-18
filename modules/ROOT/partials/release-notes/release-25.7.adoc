@@ -359,3 +359,12 @@ helm install --wait zookeeper-operator oci://oci.stackable.tech/sdp-charts/zooke
 ----
 
 ==== Known issues
+
+* During the upgrade of the secret-operator CRD, special care must be taken because the CRD introduces the new TrustStore custom resource.
+  It is recommended to apply it instead of replacing it: `kubectl apply -f ...`.
+* There are strong indicators that TLS CA handling is broken in products using `keytool`.
+  As of now, we confirmed that Trino has an issue in properly handling CA rotations due to a limitation with `keytool`.
+  The report in https://github.com/stackabletech/issues/issues/744[issues#744] outlines a workaround which requires the following steps:
+  . Identify the secretClass used by the secret-operator to distribute CAs.
+  . Delete this secret causing secret-operator to re-create a new CA secret.
+  . Restart all stackable pods manually.
