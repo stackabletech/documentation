@@ -60,7 +60,7 @@ Additionally see the official xref:concepts:observability/telemetry.adoc[telemet
 The user-info-fetcher backend now supports fetching user groups from Microsoft Entra (experimental).
 See https://github.com/stackabletech/opa-operator/pull/712[opa-operator#712].
 
-===== Miscellaneous
+====== Miscellaneous
 
 The operator Helm charts now grant RBAC `patch` permissions on `events.k8s.io/events`, so events can be aggregated (e.g. "error happened 10 times over the last 5 minutes").
 See https://github.com/stackabletech/issues/issues/748[issues#748].
