@@ -51,7 +51,6 @@ See https://github.com/stackabletech/issues/issues/662[issues#662].
 * All operators use unified CLI arguments and environment variables to configure the exporters.
 * All operators allow exporter configuration via Helm values.
 * All exporters are disabled by default, except for console logs, which remain enabled by default.
-* Customization via Helm values is supported for all exporters.
 
 Additionally see the official xref:concepts:observability/telemetry.adoc[telemetry documentation page] and the tracking issue https://github.com/stackabletech/issues/issues/639[issues#639] for further details.
 
