@@ -141,6 +141,11 @@ See the overall tracking issue https://github.com/stackabletech/issues/issues/69
   Both Coordinators and Workers have two services at role group level, a headless service called `<cluster>-<role>-<rolegroup>-headless` and a service for metrics called `<cluster>-<role>-<rolegroup>-metrics`.
   See xref:trino:usage-guide/listenerclass.adoc[Trino ListenerClass documentation] and https://github.com/stackabletech/issues/issues/692#issuecomment-3001089387[issues#692 (comment)].
 
+====== AuthZ
+
+The user-info-fetcher AD backend now filters by both UPN and SAN fields when fetching user groups.
+See the xref:opa:usage-guide/user-info-fetcher.adoc#backend-activedirectory[documentation] and https://github.com/stackabletech/opa-operator/issues/702[opa-operator#702].
+
 ====== Miscellaneous
 
 * All products that are built from source in SDP, which is at the time of this release everything except Airflow and Superset, now have a version suffix to indicate they include custom modifications made by Stackable.
