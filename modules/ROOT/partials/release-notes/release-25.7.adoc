@@ -201,6 +201,10 @@ The built-in Prometheus servlet is now enabled by default and metrics are availa
 The metrics exposed by the JMX exporter are now considered deprecated and will be removed in a future release.
 See https://github.com/stackabletech/hdfs-operator/pull/695[hdfs-operator#695].
 
+===== Apache Hive
+
+Hive 3 is deprecated in this release and we plan to remove it in the upcoming release.
+
 ===== Apache Spark
 
 This release enables the built in Prometheus servlet for metric scraping.
