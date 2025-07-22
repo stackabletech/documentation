@@ -203,7 +203,8 @@ See https://github.com/stackabletech/hdfs-operator/pull/695[hdfs-operator#695].
 
 ===== Apache Hive
 
-Hive 3 is deprecated in this release and we plan to remove it in the upcoming release.
+Hive 3 has been deprecated since SDP 25.3.0 and was marked as End of Life on 2024-10-08 by the upstream project.
+We might remove it in the upcoming release, the final decision will be based on metastore client compatibility and customer feedback.
 
 ===== Apache Spark
 
