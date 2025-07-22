@@ -146,6 +146,10 @@ See the overall tracking issue https://github.com/stackabletech/issues/issues/69
 * All products that are built from source in SDP, which is at the time of this release everything except Airflow and Superset, now have a version suffix to indicate they include custom modifications made by Stackable.
   The suffix the same as for SDP container images, so Zookeeper 3.9.3 in SDP 25.7.0 will for example report `3.9.3-stackable25.7.0` as its version.
   See https://github.com/stackabletech/docker-images/issues/1068[docker-images#1068].
+* We've added source code snapshots directly into our container images to further improve transparency and the debugging experience.
+  Each container image now includes `.tar.gz` archives containing the exact source code used to build that specific version of the product.
+  They can be found within the `/stackable` directory of each container image.
+  See the xref:guides:viewing-and-verifying-sboms.adoc[SBOM documentation] and https://github.com/stackabletech/docker-images/issues/1069[docker-images#1069].
 * Our containers include a tool which regularly logs relevant system information to aid in debugging.
   This was introduced in SDP 25.3.0 and was running every minute.
   The signal to noise ratio was off which is why we are switching to run this every 30min in this release.
