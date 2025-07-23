@@ -165,6 +165,12 @@ See the xref:opa:usage-guide/user-info-fetcher.adoc#backend-activedirectory[docu
 230 CVEs were fixed in the Stackable product images.
 This includes 3 critical and 97 high-severity CVEs.
 
+===== Apache Druid
+
+We noticed that a bunch of configuration properties were missing on the middleManager roles.
+The properties are now available.
+See https://github.com/stackabletech/druid-operator/pull/740[druid-operator#740].
+
 ===== Apache Hadoop
 
 * Various setting defaults have been updated for better performance and reliability.
