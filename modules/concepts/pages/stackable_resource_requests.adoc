@@ -1,7 +1,7 @@
 // This is meant to be inlined using the "include" directive in other pages.
 // WARNING: do not add headers here as they can break the structure of pages
 // that include this file.
-Stackable operators handle resource requests in a sligtly different manner than Kubernetes.
+Stackable operators handle resource requests in a slightly different manner than Kubernetes.
 Resource requests are defined on xref:concepts:stacklet.adoc#roles[role] or xref:concepts:stacklet.adoc#role-groups[role group] level.
 On a role level this means that by default, all workers will use the same resource requests and limits.
 This can be further specified on role group level (which takes priority to the role level) to apply different resources.
