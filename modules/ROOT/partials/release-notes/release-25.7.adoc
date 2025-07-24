@@ -238,6 +238,7 @@ See https://github.com/stackabletech/spark-k8s-operator/pull/584[spark-k8s-opera
 * This release removes support for previously deprecated product service accounts.
   Deprecated service accounts named `<product_name>-serviceaccount` are ignored.
   Instead, product workloads use service accounts named `<resource_name>-serviceaccount` where `resource_name` is the stacklet (or cluster) name as defined in the cluster resource.
+  We advise deleting these orphaned ServiceAccounts manually.
   See https://github.com/stackabletech/operator-rs/pull/1060[operator-rs#1060].
 * *Breaking:*
   The `lastUpdatedTime` was removed from the `ClusterStatus` of each operator.
