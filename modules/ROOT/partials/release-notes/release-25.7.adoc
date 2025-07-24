@@ -90,10 +90,13 @@ See https://github.com/stackabletech/issues/issues/748[issues#748].
 
 ===== Apache Spark
 
-This release adds experimental support for Spark Connect.
-The Spark operator watches for SparkConnectServer custom resources.
-Preliminary documentation is xref:spark-k8s:usage-guide/spark-connect.adoc[available] and the existing xref:demos:jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data.adoc[Taxi Data Anomaly Detection demo] has been retrofitted to use a JupterLab client running against a Spark Connect server.
-Also see https://github.com/stackabletech/spark-k8s-operator/issues/284[spark-k8s-operator#284].
+* This release adds experimental support for Spark Connect.
+  The Spark operator watches for SparkConnectServer custom resources.
+  Preliminary documentation is xref:spark-k8s:usage-guide/spark-connect.adoc[available] and the existing xref:demos:jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data.adoc[Taxi Data Anomaly Detection demo] has been retrofitted to use a JupterLab client running against a Spark Connect server.
+  Also see https://github.com/stackabletech/spark-k8s-operator/issues/284[the issue] tracking support for Spark Connect.
+* This release also ensures that Bouncy Castle libraries are included in the Spark images.
+  This was causing errors in kerberized environments previously.
+  See https://github.com/stackabletech/docker-images/pull/1212[this pull request] for details.
 
 // TODO (@Techassi): Define a single way of spelling internal operators, like listener, secret, and commons.
 // Currently, throughout this page variations like Stackable Listener Operator, Listener Operator, listener operator,
