@@ -396,9 +396,12 @@ kubectl replace -f https://raw.githubusercontent.com/stackabletech/kafka-operato
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/listener-operator/25.7.0/deploy/helm/listener-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/nifi-operator/25.7.0/deploy/helm/nifi-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/opa-operator/25.7.0/deploy/helm/opa-operator/crds/crds.yaml
+# We have a new custom resource: truststores.secrets.stackable.tech
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/secret-operator/25.7.0/deploy/helm/secret-operator/crds/crds.yaml || true
-kubectl apply -f https://raw.githubusercontent.com/stackabletech/secret-operator/25.7.0/deploy/helm/secret-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/25.7.0/deploy/helm/spark-k8s-operator/crds/crds.yaml
+kubectl create -f https://raw.githubusercontent.com/stackabletech/secret-operator/25.7.0/deploy/helm/secret-operator/crds/crds.yaml || true
+# We have a new custom resource: sparkconnectservers.spark.stackable.tech
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/25.7.0/deploy/helm/spark-k8s-operator/crds/crds.yaml || true
+kubectl create -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/25.7.0/deploy/helm/spark-k8s-operator/crds/crds.yaml || true
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/superset-operator/25.7.0/deploy/helm/superset-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/trino-operator/25.7.0/deploy/helm/trino-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/25.7.0/deploy/helm/zookeeper-operator/crds/crds.yaml
@@ -459,9 +462,12 @@ kubectl replace -f https://raw.githubusercontent.com/stackabletech/kafka-operato
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/listener-operator/25.7.0/deploy/helm/listener-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/nifi-operator/25.7.0/deploy/helm/nifi-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/opa-operator/25.7.0/deploy/helm/opa-operator/crds/crds.yaml
+# We have a new custom resource: truststores.secrets.stackable.tech
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/secret-operator/25.7.0/deploy/helm/secret-operator/crds/crds.yaml || true
-kubectl apply -f https://raw.githubusercontent.com/stackabletech/secret-operator/25.7.0/deploy/helm/secret-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/25.7.0/deploy/helm/spark-k8s-operator/crds/crds.yaml
+kubectl create -f https://raw.githubusercontent.com/stackabletech/secret-operator/25.7.0/deploy/helm/secret-operator/crds/crds.yaml || true
+# We have a new custom resource: sparkconnectservers.spark.stackable.tech
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/25.7.0/deploy/helm/spark-k8s-operator/crds/crds.yaml || true
+kubectl create -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/25.7.0/deploy/helm/spark-k8s-operator/crds/crds.yaml || true
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/superset-operator/25.7.0/deploy/helm/superset-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/trino-operator/25.7.0/deploy/helm/trino-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/25.7.0/deploy/helm/zookeeper-operator/crds/crds.yaml
@@ -502,7 +508,7 @@ helm install --wait zookeeper-operator oci://oci.stackable.tech/sdp-charts/zooke
 ==== Known issues
 
 * During the upgrade of the secret-operator CRD, special care must be taken because the CRD introduces the new TrustStore custom resource.
-  It is recommended to apply it instead of replacing it: `kubectl apply -f ...`.
+  It is recommended to apply/create it in addition to replacing it.
 * There are strong indicators that TLS CA handling is broken in products using `keytool`.
   As of now, we confirmed that Trino has an issue in properly handling CA rotations due to a limitation with `keytool`.
   The report in https://github.com/stackabletech/issues/issues/744[issues#744] outlines a workaround which requires the following steps:
