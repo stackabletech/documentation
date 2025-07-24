@@ -88,7 +88,7 @@ See https://github.com/stackabletech/issues/issues/748[issues#748].
 
 * This release adds experimental support for Spark Connect.
   The Spark operator watches for SparkConnectServer custom resources.
-  Preliminary documentation is xref:spark-k8s:usage-guide/spark-connect.adoc[available] and the existing xref:demos:jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data.adoc[Taxi Data Anomaly Detection demo] has been retrofitted to use a JupterLab client running against a Spark Connect server.
+  Preliminary documentation is xref:spark-k8s:usage-guide/spark-connect.adoc[available] and the existing xref:demos:jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data.adoc[Taxi Data Anomaly Detection demo] has been retrofitted to use a JupyterLab client running against a Spark Connect server.
   Also see https://github.com/stackabletech/spark-k8s-operator/issues/284[the issue] tracking support for Spark Connect.
 * This release also ensures that Bouncy Castle libraries are included in the Spark images.
   This was causing errors in kerberized environments previously.
