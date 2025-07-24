@@ -1,0 +1,517 @@
+== Release 25.7
+
+=== 25.7.0
+
+Released on 2025-07-23.
+
+[NOTE]
+====
+The SDP 25.7.0 release is the first release which  will **only** be published on `oci.stackable.tech`.
+====
+
+[NOTE]
+====
+Previously, releases of the `stackablectl` CLI tool were synced with platform releases.
+The tool itself was never tied to a particular version of SDP.
+As such, it was decided to version `stackablectl` independently.
+Starting with this release, the release notes for `stackablectl` are located on a separate xref:management:stackablectl:release-notes.adoc[page].
+====
+
+==== New platform features
+
+===== General
+
+====== Security
+
+* Users (and services) can now use the new TrustStore resource to request the trust root certificates associated with a SecretClass.
+  See the xref:secret-operator:truststore.adoc[TrustStore documentation] and https://github.com/stackabletech/secret-operator/issues/410[secret-operator#410].
+* Add support for format-specific annotations to override secret file names.
+  Names can be customized using secret volume annotations which are listed xref:secret-operator:volume.adoc[in our documentation].
+  See https://github.com/stackabletech/secret-operator/pull/572[secret-operator#572].
+
+====== Automatic cluster domain detection
+
+The default Kubernetes cluster domain name is now fetched from the kubelet API unless explicitly configured.
+Operators are now required to have the RBAC permission to get `nodes/proxy`.
+The helm-charts takes care of this.
+
+The CLI argument `--kubernetes-node-name` or env variable `KUBERNETES_NODE_NAME` needs to be set.
+The helm-charts takes care of this.
+
+See https://github.com/stackabletech/issues/issues/662[issues#662].
+
+====== Observability
+
+* All operators support sending OpenTelemetry logs and traces via OTLP.
+* All operators use unified CLI arguments and environment variables to configure the exporters.
+* All operators allow exporter configuration via Helm values.
+* All exporters are disabled by default, except for console logs, which remain enabled by default.
+
+Additionally see the official xref:concepts:observability/telemetry.adoc[telemetry documentation page] and the tracking issue https://github.com/stackabletech/issues/issues/639[issues#639] for further details.
+
+====== Authorization
+
+The user-info-fetcher backend now supports fetching user groups from Microsoft Entra (experimental).
+See https://github.com/stackabletech/opa-operator/pull/712[opa-operator#712].
+
+====== Miscellaneous
+
+The operator Helm charts now grant RBAC `patch` permissions on `events.k8s.io/events`, so events can be aggregated (e.g. "error happened 10 times over the last 5 minutes").
+See https://github.com/stackabletech/issues/issues/748[issues#748].
+
+===== Apache Airflow
+
+* The recent release of Airflow 3 brings with it a raft of changes - with both new features and significant changes to architecture.
+  SDP offers early experimental support for Airflow 3.0.1 as of SDP 25.7.
+  This gives users the chance to use the new UI, to https://airflow.apache.org/docs/apache-airflow/3.0.1/installation/upgrading_to_airflow3.html#step-3-dag-authors-check-your-airflow-dags-for-compatibility[update] their DAGs and to test the new OPA authenticator.
+  See https://github.com/stackabletech/docker-images/issues/1074[docker-images#1074].
+* Set the default `airflow.task` log level to `INFO` to not spam the Airflow UI with task logs.
+  See https://github.com/stackabletech/airflow-operator/pull/649[airflow-operator#649].
+
+===== Apache NiFi
+
+* Starting with NiFi 2.0, custom Python extensions are supported.
+  See https://github.com/stackabletech/nifi-operator/issues/739[nifi-operator#739] and documentation on xref:nifi:usage_guide/custom-components.adoc[custom components].
+* Custom NiFi Archives (NARs) and Python components can be loaded from Git repositories with git-sync.
+  See https://github.com/stackabletech/nifi-operator/issues/739[nifi-operator#739] and documentation on xref:nifi:usage_guide/custom-components.adoc[custom components].
+* The Stackable operator for Apache NiFi now supports using Kubernetes for cluster coordination and storage, rather than ZooKeeper.
+  (Requires NiFi 2, migrating existing installs is currently not supported)
+  See xref:nifi:usage_guide/clustering.adoc#backend-kubernetes[NiFi backend documentation] and https://github.com/stackabletech/nifi-operator/issues/737[nifi-operator#737].
+* Rolling upgrades are now supported between NiFi 2 versions.
+  This is the default update strategy for NiFi 2 clusters.
+  See the xref:nifi:usage_guide/updating.adoc[NiFi updating documentation] and https://github.com/stackabletech/nifi-operator/issues/736[nifi-operator#736].
+* The Stackable operator for Apache NiFi now supports authorization using the Open Policy Agent (OPA).
+  See the xref:nifi:usage_guide/security.adoc#authorization-opa[NiFi authorization documentation] and https://github.com/stackabletech/issues/issues/47[issues#47].
+
+===== Apache Spark
+
+* This release adds experimental support for Spark Connect.
+  The Spark operator watches for SparkConnectServer custom resources.
+  Preliminary documentation is xref:spark-k8s:usage-guide/spark-connect.adoc[available] and the existing xref:demos:jupyterhub-pyspark-hdfs-anomaly-detection-taxi-data.adoc[Taxi Data Anomaly Detection demo] has been retrofitted to use a JupyterLab client running against a Spark Connect server.
+  Also see https://github.com/stackabletech/spark-k8s-operator/issues/284[the issue] tracking support for Spark Connect.
+* This release also ensures that Bouncy Castle libraries are included in the Spark images.
+  This was causing errors in kerberized environments previously.
+  See https://github.com/stackabletech/docker-images/pull/1212[docker-images#1212] for details.
+
+===== Stackable listener-operator
+
+The Stackable listener-operator can now use custom xref:listener-operator:listenerclass.adoc#servicetype-loadbalancer-class[LoadBalancer classes] and https://kubernetes.io/docs/concepts/services-networking/service/#load-balancer-nodeport-allocation[disable NodePort allocation].
+
+==== Platform improvements
+
+===== General
+
+====== Listener integration
+
+*Breaking:* The Stackable operators for Apache Airflow, Apache Druid, Apache HBase, Apache Hadoop, Apache Hive, Apache NiFi, Apache Spark, Apache ZooKeeper, and Trino are now integrated with the Stackable listener-operator.
+See the overall tracking issue https://github.com/stackabletech/issues/issues/692[issues#692] and https://github.com/stackabletech/issues/issues/692#issuecomment-3068662411[comment] summarizing the breaking changes.
+
+* *Apache Airflow and Apache Superset:*
+  Listener classes are now declared at role level: this replaces the previous implementation where this was defined at cluster level and used a specific role service.
+  Metrics are not exposed via the listener service and are - as previously - only available within the cluster.
+  The service naming has been changed to reflect this.
+  See https://github.com/stackabletech/issues/issues/692#issuecomment-2854266967[issues#692 (comment)].
+* *Apache Druid:*
+  Listener classes for Brokers, Coordinators and Routers are now defined in `spec.brokers|coordinators|routers.roleConfig.listenerClass`.
+  Metrics are no longer exposed by the listener Service and are instead now defined on a dedicated ClusterIP service per role group (eg: my-druid-broker-default-metrics).
+  A separate headless Service is now created for each role group for internal communications (e.g. between different Druid services).
+  See https://github.com/stackabletech/issues/issues/692#issuecomment-3106382988[issues#692 (comment)].
+* *Apache HBase:*:
+  Coordinator Listener classes are now declared at role level `spec.<role>.config.listenerClass` instead of `spec.clusterConfig.listenerClass`.
+  HBase has been patched so that the URLs in the UI screens now use listener endpoints (which are externally reachable as long as the appropriate listenerClass has been selected).
+  See xref:hbase:usage-guide/listenerclass.adoc[HBase ListenerClass documentation] and https://github.com/stackabletech/issues/issues/692#issuecomment-3089441868[docker-images#692 (comment)].
+* *Apache Hive:*
+  Introduces a listener service on the `metastore` role level.
+  Additionally, a `-headless` service for internal communications as well as a `-metrics` service for monitoring is introduced at the role group level.
+  See https://github.com/stackabletech/hive-operator/issues/566[hive-operator#566].
+* *Apache NiFi:*
+  Listener classes are now defined in spec.nodes.roleConfig.listenerClass.
+  Metrics are no longer exposed by the listener Service and are instead now defined on a dedicated ClusterIP service per role group (eg: my-nifi-node-default-metrics).
+  A separate headless Service is now created for each role group for internal communications (between NiFi nodes).
+  See https://github.com/stackabletech/issues/issues/692#issuecomment-3106375374[issues#692 (comment)].
+* *Apache Spark:*
+  The history server UI is now exposed using listeners instead of services created by the operator directly.
+  This implementation also changed the CRD by moving the `spec.clusterConfig.listenerClass` field to `spec.node.config.listenerClass`.
+  The new and experimental Spark connect servers in this release are also exposed using listeners in the same fashion as the history server.
+  See https://github.com/stackabletech/issues/issues/692#issuecomment-2847025199[issues#692 (comment)].
+* *Apache ZooKeeper:*
+  ListenerClasses are now defined in `spec.server.roleConfig.listenerClass`.
+  Metrics are no longer exposed by the listener Service and are instead now defined on a dedicated ClusterIP service per role group (eg: `my-zk-server-default-metrics`).
+  A separate headless Service is now created for each role group for internal communications (eg: access to the leader and leader-election).
+  See https://github.com/stackabletech/issues/issues/692#issuecomment-3034672506[issues#692 (comment)].
+* *Trino:*
+  Coordinator Listener classes are now declared at role level `spec.coordinators.roleConfig.listenerClass` instead of `spec.clusterConfig.listenerClass`.
+  Both Coordinators and Workers have two services at role group level, a headless service called `<cluster>-<role>-<rolegroup>-headless` and a service for metrics called `<cluster>-<role>-<rolegroup>-metrics`.
+  See xref:trino:usage-guide/listenerclass.adoc[Trino ListenerClass documentation] and https://github.com/stackabletech/issues/issues/692#issuecomment-3001089387[issues#692 (comment)].
+
+====== Authorization
+
+The user-info-fetcher AD backend now filters by both UPN and SAN fields when fetching user groups.
+See the xref:opa:usage-guide/user-info-fetcher.adoc#backend-activedirectory[documentation] and https://github.com/stackabletech/opa-operator/issues/702[opa-operator#702].
+
+====== Miscellaneous
+
+* All products that are built from source in SDP, which is at the time of this release everything except Airflow and Superset, now have a version suffix to indicate they include custom modifications made by Stackable.
+  The suffix the same as for SDP container images, so ZooKeeper 3.9.3 in SDP 25.7.0 will for example report `3.9.3-stackable25.7.0` as its version.
+  See https://github.com/stackabletech/docker-images/issues/1068[docker-images#1068].
+* We've added source code snapshots directly into our container images to further improve transparency and the debugging experience.
+  Each container image now includes `.tar.gz` archives containing the exact source code used to build that specific version of the product.
+  They can be found within the `/stackable` directory of each container image.
+  See the xref:guides:viewing-and-verifying-sboms.adoc[SBOM documentation] and https://github.com/stackabletech/docker-images/issues/1069[docker-images#1069].
+* Our containers include a tool which regularly logs relevant system information to aid in debugging.
+  This was introduced in SDP 25.3.0 and was running every minute.
+  The signal to noise ratio was off which is why we are switching to run this every 30min in this release.
+  See https://github.com/stackabletech/docker-images/pull/1128[docker-images#1128].
+
+===== Vulnerabilities
+
+230 CVEs were fixed in the Stackable product images.
+This includes 3 critical and 97 high-severity CVEs.
+
+===== Apache Druid
+
+We noticed that a bunch of configuration properties were missing on the middleManager roles.
+The properties are now available.
+See https://github.com/stackabletech/druid-operator/pull/740[druid-operator#740].
+
+===== Apache Hadoop
+
+* Various setting defaults have been updated for better performance and reliability.
+  See https://github.com/stackabletech/hdfs-operator/issues/685[hdfs-operator#685].
+* The operator now defaults `dfs.encrypt.data.transfer.cipher.suite` to `AES/CTR/NoPadding` to improve security and performance.
+  See https://github.com/stackabletech/hdfs-operator/pull/693[hdfs-operator#693].
+* Previously Apache Hadoop wouldn't find and use the native OpenSSL library to speed up crypto operations.
+  This was fixed by adding a https://issues.apache.org/jira/browse/HADOOP-12845[missing symlink] and backporting https://issues.apache.org/jira/browse/HADOOP-18583[HADOOP-18583].
+  See https://github.com/stackabletech/docker-images/pull/1209[docker-images#1209].
+
+===== Apache NiFi
+
+* The operator now emits a warning for deprecated sensitive property algorithms in NiFi version 1 and errors out for version 2 if an unsupported sensitive properties algorithm is used.
+  See the official https://nifi.apache.org/docs/nifi-docs/html/administration-guide.html#property-encryption-algorithms[NiFi documentation] and https://github.com/stackabletech/nifi-operator/issues/791[nifi-operator#791].
+* Re-add Iceberg support to NiFi 2.4.0, which was removed upstream starting with version 2.0.0.
+  See xref:nifi:usage_guide/writing-to-iceberg-tables.adoc[NiFi Iceberg documentation] and https://github.com/stackabletech/nifi-operator/issues/738[nifi-operator#738].
+* Update patch that allows bypassing the host header validation starting with NiFi 2.4.0.
+  See https://github.com/stackabletech/docker-images/pull/1125[docker-images#1125].
+
+===== Apache ZooKeeper
+
+* The image for Apache ZooKeeper backports various 3.9.4 changes into the supported 3.9.3 version.
+  See https://github.com/stackabletech/docker-images/issues/1143[docker-images#1143].
+* Prometheus support was added using the built-in Prometheus provider in Apache ZooKeeper.
+  This appends another port (native-metrics).
+  To access the metrics this port in combination with the `/metrics` endpoint can be used.
+  See https://github.com/stackabletech/zookeeper-operator/pull/955[zookeeper-operator#955].
+
+==== Platform deprecations
+
+===== Apache Hadoop
+
+The built-in Prometheus servlet is now enabled by default and metrics are available under the `/prom` path of all UI services.
+The metrics exposed by the JMX exporter are now considered deprecated and will be removed in a future release.
+See https://github.com/stackabletech/hdfs-operator/pull/695[hdfs-operator#695].
+
+===== Apache Hive
+
+Hive 3 has been deprecated since SDP 25.3.0 and was marked as End of Life on 2024-10-08 by the upstream project.
+We might remove it in the upcoming release, the final decision will be based on metastore client compatibility and customer feedback.
+
+===== Apache Spark
+
+This release enables the built in Prometheus servlet for metric scraping.
+The existing JMX exporter is still enabled but it is deprecated and it will be removed in a future release.
+See https://github.com/stackabletech/spark-k8s-operator/pull/584[spark-k8s-operator#584].
+
+==== Platform removals
+
+===== General
+
+* Remove CSI registration path migration job (init-container) from secret-operator DaemonSet.
+  See https://github.com/stackabletech/secret-operator/pull/610[secret-operator#610].
+* This release removes support for previously deprecated product service accounts.
+  Deprecated service accounts named `<product_name>-serviceaccount` are ignored.
+  Instead, product workloads use service accounts named `<resource_name>-serviceaccount` where `resource_name` is the stacklet (or cluster) name as defined in the cluster resource.
+  We advise deleting these orphaned ServiceAccounts manually.
+  See https://github.com/stackabletech/operator-rs/pull/1060[operator-rs#1060].
+* *Breaking:*
+  The `lastUpdatedTime` was removed from the `ClusterStatus` of each operator.
+  Users previously relying on this value should migrate to `lastTransitionTime`.
+  See https://github.com/stackabletech/operator-rs/issues/1032[operator-rs#1032] and https://github.com/stackabletech/operator-rs/pull/1054[operator-rs#1054].
+
+===== Container images
+
+*Breaking:*
+The `oci.stackable.tech/sdp/kcat` image has been discontinued starting with SDP 25.7.0.
+Use `oci.stackable.tech/sdp/kafka-testing-tools` instead, which includes kcat.
+Existing `oci.stackable.tech/sdp/kcat` images for previous SDP releases remain available.
+See https://github.com/stackabletech/docker-images/pull/1124[docker-images#1124].
+
+===== Apache HBase
+
+Starting with this release, support for HBase 2.4 has been removed.
+This includes metrics exposed via the JMX exporter.
+All supported HBase versions expose metrics via the built in Prometheus servlet.
+See https://github.com/stackabletech/hbase-operator/pull/672[hbase-operator#672].
+
+===== Apache ZooKeeper
+
+*Breaking:*
+The `-nodeport` discovery ConfigMap has been deprecated in 25.3.0 and is removed as of this release.
+Use the primary discovery ConfigMap instead.
+See https://github.com/stackabletech/kafka-operator/pull/868[kafka-operator#868].
+
+==== Supported versions
+
+===== Product versions
+
+As with previous SDP releases, many product images have been updated to their latest versions.
+Refer to the xref:operators:supported_versions.adoc[supported versions] documentation for a complete overview including LTS versions or deprecations.
+
+====== New versions
+
+The following new product versions are now supported:
+
+* Apache Airflow: https://github.com/stackabletech/docker-images/issues/1074[2.10.5], https://github.com/stackabletech/docker-images/issues/1074[3.0.1 (experimental)]
+* Apache Druid: https://github.com/stackabletech/docker-images/issues/1075[33.0.0]
+* Apache HBase: https://github.com/stackabletech/docker-images/issues/1076[2.6.2 (LTS)]
+* Apache NiFi: https://github.com/stackabletech/docker-images/issues/1079[2.4.0]
+* Apache Superset: https://github.com/stackabletech/docker-images/issues/1081[4.1.2]
+* Open Policy Agent: https://github.com/stackabletech/docker-images/issues/1084[1.4.2]
+* Trino: https://github.com/stackabletech/docker-images/issues/1082[476]
+
+====== Deprecated versions
+
+The following product versions are deprecated and will be removed in a later release:
+
+* Apache Airflow: https://github.com/stackabletech/docker-images/issues/1074[2.10.4]
+* Apache Druid: https://github.com/stackabletech/docker-images/issues/1075[31.0.1]
+* Apache Hbase: https://github.com/stackabletech/docker-images/issues/1076[2.6.1]
+* Apache Superset: https://github.com/stackabletech/docker-images/issues/1081[4.2.1]
+* Open Policy Agent: https://github.com/stackabletech/docker-images/issues/1084[1.0.1]
+* Trino: https://github.com/stackabletech/docker-images/issues/1082[470]
+
+====== Removed versions
+
+The following product versions are no longer supported.
+These images for released product versions remain available https://oci.stackable.tech/[here,window=_blank].
+Information on how to browse the registry can be found xref:contributor:project-overview.adoc#docker-images[here,window=_blank].
+
+[NOTE]
+====
+We removed support for Apache Hadoop 3.3.6 in our operator, but it is still required by HBase, Hive, and Spark in this release.
+====
+
+* Apache Druid: https://github.com/stackabletech/docker-images/issues/1075[30.0.0]
+* Apache Hbase: https://github.com/stackabletech/docker-images/issues/1076[2.4.18]
+* Apache Hadoop: https://github.com/stackabletech/docker-images/issues/1077[3.3.4], https://github.com/stackabletech/docker-images/issues/1077[3.4.0], https://github.com/stackabletech/docker-images/issues/1077[3.3.6]
+* Apache Kafka: https://github.com/stackabletech/docker-images/issues/1078[3.7.1], https://github.com/stackabletech/docker-images/issues/1078[3.8.0]
+* Apache NiFi: https://github.com/stackabletech/docker-images/issues/1079[2.2.0 (experimental)]
+* Apache Spark: https://github.com/stackabletech/docker-images/issues/1080[3.5.2]
+* Apache ZooKeeper: https://github.com/stackabletech/docker-images/issues/1083[3.9.2]
+* Open Policy Agent: https://github.com/stackabletech/docker-images/issues/1084[0.67.1]
+* Trino:  https://github.com/stackabletech/docker-images/issues/1082[455]
+
+===== Kubernetes versions
+
+This release supports the following Kubernetes versions:
+
+* `1.33`
+* `1.32`
+* `1.31`
+* `1.30`
+
+These Kubernetes versions are no longer supported:
+
+* `1.29`
+
+===== OpenShift versions
+
+This release is available in the RedHat Certified Operator Catalog for the following OpenShift versions:
+
+* `4.18`
+* `4.17`
+* `4.16`
+
+These OpenShift versions are no longer supported:
+
+* `4.15`
+* `4.14`
+
+==== Upgrade from 25.3
+
+===== Using stackablectl
+
+====== Upgrade with a single command
+
+Starting with stackablectl Release 1.0.0 the multiple consecutive commands described below can be shortened to just one command, which executes exactly those steps on its own.
+
+[source,console]
+----
+$ stackablectl release upgrade 25.7
+----
+
+====== Upgrade with multiple consecutive commands
+
+Uninstall the `25.3` release
+
+[source,console]
+----
+$ stackablectl release uninstall 25.3
+
+Uninstalled release '25.3'
+
+Use "stackablectl release list" to list available releases.
+# ...
+----
+
+Afterwards you will need to upgrade the CustomResourceDefinitions (CRDs) installed by the Stackable Platform.
+The reason for this is that helm will uninstall the operators but not the CRDs.
+This can be done using `kubectl replace`.
+
+[IMPORTANT]
+====
+In this release, two CRDs must be applied/created in addition to being replaced:
+
+* The Stackable secret-operator CRD introduces the new TrustStore custom resource.
+* The Stackable Operator for Apache Spark CRD introduces a new SparkConnectServer custom resource.
+
+The commands below are adjusted accordingly.
+This issue is also mentioned in the link:#known-issues-25_7_0[known issues section] below.
+====
+
+[source,shell]
+----
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/airflow-operator/25.7.0/deploy/helm/airflow-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/commons-operator/25.7.0/deploy/helm/commons-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/druid-operator/25.7.0/deploy/helm/druid-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hbase-operator/25.7.0/deploy/helm/hbase-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hdfs-operator/25.7.0/deploy/helm/hdfs-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hive-operator/25.7.0/deploy/helm/hive-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/kafka-operator/25.7.0/deploy/helm/kafka-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/listener-operator/25.7.0/deploy/helm/listener-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/nifi-operator/25.7.0/deploy/helm/nifi-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/opa-operator/25.7.0/deploy/helm/opa-operator/crds/crds.yaml
+# We have a new custom resource: truststores.secrets.stackable.tech
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/secret-operator/25.7.0/deploy/helm/secret-operator/crds/crds.yaml || true
+kubectl create -f https://raw.githubusercontent.com/stackabletech/secret-operator/25.7.0/deploy/helm/secret-operator/crds/crds.yaml || true
+# We have a new custom resource: sparkconnectservers.spark.stackable.tech
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/25.7.0/deploy/helm/spark-k8s-operator/crds/crds.yaml || true
+kubectl create -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/25.7.0/deploy/helm/spark-k8s-operator/crds/crds.yaml || true
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/superset-operator/25.7.0/deploy/helm/superset-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/trino-operator/25.7.0/deploy/helm/trino-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/25.7.0/deploy/helm/zookeeper-operator/crds/crds.yaml
+----
+
+[source]
+----
+customresourcedefinition.apiextensions.k8s.io "airflowclusters.airflow.stackable.tech" replaced
+customresourcedefinition.apiextensions.k8s.io "authenticationclasses.authentication.stackable.tech" replaced
+customresourcedefinition.apiextensions.k8s.io "s3connections.s3.stackable.tech" replaced
+...
+----
+
+Install the `25.7` release
+
+[source,console]
+----
+$ stackablectl release install 25.7
+
+Installed release '25.7'
+
+Use "stackablectl operator installed" to list installed operators.
+----
+
+===== Using Helm
+
+Use `helm list` to list the currently installed operators.
+
+You can use the following command to uninstall all operators that are part of the `25.3` release:
+
+[source,console]
+----
+$ helm uninstall airflow-operator commons-operator druid-operator hbase-operator hdfs-operator hive-operator kafka-operator listener-operator nifi-operator opa-operator secret-operator spark-k8s-operator superset-operator trino-operator zookeeper-operator
+release "airflow-operator" uninstalled
+release "commons-operator" uninstalled
+...
+----
+
+Afterward you will need to upgrade the CustomResourceDefinitions (CRDs) installed by the Stackable Platform.
+The reason for this is that helm will uninstall the operators but not the CRDs.
+This can be done using `kubectl replace`.
+
+[IMPORTANT]
+====
+In this release, two CRDs must be applied/created in addition to being replaced:
+
+* The Stackable secret-operator CRD introduces the new TrustStore custom resource.
+* The Stackable Operator for Apache Spark CRD introduces a new SparkConnectServer custom resource.
+
+The commands below are adjusted accordingly.
+This issue is also mentioned in the link:#known-issues-25_7_0[known issues section] below.
+====
+
+[source,shell]
+----
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/airflow-operator/25.7.0/deploy/helm/airflow-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/commons-operator/25.7.0/deploy/helm/commons-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/druid-operator/25.7.0/deploy/helm/druid-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hbase-operator/25.7.0/deploy/helm/hbase-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hdfs-operator/25.7.0/deploy/helm/hdfs-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hive-operator/25.7.0/deploy/helm/hive-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/kafka-operator/25.7.0/deploy/helm/kafka-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/listener-operator/25.7.0/deploy/helm/listener-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/nifi-operator/25.7.0/deploy/helm/nifi-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/opa-operator/25.7.0/deploy/helm/opa-operator/crds/crds.yaml
+# We have a new custom resource: truststores.secrets.stackable.tech
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/secret-operator/25.7.0/deploy/helm/secret-operator/crds/crds.yaml || true
+kubectl create -f https://raw.githubusercontent.com/stackabletech/secret-operator/25.7.0/deploy/helm/secret-operator/crds/crds.yaml || true
+# We have a new custom resource: sparkconnectservers.spark.stackable.tech
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/25.7.0/deploy/helm/spark-k8s-operator/crds/crds.yaml || true
+kubectl create -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/25.7.0/deploy/helm/spark-k8s-operator/crds/crds.yaml || true
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/superset-operator/25.7.0/deploy/helm/superset-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/trino-operator/25.7.0/deploy/helm/trino-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/25.7.0/deploy/helm/zookeeper-operator/crds/crds.yaml
+----
+
+[source]
+----
+customresourcedefinition.apiextensions.k8s.io "airflowclusters.airflow.stackable.tech" replaced
+customresourcedefinition.apiextensions.k8s.io "authenticationclasses.authentication.stackable.tech" replaced
+customresourcedefinition.apiextensions.k8s.io "s3connections.s3.stackable.tech" replaced
+...
+----
+
+Install the `25.7` release
+
+NOTE: `helm repo` subcommands are not supported for OCI registries.
+The operators are installed directly, without adding the Helm Chart repository first.
+
+[source,console]
+----
+helm install --wait airflow-operator oci://oci.stackable.tech/sdp-charts/airflow-operator --version 25.7.0
+helm install --wait commons-operator oci://oci.stackable.tech/sdp-charts/commons-operator --version 25.7.0
+helm install --wait druid-operator oci://oci.stackable.tech/sdp-charts/druid-operator --version 25.7.0
+helm install --wait hbase-operator oci://oci.stackable.tech/sdp-charts/hbase-operator --version 25.7.0
+helm install --wait hdfs-operator oci://oci.stackable.tech/sdp-charts/hdfs-operator --version 25.7.0
+helm install --wait hive-operator oci://oci.stackable.tech/sdp-charts/hive-operator --version 25.7.0
+helm install --wait kafka-operator oci://oci.stackable.tech/sdp-charts/kafka-operator --version 25.7.0
+helm install --wait listener-operator oci://oci.stackable.tech/sdp-charts/listener-operator --version 25.7.0
+helm install --wait nifi-operator oci://oci.stackable.tech/sdp-charts/nifi-operator --version 25.7.0
+helm install --wait opa-operator oci://oci.stackable.tech/sdp-charts/opa-operator --version 25.7.0
+helm install --wait secret-operator oci://oci.stackable.tech/sdp-charts/secret-operator --version 25.7.0
+helm install --wait spark-k8s-operator oci://oci.stackable.tech/sdp-charts/spark-k8s-operator --version 25.7.0
+helm install --wait superset-operator oci://oci.stackable.tech/sdp-charts/superset-operator --version 25.7.0
+helm install --wait trino-operator oci://oci.stackable.tech/sdp-charts/trino-operator --version 25.7.0
+helm install --wait zookeeper-operator oci://oci.stackable.tech/sdp-charts/zookeeper-operator --version 25.7.0
+----
+
+[#known-issues-25_7_0]
+==== Known issues
+
+* During the upgrade of the secret-operator CRD, special care must be taken because the CRD introduces the new TrustStore custom resource.
+  It is recommended to apply/create it in addition to replacing it.
+* There are strong indicators that TLS CA handling is broken in products using `keytool`.
+  As of now, we confirmed that Trino has an issue in properly handling CA rotations due to a limitation with `keytool`.
+  The report in https://github.com/stackabletech/issues/issues/744[issues#744] outlines a workaround which requires the following steps:
+  . Identify the secretClass used by the secret-operator to distribute CAs.
+  . Delete this secret causing secret-operator to re-create a new CA secret.
+  . Restart all stackable pods manually.
