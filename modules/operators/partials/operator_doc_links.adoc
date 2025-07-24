@@ -34,6 +34,11 @@ include::kafka:partial$nav.adoc[]
 --
 include::nifi:partial$nav.adoc[]
 --
+** xref:opensearch:index.adoc[OpenSearch]
++
+--
+include::opensearch:partial$nav.adoc[]
+--
 ** xref:spark-k8s:index.adoc[Apache Spark on K8S]
 +
 --

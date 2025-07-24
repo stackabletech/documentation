@@ -70,6 +70,10 @@ content:
       start_path: docs
       branches:
         - main
+    - url: https://github.com/stackabletech/opensearch-operator.git
+      start_path: docs
+      branches:
+        - main
     - url: https://github.com/stackabletech/spark-k8s-operator.git
       start_path: docs
       branches:
