@@ -370,7 +370,11 @@ This can be done using `kubectl replace`.
 
 [IMPORTANT]
 ====
-The Stackable secret operator CRD needs to be applied in addition to being replaced, because it introduces the new TrustStore custom resource.
+In this release, two CRDs must be applied/created in addition to being replaced:
+
+* The Stackable secret-operator CRD introduces the new TrustStore custom resource.
+* The Stackable Operator for Apache Spark CRD introduces a new SparkConnectServer custom resource.
+
 The commands below are adjusted accordingly.
 This issue is also mentioned in the link:#known-issues-25_7_0[known issues section] below.
 ====
@@ -437,7 +441,11 @@ This can be done using `kubectl replace`.
 
 [IMPORTANT]
 ====
-The Stackable secret operator CRD needs to be applied in addition to being replaced, because it introduces the new TrustStore custom resource.
+In this release, two CRDs must be applied/created in addition to being replaced:
+
+* The Stackable secret-operator CRD introduces the new TrustStore custom resource.
+* The Stackable Operator for Apache Spark CRD introduces a new SparkConnectServer custom resource.
+
 The commands below are adjusted accordingly.
 This issue is also mentioned in the link:#known-issues-25_7_0[known issues section] below.
 ====
