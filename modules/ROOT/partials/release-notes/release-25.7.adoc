@@ -3,7 +3,6 @@
 === 25.7.0
 
 Released on 2025-07-23.
-(Optional description / introduction)
 
 [NOTE]
 ====
