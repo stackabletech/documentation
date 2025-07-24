@@ -143,13 +143,13 @@ if [ "$PUSH" = true ]; then
     git push -u origin "$PR_BRANCH"
     echo ""
     echo "The changes have been pushed to GitHub!"
-    echo "Raise the PR against the $BRANCH branch."
+    echo "Raise the PR against the main branch."
     echo "Click the link above to create the PR in GitHub, and then verify that the build works with Netlify previews."
     echo "Once the branch is merged, the changes will automatically be deployed and be live."
 else
     echo ""
     echo "Skipping push to origin."
     echo "Please push the branch manually and create PR."
-    echo "Raise the PR against the $BRANCH branch."
+    echo "Raise the PR against the main branch."
     echo "Once the changes are merged, they will automatically be deployed and be live."
 fi
