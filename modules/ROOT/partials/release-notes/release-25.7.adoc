@@ -33,10 +33,10 @@ Starting with this release, the release notes for `stackablectl` are located on 
 
 The default Kubernetes cluster domain name is now fetched from the kubelet API unless explicitly configured.
 Operators are now required to have the RBAC permission to get `nodes/proxy`.
-The helm-charts takes care of this.
+The helm-charts take care of this.
 
 The CLI argument `--kubernetes-node-name` or env variable `KUBERNETES_NODE_NAME` needs to be set.
-The helm-charts takes care of this.
+The helm-charts take care of this.
 
 See https://github.com/stackabletech/issues/issues/662[issues#662].
 
