@@ -5,7 +5,7 @@
 
 === 25.7.0
 
-Released on YYYY-MM-DD.
+Released on 2025-07-23.
 (Optional description / introduction)
 
 [NOTE]
@@ -15,7 +15,7 @@ The SDP 25.7.0 release is the first release which  will **only** be published on
 
 [NOTE]
 ====
-In previous releases, releases of the `stackablectl` CLI tool were synced with platform releases.
+Previously, releases of the `stackablectl` CLI tool were synced with platform releases.
 The tool itself was never tied to a particular version of SDP.
 As such, it was decided to version `stackablectl` independently.
 // Starting with this release, the release notes for `stackablectl` are located on a separate xref:management:stackablectl/release-notes.adoc[page].
@@ -37,7 +37,7 @@ Starting with this release, the release notes for `stackablectl` are located on 
 ====== Automatic cluster domain detection
 
 The default Kubernetes cluster domain name is now fetched from the kubelet API unless explicitly configured.
-Operators are now required to have the RBAC permission to get nodes/proxy in the apiGroup `""`.
+Operators are now required to have the RBAC permission to get `nodes/proxy`.
 The helm-charts takes care of this.
 
 The CLI argument `--kubernetes-node-name` or env variable `KUBERNETES_NODE_NAME` needs to be set.
@@ -47,14 +47,14 @@ See https://github.com/stackabletech/issues/issues/662[issues#662].
 
 ====== Observability
 
-* All operators support sending OpenTelemetry logs and traces.
+* All operators support sending OpenTelemetry logs and traces via OTLP.
 * All operators use unified CLI arguments and environment variables to configure the exporters.
 * All operators allow exporter configuration via Helm values.
 * All exporters are disabled by default, except for console logs, which remain enabled by default.
 
 Additionally see the official xref:concepts:observability/telemetry.adoc[telemetry documentation page] and the tracking issue https://github.com/stackabletech/issues/issues/639[issues#639] for further details.
 
-====== AuthZ
+====== Authorization
 
 The user-info-fetcher backend now supports fetching user groups from Microsoft Entra (experimental).
 See https://github.com/stackabletech/opa-operator/pull/712[opa-operator#712].
@@ -80,7 +80,7 @@ See https://github.com/stackabletech/issues/issues/748[issues#748].
 * Custom NiFi Archives (NARs) and Python components can be loaded from Git repositories with git-sync.
   See https://github.com/stackabletech/nifi-operator/issues/739[nifi-operator#739] and documentation on xref:nifi:usage_guide/custom-components.adoc[custom components].
 * The Stackable operator for Apache NiFi now supports using Kubernetes for cluster coordination and storage, rather than ZooKeeper.
-  (Requires NiFi 2.x, migrating existing installs is currently not supported)
+  (Requires NiFi 2, migrating existing installs is currently not supported)
   See xref:nifi:usage_guide/clustering.adoc#backend-kubernetes[NiFi backend documentation] and https://github.com/stackabletech/nifi-operator/issues/737[nifi-operator#737].
 * Rolling upgrades are now supported between NiFi 2 versions.
   This is the default update strategy for NiFi 2 clusters.
@@ -149,7 +149,7 @@ See the overall tracking issue https://github.com/stackabletech/issues/issues/69
   Both Coordinators and Workers have two services at role group level, a headless service called `<cluster>-<role>-<rolegroup>-headless` and a service for metrics called `<cluster>-<role>-<rolegroup>-metrics`.
   See xref:trino:usage-guide/listenerclass.adoc[Trino ListenerClass documentation] and https://github.com/stackabletech/issues/issues/692#issuecomment-3001089387[issues#692 (comment)].
 
-====== AuthZ
+====== Authorization
 
 The user-info-fetcher AD backend now filters by both UPN and SAN fields when fetching user groups.
 See the xref:opa:usage-guide/user-info-fetcher.adoc#backend-activedirectory[documentation] and https://github.com/stackabletech/opa-operator/issues/702[opa-operator#702].
@@ -191,7 +191,7 @@ See https://github.com/stackabletech/druid-operator/pull/740[druid-operator#740]
 
 ===== Apache NiFi
 
-* The operator now emits a warning for deprecated sensitive property algorithms in NiFi version 1.x.x and errors out for version 2.x.x if an unsupported sensitive properties algorithm is used.
+* The operator now emits a warning for deprecated sensitive property algorithms in NiFi version 1 and errors out for version 2 if an unsupported sensitive properties algorithm is used.
   See the official https://nifi.apache.org/docs/nifi-docs/html/administration-guide.html#property-encryption-algorithms[NiFi documentation] and https://github.com/stackabletech/nifi-operator/issues/791[nifi-operator#791].
 * Re-add Iceberg support to NiFi 2.4.0, which was removed upstream starting with version 2.0.0.
   See xref:nifi:usage_guide/writing-to-iceberg-tables.adoc[NiFi Iceberg documentation] and https://github.com/stackabletech/nifi-operator/issues/738[nifi-operator#738].
@@ -251,7 +251,7 @@ See https://github.com/stackabletech/docker-images/pull/1124[docker-images#1124]
 
 ===== Apache HBase
 
-Starting with this release, support for HBase 2.4.x has been removed.
+Starting with this release, support for HBase 2.4 has been removed.
 This includes metrics exposed via the JMX exporter.
 All supported HBase versions expose metrics via the built in Prometheus servlet.
 See https://github.com/stackabletech/hbase-operator/pull/672[hbase-operator#672].
