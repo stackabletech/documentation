@@ -58,4 +58,4 @@ spec:
       listenerClass: external-unstable
 ----
 
-Every operator has a documentation section called "Service exposition with ListenerClasses", which may provide details for the specific tool. 
+Every operator has a documentation section called "Service exposition with ListenerClasses", which may provide details for the specific tool.
