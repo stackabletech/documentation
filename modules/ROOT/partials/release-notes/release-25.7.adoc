@@ -300,25 +300,23 @@ The following product versions are deprecated and will be removed in a later rel
 ====== Removed versions
 
 The following product versions are no longer supported.
-These images for released product versions remain available https://oci.stackable.tech/[here,window=_blank]
-Information on how to browse the registry can be found xref:contributor:project-overview.adoc#docker-images[here,window=_blank]
+These images for released product versions remain available https://oci.stackable.tech/[here,window=_blank].
+Information on how to browse the registry can be found xref:contributor:project-overview.adoc#docker-images[here,window=_blank].
+
+[NOTE]
+====
+We removed support for Apache Hadoop 3.3.6 in our operator, but it is still required by HBase, Hive, and Spark in this release.
+====
 
 * Apache Druid: https://github.com/stackabletech/docker-images/issues/1075[30.0.0]
 * Apache Hbase: https://github.com/stackabletech/docker-images/issues/1076[2.4.18]
-* Apache Hadoop: https://github.com/stackabletech/docker-images/issues/1077[3.3.4], https://github.com/stackabletech/docker-images/issues/1077[3.4.0], https://github.com/stackabletech/docker-images/issues/1077[3.3.6^1^]
+* Apache Hadoop: https://github.com/stackabletech/docker-images/issues/1077[3.3.4], https://github.com/stackabletech/docker-images/issues/1077[3.4.0], https://github.com/stackabletech/docker-images/issues/1077[3.3.6]
 * Apache Kafka: https://github.com/stackabletech/docker-images/issues/1078[3.7.1], https://github.com/stackabletech/docker-images/issues/1078[3.8.0]
 * Apache NiFi: https://github.com/stackabletech/docker-images/issues/1079[2.2.0 (experimental)]
 * Apache Spark: https://github.com/stackabletech/docker-images/issues/1080[3.5.2]
 * Apache ZooKeeper: https://github.com/stackabletech/docker-images/issues/1083[3.9.2]
 * Open Policy Agent: https://github.com/stackabletech/docker-images/issues/1084[0.67.1]
 * Trino:  https://github.com/stackabletech/docker-images/issues/1082[455]
-
-'''
-
-[.small]
---
-. Remove support for 3.3.6, it is still required by HBase, Hive, and Spark in this release.
---
 
 ===== Kubernetes versions
 
