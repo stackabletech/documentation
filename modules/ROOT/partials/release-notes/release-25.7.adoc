@@ -402,7 +402,7 @@ kubectl replace -f https://raw.githubusercontent.com/stackabletech/trino-operato
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/25.7.0/deploy/helm/zookeeper-operator/crds/crds.yaml
 ----
 
-[source,console]
+[source]
 ----
 customresourcedefinition.apiextensions.k8s.io "airflowclusters.airflow.stackable.tech" replaced
 customresourcedefinition.apiextensions.k8s.io "authenticationclasses.authentication.stackable.tech" replaced
@@ -450,7 +450,7 @@ The commands below are adjusted accordingly.
 This issue is also mentioned in the link:#known-issues-25_7_0[known issues section] below.
 ====
 
-[source]
+[source,shell]
 ----
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/airflow-operator/25.7.0/deploy/helm/airflow-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/commons-operator/25.7.0/deploy/helm/commons-operator/crds/crds.yaml
@@ -473,7 +473,7 @@ kubectl replace -f https://raw.githubusercontent.com/stackabletech/trino-operato
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/25.7.0/deploy/helm/zookeeper-operator/crds/crds.yaml
 ----
 
-[source,console]
+[source]
 ----
 customresourcedefinition.apiextensions.k8s.io "airflowclusters.airflow.stackable.tech" replaced
 customresourcedefinition.apiextensions.k8s.io "authenticationclasses.authentication.stackable.tech" replaced
