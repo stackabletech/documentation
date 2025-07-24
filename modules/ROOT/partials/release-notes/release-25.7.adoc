@@ -379,7 +379,7 @@ The commands below are adjusted accordingly.
 This issue is also mentioned in the link:#known-issues-25_7_0[known issues section] below.
 ====
 
-[source]
+[source,shell]
 ----
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/airflow-operator/25.7.0/deploy/helm/airflow-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/commons-operator/25.7.0/deploy/helm/commons-operator/crds/crds.yaml
