@@ -381,7 +381,7 @@ This can be done using `kubectl replace`.
 ====
 The Stackable secret operator CRD needs to be applied in addition to being replaced, because it introduces the new TrustStore custom resource.
 The commands below are adjusted accordingly.
-This issue is also mentioned in the known issues section below.
+This issue is also mentioned in the link:#known-issues-25_7_0[known issues section] below.
 ====
 
 [source]
@@ -444,7 +444,7 @@ The reason for this is that helm will uninstall the operators but not the CRDs. 
 ====
 The Stackable secret operator CRD needs to be applied in addition to being replaced, because it introduces the new TrustStore custom resource.
 The commands below are adjusted accordingly.
-This issue is also mentioned in the known issues section below.
+This issue is also mentioned in the link:#known-issues-25_7_0[known issues section] below.
 ====
 
 [source]
@@ -498,6 +498,7 @@ helm install --wait trino-operator oci://oci.stackable.tech/sdp-charts/trino-ope
 helm install --wait zookeeper-operator oci://oci.stackable.tech/sdp-charts/zookeeper-operator --version 25.7.0
 ----
 
+[#known-issues-25_7_0]
 ==== Known issues
 
 * During the upgrade of the secret-operator CRD, special care must be taken because the CRD introduces the new TrustStore custom resource.
