@@ -116,7 +116,11 @@ See the overall tracking issue https://github.com/stackabletech/issues/issues/69
   Metrics are not exposed via the listener service and are - as previously - only available within the cluster.
   The service naming has been changed to reflect this.
   See https://github.com/stackabletech/issues/issues/692#issuecomment-2854266967[issues#692 (comment)].
-* *Apache Druid:* TBD.
+* *Apache Druid:*
+  Listener classes for Brokers, Coordinators and Routers are now defined in `spec.brokers|coordinators|routers.roleConfig.listenerClass`.
+  Metrics are no longer exposed by the listener Service and are instead now defined on a dedicated ClusterIP service per role group (eg: my-druid-broker-default-metrics).
+  A separate headless Service is now created for each role group for internal communications (e.g. between different Druid services).
+  See https://github.com/stackabletech/issues/issues/692#issuecomment-3106382988[issues#692 (comment)].
 * *Apache HBase:*:
   Coordinator Listener classes are now declared at role level `spec.<role>.config.listenerClass` instead of `spec.clusterConfig.listenerClass`.
   HBase has been patched so that the URLs in the UI screens now use listener endpoints (which are externally reachable as long as the appropriate listenerClass has been selected).
@@ -125,7 +129,11 @@ See the overall tracking issue https://github.com/stackabletech/issues/issues/69
   Introduces a listener service on the `metastore` role level.
   Additionally, a `-headless` service for internal communications as well as a `-metrics` service for monitoring is introduced at the role group level.
   See https://github.com/stackabletech/hive-operator/issues/566[hive-operator#566].
-* *Apache NiFi:* TBD.
+* *Apache NiFi:*
+  Listener classes are now defined in spec.nodes.roleConfig.listenerClass.
+  Metrics are no longer exposed by the listener Service and are instead now defined on a dedicated ClusterIP service per role group (eg: my-nifi-node-default-metrics).
+  A separate headless Service is now created for each role group for internal communications (between NiFi nodes).
+  See https://github.com/stackabletech/issues/issues/692#issuecomment-3106375374[issues#692 (comment)].
 * *Apache Spark:*
   The history server UI is now exposed using listeners instead of services created by the operator directly.
   This implementation also changed the CRD by moving the `spec.clusterConfig.listenerClass` field to `spec.node.config.listenerClass`.
@@ -133,8 +141,8 @@ See the overall tracking issue https://github.com/stackabletech/issues/issues/69
   See https://github.com/stackabletech/issues/issues/692#issuecomment-2847025199[issues#692 (comment)].
 * *Apache ZooKeeper:*
   ListenerClasses are now defined in `spec.server.roleConfig.listenerClass`.
-  Metrics are no longer exposed by the listener Service and are instead now defined on a dedicated ClusterIP service per RoleGroup (eg: `my-zk-server-default-metrics`).
-  A separate Headless Service is now created for each RoleGroup for internal communications (eg: access to the leader and leader-election).
+  Metrics are no longer exposed by the listener Service and are instead now defined on a dedicated ClusterIP service per role group (eg: `my-zk-server-default-metrics`).
+  A separate headless Service is now created for each role group for internal communications (eg: access to the leader and leader-election).
   See https://github.com/stackabletech/issues/issues/692#issuecomment-3034672506[issues#692 (comment)].
 * *Trino:*
   Coordinator Listener classes are now declared at role level `spec.coordinators.roleConfig.listenerClass` instead of `spec.clusterConfig.listenerClass`.
