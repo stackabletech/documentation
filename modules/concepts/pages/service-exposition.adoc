@@ -1,70 +1,61 @@
 = Service exposition
-:k8s-service: https://kubernetes.io/docs/concepts/services-networking/service/
-:k8s-service-types: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
-:description: Explore Stackable's service exposition options: ClusterIP for internal access, NodePort for unstable external access, and LoadBalancer for stable external access.
-
+:listener-operator: xref:listener-operator:index.adoc
+:secret-operator: xref:secret-operator:index.adoc
+:listenerclass: xref:listener-operator:listenerclass.adoc
+:description: Explore how Stackable uses listener-operator to expose Services.
 
 Data products expose interfaces to the outside world.
 These interfaces (whether UIs, or APIs) can be accessed by other products or by end users.
-Other products accessing the interfaces can run inside or outside of the same Kubernetes cluster.
+Clients accessing the interfaces can run inside or outside of the same Kubernetes cluster.
 For example, xref:zookeeper:index.adoc[Apache ZooKeeper] is a dependency for other products, and it usually needs to be accessible only from within Kubernetes, while xref:superset:index.adoc[Apache Superset] is a data analysis product for end users and therefore needs to be accessible from outside the Kubernetes cluster.
 Users connecting to Superset can be restricted within the local company network, or they can connect over the internet depending on the company security policies and demands.
 This page gives an overview over the different options for service exposition, when to choose which option and how these options are configured.
 
-== Service exposition options
+== Motivation
 
-The Stackable Data Platform supports three {k8s-service-types}[types of Kubernetes Service] for exposing data product endpoints:
+Service exposition is such a complicated topic, that Stackable has build it's own operator for that: {listener-operator}[].
+The following section explains the motivation why we wrote such an operator over just using plain regular Kubernetes Services.
 
-* ClusterIP
-* NodePort
-* LoadBalancer
+=== Tools advertising their address
 
-All custom resources for data products provide a resource field named `spec.clusterConfig.listenerClass` which determines how the product can be accessed.
-There are three ListenerClasses, named after the goal for which they are used (more on this in the <<when-to-choose-which-option, next section>>):
+Some tools need to know how they are externally reachable.
+This is e.g. important for HDFS, where the namenode keeps track of which datanode serves which block or Kafka (used for client bootstrapping).
+A HDFS client asks the namenode "I want to read block 42, who is serving that?", the namenode responds with "block 42 is served by <ip or hostname of some datanode>".
+For that to work, the datanode needs to know it's external address on startup and tell it the namenode.
+(And yes, we needed to patch Hadoop source-code for that ;))
 
-* `cluster-internal` => Use ClusterIP (default)
-* `external-unstable` => Use NodePort
-* `external-stable` => Use LoadBalancer
+The {listener-operator}[listener-operator] runs as CSI driver (same as the {secret-operator}[secret-operator]) and places files inside the CSI volume, which tell the tool how it is reachable.
 
-The `cluster-internal` class exposes the interface of a product by using a ClusterIP Service.
-This service is only reachable from within the Kubernetes cluster.
-This setting is the most secure and was chosen as the default for that reason.
+=== Integration with {secret-operator}[secret-operator]
 
-NOTE: Not all operators support all classes.
-Consult the operator specific documentation to find out about the supported service types.
+If a tool is secured using TLS or Kerberos, it does not only need to be reachable via the determined address, it also needs a TLS certificate/keytab issued on the determined address.
+{secret-operator}[secret-operator] integrated with to {listener-operator}[listener-operator], so that the platform takes care of provisioning certificates with the correct addresses (in the form of SAN entries).
 
-[#when-to-choose-which-option]
-== When to choose which option
+== {listenerclass}[ListenerClasses]
 
-There are three options, one for internal traffic and two for external access, where internal and external refer to the Kubernetes cluster.
-Internal means inside of the Kuberenetes cluster, and external means access from outside of it.
+A {listenerclass}[] describes how a product should be exposed.
+Please read on {listenerclass}[it's documentation] before continuing on this page.
 
-=== Internal
+As a quick reminder, the platform ships with 3 default {listenerclass}[ListenerClasses]:
 
-`cluster-internal` is the default class and the Service behind it is only reachable from within Kubernetes.
-This is useful for middleware products such as xref:zookeeper:index.adoc[Apache ZooKeeper], xref:hive:index.adoc[Apache Hive metastore], or an xref:kafka:index.adoc[Apache Kafka] cluster used for internal data flow.
-Products using this ListenerClass are not accessible from outside Kubernetes.
+`cluster-internal`:: Used for listeners that are only accessible internally from the cluster. For example: communication between ZooKeeper nodes.
+`external-unstable`:: Used for listeners that are accessible from outside the cluster, but which do not require a stable address. For example: individual Kafka brokers.
+`external-stable`:: Used for listeners that are accessible from outside the cluster, and do require a stable address. For example: Kafka bootstrap.
 
-=== External
+Keep in mind that you are not restricted to this list, you can configure your own custom {listenerclass}[ListenerClasses].
 
-External access is needed when a product needs to be accessed from _outside_ of Kubernetes.
-This is necessary for all end user products such as xref:superset:index.adoc[Apache Superset].
-Some tools can expose APIs for data ingestion like xref:kafka:index.adoc[Apache Kafka] or xref:nifi:index.adoc[Apache NiFi].
-If data needs to be ingested from outside of the cluster, one of the external listener classes should be chosen.
+== Configuring the ListenerClass for a stacklet
 
-When to use `stable` and when to use `unstable`?
-The `external-unstable` setting exposes a product interface via a Kuberneres NodePort.
-In this case the service's IP address and port can change if Kubernetes needs to restart or reschedule the Pod to another node.
+We integrated {listener-operator}[listener-operator] into most of our products, currently only xref:opa:index.adoc[] and xref:spark-k8s:index.adoc[] are not using {listener-operator}[listener-operator].
 
-The `external-stable` class uses a LoadBalancer.
-The LoadBalancer is running at a fixed address and is therefore `stable`.
-Managed Kubernetes services in the cloud usually offer a LoadBalancer, but for an on premise cluster you have to configure a LoadBalancer yourself.
-For a production setup, it is recommended to use a LoadBalancer and the `external-stable` ListenerClass.
+Most of the tools configure the {listenerclass}[] at the role level as follows:
 
-== Outlook
+[source,yaml]
+----
+spec:
+  my-role:
+    roleConfig:
+      listenerClass: external-unstable
+----
 
-For most of the Stackable operators, these listener classes are hardcoded to expose certain Service types and do not offer any additional configuration.
-However, some operators support specifying custom xref:listener-operator:listenerclass.adoc[ListenerClass]es with more granular configuration options, via the xref:listener-operator:index.adoc[listener-operator].
-In a future release, all Stackable operators are planned to be migrated over to this system.
-
-For more information on what is supported by any individual operator, please see that operator's documentation.
+Every operator has a documentation section called "Service exposition with ListenerClasses", which may provide details for the specific tool. 
