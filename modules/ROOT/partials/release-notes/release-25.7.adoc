@@ -96,7 +96,7 @@ See https://github.com/stackabletech/issues/issues/748[issues#748].
   Also see https://github.com/stackabletech/spark-k8s-operator/issues/284[the issue] tracking support for Spark Connect.
 * This release also ensures that Bouncy Castle libraries are included in the Spark images.
   This was causing errors in kerberized environments previously.
-  See https://github.com/stackabletech/docker-images/pull/1212[this pull request] for details.
+  See https://github.com/stackabletech/docker-images/pull/1212[docker-images#1212] for details.
 
 // TODO (@Techassi): Define a single way of spelling internal operators, like listener, secret, and commons.
 // Currently, throughout this page variations like Stackable Listener Operator, Listener Operator, listener operator,
