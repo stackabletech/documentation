@@ -20,7 +20,7 @@ The following section explains the motivation behind implementing such an operat
 
 Some products require information about their external accessibility.
 This is e.g. important for HDFS, where the namenode keeps track of which datanode serves which block. Another case is Kafka, where it is required for client bootstrapping.
-A HDFS client asks the namenode "I want to read block 42, who is serving that?", the namenode responds with "block 42 is served by <ip or hostname of some datanode>".
+A common use case is an HDFS client connecting to a namenode in order to read block 42. Therefore, the namenode needs to know which datanode is serving block 42. The namenode then responds with the IP or hostname of the datanode containing that block 42.
 For that to work, the datanode needs to know it's external address on startup and tell it the namenode.
 (And yes, we needed to patch Hadoop source-code for that ;))
 
