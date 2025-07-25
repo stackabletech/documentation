@@ -48,7 +48,9 @@ Keep in mind that you are not restricted to this list, you can configure your ow
 
 The {listener-operator}[listener-operator] is integrated into most of the Stackable products, currently only xref:opa:index.adoc[] and xref:spark-k8s:index.adoc[] are not using {listener-operator}[listener-operator].
 
-Most of the tools configure the {listenerclass}[] at the role level as follows:
+Most of the products configure the {listenerclass}[] at the role level as follows.
+However, there are some products that have this option at the rolegroup level.
+One example is HDFS, where some roles require a listener service per Pod, to individually access single instances.
 
 [source,yaml]
 ----
