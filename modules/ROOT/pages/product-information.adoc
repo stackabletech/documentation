@@ -28,7 +28,6 @@ Supported products:
 * xref:hdfs:index.adoc[Apache Hadoop HDFS]
 * xref:kafka:index.adoc[Apache Kafka]
 * xref:nifi:index.adoc[Apache Nifi]
-* xref:opensearch:index.adoc[OpenSearch]
 * xref:spark-k8s:index.adoc[Apache Spark] (including xref:spark-k8s:usage-guide/history-server.adoc[Spark History Server])
 * xref:superset:index.adoc[Apache Superset]
 * xref:trino:index.adoc[Trino]
