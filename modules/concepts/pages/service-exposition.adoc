@@ -2,7 +2,7 @@
 :listener-operator: xref:listener-operator:index.adoc
 :secret-operator: xref:secret-operator:index.adoc
 :listenerclass: xref:listener-operator:listenerclass.adoc
-:description: Explore how Stackable uses listener-operator to expose Services.
+:description: Explore how Stackable utilizes the listener-operator to expose Services.
 
 Data products expose interfaces to the outside world.
 These interfaces (whether UIs, or APIs) can be accessed by other products or by end users.
@@ -14,12 +14,12 @@ This page gives an overview over the different options for service exposition, w
 == Motivation
 
 Service exposition is such a complicated topic, that Stackable has build it's own operator for that: {listener-operator}[].
-The following section explains the motivation why we wrote such an operator over just using plain regular Kubernetes Services.
+The following section explains the motivation behind implementing such an operator instead of using plain regular Kubernetes Services.
 
-=== Tools advertising their address
+=== Products advertising their addresses
 
-Some tools need to know how they are externally reachable.
-This is e.g. important for HDFS, where the namenode keeps track of which datanode serves which block or Kafka (used for client bootstrapping).
+Some products require information about their external accessibility.
+This is e.g. important for HDFS, where the namenode keeps track of which datanode serves which block. Another case is Kafka, where it is required for client bootstrapping.
 A HDFS client asks the namenode "I want to read block 42, who is serving that?", the namenode responds with "block 42 is served by <ip or hostname of some datanode>".
 For that to work, the datanode needs to know it's external address on startup and tell it the namenode.
 (And yes, we needed to patch Hadoop source-code for that ;))
@@ -34,7 +34,7 @@ If a tool is secured using TLS or Kerberos, it does not only need to be reachabl
 == {listenerclass}[ListenerClasses]
 
 A {listenerclass}[] describes how a product should be exposed.
-Please read on {listenerclass}[it's documentation] before continuing on this page.
+Please read on {listenerclass}[its documentation] before continuing on this page.
 
 As a quick reminder, the platform ships with 3 default {listenerclass}[ListenerClasses]:
 
@@ -44,9 +44,9 @@ As a quick reminder, the platform ships with 3 default {listenerclass}[ListenerC
 
 Keep in mind that you are not restricted to this list, you can configure your own custom {listenerclass}[ListenerClasses].
 
-== Configuring the ListenerClass for a stacklet
+== Configuring the ListenerClass for a Stacklet
 
-We integrated {listener-operator}[listener-operator] into most of our products, currently only xref:opa:index.adoc[] and xref:spark-k8s:index.adoc[] are not using {listener-operator}[listener-operator].
+The {listener-operator}[listener-operator] is integrated into most of the Stackable products, currently only xref:opa:index.adoc[] and xref:spark-k8s:index.adoc[] are not using {listener-operator}[listener-operator].
 
 Most of the tools configure the {listenerclass}[] at the role level as follows:
 
