@@ -139,22 +139,6 @@ xref:nifi:index.adoc[Read more]
 ++++
 
 ++++
-<h3 id="opensearch"><a class="anchor" href="#opensearch"></a>OpenSearch</h3>
-++++
-
-OpenSearch is a powerful search and analytics engine built on Apache Lucene.
-
-xref:opensearch:index.adoc[Read more]
-
-++++
-</div>
-++++
-
-++++
-<div class="box">
-++++
-
-++++
 <h3 id="spark"><a class="anchor" href="#spark"></a>Apache Spark</h3>
 ++++
 

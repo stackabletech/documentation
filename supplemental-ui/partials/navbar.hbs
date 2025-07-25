@@ -37,19 +37,6 @@
         <a class="navbar-item" href="{{{ relativize (versioned "home" page "hive/index.html") }}}">Apache Hive</a>
         <a class="navbar-item" href="{{{ relativize (versioned "home" page "kafka/index.html") }}}">Apache Kafka</a>
         <a class="navbar-item" href="{{{ relativize (versioned "home" page "nifi/index.html") }}}">Apache NiFi</a>
-        {{#if (not (or
-            (eq page.version "23.1")
-            (eq page.version "23.4")
-            (eq page.version "23.7")
-            (eq page.version "23.11")
-            (eq page.version "24.3")
-            (eq page.version "24.7")
-            (eq page.version "24.11")
-            (eq page.version "25.3")
-            (eq page.version "25.7")
-        ))}}
-        <a class="navbar-item" href="{{{ relativize (versioned "home" page "opensearch/index.html") }}}">OpenSearch</a>
-        {{/if}}
         <a class="navbar-item" href="{{{ relativize (versioned "home" page "spark-k8s/index.html") }}}">Apache Spark on K8S</a>
         <a class="navbar-item" href="{{{ relativize (versioned "home" page "superset/index.html") }}}">Apache Superset</a>
         <a class="navbar-item" href="{{{ relativize (versioned "home" page "trino/index.html") }}}">Trino</a>
