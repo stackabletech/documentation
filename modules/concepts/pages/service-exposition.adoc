@@ -22,7 +22,7 @@ Some products require information about their external accessibility.
 This is e.g. important for HDFS, where the namenode keeps track of which datanode serves which block. Another case is Kafka, where it is required for client bootstrapping.
 A common use case is an HDFS client connecting to a namenode in order to read block 42. Therefore, the namenode needs to know which datanode is serving block 42. The namenode then responds with the IP or hostname of the datanode containing that block 42.
 For that to work, the datanode needs to know it's external address on startup and tell it the namenode.
-(And yes, we needed to patch Hadoop source-code for that ;))
+(And yes, we needed to patch the Hadoop sourcecode for that)
 
 The {listener-operator}[listener-operator] runs as CSI driver (same as the {secret-operator}[secret-operator]) and places files inside the CSI volume, which tell the tool how it is reachable.
 
