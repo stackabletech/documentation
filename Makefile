@@ -40,7 +40,7 @@ netlify-fetch:
 	# fetch, because netlify does caching and we want to get the latest commits
 	git fetch --all
 	# checkout all release branches once, so we fetch the files
-	for remote in $(shell git branch -r | grep release/); do \
+	for remote in $(shell git branch -r | grep -E 'release[/-]'); do \
 		git checkout --recurse-submodules "$${remote#origin/}" ; git pull; \
 	done
 	# go back to the initial commit to start the build
