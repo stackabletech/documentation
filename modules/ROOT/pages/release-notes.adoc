@@ -7,6 +7,8 @@ The Stackable Data Platform consists of multiple operators that work together.
 Periodically a platform release is made, including all components of the platform at a specific version.
 
 // WARNING: Please keep the empty newlines, otherwise headings are broken.
+include::partial$release-notes/release-25.7.adoc[]
+
 include::partial$release-notes/release-25.3.adoc[]
 
 include::partial$release-notes/release-24.11.adoc[]
