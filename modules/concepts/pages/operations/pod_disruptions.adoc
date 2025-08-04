@@ -1,5 +1,6 @@
 = Allowed Pod disruptions
 :k8s-pdb: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
+:commons-operator: xref:commons-operator:index.adoc
 :description: Configure PodDisruptionBudgets (PDBs) to minimize planned downtime for Stackable products. Default values are based on fault tolerance and can be customized.
 
 Any downtime of our products is generally considered to be bad.
@@ -117,3 +118,35 @@ This PDB allows only one Pod out of all the Namenodes and Journalnodes to be dow
 
 == Details
 Have a look at the xref:contributor:adr/ADR030-allowed-pod-disruptions.adoc[ADR on Allowed Pod disruptions] for the implementation details.
+
+== Known issues with PDBs and e.g. certificate rotations
+PDBs together with certificate rotations can be problematic in case e.g. {commons-operator}[commons-operator] was unavailable until certificates expire. Assume a product like xref:zookeeper:index.adoc[Apache ZooKeeper] which needs a quorum and a PDB of `1`. If commons-operator comes back, it will rotate all expired certificates and thus `evict` pods. PDBs count exclusively for `eviction` and as the certificates are expired this pod will be stuck in `CrashLoopBackOff` forever unable to connect to the quorum, blocking PDB for the other pods. Other pods are unable to restart and rotate certificates.
+
+NOTE: We encountered this problem only with the specific outlined case above and only under this circumstances.
+
+=== Workaround
+If you encounter this only manually deleting those pods can help out of this situation as it is no `eviction`.
+
+==== k9s
+If you are using `k9s` you can start it in your terminal
+[source, bash]
+----
+k9s
+----
+and type `0` to view all namespaces and then type e.g. `/zookeeper` and hit enter. Go with up and down to your pod and press `CTL + D` and confirm to delete the pod. Repeat with all other instances of the stuck product.
+
+==== kubectl
+List your pods with
+[source, bash]
+----
+kubectl get pods -A
+----
+and copy the name of the pod you want to delete. Type
+[source, bash]
+----
+kubectl delete pod zookeeper-server-default-0
+----
+to delete the instance with the name `zookeeper-server-default-0`. Repeat it for all instances of your product.
+
+=== Preventing this Situation entirely
+Only disabling PDBs can guarantee to not run into this scenario.
