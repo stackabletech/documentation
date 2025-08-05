@@ -123,6 +123,7 @@ Have a look at the xref:contributor:adr/ADR030-allowed-pod-disruptions.adoc[ADR 
 PDBs together with certificate rotations can be problematic in case e.g. {commons-operator}[commons-operator] was unavailable to restart the Pods before the certificate expire.
 commons-operator uses the `evict` API in Kubernetes, which respects the PDB.
 If a Pod is evicted and a PDB would be violated, the Pod is *not* restarted.
+
 Assume a product like xref:zookeeper:index.adoc[Apache ZooKeeper] which needs to form a quorum to function and the PDB only allows a single Pod to be unavailable.
 As soon as enough certificates of the ZookeeperCluster have expired, all Pods will crash-loop, as they encounter expired certificates.
 As only the container crash-loops (not the entire Pod), no new certificate is issued.
@@ -132,7 +133,7 @@ However, this is prohibited, as the PDB would be violated.
 NOTE: We encountered this problem only with the specific outlined case above and only under this circumstances.
 
 === Workaround
-If you encounter this only manually deleting those pods can help out of this situation.
+If you encounter this, only manually deleting those pods can help you out of this situation.
 A Pod deletion (other than evictions) does *not* respect PDBs, so the Pods can be restarted anyway.
 All restarted Pods will get a new certificate, the stacklet should turn healthy again.
 
