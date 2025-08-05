@@ -136,26 +136,16 @@ If you encounter this only manually deleting those pods can help out of this sit
 A Pod deletion (other than evictions) does *not* respect PDBs, so the Pods can be restarted anyway.
 All restarted Pods will get a new certificate, the stacklet should turn healthy again.
 
-==== k9s
-If you are using `k9s` you can start it in your terminal
+=== Restore working state
+Delete pods with e.g. `kubectl``.
 [source, bash]
 ----
-k9s
+kubectl delete pod -l app.kubernetes.io/name=zookeeper,app.kubernetes.io/instance=simple-zk
+pod "simple-zk-server-default-0" deleted
+pod "simple-zk-server-default-1" deleted
+pod "simple-zk-server-default-2" deleted
 ----
-and type `0` to view all namespaces and then type e.g. `/zookeeper` and hit enter. Go with up and down to your pod and press `CTL + D` and confirm to delete the pod. Repeat with all other instances of the stuck product.
 
-==== kubectl
-List your pods with
-[source, bash]
-----
-kubectl get pods -A
-----
-and copy the name of the pod you want to delete. Type
-[source, bash]
-----
-kubectl delete pod zookeeper-server-default-0
-----
-to delete the instance with the name `zookeeper-server-default-0`. Repeat it for all instances of your product.
 
 === Preventing this situation
 The best measure is to make sure that commons-operator is always running, so that it can restart the Pods before the certificates expire.
