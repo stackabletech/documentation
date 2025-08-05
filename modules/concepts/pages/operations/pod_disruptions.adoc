@@ -119,13 +119,22 @@ This PDB allows only one Pod out of all the Namenodes and Journalnodes to be dow
 == Details
 Have a look at the xref:contributor:adr/ADR030-allowed-pod-disruptions.adoc[ADR on Allowed Pod disruptions] for the implementation details.
 
-== Known issues with PDBs and e.g. certificate rotations
-PDBs together with certificate rotations can be problematic in case e.g. {commons-operator}[commons-operator] was unavailable until certificates expire. Assume a product like xref:zookeeper:index.adoc[Apache ZooKeeper] which needs a quorum and a PDB of `1`. If commons-operator comes back, it will rotate all expired certificates and thus `evict` pods. PDBs count exclusively for `eviction` and as the certificates are expired this pod will be stuck in `CrashLoopBackOff` forever unable to connect to the quorum, blocking PDB for the other pods. Other pods are unable to restart and rotate certificates.
+== Known issue with PDBs and certificate rotations
+PDBs together with certificate rotations can be problematic in case e.g. {commons-operator}[commons-operator] was unavailable to restart the Pods before the certificate expire.
+commons-operator uses the `evict` API in Kubernetes, which respects the PDB.
+If a Pod is evicted and a PDB would be violated, the Pod is *not* restarted.
+Assume a product like xref:zookeeper:index.adoc[Apache ZooKeeper] which needs to form a quorum to function and the PDB only allows a single Pod to be unavailable.
+As soon as enough certificates of the ZookeeperCluster have expired, all Pods will crash-loop, as they encounter expired certificates.
+As only the container crash-loops (not the entire Pod), no new certificate is issued.
+As soon as commons-operator comes online again it tries to `evict` a Zookeeper Pod.
+However, this is prohibited, as the PDB would be violated.
 
 NOTE: We encountered this problem only with the specific outlined case above and only under this circumstances.
 
 === Workaround
-If you encounter this only manually deleting those pods can help out of this situation as it is no `eviction`.
+If you encounter this only manually deleting those pods can help out of this situation.
+A Pod deletion (other than evictions) does *not* respect PDBs, so the Pods can be restarted anyway.
+All restarted Pods will get a new certificate, the stacklet should turn healthy again.
 
 ==== k9s
 If you are using `k9s` you can start it in your terminal
@@ -148,5 +157,8 @@ kubectl delete pod zookeeper-server-default-0
 ----
 to delete the instance with the name `zookeeper-server-default-0`. Repeat it for all instances of your product.
 
-=== Preventing this Situation entirely
-Only disabling PDBs can guarantee to not run into this scenario.
+=== Preventing this situation
+The best measure is to make sure that commons-operator is always running, so that it can restart the Pods before the certificates expire.
+
+A hacky way to prevent this situation could be to disable PDBs for the specific stacklet.
+But this also has the downside, that you are now missing the benefits of the PDB.
