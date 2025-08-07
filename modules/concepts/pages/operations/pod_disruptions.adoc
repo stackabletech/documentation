@@ -1,6 +1,5 @@
 = Allowed Pod disruptions
 :k8s-pdb: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
-:commons-operator: xref:commons-operator:index.adoc
 :description: Configure PodDisruptionBudgets (PDBs) to minimize planned downtime for Stackable products. Default values are based on fault tolerance and can be customized.
 
 Any downtime of our products is generally considered to be bad.
@@ -120,7 +119,7 @@ This PDB allows only one Pod out of all the Namenodes and Journalnodes to be dow
 Have a look at the xref:contributor:adr/ADR030-allowed-pod-disruptions.adoc[ADR on Allowed Pod disruptions] for the implementation details.
 
 == Known issue with PDBs and certificate rotations
-PDBs together with certificate rotations can be problematic in case e.g. {commons-operator}[commons-operator] was unavailable to restart the Pods before the certificate expire.
+PDBs together with certificate rotations can be problematic in case e.g. xref:commons-operator:index.adoc[commons-operator] was unavailable to restart the Pods before the certificate expire.
 commons-operator uses the `evict` API in Kubernetes, which respects the PDB.
 If a Pod is evicted and a PDB would be violated, the Pod is *not* restarted.
 
