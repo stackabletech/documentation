@@ -19,6 +19,10 @@ urls:
   # latest version is not latest anymore, the redirect is instead the actual URL.
   latest_version_segment: stable
   latest_version_segment_strategy: redirect:to
+  # If `redirect_facility` is not specified it defaults to `static`. This, in turn,
+  # transparently changes the `redirect:to` strategy to `replace`, which is not the one
+  # we want. See https://docs.antora.org/antora/latest/playbook/urls-latest-version-segment-strategy/#key
+  redirect_facility: netlify
   # See https://docs.antora.org/antora/latest/playbook/urls-html-extension-style/#html-extension-style-key
   html_extension_style: indexify
 content:
