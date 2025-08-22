@@ -259,6 +259,21 @@ The `-nodeport` discovery ConfigMap has been deprecated in 25.3.0 and is removed
 Use the primary discovery ConfigMap instead.
 See https://github.com/stackabletech/kafka-operator/pull/868[kafka-operator#868].
 
+===== Trino
+
+*Breaking:*
+The PersistentVolumeClaims for Trino coordinator and workers have been removed because they caused problems due to storing its PID in `/stackable/data/var/run/launcher.pid`.
+A forceful stop (eg. OOMKilled) could result in a leftover PID in this file.
+In this case Trino would refuse startup with `ERROR: already running as 21`.
+As the PersistentVolumeClaims didn't store any actual data, they have been removed.
+See https://github.com/stackabletech/trino-operator/issues/768[trino-operator#768] and https://github.com/stackabletech/trino-operator/pull/769[trino-operator#769].
+
+* Upgrading will result in an error, because Kubernetes currently does not allow changing the `volumeClaimTemplates` field.
+  Simply delete the mentioned StatefulSet and the operator will re-create it.
+* Orphaned PVCs can be cleaned up.
+  Listing all Trino-related PVCs can be done using the following command: `kubectl get pvc -l app.kubernetes.io/name=trino`.
+* The `.spec.coordinators|workers.config.resources.storage.data` field has been removed, as it is no longer needed.
+
 ==== Supported versions
 
 ===== Product versions
