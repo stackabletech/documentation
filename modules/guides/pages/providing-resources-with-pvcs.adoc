@@ -9,9 +9,9 @@ Several of the tools on the Stackable platform can use external resources that t
 Airflow users can access DAG jobs this way, and Spark users can do the same for data or other job dependencies, to name just two examples.
 
 A PersistentVolume will usually be provisioned by the Kubernetes Container Storage Interface (CSI) on behalf of the cluster administrator, who will take into account the type of storage that is required.
-This will include, for example, an {pvc-capacity}[appropriate sizing], and relevant access modes (which  in turn are dependent on the StorageClass chosen to back the PersistentVolume).
+This will include, for example, an {pvc-capacity}[appropriate sizing{external-link-icon}^], and relevant access modes (which  in turn are dependent on the StorageClass chosen to back the PersistentVolume).
 
-The relationship between a PersistentVolume and a PersistentVolumeClaim can be illustrated by these https://kubernetes.io/docs/tasks/configure-pod-container/configure-persistent-volume-storage/#create-a-persistentvolume[two] https://kubernetes.io/docs/tasks/configure-pod-container/configure-persistent-volume-storage/#create-a-persistentvolumeclaim[examples]:
+The relationship between a PersistentVolume and a PersistentVolumeClaim can be illustrated by these https://kubernetes.io/docs/tasks/configure-pod-container/configure-persistent-volume-storage/#create-a-persistentvolume[two{external-link-icon}^] https://kubernetes.io/docs/tasks/configure-pod-container/configure-persistent-volume-storage/#create-a-persistentvolumeclaim[examples{external-link-icon}^]:
 
 [source,yaml]
 ----
@@ -49,14 +49,14 @@ spec:
 ----
 <1> The name of the storage class, which will be used by the PersistentVolumeClaim
 <2> The capacity of the PersistentVolume
-<3> a list of https://kubernetes.io/docs/concepts/storage/persistent-volumes/?force_isolation=true#access-modes[access modes]
+<3> a list of https://kubernetes.io/docs/concepts/storage/persistent-volumes/?force_isolation=true#access-modes[access modes{external-link-icon}^]
 <4> The storageClassName which is used to match a PersistentVolume to a claim
 <5> The specific quantity of the resource that is being claimed
 
 == Access modes and the StorageClass
 
-Not all storage classes support all {pvc-access-modes}[access modes].
-The supported access modes also depend on the Kubernetes implementation, see for example the compatiblity table https://docs.openshift.com/container-platform/4.8/storage/understanding-persistent-storage.html#pv-access-modes_understanding-persistent-storage[Supported access modes for PVs] in the OpenShift documentation. Other managed Kubernetes implementations will be similar, albeit with different default storage class names.
+Not all storage classes support all {pvc-access-modes}[access modes{external-link-icon}^].
+The supported access modes also depend on the Kubernetes implementation, see for example the compatiblity table https://docs.openshift.com/container-platform/4.8/storage/understanding-persistent-storage.html#pv-access-modes_understanding-persistent-storage[Supported access modes for PVs{external-link-icon}^] in the OpenShift documentation. Other managed Kubernetes implementations will be similar, albeit with different default storage class names.
 The important point is that the default StorageClass only supports `ReadWriteOnce`, which limits access to the PersistentVolumeClaim to a single node.
 A strategy governing PersistentVolumeClaim resources will thus address the following:
 
@@ -68,11 +68,11 @@ If a PersistentVolumeClaim should be mounted on a single node for the applicatio
 
 == Node selection
 
-The Kubernetes https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/[documentation] states the following with regard to assigning pods to specific nodes:
+The Kubernetes https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/[documentation{external-link-icon}^] states the following with regard to assigning pods to specific nodes:
 ____
 the scheduler will automatically do a reasonable placement (for example, spreading your Pods across nodes so as not place Pods on a node with insufficient free resources).
 ____
-This suggests that resources are automatically considered when pods are assigned to nodes, but it is not clear if the same is true for implicit dependencies, such as PersistentVolumeClaim usage by multiple pods. The https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/[scheduler] will take various factors into account, such as
+This suggests that resources are automatically considered when pods are assigned to nodes, but it is not clear if the same is true for implicit dependencies, such as PersistentVolumeClaim usage by multiple pods. The https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/[scheduler{external-link-icon}^] will take various factors into account, such as
 
 ____
 ...individual and collective resource requirements, hardware / software / policy constraints, affinity and anti-affinity specifications, data locality, inter-workload interference....
@@ -91,10 +91,10 @@ Managed Kubernetes clusters will normally have a default storage implementation 
 == Operator usage
 
 === Spark-k8s
-Users of the xref:spark-k8s:index.adoc[Spark-k8s operator] have a variety of ways to manage SparkApplication dependencies, one of which is to xref:spark-k8s:usage-guide/examples.adoc#_pyspark_externally_located_dataset_artifact_available_via_pvcvolume_mount[mount resources on a PersistentVolumeClaim]. An example is shown https://github.com/stackabletech/spark-k8s-operator/blob/main/examples/ny-tlc-report.yaml[here].
+Users of the xref:spark-k8s:index.adoc[Spark-k8s operator] have a variety of ways to manage SparkApplication dependencies, one of which is to xref:spark-k8s:usage-guide/examples.adoc#_pyspark_externally_located_dataset_artifact_available_via_pvcvolume_mount[mount resources on a PersistentVolumeClaim]. An example is shown https://github.com/stackabletech/spark-k8s-operator/blob/main/examples/ny-tlc-report.yaml[here{external-link-icon}^].
 
 == Further reading
 
-* {pvcs}[Persistent Volumes]
-* https://kubernetes.io/docs/tasks/configure-pod-container/configure-persistent-volume-storage/#create-a-persistentvolumeclaim[PV/PVC example]
-* https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/[Labels and selectors]
+* {pvcs}[Persistent Volumes{external-link-icon}^]
+* https://kubernetes.io/docs/tasks/configure-pod-container/configure-persistent-volume-storage/#create-a-persistentvolumeclaim[PV/PVC example{external-link-icon}^]
+* https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/[Labels and selectors{external-link-icon}^]

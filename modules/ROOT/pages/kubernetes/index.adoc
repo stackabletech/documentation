@@ -28,12 +28,12 @@ Stackable's control plane is built around Kubernetes, and we'll give some brief 
 
 === Installing kubectl
 
-Stackable operators and their services are managed by applying manifest files to the Kubernetes cluster. For this purpose, you need to have the `kubectl` tool installed. Follow the instructions https://kubernetes.io/docs/tasks/tools/#kubectl[here] for your platform.
+Stackable operators and their services are managed by applying manifest files to the Kubernetes cluster. For this purpose, you need to have the `kubectl` tool installed. Follow the instructions https://kubernetes.io/docs/tasks/tools/#kubectl[here{external-link-icon}^] for your platform.
 
 === Installing Kubernetes using Kind
 Kind offers a very quick and easy way to bootstrap your Kubernetes infrastructure in Docker. The big advantage of this is that you can simply remove the Docker containers when you're finished and clean up easily, making it great for testing and development.
 
-If you don't already have Docker then visit https://docs.docker.com/get-docker/[Docker Website] to find out how to install Docker. Kind is a single executable that performs the tasks of installing and configuring Kubernetes for you within Docker containers. The https://kind.sigs.k8s.io/docs/user/quick-start/[Kind Website] has instructions for installing Kind on your system.
+If you don't already have Docker then visit https://docs.docker.com/get-docker/[Docker Website{external-link-icon}^] to find out how to install Docker. Kind is a single executable that performs the tasks of installing and configuring Kubernetes for you within Docker containers. The https://kind.sigs.k8s.io/docs/user/quick-start/[Kind Website{external-link-icon}^] has instructions for installing Kind on your system.
 
 Once you have both of these installed then you can build a Kubernetes cluster in Docker. We're going to create a simple, single node cluster to test out Stackable, with the one node hosting both the Kubernetes control plane and the Stackable services.
 
@@ -80,5 +80,5 @@ Metrics-server is running at https://127.0.0.1:6443/api/v1/namespaces/kube-syste
 
 === Configuring the cluster domain
 
-In case a non-default cluster domain is used as described in https://kubernetes.io/docs/tasks/administer-cluster/dns-custom-nameservers/[Customizing DNS Service],
+In case a non-default cluster domain is used as described in https://kubernetes.io/docs/tasks/administer-cluster/dns-custom-nameservers/[Customizing DNS Service{external-link-icon}^],
 Stackable operators can be configured accordingly. This is described in detail in the xref:guides:kubernetes-cluster-domain.adoc[Configuring the Kubernetes cluster domain] guide.

@@ -1,6 +1,6 @@
 = IBM Cloud Kubernetes Service
 
-https://www.ibm.com/products/kubernetes-service
+https://www.ibm.com/products/kubernetes-service[https://www.ibm.com/products/kubernetes-service{external-link-icon}^]
 
 IBM Cloud Kubernetes Service uses a non-standard Kubelet state directory.
 For this reason the secret-operator and listener-operator on IBM Cloud Kubernetes Service require special handling.

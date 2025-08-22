@@ -7,28 +7,28 @@ This page gives you a high-level overview of all the technical bits in the Stack
 [[repositories]]
 == Repositories
 
-On GitHub you can find more than a 100 repositories in the https://github.com/orgs/stackabletech/repositories[stackabletech organization].
+On GitHub you can find more than a 100 repositories in the https://github.com/orgs/stackabletech/repositories[stackabletech organization{external-link-icon}^].
 Below you find an overview of the majority of these repositories and how they relate to each other.
 
 [[operator-repositories]]
 === Operator repositories, templating, operator-rs
 
-At the core of the Stackable Platform are the Kubernetes operators used to install and manage various data products, like the https://github.com/stackabletech/nifi-operator[nifi-operator] for example.
-You can find all of the operators if you https://github.com/orgs/stackabletech/repositories?q=operator[search the organization repositories].
+At the core of the Stackable Platform are the Kubernetes operators used to install and manage various data products, like the https://github.com/stackabletech/nifi-operator[nifi-operator{external-link-icon}^] for example.
+You can find all of the operators if you https://github.com/orgs/stackabletech/repositories?q=operator[search the organization repositories{external-link-icon}^].
 
 image::project-overview-operators.drawio.svg[]
 
-All the operators are written in https://www.rust-lang.org/[Rust] and the source code is found in the `rust` directory.
-`tests` contains the integration tests which use https://kuttl.dev/[kuttl] and our own test template https://github.com/stackabletech/beku.py[beku.py].
-Documentation is written in https://antora.org/[Antora] and found in the `docs` directory, see also <<documentation>> further down the page.
+All the operators are written in https://www.rust-lang.org/[Rust{external-link-icon}^] and the source code is found in the `rust` directory.
+`tests` contains the integration tests which use https://kuttl.dev/[kuttl{external-link-icon}^] and our own test template https://github.com/stackabletech/beku.py[beku.py{external-link-icon}^].
+Documentation is written in https://antora.org/[Antora{external-link-icon}^] and found in the `docs` directory, see also <<documentation>> further down the page.
 `deploy` and `docker` contain files used to package the operator into a Docker image and Helm chart.
 Some files in these repositories are actually _templated_:
 
-The https://github.com/stackabletech/operator-templating[operator-templating] repository contains a template for all operator repositories, where shared files are distributed from.
+The https://github.com/stackabletech/operator-templating[operator-templating{external-link-icon}^] repository contains a template for all operator repositories, where shared files are distributed from.
 You can read the README in that repository to find out more about the details.
 Whenever common files are changed, a GitHub action is used to distribute the changes to all operator repositories.
 
-The https://github.com/stackabletech/operator-rs/[operator-rs] repository contains the common framework library for all operators.
+The https://github.com/stackabletech/operator-rs/[operator-rs{external-link-icon}^] repository contains the common framework library for all operators.
 It is a Rust library that is used by all operators and contains shared structs and shared functionality.
 
 [[docker-images-repository]]
@@ -36,14 +36,14 @@ It is a Rust library that is used by all operators and contains shared structs a
 
 image::project-overview-docker-images.drawio.svg[]
 
-The https://github.com/stackabletech/docker-images/[docker-images] repository contains Dockerfiles for all the products that are supported by the SDP.
+The https://github.com/stackabletech/docker-images/[docker-images{external-link-icon}^] repository contains Dockerfiles for all the products that are supported by the SDP.
 The actual product artifacts are pulled from the <<product-artifacts, product artifacs store>> and packaged into images.
 The images are pushed into an <<docker-images, image registry>>.
 
 [[management-tooling]]
 === Management tooling: stackablectl, stackable-cockpit
 
-The `stackablectl` commandline tool and the Stackable Cockpit UI are both found in the https://github.com/stackabletech/stackable-cockpit[stackable-cockpit] repository, and they both share some code.
+The `stackablectl` commandline tool and the Stackable Cockpit UI are both found in the https://github.com/stackabletech/stackable-cockpit[stackable-cockpit{external-link-icon}^] repository, and they both share some code.
 The structure of the repository is documented in its README.
 
 [[documentation]]
@@ -51,29 +51,29 @@ The structure of the repository is documented in its README.
 
 image::project-overview-documentation.drawio.svg[]
 
-The documentation is built with https://antora.org/[Antora] and the playbook file to build it is located in the https://github.com/stackabletech/documentation[documentation] repository, among some common platform documentation.
-The UI for the documentation is found in the https://github.com/stackabletech/documentation-ui[documentation-ui] repository; it is included as a submodule in the documentation repository.
+The documentation is built with https://antora.org/[Antora{external-link-icon}^] and the playbook file to build it is located in the https://github.com/stackabletech/documentation[documentation{external-link-icon}^] repository, among some common platform documentation.
+The UI for the documentation is found in the https://github.com/stackabletech/documentation-ui[documentation-ui{external-link-icon}^] repository; it is included as a submodule in the documentation repository.
 The documentation pulls in operator documentation files from the operator repositories.
-The documentation is found at https://docs.stackable.tech/.
+The documentation is found at https://docs.stackable.tech/[https://docs.stackable.tech/{external-link-icon}^].
 
-There is also https://crds.stackable.tech/ where you can find generated documentation for all the CustomResourceDefinitions on the platform.
-The code to generate this page is found in the https://github.com/stackabletech/crddocs[crddocs] repository.
+There is also https://crds.stackable.tech/[https://crds.stackable.tech/{external-link-icon}^] where you can find generated documentation for all the CustomResourceDefinitions on the platform.
+The code to generate this page is found in the https://github.com/stackabletech/crddocs[crddocs{external-link-icon}^] repository.
 
 [[tooling-repositories]]
 === Tooling repositories
 
 On top of the mentioned repositories, there are various smaller tools or product extensions that Stackable developed, they are all linked to from relevant places.
-Two examples are the https://github.com/stackabletech/image-tools[image-tools] used to build Docker images and the https://github.com/stackabletech/druid-opa-authorizer/[druid-opa-authorizer] which is a Druid extension that enables OPA support for Druid.
+Two examples are the https://github.com/stackabletech/image-tools[image-tools{external-link-icon}^] used to build Docker images and the https://github.com/stackabletech/druid-opa-authorizer/[druid-opa-authorizer{external-link-icon}^] which is a Druid extension that enables OPA support for Druid.
 
 [[infrastructure-repositories]]
 === Infastructure: T2
 
-https://github.com/stackabletech/t2[T2 - Test & Troubleshoot Platform] is used for integration testing across different versions and cloud providers, find more information in the README of the repository.
+https://github.com/stackabletech/t2[T2 - Test & Troubleshoot Platform{external-link-icon}^] is used for integration testing across different versions and cloud providers, find more information in the README of the repository.
 
 [[issues-repository]]
 === Issues
 
-The https://github.com/stackabletech/issues[issues] repository exists solely for the purpose of tracking issues related to the Stackable Platform in general.
+The https://github.com/stackabletech/issues[issues{external-link-icon}^] repository exists solely for the purpose of tracking issues related to the Stackable Platform in general.
 Large topics that impact many or even all of the platform components are discussed here.
 There is no code in this repository.
 
@@ -85,7 +85,7 @@ Where are binaries, Helm Charts and Docker images stored?
 [[product-artifacts]]
 === Product artifacts
 
-A lot of artifacts are stored in the https://oci.stackable.tech[OCI registry]. Currently, those artifacts can be browsed by calling the API.
+A lot of artifacts are stored in the https://oci.stackable.tech[OCI registry{external-link-icon}^]. Currently, those artifacts can be browsed by calling the API.
 
 The following command lists all the different projects the artifacts are distributed across:
 
@@ -101,7 +101,7 @@ stackable-charts
 ----
 
 `sdp` contains the product and operator Docker images. The Helm Charts for the operators are found under `sdp-charts`. Some artifacts like the
-product binaries are stored in the https://repo.stackable.tech/#browse/browse[Nexus repo] under `packages`.
+product binaries are stored in the https://repo.stackable.tech/#browse/browse[Nexus repo{external-link-icon}^] under `packages`.
 
 List the Helm Charts in `sdp-charts`:
 
@@ -130,7 +130,7 @@ $ curl -X GET --header 'Accept: application/json' 'https://oci.stackable.tech/ap
 [[docker-images]]
 === Docker images
 
-Docker images are stored in https://oci.stackable.tech as mentioned above. To list all the available repositories in a project, for example in
+Docker images are stored in https://oci.stackable.tech[https://oci.stackable.tech{external-link-icon}^] as mentioned above. To list all the available repositories in a project, for example in
 the `sdp` project, run this command:
 
 [source,console]
@@ -174,7 +174,7 @@ $ curl -X GET --header 'Accept: application/json' 'https://oci.stackable.tech/ap
 Similar to the previous command, the API call uses pagination again. So the `page` value in the command can be incremented to see more results. Here the `page_size`
 parameter was also used to increase the results per page.
 
-Another possibility, instead of using `curl`, would be the https://github.com/google/go-containerregistry/blob/main/cmd/crane/README.md[crane tool], which can also be used
+Another possibility, instead of using `curl`, would be the https://github.com/google/go-containerregistry/blob/main/cmd/crane/README.md[crane tool{external-link-icon}^], which can also be used
 to browse the tags when given the path to a repository.
 
 [source,console]

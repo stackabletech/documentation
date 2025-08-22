@@ -7,11 +7,11 @@ Logging on the Stackable Data Platform is always configured in the same way, so 
 
 Prerequisites:
 
-* a k8s cluster available, or https://kind.sigs.k8s.io/[kind] installed
+* a k8s cluster available, or https://kind.sigs.k8s.io/[kind{external-link-icon}^] installed
 * xref:management:stackablectl:index.adoc[] installed
-* https://helm.sh/[Helm] installed to deploy Vector
+* https://helm.sh/[Helm{external-link-icon}^] installed to deploy Vector
 * basic knowledge of how to create resources in Kubernetes (i.e. `kubectl apply -f <filename>.yaml`) and inspect them
-  (`kubectl get` or a tool like https://k9scli.io/[k9s])
+  (`kubectl get` or a tool like https://k9scli.io/[k9s{external-link-icon}^])
 
 == Install the ZooKeeper operator
 
@@ -42,7 +42,7 @@ Deploy Vector with these values using Helm:
 include::example$logging-aggregator/main.sh[tag=vector-agg]
 
 This is a minimal working configuration. The source should be defined in this way, but you can configure different sinks, depending on your needs.
-You can find an https://vector.dev/docs/reference/configuration/sinks/[overview] of all sinks in the Vector documentation, specifically the https://vector.dev/docs/reference/configuration/sinks/elasticsearch/[Elasticsearch] sink might be useful, it also works when configured with OpenSearch.
+You can find an https://vector.dev/docs/reference/configuration/sinks/[overview{external-link-icon}^] of all sinks in the Vector documentation, specifically the https://vector.dev/docs/reference/configuration/sinks/elasticsearch/[Elasticsearch{external-link-icon}^] sink might be useful, it also works when configured with OpenSearch.
 
 To make the Vector aggregator discoverable to ZooKeeper, deploy a xref:concepts:service_discovery.adoc[discovery ConfigMap] called `vector-aggregator-discovery`.
 Create a file called `vector-aggregator-discovery.yaml`:
@@ -117,4 +117,4 @@ Congratulations, this concludes the tutorial!
 
 == What's next?
 
-Look into different sink configurations which are more suited to production use in the https://vector.dev/docs/reference/configuration/sinks/[sinks overview documetation] or learn more about how logging works on the platform in the xref:concepts:observability/logging.adoc[concepts documentation].
+Look into different sink configurations which are more suited to production use in the https://vector.dev/docs/reference/configuration/sinks/[sinks overview documetation{external-link-icon}^] or learn more about how logging works on the platform in the xref:concepts:observability/logging.adoc[concepts documentation].

@@ -283,4 +283,4 @@ region:
 
 == What's next
 
-Read the {crd-docs}/s3.stackable.tech/s3bucket/v1alpha1/[S3Bucket CRD reference] and the {crd-docs}/s3.stackable.tech/s3connection/v1alpha1/[S3Connection CRD reference].
+Read the {crd-docs}/s3.stackable.tech/s3bucket/v1alpha1/[S3Bucket CRD reference{external-link-icon}^] and the {crd-docs}/s3.stackable.tech/s3connection/v1alpha1/[S3Connection CRD reference{external-link-icon}^].

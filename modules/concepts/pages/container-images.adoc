@@ -14,11 +14,11 @@ usually these products also only provide a single artifact that is used to run a
 
 Product images are built for xref:operators:supported_versions.adoc[] of products (Not all product versions are supported by all releases).
 
-All images are stored in the {stackable-image-registry}[Stackable image registry].
+All images are stored in the {stackable-image-registry}[Stackable image registry{external-link-icon}^].
 
 == Image structure and contents
 
-All our images are built using the {ubi}[Red Hat Universal Base Image (UBI)] minimal as a base image.
+All our images are built using the {ubi}[Red Hat Universal Base Image (UBI){external-link-icon}^] minimal as a base image.
 This is a requirement for the platform to achieve xref:ROOT:kubernetes/openshift.adoc[OpenShift] certification and be available in the RedHat Certified Operator catalog.
 The base image also contains only minimal dependencies and is vetted by RedHat.
 
@@ -27,7 +27,7 @@ The file system structure is the same across all images, which makes the images 
 Products are either built from source code or official artifacts are used.
 Beyond that, Stackable also adds plugins or extensions that are not shipped by default, to support features such as xref:operators:monitoring.adoc[] or xref:opa:index.adoc[OpenPolicyAgent] support.
 
-Since Stackable release 24.3, {stackable-sboms}[SBOMs] for all images are provided.
+Since Stackable release 24.3, {stackable-sboms}[SBOMs{external-link-icon}^] for all images are provided.
 Have a look at the xref:guides:viewing-and-verifying-sboms.adoc[] guide to learn how to use SBOMs.
 
 [#multi-platform-support]

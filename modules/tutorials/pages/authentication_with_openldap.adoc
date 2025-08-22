@@ -9,10 +9,10 @@ more about authentication in the Stackable Platform on the xref:concepts:authent
 
 Prerequisites:
 
-* a k8s cluster available, or {kind}[kind] installed
+* a k8s cluster available, or {kind}[kind{external-link-icon}^] installed
 * xref:management:stackablectl:index.adoc[] installed
 * basic knowledge of how to create resources in Kubernetes (i.e. `kubectl apply -f <filename>.yaml`) and inspect them
-  (`kubectl get` or a tool like {k9s}[k9s])
+  (`kubectl get` or a tool like {k9s}[k9s{external-link-icon}^])
 
 == Setup
 
@@ -354,7 +354,7 @@ The LDAP connection details only need to be written down once, in the Authentica
 == Further Reading
 
 - xref:concepts:authentication.adoc[Authentication concepts page]
-* {crd-docs}/authentication.stackable.tech/authenticationclass/v1alpha1/[AuthenticationClass CRD reference]
+* {crd-docs}/authentication.stackable.tech/authenticationclass/v1alpha1/[AuthenticationClass CRD reference{external-link-icon}^]
 - xref:superset:getting_started/index.adoc[Getting started with the Stackable Operator for Apache Superset]
 - xref:trino:getting_started/index.adoc[Getting started with the Stackable Operator for Trino]
 // TODO Operator docs for LDAP

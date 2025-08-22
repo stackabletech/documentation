@@ -3,7 +3,7 @@
 All Stackable-managed products regularly log information about their operating
 environment, such as available disk interfaces and network interfaces.
 
-This logging is performed by our https://github.com/stackabletech/containerdebug[containerdebug] tool.
+This logging is performed by our https://github.com/stackabletech/containerdebug[containerdebug{external-link-icon}^] tool.
 
 NOTE: This tool is intended as a debugging aid, and the particular information or
 format should not be considered stable.

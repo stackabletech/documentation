@@ -3,7 +3,7 @@
 
 == USA
 
-The USA adopts the https://en.wikipedia.org/wiki/Export_Administration_Regulations[Export Administration Regulations (EAR)] as the primary regulation to control exports.
+The USA adopts the https://en.wikipedia.org/wiki/Export_Administration_Regulations[Export Administration Regulations (EAR){external-link-icon}^] as the primary regulation to control exports.
 
 All of our products are outside of the scope of EAR because they fall under the _publicly available_ exemption and do not contain non-standard cryptography.
 
@@ -11,7 +11,7 @@ NOTE: That means E-Mail notifications to the NSA and BIS are not required and ar
 
 In particular:
 
-* We are exempt under https://www.ecfr.gov/current/title-15/subtitle-B/chapter-VII/subchapter-C/part-734/section-734.3[EAR 734.3(b)] because we publish according to https://www.ecfr.gov/current/title-15/subtitle-B/chapter-VII/subchapter-C/part-734/section-734.7[EAR 734.7]
-* We are exempt under https://www.ecfr.gov/current/title-15/subtitle-B/chapter-VII/subchapter-C/part-742/section-742.15[EAR 742.15(b)] as our software includes only https://ecfr.io/Title-15/Section-772.1[standard encryption]
+* We are exempt under https://www.ecfr.gov/current/title-15/subtitle-B/chapter-VII/subchapter-C/part-734/section-734.3[EAR 734.3(b){external-link-icon}^] because we publish according to https://www.ecfr.gov/current/title-15/subtitle-B/chapter-VII/subchapter-C/part-734/section-734.7[EAR 734.7{external-link-icon}^]
+* We are exempt under https://www.ecfr.gov/current/title-15/subtitle-B/chapter-VII/subchapter-C/part-742/section-742.15[EAR 742.15(b){external-link-icon}^] as our software includes only https://ecfr.io/Title-15/Section-772.1[standard encryption{external-link-icon}^]
 
-The Stackable Data Platform is open source, and the source code of all the components can be found on https://github.com/stackabletech/[GitHub].
+The Stackable Data Platform is open source, and the source code of all the components can be found on https://github.com/stackabletech/[GitHub{external-link-icon}^].

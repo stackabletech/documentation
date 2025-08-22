@@ -3,7 +3,7 @@
 :keywords: Stackable Operator, Kubernetes, operator
 :k8s-operators: https://kubernetes.io/docs/concepts/extend-kubernetes/operator/
 
-This section of the Stackable documentation contains information about the individual {k8s-operators}[operators] that make up the Stackable Data Platform.
+This section of the Stackable documentation contains information about the individual {k8s-operators}[operators{external-link-icon}^] that make up the Stackable Data Platform.
 You can find an overview over the <<product, product operators>> as well as <<internal, internal operators>> below.
 
 This section also contains an overview over the xref:supported_versions.adoc[supported product versions] and how to enable xref:monitoring.adoc[monitoring] in all operators.

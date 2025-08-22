@@ -4,14 +4,14 @@
 :opa-docs: https://www.openpolicyagent.org/docs/latest/#overview
 :description: Stackable Data Platform uses OpenPolicyAgent (OPA) for policy-based access control with Rego rules, ensuring efficient, local policy evaluation across nodes.
 
-The Stackable Data Platform offers policy-based access control via the {opa}[OpenPolicyAgent] (OPA) operator.
-Authorization policies are defined in the {rego}[Rego] language, divided into packages and supplied via ConfigMaps.
+The Stackable Data Platform offers policy-based access control via the {opa}[OpenPolicyAgent{external-link-icon}^] (OPA) operator.
+Authorization policies are defined in the {rego}[Rego{external-link-icon}^] language, divided into packages and supplied via ConfigMaps.
 Every node is running an OPA instance for fast policy evaluation and products are connected to OPA with the xref:service_discovery.adoc[service discovery] mechanism.
 
 == What is OPA?
 // What's OPA? What are Rego Rules?
 OPA is an open-source, general-purpose policy engine.
-It supports a high-level declarative language called {rego}[Rego].
+It supports a high-level declarative language called {rego}[Rego{external-link-icon}^].
 Rego enables you to specify complex policies as code and transfer the decision-making processes from your software to OPA.
 Policies written in Rego are called _Rego rules_.
 
@@ -72,7 +72,7 @@ data:
 The combination of arbitrary input data and the Rego rules enables you to specify and enforce almost any kind of policies.
 You can define powerful policies for e.g. user access for database tables, schemas, columns etc. You can enforce local network traffic, access time periods and many more.
 
-See the {opa-docs}[OPA documentation] for further examples.
+See the {opa-docs}[OPA documentation{external-link-icon}^] for further examples.
 
 === Connect a product
 

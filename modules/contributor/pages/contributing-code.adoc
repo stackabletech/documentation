@@ -8,20 +8,20 @@
 
 In order to contribute source code, you need an environment that is capable of running the following tools:
 
-* https://git-scm.com/[Git]
-* https://www.gnu.org/software/make/manual/make.html[make]
-* https://www.docker.com/[Docker]
-* https://kind.sigs.k8s.io/[Kind]
-* https://helm.sh/[Helm]
-* https://kuttl.dev/[Kuttl]
-* https://www.rust-lang.org/[Rust]
-* https://www.python.org/[Python]
-* https://jqlang.github.io/jq/[jq]
-* https://github.com/mikefarah/yq[yq]
-* https://tilt.dev/[Tilt]
-* https://pre-commit.com/[pre-commit] (optional)
+* https://git-scm.com/[Git{external-link-icon}^]
+* https://www.gnu.org/software/make/manual/make.html[make{external-link-icon}^]
+* https://www.docker.com/[Docker{external-link-icon}^]
+* https://kind.sigs.k8s.io/[Kind{external-link-icon}^]
+* https://helm.sh/[Helm{external-link-icon}^]
+* https://kuttl.dev/[Kuttl{external-link-icon}^]
+* https://www.rust-lang.org/[Rust{external-link-icon}^]
+* https://www.python.org/[Python{external-link-icon}^]
+* https://jqlang.github.io/jq/[jq{external-link-icon}^]
+* https://github.com/mikefarah/yq[yq{external-link-icon}^]
+* https://tilt.dev/[Tilt{external-link-icon}^]
+* https://pre-commit.com/[pre-commit{external-link-icon}^] (optional)
 
-Depending on the repository, you might also need https://go.dev/[Go], https://www.java.com/en/[Java] or other programming language support.
+Depending on the repository, you might also need https://go.dev/[Go{external-link-icon}^], https://www.java.com/en/[Java{external-link-icon}^] or other programming language support.
 
 Almost all build scripts assume a Unix based environment (preferably Linux).
 
@@ -29,19 +29,19 @@ Almost all build scripts assume a Unix based environment (preferably Linux).
 
 Of course you are free to use whatever works for you best. No editor is perfect but we have positive experience with:
 
-* https://www.jetbrains.com/idea/[IntelliJ Idea] with the `Rust` plug-in
-* https://code.visualstudio.com/[VisualStudio Code] with the `rust-analyzer` extension
+* https://www.jetbrains.com/idea/[IntelliJ Idea{external-link-icon}^] with the `Rust` plug-in
+* https://code.visualstudio.com/[VisualStudio Code{external-link-icon}^] with the `rust-analyzer` extension
 
 For `VisualStudio Code` we also recommend the following extensions:
 
-* https://marketplace.visualstudio.com/items?itemName=tamasfe.even-better-toml[Even Better TOML]
-* https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb[CodeLLDB] (for debugging)
-* https://marketplace.visualstudio.com/items?itemName=usernamehw.errorlens[Error Lens] (inline error messages)
-* https://marketplace.visualstudio.com/items?itemName=asciidoctor.asciidoctor-vscode[AsciiDoc]
-* https://marketplace.visualstudio.com/items?itemName=GitHub.vscode-pull-request-github[GitHub Pull requests and Issues]
-* https://marketplace.visualstudio.com/items?itemName=eamodio.gitlens[GitLens]
-* https://marketplace.visualstudio.com/items?itemName=ms-python.python[Python]
-* https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker[Docker]
+* https://marketplace.visualstudio.com/items?itemName=tamasfe.even-better-toml[Even Better TOML{external-link-icon}^]
+* https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb[CodeLLDB{external-link-icon}^] (for debugging)
+* https://marketplace.visualstudio.com/items?itemName=usernamehw.errorlens[Error Lens{external-link-icon}^] (inline error messages)
+* https://marketplace.visualstudio.com/items?itemName=asciidoctor.asciidoctor-vscode[AsciiDoc{external-link-icon}^]
+* https://marketplace.visualstudio.com/items?itemName=GitHub.vscode-pull-request-github[GitHub Pull requests and Issues{external-link-icon}^]
+* https://marketplace.visualstudio.com/items?itemName=eamodio.gitlens[GitLens{external-link-icon}^]
+* https://marketplace.visualstudio.com/items?itemName=ms-python.python[Python{external-link-icon}^]
+* https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker[Docker{external-link-icon}^]
 
 == Steps
 
@@ -58,10 +58,10 @@ For `VisualStudio Code` we also recommend the following extensions:
   execute `make regenerate-charts`.
 . If it is useful for the users of the project to know about the change then it must be added to the changelog. For
   instance, if only the dependencies in an operator are upgraded but nothing changes for the user then the upgrade
-  should not be added to the changelog. Conversely, if the dependencies in the {operator-repo}[operator framework] are
+  should not be added to the changelog. Conversely, if the dependencies in the {operator-repo}[operator framework{external-link-icon}^] are
   upgraded then changes are probably required in the operators (which are the clients of the framework) and therefore
   the upgrade must be mentioned in the changelog. The changelog must be formatted according to
-  https://keepachangelog.com/en/1.1.0/[keep a changelog].
+  https://keepachangelog.com/en/1.1.0/[keep a changelog{external-link-icon}^].
 
 == Changes in the integration tests
 
@@ -69,8 +69,8 @@ For `VisualStudio Code` we also recommend the following extensions:
   operator repository in the `tests` directory.
 . Create or adapt the tests.
   Try to mimic the style of the other tests.
-  They are written with https://kuttl.dev/[KUTTL] and our own templating tool https://github.com/stackabletech/beku.py[beku.py] to template tests and test multiple product versions at once.
-. Start a test cluster using https://kind.sigs.k8s.io/[kind].
+  They are written with https://kuttl.dev/[KUTTL{external-link-icon}^] and our own templating tool https://github.com/stackabletech/beku.py[beku.py{external-link-icon}^] to template tests and test multiple product versions at once.
+. Start a test cluster using https://kind.sigs.k8s.io/[kind{external-link-icon}^].
 . Run your development version of the operator with `make run-dev` (see also xref:testing-on-kubernetes.adoc[] for more information on this).
   This will deploy the operator directly into the cluster, also using part of the Helm Chart definition and therefore the RBAC rules.
 . When making changes to the Helm Chart, you should however test the Helm Chart explicitly.
@@ -89,7 +89,7 @@ helm install <operator> deploy/helm/<operator>/
 
 If a new version of a product was added then the following tasks must be performed:
 
-* Add the new version in the https://github.com/stackabletech/docker-images[docker-images] repository.
+* Add the new version in the https://github.com/stackabletech/docker-images[docker-images{external-link-icon}^] repository.
 * Update the operator to support the new version if necessary.
 * Update the examples in the operator to use the new version.
 * Update the integration tests.

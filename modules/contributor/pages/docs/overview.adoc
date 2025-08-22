@@ -15,15 +15,15 @@
 :stackable-docs-ui-repo: https://github.com/stackabletech/documentation-ui
 :trunk-based-development: https://trunkbaseddevelopment.com/
 
-We use {antora-docs}[Antora] to write our user facing documentation,
-{netlify}[Netlify] to host it and the {diataxis}[Diátaxis] framework as the guide for the structure of the content.
-The main repository for the documentation is the {stackable-docs-repo}[Documentation] repository and
+We use {antora-docs}[Antora{external-link-icon}^] to write our user facing documentation,
+{netlify}[Netlify{external-link-icon}^] to host it and the {diataxis}[Diátaxis{external-link-icon}^] framework as the guide for the structure of the content.
+The main repository for the documentation is the {stackable-docs-repo}[Documentation{external-link-icon}^] repository and
 each operator and other tools have a `docs` directory from which content is pulled in.
 Have a look at the xref:project-overview.adoc[] to learn about the repositories that are involved in providing the documentation.
 
 == Content structure: Diátaxis
 
-The {diataxis}[Diátaxis] framework is a way to classify documentation content into four groups with distinct use cases.
+The {diataxis}[Diátaxis{external-link-icon}^] framework is a way to classify documentation content into four groups with distinct use cases.
 
 .Source: {diataxis}
 image::diataxis.png[]
@@ -46,7 +46,7 @@ The guide has to account for different use-cases (i.e. the user is using their o
 Since this kind of information is typically product specific, it is located in the usage guide section of individual operators.
 
 **Reference** information for the Stackable platform entails all the settings and Options in our YAMLs, which we generate.
-The reference is found at {crddocs-site} and generated from the {stackable-crddocs-repo}[crddocs repository].
+The reference is found at {crddocs-site}[{crddocs-site}{external-link-icon}^] and generated from the {stackable-crddocs-repo}[crddocs repository{external-link-icon}^].
 
 === Style guide
 
@@ -54,17 +54,17 @@ The xref:docs/style-guide.adoc[] contains all the information about the writing 
 
 == Technical bits: Antora, Netlify, Pagefind
 
-{antora-docs}[Antora] uses a {antora-playbook}[playbook] to build the documentation.
+{antora-docs}[Antora{external-link-icon}^] uses a {antora-playbook}[playbook{external-link-icon}^] to build the documentation.
 It pulls documentation content from all the individual operator repositories, so an operators documentation is maintained in the same repository as the code.
-Antora builds a static website which we serve over {netlify}[Netlify].
-The web template of the documentation is also custom made and is developed in the {stackable-docs-ui-repo}[documentation-ui] repository.
+Antora builds a static website which we serve over {netlify}[Netlify{external-link-icon}^].
+The web template of the documentation is also custom made and is developed in the {stackable-docs-ui-repo}[documentation-ui{external-link-icon}^] repository.
 
-For search, we use {pagefind}[pagefind] - a static search.
+For search, we use {pagefind}[pagefind{external-link-icon}^] - a static search.
 The search index is generated as part of the build process and no external index is queried during search.
 
-For Antora, the {antora-zulipchat}[Antora Zulip chatroom] is a good place to get help (besides the documentation)!
+For Antora, the {antora-zulipchat}[Antora Zulip chatroom{external-link-icon}^] is a good place to get help (besides the documentation)!
 
-Building the documentation and also the deployment process on Netlify are documented in the {stackable-docs-readme}[README] file of the documentation repository.
+Building the documentation and also the deployment process on Netlify are documented in the {stackable-docs-readme}[README{external-link-icon}^] file of the documentation repository.
 
 == Executable tutorials
 
@@ -76,7 +76,7 @@ Have a look at the existing getting started guides on how to do this.
 == Templating
 
 There is a templating mechanism in the docs.
-This has been introduced to template in mostly version numbers, so the updating doesn't have to be done by hand. 
+This has been introduced to template in mostly version numbers, so the updating doesn't have to be done by hand.
 
 Every Operator repo has a script `scripts/docs_templating.sh` and a file with templating variables `docs/templating_vars.yaml`.
 The script applies the variables to all `.j2` files in the `docs` directory.
@@ -91,9 +91,9 @@ The documentation consists of two _components_, the `home` and `management` comp
 All documentation for the operators is in the `home` component, and it is versioned with the platform versions (23.11, 24.3, 24.7 etc.).
 The `management` component contains docs for `stackablectl` and the Stackable cockpit; it is not versioned (there is only a single, current version).
 
-The `home` component is actually a {antora-distributed-components}[distributed component], which means that it is split across multiple repositories.
+The `home` component is actually a {antora-distributed-components}[distributed component{external-link-icon}^], which means that it is split across multiple repositories.
 Each operator repository has a `docs` directory where the docs are found, and in there the `antora.yml` file specifies that the component is `home`, which means that the `home` component is partially defined across all operator repositories.
 
-For versions, all Stackable repositories use {trunk-based-development}[trunk based development], and so the documentation is also pulled from different release branches in each repository.
+For versions, all Stackable repositories use {trunk-based-development}[trunk based development{external-link-icon}^], and so the documentation is also pulled from different release branches in each repository.
 Each branch contains only a single version, and the `main` branch contains the `nightly` docs version.
-Using branches to structure component version is also {antora-content-branches}[recommended by Antora].
+Using branches to structure component version is also {antora-content-branches}[recommended by Antora{external-link-icon}^].

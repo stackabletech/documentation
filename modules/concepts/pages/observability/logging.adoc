@@ -35,7 +35,7 @@ For advanced log configurations, supplying custom product specific log configura
 == Architecture
 
 Below you can see the overall architecture using ZooKeeper as an example.
-Stackable uses {vector}[Vector] for log aggregation and any of the supported {vector-sinks}[sinks] can be used to persist the logs.
+Stackable uses {vector}[Vector{external-link-icon}^] for log aggregation and any of the supported {vector-sinks}[sinks{external-link-icon}^] can be used to persist the logs.
 
 image::logging_architecture.drawio.svg[An architecture diagram showing the Kubernetes resources involved in the logging stack]
 
@@ -44,12 +44,12 @@ image::logging_architecture.drawio.svg[An architecture diagram showing the Kuber
 You configure your logging settings in the Stacklet definition (ZookeeperCluster in this example), seen in the top left in the diagram (see the <<configuration, configuration>> section below).
 The operator reads this resource and creates the appropriate log configuration files in the ConfigMap which also holds other product configuration.
 The ConfigMap is then mounted into the containers.
-The ZooKeeper Pod has three containers: The `prepare` sidecar container, the `zookeeper` container and the `vector` {vector-sidecar}[sidecar container].
-All logs get written into a shared mounted directory, from which the Vector agent reads them and sends them to the Vector {vector-aggregator}[aggregator].
+The ZooKeeper Pod has three containers: The `prepare` sidecar container, the `zookeeper` container and the `vector` {vector-sidecar}[sidecar container{external-link-icon}^].
+All logs get written into a shared mounted directory, from which the Vector agent reads them and sends them to the Vector {vector-aggregator}[aggregator{external-link-icon}^].
 
 === Aggregator and sinks
 
-The aggregator is configured to use one or multiple {vector-sinks}[sinks] (for example OpenSearch, Elasticsearch), it sends all logs to all sinks.
+The aggregator is configured to use one or multiple {vector-sinks}[sinks{external-link-icon}^] (for example OpenSearch, Elasticsearch), it sends all logs to all sinks.
 If a sink is unavailable, the aggregator buffers the log messages.
 It is also the single point where the sinks are configured, so the sinks are decoupled from the Stacklet definitions and only need to be configured in this single location for the whole platform.
 
@@ -122,8 +122,8 @@ Following the Stackable xref:stacklet.adoc#roles[roles] and xref::stacklet.adoc#
 
 === Configuring the Aggregator
 
-Follow the {vector-agg-install}[installation instructions] for the aggregator.
-Configure a {vector-source-vector}[Vector source] at adress `0.0.0.0:6000` and configure sinks and additional settings according to your needs.
+Follow the {vector-agg-install}[installation instructions{external-link-icon}^] for the aggregator.
+Configure a {vector-source-vector}[Vector source{external-link-icon}^] at adress `0.0.0.0:6000` and configure sinks and additional settings according to your needs.
 
 === Configuring the aggregator location
 
@@ -150,4 +150,4 @@ logging:
 == Further reading
 
 To get some hands on experience and see logging in action, try out the xref:demos:logging.adoc[logging demo] or follow the xref:tutorials:logging-vector-aggregator.adoc[logging tutorial].
-The Vector documentation contains more information about the {vector-topology-centralized}[deployment topology] and {vector-sinks}[sinks] that can be used.
+The Vector documentation contains more information about the {vector-topology-centralized}[deployment topology{external-link-icon}^] and {vector-sinks}[sinks{external-link-icon}^] that can be used.
