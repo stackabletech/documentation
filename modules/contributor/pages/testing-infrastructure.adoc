@@ -1,6 +1,6 @@
 = Understanding the integration testing infrastructure
 :beku: https://github.com/stackabletech/beku.py
-:ci: https://ci.stackable.tech/
+:ci: https://testing.stackable.tech/
 :demos: https://github.com/stackabletech/demos
 :kind: https://kind.sigs.k8s.io/
 :kuttl: https://kuttl.dev/
@@ -9,8 +9,8 @@
 Contributors are encouraged to write tests for their operators.
 For small bug fixes and enhancements, unit tests are preferred.
 Larger developments should have integration tests.
-Integration tests are declarative in form of manifest files that are executed by {kuttl}[KuTTL] on a Kubernetes cluster.
-Each test case is comprised of multiple steps, each with a setup and an assertion file. 
+Integration tests are declarative in form of manifest files that are executed by {kuttl}[KuTTL{external-link-icon}^] on a Kubernetes cluster.
+Each test case is comprised of multiple steps, each with a setup and an assertion file.
 Furthermore, to support a high dimensional matrix of configurations, the manifest files are partly templated as Jinja2 files.
 This allows for example to test the behaviour of multiple product versions with and without various features enabled.
 Having the manifest files as Jinja2 templates avoids duplication and makes the tests more maintainable.
@@ -19,13 +19,13 @@ Having the manifest files as Jinja2 templates avoids duplication and makes the t
 
 To run the integration tests from your local machine, you need to have the follwing tools installed:
 
-* {python}[Python] to run scripts.
-* {kuttl}[KuTTL] to run the tests.
-* {beku}[beku] our custom test expander.
+* {python}[Python{external-link-icon}^] to run scripts.
+* {kuttl}[KuTTL{external-link-icon}^] to run the tests.
+* {beku}[beku{external-link-icon}^] our custom test expander.
 * xref:management:stackablectl:installation.adoc[stackablectl] to install operators.
 
 A Kubernetes cluster is needed to run the tests.
-You can use {kind}[kind] to create one on your local machine.
+You can use {kind}[kind{external-link-icon}^] to create one on your local machine.
 
 == Running the integration tests
 
@@ -86,7 +86,7 @@ tests
 
 == How to run tests in the CI (Jenkins)
 
-Stackable operators a {ci}[Jenkins instance] where the tests are ran every night. 
+Stackable operates a {ci}[Jenkins instance{external-link-icon}^] where the tests are ran every night.
 You can also run the tests manually there, for a particular pull request, if you have an account (only internal contributors).
 
 == Adding a new test
@@ -96,4 +96,4 @@ Have a look at other tests to familiarize yourself with the general pattern of s
 
 == Further reading
 
-Also have a look at the {demos}[Demos] for another way to deploy Stackable components and test them.
+Also have a look at the {demos}[Demos{external-link-icon}^] for another way to deploy Stackable components and test them.

@@ -1,6 +1,6 @@
 = Red Hat OpenShift
 
-https://www.redhat.com/en/technologies/cloud-computing/openshift
+https://www.redhat.com/en/technologies/cloud-computing/openshift[https://www.redhat.com/en/technologies/cloud-computing/openshift{external-link-icon}^]
 
 SDP operators are certified for the OpenShift platform and can be installed from the OperatorHub.
 
@@ -8,7 +8,7 @@ IMPORTANT: OpenShift installations with FIPS mode enabled are not supported. Thi
 
 == Customizing operator installations
 
-As described in the https://github.com/operator-framework/operator-lifecycle-manager/blob/master/doc/design/subscription-config.md[Openshift Subscription documentation] you can configure the deployed operators.
+As described in the https://github.com/operator-framework/operator-lifecycle-manager/blob/master/doc/design/subscription-config.md[Openshift Subscription documentation{external-link-icon}^] you can configure the deployed operators.
 
 E.g. depending on the cluster size, you may need to customize the resources requested by the SDP operator containers.
 This is possible when installing the operators via a Subscription CustomResource.
@@ -60,4 +60,3 @@ Starting with the release version `24.7.0`, all products run with the `nonroot-v
 
 Operators (with two exceptions) don't request a specific SCC to run with. Usually OpenShift will select the `restricted` or `restricted-v2` SCC unless the cluster admins have specifically assigned a different one to the namespace where the operators are running.
 The two exceptions are the secret and the listener operators. These need additional permissions not available in the `restricted` SCCs to propagate volume mounts to the requesting pods.
-

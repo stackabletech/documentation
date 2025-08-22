@@ -6,9 +6,9 @@
 :go: https://go.dev/
 :description: Understand the human-readable duration format used by Stackable operators, based on Go's time.ParseDuration, with units like days, hours, minutes, and seconds.
 
-All Stackable operators use a human-readable duration format. It very closely resembles the format used by the {go}[Go] programming language - which Kubernetes uses internally.
-Every duration field of a {k8s-cr}[CustomResource], for example, the xref:trino:usage-guide/operations/graceful-shutdown.adoc[`spec.workers.roleConfig.gracefulShutdownTimeout`] field, supports this format.
-There is no official format specification, but the source code of {go-std-time}[`time.ParseDuration`] in the Go standard library can be used as an implementation reference.
+All Stackable operators use a human-readable duration format. It very closely resembles the format used by the {go}[Go{external-link-icon}^] programming language - which Kubernetes uses internally.
+Every duration field of a {k8s-cr}[CustomResource{external-link-icon}^], for example, the xref:trino:usage-guide/operations/graceful-shutdown.adoc[`spec.workers.roleConfig.gracefulShutdownTimeout`] field, supports this format.
+There is no official format specification, but the source code of {go-std-time}[`time.ParseDuration`{external-link-icon}^] in the Go standard library can be used as an implementation reference.
 
 The format looks like this: `15d18h34m42s`.
 xref:trino:index.adoc[Trino], for example, uses it in the following way:
@@ -25,4 +25,4 @@ spec:
 Valid time units are: `d`, `h`, `m`, `s`, and `ms`.
 Separating the duration fragments, which is a tuple of time value and time unit (`15d`), by spaces is **not** supported and will result in an error.
 The maximum amount of time which can safely be represented without precision loss or integer overflow is 584,942,417,355 years.
-See {rust-duration-max}[here] for more information.
+See {rust-duration-max}[here{external-link-icon}^] for more information.

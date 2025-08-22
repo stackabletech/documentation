@@ -3,11 +3,11 @@
 :prometheus-operator: https://prometheus-operator.dev/
 :description: Monitor Stackable services with Prometheus. Install via Prometheus Operator or use an existing setup. Configure scraping for Kubernetes services.
 
-Services managed by Stackable support monitoring via {prometheus}[Prometheus].
+Services managed by Stackable support monitoring via {prometheus}[Prometheus{external-link-icon}^].
 
 == Prometheus operator
 
-Stackable does not currently provide Prometheus, instead we suggest using {prometheus-operator}[Prometheus operator].
+Stackable does not currently provide Prometheus, instead we suggest using {prometheus-operator}[Prometheus operator{external-link-icon}^].
 
 === Installing Prometheus
 
@@ -40,4 +40,4 @@ An existing Prometheus installation can also be used to monitor Stackable servic
 
 In this case, it should be configured to scrape Kubernetes `Service` objects with the label `prometheus.io/scrape: "true"`.
 For more details, see their official documentation for
-https://prometheus.io/docs/prometheus/latest/configuration/configuration/#kubernetes_sd_config[`<kubernetes_sd_config>`].
+https://prometheus.io/docs/prometheus/latest/configuration/configuration/#kubernetes_sd_config[`<kubernetes_sd_config>`{external-link-icon}^].

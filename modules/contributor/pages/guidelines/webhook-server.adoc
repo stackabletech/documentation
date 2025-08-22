@@ -70,7 +70,7 @@ The `stackable-webhook` library provides a ready-to-use `ConversionWebhookServer
 
 [NOTE]
 ====
-The `#[tokio::main]` attribute is only available when the https://docs.rs/tokio/latest/tokio/#feature-flags[`macros`] feature is enabled.
+The `#[tokio::main]` attribute is only available when the https://docs.rs/tokio/latest/tokio/#feature-flags[`macros`{external-link-icon}^] feature is enabled.
 Using the `full` feature flag includes the `macros` flag.
 ====
 

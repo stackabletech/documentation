@@ -38,12 +38,12 @@ In a diagram it would look like this:
 
 image::image$authentication-overview.drawio.svg[]
 
-NOTE: Learn more in the xref:tutorials:authentication_with_openldap.adoc[OpenLDAP tutorial] and get a full overview of all the properties in the {crd-docs}/authentication.stackable.tech/authenticationclass/v1alpha1/#spec-provider-ldap[AuthenticationClass LDAP provider CRD reference].
+NOTE: Learn more in the xref:tutorials:authentication_with_openldap.adoc[OpenLDAP tutorial] and get a full overview of all the properties in the {crd-docs}/authentication.stackable.tech/authenticationclass/v1alpha1/#spec-provider-ldap[AuthenticationClass LDAP provider CRD reference{external-link-icon}^].
 
 [#OIDC]
 === OpenID Connect
 
-An OIDC provider like {keycloak}[Keycloak] could be configured as follows:
+An OIDC provider like {keycloak}[Keycloak{external-link-icon}^] could be configured as follows:
 
 [source,yaml]
 ----
@@ -59,7 +59,7 @@ include::example$authenticationclass-keycloak.yaml[]
 <7> Optionally enable TLS and configure verification. When present, connections to the idP will use `https://` instead of `http://`. See xref:tls-server-verification.adoc[].
 <8> Trust certificates signed by commonly trusted Certificate Authorities.
 
-NOTE: Get a full overview of all the properties in the {crd-docs}/authentication.stackable.tech/authenticationclass/v1alpha1/#spec-provider-oidc[AuthenticationClass OIDC provider CRD reference].
+NOTE: Get a full overview of all the properties in the {crd-docs}/authentication.stackable.tech/authenticationclass/v1alpha1/#spec-provider-oidc[AuthenticationClass OIDC provider CRD reference{external-link-icon}^].
 
 [#tls]
 === TLS
@@ -113,4 +113,4 @@ include::example$authenticationclass-static-secret.yaml[]
 == Further reading
 
 * xref:tutorials:authentication_with_openldap.adoc[] tutorial
-* {crd-docs}/authentication.stackable.tech/authenticationclass/v1alpha1/[AuthenticationClass CRD reference]
+* {crd-docs}/authentication.stackable.tech/authenticationclass/v1alpha1/[AuthenticationClass CRD reference{external-link-icon}^]

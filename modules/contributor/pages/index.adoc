@@ -6,16 +6,16 @@
 Welcome to Stackable, we're happy to have your contributions!
 Contributions can come in many different ways, and this document is the entry point to point you into the right direction to get your contribution posted as soon as possible.
 
-* First of all, if you have a **question** and something is unclear and you couldn't find the information you needed, ask a question on https://github.com/orgs/stackabletech/discussions[GitHub discussions].
+* First of all, if you have a **question** and something is unclear and you couldn't find the information you needed, ask a question on https://github.com/orgs/stackabletech/discussions[GitHub discussions{external-link-icon}^].
   This is the first place you should go to if you don't know where to start.
 * If you found a **bug or a feature request** and you already know where it would need to go, _search for similar issues first_!
-  If you cannot find anything, {gh-create-issue}[create an issue] in the repository that belongs to the component where you found the bug or have the feature request.
+  If you cannot find anything, {gh-create-issue}[create an issue{external-link-icon}^] in the repository that belongs to the component where you found the bug or have the feature request.
   You can also have a look at the xref:project-overview.adoc[] to find out which repository might be the right place to go to.
   An issue is also the right tool if you have a suggestion for a fix for a bug but first want to report the bug to raise awareness.
   When creating a new issue please provide as much information as you consider relevant.
   Issues can be bug reports, feature requests and so on.
   The Stackable repositories provide templates to make it easier to submit high-quality issues.
-* If you are already familiar with the xref:project-overview.adoc[] and you have a **particular fix or feature to contribute in code**, you can {gh-pr}[create a pull request] in the specific repository.
+* If you are already familiar with the xref:project-overview.adoc[] and you have a **particular fix or feature to contribute in code**, you can {gh-pr}[create a pull request{external-link-icon}^] in the specific repository.
   Again, it is useful to first to a quick search if there is already an issue or other pull request that is similar to yours.
   If that is the case, consider contributing to the existing issue by either adding new feedback or code.
   The steps to contribute a pull request are outlined below, and you should also consult the xref:contributing-code.adoc[] guidelines to make sure your contribution isn't missing anything and follow the <<contributing-workflow>> below.
@@ -28,8 +28,8 @@ Please see the xref:project-overview.adoc[] page to get an overview of the most 
 [[contributing-workflow]]
 == General pull request guidelines
 
-All our development is done on https://github.com/stackabletech[GitHub] and contributions should be made through {gh-pr}[creating pull requests],
-follow the GitHub instructions on how to do this. 
+All our development is done on https://github.com/stackabletech[GitHub{external-link-icon}^] and contributions should be made through {gh-pr}[creating pull requests{external-link-icon}^],
+follow the GitHub instructions on how to do this.
 If you are an external contributor, you will need to fork the repository where you want your change to be made.
 
 === Signed commits
@@ -37,12 +37,12 @@ If you are an external contributor, you will need to fork the repository where y
 As a supply chain security policy, all commits and tags in Stackable repositories need to be signed.
 Signed commits ensure authenticity by verifying that a commit has indeed been made by a certain person and integrity to make sure that no data has been changed after the fact.
 
-Read https://stackable.tech/en/notes-on-signed-commits-with-git-and-github/[Notes on Signed Commits with Git and Github] for more information on using signed commits.
+Read https://stackable.tech/en/notes-on-signed-commits-with-git-and-github/[Notes on Signed Commits with Git and Github{external-link-icon}^] for more information on using signed commits.
 
 === Instructions
 
 Please make sure that you base your pull request on the latest changes in the `main` branch of the repository if it is a general change you want to see added to the platform, or off of a specific release branch (named `release-23.11` for example) if you want to contribute a fix that is specific to a release.
-At Stackable we use a branch structure based on https://trunkbaseddevelopment.com/[trunk based development].
+At Stackable we use a branch structure based on https://trunkbaseddevelopment.com/[trunk based development{external-link-icon}^].
 
 ==== Review preparation
 

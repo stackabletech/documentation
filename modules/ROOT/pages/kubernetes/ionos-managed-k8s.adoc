@@ -1,6 +1,6 @@
 = IONOS managed Kubernetes
 
-https://cloud.ionos.com/managed/kubernetes
+https://cloud.ionos.com/managed/kubernetes[https://cloud.ionos.com/managed/kubernetes{external-link-icon}^]
 
 TIP: IONOS also offers a xref:kubernetes/ionos-managed-stackable.adoc[managed Stackable service], which simplifies the usage of Stackable.
 

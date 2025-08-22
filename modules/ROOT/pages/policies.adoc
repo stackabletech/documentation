@@ -25,13 +25,13 @@ These policies are from *July 2023*.
 NOTE: This policy concerns releases of our platform as a whole and how long and to which extent we support each version.
 
 We do releases of our Stackable Data Platform.
-These releases get a name based on the year and month they have been released in (e.g. `23.4`, `23.7`, also called https://calver.org/[CalVer]). This name does not follow Semantic Versioning (https://semver.org/[SemVer]). We may release patches for a release, which then follow the PATCH naming semantics of SemVer (e.g. `23.4.1`) or the _Micro_ name from CalVer. See below for our policy on patches for the SDP.
+These releases get a name based on the year and month they have been released in (e.g. `23.4`, `23.7`, also called https://calver.org/[CalVer{external-link-icon}^]). This name does not follow Semantic Versioning (https://semver.org/[SemVer{external-link-icon}^]). We may release patches for a release, which then follow the PATCH naming semantics of SemVer (e.g. `23.4.1`) or the _Micro_ name from CalVer. See below for our policy on patches for the SDP.
 
 We support an SDP release for a specific amount of time after its initial release.
 
 An SDP release contains our operators and other code developed at Stackable as well as the product docker images.
 
-TIP: Our policy is inspired by the https://kubernetes.io/releases/patch-releases/[Kubernetes] and the https://access.redhat.com/support/policy/updates/openshift#ocp4[OpenShift] policies.
+TIP: Our policy is inspired by the https://kubernetes.io/releases/patch-releases/[Kubernetes{external-link-icon}^] and the https://access.redhat.com/support/policy/updates/openshift#ocp4[OpenShift{external-link-icon}^] policies.
 
 === Full support phase
 
@@ -67,7 +67,7 @@ IMPORTANT: As of January 2024 all our CRDs are versioned as `alpha1`. We will st
 
 CustomResourceDefinitions at Stackable are versioned.
 
-Our policies around CRD versioning are inspired by the https://kubernetes.io/docs/reference/using-api/deprecation-policy/[Kubernetes Deprecation Policy].
+Our policies around CRD versioning are inspired by the https://kubernetes.io/docs/reference/using-api/deprecation-policy/[Kubernetes Deprecation Policy{external-link-icon}^].
 
 Specifically we try to follow these rules:
 
@@ -141,7 +141,7 @@ Stackable will analyze published security vulnerabilities (e.g. CVEs but other s
 We take various sources into account when assigning a criticality.
 Among those sources is the NVD database, but we place higher value on the self-assessments by the projects themselves, and we will additionally evaluate vulnerabilities in the context of how they are used in the Stackable Data Platform.
 
-We will then assign a criticality to each vulnerability according to similar rating categories that https://access.redhat.com/security/updates/classification[RedHat has established]:
+We will then assign a criticality to each vulnerability according to similar rating categories that https://access.redhat.com/security/updates/classification[RedHat has established{external-link-icon}^]:
 
 Critical::
 This rating is given to flaws that could be easily exploited by a remote unauthenticated attacker and lead to system compromise (arbitrary code execution) without requiring user interaction. Flaws that require authentication, local or physical access to a system, or an unlikely configuration are not classified as Critical impact. These are the types of vulnerabilities that can be exploited by worms.

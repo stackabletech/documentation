@@ -7,10 +7,10 @@
    Make sure that the release branches have the correct version set in their `antora.yml` files and also make sure that the `main` branch is still set to `nightly`.
 * An `xref` or `include` in the `home` component is not found (starting with `xref:home...`)
 ** If the page containing the `xref` is also in the `home` component, do **not** include the component name in the `xref`.
-   Read the {antora-xref-docs}[`xref` documentation].
+   Read the {antora-xref-docs}[`xref` documentation{external-link-icon}^].
    Creating a reference to a page and _specifying a component without a version_ means that the link is pointing to the latest version.
    This is usually not what you want!
    Omitting the component entirely will instead link to the target page _within the same version_ as the page resides in.
 * Other `xref` and `include` issues
-** Familiarize yourself with the {antora-xref-docs}[`xref` documentation] which explains the syntax in great detail.
+** Familiarize yourself with the {antora-xref-docs}[`xref` documentation{external-link-icon}^] which explains the syntax in great detail.
    Unfortunately the xref syntax is a common place to make mistakes, and it is easy to accidently link to the wrong place.

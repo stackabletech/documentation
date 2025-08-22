@@ -35,7 +35,7 @@ The following product versions are deprecated and will be removed in a later rel
 
 ===== Removed versions
 
-The following product versions are no longer supported (although images for released product versions remain available https://oci.stackable.tech/[here,window=_blank]. Information on how to browse the registry can be found xref:contributor:project-overview.adoc#docker-images[here,window=_blank].):
+The following product versions are no longer supported (although images for released product versions remain available https://oci.stackable.tech/[here{external-link-icon}^]. Information on how to browse the registry can be found xref:contributor:project-overview.adoc#docker-images[here,window=_blank].):
 
 * ...
 

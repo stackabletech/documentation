@@ -5,11 +5,11 @@
 
 == Introduction
 
-The Stackable Platform offers an https://www.openpolicyagent.org[OpenPolicyAgent] (OPA) operator for policy-based access control. This document shows how to configure a Stackable operator and its managed product to query OPA to enforce policy-based access control.
+The Stackable Platform offers an https://www.openpolicyagent.org[OpenPolicyAgent{external-link-icon}^] (OPA) operator for policy-based access control. This document shows how to configure a Stackable operator and its managed product to query OPA to enforce policy-based access control.
 
 == What is OPA?
 
-OPA is an open source, general purpose policy engine. It supports a high-level declarative language called `https://www.openpolicyagent.org/docs/latest/policy-language/[Rego]`. Rego enables you to specify complex policies as code and transfer the decision-making processes from your software to OPA. We refer to policies written in Rego as _Rego rules_.
+OPA is an open source, general purpose policy engine. It supports a high-level declarative language called `https://www.openpolicyagent.org/docs/latest/policy-language/[Rego{external-link-icon}^]`. Rego enables you to specify complex policies as code and transfer the decision-making processes from your software to OPA. We refer to policies written in Rego as _Rego rules_.
 
 The provided OPA REST API allows you to enforce policies within microservices, Kubernetes, CI/CD pipelines and more.
 
@@ -20,11 +20,11 @@ OPA accepts arbitrary structured input data (e.g. JSON) when running queries aga
 The combination of arbitrary input data and the Rego rules enable you to specify and enforce almost any kind of policies.
 You can define powerful policies for e.g. user access for database tables, schemas, columns etc. You can enforce local network traffic, access time periods and many more.
 
-See the https://www.openpolicyagent.org/docs/latest/#overview[OPA documentation] for further examples.
+See the https://www.openpolicyagent.org/docs/latest/#overview[OPA documentation{external-link-icon}^] for further examples.
 
 == Stackable Operator for OPA
 
-The https://github.com/stackabletech/opa-operator[Stackable Operator for OPA] deploys OPA as a https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/[DaemonSet] in Kubernetes. This ensures that every registered https://kubernetes.io/de/docs/concepts/architecture/nodes/[Node] runs exactly one OPA instance. In order to reduce traffic and latency, deployed products querying OPA must use the local OPA provided on their respective Node.
+The https://github.com/stackabletech/opa-operator[Stackable Operator for OPA{external-link-icon}^] deploys OPA as a https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/[DaemonSet{external-link-icon}^] in Kubernetes. This ensures that every registered https://kubernetes.io/de/docs/concepts/architecture/nodes/[Node{external-link-icon}^] runs exactly one OPA instance. In order to reduce traffic and latency, deployed products querying OPA must use the local OPA provided on their respective Node.
 
 === Service Discovery
 
@@ -79,7 +79,7 @@ In order to configure another operator and its product to query OPA, the service
 
 === Configure OPA access in the operator
 
-The `https://github.com/stackabletech/operator-rs[operator-rs]` framework has a module called `opa.rs` that offers a predefined struct OpaConfig and several helper methods to extract the OPA URL from the service discovery ConfigMap.
+The `https://github.com/stackabletech/operator-rs[operator-rs{external-link-icon}^]` framework has a module called `opa.rs` that offers a predefined struct OpaConfig and several helper methods to extract the OPA URL from the service discovery ConfigMap.
 
 [source,rust]
 ----
@@ -101,9 +101,9 @@ The Stackable platform uses internal (written by us) and external authorizers to
 
 === Internal
 
-- https://github.com/stackabletech/trino-opa-authorizer[Trino]
-- https://github.com/stackabletech/druid-opa-authorizer[Druid]
+- https://github.com/stackabletech/trino-opa-authorizer[Trino{external-link-icon}^]
+- https://github.com/stackabletech/druid-opa-authorizer[Druid{external-link-icon}^]
 
 === External
 
-- https://github.com/anderseknert/opa-kafka-plugin[Apache Kafka]
+- https://github.com/anderseknert/opa-kafka-plugin[Apache Kafka{external-link-icon}^]

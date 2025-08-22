@@ -1,6 +1,6 @@
 = STACKIT Kubernetes Engine (SKE)
 
-https://www.stackit.de/de/produkt/stackit-kubernetes-engine/
+https://www.stackit.de/de/produkt/stackit-kubernetes-engine/[https://www.stackit.de/de/produkt/stackit-kubernetes-engine/{external-link-icon}^]
 
 SKE clusters by default have no public IPs assigned to the Kubernetes nodes.
 As of 2024-06-13 marking the nodes as public during the Kubernetes cluster creation is not supported.

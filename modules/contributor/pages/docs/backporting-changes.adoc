@@ -1,6 +1,6 @@
 = Backporting changes
 
-The documentation uses https://trunkbaseddevelopment.com/[trunk based development], so any new content or fixes should first be applied to the `main` branch and then ported to the release branches where the feature/fix also applies.
+The documentation uses https://trunkbaseddevelopment.com/[trunk based development{external-link-icon}^], so any new content or fixes should first be applied to the `main` branch and then ported to the release branches where the feature/fix also applies.
 
 == Prerequisites
 
@@ -19,4 +19,4 @@ The documentation uses https://trunkbaseddevelopment.com/[trunk based developmen
   That's it, you're done!
 
 The changes will become visible in the online documentation once the next build is triggered.
-You can either wait for the nightly build, or trigger a build yourself with the https://github.com/stackabletech/documentation/actions/workflows/deploy.yml[Build and deploy production site] GitHub action.
+You can either wait for the nightly build, or trigger a build yourself with the https://github.com/stackabletech/documentation/actions/workflows/deploy.yml[Build and deploy production site{external-link-icon}^] GitHub action.

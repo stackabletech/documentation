@@ -1,6 +1,6 @@
 = Microk8s
 
-https://microk8s.io/
+https://microk8s.io/[https://microk8s.io/{external-link-icon}^]
 
 Microk8s uses a non-standard Kubelet state directory.
 For this reason the secret-operator and listener-operator on Microk8s require special handling.

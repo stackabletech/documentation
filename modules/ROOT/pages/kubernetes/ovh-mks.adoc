@@ -1,6 +1,6 @@
 = OVH Managed Kubernetes Service (MKS)
 
-https://www.ovhcloud.com/en/public-cloud/kubernetes/
+https://www.ovhcloud.com/en/public-cloud/kubernetes/[https://www.ovhcloud.com/en/public-cloud/kubernetes/{external-link-icon}^]
 
 The Stackable Data Platform should install normally on the OVH MKS out of the box.
 

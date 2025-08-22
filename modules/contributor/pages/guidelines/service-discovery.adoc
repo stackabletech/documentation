@@ -24,7 +24,7 @@ The following section offers some Rust code snippets to get an idea on how to cr
 
 === Create a discovery ConfigMap
 
-Remember, per convention the discovery `ConfigMap` name of a cluster must be equal to the cluster name. The following code demonstrates how to create a discovery `ConfigMap` using the `ConfigMapBuilder` of the https://github.com/stackabletech/operator-rs[`operator-rs`] framework:
+Remember, per convention the discovery `ConfigMap` name of a cluster must be equal to the cluster name. The following code demonstrates how to create a discovery `ConfigMap` using the `ConfigMapBuilder` of the https://github.com/stackabletech/operator-rs[`operator-rs`{external-link-icon}^] framework:
 
 [source,rust]
 ----
@@ -83,7 +83,7 @@ fn env_var_from_cm(name: &str, configmap_name: &str) -> EnvVar {
 }
 ----
 
-The returned `EnvVar` then can be added to a `Pod` container and used in the `command` or `args` field using the https://github.com/stackabletech/operator-rs[`operator-rs`] framework container builder:
+The returned `EnvVar` then can be added to a `Pod` container and used in the `command` or `args` field using the https://github.com/stackabletech/operator-rs[`operator-rs`{external-link-icon}^] framework container builder:
 
 [source,rust]
 ----
@@ -129,9 +129,9 @@ The retrieved connection string can be used to configure the product to connect 
 
 == Existing libraries
 
-Currently, there is not much support from the https://github.com/stackabletech/operator-rs[`operator-rs`] framework to assist with service discovery. The related code is mostly contained in each operator and similar to the examples above.
+Currently, there is not much support from the https://github.com/stackabletech/operator-rs[`operator-rs`{external-link-icon}^] framework to assist with service discovery. The related code is mostly contained in each operator and similar to the examples above.
 
 The following list should indicate support for certain products or helper methods:
 
 - `ConfigMapBuilder` in combination with `ObjectMetaBuilder` assists with building the discovery `ConfigMap`
-- `OPA`: The https://github.com/stackabletech/operator-rs[`operator-rs`] framework has a module called `opa.rs` that supports the creation of the data API connection string
+- `OPA`: The https://github.com/stackabletech/operator-rs[`operator-rs`{external-link-icon}^] framework has a module called `opa.rs` that supports the creation of the data API connection string

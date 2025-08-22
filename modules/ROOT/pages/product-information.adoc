@@ -55,14 +55,14 @@ Stackable components.
 === Operators and products
 
 All operators are supplied in container images. The products are also deployed in container images. The docker images
-are available for download here: https://oci.stackable.tech/[]. Information on how to browse the images can be found xref:contributor:project-overview.adoc#docker-images[here].
+are available for download here: https://oci.stackable.tech/[https://oci.stackable.tech/{external-link-icon}^]. Information on how to browse the images can be found xref:contributor:project-overview.adoc#docker-images[here].
 
-Stackable supports installing the Operators via https://helm.sh/[Helm] or with <<stackablectl>>. Every Operator includes
+Stackable supports installing the Operators via https://helm.sh/[Helm{external-link-icon}^] or with <<stackablectl>>. Every Operator includes
 installation instructions in the Getting started guide.
 
 ==== Helm Charts
 
-The Helm Charts can be found here: https://oci.stackable.tech/api/v2.0/projects/sdp-charts[] Using the Helm Charts
+The Helm Charts can be found here: https://oci.stackable.tech/api/v2.0/projects/sdp-charts[https://oci.stackable.tech/api/v2.0/projects/sdp-charts{external-link-icon}^] Using the Helm Charts
 requires Helm version 3 or above. Information on how to browse the OCI repository for Helm Charts is described xref:contributor:project-overview.adoc#product-artifacts[here].
 
 

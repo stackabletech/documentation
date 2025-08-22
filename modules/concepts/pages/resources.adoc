@@ -1,15 +1,15 @@
 = Resource management
 :description: Learn how to manage CPU, memory, and storage resources for Stackable Data Platform products, including setting requests, limits, and StorageClasses.
 
-The Stackable Data Platform and its xref:operators:index.adoc[operators] deploy their products in https://kubernetes.io/docs/concepts/containers/[containers] within https://kubernetes.io/docs/concepts/workloads/pods/[Pods] using https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/[StatefulSets] or https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/[DaemonSets].
-In order for the Kubernetes scheduler to select a suitable https://kubernetes.io/docs/concepts/architecture/nodes/[Node] for a Pod, https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/[resource] requests and limits for CPU and memory can be specified.
+The Stackable Data Platform and its xref:operators:index.adoc[operators] deploy their products in https://kubernetes.io/docs/concepts/containers/[containers{external-link-icon}^] within https://kubernetes.io/docs/concepts/workloads/pods/[Pods{external-link-icon}^] using https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/[StatefulSets{external-link-icon}^] or https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/[DaemonSets{external-link-icon}^].
+In order for the Kubernetes scheduler to select a suitable https://kubernetes.io/docs/concepts/architecture/nodes/[Node{external-link-icon}^] for a Pod, https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/[resource{external-link-icon}^] requests and limits for CPU and memory can be specified.
 The Kubernetes scheduler ensures that the sum of the CPU and memory requests does not exceed the capacity of a given Node.
 
 == Terminology
 
 The most commonly defined resources are CPU and memory (RAM).
 Keep in mind that there are other resources as well.
-For more information have a look at the Kubernetes https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#requests-and-limits[documentation] on resources.
+For more information have a look at the Kubernetes https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#requests-and-limits[documentation{external-link-icon}^] on resources.
 
 === CPU
 
@@ -37,7 +37,7 @@ To avoid the restart it is critical to specify sufficient resources.
 === Storage
 
 Some Stackable products require data storage.
-This is done using https://kubernetes.io/docs/concepts/storage/persistent-volumes/#persistentvolumeclaims[Persistent Volume Claims] where the size of storage can be specified.
+This is done using https://kubernetes.io/docs/concepts/storage/persistent-volumes/#persistentvolumeclaims[Persistent Volume Claims{external-link-icon}^] where the size of storage can be specified.
 
 == Kubernetes resource requests
 
@@ -75,7 +75,7 @@ include::stackable_resource_requests.adoc[]
 
 === Storage
 
-This is an example on how to specify storage resources using the Stackable https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/[Custom Resources]:
+This is an example on how to specify storage resources using the Stackable https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/[Custom Resources{external-link-icon}^]:
 
 [source, yaml]
 ----
@@ -116,9 +116,9 @@ IMPORTANT: Stackable operators use different names (`data` in this example) for 
 A StorageClass defines a type of storage with certain properties.
 The StorageClasses that are available on a Kubernetes cluster are configured by the cluster administrator.
 Different classes can be configured to provide different levels of reliability or speed, or be configured to be more suited for read or write heavy loads.
-This configuration is either done in the storage backend or Kubernetes settings (find more information in the https://kubernetes.io/docs/concepts/storage/storage-classes/[Kubernetes documentation]).
+This configuration is either done in the storage backend or Kubernetes settings (find more information in the https://kubernetes.io/docs/concepts/storage/storage-classes/[Kubernetes documentation{external-link-icon}^]).
 
-For Stackable resources, setting a StorageClass is not mandatory; if a StorageClass is not set, the https://kubernetes.io/docs/concepts/storage/storage-classes/#default-storageclass[default StorageClass] will be used.
+For Stackable resources, setting a StorageClass is not mandatory; if a StorageClass is not set, the https://kubernetes.io/docs/concepts/storage/storage-classes/#default-storageclass[default StorageClass{external-link-icon}^] will be used.
 If you want to use a specific StorageClass for a particular storage, the StorageClass can be set on the resource:
 
 [source,yaml]

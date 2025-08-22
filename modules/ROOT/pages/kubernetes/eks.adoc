@@ -1,6 +1,6 @@
 = Amazon Elastic Kubernetes Service (EKS)
 
-https://aws.amazon.com/eks/
+https://aws.amazon.com/eks/[https://aws.amazon.com/eks/{external-link-icon}^]
 
 Please make sure that you have a default StorageClass in your cluster, so that PVCs will be provisioned.
 

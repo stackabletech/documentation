@@ -1,5 +1,5 @@
 = Quickstart
-:latest-release: https://github.com/stackabletech/stackable-cockpit/releases/tag/stackablectl-24.11.1
+:latest-release: https://github.com/stackabletech/stackable-cockpit/releases/tag/stackablectl-1.1.0
 :cockpit-releases: https://github.com/stackabletech/stackable-cockpit/releases
 :description: Quickstart guide for Stackable: Install stackablectl, set up a demo, and connect to services like Superset and Trino with easy commands and links.
 
@@ -12,14 +12,14 @@ Install `stackablectl`, the Stackable CLI utility.
 
 === Installation on Linux
 
-Download the `stackablectl-x86_64-unknown-linux-gnu` binary file from the link:{latest-release}[latest release], then
+Download the `stackablectl-x86_64-unknown-linux-gnu` binary file from the link:{latest-release}[latest release{external-link-icon}^], then
 rename the file to `stackablectl`. You can also use the following command:
 
 [source,console]
 ----
-wget -O stackablectl https://github.com/stackabletech/stackable-cockpit/releases/download/stackablectl-24.11.1/stackablectl-x86_64-unknown-linux-gnu
+wget -O stackablectl https://github.com/stackabletech/stackable-cockpit/releases/download/stackablectl-1.1.0/stackablectl-x86_64-unknown-linux-gnu
 # or
-curl -L -o stackablectl https://github.com/stackabletech/stackable-cockpit/releases/download/stackablectl-24.11.1/stackablectl-x86_64-unknown-linux-gnu
+curl -L -o stackablectl https://github.com/stackabletech/stackable-cockpit/releases/download/stackablectl-1.1.0/stackablectl-x86_64-unknown-linux-gnu
 ----
 
 Mark the binary as executable:
@@ -38,7 +38,7 @@ See the xref:management:stackablectl:installation.adoc[guide] for detailed infor
 == Install the Taxi data demo
 
 The xref:demos:trino-taxi-data.adoc[`trino-taxi-data`] Demo installs the latest Stackable platform release and a
-visualization of https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page[New York City Taxi Data] using Trino and
+visualization of https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page[New York City Taxi Data{external-link-icon}^] using Trino and
 Superset:
 
 [source,console]

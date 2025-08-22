@@ -9,7 +9,7 @@ Although downtime can't be prevented 100% of the time - especially if the produc
 Kubernetes provides mechanisms to ensure minimal *planned* downtime.
 Please keep in mind that this only affects planned (voluntary) downtime of Pods - unplanned Kubernetes node crashes can always occur.
 
-Our operators will always deploy so-called {k8s-pdb}[PodDisruptionBudget (PDB)] resources as part of a xref:stacklet.adoc[].
+Our operators will always deploy so-called {k8s-pdb}[PodDisruptionBudget (PDB){external-link-icon}^] resources as part of a xref:stacklet.adoc[].
 For every xref:stacklet.adoc#roles[role] that you specify (e.g. HDFS namenodes or Trino workers) a PDB is created.
 
 == Default values
@@ -36,7 +36,7 @@ Otherwise, rolling re-deployments may take very long.
 IMPORTANT: The operators calculate the number of Pods for a given role by adding the number of replicas of every role group that is part of that role.
 
 In case there are no replicas defined on a role group, one Pod will be assumed for this role group, as the created Kubernetes objects (StatefulSets or Deployments) will default to a single replica as well.
-However, in case there are https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/[HorizontalPodAutoscaler] in place, the number of replicas of a rolegroup can change dynamically.
+However, in case there are https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/[HorizontalPodAutoscaler{external-link-icon}^] in place, the number of replicas of a rolegroup can change dynamically.
 In this case the operators might falsely assume that role groups have fewer Pods than they actually have.
 This is a pessimistic approach, as the number of allowed disruptions normally stays the same or even increases when the number of Pods increases.
 This should be safe, but in some cases more Pods *could* have been allowed to be unavailable which may increase the duration of rolling re-deployments.
@@ -90,7 +90,7 @@ In case you are not satisfied with the PDBs that are written by the operators, y
 
 WARNING: In case you write custom PDBs, it is your responsibility to take care of the availability of the products
 
-IMPORTANT: It is important to disable the PDBs created by the Stackable operators as described above before creating your own PDBs, as this is a https://github.com/kubernetes/kubernetes/issues/75957[limitation of Kubernetes].
+IMPORTANT: It is important to disable the PDBs created by the Stackable operators as described above before creating your own PDBs, as this is a https://github.com/kubernetes/kubernetes/issues/75957[limitation of Kubernetes{external-link-icon}^].
 
 *After disabling the Stackable PDBs*, you can deploy you own PDB such as
 
