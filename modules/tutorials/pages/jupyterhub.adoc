@@ -3,12 +3,12 @@
 :keywords: notebook, JupyterHub, Kubernetes, k8s, Apache Spark, HDFS, S3
 
 This tutorial illustrates various scenarios and configuration options when using JupyterHub on Kubernetes.
-The Custom Resources and configuration settings that are discussed here are based on the xref:demos:jupyterhub-keycloak.adoc[JupyterHub-Keycloak demo], so you may find it helpful to have that demo running to reference the various https://github.com/stackabletech/demos/blob/main/stacks/jupyterhub-keycloak[Resource definitions] as you read through this tutorial.
+The Custom Resources and configuration settings that are discussed here are based on the xref:demos:jupyterhub-keycloak.adoc[JupyterHub-Keycloak demo], so you may find it helpful to have that demo running to reference the various https://github.com/stackabletech/demos/blob/main/stacks/jupyterhub-keycloak[Resource definitions{external-link-icon}^] as you read through this tutorial.
 The example notebook is used to demonstrate simple read/write interactions with an S3 storage backend using Apache Spark.
 
 == Keycloak
 
-Keycloak is installed using a https://github.com/stackabletech/demos/blob/main/stacks/jupyterhub-keycloak/keycloak.yaml[Deployment] that loads its realm configuration mounted as a ConfigMap.
+Keycloak is installed using a https://github.com/stackabletech/demos/blob/main/stacks/jupyterhub-keycloak/keycloak.yaml[Deployment{external-link-icon}^] that loads its realm configuration mounted as a ConfigMap.
 
 [#services]
 === Services
@@ -207,7 +207,7 @@ For the self-signed certificate to be accepted during the handshake between Jupy
 
 === Realm
 
-The Keycloak https://github.com/stackabletech/demos/blob/main/stacks/jupyterhub-keycloak/keycloak-realm-config.yaml[realm configuration] for the demo basically contains a set of users and groups, along with a JupyterHub client definition:
+The Keycloak https://github.com/stackabletech/demos/blob/main/stacks/jupyterhub-keycloak/keycloak-realm-config.yaml[realm configuration{external-link-icon}^] for the demo basically contains a set of users and groups, along with a JupyterHub client definition:
 
 [source,yaml]
 ----
@@ -231,7 +231,7 @@ Wildcards are used for `redirectUris` and `webOrigins`, mainly for the sake of s
 === Authentication
 
 This tutorial covers two methods of authentication: Native and OAuth.
-Other implementations are documented https://jupyterhub.readthedocs.io/en/stable/reference/authenticators.html[here].
+Other implementations are documented https://jupyterhub.readthedocs.io/en/stable/reference/authenticators.html[here{external-link-icon}^].
 
 ==== Native Authenticator
 

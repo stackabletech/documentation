@@ -1,6 +1,6 @@
 = Azure Kubernetes Service (AKS)
 
-https://azure.microsoft.com/en-us/products/kubernetes-service
+https://azure.microsoft.com/en-us/products/kubernetes-service[https://azure.microsoft.com/en-us/products/kubernetes-service{external-link-icon}^]
 
 Automatic Kubernetes clusters are not supported, as the xref:secret-operator:index.adoc[secret-operator] requires special privileges that are not granted in automatic Kubernetes clusters.
 
@@ -47,4 +47,3 @@ image::managed-k8s/aks/6.png[]
 Access your Kubernetes by clicking on the `Connect` button and following the instructions.
 +
 image::managed-k8s/aks/7.png[]
-

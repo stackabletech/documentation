@@ -2,11 +2,11 @@
 
 == Cargo.toml
 
-Follow the https://doc.rust-lang.org/nightly/style-guide/cargo.html[official formatting conventions] for the `Cargo.toml` file.
+Follow the https://doc.rust-lang.org/nightly/style-guide/cargo.html[official formatting conventions{external-link-icon}^] for the `Cargo.toml` file.
 This means:
 
 * Put the `[package]` section at the top of the file.
-* Put the `name` and `version` keys in that order at the top of that section, followed by the remaining keys other than `description` in order (sort keys with https://www.gnu.org/software/coreutils/manual/html_node/Version-sort-overview.html[version-sort]; very similar to lexical sorting)), followed by the `description` at the end of that section.
+* Put the `name` and `version` keys in that order at the top of that section, followed by the remaining keys other than `description` in order (sort keys with https://www.gnu.org/software/coreutils/manual/html_node/Version-sort-overview.html[version-sort{external-link-icon}^]; very similar to lexical sorting)), followed by the `description` at the end of that section.
 * For other sections, sort keys with version-sort.
 
 [TIP.code-rule,caption=Examples of correct code for this rule]
@@ -48,7 +48,7 @@ a_dependency = "1.2.3"
 
 ====
 
-NOTE: This formatting might be supported by `rustfmt` in the future, see the https://github.com/rust-lang/rustfmt/pull/5240[PR] here.
+NOTE: This formatting might be supported by `rustfmt` in the future, see the https://github.com/rust-lang/rustfmt/pull/5240[PR{external-link-icon}^] here.
 
 == Identifier names
 
@@ -57,7 +57,7 @@ NOTE: This formatting might be supported by `rustfmt` in the future, see the htt
 We use unabbreviated identifier names to avoid ambiguity.
 Short (even single letter) variable names are allowed in lambdas (closures), in one-liners, and when the context allows it.
 
-[quote,Uncle Bob Martin, 'Source: https://twitter.com/unclebobmartin/status/360029878126514177[Twitter]']
+[quote,Uncle Bob Martin, 'Source: https://twitter.com/unclebobmartin/status/360029878126514177[Twitter,window=_blank]']
 The shorter the scope the shorter the variable names, and the longer the function [...] names.  And vice versa.
 
 The usage of well-known acronyms like CPU, TLS or OIDC are allowed.
@@ -344,7 +344,7 @@ Comments should always form complete sentences with full stops at the end.
 
 ====
 
-Additionally, doc comments should follow the structure outlined by the Rust project, which is described https://doc.rust-lang.org/rustdoc/how-to-write-documentation.html#documenting-components[here]:
+Additionally, doc comments should follow the structure outlined by the Rust project, which is described https://doc.rust-lang.org/rustdoc/how-to-write-documentation.html#documenting-components[here{external-link-icon}^]:
 
 [source]
 ----
@@ -539,7 +539,7 @@ enum Error {
 
 The `unwrap` function must not be used in any code.
 Instead, proper error handling like above should be used, unless there is a valid reason to use `expect` described below.
-Using link:{unwrap_or}[`unwrap_or`], link:{unwrap_or_default}[`unwrap_or_default`] or link:{unwrap_or_else}[`unwrap_or_else`] is allowed because these functions will not panic.
+Using link:{unwrap_or}[`unwrap_or`{external-link-icon}^], link:{unwrap_or_default}[`unwrap_or_default`{external-link-icon}^] or link:{unwrap_or_else}[`unwrap_or_else`{external-link-icon}^] is allowed because these functions will not panic.
 
 The `expect` function can be used when external factors cannot influence whether a panic will happen. For example, when compiling regular expressions inside const/static environments.
 For such cases code must use `expect` instead of `unwrap` to provide additional context for why a particular piece of code should never fail.
@@ -642,7 +642,7 @@ format!("Hello {name}, hello again {name}", name = greetee);
 
 == Specifying resources measured in bytes and CPU fractions
 
-Follow the Kubernetes convention described https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/[here].
+Follow the Kubernetes convention described https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/quantity/[here{external-link-icon}^].
 
 === Resources measured in bytes
 

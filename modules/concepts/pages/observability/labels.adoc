@@ -9,7 +9,7 @@ The xref:management:stackablectl:index.adoc[`stackablectl`] tool, the cockpit, a
 == Resource labels added by the operators
 
 Every resource created by a Stackable operator has a common set of labels applied.
-Some of these labels are {common-labels}[recommended] to use by the Kubernetes documentation.
+Some of these labels are {common-labels}[recommended{external-link-icon}^] to use by the Kubernetes documentation.
 The following labels are added to resources created by our operators:
 
 * `app.kubernetes.io/name` - The name of the product, i.e. `druid` or `zookeeper`.

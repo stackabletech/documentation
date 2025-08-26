@@ -139,7 +139,7 @@ The priority of how to construct the final Pod submitted to Kubernetes looks as 
 3. PodTemplateSpec given in rolegroup level `podOverrides`
 
 Each of these are combined top to bottom using a deep merge.
-The exact merge algorithm is described in the {k8s-openapi-deepmerge}[k8s-openapi docs], which basically tries to mimic the way Kubernetes merges patches onto objects.
+The exact merge algorithm is described in the {k8s-openapi-deepmerge}[k8s-openapi docs{external-link-icon}^], which basically tries to mimic the way Kubernetes merges patches onto objects.
 
 The `podOverrides` will be merged onto the following resources the operators deploy:
 

@@ -1,6 +1,6 @@
 = VMware Tanzu
 
-https://www.vmware.com/products/app-platform/tanzu
+https://www.vmware.com/products/app-platform/tanzu[https://www.vmware.com/products/app-platform/tanzu{external-link-icon}^]
 
 VMware Tanzu uses a non-standard Kubelet state directory.
 For this reason the secret-operator and listener-operator on VMware Tanzu require special handling.
