@@ -3,7 +3,7 @@
 :tcpdump: https://www.tcpdump.org/
 :mitmproxy: https://www.mitmproxy.org/
 
-You like know this problem: Some tools is behaving weird, and you need to debug (often times HTTP/HTTPS or DNS) traffic between Kubernetes Pods.
+You likely know this problem: Some tools is behaving weird, and you need to debug (often times HTTP/HTTPS or DNS) traffic between Kubernetes Pods.
 If the tool would be running on a local machine, one would simply start {tcpdump}[`tcpdump`] and inspect the traffic.
 Maybe use {mitmproxy}[`mitmproxy`] as a HTTPS proxy to re-encrypt the HTTPS traffic, so that it is readable.
 
