@@ -1,0 +1,153 @@
+= Debug network traffic
+:description: Capture and analyze network traffic between Pods. This also includes TLS encrypted communications.
+:tcpdump: https://www.tcpdump.org/
+:mitmproxy: https://www.mitmproxy.org/
+
+You like know this problem: Some tools is behaving weird, and you need to debug (often times HTTP/HTTPS or DNS) traffic between Kubernetes Pods.
+If the tool would be running on a local machine, one would simply start {tcpdump}[`tcpdump`] and inspect the traffic.
+Maybe use {mitmproxy}[`mitmproxy`] as a HTTPS proxy to re-encrypt the HTTPS traffic, so that it is readable.
+
+However, as we are running in a containerized environment, things are a bit more complicated.
+This guide explains you how you can capture and inspect traffic anyway.
+
+There are a few things needed:
+
+1. A sidecar running {tcpdump}[`tcpdump`], capturing the traffic into a file.
+2. If TLS (e.g. HTTPS) traffic is involved, the product needs to be configured in such a way, that it writes the TLS session keys into a file.
+   The key log can be used afterwards to decrypt the TLS traffic.
+3. Wireshark to make it easier to inspect the captured traffic.
+   You can give it the TLS key log and it will automatically decrypt the TLS traffic.
+
+== Simple usage
+
+If you only care about unencrypted communications, you can use this snippet to dump all traffic using {tcpdump}[`tcpdump`].
+
+[source,yaml]
+----
+apiVersion: trino.stackable.tech/v1alpha1
+kind: TrinoCluster
+metadata:
+  name: trino
+spec:
+  coordinators:
+    podOverrides:
+      spec:
+        containers:
+          - name: tcpdump
+            image: nicolaka/netshoot
+            command: ["/bin/bash"]
+            args:
+              - -c
+              # If the dump grows to big, you can use regular tcpdump filters here 
+              # to filter the captured traffic
+              - tcpdump -i any -w /tmp/tcpdump.pcap
+----
+
+=== Attach without restart
+
+You can also use something like `kubectl debug trino-coordinator-default-0 -it --image=nicolaka/netshoot -c tcpdump` to use a debug container and attach to a Pod without restart.
+
+== TLS decryption usage
+
+Let's make things a bit more interesting using a real-world example.
+As Superset is behaving weird, we want to debug the network traffic from Superset to Trino, which is using HTTPS.
+
+As of Java 21 the JVM does not respect the `SSLKEYLOGFILE` env var and does not seem to have support to write the TLS key log.
+So we need to use a third-party Java agent called https://github.com/neykov/extract-tls-secrets[extract-tls-secrets] for that.
+
+[source,yaml]
+----
+apiVersion: trino.stackable.tech/v1alpha1
+kind: TrinoCluster
+metadata:
+  name: trino
+spec:
+  coordinators:
+    envOverrides:
+      SSLKEYLOGFILE: /tmp/sslkeys.log
+    podOverrides:
+      spec:
+        # As we can not add a curl command to the Trino startup script, we add a initContainer,
+        # that curls the needed jar for us
+        initContainers:
+          - name: download-java-agent
+            image: nicolaka/netshoot # We only need curl, reusing same image for quicker pulls
+            command: ["/bin/bash"]
+            args:
+              - -c
+              - curl -L -o /jar/extract-tls-secrets.jar https://github.com/neykov/extract-tls-secrets/releases/download/v4.0.0/extract-tls-secrets-4.0.0.jar
+            volumeMounts:
+              - name: jar
+                mountPath: /jar
+        containers:
+          - name: tcpdump
+            image: nicolaka/netshoot
+            command: ["/bin/bash"]
+            args:
+              - -c
+              # If the dump grows to big, you can use regular tcpdump filters here 
+              # to filter the captured traffic
+              - tcpdump -i any -w /tcpdump/tcpdump.pcap
+            volumeMounts:
+              - name: tcpdump
+                mountPath: /tcpdump
+          - name: trino
+            volumeMounts:
+              - name: jar
+                mountPath: /jar
+        volumes:
+          - name: jar
+            emptyDir: {}
+          # As the dump can grow quite big we use a dedicated emptyDir for it
+          - name: tcpdump
+            emptyDir: {}
+    jvmArgumentOverrides:
+      add:
+        - -javaagent:/jar/extract-tls-secrets.jar=/tmp/sslkeys.log
+----
+
+Your Trino now captures all traffic into `tcpdump.pcap` and the SSL key logs into `sslkeys.log`.
+
+Use the following command to copy the files to your local machine
+
+[source,bash]
+----
+kubectl cp trino-coordinator-default-0:/tcpdump/tcpdump.pcap -c tcpdump tcpdump.pcap && kubectl cp trino-coordinator-default-0:/tmp/sslkeys.log -c trino sslkeys.log
+----
+
+To inspect the traffic in Wireshark run
+
+[source,bash]
+----
+wireshark -o tls.keylog_file:./sslkeys.log tcpdump.pcap
+----
+
+Normal Wireshark usage applies now.
+E.g. for the case of Trino we want to see all `POST /v1/statement` HTTPS calls.
+You can filter for them using `http.request.method == POST && http.request.uri == "/v1/statement"`:
+
+image::debug-network-traffic/1.png[]
+
+You can see that the HTTP packet was actually TLS encrypted in the packet explorer at the bottom.
+
+image::debug-network-traffic/2.png[]
+
+To follow the entire HTTP stream, right-click on the packet and select `Follow` -> `HTTP Stream`.
+
+image::debug-network-traffic/3.png[]
+
+You now see the entire Superset -> Trino conversation, in this case thw following SQL query:
+
+[source,sql]
+----
+SELECT date_trunc('day', CAST(tpep_pickup_datetime AS TIMESTAMP)) AS __timestamp, AVG(duration_min) AS "Average trip duration" 
+FROM demo.ny_taxi_data GROUP BY date_trunc('day', CAST(tpep_pickup_datetime AS TIMESTAMP)) ORDER BY "Average trip duration" DESC
+LIMIT 10000
+----
+
+image::debug-network-traffic/4.png[]
+
+== Follow-up tips
+
+1. You can filter the packets in the {tcpdump}[`tcpdump`] call to reduce the capture file size.
+2. If you do this on a production setup, keep in mind that the dump might contain sensitive data and the TLS keys can be used to decrypt all TLS traffic of this Pod!

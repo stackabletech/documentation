@@ -1,5 +1,6 @@
 * xref:index.adoc[]
 ** xref:custom-images.adoc[]
+** xref:debug-network-traffic.adoc[]
 ** xref:providing-resources-with-pvcs.adoc[]
 ** xref:running-stackable-in-an-airgapped-environment.adoc[]
 ** xref:viewing-and-verifying-sboms.adoc[]
