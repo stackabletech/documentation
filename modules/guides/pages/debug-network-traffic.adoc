@@ -136,7 +136,7 @@ To follow the entire HTTP stream, right-click on the packet and select `Follow` 
 
 image::debug-network-traffic/3.png[]
 
-You now see the entire Superset -> Trino conversation, in this case thw following SQL query:
+You now see the entire Superset -> Trino conversation, in this case the following SQL query:
 
 [source,sql]
 ----
