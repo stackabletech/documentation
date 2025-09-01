@@ -38,7 +38,7 @@ spec:
             command: ["/bin/bash"]
             args:
               - -c
-              # If the dump grows to big, you can use regular tcpdump filters here 
+              # If the dump grows to big, you can use regular tcpdump filters here
               # to filter the captured traffic
               - tcpdump -i any -w /tmp/tcpdump.pcap
 ----
@@ -85,7 +85,7 @@ spec:
             command: ["/bin/bash"]
             args:
               - -c
-              # If the dump grows to big, you can use regular tcpdump filters here 
+              # If the dump grows to big, you can use regular tcpdump filters here
               # to filter the captured traffic
               - tcpdump -i any -w /tcpdump/tcpdump.pcap
             volumeMounts:
@@ -140,7 +140,7 @@ You now see the entire Superset -> Trino conversation, in this case the followin
 
 [source,sql]
 ----
-SELECT date_trunc('day', CAST(tpep_pickup_datetime AS TIMESTAMP)) AS __timestamp, AVG(duration_min) AS "Average trip duration" 
+SELECT date_trunc('day', CAST(tpep_pickup_datetime AS TIMESTAMP)) AS __timestamp, AVG(duration_min) AS "Average trip duration"
 FROM demo.ny_taxi_data GROUP BY date_trunc('day', CAST(tpep_pickup_datetime AS TIMESTAMP)) ORDER BY "Average trip duration" DESC
 LIMIT 10000
 ----
