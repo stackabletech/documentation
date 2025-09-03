@@ -50,7 +50,7 @@ You can also use something like `kubectl debug trino-coordinator-default-0 -it -
 == TLS decryption usage
 
 Let's make things a bit more interesting using a real-world example.
-As Superset is behaving weird, we want to debug the network traffic from Superset to Trino, which is using HTTPS.
+Let's assume Superset is behaving weird and we want to debug the network traffic from Superset to Trino, which is using HTTPS.
 
 As of Java 21 the JVM does not respect the `SSLKEYLOGFILE` env var and does not seem to have support to write the TLS key log.
 So we need to use a third-party Java agent called https://github.com/neykov/extract-tls-secrets[extract-tls-secrets] for that.
