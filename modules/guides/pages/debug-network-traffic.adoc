@@ -151,3 +151,4 @@ image::debug-network-traffic/4.png[]
 
 1. You can filter the packets in the {tcpdump}[`tcpdump`] call to reduce the capture file size.
 2. If you do this on a production setup, keep in mind that the dump might contain sensitive data and the TLS keys can be used to decrypt all TLS traffic of this Pod!
+3. In case the product uses HTTP 2 (or newer), you need to use a Wireshark filter such as `http2.headers.path == "/nifi-api/flow/current-user"`
