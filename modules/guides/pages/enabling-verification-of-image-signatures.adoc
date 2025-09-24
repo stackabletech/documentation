@@ -2,7 +2,7 @@
 :page-aliases: tutorials:enabling-verification-of-image-signatures.adoc
 :description: Learn to enable and verify image signatures in Kubernetes using Sigstore’s Policy Controller, ensuring image authenticity and security in your cluster.
 
-Image signing is a security measure that helps ensure the authenticity and integrity of container images. Starting with SDP 23.11, all our images are signed "https://docs.sigstore.dev/cosign/openid_signing/[keyless{external-link-icon}^]". By verifying these signatures, cluster administrators can ensure that the images pulled from Stackable's container registry are authentic and have not been tampered with.
+Image signing is a security measure that helps ensure the authenticity and integrity of container images. Starting with SDP 23.11, all our images are signed "https://docs.sigstore.dev/cosign/signing/overview/[keyless{external-link-icon}^]". By verifying these signatures, cluster administrators can ensure that the images pulled from Stackable's container registry are authentic and have not been tampered with.
 Since Kubernetes does not have native support for verifying image signatures yet, we will use Sigstore's https://docs.sigstore.dev/policy-controller/overview/[Policy Controller{external-link-icon}^] in this tutorial.
 
 IMPORTANT: Releases prior to SDP 23.11 do not have signed images. If you are using an older release and enforce image signature verification, Pods with Stackable images will be prevented from starting.
