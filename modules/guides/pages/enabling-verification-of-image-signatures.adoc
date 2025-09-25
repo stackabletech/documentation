@@ -91,7 +91,7 @@ If you provide the files as serialized repository in the `TrustRoot` resource, t
 
 There's a lot more to learn about how keyless signing and verification works. We recommend the following resources:
 
-* https://docs.sigstore.dev/signing/overview/[https://docs.sigstore.dev/signing/overview/{external-link-icon}^]
+* https://docs.sigstore.dev/cosign/signing/overview/[https://docs.sigstore.dev/cosign/signing/overview/{external-link-icon}^]
 * https://docs.sigstore.dev/policy-controller/overview/[https://docs.sigstore.dev/policy-controller/overview/{external-link-icon}^]
 * https://www.chainguard.dev/unchained/life-of-a-sigstore-signature[https://www.chainguard.dev/unchained/life-of-a-sigstore-signature{external-link-icon}^]
 * https://blog.sigstore.dev/why-you-cant-use-sigstore-without-sigstore-de1ed745f6fc/[https://blog.sigstore.dev/why-you-cant-use-sigstore-without-sigstore-de1ed745f6fc/{external-link-icon}^]
