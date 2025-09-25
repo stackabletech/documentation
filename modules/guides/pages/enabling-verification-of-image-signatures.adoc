@@ -54,7 +54,7 @@ As mentioned before, our images and Helm charts for SDP are signed keyless. Keyl
 
 To verify keyless signatures, the Policy Controller needs an up-to-date version of the root of trust, which is distributed as a collection of files (to put it simply). In an online setting, these files are automatically fetched via HTTP, by default from the https://tuf-repo-cdn.sigstore.dev/[Sigstore TUF Repo CDN{external-link-icon}^].
 
-NOTE: https://docs.sigstore.dev/signing/overview/#root-of-trust[The Update Framework (TUF){external-link-icon}^] is the mechanism used by the Policy Controller to initialize and update the root of trust.
+NOTE: https://docs.sigstore.dev/cosign/signing/overview/#root-of-trust[The Update Framework (TUF){external-link-icon}^] is the mechanism used by the Policy Controller to initialize and update the root of trust.
 
 In an air-gapped environment, this CDN is not reachable, so instead you have to provide those files yourself. You can get these files from https://github.com/sigstore/root-signing/tree/main/repository/repository[GitHub{external-link-icon}^].
 There are multiple ways how you can provide these files to the Policy Controller, please pick the one that works best for your air-gapped environment:
