@@ -1,11 +1,11 @@
 = Lifecycle policies
 :description: Detailed lifecycle policies for Stackable Data Platform, covering SDP, CRD versioning, product support, and compatibility with Kubernetes & OpenShift.
 
-This page details our lifecycle policies around various parts of our product - the Stackable Data Platform (SDP).
+This page details lifecycle policies for the Stackable Data Platform (SDP).
 
-We define multiple lifecycle policies for different parts of our platform, but all policies follow some common goals:
+Multiple lifecycle policies are defined for different parts of our platform, but all policies follow some common goals:
 
-* It should always be possible to upgrade to a new version of SDP without also changing any of your Kubernetes resources as long as you are not currently using anything that has already been marked as deprecated
+* It should always be possible to upgrade to a new version of SDP without also changing any of the Stackable Custom Resources as long as you are not currently using anything that has already been marked as deprecated
 ** This means you can upgrade the control plane independently of the user-facing products
 * All deprecations follow a predictable lifecycle that allows planning of upgrades ahead of time
 
@@ -16,13 +16,11 @@ The guarantees we give are on multiple levels as detailed below:
 * Supported product versions
 * Supported OpenShift & Kubernetes versions
 
-All these policies may evolve as we learn what works best for our customers and for us.
+These policies may evolve based on customer feedback and operational experience.
 
 These policies were last updated in *September 2025*.
 
 == Stackable Data Platform lifecycle policy
-
-NOTE: This policy concerns releases of our platform as a whole and how long and to which extent we support each version.
 
 We do releases of our Stackable Data Platform.
 These releases get a name based on the year and month they have been released in (e.g. `25.3`, `25.7`, also called https://calver.org/[CalVer{external-link-icon}^]).
@@ -32,7 +30,7 @@ See below for our policy on patches for the SDP.
 
 We support an SDP release for a specific amount of time after its initial release.
 
-An SDP release contains our operators and other code developed at Stackable as well as the data product docker images.
+An SDP release contains our operators, other components developed at Stackable, and the operator-managed product container images.
 
 TIP: Our policy is inspired by the https://kubernetes.io/releases/patch-releases/[Kubernetes{external-link-icon}^] and the https://access.redhat.com/support/policy/updates/openshift#ocp4[OpenShift{external-link-icon}^] policies.
 
@@ -74,8 +72,8 @@ While they may work in some cases, customers who downgrade do so at their own ri
 
 == CRD Versioning lifecycle policy
 
-IMPORTANT: As of release 25.7 all our CRDs are versioned as `alpha1`.
-Starting with release 25.11 we will introduce versioned CRDs (beta/stable) for some products.
+IMPORTANT: As of release 25.7 all our CRDs are versioned as `v1alpha1`.
+Starting with release 25.11 we will introduce versioned CRDs for some products.
 
 CustomResourceDefinitions at Stackable are versioned.
 
@@ -125,7 +123,7 @@ When introducing a new LTS release line, the previous LTS line must remain avail
 For example: If an LTS version is introduced in release 24.3 (March 2024), it must be available as the recommended LTS through at least the March 2025 release (25.3).
 If a new LTS is introduced in 25.3, the old LTS from 24.3 must remain available but deprecated in 25.3, and can be removed in the following release (25.7).
 
-Which line we choose as our LTS release is at our own discretion and is based on popularity, upstream lifecycle policies, stability, our own experience and other factors.
+The line designated as our LTS release is chosen at our own discretion and is based on popularity, upstream lifecycle policies, stability, our own experience and other factors.
 
 In addition to the LTS line we may also ship other versions, e.g. the latest upstream version.
 
