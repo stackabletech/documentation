@@ -1,4 +1,5 @@
 = Product information
+:page-aliases: ROOT:product-information.adoc
 :description: Learn about concrete specifications of the Stackable Data Platform (SDP) as a product, which components are
 included, how they are supplied and which external dependencies exist that you as a customer need to take care of.
 
@@ -39,7 +40,7 @@ functionality for managing and control SDP: xref:commons-operator:index.adoc[Com
 xref:secret-operator:index.adoc[Secret] and xref:listener-operator:index.adoc[Listener] Operator.
 
 The pages linked above also detail the use cases and features supported by each component. You can find additional
-information in the xref:release_notes.adoc[release notes]. Refer to the xref:operators:supported_versions.adoc[list of
+information in the xref:ROOT:release_notes.adoc[release notes]. Refer to the xref:operators:supported_versions.adoc[list of
 supported product versions] to find out which product versions are supported.
 
 
@@ -106,16 +107,16 @@ components.
 A Kubernetes cluster is required to install the Stackable Data Platform.
 The supported Kubernetes versions for each platform release can be found here:
 
-xref:release-notes.adoc[SDP Release notes]
+xref:ROOT:release-notes.adoc[SDP Release notes]
 
 There are various Kubernetes distributions.
 The following distributions are supported for a production setup of the Stackable Data Platform:
 
-include::partial$supported-kubernetes-distributions.adoc[]
+include::ROOT:partial$supported-kubernetes-distributions.adoc[]
 
 These Kubernetes distributions are not officially tested by us but based on community feedback have been known to work. Some might require extra steps, please refer to the detailed pages for more information. Please contact us if you're interested in official support for any of these:
 
-include::partial$tested-kubernetes-distributions.adoc[]
+include::ROOT:partial$tested-kubernetes-distributions.adoc[]
 
 === Product specific dependencies
 
