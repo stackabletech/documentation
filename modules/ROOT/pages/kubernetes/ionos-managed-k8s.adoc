@@ -4,6 +4,8 @@ https://cloud.ionos.com/managed/kubernetes[https://cloud.ionos.com/managed/kuber
 
 TIP: IONOS also offers a xref:kubernetes/ionos-managed-stackable.adoc[managed Stackable service], which simplifies the usage of Stackable.
 
+WARNING: To use a LoadBalancer, you will need to set `serviceExternalTrafficPolicy: Cluster`.
+
 There are no special setup steps needed.
 
 . Create Kubernetes cluster
