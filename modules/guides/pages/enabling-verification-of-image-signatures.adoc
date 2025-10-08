@@ -2,7 +2,7 @@
 :page-aliases: tutorials:enabling-verification-of-image-signatures.adoc
 :description: Learn to enable and verify image signatures in Kubernetes using Sigstore’s Policy Controller, ensuring image authenticity and security in your cluster.
 
-Image signing is a security measure that helps ensure the authenticity and integrity of container images. Starting with SDP 23.11, all our images are signed "https://docs.sigstore.dev/cosign/openid_signing/[keyless{external-link-icon}^]". By verifying these signatures, cluster administrators can ensure that the images pulled from Stackable's container registry are authentic and have not been tampered with.
+Image signing is a security measure that helps ensure the authenticity and integrity of container images. Starting with SDP 23.11, all our images are signed "https://docs.sigstore.dev/cosign/signing/overview/[keyless{external-link-icon}^]". By verifying these signatures, cluster administrators can ensure that the images pulled from Stackable's container registry are authentic and have not been tampered with.
 Since Kubernetes does not have native support for verifying image signatures yet, we will use Sigstore's https://docs.sigstore.dev/policy-controller/overview/[Policy Controller{external-link-icon}^] in this tutorial.
 
 IMPORTANT: Releases prior to SDP 23.11 do not have signed images. If you are using an older release and enforce image signature verification, Pods with Stackable images will be prevented from starting.
@@ -54,7 +54,7 @@ As mentioned before, our images and Helm charts for SDP are signed keyless. Keyl
 
 To verify keyless signatures, the Policy Controller needs an up-to-date version of the root of trust, which is distributed as a collection of files (to put it simply). In an online setting, these files are automatically fetched via HTTP, by default from the https://tuf-repo-cdn.sigstore.dev/[Sigstore TUF Repo CDN{external-link-icon}^].
 
-NOTE: https://docs.sigstore.dev/signing/overview/#root-of-trust[The Update Framework (TUF){external-link-icon}^] is the mechanism used by the Policy Controller to initialize and update the root of trust.
+NOTE: https://docs.sigstore.dev/cosign/signing/overview/#root-of-trust[The Update Framework (TUF){external-link-icon}^] is the mechanism used by the Policy Controller to initialize and update the root of trust.
 
 In an air-gapped environment, this CDN is not reachable, so instead you have to provide those files yourself. You can get these files from https://github.com/sigstore/root-signing/tree/main/repository/repository[GitHub{external-link-icon}^].
 There are multiple ways how you can provide these files to the Policy Controller, please pick the one that works best for your air-gapped environment:
@@ -91,7 +91,7 @@ If you provide the files as serialized repository in the `TrustRoot` resource, t
 
 There's a lot more to learn about how keyless signing and verification works. We recommend the following resources:
 
-* https://docs.sigstore.dev/signing/overview/[https://docs.sigstore.dev/signing/overview/{external-link-icon}^]
+* https://docs.sigstore.dev/cosign/signing/overview/[https://docs.sigstore.dev/cosign/signing/overview/{external-link-icon}^]
 * https://docs.sigstore.dev/policy-controller/overview/[https://docs.sigstore.dev/policy-controller/overview/{external-link-icon}^]
 * https://www.chainguard.dev/unchained/life-of-a-sigstore-signature[https://www.chainguard.dev/unchained/life-of-a-sigstore-signature{external-link-icon}^]
 * https://blog.sigstore.dev/why-you-cant-use-sigstore-without-sigstore-de1ed745f6fc/[https://blog.sigstore.dev/why-you-cant-use-sigstore-without-sigstore-de1ed745f6fc/{external-link-icon}^]
