@@ -72,7 +72,21 @@
     <a class="navbar-link" href="#">Compliance</a>
     <div class="navbar-dropdown">
         <a class="navbar-item" href="{{{ relativize "/home/stable/compliance/product-information" }}}">Product Information</a>
+        {{#if (not (or
+            (eq page.version "23.1")
+            (eq page.version "23.4")
+            (eq page.version "23.7")
+            (eq page.version "23.11")
+            (eq page.version "24.3")
+            (eq page.version "24.7")
+            (eq page.version "24.11")
+            (eq page.version "25.3")
+            (eq page.version "25.7")
+        ))}}
         <a class="navbar-item" href="{{{ relativize (versioned "home" page "policies.html") }}}">Policies</a>
+        {{else}}
+        <a class="navbar-item" href="{{{ relativize (versioned "home" page "compliance/policies.html") }}}">Policies</a>
+        {{/if}}
         <a class="navbar-item" href="{{{ relativize "/home/stable/compliance/licenses" }}}">Licenses</a>
         <a class="navbar-item" href="{{{ relativize "/home/stable/compliance/export" }}}">Export Control</a>
         <a class="navbar-item" href="{{{ relativize "/home/stable/compliance/cra" }}}">Cyber Resilience Act</a>
