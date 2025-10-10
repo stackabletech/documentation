@@ -121,7 +121,7 @@ Every LTS release line is supported for a minimum of 12 months from the SDP rele
 When introducing a new LTS release line, the previous LTS line must remain available (marked as deprecated) for at least one additional SDP release to allow migration time.
 
 For example: If an LTS version is introduced in release 24.3 (March 2024), it must be available as the recommended LTS through at least the March 2025 release (25.3).
-If a new LTS is introduced in 25.3, the old LTS from 24.3 must remain available but deprecated in 25.3, and can be removed in the following release (25.7).
+If a new LTS version is introduced in 25.3, the old LTS version from 24.3 must remain available but deprecated in 25.3, and can be removed in the following release (25.7).
 
 The line designated as our LTS release is chosen at our own discretion and is based on popularity, upstream lifecycle policies, stability, our own experience and other factors.
 
