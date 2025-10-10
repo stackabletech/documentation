@@ -1,11 +1,11 @@
 = Lifecycle policies
 :description: Detailed lifecycle policies for Stackable Data Platform, covering SDP, CRD versioning, product support, and compatibility with Kubernetes & OpenShift.
 
-This page details our lifecycle policies around various parts of our product - the Stackable Data Platform (SDP).
+This page details lifecycle policies for the Stackable Data Platform (SDP).
 
-We define multiple lifecycle policies for different parts of our platform, but all policies follow some common goals:
+Multiple lifecycle policies are defined for different parts of our platform, but all policies follow some common goals:
 
-* It should always be possible to upgrade to a new version of SDP without also changing any of your Kubernetes resources as long as you are not currently using anything that has already been marked as deprecated
+* It should always be possible to upgrade to a new version of SDP without also changing any of the Stackable Custom Resources as long as you are not currently using anything that has already been marked as deprecated
 ** This means you can upgrade the control plane independently of the user-facing products
 * All deprecations follow a predictable lifecycle that allows planning of upgrades ahead of time
 
@@ -16,20 +16,21 @@ The guarantees we give are on multiple levels as detailed below:
 * Supported product versions
 * Supported OpenShift & Kubernetes versions
 
-All these policies may evolve as we learn what works best for our customers and for us.
+These policies may evolve based on customer feedback and operational experience.
 
-These policies are from *July 2023*.
+These policies were last updated in *September 2025*.
 
 == Stackable Data Platform lifecycle policy
 
-NOTE: This policy concerns releases of our platform as a whole and how long and to which extent we support each version.
-
 We do releases of our Stackable Data Platform.
-These releases get a name based on the year and month they have been released in (e.g. `23.4`, `23.7`, also called https://calver.org/[CalVer{external-link-icon}^]). This name does not follow Semantic Versioning (https://semver.org/[SemVer{external-link-icon}^]). We may release patches for a release, which then follow the PATCH naming semantics of SemVer (e.g. `23.4.1`) or the _Micro_ name from CalVer. See below for our policy on patches for the SDP.
+These releases get a name based on the release year and month (e.g. `25.3`, `25.7`, also called https://calver.org/[CalVer{external-link-icon}^]).
+This name does not follow Semantic Versioning (https://semver.org/[SemVer{external-link-icon}^]).
+We may release patches for a release, which then follow the PATCH naming semantics of SemVer (e.g. `24.7.1`) or the _Micro_ name from CalVer.
+See below for our policy on patches for the SDP.
 
 We support an SDP release for a specific amount of time after its initial release.
 
-An SDP release contains our operators and other code developed at Stackable as well as the product docker images.
+An SDP release contains our operators, other components developed at Stackable, and the operator-managed product container images.
 
 TIP: Our policy is inspired by the https://kubernetes.io/releases/patch-releases/[Kubernetes{external-link-icon}^] and the https://access.redhat.com/support/policy/updates/openshift#ocp4[OpenShift{external-link-icon}^] policies.
 
@@ -43,27 +44,36 @@ image:full_support_scenario_1.png[Full Support Scenario 1]
 
 image:full_support_scenario_2.png[Full Support Scenario 2]
 
-We _will_ release new patch releases of a SDP release (e.g. `23.4.1`) for any issues we deem Critical or High (see definition below) once fixes become available.
+We _will_ release new patch releases of a SDP release (e.g. `24.11.1`) for any issues we deem Critical or High (see definition below) once fixes become available.
 We _may_ release new patch releases for other reasons.
 
 === Maintenance phase
 
 This phase commences after the _Full Support_ phase for the respective SDP version and ends 12 months after general availability of the SDP release.
 
-We _may_ release new patch releases of a SDP release (e.g. `23.4.1`) for any issues we deem Critical or High (see definition below) once fixes become available.
+We _may_ release new patch releases of a SDP release (e.g. `24.11.1`) for any issues we deem Critical or High (see definition below) once fixes become available.
 We may release patches for other reasons.
 
 image:maintenance_phase.png[Maintenance Phase]
 
 == Upgrade policy
 
-Customers are expected to upgrade their SDP environment to the most current supported patch/micro (`23.4.z`) version.
-Skipping SDP releases while upgrading is currently not supported.
-The only upgrade path we support is from one version to the next.
+IMPORTANT: Skipping SDP releases while upgrading is currently not supported.
+The only upgrade path we test and support is from one SDP version to the next (e.g., 24.11 → 25.3 → 25.7).
+
+Customers are expected to upgrade their SDP environment to the most current supported patch/micro (`25.7.z`) version.
+
+We test and support upgrades for both our Kubernetes operators and data products.
+There can be exceptions from this policy for specific data product upgrade paths.
+These are documented in our release notes.
+
+NOTE: Downgrades and rollbacks are not supported or tested.
+While they may work in some cases, customers who downgrade do so at their own risk and without our support.
 
 == CRD Versioning lifecycle policy
 
-IMPORTANT: As of January 2024 all our CRDs are versioned as `alpha1`. We will start introducing other versions later
+IMPORTANT: As of release 25.7 all our CRDs are versioned as `v1alpha1`.
+Starting with release 25.11 we will introduce versioned CRDs for some products.
 
 CustomResourceDefinitions at Stackable are versioned.
 
@@ -89,9 +99,16 @@ Similar to the Exception noted by the Kubernetes project itself, we will also ev
 NOTE: According to these rules it is legal to _add_ fields to a CRD without increasing the version as long as there is a default for this field.
 
 
+== Operator implementation details
+
+Resources created and managed by Stackable operators (such as Pods, Services, ConfigMaps, StatefulSets, etc.) are considered implementation details of the operators.
+The structure, naming, labels, and configuration of these resources may change between releases without prior notice.
+Users should not directly depend on or modify these operator-managed resources.
+
+
 == Product lifecycle policy
 
-SDP ships with a lot of different downstream products (e.g. Apache HBase, Apache Superset).
+SDP ships with a lot of different data products (e.g. Apache HBase, Apache Superset).
 
 All of these products follow their own version semantics and release cadences and lifecycles, which is why we do not define a product lifecycle policy based on version numbers alone.
 
@@ -100,9 +117,13 @@ A release line usually means that we are going to keep a `major.minor` release s
 
 Some products (e.g. Trino) don't follow Semver rules, for those we will follow separate rules and clearly document what version is considered LTS.
 
-Every LTS release line is shipped for at least one full year.
-After a year we may switch to a new release line - but there will always be at least an overlap of one release in which the old LTS version is deprecated, but a new LTS version is available.
-Which line we chose as our LTS release is at our own discretion and is based on popularity, upstream lifecycle policies, stability, our own experience and other factors.
+Every LTS release line is supported for a minimum of 12 months from the SDP release in which it was introduced.
+When introducing a new LTS release line, the previous LTS line must remain available (marked as deprecated) for at least one additional SDP release to allow migration time.
+
+For example: If an LTS version is introduced in release 24.3 (March 2024), it must be available as the recommended LTS through at least the March 2025 release (25.3).
+If a new LTS version is introduced in 25.3, the old LTS version from 24.3 must remain available but deprecated in 25.3, and can be removed in the following release (25.7).
+
+The line designated as our LTS release is chosen at our own discretion and is based on popularity, upstream lifecycle policies, stability, our own experience and other factors.
 
 In addition to the LTS line we may also ship other versions, e.g. the latest upstream version.
 
@@ -113,7 +134,7 @@ image:product_release_cycle.png[Product Lifecycle Policy]
 === Deprecation
 
 Every product version that gets removed will be deprecated for at least 1 SDP release before removal.
-This guarantees that users can update the operators (e.g. from 23.1 to 23.4) without the need to simultaneously update the product version as well.
+This guarantees that users can update the operators (e.g. from 25.3 to 25.7) without the need to simultaneously update the product version as well.
 The flow is to first update the control plane (the operators) and afterward the product versions if desired (e.g. when the currently used version is now deprecated).
 
 === Definition of support
@@ -134,6 +155,9 @@ For every SDP release we will publish a list of supported Kubernetes versions.
 We are aiming to support the last three Kubernetes versions but will make case-by-case decisions by taking into account the currently supported Kubernetes versions.
 We will also take into account currently supported OpenShift versions as published by RedHat. It is our goal to support all versions that are in Full or Maintenance support. As the releases may be overlapping we might not always support the latest Kubernetes or OpenShift versions when we release a SDP version.
 
+NOTE: When a Kubernetes or OpenShift version is no longer listed as supported for an SDP release, this means we no longer test the SDP release against that version.
+The platform _may_ continue to work on unsupported versions, but we make no guarantees.
+We will not investigate or fix issues that only occur on unsupported Kubernetes/OpenShift versions.
 
 == Support policy (security & bugs)
 
