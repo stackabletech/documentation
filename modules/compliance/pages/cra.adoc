@@ -1,0 +1,57 @@
+= Cyber Resilience Act (CRA)
+
+NOTE: The https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32024R2847[Cyber Resilience Act (CRA)] is a European regulation that establishes cybersecurity requirements for products with digital elements placed on the EU market.
+It aims to ensure that hardware and software products are designed, developed, and maintained with adequate cybersecurity throughout their lifecycle.
+
+This will be expanded over time.
+
+== Target Audience & Content
+
+This page serves as a central hub for
+
+* users of the Stackable Data Platform (SDP),
+* market surveillance authorities,
+* and the https://single-market-economy.ec.europa.eu/single-market/goods/building-blocks/market-surveillance/organisation/adcos_en[Administrative Cooperation Group] (AdCo) established in Article 52(15)
+
+to find all information mandated by the CRA in a single and central place.
+
+== Stackable Data Platform (SDP) classification
+
+The CRA defines multiple product categories that determine the conformity assessment procedure.
+We consider the Stackable Data Platform to be a default product (not Important or Critical).
+This means we perform a self-assessment of conformity rather than requiring third-party certification.
+
+== Annex II: Information and instructions to the user
+
+Annex II of the CRA specifies information that manufacturers must provide to users.
+The following items correspond to the numbered requirements in Annex II:
+
+. **Contact Information**: You can find all our contact information on our homepage in the https://stackable.tech/en/imprint/[imprint] section.
+
+. **Vulnerability Disclosure**: Please see our https://stackable.tech/en/vulnerability-disclosure-policy/[Vulnerability Disclosure Policy] for all information on how to report vulnerabilities in a coordinated way.
+
+. **Product Identification**: The Stackable Data Platform (SDP) is a Kubernetes-based data platform for operating data applications.
+All our images are tagged and contain annotations to identify the product versions.
+Additional documentation will follow.
+
+. **Intended Purpose and Security Properties**: Information about the intended purpose of SDP, the security environment, essential functionalities, and security properties will be documented here.
+
+. **Known Cybersecurity Risks**: Information about known or foreseeable circumstances that may lead to significant cybersecurity risks will be documented here.
+
+. **EU Declaration of Conformity**: The internet address at which the EU declaration of conformity can be accessed will be provided here when available.
+
+. **Security Support and Support Period**: Please see our xref:policies.adoc[Lifecycle policies] for information on the type of security support offered and the support duration, including the period during which vulnerabilities will be handled and security updates provided for the Stackable Data Platform and the included products.
+
+. **Security Instructions**: Detailed instructions on the following topics will be documented here:
++
+--
+* Necessary measures during initial commissioning and throughout the product lifetime to ensure secure use
+* How changes to the product can affect data security
+* How to install security-relevant updates
+* Secure decommissioning of the product and secure removal of user data
+* How to manage automatic security update settings
+* Information for integrators on cybersecurity requirements (where applicable)
+--
+
+. **Software Bill of Materials (SBOM)**: We provide https://sboms.stackable.tech/[SBOMs] for all container images in the Stackable Data Platform.
+Please see our xref:guides:viewing-and-verifying-sboms.adoc[SBOM documentation] for information on how to access, view, and verify SBOMs.
