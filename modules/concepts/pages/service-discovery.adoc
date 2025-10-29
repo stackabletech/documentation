@@ -7,7 +7,7 @@ Stackable operators provide a _service discovery ConfigMap_ for each product ins
 
 == Motivation
 
-Products on the Stackable platform can, and in some cases must be connected with each other to run correctly. Some products are fundamental to the platform while others depend on them. For example, a NiFi cluster requires a ZooKeeper connection to run in distributed mode. Other products can optionally be connected with each other for better data flow. For example Trino does not store the query data itself, instead it interfaces with other applications to get access to it.
+Products on the Stackable platform can, and in some cases must be connected with each other to run correctly. Some products are fundamental to the platform while others depend on them. For example, an HBase cluster requires a ZooKeeper connection to run in distributed mode. Other products can optionally be connected with each other for better data flow. For example Trino does not store the query data itself, instead it interfaces with other applications to get access to it.
 
 To connect NiFi to ZooKeeper, NiFi needs to know at which host and port it can find the ZooKeeper instance. However the exact address is not known in advance. To enable a connection from NiFi to ZooKeeper purely based on the name of the ZooKeeper cluster, the discovery ConfigMap is used.
 
