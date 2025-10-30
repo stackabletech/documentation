@@ -9,9 +9,7 @@ Stackable operators provide a _service discovery ConfigMap_ for each product ins
 
 Products on the Stackable platform can, and in some cases must be connected with each other to run correctly. Some products are fundamental to the platform while others depend on them. For example, an HBase cluster requires a ZooKeeper connection to run in distributed mode. Other products can optionally be connected with each other for better data flow. For example Trino does not store the query data itself, instead it interfaces with other applications to get access to it.
 
-To connect NiFi to ZooKeeper, NiFi needs to know at which host and port it can find the ZooKeeper instance. However the exact address is not known in advance. To enable a connection from NiFi to ZooKeeper purely based on the name of the ZooKeeper cluster, the discovery ConfigMap is used.
-
-With the ConfigMap, the name of the ZooKeeper cluster is enough to know how to connect to it, the ConfigMap has the same name as the cluster and contains all the information needed to connect to the ZooKeeper cluster.
+The ZooKeeper connection details are published by the ZooKeeper operator in a discovery ConfigMap. This ConfigMap has the same name as the ZooKeeper cluster and can be referenced by clients (HBase in our example) when connecting to it.
 
 === Example
 
@@ -39,11 +37,11 @@ data:
   ZOOKEEPER: simple-zk-server-default-0.simple-zk-server-default.default.svc.cluster.local:2181,simple-zk-server-default-1.simple-zk-server-default.default.svc.cluster.local:2181
 ----
 
-The information needed to connect can be a string like above, for example a JDBC connect string: `jdbc:postgresql://localhost:12345`. But a ConfigMap can also contain multiple configuration files which can then be mounted into a client Pod. This is the case for xref:hdfs:discovery.adoc[HDFS], where the `core-site.xml` and `hdfs-site.xml` files are put into the discovery ConfigMap.
+The connection details can be a string like above, for example a JDBC connect string: `jdbc:postgresql://localhost:12345`. But a ConfigMap can also contain multiple configuration files which can then be mounted into a client Pod. This is the case for xref:hdfs:discovery.adoc[HDFS], where the `core-site.xml` and `hdfs-site.xml` files are put into the discovery ConfigMap.
 
 == Usage of the service discovery ConfigMap
 
-The ConfigMap is used by Stackable operators to connect products together, but can also be used by the user to retrieve connection information to connect to product instances. The operators consume only the ConfigMap, so it is also possible to create a ConfigMap by hand for a product instance that is not operated by a Stackable operator. These different usage scenarios are explained below.
+Discovery ConfigMaps are used by Stackable operators to connect products together, but can also be used by the user to retrieve connection information to connect to product instances. The operators consume only the ConfigMap, so it is also possible to create a ConfigMap by hand for a product instance that is not operated by a Stackable operator. These different usage scenarios are explained below.
 
 === Service discovery within Stackable
 
