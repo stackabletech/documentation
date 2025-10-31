@@ -265,6 +265,7 @@ ui:
 asciidoc:
   extensions:
     - '@asciidoctor/tabs'
+    - asciidoctor-kroki
   attributes:
     base-repo: https://github.com/stackabletech
     plantuml-server-url: http://www.plantuml.com/plantuml
