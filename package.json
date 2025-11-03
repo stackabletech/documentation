@@ -6,7 +6,8 @@
   },
   "dependencies": {
     "@antora/lunr-extension": "^1.0.0-alpha.8",
-    "@asciidoctor/tabs": "^1.0.0-beta.6"
+    "@asciidoctor/tabs": "^1.0.0-beta.6",
+    "@sntke/antora-mermaid-extension": "0.0.8"
   },
   "workspaces": [
     "ui"
