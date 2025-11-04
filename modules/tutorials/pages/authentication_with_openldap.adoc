@@ -317,7 +317,7 @@ Fetch the snippet as before:
 [source,bash]
 include::example$ldap-auth/70-modify-trino-opa-bundle.sh[tag=get-yaml]
 
-Apply this patch:
+Update the ConfigMap to look like the below:
 
 [source,yaml]
 ----
