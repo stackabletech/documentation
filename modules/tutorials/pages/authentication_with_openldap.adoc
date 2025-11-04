@@ -42,7 +42,7 @@ to learn more.
 Before starting to add configuration to your Stackable cluster, inspect what the command above has set up in your
 Kubernetes cluster.
 
-Use `stackablectl stacklets list` to find the endpoints of Superset and Trino and open their web interfaces in the
+Use `stackablectl stacklet list` to find the endpoints of Superset and Trino and open their web interfaces in the
 browser.
 
 You can log into Superset with user _admin_ and password _adminadmin_, and into Trino with user _admin_ and password
