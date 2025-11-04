@@ -1,0 +1,26 @@
+= Compliance
+:description: Documentation covering regulatory compliance, lifecycle policies, licensing, product specifications, and export control for the Stackable Data Platform.
+
+This section provides information about compliance, licensing, and regulatory aspects of the Stackable Data Platform.
+It covers regulatory requirements like the Cyber Resilience Act, lifecycle and support policies for the platform and products, licensing information for all components, detailed product specifications, and export control regulations.
+
+== Regulatory Compliance
+
+Learn about xref:cra.adoc[Cyber Resilience Act (CRA)] compliance, including how the Stackable Data Platform meets European cybersecurity requirements, product classification, and mandated information for users and market surveillance authorities.
+
+== Lifecycle and Support Policies
+
+The xref:policies.adoc[Lifecycle policies] page details support policies for SDP releases, CRD versioning, product versions, and Kubernetes/OpenShift compatibility.
+It explains the full support and maintenance phases, upgrade policies, and how security vulnerabilities and bugs are handled.
+
+== Product Information
+
+The xref:product-information.adoc[Product information] page provides detailed specifications about the Stackable Data Platform, including which components are included, supported products, installation methods, system requirements, and required external dependencies.
+
+== Licensing
+
+Find all xref:licenses.adoc[license information] for Stackable operators, stackablectl, and product images, with links to the complete license texts on GitHub.
+
+== Export Control
+
+Learn about xref:export.adoc[export control] regulations and how the Stackable Data Platform is exempt from US Export Administration Regulations due to its publicly available open source status.
