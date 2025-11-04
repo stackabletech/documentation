@@ -3,16 +3,16 @@
 :tcpdump: https://www.tcpdump.org/
 :mitmproxy: https://www.mitmproxy.org/
 
-You likely know this problem: Some tools is behaving weird, and you need to debug (often times HTTP/HTTPS or DNS) traffic between Kubernetes Pods.
-If the tool would be running on a local machine, one would simply start {tcpdump}[`tcpdump`] and inspect the traffic.
-Maybe use {mitmproxy}[`mitmproxy`] as a HTTPS proxy to re-encrypt the HTTPS traffic, so that it is readable.
+You likely know this problem: Some tool is behaving weird, and you need to debug (often times HTTP/HTTPS or DNS) traffic between Kubernetes Pods.
+If the tool would be running on a local machine, one would simply start {tcpdump}[`tcpdump`{external-link-icon}^] and inspect the traffic.
+Maybe use {mitmproxy}[`mitmproxy`{external-link-icon}^] as a HTTPS proxy to re-encrypt the HTTPS traffic, so that `mitmproxy` can inspect the decrypted traffic.
 
 However, as we are running in a containerized environment, things are a bit more complicated.
 This guide explains you how you can capture and inspect traffic anyway.
 
 There are a few things needed:
 
-1. A sidecar running {tcpdump}[`tcpdump`], capturing the traffic into a file.
+1. A sidecar running {tcpdump}[`tcpdump`{external-link-icon}^], capturing the traffic into a file.
 2. If TLS (e.g. HTTPS) traffic is involved, the product needs to be configured in such a way, that it writes the TLS session keys into a file.
    The key log can be used afterwards to decrypt the TLS traffic.
 3. Wireshark to make it easier to inspect the captured traffic.
@@ -20,7 +20,7 @@ There are a few things needed:
 
 == Simple usage
 
-If you only care about unencrypted communications, you can use this snippet to dump all traffic using {tcpdump}[`tcpdump`].
+If you only care about unencrypted communications, you can use this snippet to dump all traffic using {tcpdump}[`tcpdump`{external-link-icon}^].
 
 [source,yaml]
 ----
@@ -53,7 +53,7 @@ Let's make things a bit more interesting using a real-world example.
 Let's assume Superset is behaving weird and we want to debug the network traffic from Superset to Trino, which is using HTTPS.
 
 As of Java 21 the JVM does not respect the `SSLKEYLOGFILE` env var and does not seem to have support to write the TLS key log.
-So we need to use a third-party Java agent called https://github.com/neykov/extract-tls-secrets[extract-tls-secrets] for that.
+So we need to use a third-party Java agent called https://github.com/neykov/extract-tls-secrets[extract-tls-secrets{external-link-icon}^] for that.
 
 [source,yaml]
 ----
@@ -149,6 +149,6 @@ image::debug-network-traffic/4.png[]
 
 == Follow-up tips
 
-1. You can filter the packets in the {tcpdump}[`tcpdump`] call to reduce the capture file size.
+1. You can filter the packets in the {tcpdump}[`tcpdump`{external-link-icon}^] call to reduce the capture file size.
 2. If you do this on a production setup, keep in mind that the dump might contain sensitive data and the TLS keys can be used to decrypt all TLS traffic of this Pod!
 3. In case the product uses HTTP 2 (or newer), you need to use a Wireshark filter such as `http2.headers.path == "/nifi-api/flow/current-user"`
