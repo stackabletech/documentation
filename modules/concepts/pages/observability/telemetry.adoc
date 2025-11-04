@@ -46,9 +46,9 @@ telemetry:
     format: null  # <3>
 ----
 
-<1> Boolean: `true, false`
-<2> Enum: `error, warning, info, debug, trace`
-<3> Enum: `plain, json`
+<1> Boolean: `true`, `false`
+<2> Enum: `error`, `warn`, `info`, `debug`, trace`
+<3> Enum: `plain`, `json`
 
 == File logs
 
@@ -65,9 +65,9 @@ telemetry:
     maxFiles: 6            # <4>
 ----
 
-<1> Boolean: `true, false`
-<2> Enum: `error, warning, info, debug, trace`
-<3> Enum: `never, daily, hourly, minutely`
+<1> Boolean: `true`, `false`
+<2> Enum: `error`, `warn`, `info`, `debug`, `trace`
+<3> Enum: `never`, `daily`, `hourly`, `minutely`
 <4> Unsigned Integer
 
 == OpenTelemetry logs and traces
@@ -88,6 +88,6 @@ telemetry:
     endpoint: null # <3>
 ----
 
-<1> Boolean: `true, false`
-<2> Enum: `error, warning, info, debug, trace`
-<3> String: E.g. `my-collector:4317`
+<1> Boolean: `true`, `false`
+<2> Enum: `error`, `warn`, `info`, `debug`, `trace`
+<3> String: E.g. `https://my-collector:4317` (Note: it must contain the scheme)
