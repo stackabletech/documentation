@@ -48,7 +48,7 @@ telemetry:
 ----
 
 <1> Boolean: `true`, `false`
-<2> String: `error`, `warn`, `info`, `debug`, `trace`, `off` (or {env-filter-syntax}[more complex filters])
+<2> String: `error`, `warn`, `info`, `debug`, `trace`, `off` (or {env-filter-syntax}[more complex filters,window=_blank])
 <3> Enum: `plain`, `json`
 
 == File logs
@@ -67,7 +67,7 @@ telemetry:
 ----
 
 <1> Boolean: `true`, `false`
-<2> String: `error`, `warn`, `info`, `debug`, `trace`, `off` (or {env-filter-syntax}[more complex filters])
+<2> String: `error`, `warn`, `info`, `debug`, `trace`, `off` (or {env-filter-syntax}[more complex filters,window=_blank])
 <3> Enum: `never`, `daily`, `hourly`, `minutely`
 <4> Unsigned Integer
 
@@ -90,5 +90,5 @@ telemetry:
 ----
 
 <1> Boolean: `true`, `false`
-<2> String: `error`, `warn`, `info`, `debug`, `trace`, `off` (or {env-filter-syntax}[more complex filters])
+<2> String: `error`, `warn`, `info`, `debug`, `trace`, `off` (or {env-filter-syntax}[more complex filters,window=_blank])
 <3> String: E.g. `https://my-collector:4317` (Note: it must contain the scheme)
