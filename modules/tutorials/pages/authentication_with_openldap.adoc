@@ -210,7 +210,10 @@ Now deploy the updated superset cluster:
 [source,bash]
 include::example$ldap-auth/40-modify-superset.sh[tag=apply-superset-cluster]
 
-Connect to superset as before, and try logging in again with username _admin_ and password _adminadmin_, Superset will not accept these credentials anymore. You now have to use LDAP credentials to log in. The OpenLDAP you installed earlier comes with two users, _alice_ (password _alice_) and _bob_ (password _bob_). Log in with any of these users and Superset will accept.
+Connect to superset as before (logout if you still had a valid session from earlier), and try logging in again with username _admin_ and password _adminadmin_, Superset will not accept these credentials anymore.
+You now have to use LDAP credentials to log in.
+The OpenLDAP you installed earlier comes with two users, _alice_ (password _alice_) and _bob_ (password _bob_).
+Log in with any of these users and Superset will accept.
 
 [#trino]
 === Add LDAP configuration to Trino
