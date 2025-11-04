@@ -3,4 +3,4 @@
 ** xref:policies.adoc[]
 ** xref:licenses.adoc[Licenses]
 ** xref:export.adoc[Export Control]
-** xref:cra.adoc[CRA]
+** xref:cra.adoc[Cyber Resilience Act]
