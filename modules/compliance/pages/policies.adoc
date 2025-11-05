@@ -1,4 +1,5 @@
 = Lifecycle policies
+:page-aliases: ROOT:policies.adoc
 :description: Detailed lifecycle policies for Stackable Data Platform, covering SDP, CRD versioning, product support, and compatibility with Kubernetes & OpenShift.
 
 This page details lifecycle policies for the Stackable Data Platform (SDP).
