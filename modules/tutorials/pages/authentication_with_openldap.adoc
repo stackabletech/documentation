@@ -42,13 +42,12 @@ to learn more.
 Before starting to add configuration to your Stackable cluster, inspect what the command above has set up in your
 Kubernetes cluster.
 
-Use `stackablectl stacklets list` to find the endpoints of Superset and Trino and open their web interfaces in the
+Use `stackablectl stacklet list` to find the endpoints of Superset and Trino and open their web interfaces in the
 browser.
 
-You can log into Superset with user _admin_ and password _adminadmin_, and into Trino with user _admin_ and password
-_adminadmin_.
+You can log into both Superset and Trino with user `admin` and password `adminadmin`.
 
-These are the current users defined in Superset's and Trino's internal user management. Later you will see that these users cannot be used for authentication anymore after LDAP authentication has been enabled.
+These _admin_ users are defined in Superset's and Trino's internal user management. Later you will see that these users cannot be used for authentication anymore after LDAP authentication has been enabled.
 
 === OpenLDAP Stack
 
@@ -211,7 +210,10 @@ Now deploy the updated superset cluster:
 [source,bash]
 include::example$ldap-auth/40-modify-superset.sh[tag=apply-superset-cluster]
 
-Connect to superset as before, and try logging in again with username _admin_ and password _adminadmin_, Superset will not accept these credentials anymore. You now have to use LDAP credentials to log in. The OpenLDAP you installed earlier comes with two users, _alice_ (password _alice_) and _bob_ (password _bob_). Log in with any of these users and Superset will accept.
+Connect to superset as before (logout if you still had a valid session from earlier), and try logging in again with username _admin_ and password _adminadmin_, Superset will not accept these credentials anymore.
+You now have to use LDAP credentials to log in.
+The OpenLDAP you installed earlier comes with two users, _alice_ (password _alice_) and _bob_ (password _bob_).
+Log in with any of these users and Superset will accept.
 
 [#trino]
 === Add LDAP configuration to Trino
@@ -315,7 +317,7 @@ Fetch the snippet as before:
 [source,bash]
 include::example$ldap-auth/70-modify-trino-opa-bundle.sh[tag=get-yaml]
 
-Apply this patch:
+Update the ConfigMap to look like the below:
 
 [source,yaml]
 ----
