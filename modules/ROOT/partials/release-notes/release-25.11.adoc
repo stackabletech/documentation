@@ -1,0 +1,6 @@
+== Release 25.11
+
+=== 25.11.0
+
+Released on YYYY-MM-DD.
+(Optional description / introduction)
