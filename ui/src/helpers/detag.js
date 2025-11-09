@@ -1,12 +1,7 @@
 'use strict'
 
 const TAG_ALL_RX = /<[^>]+>/g
+const QUOT_RX = /"/g
 
-module.exports = (html, options) => {
-  if (!html) return html
-  let result = html.replace(TAG_ALL_RX, '')
-  if (options.hash.attribute) {
-    result = result.replace(/"/g, '&quot;')
-  }
-  return result
-}
+module.exports = (html, { hash: { attribute } }) =>
+  html && (attribute ? html.replace(TAG_ALL_RX, '').replace(QUOT_RX, '&quot;') : html.replace(TAG_ALL_RX, ''))
