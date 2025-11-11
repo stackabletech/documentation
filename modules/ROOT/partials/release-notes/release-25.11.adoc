@@ -42,3 +42,13 @@ A patch was added which allows disabling the SNI (Server Name Indication) checks
 The workaround is documented in the xref:nifi:troubleshooting/index.adoc[troubleshooting] section.
 This can be useful in certain scenarios where the external name is not in the certificates used by NiFi.
 See https://github.com/stackabletech/nifi-operator/issues/812[nifi-operator#812].
+
+===== Apache Spark
+
+* The service account of spark applications can now be overridden with pod overrides.
+  Previously, the application service account was passed as command line argument to spark-submit and it was therefor not possible to overwrite it with pod overrides for the driver and executors.
+  This CLI argument has now been moved to the pod templates of the individual roles.
+  See https://github.com/stackabletech/spark-k8s-operator/pull/617[spark-k8s-operator#617].
+* This release adds experimental support for Spark 4.X.X.
+  The support is marked as experimental because Spark 4.0.0 has known compatibility issues with https://github.com/apache/hbase-connectors/pull/130[Apache HBase] and https://github.com/apache/iceberg/issues/13358[Apache Iceberg].
+  See https://github.com/stackabletech/spark-k8s-operator/issues/586[spark-k8s-operator#586].
