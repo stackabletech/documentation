@@ -2,7 +2,7 @@
 
 === 25.11.0
 
-Released on YYYY-MM-DD.
+Released on 2025-11-07.
 (Optional description / introduction)
 
 ==== New platform features
