@@ -454,3 +454,16 @@ This release supports the following Kubernetes versions:
 These Kubernetes versions are no longer supported:
 
 * `1.30`
+
+===== OpenShift versions
+
+This release is available in the RedHat Certified Operator Catalog for the following OpenShift versions:
+
+* `4.20`
+* `4.19`
+* `4.18`
+
+These OpenShift versions are no longer supported:
+
+* `4.17`
+* `4.16`
