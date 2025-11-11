@@ -35,3 +35,10 @@ See https://github.com/stackabletech/demos/pull/289[demos#289].
   See https://github.com/stackabletech/airflow-operator/issues/200[airflow-operator#200].
 * The xref:demos:airflow-scheduled-job.adoc[`airflow-scheduled-job`] demo for Airflow has been extended to showcase some of the new Airflow 3.x features in the context of SDP i.e. event scheduling (with Kafka), triggerer actions and user authorization with OPA and the SDP OPA authorizer.
   See https://github.com/stackabletech/demos/issues/223[demos#223].
+
+===== Apache NiFi
+
+A patch was added which allows disabling the SNI (Server Name Indication) checks for NiFi.
+The workaround is documented in the xref:nifi:troubleshooting/index.adoc[troubleshooting] section.
+This can be useful in certain scenarios where the external name is not in the certificates used by NiFi.
+See https://github.com/stackabletech/nifi-operator/issues/812[nifi-operator#812].
