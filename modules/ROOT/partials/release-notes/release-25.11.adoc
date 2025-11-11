@@ -27,3 +27,11 @@ See the xref:opa:usage-guide/tls.adoc[TLS encryption documentation page] and htt
 The performance of the Trino rules in the `end-to-end-security` stack was improved.
 Batch queries are now significantly faster.
 See https://github.com/stackabletech/demos/pull/289[demos#289].
+
+===== Apache Airflow
+
+* The Airflow xref:airflow:index.adoc#_triggerers[triggerer] component is now supported.
+  This can be used with DAGs utilising deferrable operators to keep worker slots free and enhance HA.
+  See https://github.com/stackabletech/airflow-operator/issues/200[airflow-operator#200].
+* The xref:demos:airflow-scheduled-job.adoc[`airflow-scheduled-job`] demo for Airflow has been extended to showcase some of the new Airflow 3.x features in the context of SDP i.e. event scheduling (with Kafka), triggerer actions and user authorization with OPA and the SDP OPA authorizer.
+  See https://github.com/stackabletech/demos/issues/223[demos#223].
