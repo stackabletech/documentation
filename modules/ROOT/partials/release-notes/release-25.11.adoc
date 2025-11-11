@@ -68,3 +68,60 @@ This release adds a dedicated per-rolegroup `-metrics` Service, which can be use
   Users can configure an S3 connection and the location or spooling segments.
   Additional properties can be added using the `configOverrides` mechanism for the `spooling-manager.properties` file.
   See the xref:trino:usage-guide/client-spooling-protocol.adoc[client spooling protocol] documentation page and https://github.com/stackabletech/trino-operator/pull/793[trino-operator#793].
+
+==== Platform improvements
+
+===== Vulnerabilities
+
+37 CVEs were fixed in the Stackable product images.
+This includes 2 critical and 18 high-severity CVEs.
+
+===== General
+
+====== Observability
+
+This release includes various improvements in regards to metrics collection and exposition.
+Previously, some operators did not expose Prometheus annotations containing the HTTP(S) scheme or the metrics path and port.
+These annotations are now available which allows custom relabel configs in Prometheus to scrape the metric endpoints.
+
+* Apache HBase: The `prometheus.io/scrape` label is now only available on the `metrics` Service (instead of the `headless` service), which uses `metrics` as the port name instead of the previous `ui-http`/`ui-https` port name.
+  See https://github.com/stackabletech/hbase-operator/pull/701[hbase-operator#701].
+* Apache Airflow: The operator now adds the appropriate Prometheus annotations.
+  See https://github.com/stackabletech/airflow-operator/pull/698[airflow-operator#698].
+* Apache Druid: The operator now adds the appropriate Prometheus annotations.
+  See https://github.com/stackabletech/druid-operator/pull/761[airflow-operator#761].
+
+====== Miscellaneous
+
+* All operators now correctly handle multiple CA certificates.
+  This can be the case if the Stackable secret-operator auto rotated the CA certificate or if multiple CA certificates are present in a SecretClass.
+  See https://github.com/stackabletech/issues/issues/764[issues#764] for more details.
+* New Helm values have been added to the operators for setting `priorityClassName` on the resulting Pods, giving administrators greater control over scheduling.
+  When left unconfigured, the fields will not be present on the subsequent Pods.
+  See https://github.com/stackabletech/issues/issues/765[issues#765] for more details.
++
+[source,yaml]
+----
+# Listener operator
+csiProvisioner:
+  priorityClassName: ...
+
+csiNodeDriver:
+  priorityClassName: ...
+
+# TODO: List/check secret-operator here as well
+# All other operators
+priorityClassName: ...
+----
+
+* Previously, log entries for some supported products were broken from time to time.
+  These issues have now been resolved by implementing multiple fixes in various affected (upstream) projects.
+  See the tracking issue https://github.com/stackabletech/issues/issues/778[issues#778] for more details.
+** Pull request https://github.com/vectordotdev/vector/pull/24028[vectordotdev/vector#24028] was raised to fix log entries with multi-char delimiters.
+   At the time of writing, this PR has not been merged yet, but the fix is manually applied as a patch.
+   See https://github.com/stackabletech/docker-images/pull/1323[docker-images#1323].
+** A XMLLayout multithreading issue in logback has been fixed by raising https://github.com/qos-ch/logback/pull/978[qos-ch/logback#978].
+    This fix has been rolled out in all affected products:
+*** Apache Kafka: https://github.com/stackabletech/docker-images/pull/1330[docker-images#1330]
+*** Apache NiFi: https://github.com/stackabletech/docker-images/pull/1314[docker-images#1314]
+*** Apache ZooKeeper: https://github.com/stackabletech/docker-images/pull/1320[docker-images#1320]
