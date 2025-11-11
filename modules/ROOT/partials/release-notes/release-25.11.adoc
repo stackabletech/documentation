@@ -607,4 +607,3 @@ helm install --wait superset-operator oci://oci.stackable.tech/sdp-charts/supers
 helm install --wait trino-operator oci://oci.stackable.tech/sdp-charts/trino-operator --version 25.11.0
 helm install --wait zookeeper-operator oci://oci.stackable.tech/sdp-charts/zookeeper-operator --version 25.11.0
 ----
-
