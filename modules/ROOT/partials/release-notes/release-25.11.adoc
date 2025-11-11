@@ -21,6 +21,24 @@ Traffic between Open Policy Agent (OPA) and clients can be encrypted using TLS b
 The authorizers for Trino and NiFi automatically integrate with these secured OPA deployments and verify the authenticity of the server certificates when TLS for OPA is enabled.
 See the xref:opa:usage-guide/tls.adoc[TLS encryption documentation page] and https://github.com/stackabletech/opa-operator/issues/581[opa-operator#581].
 
+====== End-of-Support (EoS) warning
+
+All operators now emit a warning message on startup and in a regular interval when it may have reached end-of-support.
+Most of our operators reach end-of-support one year after they have been released which roughly translates to three SDP releases.
+This is in accordance with our xref:compliance:policies.adoc[support policy].
+The interval can be adjusted or the check can be disabled completely via Helm values.
+
+[source,yaml]
+----
+maintenance:
+  endOfSupportCheck:
+    enabled: true
+    mode: offline # only offline is currently supported
+    interval: 24h # A human-readable duration
+----
+
+See https://github.com/stackabletech/issues/issues/733[issues#733].
+
 ====== Miscellaneous
 
 // TODO: Do we want to include this?
