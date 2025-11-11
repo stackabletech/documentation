@@ -375,3 +375,17 @@ See https://github.com/stackabletech/secret-operator/pull/634[secret-operator#63
 
 * The operator now supports exporting the TrustStore CA certificate information to Secrets (in addition to ConfigMaps).
   See https://github.com/stackabletech/secret-operator/pull/597[secret-operator#597].
+
+==== Supported versions
+
+===== Product versions
+
+As with previous SDP releases, many product images have been updated to their latest versions.
+Refer to the xref:operators:supported_versions.adoc[supported versions] documentation for a complete overview including LTS versions or deprecations.
+
+====== New LTS versions
+
+The following product versions were already available before but are now marked as the xref:compliance:policies.adoc#_product_lifecycle_policy[LTS] version:
+
+* Apache Hive: https://github.com/stackabletech/docker-images/issues/1271[4.0.1 (LTS)]
+* Apache Kafka: https://github.com/stackabletech/docker-images/issues/1272[3.9.1 (LTS)]
