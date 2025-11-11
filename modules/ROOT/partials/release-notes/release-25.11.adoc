@@ -159,3 +159,9 @@ Only use this setting if you know what you are doing!
 
 The Apache NiFi xref:nifi:usage_guide/monitoring.adoc#_configure_metrics_in_nifi_2_x_x[monitoring documentation] page has been updated to include guidance on how to scrape NiFi 2.X.X metrics using mTLS.
 See https://github.com/stackabletech/nifi-operator/issues/813[nifi-operator#813].
+
+===== Apache Spark
+
+Spark Connect: Previously the property `spec.image.pullSecrets` was ignored by the operator when creating the executor templates.
+This has now been corrected in the operator code.
+See https://github.com/stackabletech/spark-k8s-operator/issues/600[spark-k8s-operator#600].
