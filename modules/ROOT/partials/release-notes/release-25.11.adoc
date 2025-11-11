@@ -52,3 +52,9 @@ See https://github.com/stackabletech/nifi-operator/issues/812[nifi-operator#812]
 * This release adds experimental support for Spark 4.X.X.
   The support is marked as experimental because Spark 4.0.0 has known compatibility issues with https://github.com/apache/hbase-connectors/pull/130[Apache HBase] and https://github.com/apache/iceberg/issues/13358[Apache Iceberg].
   See https://github.com/stackabletech/spark-k8s-operator/issues/586[spark-k8s-operator#586].
+
+====== Open Policy Agent
+
+This release adds a dedicated per-rolegroup `-metrics` Service, which can be used to scrape Prometheus metrics.
+// TODO: How do we expose more metrics? The PR this snippet comes from doesn't seem to expose more metrics.
+// The Expose more Prometheus metrics, such as successful or failed bundle loads and information about the OPA environment
