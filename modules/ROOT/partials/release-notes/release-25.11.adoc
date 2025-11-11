@@ -171,3 +171,13 @@ See https://github.com/stackabletech/spark-k8s-operator/issues/600[spark-k8s-ope
 Previously, there was a chance containers would not start, because Superset was starting too slowly and was killed because of a failing liveness probe.
 Now, we add a proper startup probe, which allows Superset startup to succeed and not be killed.
 See https://github.com/stackabletech/superset-operator/pull/654[superset-operator#654].
+
+===== Open Policy Agent
+
+* *Breaking:* The per-rolegroup Services now only expose the HTTP port and contain a `-headless` suffix to better indicate their purpose and to be consistent with other operators.
+  See https://github.com/stackabletech/opa-operator/pull/748[opa-operator#748].
+* Previously the opa-operator ignored `envOverrides` set on role or rolegroup level.
+  With this release, the `envOverrides` are now properly propagated by the operator.
+  See https://github.com/stackabletech/opa-operator/pull/754[opa-operator#754].
+* The xref:opa:usage-guide/user-info-fetcher.adoc[User Info Fetcher (UIF)] is no longer marked as experimental.
+  See https://github.com/stackabletech/opa-operator/issues/751[opa-operator#751].
