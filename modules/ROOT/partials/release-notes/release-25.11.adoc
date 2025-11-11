@@ -4,3 +4,26 @@
 
 Released on YYYY-MM-DD.
 (Optional description / introduction)
+
+==== New platform features
+
+===== General
+
+====== Custom image selection
+
+Previously, when using custom images in combination with a SHA digest like `oci.stackable.tech/sdp/spark-k8s@sha256:c8b7...`, all operators created invalid labels `app.kubernetes.io/version` for their applied resources.
+This was fixed by checking and replacing invalid characters in the created labels when a SHA digest is used to select the custom image.
+See https://github.com/stackabletech/operator-rs/pull/1076[operator-rs#1076].
+
+====== Security
+
+Traffic between Open Policy Agent (OPA) and clients can be encrypted using TLS by enabling it in the OPA custom resource.
+The authorizers for Trino and NiFi automatically integrate with these secured OPA deployments and verify the authenticity of the server certificates when TLS for OPA is enabled.
+See the xref:opa:usage-guide/tls.adoc[TLS encryption documentation page] and https://github.com/stackabletech/opa-operator/issues/581[opa-operator#581].
+
+====== Miscellaneous
+
+// TODO: Do we want to include this?
+The performance of the Trino rules in the `end-to-end-security` stack was improved.
+Batch queries are now significantly faster.
+See https://github.com/stackabletech/demos/pull/289[demos#289].
