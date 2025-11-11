@@ -188,3 +188,148 @@ Reduce severity of Pod eviction errors.
 Previously, the operator would produce lot's of `Cannot evict pod as it would violate the pod's disruption budget` errors.
 With this fix, the error is reduced to an info instead.
 See https://github.com/stackabletech/commons-operator/pull/372[commons-operator#372].
+
+===== Stackable listener-operator
+
+* *Breaking:* Default ListenerClass `.spec.externalTrafficPolicy` to `null` to improve LoadBalancer support across various Kubernetes environments.
+  See https://github.com/stackabletech/listener-operator/pull/347[listener-operator#347].
+* *Breaking:* The listener-operator default preset changed from `stable-nodes` to `ephemeral-nodes`.
+  Previously, `external-stable` NodePorts pinned the Pod to a specific node, which caused problems with node rotations.
+// TODO: See if we use code block here or not
+  Node pinning can be enabled via ListenerClass' new xref:listener-operator:listenerclass.adoc##_node_stickiness[`.spec.pinnedNodePorts`] field.
+  The preset can be configured using the following two commands:
++
+--
+[source,shell]
+----
+helm --set preset=stable-nodes # or ephemeral-nodes or none
+----
+
+[source,shell]
+----
+stackablectl --listener-class-preset stable-nodes # or ephemeral-nodes or none <1>
+----
+
+<1> It should be noted that `stackablectl` automatically detects k3s and kind clusters and uses the `stable-nodes` preset.
+
+See the tracking issue https://github.com/stackabletech/issues/issues/770[issues#770] for more details.
+--
+
+* *Breaking:* Helm values have changed to allow for separate configuration of affinity, resource, etc... between the operator deployment and the CSI driver pods.
++
+--
+// TODO: Confirm these are the final values for 25.11.0
+Container resources for the CSI Controller Service (`sdp/listener-operator` in the Deployment):
+
+[source,yaml]
+----
+# Before
+controller:
+  resources:
+
+# After
+csiProvisioner:
+  controllerService:
+    resources:
+----
+
+Container image/resources for the external-provisioner (`sig-storage/csi-provisioner` in the Deployment):
+
+[source,yaml]
+----
+# Before
+csiProvisioner:
+  image:
+  resources:
+
+# After
+csiProvisioner:
+  externalProvisioner:
+    image:
+    resources:
+----
+
+Container resources for the CSI Node Service (`sdp/listener-operator` in the DaemonSet):
+
+[source,yaml]
+----
+# Before
+node:
+  driver:
+    resources:
+
+# After
+csiNodeDriver:
+  nodeService:
+    resources:
+----
+
+Container image/resources for the node-driver-registrar (`sig-storage/csi-node-driver-registrar` in the DaemonSet):
+
+[source,yaml]
+----
+# Before
+csiNodeDriverRegistrar:
+  image:
+  resources:
+
+# After
+csiNodeDriver:
+  nodeDriverRegistrar:
+    image:
+    resources:
+----
+
+Settings that are now split:
+
+[source,yaml]
+----
+# Before
+podAnnotations:
+podSecurityContext:
+securityContext:
+nodeSelector:
+tolerations:
+affinity:
+
+# After
+csiProvisioner:
+  podAnnotations:
+  podSecurityContext:
+  nodeSelector:
+  tolerations:
+  affinity:
+
+  controllerService:
+    securityContext:
+
+csiNodeDriver:
+  podAnnotations:
+  podSecurityContext:
+  nodeSelector:
+  tolerations:
+  affinity:
+
+  nodeService:
+    securityContext:
+----
+
+See the tracking issue https://github.com/stackabletech/issues/issues/763[issues#763] and https://github.com/stackabletech/listener-operator/pull/334[listener-operator#334] for more details.
+--
+
+* As part of the Helm value changes listed above, some resource names have also been updated.
++
+[WARNING]
+====
+It should be noted that generally no action is required, but that depends on whether or not your deployment scripts (eg: Kustomize) or monitoring/alerting system depends on any of the names and values.
+====
+** Deployment `testing-listener-operator-deployment` has been renamed to `testing-listener-operator-csi-provisioner`
+*** The `app.kubernetes.io/role` label value has changed from `controller` to `provisioner`
+*** Container `listener-operator` has been renamed to `csi-controller-service`
+** DaemonSet `listener-operator-node-daemonset` has been renamed to `listener-operator-csi-node-driver`
+*** The `app.kubernetes.io/role` label value has changed from `node` to `node-driver`
+*** Container `listener-operator` has been renamed to `csi-node-service`
+
+
++
+See https://github.com/stackabletech/listener-operator/pull/334[listener-operator#334] for more details.
