@@ -181,3 +181,10 @@ See https://github.com/stackabletech/superset-operator/pull/654[superset-operato
   See https://github.com/stackabletech/opa-operator/pull/754[opa-operator#754].
 * The xref:opa:usage-guide/user-info-fetcher.adoc[User Info Fetcher (UIF)] is no longer marked as experimental.
   See https://github.com/stackabletech/opa-operator/issues/751[opa-operator#751].
+
+===== Stackable commons-operator
+
+Reduce severity of Pod eviction errors.
+Previously, the operator would produce lot's of `Cannot evict pod as it would violate the pod's disruption budget` errors.
+With this fix, the error is reduced to an info instead.
+See https://github.com/stackabletech/commons-operator/pull/372[commons-operator#372].
