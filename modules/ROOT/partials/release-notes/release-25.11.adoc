@@ -425,3 +425,19 @@ The following product versions are deprecated and will be removed in a later rel
 * Apache ZooKeeper: https://github.com/stackabletech/docker-images/issues/1275[3.9.3]
 * Open Policy Agent: https://github.com/stackabletech/docker-images/issues/1238[1.4.2]
 * Trino: https://github.com/stackabletech/docker-images/issues/1242[451], https://github.com/stackabletech/docker-images/issues/1242[476]
+
+====== Removed versions
+
+The following product versions are no longer supported.
+These images for released product versions remain available https://oci.stackable.tech/[here,window=_blank].
+Information on how to browse the registry can be found xref:contributor:project-overview.adoc#docker-images[here,window=_blank].
+
+* Apache Airflow: https://github.com/stackabletech/docker-images/issues/1268[2.10.4]
+* Apache Druid: https://github.com/stackabletech/docker-images/issues/1234[31.0.1]
+* Apache HBase: https://github.com/stackabletech/docker-images/issues/1269[2.6.1]
+* Apache Kafka: https://github.com/stackabletech/docker-images/issues/1272[3.9.0]
+* Apache Spark: https://github.com/stackabletech/docker-images/issues/1273[3.5.5], https://github.com/stackabletech/docker-images/issues/1273[4.0.0]
+* Apache Superset: https://github.com/stackabletech/docker-images/issues/1274[4.1.1]
+* Open Policy Agent: https://github.com/stackabletech/docker-images/issues/1238[1.0.1]
+* Trino: https://github.com/stackabletech/docker-images/issues/1242[470]
+* Vector: https://github.com/stackabletech/docker-images/issues/1233[0.47.0]
