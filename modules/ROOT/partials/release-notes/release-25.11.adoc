@@ -125,3 +125,32 @@ priorityClassName: ...
 *** Apache Kafka: https://github.com/stackabletech/docker-images/pull/1330[docker-images#1330]
 *** Apache NiFi: https://github.com/stackabletech/docker-images/pull/1314[docker-images#1314]
 *** Apache ZooKeeper: https://github.com/stackabletech/docker-images/pull/1320[docker-images#1320]
+
+===== Apache Airflow
+
+* Previously, a missing OPA ConfigMap would crash the operator.
+  With this release, we don't panic on an invalid authorization config.
+  See https://github.com/stackabletech/airflow-operator/pull/667[airflow-operator#667].
+* Previously, OPA authorization for Airflow 3 was not working.
+  With this release, the operator now sets the required environment variables.
+  See https://github.com/stackabletech/airflow-operator/pull/668[airflow-operator#668].
+* Allow multiple Airflows in the same namespace to use Kubernetes executors.
+  Previously, the operator would always use the same name for the executor Pod template ConfigMap.
+  Thus when deploying multiple Airflow instances in the same namespace, the ConfigMaps would conflict.
+  See https://github.com/stackabletech/airflow-operator/pull/678[airflow-operator#678].
+// TODO: Is there only ONE key or should we clarify WHICH key this is?
+* The JWT key is now created by the the operator internally.
+  The same applies to the key previously defined in the credentials secret under `connections.secretKey`: this change is non-breaking, as `connections.secretKey` will be ignored if supplied.
+  See https://github.com/stackabletech/airflow-operator/pull/686[airflow-operator#686].
+* Database initialization routines - which are idempotent and run by default - can be deactivated to e.g. help diagnose or troubleshoot start-up issues via the new `databaseInitialization.enabled` field.
++
+[WARNING]
+====
+Turning off these routines is an unsupported operation as subsequent updates to a running Airflow cluster can result in broken behaviour due to inconsistent metadata.
+Only use this setting if you know what you are doing!
+====
+* The Airflow xref:airflow:index.adoc#_dag_processors[DAG-processor] component now has an optional individual role in the resource definition, allowing it to be separately configured (e.g. logging, resources) and run in a dedicated container.
+  See https://github.com/stackabletech/airflow-operator/issues/637[airflow-operator#637].
+* Previously in set-ups where multiple Web-/API-servers were used, only one instance was able to automatically access the connection passwords stored in the database.
+  This could be solved by setting the https://airflow.apache.org/docs/apache-airflow/stable/configurations-ref.html#fernet-key[fernet] key explicitly, but now this detail is taken care of internally by the operator.
+  See https://github.com/stackabletech/airflow-operator/issues/694[airflow-operator#694].
