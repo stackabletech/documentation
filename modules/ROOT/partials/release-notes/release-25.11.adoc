@@ -333,3 +333,45 @@ It should be noted that generally no action is required, but that depends on whe
 
 +
 See https://github.com/stackabletech/listener-operator/pull/334[listener-operator#334] for more details.
+
+===== Stackable secret-operator
+
+* *Breaking:* The Helm Chart now deploys the secret-operator as two parts.
+  This separation is needed for CRD versioning and conversion by the operator.
+** The controller (which reconciles resources, maintains CRDs and provides the CRD conversion webhook) runs as a Deployment with a single replica.
+** The CSI server runs on every Kubernetes cluster node via a DaemonSet (this behaviour is unchanged).
+** The Helm values are adjusted in accordance to the changes above.
+// TODO: Should we list the changes explicitly like we did for listener-operator above?
+   See the secret-operator https://github.com/stackabletech/secret-operator/blob/25.11.0/CHANGELOG.md[changelog] for a complete overview of these changes.
+** The old DaemonSet `secret-operator-daemonset` should be removed manually.
+
++
+See https://github.com/stackabletech/secret-operator/pull/645[secret-operator#645].
+
+* *Breaking:* The Stackable secret-operator no longer publishes retired and expired CA certificates:
+** CA certificates are by default retired one hour before they expire.
+   This duration can be configured via `autoTls.ca.caCertificateRetirementDuration`.
+** Expired and retired CA certificates are no longer published in Volumes and TrustStore.
+
++
+See the xref:secret-operator:secretclass.adoc#ca-rotation[SecretClass] and xref:secret-operator:truststore.adoc[TrustStore] documentation as well as https://github.com/stackabletech/secret-operator/pull/650[secret-operator#650].
+
+* The custom `samAccountName` generation is no longer marked as experimental.
+  To make this possible, the secret-operator is the first Stackable operator which supports CRD versioning.
+** In version `v1alpha2` of the SecretClass, the `experimentalGenerateSamAccountName` field was renamed to `generateSamAccountName`.
+   See the xref:secret-operator:secretclass.adoc[SecretClass reference] for more details.
+** The stored version of SecretClass is `v1alpha2`.
+   It is however still possible to apply and retrieve SecretClasses in `v1alpha1`.
+   The resources are automatically converted by the operator.
+** The operator now deploys the CRDs for SecretClass and TrustStore by itself instead of relying on the Helm chart.
+   This enables the operator to automatically rotate and update the TLS certificate (`caBundle`) used for the conversion webhook.
+
++
+See https://github.com/stackabletech/secret-operator/pull/634[secret-operator#634].
+
+* The `certManager` backend is no longer marked as experimental.
+  In version `v1alpha2` of the SecretClass, the `experimentalCertManager` field was renamed to `certManager`.
+  See the xref:secret-operator:secretclass.adoc[SecretClass reference] for more details.
+
+* The operator now supports exporting the TrustStore CA certificate information to Secrets (in addition to ConfigMaps).
+  See https://github.com/stackabletech/secret-operator/pull/597[secret-operator#597].
