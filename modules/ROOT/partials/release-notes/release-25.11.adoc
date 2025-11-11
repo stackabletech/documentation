@@ -154,3 +154,8 @@ Only use this setting if you know what you are doing!
 * Previously in set-ups where multiple Web-/API-servers were used, only one instance was able to automatically access the connection passwords stored in the database.
   This could be solved by setting the https://airflow.apache.org/docs/apache-airflow/stable/configurations-ref.html#fernet-key[fernet] key explicitly, but now this detail is taken care of internally by the operator.
   See https://github.com/stackabletech/airflow-operator/issues/694[airflow-operator#694].
+
+===== Apache NiFi
+
+The Apache NiFi xref:nifi:usage_guide/monitoring.adoc#_configure_metrics_in_nifi_2_x_x[monitoring documentation] page has been updated to include guidance on how to scrape NiFi 2.X.X metrics using mTLS.
+See https://github.com/stackabletech/nifi-operator/issues/813[nifi-operator#813].
