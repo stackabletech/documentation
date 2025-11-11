@@ -165,3 +165,9 @@ See https://github.com/stackabletech/nifi-operator/issues/813[nifi-operator#813]
 Spark Connect: Previously the property `spec.image.pullSecrets` was ignored by the operator when creating the executor templates.
 This has now been corrected in the operator code.
 See https://github.com/stackabletech/spark-k8s-operator/issues/600[spark-k8s-operator#600].
+
+===== Apache Superset
+
+Previously, there was a chance containers would not start, because Superset was starting too slowly and was killed because of a failing liveness probe.
+Now, we add a proper startup probe, which allows Superset startup to succeed and not be killed.
+See https://github.com/stackabletech/superset-operator/pull/654[superset-operator#654].
