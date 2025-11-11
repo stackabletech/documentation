@@ -408,3 +408,20 @@ The following new product versions are now supported:
 * Open Policy Agent: https://github.com/stackabletech/docker-images/issues/1238[1.8.0]
 * Trino: https://github.com/stackabletech/docker-images/issues/1242[477 (LTS)]
 * Vector: https://github.com/stackabletech/docker-images/issues/1233[0.49.0]
+
+====== Deprecated versions
+
+The following product versions are deprecated and will be removed in a later release:
+
+* Apache Airflow: https://github.com/stackabletech/docker-images/issues/1266[2.9.3], https://github.com/stackabletech/docker-images/issues/1268[2.10.5]
+* Apache Druid: https://github.com/stackabletech/docker-images/issues/1234[33.0.0]
+* Apache HBase: https://github.com/stackabletech/docker-images/issues/1269[2.6.4]
+* Apache Hadoop: https://github.com/stackabletech/docker-images/issues/1270[3.4.1]
+* Apache Hive: https://github.com/stackabletech/docker-images/issues/1271[4.0.0]
+* Apache Kafka: https://github.com/stackabletech/docker-images/issues/1236[3.7.2]
+* Apache NiFi: https://github.com/stackabletech/docker-images/issues/1237[1.27.0], https://github.com/stackabletech/docker-images/issues/1237[1.28.1], https://github.com/stackabletech/docker-images/issues/1237[2.4.0]
+* Apache Spark: https://github.com/stackabletech/docker-images/issues/1273[3.5.6]
+* Apache Superset: https://github.com/stackabletech/docker-images/issues/1241[4.0.2], https://github.com/stackabletech/docker-images/issues/1274[4.1.2]
+* Apache ZooKeeper: https://github.com/stackabletech/docker-images/issues/1275[3.9.3]
+* Open Policy Agent: https://github.com/stackabletech/docker-images/issues/1238[1.4.2]
+* Trino: https://github.com/stackabletech/docker-images/issues/1242[451], https://github.com/stackabletech/docker-images/issues/1242[476]
