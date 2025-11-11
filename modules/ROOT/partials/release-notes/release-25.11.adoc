@@ -58,3 +58,13 @@ See https://github.com/stackabletech/nifi-operator/issues/812[nifi-operator#812]
 This release adds a dedicated per-rolegroup `-metrics` Service, which can be used to scrape Prometheus metrics.
 // TODO: How do we expose more metrics? The PR this snippet comes from doesn't seem to expose more metrics.
 // The Expose more Prometheus metrics, such as successful or failed bundle loads and information about the OPA environment
+
+====== Trino
+
+* The operator now supports configuring fault-tolerant execution for Trino via the TrinoCluster CRD.
+  See the xref:trino:usage-guide/fault-tolerant-execution.adoc[documentation page] and https://github.com/stackabletech/trino-operator/pull/779[trino-operator#779].
+* The Trino client spooling protocol can now be configured using the `spec.clusterConfig.clientProtocol.spooling` property.
+// TODO: Is this an S3Connection (CR)?
+  Users can configure an S3 connection and the location or spooling segments.
+  Additional properties can be added using the `configOverrides` mechanism for the `spooling-manager.properties` file.
+  See the xref:trino:usage-guide/client-spooling-protocol.adoc[client spooling protocol] documentation page and https://github.com/stackabletech/trino-operator/pull/793[trino-operator#793].
