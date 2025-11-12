@@ -61,6 +61,7 @@ See https://github.com/stackabletech/demos/pull/289[demos#289].
 
 This release adds experimental support for KRaft managed Kafka clusters.
 KRaft Controllers can be deployed instead of Apache ZooKeeper to manage the state of Kafka.
+// TODO: Should this instead be "... the only cluster management option available."?
 KRaft is supported by all Kafka versions provided by SDP, and starting with Kafka 4.X it is the only cluster management version available.
 See https://github.com/stackabletech/kafka-operator/pull/889[kafka-operator#889].
 
@@ -88,7 +89,7 @@ Additionally, the operator exposes more Prometheus metrics, such as successful o
 
 ===== OpenSearch
 
-The Stackable platform now provides an operator for OpenSearch.
+The Stackable Data Platform now provides an operator for OpenSearch.
 We initially support version link:#new-product-versions-25_11_0[3.1.0], which is also marked as the LTS line going forward.
 
 OpenSearch is a powerful search and analytics engine built on Apache Lucene.
@@ -234,7 +235,7 @@ See https://github.com/stackabletech/nifi-operator/issues/813[nifi-operator#813]
 
 Reduce severity of Pod eviction errors.
 Previously, the operator would produce lot's of `Cannot evict pod as it would violate the pod's disruption budget` errors.
-With this fix, the error is reduced to an info instead.
+With this change, the error is reduced to an info instead.
 See https://github.com/stackabletech/commons-operator/pull/372[commons-operator#372].
 
 ===== Stackable listener-operator
@@ -244,7 +245,7 @@ See https://github.com/stackabletech/commons-operator/pull/372[commons-operator#
 * *Breaking:* The listener-operator default preset changed from `stable-nodes` to `ephemeral-nodes`.
   Previously, `external-stable` NodePorts pinned the Pod to a specific node, which caused problems with node rotations.
 // TODO: See if we use code block here or not
-  Node pinning can be enabled via ListenerClass' new xref:listener-operator:listenerclass.adoc##_node_stickiness[`.spec.pinnedNodePorts`] field.
+  Node pinning can be enabled via ListenerClass' new xref:listener-operator:listenerclass.adoc#_node_stickiness[`.spec.pinnedNodePorts`] field.
   The preset can be configured using the following two commands:
 +
 --
