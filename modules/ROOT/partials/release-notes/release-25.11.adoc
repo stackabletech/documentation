@@ -586,8 +586,8 @@ The following new product versions are now supported:
 * Apache Spark: https://github.com/stackabletech/docker-images/issues/1273[3.5.7 (LTS)], https://github.com/stackabletech/docker-images/issues/1273[4.0.1 (experimental)]
 * Apache Superset: https://github.com/stackabletech/docker-images/issues/1274[4.1.4 (LTS)]
 * Apache ZooKeeper: https://github.com/stackabletech/docker-images/issues/1275[3.9.4 (LTS)]
-* OpenSearch: https://github.com/stackabletech/docker-images/issues/1239[3.1.0 (LTS)]
 * Open Policy Agent: https://github.com/stackabletech/docker-images/issues/1238[1.8.0]
+* OpenSearch: https://github.com/stackabletech/docker-images/issues/1239[3.1.0 (LTS)]
 * Trino: https://github.com/stackabletech/docker-images/issues/1242[477 (LTS)]
 * Vector: https://github.com/stackabletech/docker-images/issues/1233[0.49.0]
 
