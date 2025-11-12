@@ -71,7 +71,11 @@ This release adds a dedicated per-rolegroup `-metrics` Service, which can be use
 // TODO: How do we expose more metrics? The PR this snippet comes from doesn't seem to expose more metrics.
 // The Expose more Prometheus metrics, such as successful or failed bundle loads and information about the OPA environment
 
-====== Trino
+===== OpenSearch
+
+As of this release OpenSearch is part of the SDP.
+We initially support version link:#new-product-versions-25_11_0[3.1.0], which is also marked as the LTS line going forward.
+
 
 * The operator now supports configuring fault-tolerant execution for Trino via the TrinoCluster CRD.
   See the xref:trino:usage-guide/fault-tolerant-execution.adoc[documentation page] and https://github.com/stackabletech/trino-operator/pull/779[trino-operator#779].
@@ -416,6 +420,7 @@ The following product versions were already available before but are now marked 
 * Apache Hive: https://github.com/stackabletech/docker-images/issues/1271[4.0.1 (LTS)]
 * Apache Kafka: https://github.com/stackabletech/docker-images/issues/1272[3.9.1 (LTS)]
 
+[#new-product-versions-25_11_0]
 ====== New versions
 
 The following new product versions are now supported:
