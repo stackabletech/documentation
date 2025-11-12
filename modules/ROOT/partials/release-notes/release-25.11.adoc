@@ -3,7 +3,16 @@
 === 25.11.0
 
 Released on 2025-11-07.
-(Optional description / introduction)
+
+[TIP,caption=Release highlights]
+====
+* The Stackable platform now provides an operator for OpenSearch.
+* All operators now correctly handle multiple CA certificates.
+* The User Info Fetcher (UIF) is no longer marked as experimental.
+* SecretClass `v1alpha2` is now available:
+** The custom `samAccountName` generation is no longer marked as experimental.
+** The `certManager` backend is no longer marked as experimental.
+====
 
 ==== New platform features
 
