@@ -48,6 +48,13 @@ See https://github.com/stackabletech/demos/pull/289[demos#289].
 * The xref:demos:airflow-scheduled-job.adoc[`airflow-scheduled-job`] demo for Airflow has been extended to showcase some of the new Airflow 3.x features in the context of SDP i.e. event scheduling (with Kafka), triggerer actions and user authorization with OPA and the SDP OPA authorizer.
   See https://github.com/stackabletech/demos/issues/223[demos#223].
 
+===== Apache Kafka
+
+This release adds experimental support for KRaft managed Kafka clusters.
+KRaft Controllers can be deployed instead of Apache ZooKeeper to manage the state of Kafka.
+KRaft is supported by all Kafka versions provided by SDP, and starting with Kafka 4.X it is the only cluster management version available.
+See https://github.com/stackabletech/kafka-operator/pull/889[kafka-operator#889].
+
 ===== Apache NiFi
 
 A patch was added which allows disabling the SNI (Server Name Indication) checks for NiFi.
