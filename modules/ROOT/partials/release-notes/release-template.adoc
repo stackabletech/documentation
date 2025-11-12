@@ -35,6 +35,9 @@ All subsections must follow this order:
 * OpenSearch
 * Trino
 * Vector
+* Stackable commons-operator
+* Stackable listener-operator
+* Stackable secret-operator
 
 Potential sub headers...
 
