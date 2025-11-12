@@ -117,14 +117,38 @@ This includes 2 critical and 18 high-severity CVEs.
 
 This release includes various improvements in regards to metrics collection and exposition.
 Previously, some operators did not expose Prometheus annotations containing the HTTP(S) scheme or the metrics path and port.
-These annotations are now available which allows custom relabel configs in Prometheus to scrape the metric endpoints.
+These annotations are now available which allows custom relabel configs in Prometheus to scrape the metric endpoints:
 
-* Apache HBase: The `prometheus.io/scrape` label is now only available on the `metrics` Service (instead of the `headless` service), which uses `metrics` as the port name instead of the previous `ui-http`/`ui-https` port name.
+* Apache Airflow: https://github.com/stackabletech/airflow-operator/pull/698[airflow-operator#698].
+* Apache Druid: https://github.com/stackabletech/druid-operator/pull/761[airflow-operator#761].
+* Apache Hive: https://github.com/stackabletech/hive-operator/pull/641[hive-operator#641].
+* Apache Kafka: https://github.com/stackabletech/kafka-operator/pull/897[kafka-operator#897].
+* Apache NiFi: https://github.com/stackabletech/nifi-operator/pull/855[nifi-operator#855].
+* Apache Spark: https://github.com/stackabletech/spark-k8s-operator/pull/619[spark-k8s-operator#619].
+* Apache Superset: https://github.com/stackabletech/superset-operator/pull/671[superset-operator#671].
+* Apache ZooKeeper: https://github.com/stackabletech/zookeeper-operator/pull/978[zookeeper-operator#978].
+* Open Policy Agent: https://github.com/stackabletech/opa-operator/pull/767[opa-operator#767].
+* Trino: https://github.com/stackabletech/trino-operator/pull/807[trino-operator#807].
+
+In addition to the annotation changes listed above, the following changes were made:
+
+* Apache HBase: The `prometheus.io/scrape` label is now only available on the `metrics` Service (instead of the `headless` Service), which uses `metrics` as the port name instead of the previous `ui-http`/`ui-https` port name.
   See https://github.com/stackabletech/hbase-operator/pull/701[hbase-operator#701].
-* Apache Airflow: The operator now adds the appropriate Prometheus annotations.
-  See https://github.com/stackabletech/airflow-operator/pull/698[airflow-operator#698].
-* Apache Druid: The operator now adds the appropriate Prometheus annotations.
-  See https://github.com/stackabletech/druid-operator/pull/761[airflow-operator#761].
+* Apache Hadoop: The `metrics` Service previously exposed the JMX metrics via the `metrics` port.
+  In this release, the JMX metrics have been moved to the `jmx-metrics` port.
+  The `metrics` port now instead exposes the native Prometheus metrics.
++
+--
+[WARNING]
+====
+Care needs to be taken because the metrics format changed.
+====
+
+See https://github.com/stackabletech/hdfs-operator/pull/721[hdfs-operator#721].
+--
+
+* Apache Kafka: Additionally, the `<cluster>-<role>-<rolegroup>` Service was replaced with `<cluster>-<role>-<rolegroup>-headless` and `<cluster>-<role>-<rolegroup>-metrics` Services.
+  See https://github.com/stackabletech/kafka-operator/pull/897[kafka-operator#897].
 
 ====== Miscellaneous
 
