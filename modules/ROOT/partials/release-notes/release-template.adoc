@@ -8,74 +8,142 @@
 Released on YYYY-MM-DD.
 (Optional description / introduction)
 
+[TIP,caption=Release highlights]
+====
+* Highlight 1
+* Highlight 2
+* Highlight 3
+====
+
 ==== New platform features
+
+All subsections must follow this order:
+
+* Apache Airflow
+* Apache Druid
+* Apache HBase
+* Apache Hadoop
+* Apache Hive
+* Apache Kafka
+* Apache NiFi
+* Apache Omid
+* Apache Phoenix
+* Apache Spark
+* Apache Superset
+* Apache ZooKeeper
+* OpenSearch
+* Open Policy Agent
+* Trino
+* Vector
+
+Potential sub headers...
+
+===== General
+
+====== Security/Observability/Authorization/Miscellaneous
+
+===== Apache Project and Stackable <CORE>-operator
 
 ==== Platform improvements
 
+Mark any breaking changes with *Breaking:*.
+
+===== General
+
+====== Vulnerabilities
+
+YYY CVEs were fixed in the Stackable product images.
+This includes X critical and XX high-severity CVEs.
+
+====== Authorization/Miscellaneous
+
+===== Apache Project and Stackable <CORE>-operator
+
+==== Platform fixes
+
+===== General
+
+====== Security/Observability/Authorization/Miscellaneous
+
+===== Apache Project and Stackable <CORE>-operator
+
 ==== Platform deprecations
 
-==== Product versions
+===== Apache Project and Stackable <CORE>-operator
+
+==== Platform removals
+
+Mark any breaking changes with *Breaking:*.
+
+===== General
+
+===== Apache Project and Stackable <CORE>-operator
+
+==== Supported versions
+
+===== Product versions
 
 As with previous SDP releases, many product images have been updated to their latest versions.
-The LTS version has in many cases also been adjusted in line with our xref:ROOT:policies.adoc[support policy].
-
 Refer to the xref:operators:supported_versions.adoc[supported versions] documentation for a complete overview including LTS versions or deprecations.
 
-===== New versions
+====== New LTS versions
+
+The following product versions were already available before but are now marked as the xref:compliance:policies.adoc#_product_lifecycle_policy[LTS] version:
+
+* Product 1: https://example.org[1.2.3 (LTS)]
+* Product 2: https://example.org[1.2.3 (LTS)]
+
+====== New versions
 
 The following new product versions are now supported:
 
-* ...
+* Product 1: https://example.org[1.2.3]
+* Product 2: https://example.org[1.2.3 (LTS)]
+* Product 2: https://example.org[1.2.3 (experimental)]
 
-===== Deprecated versions
+====== Deprecated versions
 
 The following product versions are deprecated and will be removed in a later release:
 
-* ...
+* Product 1: https://example.org[1.2.3]
+* Product 2: https://example.org[1.2.3]
+* Product 2: https://example.org[1.2.3]
 
-===== Removed versions
+====== Removed versions
 
-The following product versions are no longer supported (although images for released product versions remain available https://oci.stackable.tech/[here{external-link-icon}^]. Information on how to browse the registry can be found xref:contributor:project-overview.adoc#docker-images[here,window=_blank].):
+The following product versions are no longer supported.
+These images for released product versions remain available https://oci.stackable.tech/[here,window=_blank].
+Information on how to browse the registry can be found xref:contributor:project-overview.adoc#docker-images[here,window=_blank].
 
-* ...
+* Product 1: https://example.org[1.2.3]
+* Product 2: https://example.org[1.2.3]
+* Product 2: https://example.org[1.2.3]
 
-==== stackablectl
-
-==== Supported Kubernetes versions
+===== Kubernetes versions
 
 This release supports the following Kubernetes versions:
 
-* `1.XX`
+* `1.33`
+* `1.32`
+* `1.31`
+* `1.30`
 
 These Kubernetes versions are no longer supported:
 
-* `1.XX`
+* `1.29`
 
-==== Supported OpenShift versions
+===== OpenShift versions
 
 This release is available in the RedHat Certified Operator Catalog for the following OpenShift versions:
 
-* `4.XX`
+* `4.18`
+* `4.17`
+* `4.16`
 
 These OpenShift versions are no longer supported:
 
-* `4.XX`
-
-==== Breaking changes
-
-Of the changes mentioned above, the following are breaking (or could lead to breaking behaviour), and you will need to adapt your existing CRDs accordingly:
-
-===== Stackable Operator for Example Product
-
-* Description of the change 1
-* Description of the change 2
-
-.Breaking changes details
-[%collapsible]
-====
-* `spec.a`: This field has been removed.
-* `spec.b`: This field has been changed to a number.
-====
+* `4.15`
+* `4.14`
 
 ==== Upgrade from OO.M
 
@@ -108,7 +176,7 @@ Afterwards you will need to upgrade the CustomResourceDefinitions (CRDs) install
 The reason for this is that helm will uninstall the operators but not the CRDs.
 This can be done using `kubectl replace`.
 
-[source]
+[source,shell]
 ----
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/airflow-operator/YY.M.X/deploy/helm/airflow-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/commons-operator/YY.M.X/deploy/helm/commons-operator/crds/crds.yaml
@@ -120,14 +188,13 @@ kubectl replace -f https://raw.githubusercontent.com/stackabletech/kafka-operato
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/listener-operator/YY.M.X/deploy/helm/listener-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/nifi-operator/YY.M.X/deploy/helm/nifi-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/opa-operator/YY.M.X/deploy/helm/opa-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/secret-operator/YY.M.X/deploy/helm/secret-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/YY.M.X/deploy/helm/spark-k8s-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/superset-operator/YY.M.X/deploy/helm/superset-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/trino-operator/YY.M.X/deploy/helm/trino-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/YY.M.X/deploy/helm/zookeeper-operator/crds/crds.yaml
 ----
 
-[source,console]
+[source]
 ----
 customresourcedefinition.apiextensions.k8s.io "airflowclusters.airflow.stackable.tech" replaced
 customresourcedefinition.apiextensions.k8s.io "authenticationclasses.authentication.stackable.tech" replaced
@@ -164,7 +231,7 @@ Afterward you will need to upgrade the CustomResourceDefinitions (CRDs) installe
 The reason for this is that helm will uninstall the operators but not the CRDs.
 This can be done using `kubectl replace`.
 
-[source]
+[source,shell]
 ----
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/airflow-operator/YY.M.X/deploy/helm/airflow-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/commons-operator/YY.M.X/deploy/helm/commons-operator/crds/crds.yaml
@@ -176,14 +243,13 @@ kubectl replace -f https://raw.githubusercontent.com/stackabletech/kafka-operato
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/listener-operator/YY.M.X/deploy/helm/listener-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/nifi-operator/YY.M.X/deploy/helm/nifi-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/opa-operator/YY.M.X/deploy/helm/opa-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/secret-operator/YY.M.X/deploy/helm/secret-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/YY.M.X/deploy/helm/spark-k8s-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/superset-operator/YY.M.X/deploy/helm/superset-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/trino-operator/YY.M.X/deploy/helm/trino-operator/crds/crds.yaml
 kubectl replace -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/YY.M.X/deploy/helm/zookeeper-operator/crds/crds.yaml
 ----
 
-[source,console]
+[source]
 ----
 customresourcedefinition.apiextensions.k8s.io "airflowclusters.airflow.stackable.tech" replaced
 customresourcedefinition.apiextensions.k8s.io "authenticationclasses.authentication.stackable.tech" replaced
@@ -193,7 +259,8 @@ customresourcedefinition.apiextensions.k8s.io "s3connections.s3.stackable.tech" 
 
 Install the `YY.M` release
 
-NOTE: `helm repo` subcommands are not supported for OCI registries. The operators are installed directly, without adding the Helm Chart repository first.
+NOTE: `helm repo` subcommands are not supported for OCI registries.
+The operators are installed directly, without adding the Helm Chart repository first.
 
 [source,console]
 ----
@@ -214,4 +281,7 @@ helm install --wait trino-operator oci://oci.stackable.tech/sdp-charts/trino-ope
 helm install --wait zookeeper-operator oci://oci.stackable.tech/sdp-charts/zookeeper-operator --version YY.M.X
 ----
 
+[#known-issues-YY_M_X]
 ==== Known issues
+
+Note down any potential known issues.
