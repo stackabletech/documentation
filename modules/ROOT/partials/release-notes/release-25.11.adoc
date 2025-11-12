@@ -215,12 +215,6 @@ Only use this setting if you know what you are doing!
 The Apache NiFi xref:nifi:usage_guide/monitoring.adoc#_configure_metrics_in_nifi_2_x_x[monitoring documentation] page has been updated to include guidance on how to scrape NiFi 2.X.X metrics using mTLS.
 See https://github.com/stackabletech/nifi-operator/issues/813[nifi-operator#813].
 
-===== Apache Superset
-
-Previously, there was a chance containers would not start, because Superset was starting too slowly and was killed because of a failing liveness probe.
-Now, we add a proper startup probe, which allows Superset startup to succeed and not be killed.
-See https://github.com/stackabletech/superset-operator/pull/654[superset-operator#654].
-
 ===== Open Policy Agent
 
 * *Breaking:* The per-rolegroup Services now only expose the HTTP port and contain a `-headless` suffix to better indicate their purpose and to be consistent with other operators.
@@ -542,6 +536,12 @@ See https://github.com/stackabletech/operator-rs/pull/1076[operator-rs#1076].
 Spark Connect: Previously the property `spec.image.pullSecrets` was ignored by the operator when creating the executor templates.
 This has now been corrected in the operator code.
 See https://github.com/stackabletech/spark-k8s-operator/issues/600[spark-k8s-operator#600].
+
+===== Apache Superset
+
+Previously, there was a chance containers would not start, because Superset was starting too slowly and was killed because of a failing liveness probe.
+Now, we add a proper startup probe, which allows Superset startup to succeed and not be killed.
+See https://github.com/stackabletech/superset-operator/pull/654[superset-operator#654].
 
 ===== Open Policy Agent
 
