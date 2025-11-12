@@ -9,12 +9,6 @@ Released on 2025-11-07.
 
 ===== General
 
-====== Custom image selection
-
-Previously, when using custom images in combination with a SHA digest like `oci.stackable.tech/sdp/spark-k8s@sha256:c8b7...`, all operators created invalid labels `app.kubernetes.io/version` for their applied resources.
-This was fixed by checking and replacing invalid characters in the created labels when a SHA digest is used to select the custom image.
-See https://github.com/stackabletech/operator-rs/pull/1076[operator-rs#1076].
-
 ====== Security
 
 Traffic between Open Policy Agent (OPA) and clients can be encrypted using TLS by enabling it in the OPA custom resource.
@@ -146,16 +140,6 @@ priorityClassName: ...
 
 ===== Apache Airflow
 
-* Previously, a missing OPA ConfigMap would crash the operator.
-  With this release, we don't panic on an invalid authorization config.
-  See https://github.com/stackabletech/airflow-operator/pull/667[airflow-operator#667].
-* Previously, OPA authorization for Airflow 3 was not working.
-  With this release, the operator now sets the required environment variables.
-  See https://github.com/stackabletech/airflow-operator/pull/668[airflow-operator#668].
-* Allow multiple Airflows in the same namespace to use Kubernetes executors.
-  Previously, the operator would always use the same name for the executor Pod template ConfigMap.
-  Thus when deploying multiple Airflow instances in the same namespace, the ConfigMaps would conflict.
-  See https://github.com/stackabletech/airflow-operator/pull/678[airflow-operator#678].
 // TODO: Is there only ONE key or should we clarify WHICH key this is?
 * The JWT key is now created by the the operator internally.
   The same applies to the key previously defined in the credentials secret under `connections.secretKey`: this change is non-breaking, as `connections.secretKey` will be ignored if supplied.
@@ -178,12 +162,6 @@ Only use this setting if you know what you are doing!
 The Apache NiFi xref:nifi:usage_guide/monitoring.adoc#_configure_metrics_in_nifi_2_x_x[monitoring documentation] page has been updated to include guidance on how to scrape NiFi 2.X.X metrics using mTLS.
 See https://github.com/stackabletech/nifi-operator/issues/813[nifi-operator#813].
 
-===== Apache Spark
-
-Spark Connect: Previously the property `spec.image.pullSecrets` was ignored by the operator when creating the executor templates.
-This has now been corrected in the operator code.
-See https://github.com/stackabletech/spark-k8s-operator/issues/600[spark-k8s-operator#600].
-
 ===== Apache Superset
 
 Previously, there was a chance containers would not start, because Superset was starting too slowly and was killed because of a failing liveness probe.
@@ -194,9 +172,6 @@ See https://github.com/stackabletech/superset-operator/pull/654[superset-operato
 
 * *Breaking:* The per-rolegroup Services now only expose the HTTP port and contain a `-headless` suffix to better indicate their purpose and to be consistent with other operators.
   See https://github.com/stackabletech/opa-operator/pull/748[opa-operator#748].
-* Previously the opa-operator ignored `envOverrides` set on role or rolegroup level.
-  With this release, the `envOverrides` are now properly propagated by the operator.
-  See https://github.com/stackabletech/opa-operator/pull/754[opa-operator#754].
 * The xref:opa:usage-guide/user-info-fetcher.adoc[User Info Fetcher (UIF)] is no longer marked as experimental.
   See https://github.com/stackabletech/opa-operator/issues/751[opa-operator#751].
 
@@ -393,6 +368,39 @@ See https://github.com/stackabletech/secret-operator/pull/634[secret-operator#63
 
 * The operator now supports exporting the TrustStore CA certificate information to Secrets (in addition to ConfigMaps).
   See https://github.com/stackabletech/secret-operator/pull/597[secret-operator#597].
+
+==== Platform fixes
+
+===== Custom image selection
+
+Previously, when using custom images in combination with a SHA digest like `oci.stackable.tech/sdp/spark-k8s@sha256:c8b7...`, all operators created invalid labels `app.kubernetes.io/version` for their applied resources.
+This was fixed by checking and replacing invalid characters in the created labels when a SHA digest is used to select the custom image.
+See https://github.com/stackabletech/operator-rs/pull/1076[operator-rs#1076].
+
+===== Apache Airflow
+
+* Previously, a missing OPA ConfigMap would crash the operator.
+  With this release, we don't panic on an invalid authorization config.
+  See https://github.com/stackabletech/airflow-operator/pull/667[airflow-operator#667].
+* Previously, OPA authorization for Airflow 3 was not working.
+  With this release, the operator now sets the required environment variables.
+  See https://github.com/stackabletech/airflow-operator/pull/668[airflow-operator#668].
+* Allow multiple Airflows in the same namespace to use Kubernetes executors.
+  Previously, the operator would always use the same name for the executor Pod template ConfigMap.
+  Thus when deploying multiple Airflow instances in the same namespace, the ConfigMaps would conflict.
+  See https://github.com/stackabletech/airflow-operator/pull/678[airflow-operator#678].
+
+===== Apache Spark
+
+Spark Connect: Previously the property `spec.image.pullSecrets` was ignored by the operator when creating the executor templates.
+This has now been corrected in the operator code.
+See https://github.com/stackabletech/spark-k8s-operator/issues/600[spark-k8s-operator#600].
+
+===== Open Policy Agent
+
+Previously the opa-operator ignored `envOverrides` set on role or rolegroup level.
+With this release, the `envOverrides` are now properly propagated by the operator.
+See https://github.com/stackabletech/opa-operator/pull/754[opa-operator#754].
 
 ==== Supported versions
 
