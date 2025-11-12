@@ -138,7 +138,13 @@ csiProvisioner:
 csiNodeDriver:
   priorityClassName: ...
 
-# TODO: List/check secret-operator here as well
+# Secret operator
+controllerService:
+  priorityClassName: ...
+
+csiNodeDriver:
+  priorityClassName: ...
+
 # All other operators
 priorityClassName: ...
 ----
@@ -350,10 +356,104 @@ See https://github.com/stackabletech/listener-operator/pull/334[listener-operato
   This separation is needed for CRD versioning and conversion by the operator.
 ** The controller (which reconciles resources, maintains CRDs and provides the CRD conversion webhook) runs as a Deployment with a single replica.
 ** The CSI server runs on every Kubernetes cluster node via a DaemonSet (this behaviour is unchanged).
-** The Helm values are adjusted in accordance to the changes above.
-// TODO: Should we list the changes explicitly like we did for listener-operator above?
-   See the secret-operator https://github.com/stackabletech/secret-operator/blob/25.11.0/CHANGELOG.md[changelog] for a complete overview of these changes.
 ** The old DaemonSet `secret-operator-daemonset` should be removed manually.
+** The Helm values are adjusted in accordance to the changes above.
++
+--
+Both the external provisioner and the node driver registrar have been moved under `csiNodeDriver`:
+
+[source,yaml]
+----
+# Before
+csiProvisioner:
+  resources:
+
+csiNodeDriverRegistrar:
+  resources:
+
+# After
+csiNodeDriver:
+  externalProvisioner:
+    resources:
+  nodeDriverRegistrar:
+    resources:
+----
+
+The secret-operator is now deployed through a Deployment and a DaemonSet.
+As such, the resources of both secret-operator instances can be controlled separately:
+
+[source,yaml]
+----
+# Before
+node:
+  driver:
+    resources:
+
+# After
+csiNodeDriver:
+  nodeService:
+    resources:
+
+controllerService:
+  resources:
+----
+
+The `securityContext` has been split into two parts:
+
+[source,yaml]
+----
+# Before
+securityContext:
+
+# After
+csiNodeDriver:
+  nodeService:
+    securityContext:
+
+controllerService:
+  securityContext:
+----
+
+Settings that are now split:
+
+[source,yaml]
+----
+# Before
+podAnnotations:
+podSecurityContext:
+nodeSelector:
+tolerations:
+affinity:
+
+# After
+csiNodeDriver:
+  podAnnotations:
+  podSecurityContext:
+  nodeSelector:
+  tolerations:
+  affinity:
+
+controllerService:
+  podAnnotations:
+  podSecurityContext:
+  nodeSelector:
+  tolerations:
+  affinity:
+----
+
+Settings that have moved:
+
+[source,yaml]
+----
+# Before
+kubeletDir:
+
+# After
+csiNodeDriver:
+  kubeletDir:
+----
+
+--
 
 +
 See https://github.com/stackabletech/secret-operator/pull/645[secret-operator#645].
