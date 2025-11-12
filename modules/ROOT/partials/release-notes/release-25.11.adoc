@@ -65,7 +65,7 @@ See https://github.com/stackabletech/nifi-operator/issues/812[nifi-operator#812]
   The support is marked as experimental because Spark 4.0.0 has known compatibility issues with https://github.com/apache/hbase-connectors/pull/130[Apache HBase] and https://github.com/apache/iceberg/issues/13358[Apache Iceberg].
   See https://github.com/stackabletech/spark-k8s-operator/issues/586[spark-k8s-operator#586].
 
-====== Open Policy Agent
+===== Open Policy Agent
 
 This release adds a dedicated per-rolegroup `-metrics` Service, which can be used to scrape Prometheus metrics.
 // TODO: How do we expose more metrics? The PR this snippet comes from doesn't seem to expose more metrics.
@@ -76,6 +76,7 @@ This release adds a dedicated per-rolegroup `-metrics` Service, which can be use
 As of this release OpenSearch is part of the SDP.
 We initially support version link:#new-product-versions-25_11_0[3.1.0], which is also marked as the LTS line going forward.
 
+===== Trino
 
 * The operator now supports configuring fault-tolerant execution for Trino via the TrinoCluster CRD.
   See the xref:trino:usage-guide/fault-tolerant-execution.adoc[documentation page] and https://github.com/stackabletech/trino-operator/pull/779[trino-operator#779].
