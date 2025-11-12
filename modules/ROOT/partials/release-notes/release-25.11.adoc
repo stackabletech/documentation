@@ -73,8 +73,20 @@ This release adds a dedicated per-rolegroup `-metrics` Service, which can be use
 
 ===== OpenSearch
 
-As of this release OpenSearch is part of the SDP.
+The Stackable platform now provides an operator for OpenSearch.
 We initially support version link:#new-product-versions-25_11_0[3.1.0], which is also marked as the LTS line going forward.
+
+OpenSearch is a powerful search and analytics engine built on Apache Lucene.
+OpenSearch clusters can be specified in custom resources similar to other Stackable operators.
+For instance, a cluster with OpenSearch nodes of different types and replication factors can be defined.
+Logging, Monitoring and service exposition with ListenerClasses is supported as well.
+As the operator is still in an early development phase, special care was taken to allow extensive overriding with xref:concepts:overrides.adoc#config-overrides[`configOverrides`] and xref:concepts:overrides.adoc#pod-overrides[`podOverrides`].
+
+The operator only manages the OpenSearch back-end.
+The OpenSearch Dashboards front-end can be installed via the https://github.com/opensearch-project/helm-charts/tree/opensearch-dashboards-3.1.0/charts/opensearch-dashboards[official Helm chart].
+Stackable provides a supported image for OpenSearch Dashboard which can be used with this Helm chart.
+
+See the xref:opensearch:index.adoc[OpenSearch documentation] page for more details.
 
 ===== Trino
 
