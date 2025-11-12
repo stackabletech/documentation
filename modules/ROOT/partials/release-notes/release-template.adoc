@@ -31,8 +31,8 @@ All subsections must follow this order:
 * Apache Spark
 * Apache Superset
 * Apache ZooKeeper
-* OpenSearch
 * Open Policy Agent
+* OpenSearch
 * Trino
 * Vector
 
