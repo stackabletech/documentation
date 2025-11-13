@@ -45,9 +45,12 @@ See https://github.com/stackabletech/issues/issues/733[issues#733].
 ====== Miscellaneous
 
 // TODO: Do we want to include this?
-The performance of the Trino rules in the `end-to-end-security` stack was improved.
+* The performance of the Trino rules in the `end-to-end-security` stack was improved.
 Batch queries are now significantly faster.
 See https://github.com/stackabletech/demos/pull/289[demos#289].
+* A new demo has been added, showcasing the interaction between the Stackable Data Platform and ArgoCD to deploy resources managed in Git.
+  The xref:demos:argo-cd-git-ops.adoc[argo-cd-git-ops] demo deploys Stackable operators and Airflow via ArgoCD, uses Sealed Secrets to safely deploy secrets and credentials and synchronizes Airflow DAGs via Git.
+  See https://github.com/stackabletech/demos/pull/205[demos#205].
 
 ===== Apache Airflow
 
