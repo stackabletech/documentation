@@ -14,6 +14,15 @@ Released on 2025-11-07.
 ** The `certManager` backend is no longer marked as experimental.
 ====
 
+[WARNING,caption=Summary of breaking changes]
+====
+The following components of the SDP contain breaking changes for this release:
+
+* link:#opa-improvements-25_11_0[Open Policy Agent]
+* link:#listener-operator-improvements-25_11_0[Stackable listener-operator]
+* link:#secret-operator-improvements-25_11_0[Stackable secret-operator]
+====
+
 ==== New platform features
 
 ===== General
@@ -227,6 +236,7 @@ Only use this setting if you know what you are doing!
 The Apache NiFi xref:nifi:usage_guide/monitoring.adoc#_configure_metrics_in_nifi_2_x_x[monitoring documentation] page has been updated to include guidance on how to scrape NiFi 2 metrics using mTLS.
 See https://github.com/stackabletech/nifi-operator/issues/813[nifi-operator#813].
 
+[#opa-improvements-25_11_0]
 ===== Open Policy Agent
 
 * *Breaking:* The per-rolegroup Services now only expose the HTTP port and contain a `-headless` suffix to better indicate their purpose and to be consistent with other operators.
@@ -241,6 +251,7 @@ Previously, the operator would produce a lot of `ERROR` level logs containing `C
 With this change, the log level is reduced to `INFO`.
 See https://github.com/stackabletech/commons-operator/pull/372[commons-operator#372].
 
+[#listener-operator-improvements-25_11_0]
 ===== Stackable listener-operator
 
 * *Breaking:* Default ListenerClass `.spec.externalTrafficPolicy` to `null` to improve LoadBalancer support across various Kubernetes environments.
