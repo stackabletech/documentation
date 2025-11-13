@@ -393,7 +393,6 @@ See https://github.com/stackabletech/listener-operator/pull/334[listener-operato
   This separation is needed for CRD versioning and conversion by the operator.
 ** The controller (which reconciles resources, maintains CRDs and provides the CRD conversion webhook) runs as a Deployment with a single replica.
 ** The CSI Provisioner and Driver runs on every Kubernetes cluster node via a DaemonSet (this behaviour is unchanged).
-** The old DaemonSet `secret-operator-daemonset` should be removed manually.
 ** The Helm values are adjusted in accordance to the changes above.
 +
 --
@@ -491,6 +490,16 @@ csiNodeDriver:
 ----
 
 --
+
+** As part of the Helm value changes listed above, some resource names have also been updated.
++
+[WARNING]
+====
+It should be noted that generally no action is required, but that depends on whether or not your deployment scripts (eg: Kustomize) or monitoring/alerting system depends on any of the names and values.
+====
+*** DaemonSet `secret-operator-daemonset` has been renamed to `secret-operator-csi-node-driver`
+**** Container `secret-operator` has been renamed to `csi-node-service`
+
 
 +
 See https://github.com/stackabletech/secret-operator/pull/645[secret-operator#645].
