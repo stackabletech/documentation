@@ -635,7 +635,7 @@ The following product versions are deprecated and will be removed in a later rel
 
 * Apache Airflow: https://github.com/stackabletech/docker-images/issues/1266[2.9.3], https://github.com/stackabletech/docker-images/issues/1268[2.10.5]
 * Apache Druid: https://github.com/stackabletech/docker-images/issues/1234[33.0.0]
-* Apache HBase: https://github.com/stackabletech/docker-images/issues/1269[2.6.4]
+* Apache HBase: https://github.com/stackabletech/docker-images/issues/1269[2.6.2]
 * Apache Hadoop: https://github.com/stackabletech/docker-images/issues/1270[3.4.1]
 * Apache Hive: https://github.com/stackabletech/docker-images/issues/1271[4.0.0]
 * Apache Kafka: https://github.com/stackabletech/docker-images/issues/1236[3.7.2]
