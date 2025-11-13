@@ -58,7 +58,7 @@ See https://github.com/stackabletech/issues/issues/733[issues#733].
 Batch queries are now significantly faster.
 See https://github.com/stackabletech/demos/pull/289[demos#289].
 * A new demo has been added, showcasing the interaction between the Stackable Data Platform and ArgoCD to deploy resources managed in Git.
-  The xref:demos:argo-cd-git-ops.adoc[argo-cd-git-ops] demo deploys Stackable operators and Airflow via ArgoCD, uses Sealed Secrets to safely deploy secrets and credentials and synchronizes Airflow DAGs via Git.
+  The xref:demos:argo-cd-git-ops.adoc[`argo-cd-git-ops`] demo deploys Stackable operators and Airflow via ArgoCD, uses Sealed Secrets to safely deploy secrets and credentials and synchronizes Airflow DAGs via Git.
   See https://github.com/stackabletech/demos/pull/205[demos#205].
 
 ===== Apache Airflow
@@ -214,7 +214,6 @@ priorityClassName: ...
 
 ===== Apache Airflow
 
-// TODO: Is there only ONE key or should we clarify WHICH key this is?
 * The JWT key is now created internally by the the operator.
   The same applies to the key previously defined in the credentials secret under `connections.secretKey`: this change is non-breaking, as `connections.secretKey` will be ignored if supplied.
   See https://github.com/stackabletech/airflow-operator/pull/686[airflow-operator#686].
