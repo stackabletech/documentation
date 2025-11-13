@@ -14,7 +14,7 @@ Released on 2025-11-07.
 ** The `certManager` backend is no longer marked as experimental.
 ====
 
-[WARNING,caption=Summary of breaking changes]
+[WARNING,caption=Overview of breaking changes]
 ====
 The following components of the SDP contain breaking changes for this release:
 
