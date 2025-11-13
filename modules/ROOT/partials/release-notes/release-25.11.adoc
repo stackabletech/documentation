@@ -386,6 +386,7 @@ It should be noted that generally no action is required, but that depends on whe
 +
 See https://github.com/stackabletech/listener-operator/pull/334[listener-operator#334] for more details.
 
+[#secret-operator-improvements-25_11_0]
 ===== Stackable secret-operator
 
 * *Breaking:* The Helm Chart now deploys the secret-operator as two parts.
@@ -709,7 +710,10 @@ Afterwards you will need to upgrade the CustomResourceDefinitions (CRDs) install
 The reason for this is that helm will uninstall the operators but not the CRDs.
 This can be done using `kubectl replace`.
 
-// TODO: Mention that the CRDs of the secret-operator don't need to be replaced manually.
+[NOTE]
+====
+It should be noted that the SecretClass and TrustStore CRDs don't need to be replaced manually, because the Stackable secret-operator link:#secret-operator-improvements-25_11_0[maintains them by default].
+====
 
 [source,shell]
 ----
@@ -766,7 +770,10 @@ Afterward you will need to upgrade the CustomResourceDefinitions (CRDs) installe
 The reason for this is that helm will uninstall the operators but not the CRDs.
 This can be done using `kubectl replace`.
 
-// TODO: Mention that the CRDs of the secret-operator don't need to be replaced manually.
+[NOTE]
+====
+It should be noted that the SecretClass and TrustStore CRDs don't need to be replaced manually, because the Stackable secret-operator link:#secret-operator-improvements-25_11_0[maintains them by default].
+====
 
 [source,shell]
 ----
