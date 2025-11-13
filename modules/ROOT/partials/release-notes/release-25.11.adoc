@@ -277,12 +277,12 @@ Container resources for the CSI Controller Service (`sdp/listener-operator` in t
 ----
 # Before
 controller:
-  resources:
+  resources: ...
 
 # After
 csiProvisioner:
   controllerService:
-    resources:
+    resources: ...
 ----
 
 Container image/resources for the external-provisioner (`sig-storage/csi-provisioner` in the Deployment):
@@ -291,14 +291,14 @@ Container image/resources for the external-provisioner (`sig-storage/csi-provisi
 ----
 # Before
 csiProvisioner:
-  image:
-  resources:
+  image: ...
+  resources: ...
 
 # After
 csiProvisioner:
   externalProvisioner:
-    image:
-    resources:
+    image: ...
+    resources: ...
 ----
 
 Container resources for the CSI Node Service (`sdp/listener-operator` in the DaemonSet):
@@ -308,12 +308,12 @@ Container resources for the CSI Node Service (`sdp/listener-operator` in the Dae
 # Before
 node:
   driver:
-    resources:
+    resources: ...
 
 # After
 csiNodeDriver:
   nodeService:
-    resources:
+    resources: ...
 ----
 
 Container image/resources for the node-driver-registrar (`sig-storage/csi-node-driver-registrar` in the DaemonSet):
@@ -322,14 +322,14 @@ Container image/resources for the node-driver-registrar (`sig-storage/csi-node-d
 ----
 # Before
 csiNodeDriverRegistrar:
-  image:
-  resources:
+  image: ...
+  resources: ...
 
 # After
 csiNodeDriver:
   nodeDriverRegistrar:
-    image:
-    resources:
+    image: ...
+    resources: ...
 ----
 
 Settings that are now split:
@@ -337,33 +337,33 @@ Settings that are now split:
 [source,yaml]
 ----
 # Before
-podAnnotations:
-podSecurityContext:
-securityContext:
-nodeSelector:
-tolerations:
-affinity:
+podAnnotations: ...
+podSecurityContext: ...
+securityContext: ...
+nodeSelector: ...
+tolerations: ...
+affinity: ...
 
 # After
 csiProvisioner:
-  podAnnotations:
-  podSecurityContext:
-  nodeSelector:
-  tolerations:
-  affinity:
+  podAnnotations: ...
+  podSecurityContext: ...
+  nodeSelector: ...
+  tolerations: ...
+  affinity: ...
 
   controllerService:
-    securityContext:
+    securityContext: ...
 
 csiNodeDriver:
-  podAnnotations:
-  podSecurityContext:
-  nodeSelector:
-  tolerations:
-  affinity:
+  podAnnotations: ...
+  podSecurityContext: ...
+  nodeSelector: ...
+  tolerations: ...
+  affinity: ...
 
   nodeService:
-    securityContext:
+    securityContext: ...
 ----
 
 See the tracking issue https://github.com/stackabletech/issues/issues/763[issues#763] and https://github.com/stackabletech/listener-operator/pull/334[listener-operator#334] for more details.
@@ -402,17 +402,17 @@ Both the external provisioner and the node driver registrar have been moved unde
 ----
 # Before
 csiProvisioner:
-  resources:
+  resources: ...
 
 csiNodeDriverRegistrar:
-  resources:
+  resources: ...
 
 # After
 csiNodeDriver:
   externalProvisioner:
-    resources:
+    resources: ...
   nodeDriverRegistrar:
-    resources:
+    resources: ...
 ----
 
 The secret-operator is now deployed through a Deployment and a DaemonSet.
@@ -423,15 +423,15 @@ As such, the resources of both secret-operator instances can be controlled separ
 # Before
 node:
   driver:
-    resources:
+    resources: ...
 
 # After
 csiNodeDriver:
   nodeService:
-    resources:
+    resources: ...
 
 controllerService:
-  resources:
+  resources: ...
 ----
 
 The `securityContext` has been split into two parts:
@@ -439,15 +439,15 @@ The `securityContext` has been split into two parts:
 [source,yaml]
 ----
 # Before
-securityContext:
+securityContext: ...
 
 # After
 csiNodeDriver:
   nodeService:
-    securityContext:
+    securityContext: ...
 
 controllerService:
-  securityContext:
+  securityContext: ...
 ----
 
 Settings that are now split:
@@ -455,26 +455,26 @@ Settings that are now split:
 [source,yaml]
 ----
 # Before
-podAnnotations:
-podSecurityContext:
-nodeSelector:
-tolerations:
-affinity:
+podAnnotations: ...
+podSecurityContext: ...
+nodeSelector: ...
+tolerations: ...
+affinity: ...
 
 # After
 csiNodeDriver:
-  podAnnotations:
-  podSecurityContext:
-  nodeSelector:
-  tolerations:
-  affinity:
+  podAnnotations: ...
+  podSecurityContext: ...
+  nodeSelector: ...
+  tolerations: ...
+  affinity: ...
 
 controllerService:
-  podAnnotations:
-  podSecurityContext:
-  nodeSelector:
-  tolerations:
-  affinity:
+  podAnnotations: ...
+  podSecurityContext: ...
+  nodeSelector: ...
+  tolerations: ...
+  affinity: ...
 ----
 
 Settings that have moved:
@@ -482,11 +482,11 @@ Settings that have moved:
 [source,yaml]
 ----
 # Before
-kubeletDir:
+kubeletDir: ...
 
 # After
 csiNodeDriver:
-  kubeletDir:
+  kubeletDir: ...
 ----
 
 --
