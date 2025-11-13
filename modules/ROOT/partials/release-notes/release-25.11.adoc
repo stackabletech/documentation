@@ -74,9 +74,9 @@ See https://github.com/stackabletech/nifi-operator/issues/812[nifi-operator#812]
 
 ===== Apache Spark
 
-* The service account of spark applications can now be overridden with pod overrides.
-  Previously, the application service account was passed as command line argument to spark-submit and it was therefore not possible to overwrite it with pod overrides for the driver and executors.
-  This CLI argument has now been moved to the pod templates of the individual roles.
+* The ServiceAccount of spark applications can now be overridden with `podOverrides`.
+  Previously, the application ServiceAccount was passed as command line argument to spark-submit and it was therefore not possible to overwrite it with `podOverrides` for the driver and executors.
+  This CLI argument has now been moved to the Pod templates of the individual roles.
   See https://github.com/stackabletech/spark-k8s-operator/pull/617[spark-k8s-operator#617].
 * This release adds experimental support for Spark 4.0.1.
   The support is marked as experimental because Spark 4.0.1 has known compatibility issues with https://github.com/apache/hbase-connectors/pull/130[Apache HBase] and https://github.com/apache/iceberg/issues/13358[Apache Iceberg].
