@@ -62,7 +62,7 @@ See https://github.com/stackabletech/demos/pull/289[demos#289].
 This release adds experimental support for KRaft managed Kafka clusters.
 KRaft Controllers can be deployed instead of Apache ZooKeeper to manage the state of Kafka.
 // TODO: Should this instead be "... the only cluster management option available."?
-KRaft is supported by all Kafka versions provided by SDP, and starting with Kafka 4.X it is the only cluster management version available.
+KRaft is supported by all Kafka versions provided by SDP, and starting with Kafka 4 it is the only cluster management version available.
 See https://github.com/stackabletech/kafka-operator/pull/889[kafka-operator#889].
 
 ===== Apache NiFi
@@ -75,11 +75,11 @@ See https://github.com/stackabletech/nifi-operator/issues/812[nifi-operator#812]
 ===== Apache Spark
 
 * The service account of spark applications can now be overridden with pod overrides.
-  Previously, the application service account was passed as command line argument to spark-submit and it was therefor not possible to overwrite it with pod overrides for the driver and executors.
+  Previously, the application service account was passed as command line argument to spark-submit and it was therefore not possible to overwrite it with pod overrides for the driver and executors.
   This CLI argument has now been moved to the pod templates of the individual roles.
   See https://github.com/stackabletech/spark-k8s-operator/pull/617[spark-k8s-operator#617].
-* This release adds experimental support for Spark 4.X.X.
-  The support is marked as experimental because Spark 4.0.0 has known compatibility issues with https://github.com/apache/hbase-connectors/pull/130[Apache HBase] and https://github.com/apache/iceberg/issues/13358[Apache Iceberg].
+* This release adds experimental support for Spark 4.0.1.
+  The support is marked as experimental because Spark 4.0.1 has known compatibility issues with https://github.com/apache/hbase-connectors/pull/130[Apache HBase] and https://github.com/apache/iceberg/issues/13358[Apache Iceberg].
   See https://github.com/stackabletech/spark-k8s-operator/issues/586[spark-k8s-operator#586].
 
 ===== Open Policy Agent
@@ -150,13 +150,13 @@ In addition to the annotation changes listed above, the following changes were m
 --
 [WARNING]
 ====
-Care needs to be taken because the metrics format changed.
+Care needs to be taken because the metrics format has changed.
 ====
 
 See https://github.com/stackabletech/hdfs-operator/pull/721[hdfs-operator#721].
 --
 
-* Apache Kafka: Additionally, the `<cluster>-<role>-<rolegroup>` Service was replaced with `<cluster>-<role>-<rolegroup>-headless` and `<cluster>-<role>-<rolegroup>-metrics` Services.
+* Apache Kafka: The `<cluster>-<role>-<rolegroup>` Service was replaced with `<cluster>-<role>-<rolegroup>-headless` and `<cluster>-<role>-<rolegroup>-metrics` Services.
   See https://github.com/stackabletech/kafka-operator/pull/897[kafka-operator#897].
 
 ====== Miscellaneous
@@ -188,13 +188,13 @@ csiNodeDriver:
 priorityClassName: ...
 ----
 
-* Previously, log entries for some supported products were broken from time to time.
+* Previously, log entries for some supported products were occasionally corrupted.
   These issues have now been resolved by implementing multiple fixes in various affected (upstream) projects.
   See the tracking issue https://github.com/stackabletech/issues/issues/778[issues#778] for more details.
 ** Pull request https://github.com/vectordotdev/vector/pull/24028[vectordotdev/vector#24028] was raised to fix log entries with multi-char delimiters.
    At the time of writing, this PR has not been merged yet, but the fix is manually applied as a patch.
    See https://github.com/stackabletech/docker-images/pull/1323[docker-images#1323].
-** A XMLLayout multithreading issue in logback has been fixed by raising https://github.com/qos-ch/logback/pull/978[qos-ch/logback#978].
+** An XMLLayout multithreading issue in logback has been fixed by raising https://github.com/qos-ch/logback/pull/978[qos-ch/logback#978].
     This fix has been rolled out in all affected products:
 *** Apache Kafka: https://github.com/stackabletech/docker-images/pull/1330[docker-images#1330]
 *** Apache NiFi: https://github.com/stackabletech/docker-images/pull/1314[docker-images#1314]
@@ -203,7 +203,7 @@ priorityClassName: ...
 ===== Apache Airflow
 
 // TODO: Is there only ONE key or should we clarify WHICH key this is?
-* The JWT key is now created by the the operator internally.
+* The JWT key is now created internally by the the operator.
   The same applies to the key previously defined in the credentials secret under `connections.secretKey`: this change is non-breaking, as `connections.secretKey` will be ignored if supplied.
   See https://github.com/stackabletech/airflow-operator/pull/686[airflow-operator#686].
 * Database initialization routines - which are idempotent and run by default - can be deactivated to e.g. help diagnose or troubleshoot start-up issues via the new `databaseInitialization.enabled` field.
@@ -213,15 +213,15 @@ priorityClassName: ...
 Turning off these routines is an unsupported operation as subsequent updates to a running Airflow cluster can result in broken behaviour due to inconsistent metadata.
 Only use this setting if you know what you are doing!
 ====
-* The Airflow xref:airflow:index.adoc#_dag_processors[DAG-processor] component now has an optional individual role in the resource definition, allowing it to be separately configured (e.g. logging, resources) and run in a dedicated container.
+* The Airflow xref:airflow:index.adoc#_dag_processors[DAG-processor] component now has an optional individual role in the CRD, allowing it to be separately configured (e.g. logging, resources) and run in a dedicated container.
   See https://github.com/stackabletech/airflow-operator/issues/637[airflow-operator#637].
-* Previously in set-ups where multiple Web-/API-servers were used, only one instance was able to automatically access the connection passwords stored in the database.
+* Previously in setups where multiple Web/API-servers were used, only one instance was able to automatically access the connection passwords stored in the database.
   This could be solved by setting the https://airflow.apache.org/docs/apache-airflow/stable/configurations-ref.html#fernet-key[fernet] key explicitly, but now this detail is taken care of internally by the operator.
   See https://github.com/stackabletech/airflow-operator/issues/694[airflow-operator#694].
 
 ===== Apache NiFi
 
-The Apache NiFi xref:nifi:usage_guide/monitoring.adoc#_configure_metrics_in_nifi_2_x_x[monitoring documentation] page has been updated to include guidance on how to scrape NiFi 2.X.X metrics using mTLS.
+The Apache NiFi xref:nifi:usage_guide/monitoring.adoc#_configure_metrics_in_nifi_2_x_x[monitoring documentation] page has been updated to include guidance on how to scrape NiFi 2 metrics using mTLS.
 See https://github.com/stackabletech/nifi-operator/issues/813[nifi-operator#813].
 
 ===== Open Policy Agent
@@ -233,16 +233,16 @@ See https://github.com/stackabletech/nifi-operator/issues/813[nifi-operator#813]
 
 ===== Stackable commons-operator
 
-Reduce severity of Pod eviction errors.
-Previously, the operator would produce lot's of `Cannot evict pod as it would violate the pod's disruption budget` errors.
-With this change, the error is reduced to an info instead.
+Reduce severity of Pod eviction error logs.
+Previously, the operator would produce a lot of `ERROR` level logs containing `Cannot evict pod as it would violate the pod's disruption budget`.
+With this change, the log level is reduced to `INFO`.
 See https://github.com/stackabletech/commons-operator/pull/372[commons-operator#372].
 
 ===== Stackable listener-operator
 
 * *Breaking:* Default ListenerClass `.spec.externalTrafficPolicy` to `null` to improve LoadBalancer support across various Kubernetes environments.
   See https://github.com/stackabletech/listener-operator/pull/347[listener-operator#347].
-* *Breaking:* The listener-operator default preset changed from `stable-nodes` to `ephemeral-nodes`.
+* *Breaking:* The listener-operator Helm chart default values for `preset` changed from `stable-nodes` to `ephemeral-nodes`.
   Previously, `external-stable` NodePorts pinned the Pod to a specific node, which caused problems with node rotations.
 // TODO: See if we use code block here or not
   Node pinning can be enabled via ListenerClass' new xref:listener-operator:listenerclass.adoc#_node_stickiness[`.spec.pinnedNodePorts`] field.
@@ -264,7 +264,7 @@ It should be noted that `stackablectl` automatically detects k3s and kind cluste
 See the tracking issue https://github.com/stackabletech/issues/issues/770[issues#770] for more details.
 --
 
-* *Breaking:* Helm values have changed to allow for separate configuration of affinity, resource, etc... between the operator deployment and the CSI driver pods.
+* *Breaking:* Helm values have changed to allow for separate configuration of affinity, resource, etc... between the CSI Provisioner Deployment Pods and the CSI driver DaemonSet Pods.
 +
 --
 // TODO: Confirm these are the final values for 25.11.0
@@ -388,7 +388,7 @@ See https://github.com/stackabletech/listener-operator/pull/334[listener-operato
 * *Breaking:* The Helm Chart now deploys the secret-operator as two parts.
   This separation is needed for CRD versioning and conversion by the operator.
 ** The controller (which reconciles resources, maintains CRDs and provides the CRD conversion webhook) runs as a Deployment with a single replica.
-** The CSI server runs on every Kubernetes cluster node via a DaemonSet (this behaviour is unchanged).
+** The CSI Provisioner and Driver runs on every Kubernetes cluster node via a DaemonSet (this behaviour is unchanged).
 ** The old DaemonSet `secret-operator-daemonset` should be removed manually.
 ** The Helm values are adjusted in accordance to the changes above.
 +
@@ -520,7 +520,7 @@ maintenance:
 
 [WARNING]
 ====
-When CRD maintenance is disabled, the operator will *not* deploy and manage the CRD.
+When CRD maintenance is disabled, the operator will *not* deploy and manage the CRDs.
 The CRDs need to be deployed manually and the conversion webhook is disabled.
 As a result, only `v1alpha1` SecretClasses can be used.
 Only use this setting if you know what you are doing!
