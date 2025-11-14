@@ -254,16 +254,14 @@ See https://github.com/stackabletech/commons-operator/pull/372[commons-operator#
 ===== Stackable listener-operator
 
 * *Breaking:* Default ListenerClass `.spec.externalTrafficPolicy` to `null` to improve LoadBalancer support across various Kubernetes environments.
-  Previously, we defaulted to `Local`, which can be more performant, but needs to be supported by the LoadBalancer.
-  As we don't impose any default, Kubernetes internally will default to `Cluster`.
-  This change is marked as breaking, as in case you didn't specify a traffic policy explicitly, it will now switch to `Cluster`, which *could* cause a performance degradation.
-  You can explicitly configure `Local` to restore the old behavior.
+  Previously, ListenerClasses used `Local` by default, which can be more performant, but needs to be supported by the LoadBalancer.
+  Setting this field no `null` forwards the defaulting to the Kubernetes API server, which internally defaults to `Cluster`.
+  This change can result in degraded performance when the field was previously unconfigured, therefore it is marked as a breaking change.
+  The field can explicitly be set to `Local` to restore the old behavior.
   See https://github.com/stackabletech/listener-operator/pull/347[listener-operator#347].
 * *Breaking:* The listener-operator Helm chart default values for `preset` changed from `stable-nodes` to `ephemeral-nodes`.
   Previously, `external-stable` NodePorts pinned the Pod to a specific node, which caused problems with node rotations.
-  With the new default (`ephemeral-nodes`) you can only use the `external-stable` ListenerClass in case your Kubernetes installation supports LoadBalancers.
-  Because of this, the change is marked as breaking.
-// TODO: See if we use code block here or not
+  With the new default preset, the `external-stable` ListenerClass can only be used if the Kubernetes cluster supports LoadBalancers, which is considered a breaking change.
   Node pinning can be enabled via ListenerClass' new xref:listener-operator:listenerclass.adoc#_node_stickiness[`.spec.pinnedNodePorts`] field.
   The preset can be configured using the following two commands:
 +
