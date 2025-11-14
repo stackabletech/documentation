@@ -18,6 +18,7 @@ Released on 2025-11-07.
 ====
 The following components of the SDP contain breaking changes for this release:
 
+* link:#observability-25_11_0[Apache Kafka]
 * link:#opa-improvements-25_11_0[Open Policy Agent]
 * link:#listener-operator-improvements-25_11_0[Stackable listener-operator]
 * link:#secret-operator-improvements-25_11_0[Stackable secret-operator]
@@ -147,6 +148,7 @@ See the xref:opensearch:index.adoc[OpenSearch documentation] page for more detai
 37 CVEs were fixed in the Stackable product images.
 This includes 2 critical and 18 high-severity CVEs.
 
+[#observability-25_11_0]
 ====== Observability
 
 This release includes various improvements in regards to metrics collection and exposition.
@@ -181,7 +183,7 @@ Care needs to be taken because the metrics format has changed.
 See https://github.com/stackabletech/hdfs-operator/pull/721[hdfs-operator#721].
 --
 
-* Apache Kafka: The `<cluster>-<role>-<rolegroup>` Service was replaced with `<cluster>-<role>-<rolegroup>-headless` and `<cluster>-<role>-<rolegroup>-metrics` Services.
+* *Breaking:* Apache Kafka: The `<cluster>-<role>-<rolegroup>` Service was replaced with `<cluster>-<role>-<rolegroup>-headless` and `<cluster>-<role>-<rolegroup>-metrics` Services.
   See https://github.com/stackabletech/kafka-operator/pull/897[kafka-operator#897].
 
 ====== Miscellaneous
