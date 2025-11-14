@@ -270,33 +270,65 @@ See https://github.com/stackabletech/commons-operator/pull/372[commons-operator#
 [#listener-operator-improvements-25_11_0]
 ===== Stackable listener-operator
 
-* *Breaking:* Default ListenerClass `.spec.externalTrafficPolicy` to `null` to improve LoadBalancer support across various Kubernetes environments.
-  Previously, ListenerClasses used `Local` by default, which can be more performant, but needs to be supported by the LoadBalancer.
-  Setting this field no `null` forwards the defaulting to the Kubernetes API server, which internally defaults to `Cluster`.
-  This change can result in degraded performance when the field was previously unconfigured, therefore it is marked as a breaking change.
-  The field can explicitly be set to `Local` to restore the old behavior.
+* *Breaking:* ListenerClass `.spec.externalTrafficPolicy` now defaults to `null` (leaving this field unconfigured, previously it defaulted to `Local`).
+  This improves LoadBalancer support across various Kubernetes environments.
+  The Kubernetes API server will apply its default value of `Cluster` when this field is unset.
   See https://github.com/stackabletech/listener-operator/pull/347[listener-operator#347].
-* *Breaking:* The listener-operator Helm chart default values for `preset` changed from `stable-nodes` to `ephemeral-nodes`.
-  Previously, `external-stable` NodePorts pinned the Pod to a specific node, which caused problems with node rotations.
-  With the new default preset, the `external-stable` ListenerClass can only be used if the Kubernetes cluster supports LoadBalancers, which is considered a breaking change.
-  Node pinning can be enabled via ListenerClass' new xref:listener-operator:listenerclass.adoc#_node_stickiness[`.spec.pinnedNodePorts`] field.
-  The preset can be configured using the following two commands:
++
+[%collapsible]
+====
+*You are affected if all of the following conditions apply:*
+
+- You are using ListenerClasses.
+- You did NOT explicitly set `.spec.externalTrafficPolicy` in your ListenerClass definitions so far.
+- You experience performance degradation after upgrading or were relying on the old default behavior for different reasons.
+
+*What to do if you are affected:*
+Explicitly set `.spec.externalTrafficPolicy: Local` in your ListenerClass to restore the previous behavior.
+
+*Why this change?*
+The previous default of `Local` provides better performance but requires support by the LoadBalancer.
+Setting to `null` allows the Kubernetes API server to apply its default (`Cluster`), which works across more environments.
+====
+
+* *Breaking:* The listener-operator Helm chart default value for `preset` changed from `stable-nodes` to `ephemeral-nodes`.
+  This change improves reliability by making failures visible immediately rather than appearing unexpectedly during node rotations.
+  See the tracking issue https://github.com/stackabletech/issues/issues/770[issues#770].
++
+[%collapsible]
+====
+*You are affected if all of the following conditions apply:*
+
+- You are using the `external-stable` ListenerClass
+- You are using the `ephemeral-nodes` preset (new default now)
+- Your Kubernetes cluster does NOT support LoadBalancers
+
+*What changes:*
+Previously with the `stable-nodes` preset, the `external-stable` ListenerClass would use NodePorts and pin Pods to specific nodes.
+This could break at any point in time when nodes were rotated and the pinned Pods could not be scheduled to their pinned nodes anymore.
+With the new `ephemeral-nodes` default, `external-stable` requires LoadBalancer support and will *fail immediately on deployment* if LoadBalancers are not available.
+This fail-fast behavior is preferred over any potential long-term breakage.
+
+*What to do if you are affected:*
+
+* *Option 1:* Add LoadBalancer support to your Kubernetes cluster (recommended for production).
+* *Option 2:* Explicitly set the preset to `stable-nodes` to restore the old behavior (but be aware it might break during node rotations):
 +
 --
 [source,shell]
 ----
-helm --set preset=stable-nodes # or ephemeral-nodes or none
-----
+  # Using Helm
+  helm install listener-operator ... --set preset=stable-nodes
 
-[source,shell]
-----
-stackablectl --listener-class-preset stable-nodes # or ephemeral-nodes or none
+  # Using stackablectl
+  stackablectl release install --listener-class-preset stable-nodes
 ----
 
 It should be noted that `stackablectl` automatically detects k3s and kind clusters and uses the `stable-nodes` preset since version xref:management:stackablectl:release-notes.adoc#_1_2_0[1.2.0].
-
-See the tracking issue https://github.com/stackabletech/issues/issues/770[issues#770] for more details.
 --
+
+* *Option 3:* Use the new `.spec.pinnedNodePorts` field to control xref:listener-operator:listenerclass.adoc#_node_stickiness[node pinning].
+====
 
 * *Breaking:* Helm values have changed to allow for separate configuration of affinity, resource, etc... between the CSI Provisioner Deployment Pods and the CSI driver DaemonSet Pods.
 +
