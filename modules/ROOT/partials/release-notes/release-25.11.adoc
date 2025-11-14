@@ -65,7 +65,7 @@ See https://github.com/stackabletech/demos/pull/289[demos#289].
 ===== Apache Airflow
 
 * The Airflow xref:airflow:index.adoc#_triggerers[triggerer] component is now supported.
-  This can be used with DAGs utilizing deferrable operators to keep worker slots free and enhance HA.
+  This can be used with DAGs utilizing deferrable operators to keep worker slots free and enhance High Availability (HA).
   See https://github.com/stackabletech/airflow-operator/issues/200[airflow-operator#200].
 * The xref:demos:airflow-scheduled-job.adoc[`airflow-scheduled-job`] demo for Airflow has been extended to showcase some of the new Airflow 3.x features in the context of SDP i.e. event scheduling (with Kafka), triggerer actions and user authorization with OPA and the SDP OPA authorizer.
   See https://github.com/stackabletech/demos/issues/223[demos#223].
@@ -141,7 +141,7 @@ Previously, some operators did not expose Prometheus annotations containing the 
 These annotations are now available which allows custom relabel configs in Prometheus to scrape the metric endpoints:
 
 * Apache Airflow: https://github.com/stackabletech/airflow-operator/pull/698[airflow-operator#698].
-* Apache Druid: https://github.com/stackabletech/druid-operator/pull/761[airflow-operator#761].
+* Apache Druid: https://github.com/stackabletech/druid-operator/pull/761[druid-operator#761].
 * Apache Hive: https://github.com/stackabletech/hive-operator/pull/641[hive-operator#641].
 * Apache Kafka: https://github.com/stackabletech/kafka-operator/pull/897[kafka-operator#897].
 * Apache NiFi: https://github.com/stackabletech/nifi-operator/pull/855[nifi-operator#855].
@@ -204,7 +204,7 @@ priorityClassName: ...
   These issues have now been resolved by implementing multiple fixes in various affected (upstream) projects.
   See the tracking issue https://github.com/stackabletech/issues/issues/778[issues#778] for more details.
 ** Pull request https://github.com/vectordotdev/vector/pull/24028[vectordotdev/vector#24028] was raised to fix log entries with multi-char delimiters.
-   At the time of writing, this PR has not been merged yet, but the fix is manually applied as a patch.
+   As of SDP 25.11.0 release, this PR has not been merged yet, but the fix is manually applied as a patch.
    See https://github.com/stackabletech/docker-images/pull/1323[docker-images#1323].
 ** An XMLLayout multithreading issue in logback has been fixed by raising https://github.com/qos-ch/logback/pull/978[qos-ch/logback#978].
     This fix has been rolled out in all affected products:
