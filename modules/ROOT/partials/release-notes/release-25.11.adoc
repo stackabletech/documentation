@@ -18,6 +18,8 @@ Released on 2025-11-07.
 ====
 The following components of the SDP contain breaking changes for this release:
 
+* link:#observability-25_11_0[Apache HBase]
+* link:#observability-25_11_0[Apache Hadoop]
 * link:#observability-25_11_0[Apache Kafka]
 * link:#opa-improvements-25_11_0[Open Policy Agent]
 * link:#listener-operator-improvements-25_11_0[Stackable listener-operator]
@@ -166,11 +168,11 @@ These annotations are now available which allows custom relabel configs in Prome
 * Open Policy Agent: https://github.com/stackabletech/opa-operator/pull/767[opa-operator#767].
 * Trino: https://github.com/stackabletech/trino-operator/pull/807[trino-operator#807].
 
-In addition to the annotation changes listed above, the following changes were made:
+In addition to the annotation changes listed above, the following breaking changes were made:
 
-* Apache HBase: The `prometheus.io/scrape` label is now only available on the `metrics` Service (instead of the `headless` Service), which uses `metrics` as the port name instead of the previous `ui-http`/`ui-https` port name.
+* *Breaking:* Apache HBase: The `prometheus.io/scrape` label is now only available on the `metrics` Service (instead of the `headless` Service), which uses `metrics` as the port name instead of the previous `ui-http`/`ui-https` port name.
   See https://github.com/stackabletech/hbase-operator/pull/701[hbase-operator#701].
-* Apache Hadoop: The `metrics` Service previously exposed the JMX metrics via the `metrics` port.
+* *Breaking:* Apache Hadoop: The `metrics` Service previously exposed the JMX metrics via the `metrics` port.
   In this release, the JMX metrics have been moved to the `jmx-metrics` port.
   The `metrics` port now instead exposes the native Prometheus metrics.
 +
