@@ -6,7 +6,7 @@ Released on 2025-11-07.
 
 [TIP,caption=Release highlights]
 ====
-* The Stackable platform now provides an operator for OpenSearch.
+* The Stackable platform now provides an experimental operator for OpenSearch.
 * All operators now correctly handle multiple Certificate Authorities, previously CA certificate rotations could cause broken product clusters.
 * The User Info Fetcher (UIF) is no longer marked as experimental.
 * SecretClass `v1alpha2` is now available:
