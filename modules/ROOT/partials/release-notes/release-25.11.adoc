@@ -584,11 +584,37 @@ See the xref:secret-operator:secretclass.adoc#ca-rotation[SecretClass] and xref:
    The resources are automatically converted by the operator.
 ** The operator now deploys the CRDs for SecretClass and TrustStore by itself instead of relying on the Helm chart.
    This enables the operator to automatically rotate and update the TLS certificate (`caBundle`) used for the conversion webhook.
-   To enable this mechanism, the operator needs additional permissions.
-   These permissions are automatically granted when using the Helm Chart, but need to be manually set if other deployment mechanisms are used.
-   The maintenance of CRDs (and default custom resources) can be disabled via Helm:
+   To enable this mechanism, the operator needs the following additional permissions:
 +
 --
+[source,yaml]
+----
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: ...
+rules:
+  - apiGroups:
+      - apiextensions.k8s.io
+    resources:
+      - customresourcedefinitions
+    verbs:
+      - create
+      - patch
+  - apiGroups:
+      - secrets.stackable.tech
+    resources:
+      - secretclasses
+      - truststores
+    verbs:
+      - create
+      - patch
+----
+
+These permissions are automatically granted when using the Helm Chart, but need to be manually set if other deployment mechanisms are used.
+
+The maintenance of CRDs (and default custom resources) can be disabled via Helm:
+
 [source,yaml]
 ----
 maintenance:
