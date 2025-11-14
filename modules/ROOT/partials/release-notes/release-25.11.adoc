@@ -31,6 +31,7 @@ The following components of the SDP contain breaking changes for this release:
 
 Traffic between Open Policy Agent (OPA) and clients can be encrypted using TLS by enabling it in the OPA custom resource.
 The authorizers for Trino and NiFi automatically integrate with these secured OPA deployments and verify the authenticity of the server certificates when TLS for OPA is enabled.
+Support for other operators will be rolled out in a future release.
 See the xref:opa:usage-guide/tls.adoc[TLS encryption documentation page] and https://github.com/stackabletech/opa-operator/issues/581[opa-operator#581].
 
 ====== End-of-Support (EoS) warning
@@ -64,17 +65,16 @@ See https://github.com/stackabletech/demos/pull/289[demos#289].
 ===== Apache Airflow
 
 * The Airflow xref:airflow:index.adoc#_triggerers[triggerer] component is now supported.
-  This can be used with DAGs utilising deferrable operators to keep worker slots free and enhance HA.
+  This can be used with DAGs utilizing deferrable operators to keep worker slots free and enhance HA.
   See https://github.com/stackabletech/airflow-operator/issues/200[airflow-operator#200].
 * The xref:demos:airflow-scheduled-job.adoc[`airflow-scheduled-job`] demo for Airflow has been extended to showcase some of the new Airflow 3.x features in the context of SDP i.e. event scheduling (with Kafka), triggerer actions and user authorization with OPA and the SDP OPA authorizer.
   See https://github.com/stackabletech/demos/issues/223[demos#223].
 
 ===== Apache Kafka
 
-This release adds experimental support for KRaft managed Kafka clusters.
+This release adds experimental support for KRaft-managed Kafka clusters.
 KRaft Controllers can be deployed instead of Apache ZooKeeper to manage the state of Kafka.
-// TODO: Should this instead be "... the only cluster management option available."?
-KRaft is supported by all Kafka versions provided by SDP, and starting with Kafka 4 it is the only cluster management version available.
+KRaft is supported by all Kafka versions provided by SDP, and starting with Kafka 4 it is the only cluster management option available.
 See https://github.com/stackabletech/kafka-operator/pull/889[kafka-operator#889].
 
 ===== Apache NiFi
@@ -214,7 +214,7 @@ priorityClassName: ...
 
 ===== Apache Airflow
 
-* The JWT key is now created internally by the the operator.
+* The JWT key is now created internally by the operator.
   The same applies to the key previously defined in the credentials secret under `connections.secretKey`: this change is non-breaking, as `connections.secretKey` will be ignored if supplied.
   See https://github.com/stackabletech/airflow-operator/pull/686[airflow-operator#686].
 * Database initialization routines - which are idempotent and run by default - can be deactivated to e.g. help diagnose or troubleshoot start-up issues via the new `databaseInitialization.enabled` field.
