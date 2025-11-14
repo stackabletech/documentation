@@ -72,7 +72,20 @@ See https://github.com/stackabletech/demos/pull/289[demos#289].
 
 ===== Apache Kafka
 
-This release adds experimental support for KRaft-managed Kafka clusters.
+[WARNING]
+====
+It should be noted, that there are multiple known issues including but not limited to:
+
+* Automatic migration from Apache ZooKeeper to KRaft is not supported.
+* Scaling controller replicas might lead to unstable clusters.
+* Kerberos is currently not supported for KRaft in all versions.
+* Admin client access to controllers is not configured separately from the internal listeners.
+* Health monitoring is very basic.
+
+See the xref:kafka:usage-guide/kraft-controller.adoc#_known_issues[known issues section] on the KRaft Controller page for an up-to-date list of known issues.
+====
+
+This release adds experimental support for xref:kafka:usage-guide/kraft-controller.adoc[KRaft-managed] Kafka clusters.
 KRaft Controllers can be deployed instead of Apache ZooKeeper to manage the state of Kafka.
 KRaft is supported by all Kafka versions provided by SDP, and starting with Kafka 4 it is the only cluster management option available.
 See https://github.com/stackabletech/kafka-operator/pull/889[kafka-operator#889].
