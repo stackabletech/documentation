@@ -1,0 +1,926 @@
+== Release 25.11
+
+=== 25.11.0
+
+Released on 2025-11-07.
+
+[TIP,caption=Release highlights]
+====
+* The Stackable platform now provides an experimental operator for OpenSearch.
+* All operators now correctly handle multiple Certificate Authorities, previously CA certificate rotations could cause broken product clusters.
+* The User Info Fetcher (UIF) is no longer marked as experimental.
+* SecretClass `v1alpha2` is now available:
+** The custom `samAccountName` generation is no longer marked as experimental.
+** The `certManager` backend is no longer marked as experimental.
+====
+
+[WARNING,caption=Overview of breaking changes]
+====
+The following components of the SDP contain breaking changes for this release:
+
+* link:#observability-25_11_0[Apache HBase]
+* link:#observability-25_11_0[Apache Hadoop]
+* link:#observability-25_11_0[Apache Kafka]
+* link:#opa-improvements-25_11_0[Open Policy Agent]
+* link:#listener-operator-improvements-25_11_0[Stackable listener-operator]
+* link:#secret-operator-improvements-25_11_0[Stackable secret-operator]
+====
+
+==== New platform features
+
+===== General
+
+====== Security
+
+Traffic between Open Policy Agent (OPA) and clients can be encrypted using TLS by enabling it in the OPA custom resource.
+The authorizers for Trino and NiFi automatically integrate with these secured OPA deployments and verify the authenticity of the server certificates when TLS for OPA is enabled.
+Support for other operators will be rolled out in a future release.
+See the xref:opa:usage-guide/tls.adoc[TLS encryption documentation page] and https://github.com/stackabletech/opa-operator/issues/581[opa-operator#581].
+
+====== End-of-Support (EoS) warning
+
+All operators now emit a warning message on startup and in a regular interval when it may have reached end-of-support.
+Most of our operators reach end-of-support one year after they have been released which roughly translates to three SDP releases.
+This is in accordance with our xref:compliance:policies.adoc[support policy].
+The interval can be adjusted or the check can be disabled completely via Helm values.
+
+[source,yaml]
+----
+maintenance:
+  endOfSupportCheck:
+    enabled: true
+    mode: offline # only offline is currently supported
+    interval: 24h # A human-readable duration
+----
+
+See https://github.com/stackabletech/issues/issues/733[issues#733].
+
+====== Miscellaneous
+
+// TODO: Do we want to include this?
+* The performance of the Trino rules in the `end-to-end-security` stack was improved.
+Batch queries are now significantly faster.
+See https://github.com/stackabletech/demos/pull/289[demos#289].
+* A new demo has been added, showcasing the interaction between the Stackable Data Platform and ArgoCD to deploy resources managed in Git.
+  The xref:demos:argo-cd-git-ops.adoc[`argo-cd-git-ops`] demo deploys Stackable operators and Airflow via ArgoCD, uses Sealed Secrets to safely deploy secrets and credentials and synchronizes Airflow DAGs via Git.
+  See https://github.com/stackabletech/demos/pull/205[demos#205].
+
+===== Apache Airflow
+
+* The Airflow xref:airflow:index.adoc#_triggerers[triggerer] component is now supported.
+  This can be used with DAGs utilizing deferrable operators to keep worker slots free and enhance High Availability (HA).
+  See https://github.com/stackabletech/airflow-operator/issues/200[airflow-operator#200].
+* The xref:demos:airflow-scheduled-job.adoc[`airflow-scheduled-job`] demo for Airflow has been extended to showcase some of the new Airflow 3.x features in the context of SDP i.e. event scheduling (with Kafka), triggerer actions and user authorization with OPA and the SDP OPA authorizer.
+  See https://github.com/stackabletech/demos/issues/223[demos#223].
+
+===== Apache Kafka
+
+[WARNING]
+====
+It should be noted, that there are multiple known issues including but not limited to:
+
+* Automatic migration from Apache ZooKeeper to KRaft is not supported.
+* Scaling controller replicas might lead to unstable clusters.
+* Kerberos is currently not supported for KRaft in all versions.
+* Admin client access to controllers is not configured separately from the internal listeners.
+* Health monitoring is very basic.
+
+See the xref:kafka:usage-guide/kraft-controller.adoc#_known_issues[known issues section] on the KRaft Controller page for an up-to-date list of known issues.
+====
+
+This release adds experimental support for xref:kafka:usage-guide/kraft-controller.adoc[KRaft-managed] Kafka clusters.
+KRaft Controllers can be deployed instead of Apache ZooKeeper to manage the state of Kafka.
+KRaft is supported by all Kafka versions provided by SDP, and starting with Kafka 4 it is the only cluster management option available.
+See https://github.com/stackabletech/kafka-operator/pull/889[kafka-operator#889].
+
+===== Apache NiFi
+
+A patch was added which allows disabling the SNI (Server Name Indication) checks for NiFi.
+The workaround is documented in the xref:nifi:troubleshooting/index.adoc[troubleshooting] section.
+This can be useful in certain scenarios where the external name is not in the certificates used by NiFi.
+See https://github.com/stackabletech/nifi-operator/issues/812[nifi-operator#812].
+
+===== Apache Spark
+
+* The ServiceAccount of spark applications can now be overridden with `podOverrides`.
+  Previously, the application ServiceAccount was passed as command line argument to spark-submit and it was therefore not possible to overwrite it with `podOverrides` for the driver and executors.
+  This CLI argument has now been moved to the Pod templates of the individual roles.
+  See https://github.com/stackabletech/spark-k8s-operator/pull/617[spark-k8s-operator#617].
+* This release adds experimental support for Spark 4.0.1.
+  The support is marked as experimental because Spark 4.0.1 has known compatibility issues with https://github.com/apache/hbase-connectors/pull/130[Apache HBase] and https://github.com/apache/iceberg/issues/13358[Apache Iceberg].
+  See https://github.com/stackabletech/spark-k8s-operator/issues/586[spark-k8s-operator#586].
+
+===== Open Policy Agent
+
+This release adds a dedicated per-rolegroup `-metrics` Service, which can be used to scrape Prometheus metrics.
+Additionally, the operator exposes more Prometheus metrics, such as successful or failed bundle loads and information about the OPA environment.
+
+===== OpenSearch
+
+The Stackable Data Platform now provides an operator for OpenSearch.
+We initially support version link:#new-product-versions-25_11_0[3.1.0], which is also marked as the LTS line going forward.
+
+OpenSearch is a powerful search and analytics engine built on Apache Lucene.
+OpenSearch clusters can be defined via custom resources similar to other Stackable operators.
+For instance, a cluster with OpenSearch nodes of different types and replication factors can be defined.
+Logging, Monitoring and service exposition with ListenerClasses is supported as well.
+As the operator is still in an early development phase, special care was taken to allow extensive overriding with xref:concepts:overrides.adoc#config-overrides[`configOverrides`] and xref:concepts:overrides.adoc#pod-overrides[`podOverrides`].
+
+The operator only manages the OpenSearch back-end.
+The OpenSearch Dashboards front-end can be installed via the https://github.com/opensearch-project/helm-charts/tree/opensearch-dashboards-3.1.0/charts/opensearch-dashboards[official Helm chart].
+Stackable provides a supported image for OpenSearch Dashboards which can be used with this Helm chart.
+
+See the xref:opensearch:index.adoc[OpenSearch documentation] page for more details.
+
+===== Trino
+
+* The operator now supports configuring fault-tolerant execution via the TrinoCluster CRD.
+  See the xref:trino:usage-guide/fault-tolerant-execution.adoc[documentation page] and https://github.com/stackabletech/trino-operator/pull/779[trino-operator#779].
+* The Trino client spooling protocol can now be configured using the `spec.clusterConfig.clientProtocol.spooling` property.
+  Users can configure an xref:concepts:s3.adoc[S3Connection] and the location of spooling segments.
+  Additional properties can be added using the xref:concepts:overrides.adoc#config-overrides[`configOverrides`] mechanism for the `spooling-manager.properties` file.
+  See the xref:trino:usage-guide/client-spooling-protocol.adoc[client spooling protocol] documentation page and https://github.com/stackabletech/trino-operator/pull/793[trino-operator#793].
+
+==== Platform improvements
+
+===== General
+
+====== Vulnerabilities
+
+37 CVEs were fixed in the Stackable product images.
+This includes 2 critical and 18 high-severity CVEs.
+
+[#observability-25_11_0]
+====== Observability
+
+This release includes various improvements in regards to metrics collection and exposition.
+Previously, some operators did not expose Prometheus annotations containing the HTTP(S) scheme or the metrics path and port.
+These annotations are now available which allows custom relabel configs in Prometheus to scrape the metric endpoints:
+
+* Apache Airflow: https://github.com/stackabletech/airflow-operator/pull/698[airflow-operator#698].
+* Apache Druid: https://github.com/stackabletech/druid-operator/pull/761[druid-operator#761].
+* Apache Hive: https://github.com/stackabletech/hive-operator/pull/641[hive-operator#641].
+* Apache Kafka: https://github.com/stackabletech/kafka-operator/pull/897[kafka-operator#897].
+* Apache NiFi: https://github.com/stackabletech/nifi-operator/pull/855[nifi-operator#855].
+* Apache Spark: https://github.com/stackabletech/spark-k8s-operator/pull/619[spark-k8s-operator#619].
+* Apache Superset: https://github.com/stackabletech/superset-operator/pull/671[superset-operator#671].
+* Apache ZooKeeper: https://github.com/stackabletech/zookeeper-operator/pull/978[zookeeper-operator#978].
+* Open Policy Agent: https://github.com/stackabletech/opa-operator/pull/767[opa-operator#767].
+* Trino: https://github.com/stackabletech/trino-operator/pull/807[trino-operator#807].
+
+In addition to the annotation changes listed above, the following breaking changes were made:
+
+* *Breaking:* Apache HBase: The `prometheus.io/scrape` label is now only available on the `metrics` Service (instead of the `headless` Service), which uses `metrics` as the port name instead of the previous `ui-http`/`ui-https` port name.
+  See https://github.com/stackabletech/hbase-operator/pull/701[hbase-operator#701].
+* *Breaking:* Apache Hadoop: The `metrics` Service previously exposed the JMX metrics via the `metrics` port.
+  In this release, the JMX metrics have been moved to the `jmx-metrics` port.
+  The `metrics` port now instead exposes the native Prometheus metrics.
++
+--
+[WARNING]
+====
+Care needs to be taken because the metrics format has changed.
+====
+
+See https://github.com/stackabletech/hdfs-operator/pull/721[hdfs-operator#721].
+--
+
+* *Breaking:* Apache Kafka: The `<cluster>-<role>-<rolegroup>` Service was replaced with `<cluster>-<role>-<rolegroup>-headless` and `<cluster>-<role>-<rolegroup>-metrics` Services.
+  See https://github.com/stackabletech/kafka-operator/pull/897[kafka-operator#897].
+
+====== Miscellaneous
+
+* All operators now correctly handle multiple CA certificates.
+  This can be the case if the Stackable secret-operator auto rotated the CA certificate or if multiple CA certificates are present in a SecretClass.
+  See https://github.com/stackabletech/issues/issues/764[issues#764] for more details.
+* New Helm values have been added to the operators for setting `priorityClassName` on the resulting Pods, giving administrators greater control over scheduling.
+  When left unconfigured, the fields will not be present on the subsequent Pods.
+  See https://github.com/stackabletech/issues/issues/765[issues#765] for more details.
++
+[source,yaml]
+----
+# Listener operator
+csiProvisioner:
+  priorityClassName: ...
+
+csiNodeDriver:
+  priorityClassName: ...
+
+# Secret operator
+controllerService:
+  priorityClassName: ...
+
+csiNodeDriver:
+  priorityClassName: ...
+
+# All other operators
+priorityClassName: ...
+----
+
+* Previously, log entries for some supported products were occasionally corrupted.
+  These issues have now been resolved by implementing multiple fixes in various affected (upstream) projects.
+  See the tracking issue https://github.com/stackabletech/issues/issues/778[issues#778] for more details.
+** Pull request https://github.com/vectordotdev/vector/pull/24028[vectordotdev/vector#24028] was raised to fix log entries with multi-char delimiters.
+   As of SDP 25.11.0 release, this PR has not been merged yet, but the fix is manually applied as a patch.
+   See https://github.com/stackabletech/docker-images/pull/1323[docker-images#1323].
+** An XMLLayout multithreading issue in logback has been fixed by raising https://github.com/qos-ch/logback/pull/978[qos-ch/logback#978].
+    This fix has been rolled out in all affected products:
+*** Apache Kafka: https://github.com/stackabletech/docker-images/pull/1330[docker-images#1330]
+*** Apache NiFi: https://github.com/stackabletech/docker-images/pull/1314[docker-images#1314]
+*** Apache ZooKeeper: https://github.com/stackabletech/docker-images/pull/1320[docker-images#1320]
+
+===== Apache Airflow
+
+* The JWT key is now created internally by the operator.
+  The same applies to the key previously defined in the credentials secret under `connections.secretKey`: this change is non-breaking, as `connections.secretKey` will be ignored if supplied.
+  See https://github.com/stackabletech/airflow-operator/pull/686[airflow-operator#686].
+* Database initialization routines - which are idempotent and run by default - can be deactivated to e.g. help diagnose or troubleshoot start-up issues via the new `databaseInitialization.enabled` field.
++
+[WARNING]
+====
+Turning off these routines is an unsupported operation as subsequent updates to a running Airflow cluster can result in broken behaviour due to inconsistent metadata.
+Only use this setting if you know what you are doing!
+====
+* The Airflow xref:airflow:index.adoc#_dag_processors[DAG-processor] component now has an optional individual role in the CRD, allowing it to be separately configured (e.g. logging, resources) and run in a dedicated container.
+  See https://github.com/stackabletech/airflow-operator/issues/637[airflow-operator#637].
+* Previously in setups where multiple Web/API-servers were used, only one instance was able to automatically access the connection passwords stored in the database.
+  This could be solved by setting the https://airflow.apache.org/docs/apache-airflow/stable/configurations-ref.html#fernet-key[fernet] key explicitly, but now this detail is taken care of internally by the operator.
+  See https://github.com/stackabletech/airflow-operator/issues/694[airflow-operator#694].
+
+===== Apache NiFi
+
+The Apache NiFi xref:nifi:usage_guide/monitoring.adoc#_configure_metrics_in_nifi_2_x_x[monitoring documentation] page has been updated to include guidance on how to scrape NiFi 2 metrics using mTLS.
+See https://github.com/stackabletech/nifi-operator/issues/813[nifi-operator#813].
+
+[#opa-improvements-25_11_0]
+===== Open Policy Agent
+
+* *Breaking:* The per-rolegroup Services now only expose the HTTP port and contain a `-headless` suffix to better indicate their purpose and to be consistent with other operators.
+  See https://github.com/stackabletech/opa-operator/pull/748[opa-operator#748].
+* The xref:opa:usage-guide/user-info-fetcher.adoc[User Info Fetcher (UIF)] is no longer marked as experimental.
+  See https://github.com/stackabletech/opa-operator/issues/751[opa-operator#751].
+
+===== Stackable commons-operator
+
+Reduce severity of Pod eviction error logs.
+Previously, the operator would produce a lot of `ERROR` level logs containing `Cannot evict pod as it would violate the pod's disruption budget`.
+With this change, the log level is reduced to `INFO`.
+See https://github.com/stackabletech/commons-operator/pull/372[commons-operator#372].
+
+[#listener-operator-improvements-25_11_0]
+===== Stackable listener-operator
+
+* *Breaking:* ListenerClass `.spec.externalTrafficPolicy` now defaults to `null` (leaving this field unconfigured, previously it defaulted to `Local`).
+  This improves LoadBalancer support across various Kubernetes environments.
+  The Kubernetes API server will apply its default value of `Cluster` when this field is unset.
+  See https://github.com/stackabletech/listener-operator/pull/347[listener-operator#347].
++
+[%collapsible]
+====
+*You are affected if all of the following conditions apply:*
+
+- You are using ListenerClasses.
+- You did NOT explicitly set `.spec.externalTrafficPolicy` in your ListenerClass definitions so far.
+- You experience performance degradation after upgrading or were relying on the old default behavior for different reasons.
+
+*What to do if you are affected:*
+Explicitly set `.spec.externalTrafficPolicy: Local` in your ListenerClass to restore the previous behavior.
+
+*Why this change?*
+The previous default of `Local` provides better performance but requires support by the LoadBalancer.
+Setting to `null` allows the Kubernetes API server to apply its default (`Cluster`), which works across more environments.
+====
+
+* *Breaking:* The listener-operator Helm chart default value for `preset` changed from `stable-nodes` to `ephemeral-nodes`.
+  This change improves reliability by making failures visible immediately rather than appearing unexpectedly during node rotations.
+  See the tracking issue https://github.com/stackabletech/issues/issues/770[issues#770].
++
+[%collapsible]
+====
+*You are affected if all of the following conditions apply:*
+
+- You are using the `external-stable` ListenerClass
+- You are using the `ephemeral-nodes` preset (new default now)
+- Your Kubernetes cluster does NOT support LoadBalancers
+
+*What changes:*
+Previously with the `stable-nodes` preset, the `external-stable` ListenerClass would use NodePorts and pin Pods to specific nodes.
+This could break at any point in time when nodes were rotated and the pinned Pods could not be scheduled to their pinned nodes anymore.
+With the new `ephemeral-nodes` default, `external-stable` requires LoadBalancer support and will *fail immediately on deployment* if LoadBalancers are not available.
+This fail-fast behavior is preferred over any potential long-term breakage.
+
+*What to do if you are affected:*
+
+* *Option 1:* Add LoadBalancer support to your Kubernetes cluster (recommended for production).
+* *Option 2:* Explicitly set the preset to `stable-nodes` to restore the old behavior (but be aware it might break during node rotations):
++
+--
+[source,shell]
+----
+  # Using Helm
+  helm install listener-operator ... --set preset=stable-nodes
+
+  # Using stackablectl
+  stackablectl release install --listener-class-preset stable-nodes
+----
+
+It should be noted that `stackablectl` automatically detects k3s and kind clusters and uses the `stable-nodes` preset since version xref:management:stackablectl:release-notes.adoc#_1_2_0[1.2.0].
+--
+
+* *Option 3:* Use the new `.spec.pinnedNodePorts` field to control xref:listener-operator:listenerclass.adoc#_node_stickiness[node pinning].
+====
+
+* *Breaking:* Helm values have changed to allow for separate configuration of affinity, resource, etc... between the CSI Provisioner Deployment Pods and the CSI driver DaemonSet Pods.
++
+--
+// TODO: Confirm these are the final values for 25.11.0
+Container resources for the CSI Controller Service (`sdp/listener-operator` in the Deployment):
+
+[source,yaml]
+----
+# Before
+controller:
+  resources: ...
+
+# After
+csiProvisioner:
+  controllerService:
+    resources: ...
+----
+
+Container image/resources for the external-provisioner (`sig-storage/csi-provisioner` in the Deployment):
+
+[source,yaml]
+----
+# Before
+csiProvisioner:
+  image: ...
+  resources: ...
+
+# After
+csiProvisioner:
+  externalProvisioner:
+    image: ...
+    resources: ...
+----
+
+Container resources for the CSI Node Service (`sdp/listener-operator` in the DaemonSet):
+
+[source,yaml]
+----
+# Before
+node:
+  driver:
+    resources: ...
+
+# After
+csiNodeDriver:
+  nodeService:
+    resources: ...
+----
+
+Container image/resources for the node-driver-registrar (`sig-storage/csi-node-driver-registrar` in the DaemonSet):
+
+[source,yaml]
+----
+# Before
+csiNodeDriverRegistrar:
+  image: ...
+  resources: ...
+
+# After
+csiNodeDriver:
+  nodeDriverRegistrar:
+    image: ...
+    resources: ...
+----
+
+Settings that are now split:
+
+[source,yaml]
+----
+# Before
+podAnnotations: ...
+podSecurityContext: ...
+securityContext: ...
+nodeSelector: ...
+tolerations: ...
+affinity: ...
+
+# After
+csiProvisioner:
+  podAnnotations: ...
+  podSecurityContext: ...
+  nodeSelector: ...
+  tolerations: ...
+  affinity: ...
+
+  controllerService:
+    securityContext: ...
+
+csiNodeDriver:
+  podAnnotations: ...
+  podSecurityContext: ...
+  nodeSelector: ...
+  tolerations: ...
+  affinity: ...
+
+  nodeService:
+    securityContext: ...
+----
+
+See the tracking issue https://github.com/stackabletech/issues/issues/763[issues#763] and https://github.com/stackabletech/listener-operator/pull/334[listener-operator#334] for more details.
+--
+
+* As part of the Helm value changes listed above, some resource names have also been updated.
++
+[WARNING]
+====
+It should be noted that generally no action is required, but that depends on whether or not your deployment scripts (eg: Kustomize) or monitoring/alerting system depends on any of the names and values.
+====
+** Deployment `testing-listener-operator-deployment` has been renamed to `testing-listener-operator-csi-provisioner`
+*** The `app.kubernetes.io/role` label value has changed from `controller` to `provisioner`
+*** Container `listener-operator` has been renamed to `csi-controller-service`
+** DaemonSet `listener-operator-node-daemonset` has been renamed to `listener-operator-csi-node-driver`
+*** The `app.kubernetes.io/role` label value has changed from `node` to `node-driver`
+*** Container `listener-operator` has been renamed to `csi-node-service`
+
+
++
+See https://github.com/stackabletech/listener-operator/pull/334[listener-operator#334] for more details.
+
+[#secret-operator-improvements-25_11_0]
+===== Stackable secret-operator
+
+* *Breaking:* The Helm Chart now deploys the secret-operator as two parts.
+  This separation is needed for CRD versioning and conversion by the operator.
+** The controller (which reconciles resources, maintains CRDs and provides the CRD conversion webhook) runs as a Deployment with a single replica.
+** The CSI Provisioner and Driver runs on every Kubernetes cluster node via a DaemonSet (this behaviour is unchanged).
+** The Helm values are adjusted in accordance to the changes above.
++
+--
+Both the external provisioner and the node driver registrar have been moved under `csiNodeDriver`:
+
+[source,yaml]
+----
+# Before
+csiProvisioner:
+  resources: ...
+
+csiNodeDriverRegistrar:
+  resources: ...
+
+# After
+csiNodeDriver:
+  externalProvisioner:
+    resources: ...
+  nodeDriverRegistrar:
+    resources: ...
+----
+
+The secret-operator is now deployed through a Deployment and a DaemonSet.
+As such, the resources of both secret-operator instances can be controlled separately:
+
+[source,yaml]
+----
+# Before
+node:
+  driver:
+    resources: ...
+
+# After
+csiNodeDriver:
+  nodeService:
+    resources: ...
+
+controllerService:
+  resources: ...
+----
+
+The `securityContext` has been split into two parts:
+
+[source,yaml]
+----
+# Before
+securityContext: ...
+
+# After
+csiNodeDriver:
+  nodeService:
+    securityContext: ...
+
+controllerService:
+  securityContext: ...
+----
+
+Settings that are now split:
+
+[source,yaml]
+----
+# Before
+podAnnotations: ...
+podSecurityContext: ...
+nodeSelector: ...
+tolerations: ...
+affinity: ...
+
+# After
+csiNodeDriver:
+  podAnnotations: ...
+  podSecurityContext: ...
+  nodeSelector: ...
+  tolerations: ...
+  affinity: ...
+
+controllerService:
+  podAnnotations: ...
+  podSecurityContext: ...
+  nodeSelector: ...
+  tolerations: ...
+  affinity: ...
+----
+
+Settings that have moved:
+
+[source,yaml]
+----
+# Before
+kubeletDir: ...
+
+# After
+csiNodeDriver:
+  kubeletDir: ...
+----
+
+--
+
+** As part of the Helm value changes listed above, some resource names have also been updated.
++
+[WARNING]
+====
+It should be noted that generally no action is required, but that depends on whether or not your deployment scripts (eg: Kustomize) or monitoring/alerting system depends on any of the names and values.
+====
+*** DaemonSet `secret-operator-daemonset` has been renamed to `secret-operator-csi-node-driver`
+**** Container `secret-operator` has been renamed to `csi-node-service`
+
+
++
+See https://github.com/stackabletech/secret-operator/pull/645[secret-operator#645].
+
+* *Breaking:* The Stackable secret-operator no longer publishes retired and expired CA certificates:
+** CA certificates are by default retired one hour before they expire.
+   This duration can be configured via `autoTls.ca.caCertificateRetirementDuration`.
+** Expired and retired CA certificates are no longer published in Volumes and TrustStore.
+
++
+See the xref:secret-operator:secretclass.adoc#ca-rotation[SecretClass] and xref:secret-operator:truststore.adoc[TrustStore] documentation as well as https://github.com/stackabletech/secret-operator/pull/650[secret-operator#650].
+
+* The custom `samAccountName` generation is no longer marked as experimental.
+  To make this possible, the secret-operator is the first Stackable operator which supports CRD versioning.
+** In version `v1alpha2` of the SecretClass, the `experimentalGenerateSamAccountName` field was renamed to `generateSamAccountName`.
+   See the xref:secret-operator:secretclass.adoc[SecretClass reference] for more details.
+** The stored version of SecretClass is `v1alpha2`.
+   It is however still possible to apply and retrieve SecretClasses in `v1alpha1`.
+   The resources are automatically converted by the operator.
+** The operator now deploys the CRDs for SecretClass and TrustStore by itself instead of relying on the Helm chart.
+   This enables the operator to automatically rotate and update the TLS certificate (`caBundle`) used for the conversion webhook.
+   To enable this mechanism, the operator needs the following additional permissions:
++
+--
+[source,yaml]
+----
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: ...
+rules:
+  - apiGroups:
+      - apiextensions.k8s.io
+    resources:
+      - customresourcedefinitions
+    verbs:
+      - create
+      - patch
+  - apiGroups:
+      - secrets.stackable.tech
+    resources:
+      - secretclasses
+      - truststores
+    verbs:
+      - create
+      - patch
+----
+
+These permissions are automatically granted when using the Helm Chart, but need to be manually set if other deployment mechanisms are used.
+
+The maintenance of CRDs (and default custom resources) can be disabled via Helm:
+
+[source,yaml]
+----
+maintenance:
+  customResourceDefinitions:
+    maintain: false
+----
+
+[WARNING]
+====
+When CRD maintenance is disabled, the operator will *not* deploy and manage the CRDs.
+The CRDs need to be deployed manually and the conversion webhook is disabled.
+As a result, only `v1alpha1` SecretClasses can be used.
+Only use this setting if you know what you are doing!
+====
+
+[NOTE]
+====
+Currently the maintenance of CRDs and the deployment of default custom resources, such as the `tls` SecretClass are tied together.
+This is slated to be changed in an upcoming SDP release.
+====
+--
+
++
+See https://github.com/stackabletech/secret-operator/pull/634[secret-operator#634].
+
+* The `certManager` backend is no longer marked as experimental.
+  In version `v1alpha2` of the SecretClass, the `experimentalCertManager` field was renamed to `certManager`.
+  See the xref:secret-operator:secretclass.adoc[SecretClass reference] for more details.
+
+* The operator now supports exporting the TrustStore CA certificate information to Secrets (in addition to ConfigMaps).
+  See https://github.com/stackabletech/secret-operator/pull/597[secret-operator#597].
+
+==== Platform fixes
+
+===== Custom image selection
+
+Previously, when using custom images in combination with a SHA digest like `oci.stackable.tech/sdp/spark-k8s@sha256:c8b7...`, all operators created invalid labels `app.kubernetes.io/version` for their applied resources.
+This was fixed by checking and replacing invalid characters in the created labels when a SHA digest is used to select the custom image.
+See https://github.com/stackabletech/operator-rs/pull/1076[operator-rs#1076].
+
+===== Apache Airflow
+
+* Previously, a missing OPA ConfigMap would crash the operator.
+  With this release, we don't panic on an invalid authorization config.
+  See https://github.com/stackabletech/airflow-operator/pull/667[airflow-operator#667].
+* Previously, OPA authorization for Airflow 3 was not working.
+  With this release, the operator now sets the required environment variables.
+  See https://github.com/stackabletech/airflow-operator/pull/668[airflow-operator#668].
+* Allow multiple Airflows in the same namespace to use Kubernetes executors.
+  Previously, the operator would always use the same name for the executor Pod template ConfigMap.
+  Thus when deploying multiple Airflow instances in the same namespace, the ConfigMaps would conflict.
+  See https://github.com/stackabletech/airflow-operator/pull/678[airflow-operator#678].
+
+===== Apache Spark
+
+Spark Connect: Previously the property `spec.image.pullSecrets` was ignored by the operator when creating the executor templates.
+This has now been corrected in the operator code.
+See https://github.com/stackabletech/spark-k8s-operator/issues/600[spark-k8s-operator#600].
+
+===== Apache Superset
+
+Previously, there was a chance containers would not start, because Superset was starting too slowly and was killed because of a failing liveness probe.
+This has now been fixed by adding a proper startup probe, which allows Superset startup to succeed and not be killed.
+See https://github.com/stackabletech/superset-operator/pull/654[superset-operator#654].
+
+===== Open Policy Agent
+
+Previously the opa-operator ignored `envOverrides` set on role or rolegroup level.
+With this release, the `envOverrides` are now properly propagated by the operator.
+See https://github.com/stackabletech/opa-operator/pull/754[opa-operator#754].
+
+==== Supported versions
+
+===== Product versions
+
+As with previous SDP releases, many product images have been updated to their latest versions.
+Refer to the xref:operators:supported_versions.adoc[supported versions] documentation for a complete overview including LTS versions or deprecations.
+
+====== New LTS versions
+
+The following product versions were already available before but are now marked as the xref:compliance:policies.adoc#_product_lifecycle_policy[LTS] version:
+
+* Apache Hive: https://github.com/stackabletech/docker-images/issues/1271[4.0.1 (LTS)]
+* Apache Kafka: https://github.com/stackabletech/docker-images/issues/1272[3.9.1 (LTS)]
+
+[#new-product-versions-25_11_0]
+====== New versions
+
+The following new product versions are now supported:
+
+* Apache Airflow: https://github.com/stackabletech/docker-images/issues/1268[3.0.6 (LTS)]
+* Apache Druid: https://github.com/stackabletech/docker-images/issues/1234[34.0.0]
+* Apache HBase: https://github.com/stackabletech/docker-images/issues/1269[2.6.3 (LTS)]
+* Apache Hadoop: https://github.com/stackabletech/docker-images/issues/1270[3.4.2 (LTS)]
+* Apache Hive: https://github.com/stackabletech/docker-images/issues/1235[4.1.0]
+* Apache Kafka: https://github.com/stackabletech/docker-images/issues/1236[4.1.0 (experimental)]
+* Apache NiFi: https://github.com/stackabletech/docker-images/issues/1237[2.6.0 (LTS)]
+* Apache Spark: https://github.com/stackabletech/docker-images/issues/1273[3.5.7 (LTS)], https://github.com/stackabletech/docker-images/issues/1273[4.0.1 (experimental)]
+* Apache Superset: https://github.com/stackabletech/docker-images/issues/1274[4.1.4 (LTS)]
+* Apache ZooKeeper: https://github.com/stackabletech/docker-images/issues/1275[3.9.4 (LTS)]
+* Open Policy Agent: https://github.com/stackabletech/docker-images/issues/1238[1.8.0]
+* OpenSearch: https://github.com/stackabletech/docker-images/issues/1239[3.1.0 (LTS)]
+* Trino: https://github.com/stackabletech/docker-images/issues/1242[477 (LTS)]
+* Vector: https://github.com/stackabletech/docker-images/issues/1233[0.49.0]
+
+====== Deprecated versions
+
+The following product versions are deprecated and will be removed in a later release:
+
+* Apache Airflow: https://github.com/stackabletech/docker-images/issues/1266[2.9.3], https://github.com/stackabletech/docker-images/issues/1268[2.10.5]
+* Apache Druid: https://github.com/stackabletech/docker-images/issues/1234[33.0.0]
+* Apache HBase: https://github.com/stackabletech/docker-images/issues/1269[2.6.2]
+* Apache Hadoop: https://github.com/stackabletech/docker-images/issues/1270[3.4.1]
+* Apache Hive: https://github.com/stackabletech/docker-images/issues/1271[4.0.0]
+* Apache Kafka: https://github.com/stackabletech/docker-images/issues/1236[3.7.2]
+* Apache NiFi: https://github.com/stackabletech/docker-images/issues/1237[1.27.0], https://github.com/stackabletech/docker-images/issues/1237[1.28.1], https://github.com/stackabletech/docker-images/issues/1237[2.4.0]
+* Apache Spark: https://github.com/stackabletech/docker-images/issues/1273[3.5.6]
+* Apache Superset: https://github.com/stackabletech/docker-images/issues/1241[4.0.2], https://github.com/stackabletech/docker-images/issues/1274[4.1.2]
+* Apache ZooKeeper: https://github.com/stackabletech/docker-images/issues/1275[3.9.3]
+* Open Policy Agent: https://github.com/stackabletech/docker-images/issues/1238[1.4.2]
+* Trino: https://github.com/stackabletech/docker-images/issues/1242[451], https://github.com/stackabletech/docker-images/issues/1242[476]
+
+====== Removed versions
+
+The following product versions are no longer supported.
+These images for released product versions remain available https://oci.stackable.tech/[here,window=_blank].
+Information on how to browse the registry can be found xref:contributor:project-overview.adoc#docker-images[here,window=_blank].
+
+* Apache Airflow: https://github.com/stackabletech/docker-images/issues/1268[2.10.4]
+* Apache Druid: https://github.com/stackabletech/docker-images/issues/1234[31.0.1]
+* Apache HBase: https://github.com/stackabletech/docker-images/issues/1269[2.6.1]
+* Apache Kafka: https://github.com/stackabletech/docker-images/issues/1272[3.9.0]
+* Apache Spark: https://github.com/stackabletech/docker-images/issues/1273[3.5.5], https://github.com/stackabletech/docker-images/issues/1273[4.0.0]
+* Apache Superset: https://github.com/stackabletech/docker-images/issues/1274[4.1.1]
+* Open Policy Agent: https://github.com/stackabletech/docker-images/issues/1238[1.0.1]
+* Trino: https://github.com/stackabletech/docker-images/issues/1242[470]
+* Vector: https://github.com/stackabletech/docker-images/issues/1233[0.47.0]
+
+===== Kubernetes versions
+
+This release supports the following Kubernetes versions:
+
+* `1.34`
+* `1.33`
+* `1.32`
+* `1.31`
+
+These Kubernetes versions are no longer supported:
+
+* `1.30`
+
+===== OpenShift versions
+
+This release is available in the RedHat Certified Operator Catalog for the following OpenShift versions:
+
+* `4.20`
+* `4.19`
+* `4.18`
+
+These OpenShift versions are no longer supported:
+
+* `4.17`
+* `4.16`
+
+==== Upgrade from 25.7
+
+===== Using stackablectl
+
+====== Upgrade with a single command
+
+Starting with `stackablectl` xref:management:stackablectl:release-notes.adoc#_1_0_0[1.0.0] the multiple consecutive commands described below can be shortened to just one command, which executes exactly those steps on its own.
+
+[source,console]
+----
+$ stackablectl release upgrade 25.11
+----
+
+====== Upgrade with multiple consecutive commands
+
+Uninstall the `25.7` release
+
+[source,console]
+----
+$ stackablectl release uninstall 25.7
+
+Uninstalled release '25.7'
+
+Use "stackablectl release list" to list available releases.
+# ...
+----
+
+Afterwards you will need to upgrade the CustomResourceDefinitions (CRDs) installed by the Stackable Platform.
+The reason for this is that helm will uninstall the operators but not the CRDs.
+This can be done using `kubectl replace`.
+
+[NOTE]
+====
+It should be noted that the SecretClass and TrustStore CRDs don't need to be replaced manually, because the Stackable secret-operator link:#secret-operator-improvements-25_11_0[maintains them by default].
+====
+
+[source,shell]
+----
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/airflow-operator/25.11.0/deploy/helm/airflow-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/commons-operator/25.11.0/deploy/helm/commons-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/druid-operator/25.11.0/deploy/helm/druid-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hbase-operator/25.11.0/deploy/helm/hbase-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hdfs-operator/25.11.0/deploy/helm/hdfs-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hive-operator/25.11.0/deploy/helm/hive-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/kafka-operator/25.11.0/deploy/helm/kafka-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/listener-operator/25.11.0/deploy/helm/listener-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/nifi-operator/25.11.0/deploy/helm/nifi-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/opa-operator/25.11.0/deploy/helm/opa-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/25.11.0/deploy/helm/spark-k8s-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/superset-operator/25.11.0/deploy/helm/superset-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/trino-operator/25.11.0/deploy/helm/trino-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/25.11.0/deploy/helm/zookeeper-operator/crds/crds.yaml
+----
+
+[source]
+----
+customresourcedefinition.apiextensions.k8s.io "airflowclusters.airflow.stackable.tech" replaced
+customresourcedefinition.apiextensions.k8s.io "authenticationclasses.authentication.stackable.tech" replaced
+customresourcedefinition.apiextensions.k8s.io "s3connections.s3.stackable.tech" replaced
+...
+----
+
+Install the `25.11` release
+
+[source,console]
+----
+$ stackablectl release install 25.11
+
+Installed release '25.11'
+
+Use "stackablectl operator installed" to list installed operators.
+----
+
+===== Using Helm
+
+Use `helm list` to list the currently installed operators.
+
+You can use the following command to uninstall all operators that are part of the `25.7` release:
+
+[source,console]
+----
+$ helm uninstall airflow-operator commons-operator druid-operator hbase-operator hdfs-operator hive-operator kafka-operator listener-operator nifi-operator opa-operator secret-operator spark-k8s-operator superset-operator trino-operator zookeeper-operator
+release "airflow-operator" uninstalled
+release "commons-operator" uninstalled
+...
+----
+
+Afterward you will need to upgrade the CustomResourceDefinitions (CRDs) installed by the Stackable Platform.
+The reason for this is that helm will uninstall the operators but not the CRDs.
+This can be done using `kubectl replace`.
+
+[NOTE]
+====
+It should be noted that the SecretClass and TrustStore CRDs don't need to be replaced manually, because the Stackable secret-operator link:#secret-operator-improvements-25_11_0[maintains them by default].
+====
+
+[source,shell]
+----
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/airflow-operator/25.11.0/deploy/helm/airflow-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/commons-operator/25.11.0/deploy/helm/commons-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/druid-operator/25.11.0/deploy/helm/druid-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hbase-operator/25.11.0/deploy/helm/hbase-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hdfs-operator/25.11.0/deploy/helm/hdfs-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hive-operator/25.11.0/deploy/helm/hive-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/kafka-operator/25.11.0/deploy/helm/kafka-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/listener-operator/25.11.0/deploy/helm/listener-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/nifi-operator/25.11.0/deploy/helm/nifi-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/opa-operator/25.11.0/deploy/helm/opa-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/25.11.0/deploy/helm/spark-k8s-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/superset-operator/25.11.0/deploy/helm/superset-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/trino-operator/25.11.0/deploy/helm/trino-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/25.11.0/deploy/helm/zookeeper-operator/crds/crds.yaml
+----
+
+[source]
+----
+customresourcedefinition.apiextensions.k8s.io "airflowclusters.airflow.stackable.tech" replaced
+customresourcedefinition.apiextensions.k8s.io "authenticationclasses.authentication.stackable.tech" replaced
+customresourcedefinition.apiextensions.k8s.io "s3connections.s3.stackable.tech" replaced
+...
+----
+
+Install the `25.11` release
+
+NOTE: `helm repo` subcommands are not supported for OCI registries.
+The operators are installed directly, without adding the Helm Chart repository first.
+
+[source,console]
+----
+helm install --wait airflow-operator oci://oci.stackable.tech/sdp-charts/airflow-operator --version 25.11.0
+helm install --wait commons-operator oci://oci.stackable.tech/sdp-charts/commons-operator --version 25.11.0
+helm install --wait druid-operator oci://oci.stackable.tech/sdp-charts/druid-operator --version 25.11.0
+helm install --wait hbase-operator oci://oci.stackable.tech/sdp-charts/hbase-operator --version 25.11.0
+helm install --wait hdfs-operator oci://oci.stackable.tech/sdp-charts/hdfs-operator --version 25.11.0
+helm install --wait hive-operator oci://oci.stackable.tech/sdp-charts/hive-operator --version 25.11.0
+helm install --wait kafka-operator oci://oci.stackable.tech/sdp-charts/kafka-operator --version 25.11.0
+helm install --wait listener-operator oci://oci.stackable.tech/sdp-charts/listener-operator --version 25.11.0
+helm install --wait nifi-operator oci://oci.stackable.tech/sdp-charts/nifi-operator --version 25.11.0
+helm install --wait opa-operator oci://oci.stackable.tech/sdp-charts/opa-operator --version 25.11.0
+helm install --wait secret-operator oci://oci.stackable.tech/sdp-charts/secret-operator --version 25.11.0
+helm install --wait spark-k8s-operator oci://oci.stackable.tech/sdp-charts/spark-k8s-operator --version 25.11.0
+helm install --wait superset-operator oci://oci.stackable.tech/sdp-charts/superset-operator --version 25.11.0
+helm install --wait trino-operator oci://oci.stackable.tech/sdp-charts/trino-operator --version 25.11.0
+helm install --wait zookeeper-operator oci://oci.stackable.tech/sdp-charts/zookeeper-operator --version 25.11.0
+----

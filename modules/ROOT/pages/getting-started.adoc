@@ -37,11 +37,11 @@ These can be installed on any node that has access to the Kubernetes control pla
 In this example we will install them on the controller node.
 
 Stackable operators can be installed using `stackablectl`.
-Run the following commands to install ZooKeeper, Kafka and NiFi from the Stackable 25.7 release.
+Run the following commands to install ZooKeeper, Kafka and NiFi from the Stackable 25.11 release.
 
 [source,bash]
 ----
-stackablectl release install -i commons -i secret -i listener -i zookeeper -i kafka -i nifi 25.7
+stackablectl release install -i commons -i secret -i listener -i zookeeper -i kafka -i nifi 25.11
 ----
 
 .Using Helm instead
@@ -56,12 +56,12 @@ Install the operators:
 
 [source,bash]
 ----
-helm install zookeeper-operator oci://oci.stackable.tech/sdp-charts/zookeeper-operator --version=25.7.0
-helm install kafka-operator oci://oci.stackable.tech/sdp-charts/kafka-operator --version=25.7.0
-helm install secret-operator oci://oci.stackable.tech/sdp-charts/secret-operator --version=25.7.0
-helm install listener-operator oci://oci.stackable.tech/sdp-charts/listener-operator --version=25.7.0
-helm install commons-operator oci://oci.stackable.tech/sdp-charts/commons-operator --version=25.7.0
-helm install nifi-operator oci://oci.stackable.tech/sdp-charts/nifi-operator --version=25.7.0
+helm install zookeeper-operator oci://oci.stackable.tech/sdp-charts/zookeeper-operator --version=25.11.0
+helm install kafka-operator oci://oci.stackable.tech/sdp-charts/kafka-operator --version=25.11.0
+helm install secret-operator oci://oci.stackable.tech/sdp-charts/secret-operator --version=25.11.0
+helm install listener-operator oci://oci.stackable.tech/sdp-charts/listener-operator --version=25.11.0
+helm install commons-operator oci://oci.stackable.tech/sdp-charts/commons-operator --version=25.11.0
+helm install nifi-operator oci://oci.stackable.tech/sdp-charts/nifi-operator --version=25.11.0
 ----
 ====
 
@@ -70,12 +70,12 @@ You can check which operators are installed using `stackablectl operator install
 [source,console]
 ----
 OPERATOR              VERSION         NAMESPACE                      STATUS           LAST UPDATED
-commons               25.7.0         default                        deployed         2025-07-24 17:58:32.916032854 +0100 CET
-kafka                 25.7.0         default                        deployed         2025-07-24 17:58:55.036115353 +0100 CET
-listener              25.7.0         default                        deployed         2025-07-24 17:59:18.136775259 +0100 CET
-nifi                  25.7.0         default                        deployed         2025-07-24 17:59:51.927081648 +0100 CET
-secret                25.7.0         default                        deployed         2025-07-24 18:00:05.060241771 +0100 CET
-zookeeper             25.7.0         default                        deployed         2025-07-24 18:00:08.425686918 +0100 CET
+commons               25.11.0         default                        deployed         2025-11-07 17:58:32.916032854 +0100 CET
+kafka                 25.11.0         default                        deployed         2025-11-07 17:58:55.036115353 +0100 CET
+listener              25.11.0         default                        deployed         2025-11-07 17:59:18.136775259 +0100 CET
+nifi                  25.11.0         default                        deployed         2025-11-07 17:59:51.927081648 +0100 CET
+secret                25.11.0         default                        deployed         2025-11-07 18:00:05.060241771 +0100 CET
+zookeeper             25.11.0         default                        deployed         2025-11-07 18:00:08.425686918 +0100 CET
 ----
 
 == Deploying Stackable Services
