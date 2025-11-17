@@ -35,6 +35,7 @@ content:
     - url: .
       branches:
         - HEAD
+        - release-25.11
         - release-25.7
         - release/25.3
         - release/24.11
@@ -53,6 +54,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-25.11
         - release-25.7
         - release-25.3
         - release-24.11
@@ -67,6 +69,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-25.11
         - release-25.7
         - release-25.3
         - release-24.11
@@ -80,6 +83,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-25.11
         - release-25.7
         - release-25.3
         - release-24.11
@@ -93,6 +97,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-25.11
         - release-25.7
         - release-25.3
         - release-24.11
@@ -107,6 +112,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-25.11
         - release-25.7
         - release-25.3
         - release-24.11
@@ -120,6 +126,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-25.11
         - release-25.7
         - release-25.3
         - release-24.11
@@ -133,6 +140,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-25.11
         - release-25.7
         - release-25.3
         - release-24.11
@@ -146,6 +154,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-25.11
         - release-25.7
         - release-25.3
         - release-24.11
@@ -159,6 +168,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-25.11
         - release-25.7
         - release-25.3
         - release-24.11
@@ -172,6 +182,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-25.11
         - release-25.7
         - release-25.3
         - release-24.11
@@ -185,6 +196,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-25.11
         - release-25.7
         - release-25.3
         - release-24.11
@@ -198,6 +210,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-25.11
         - release-25.7
         - release-25.3
         - release-24.11
@@ -211,10 +224,12 @@ content:
       start_path: docs
       branches:
         - main
+        - release-25.11
     - url: https://github.com/stackabletech/spark-k8s-operator.git
       start_path: docs
       branches:
         - main
+        - release-25.11
         - release-25.7
         - release-25.3
         - release-24.11
@@ -228,6 +243,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-25.11
         - release-25.7
         - release-25.3
         - release-24.11
@@ -241,6 +257,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-25.11
         - release-25.7
         - release-25.3
         - release-24.11
@@ -254,6 +271,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-25.11
         - release-25.7
         - release-25.3
         - release-24.11
