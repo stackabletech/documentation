@@ -1,30 +1,11 @@
-    {{#with site.keys.googleAnalytics}}
-    <script async src="https://www.googletagmanager.com/gtag/js?id={{this}}"></script>
-    <script>function gtag(){dataLayer.push(arguments)};window.dataLayer=window.dataLayer||[];gtag('js',new Date());gtag('config','{{this}}')</script>
-    {{/with}}
     {{#with site.keys.enableTracking}}
-    <script type="text/javascript"> var tCPrivacyTagManager = "gtm"; </script>
     <script>
-        var consent = document.createElement("script");
-        if(window.location.pathname.indexOf("/en/") > -1){
-            // Default is EN Cookie Banner if /en/ in path
-            consent.src = "https://cdn.trustcommander.net/privacy/4616/privacy_v2_27.js";
-        } else {
-            // Default is DE Cookie Banner
-            consent.src = "https://cdn.trustcommander.net/privacy/4616/privacy_v2_9.js";
-        }
-        consent.type = "text/javascript";
-        document.head.appendChild(consent);
-    </script>
-    <!-- Matomo consent with trustcommander -->
-    <script type="text/tc_privacy" data-category="2">
-    console.log('consent provided for Matomo')
     <!-- Matomo -->
     var _paq = window._paq = window._paq || [];
     /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
     _paq.push(["setDocumentTitle", document.domain + "/" + document.title]);
-    _paq.push(["setCookieDomain", "*.stackable.tech"]);
     _paq.push(["setDomains", ["*.stackable.tech"]]);
+    _paq.push(['disableCookies']);
     _paq.push(['trackPageView']);
     _paq.push(['enableLinkTracking']);
     (function() {
