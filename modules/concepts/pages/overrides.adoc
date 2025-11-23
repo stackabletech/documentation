@@ -155,10 +155,10 @@ They will *not* be applied to:
 == Object overrides
 
 Sometime you need to override Kubernetes objects other than the generated Pods, e.g. ServiceAccounts or the StatefulSet/Deployment/DaemonSet.
-Object overrides allow you to override any Kubernetes object the operator creates are part of it's reconciliation loop, which basically means all objects that are created for a given stacklet.
+Object overrides let you modify any Kubernetes resource that the operator creates as part of its reconciliation loop, which essentially includes all objects associated with a given stacklet.
 
-On every Stackable CRD that get's reconciled into a set of Kubernetes objects we offer a field `.spec.objectOverrides`.
-You can set it to a list of arbitrary YAML objects, which need to be valid Kubernetes objects.
+On every Stackable CRD that is reconciled into a set of Kubernetes objects we provide the field `.spec.objectOverrides`.
+This field accepts a list of arbitrary YAML objects, each of which must be a valid Kubernetes resource.
 
 For every resource it creates, the operator processes the list of overrides from top to bottom.
 It first checks if an override matches the resource being created by comparing the `apiVersion`, `kind`, `name` and if applicable `namespace` (cluster-scoped resources may omit the namespace).
