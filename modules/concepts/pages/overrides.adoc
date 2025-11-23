@@ -154,7 +154,7 @@ They will *not* be applied to:
 [#object-overrides]
 == Object overrides
 
-Sometime you need to override Kubernetes objects other than the generated Pods, e.g. ServiceAccounts or the StatefulSet/Deployment/DaemonSet.
+Sometimes you need to override Kubernetes objects other than the generated Pods, e.g. ServiceAccounts or the StatefulSet/Deployment/DaemonSet.
 Object overrides let you modify any Kubernetes resource that the operator creates as part of its reconciliation loop, which essentially includes all objects associated with a given stacklet.
 
 On every Stackable CRD that is reconciled into a set of Kubernetes objects we provide the field `.spec.objectOverrides`.
