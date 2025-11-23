@@ -160,11 +160,11 @@ Object overrides allow you to override any Kubernetes object the operator create
 On every Stackable CRD that get's reconciled into a set of Kubernetes objects we offer a field `.spec.objectOverrides`.
 You can set it to a list of arbitrary YAML objects, which need to be valid Kubernetes objects.
 
-For every object it creates, the operator will walk the list of overrides from top to bottom.
-It will than first check if the override matches the object being created using apiVersion, kind, name and namespace (if set - doesn't need to be the case for cluster scoped objects).
-If the override matches, it will be merged in the same way Pod overrides are merged, using the merge algorithm described in the {k8s-openapi-deepmerge}[k8s-openapi docs{external-link-icon}^], which basically tries to mimic the way Kubernetes merges patches onto objects.
+For every resource it creates, the operator processes the list of overrides from top to bottom.
+It first checks if an override matches the resource being created by comparing the `apiVersion`, `kind`, `name` and if applicable `namespace` (cluster-scoped resources may omit the namespace).
+If an override matches, it is merged using the same mechanism as Pod overrides, using the merge algorithm described in the {k8s-openapi-deepmerge}[k8s-openapi docs{external-link-icon}^], which closely mimics the way Kubernetes applies patches to resources.
 
-A consequence of this is, that you can only modify objects the operator creates, and not deploy any additional arbitrary objects.
+As a result, you can only modify resources created by the operator. This mechanism does not work to deploy any additional arbitrary Kubernetes resources.
 
 [source,yaml]
 ----
