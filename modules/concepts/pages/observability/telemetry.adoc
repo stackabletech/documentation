@@ -1,4 +1,5 @@
 = Telemetry signals in operators
+:page-aliases: ../telemetry.adoc
 :env-filter-syntax: https://docs.rs/tracing-subscriber/latest/tracing_subscriber/filter/struct.EnvFilter.html#example-syntax
 
 [NOTE]
