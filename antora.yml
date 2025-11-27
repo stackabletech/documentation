@@ -25,7 +25,7 @@ asciidoc:
     crd-docs-version: "24.7.0"
     # Whether this version is already end of life.
     # If true, a banner will be displayed informing the user.
-    end-of-life: false
+    end-of-life: true
     # use the attributes below to link to the CRD docs
     crd-docs-base-url: "https://crds.stackable.tech"
     crd-docs: "{crd-docs-base-url}/{crd-docs-version}"
