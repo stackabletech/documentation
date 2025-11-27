@@ -698,7 +698,7 @@ Refer to the xref:operators:supported_versions.adoc[supported versions] document
 The following product versions were already available before but are now marked as the xref:compliance:policies.adoc#_product_lifecycle_policy[LTS] version:
 
 * Apache Hive: https://github.com/stackabletech/docker-images/issues/1271[4.0.1 (LTS)]
-** Please be aware that tools such as Trino or Iceberg have problems with 4.x versions. Read on xref:hive:index.adoc#_hive_4_issues[the hive-operator supported versions documentation] for details.
+** Trino and Iceberg don't fully work with Hive 4.x yet. See the xref:hive:index.adoc#_hive_4_issues[hive-operator supported versions documentation] for compatible versions and hive 4 details. Be aware of upgrading Hive (e.g. 4.0.0 to 4.0.1 or 4.0.1 to Hive 4.1.0), as this upgrade is not easily reversible. Test the new version before upgrading your production workloads and take backups of your database.
 * Apache Kafka: https://github.com/stackabletech/docker-images/issues/1272[3.9.1 (LTS)]
 
 [#new-product-versions-25_11_0]
@@ -711,7 +711,7 @@ The following new product versions are now supported:
 * Apache HBase: https://github.com/stackabletech/docker-images/issues/1269[2.6.3 (LTS)]
 * Apache Hadoop: https://github.com/stackabletech/docker-images/issues/1270[3.4.2 (LTS)]
 * Apache Hive: https://github.com/stackabletech/docker-images/issues/1235[4.1.0]
-** Please be aware that tools such as Trino or Iceberg have problems with 4.x versions. Read on xref:hive:index.adoc#_hive_4_issues[the hive-operator supported versions documentation] for details.
+** Trino and Iceberg don't fully work with Hive 4.x yet. See the xref:hive:index.adoc#_hive_4_issues[hive-operator supported versions documentation] for compatible versions and hive 4 details. Be aware of upgrading Hive (e.g. 4.0.0 to 4.0.1 or 4.0.1 to Hive 4.1.0), as this upgrade is not easily reversible. Test the new version before upgrading your production workloads and take backups of your database.
 * Apache Kafka: https://github.com/stackabletech/docker-images/issues/1236[4.1.0 (experimental)]
 * Apache NiFi: https://github.com/stackabletech/docker-images/issues/1237[2.6.0 (LTS)]
 * Apache Spark: https://github.com/stackabletech/docker-images/issues/1273[3.5.7 (LTS)], https://github.com/stackabletech/docker-images/issues/1273[4.0.1 (experimental)]
@@ -731,7 +731,7 @@ The following product versions are deprecated and will be removed in a later rel
 * Apache HBase: https://github.com/stackabletech/docker-images/issues/1269[2.6.2]
 * Apache Hadoop: https://github.com/stackabletech/docker-images/issues/1270[3.4.1]
 * Apache Hive: https://github.com/stackabletech/docker-images/issues/1271[4.0.0]
-** Please be aware that tools such as Trino or Iceberg have problems with 4.x versions. Read on xref:hive:index.adoc#_hive_4_issues[the hive-operator supported versions documentation] for details.
+** Trino and Iceberg don't fully work with Hive 4.x yet. See the xref:hive:index.adoc#_hive_4_issues[hive-operator supported versions documentation] for compatible versions and hive 4 details. Be aware of upgrading Hive (e.g. 4.0.0 to 4.0.1 or 4.0.1 to Hive 4.1.0), as this upgrade is not easily reversible. Test the new version before upgrading your production workloads and take backups of your database.
 * Apache Kafka: https://github.com/stackabletech/docker-images/issues/1236[3.7.2]
 * Apache NiFi: https://github.com/stackabletech/docker-images/issues/1237[1.27.0], https://github.com/stackabletech/docker-images/issues/1237[1.28.1], https://github.com/stackabletech/docker-images/issues/1237[2.4.0]
 * Apache Spark: https://github.com/stackabletech/docker-images/issues/1273[3.5.6]
