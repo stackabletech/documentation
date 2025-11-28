@@ -151,6 +151,59 @@ They will *not* be applied to:
 
 * Jobs, that are used to setup systems the product depends on e.g. create a database schema for Superset or Airflow.
 
+[#object-overrides]
+== Object overrides
+
+Sometimes you need to override Kubernetes objects that are not covered by e.g. `podOverrides` or `configOverrides` like ServiceAccounts or the StatefulSet/Deployment/DaemonSet.
+Object overrides let you modify any Kubernetes object that the operator creates as part of its reconciliation loop, which essentially includes all objects associated with a given stacklet.
+
+On every Stackable CRD that is reconciled into a set of Kubernetes objects we provide the field `.spec.objectOverrides`.
+This field accepts a list of arbitrary YAML objects, each of which must be a valid Kubernetes object.
+
+For every object it creates, the operator processes the list of overrides from top to bottom.
+It first checks if an override matches the object being created by comparing the `apiVersion`, `kind`, `name` and if applicable `namespace` (cluster-scoped objects may omit the namespace).
+If an override matches, it is merged using the same mechanism as Pod overrides, using the merge algorithm described in the {k8s-openapi-deepmerge}[k8s-openapi docs{external-link-icon}^], which closely mimics the way Kubernetes applies patches to object.
+
+As a result, you can only modify object created by the operator.
+This mechanism does not work to deploy any additional arbitrary Kubernetes object.
+
+[source,yaml]
+----
+apiVersion: zookeeper.stackable.tech/v1alpha1
+kind: ZookeeperCluster
+metadata:
+  name: simple-zk
+spec:
+  # ...
+  objectOverrides:
+    - apiVersion: apps/v1
+      kind: StatefulSet
+      metadata:
+        name: simple-zk-server-default
+        namespace: default
+        labels:
+          custom: label
+      spec:
+        replicas: 2
+        podManagementPolicy: Parallel
+    - apiVersion: v1
+      kind: ServiceAccount
+      metadata:
+        name: simple-zk-serviceaccount
+        namespace: default
+        labels:
+          im-on: AWS
+        annotations:
+          custom: AWS
+    - apiVersion: policy/v1
+      kind: PodDisruptionBudget
+      metadata:
+        name: simple-zk-server
+        namespace: default
+      spec:
+        maxUnavailable: 42
+----
+
 [#jvm-argument-overrides]
 == JVM argument overrides
 
