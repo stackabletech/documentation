@@ -150,6 +150,13 @@ See the xref:opensearch:index.adoc[OpenSearch documentation] page for more detai
 37 CVEs were fixed in the Stackable product images.
 This includes 2 critical and 18 high-severity CVEs.
 
+====== Image signature verification
+
+*Breaking:* With the release of SDP 25.11, we now sign container images and Helm charts using cosign 3 and its new bundle format, benefiting from the OCI Referrers API.
+This means to verify signatures of this and future releases, users need to use cosign 3.
+Verification using cosign 2 is also possible if you're using version 2.6.0 or above and provide the additional flag --new-bundle-format, but cosign 3 is recommended for full compatibility and functionality.
+For guidance on how to verify image signatures, please consult the Stackable xref:guides:enabling-verification-of-image-signatures.adoc[signature verification documentation].
+
 [#observability-25_11_0]
 ====== Observability
 
