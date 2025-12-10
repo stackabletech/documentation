@@ -130,6 +130,16 @@ Configure a {vector-source-vector}[Vector source{external-link-icon}^] at adress
 Every product also has a `vectorAggregatorConfigMapName` property in its spec that needs to be set to the name of the ConfigMap that contains the address of the aggregator.
 The field is called `ADDRESS` and the value could be `vector-aggregator:6000` if you're running the aggregator behind a service named `vector-aggregator`.
 
+[source,yaml]
+----
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vector-aggregator-discovery
+data:
+  ADDRESS: vector-aggregator.vector:6000
+----
+
 == Custom overrides
 
 As with many parts of the Stackable platform, custom overrides are supported as well, by supplying your own logging configuration file.
