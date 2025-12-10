@@ -155,7 +155,7 @@ logging:
         configMap: my-configmap  // <2>
 ----
 <1> The vector logging agent is not deployed.
-<2> A custom logging configuration is loaded from a ConfigMap called `my-configmap`.
+<2> A custom product logging configuration is loaded from a ConfigMap called `my-configmap`. The key must be the filename that the product is configured to load (eg: `logback.xml`).
 
 == Further reading
 
