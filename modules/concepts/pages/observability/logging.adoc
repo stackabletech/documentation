@@ -137,7 +137,7 @@ kind: ConfigMap
 metadata:
   name: vector-aggregator-discovery
 data:
-  ADDRESS: vector-aggregator.vector:6000
+  ADDRESS: vector-aggregator.vector.svc.cluster.local:6000
 ----
 
 == Custom overrides
@@ -155,7 +155,8 @@ logging:
         configMap: my-configmap  // <2>
 ----
 <1> The vector logging agent is not deployed.
-<2> A custom product logging configuration is loaded from a ConfigMap called `my-configmap`. The key must be the filename that the product is configured to load (eg: `logback.xml`).
+<2> A custom product logging configuration is loaded from a ConfigMap called `my-configmap`.
+    The key must be the filename that the product is configured to load, such as `logback.xml`.
 
 == Further reading
 
