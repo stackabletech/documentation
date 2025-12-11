@@ -123,12 +123,22 @@ Following the Stackable xref:stacklet.adoc#roles[roles] and xref::stacklet.adoc#
 === Configuring the Aggregator
 
 Follow the {vector-agg-install}[installation instructions{external-link-icon}^] for the aggregator.
-Configure a {vector-source-vector}[Vector source{external-link-icon}^] at adress `0.0.0.0:6000` and configure sinks and additional settings according to your needs.
+Configure a {vector-source-vector}[Vector source{external-link-icon}^] at address `0.0.0.0:6000` and configure sinks and additional settings according to your needs.
 
 === Configuring the aggregator location
 
 Every product also has a `vectorAggregatorConfigMapName` property in its spec that needs to be set to the name of the ConfigMap that contains the address of the aggregator.
 The field is called `ADDRESS` and the value could be `vector-aggregator:6000` if you're running the aggregator behind a service named `vector-aggregator`.
+
+[source,yaml]
+----
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vector-aggregator-discovery
+data:
+  ADDRESS: vector-aggregator.vector.svc.cluster.local:6000
+----
 
 == Custom overrides
 
@@ -145,7 +155,8 @@ logging:
         configMap: my-configmap  // <2>
 ----
 <1> The vector logging agent is not deployed.
-<2> A custom logging configuration is loaded from a ConfigMap called `my-configmap`.
+<2> A custom product logging configuration is loaded from a ConfigMap called `my-configmap`.
+    The key must be the filename that the product is configured to load, such as `logback.xml`.
 
 == Further reading
 
