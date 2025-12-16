@@ -773,18 +773,19 @@ These Kubernetes versions are no longer supported:
 
 * `1.30`
 
-===== OpenShift versions
+==== OpenShift
 
 This release is available in the RedHat Certified Operator Catalog for the following OpenShift versions:
 
 * `4.20`
 * `4.19`
 * `4.18`
-
-These OpenShift versions are no longer supported:
-
 * `4.17`
 * `4.16`
+
+This release changes the memory requests for operators installed from the OpenShift Certified Operator Catalog.
+Previously most operators requested `128Mi` of memory.
+Starting with this release the memory requests have been increased to `256Mi` to improve stability on large clusters.
 
 [WARNING]
 ====
