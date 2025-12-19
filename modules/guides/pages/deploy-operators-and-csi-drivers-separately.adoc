@@ -220,14 +220,14 @@ kubectl get pods -o json | jq --raw-output --arg nodepool "$OPERATORS_NODEPOOL" 
 You should see similar output showing the Stackable Operators are running only on nodes with the label `nodepool: stackable-operators`.
 
 [source]
----
+----
 Nodes in operators pool: stackable-worker,stackable-worker2
 
 commons-operator-deployment-674c469b47-nm5vb
 listener-operator-csi-provisioner-85b686d48-hv5kf
 nifi-operator-deployment-7c59778bb8-r26b8
 secret-operator-66b85c669d-7hsxs
----
+----
 
 Pods running on the `stackable-workloads` node pool:
 
@@ -241,14 +241,14 @@ kubectl get pods -o json | jq --raw-output --arg nodepool "$WORKLOADS_NODEPOOL" 
 You should see similar output showing the Stackable CSI Node Drivers are running only on nodes with the label `nodepool: stackable-workloads`.
 
 [source]
----
+----
 Nodes in workloads pool: stackable-worker3,stackable-worker4
 
 listener-operator-csi-node-driver-lv5r4
 listener-operator-csi-node-driver-vdzsq
 secret-operator-csi-node-driver-d8sqw
 secret-operator-csi-node-driver-zkrv6
----
+----
 
 The CSI Node Drivers register as such.
 This can be seen with the driver count being 2 (one for listener-operator volumes, and one for secret-operator volumes) for nodes in the workloads pool:
