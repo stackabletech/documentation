@@ -20,7 +20,7 @@ You will need a Kubernetes cluster with multiple nodes split into two groups:
 * stackable-operators
 * stackable-workloads
 
-TODO: tabs for kind or Karpenter NodePools
+// TODO: Add an image to illustrate what the guide aims to achieve
 
 [NOTE]
 ====
@@ -333,7 +333,7 @@ kubectl get pods -o json | jq --raw-output --arg nodepool "$WORKLOADS_NODEPOOL" 
 You should see similar output as last time, but now with the NiFi pod.
 
 [source]
----
+----
 Nodes in workloads pool: stackable-worker3,stackable-worker4
 
 listener-operator-csi-node-driver-lv5r4
@@ -341,7 +341,7 @@ listener-operator-csi-node-driver-vdzsq
 secret-operator-csi-node-driver-d8sqw
 secret-operator-csi-node-driver-zkrv6
 simple-nifi-node-default-0
----
+----
 
 == Cleanup
 
