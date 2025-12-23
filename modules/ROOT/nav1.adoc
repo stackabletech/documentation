@@ -4,6 +4,7 @@
 ** xref:kubernetes/eks.adoc[]
 ** xref:kubernetes/gke.adoc[]
 ** xref:kubernetes/huawei-cloud.adoc[]
+** xref:kubernetes/k0s.adoc[]
 ** xref:kubernetes/ibm-cloud.adoc[]
 ** xref:kubernetes/ionos-managed-k8s.adoc[]
 ** xref:kubernetes/ionos-managed-stackable.adoc[]
