@@ -3,5 +3,5 @@
 https://k0sproject.io/[https://k0sproject.io/{external-link-icon}^]
 
 k0s uses a non-standard Kubelet state directory.
-For this reason the secret-operator and listener-operator on k0S require special handling.
+For this reason the secret-operator and listener-operator on k0s require special handling.
 Please refer to the xref:secret-operator:installation.adoc[secret-operator installation guide] and the xref:listener-operator:installation.adoc[listener-operator installation guide] for details.
