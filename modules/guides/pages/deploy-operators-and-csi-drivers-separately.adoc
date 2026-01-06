@@ -5,7 +5,7 @@
 :commons-operator-values: https://github.com/stackabletech/commons-operator/blob/{stackable-operator-branch}/deploy/helm/commons-operator/values.yaml
 :nifi-operator-values: https://github.com/stackabletech/nifi-operator/blob/{stackable-operator-branch}/deploy/helm/nifi-operator/values.yaml
 // TODO: Is there a way to make the links above go to the right place?
-// Eg: we can search/replace "0.0.0-dev" with the release, but in the above case we would need to replace "main".
+// Eg: we can search/replace "{stackable-operator-version}" with the release, but in the above case we would need to replace "main".
 
 Operators can be installed on nodes separate from where the workloads will run.
 There is a caveat when it comes to two operators: Secret Operator and Listener Operator.
@@ -160,10 +160,10 @@ Secret Operator::
 --
 NOTE: This operator uses a specific values file.
 
-[source,bash]
+[source,bash,subs="attributes"]
 ----
 helm install secret-operator \
-    --version=0.0.0-dev \
+    --version={stackable-operator-version} \
     --values=stackable-secret-operator.yaml \
     oci://oci.stackable.tech/sdp-charts/secret-operator
 ----
@@ -175,10 +175,10 @@ Listener Operator::
 --
 NOTE: This operator uses a specific values file.
 
-[source,bash]
+[source,bash,subs="attributes"]
 ----
 helm install listener-operator \
-    --version=0.0.0-dev \
+    --version={stackable-operator-version} \
     --values=stackable-listener-operator.yaml \
     oci://oci.stackable.tech/sdp-charts/listener-operator
 ----
@@ -190,15 +190,15 @@ Remaining operators::
 --
 NOTE: These operators use the same values file.
 
-[source,bash]
+[source,bash,subs="attributes"]
 ----
 helm install commons-operator \
-    --version=0.0.0-dev \
+    --version={stackable-operator-version} \
     --values=stackable-operators.yaml \
     oci://oci.stackable.tech/sdp-charts/commons-operator
 
 helm install nifi-operator \
-    --version=0.0.0-dev \
+    --version={stackable-operator-version} \
     --values=stackable-operators.yaml \
     oci://oci.stackable.tech/sdp-charts/nifi-operator
 ----
