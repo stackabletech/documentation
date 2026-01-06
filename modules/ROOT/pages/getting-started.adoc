@@ -162,14 +162,6 @@ We will next deploy an Apache NiFi server.
 ----
 kubectl apply -f - <<EOF
 ---
-apiVersion: zookeeper.stackable.tech/v1alpha1
-kind: ZookeeperZnode
-metadata:
-  name: simple-nifi-znode
-spec:
-  clusterRef:
-    name: simple-zk
----
 apiVersion: nifi.stackable.tech/v1alpha1
 kind: NifiCluster
 metadata:
@@ -179,7 +171,6 @@ spec:
     productVersion: 2.4.0
   clusterConfig:
     listenerClass: external-unstable
-    zookeeperConfigMapName: simple-nifi-znode
     authentication:
       - authenticationClass: nifi-users
     sensitiveProperties:
@@ -258,7 +249,7 @@ You can run the `ls /` command to see the list of znodes in the root path, which
 
 ----
 [zk: localhost:2181(CONNECTED) 0] ls /
-[znode-17951052-3ffd-4e7a-9cfe-6865f827752d, znode-2d752976-f37c-4baf-a3af-2eed96ba57f5, znode-f946b36f-a0bc-4d11-93d6-8ac6a321c836, zookeeper]
+[znode-17951052-3ffd-4e7a-9cfe-6865f827752d, znode-2d752976-f37c-4baf-a3af-2eed96ba57f5, zookeeper]
 ----
 
 === Apache Kafka

@@ -1,0 +1,380 @@
+= Deploying operators and CSI drivers on separate nodes
+:related-issue: https://github.com/stackabletech/issues/issues/763
+:secret-operator-values: https://github.com/stackabletech/secret-operator/blob/{stackable-operator-branch}/deploy/helm/secret-operator/values.yaml
+:listener-operator-values: https://github.com/stackabletech/listener-operator/blob/{stackable-operator-branch}/deploy/helm/listener-operator/values.yaml
+:commons-operator-values: https://github.com/stackabletech/commons-operator/blob/{stackable-operator-branch}/deploy/helm/commons-operator/values.yaml
+:nifi-operator-values: https://github.com/stackabletech/nifi-operator/blob/{stackable-operator-branch}/deploy/helm/nifi-operator/values.yaml
+
+Operators can be installed on nodes separate from where the workloads will run.
+There is a caveat when it comes to two operators: Secret Operator and Listener Operator.
+They make use of the Container Storage Interface (CSI) and have components that must run on nodes with workloads that mount CSI volumes.
+
+This guide will show how to schedule operators on one group of nodes (for example, a Karpenter NodePool), while scheduling applicable components where workload will run.
+
+== Setup
+
+You will need a Kubernetes cluster with multiple nodes split into two groups:
+
+* stackable-operators
+* stackable-workloads
+
+image::deploy-operators-and-csi-drivers-separately/topology.drawio.svg[]
+
+[NOTE]
+====
+This guide will use _KinD_ to demonstrate, but if you are using Karpenter (eg: AWK EKS),
+you can adjust the labels to be based on the name of your NodePools.
+
+For example:
+
+* `karpenter.sh/nodepool: stackable-operators`
+* `karpenter.sh/nodepool: stackable-workloads`
+
+====
+
+Create a KinD config called `kind-config.yaml` containing:
+
+[source,yaml]
+----
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+- role: control-plane
+- role: worker
+  labels:
+    nodepool: stackable-operators
+- role: worker
+  labels:
+    nodepool: stackable-operators
+- role: worker
+  labels:
+    nodepool: stackable-workloads
+- role: worker
+  labels:
+    nodepool: stackable-workloads
+----
+
+Launch the cluster:
+
+[source,bash]
+----
+kind create cluster --name stackable --config kind-config.yaml
+----
+
+You can see which nodes are in which _nodepool_ by using the following command:
+
+[source,bash]
+----
+kubectl get nodes -o json | jq '
+    .items[]
+    | .metadata.name as $name
+    | .metadata.labels["nodepool"] as $nodepool
+    | $nodepool//empty
+    | {"nodename": $name, "nodepool":  $nodepool}
+'
+----
+
+== Prepare Helm Values for the Stackable Operators
+
+[NOTE]
+====
+Most Stackable operators use the same Helm Values structure, however Secret and
+Listener operator differ slightly - which is what allows the components to be
+configured independently of each other.
+====
+
+// TODO: Move these into files and include them (so we can run them easily)
+
+[tabs]
+====
+Secret Operator::
++
+--
+Store the values in a file called `stackable-secret-operator.yaml`.
+
+See default Chart link:{secret-operator-values}[values].
+
+[source,yaml]
+----
+controllerService:
+  nodeSelector:
+    nodepool: stackable-operators
+
+csiNodeDriver:
+  # Node Drivers need to run on the same nodes as the workloads using them
+  nodeSelector:
+    nodepool: stackable-workloads
+----
+
+--
+
+Listener Operator::
++
+--
+Store the values in a file called `stackable-listener-operator.yaml`.
+
+See default Chart link:{listener-operator-values}[values].
+
+[source,yaml]
+----
+csiProvisioner:
+  nodeSelector:
+    nodepool: stackable-operators
+
+csiNodeDriver:
+  # Node Drivers need to run on the same nodes as the workloads using them
+  nodeSelector:
+    nodepool: stackable-workloads
+----
+
+--
+
+Remaining operators::
++
+--
+Store the values in a file called `stackable-operators.yaml`.
+
+See default Chart values for link:{commons-operator-values}[commons-operator] and  link:{nifi-operator-values}[nifi-operator].
+
+[source,yaml]
+----
+nodeSelector:
+  nodepool: stackable-operators
+----
+
+--
+====
+
+NOTE: If you would like to run on nodes with taints, you can list `tolerations` next to the `nodeSelector`.
+
+== Install the Stackable Operators
+
+Now install the operators to the applicable node pools by using the Helm overrides
+
+[tabs]
+====
+Secret Operator::
++
+--
+NOTE: This operator uses a specific values file.
+
+[source,bash,subs="attributes"]
+----
+helm install secret-operator \
+    --version={stackable-operator-version} \
+    --values=stackable-secret-operator.yaml \
+    oci://oci.stackable.tech/sdp-charts/secret-operator
+----
+
+--
+
+Listener Operator::
++
+--
+NOTE: This operator uses a specific values file.
+
+[source,bash,subs="attributes"]
+----
+helm install listener-operator \
+    --version={stackable-operator-version} \
+    --values=stackable-listener-operator.yaml \
+    oci://oci.stackable.tech/sdp-charts/listener-operator
+----
+
+--
+
+Remaining operators::
++
+--
+NOTE: These operators use the same values file.
+
+[source,bash,subs="attributes"]
+----
+helm install commons-operator \
+    --version={stackable-operator-version} \
+    --values=stackable-operators.yaml \
+    oci://oci.stackable.tech/sdp-charts/commons-operator
+
+helm install nifi-operator \
+    --version={stackable-operator-version} \
+    --values=stackable-operators.yaml \
+    oci://oci.stackable.tech/sdp-charts/nifi-operator
+----
+
+--
+====
+
+You should now see that the operators are running on the `stackable-operator` nodes, while the CSI drivers are running on the `stackable-workload` nodes.
+
+Pods running on the `stackable-operators` node pool:
+
+[source,bash]
+----
+OPERATORS_NODEPOOL=$(
+    kubectl get nodes -l nodepool=stackable-operators -o jsonpath="{.items[*].metadata.name}" \
+    | tr ' ' ','
+)
+
+echo "Nodes in operators pool: $OPERATORS_NODEPOOL\n"
+kubectl get pods -o json | jq --raw-output --arg nodepool "$OPERATORS_NODEPOOL" '
+    .items[]
+    | .metadata.name as $podname
+    | .spec.nodeName as $nodename
+    | select($nodename | IN($nodepool | split(",")[]))
+    | $podname
+'
+----
+
+You should see similar output showing the Stackable Operators are running only on nodes with the label `nodepool: stackable-operators`.
+
+[source]
+----
+Nodes in operators pool: stackable-worker,stackable-worker2
+
+commons-operator-deployment-674c469b47-nm5vb
+listener-operator-csi-provisioner-85b686d48-hv5kf
+nifi-operator-deployment-7c59778bb8-r26b8
+secret-operator-66b85c669d-7hsxs
+----
+
+Pods running on the `stackable-workloads` node pool:
+
+[source,bash]
+----
+WORKLOADS_NODEPOOL=$(
+    kubectl get nodes -l nodepool=stackable-workloads -o jsonpath="{.items[*].metadata.name}" \
+    | tr ' ' ','
+)
+
+echo "Nodes in workloads pool: $WORKLOADS_NODEPOOL\n"
+kubectl get pods -o json | jq --raw-output --arg nodepool "$WORKLOADS_NODEPOOL" '
+    .items[]
+    | .metadata.name as $podname
+    | .spec.nodeName as $nodename
+    | select($nodename | IN($nodepool | split(",")[]))
+    | $podname
+'
+----
+
+You should see similar output showing the Stackable CSI Node Drivers are running only on nodes with the label `nodepool: stackable-workloads`.
+
+[source]
+----
+Nodes in workloads pool: stackable-worker3,stackable-worker4
+
+listener-operator-csi-node-driver-lv5r4
+listener-operator-csi-node-driver-vdzsq
+secret-operator-csi-node-driver-d8sqw
+secret-operator-csi-node-driver-zkrv6
+----
+
+The CSI Node Drivers register as such.
+This can be seen with the driver count being 2 (one for listener-operator volumes, and one for secret-operator volumes) for nodes in the workloads pool:
+
+[source,console]
+----
+$ kubectl get csinodes
+NAME                      DRIVERS   AGE
+stackable-control-plane   0         3h40m
+stackable-worker          0         3h39m
+stackable-worker2         0         3h39m
+stackable-worker3         2         3h39m
+stackable-worker4         2         3h39m
+----
+
+== Install a workload
+
+We'll install a NiFi cluster onto a `stackable-workload` node. Create a new file called `nifi.yaml` with the following contents:
+// This is taken from the NiFi Getting Started, but with some modifications.
+
+[source,yaml]
+----
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: simple-admin-credentials
+stringData:
+  admin: admin
+---
+apiVersion: authentication.stackable.tech/v1alpha1
+kind: AuthenticationClass
+metadata:
+  name: simple-nifi-users
+spec:
+  provider:
+    static:
+      userCredentialsSecret:
+        name: simple-admin-credentials
+---
+apiVersion: nifi.stackable.tech/v1alpha1
+kind: NifiCluster
+metadata:
+  name: simple-nifi
+spec:
+  image:
+    productVersion: 2.6.0
+  clusterConfig:
+    authentication:
+      - authenticationClass: simple-nifi-users
+    sensitiveProperties:
+      keySecret: nifi-sensitive-property-key
+      autoGenerate: true
+  nodes:
+    roleGroups:
+      default:
+        replicas: 1
+    config:
+      # Run NiFi nodes in the workloads pool
+      affinity:
+        nodeSelector:
+          nodepool: stackable-workloads
+----
+
+Apply it to Kubernetes:
+
+[source,console]
+----
+$ kubectl apply -f nifi.yaml
+----
+
+Then take a look at the pods running on nodes with the label `nodepool: stackable-workloads`:
+
+[source,bash]
+----
+WORKLOADS_NODEPOOL=$(
+    kubectl get nodes -l nodepool=stackable-workloads -o jsonpath="{.items[*].metadata.name}"
+    | tr ' ' ','
+)
+
+echo "Nodes in workloads pool: $WORKLOADS_NODEPOOL\n"
+kubectl get pods -o json | jq --raw-output --arg nodepool "$WORKLOADS_NODEPOOL" '
+    .items[]
+    | .metadata.name as $podname
+    | .spec.nodeName as $nodename
+    | select($nodename | IN($nodepool | split(",")[]))
+    | $podname
+'
+----
+
+You should see similar output as last time, but now with the NiFi pod.
+
+[source]
+----
+Nodes in workloads pool: stackable-worker3,stackable-worker4
+
+listener-operator-csi-node-driver-lv5r4
+listener-operator-csi-node-driver-vdzsq
+secret-operator-csi-node-driver-d8sqw
+secret-operator-csi-node-driver-zkrv6
+simple-nifi-node-default-0
+----
+
+== Cleanup
+
+Once done, you can delete the KinD cluster like so:
+
+[source,bash]
+----
+kind delete cluster --name stackable
+----
