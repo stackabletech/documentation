@@ -188,7 +188,7 @@ helm install listener-operator \
 Remaining operators::
 +
 --
-NOTE: These operator use the same values file.
+NOTE: These operators use the same values file.
 
 [source,bash]
 ----
@@ -212,9 +212,19 @@ Pods running on the `stackable-operators` node pool:
 
 [source,bash]
 ----
-OPERATORS_NODEPOOL=$(kubectl get nodes -l nodepool=stackable-operators -o jsonpath="{.items[*].metadata.name}" | tr ' ' ',')
+OPERATORS_NODEPOOL=$(
+    kubectl get nodes -l nodepool=stackable-operators -o jsonpath="{.items[*].metadata.name}" \
+    | tr ' ' ','
+)
+
 echo "Nodes in operators pool: $OPERATORS_NODEPOOL\n"
-kubectl get pods -o json | jq --raw-output --arg nodepool "$OPERATORS_NODEPOOL" '.items[] | .metadata.name as $podname | .spec.nodeName as $nodename | select($nodename | IN($nodepool | split(",")[])) | $podname'
+kubectl get pods -o json | jq --raw-output --arg nodepool "$OPERATORS_NODEPOOL" '
+    .items[]
+    | .metadata.name as $podname
+    | .spec.nodeName as $nodename
+    | select($nodename | IN($nodepool | split(",")[]))
+    | $podname
+'
 ----
 
 You should see similar output showing the Stackable Operators are running only on nodes with the label `nodepool: stackable-operators`.
@@ -233,9 +243,19 @@ Pods running on the `stackable-workloads` node pool:
 
 [source,bash]
 ----
-WORKLOADS_NODEPOOL=$(kubectl get nodes -l nodepool=stackable-workloads -o jsonpath="{.items[*].metadata.name}" | tr ' ' ',')
+WORKLOADS_NODEPOOL=$(
+    kubectl get nodes -l nodepool=stackable-workloads -o jsonpath="{.items[*].metadata.name}" \
+    | tr ' ' ','
+)
+
 echo "Nodes in workloads pool: $WORKLOADS_NODEPOOL\n"
-kubectl get pods -o json | jq --raw-output --arg nodepool "$WORKLOADS_NODEPOOL" '.items[] | .metadata.name as $podname | .spec.nodeName as $nodename | select($nodename | IN($nodepool | split(",")[])) | $podname'
+kubectl get pods -o json | jq --raw-output --arg nodepool "$WORKLOADS_NODEPOOL" '
+    .items[]
+    | .metadata.name as $podname
+    | .spec.nodeName as $nodename
+    | select($nodename | IN($nodepool | split(",")[]))
+    | $podname
+'
 ----
 
 You should see similar output showing the Stackable CSI Node Drivers are running only on nodes with the label `nodepool: stackable-workloads`.
@@ -325,9 +345,19 @@ Then take a look at the pods running on nodes with the label `nodepool: stackabl
 
 [source,bash]
 ----
-WORKLOADS_NODEPOOL=$(kubectl get nodes -l nodepool=stackable-workloads -o jsonpath="{.items[*].metadata.name}" | tr ' ' ',')
+WORKLOADS_NODEPOOL=$(
+    kubectl get nodes -l nodepool=stackable-workloads -o jsonpath="{.items[*].metadata.name}"
+    | tr ' ' ','
+)
+
 echo "Nodes in workloads pool: $WORKLOADS_NODEPOOL\n"
-kubectl get pods -o json | jq --raw-output --arg nodepool "$WORKLOADS_NODEPOOL" '.items[] | .metadata.name as $podname | .spec.nodeName as $nodename | select($nodename | IN($nodepool | split(",")[])) | $podname'
+kubectl get pods -o json | jq --raw-output --arg nodepool "$WORKLOADS_NODEPOOL" '
+    .items[]
+    | .metadata.name as $podname
+    | .spec.nodeName as $nodename
+    | select($nodename | IN($nodepool | split(",")[]))
+    | $podname
+'
 ----
 
 You should see similar output as last time, but now with the NiFi pod.
