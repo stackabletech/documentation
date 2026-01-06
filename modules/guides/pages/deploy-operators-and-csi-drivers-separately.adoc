@@ -286,7 +286,6 @@ stackable-worker4         2         3h39m
 
 We'll install a NiFi cluster onto a `stackable-workload` node. Create a new file called `nifi.yaml` with the following contents:
 // This is taken from the NiFi Getting Started, but with some modifications.
-// TODO: Update nifi getting started to remove zookeeper.
 
 [source,yaml]
 ----
