@@ -1,9 +1,9 @@
 = Deploying operators and CSI drivers on separate nodes
 :related-issue: https://github.com/stackabletech/issues/issues/763
-:secret-operator-values: https://github.com/stackabletech/secret-operator/blob/main/deploy/helm/secret-operator/values.yaml
-:listener-operator-values: https://github.com/stackabletech/listener-operator/blob/main/deploy/helm/listener-operator/values.yaml
-:commons-operator-values: https://github.com/stackabletech/commons-operator/blob/main/deploy/helm/commons-operator/values.yaml
-:nifi-operator-values: https://github.com/stackabletech/nifi-operator/blob/main/deploy/helm/nifi-operator/values.yaml
+:secret-operator-values: https://github.com/stackabletech/secret-operator/blob/{stackable-operator-branch}/deploy/helm/secret-operator/values.yaml
+:listener-operator-values: https://github.com/stackabletech/listener-operator/blob/{stackable-operator-branch}/deploy/helm/listener-operator/values.yaml
+:commons-operator-values: https://github.com/stackabletech/commons-operator/blob/{stackable-operator-branch}/deploy/helm/commons-operator/values.yaml
+:nifi-operator-values: https://github.com/stackabletech/nifi-operator/blob/{stackable-operator-branch}/deploy/helm/nifi-operator/values.yaml
 // TODO: Is there a way to make the links above go to the right place?
 // Eg: we can search/replace "0.0.0-dev" with the release, but in the above case we would need to replace "main".
 
@@ -94,7 +94,7 @@ Secret Operator::
 --
 Store the values in a file called `stackable-secret-operator.yaml`.
 
-// TODO: Link to default values
+See default Chart link:{secret-operator-values}[values].
 
 [source,yaml]
 ----
@@ -115,7 +115,7 @@ Listener Operator::
 --
 Store the values in a file called `stackable-listener-operator.yaml`.
 
-// TODO: Link to default values
+See default Chart link:{listener-operator-values}[values].
 
 [source,yaml]
 ----
@@ -136,7 +136,7 @@ Remaining operators::
 --
 Store the values in a file called `stackable-operators.yaml`.
 
-// TODO: Link to default values for remaining operators used in this guide
+See default Chart values for link:{commons-operator-values}[commons-operator] and  link:{nifi-operator-values}[nifi-operator].
 
 [source,yaml]
 ----
