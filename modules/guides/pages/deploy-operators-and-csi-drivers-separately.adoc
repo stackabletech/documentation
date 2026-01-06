@@ -18,7 +18,7 @@ You will need a Kubernetes cluster with multiple nodes split into two groups:
 * stackable-operators
 * stackable-workloads
 
-// TODO: Add an image to illustrate what the guide aims to achieve
+image::deploy-operators-and-csi-drivers-separately/topology.drawio.svg[]
 
 [NOTE]
 ====
