@@ -4,8 +4,6 @@
 :listener-operator-values: https://github.com/stackabletech/listener-operator/blob/{stackable-operator-branch}/deploy/helm/listener-operator/values.yaml
 :commons-operator-values: https://github.com/stackabletech/commons-operator/blob/{stackable-operator-branch}/deploy/helm/commons-operator/values.yaml
 :nifi-operator-values: https://github.com/stackabletech/nifi-operator/blob/{stackable-operator-branch}/deploy/helm/nifi-operator/values.yaml
-// TODO: Is there a way to make the links above go to the right place?
-// Eg: we can search/replace "{stackable-operator-version}" with the release, but in the above case we would need to replace "main".
 
 Operators can be installed on nodes separate from where the workloads will run.
 There is a caveat when it comes to two operators: Secret Operator and Listener Operator.
