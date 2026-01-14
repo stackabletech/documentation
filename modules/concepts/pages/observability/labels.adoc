@@ -39,8 +39,8 @@ When installing operators and releases, `stackablectl` will always label the Dep
 
 When installing a stack or a demo, `stackablectl` adds additional labels to identify the parts of the stack or demo:
 
-* `stackable-tech/stack` with the value being the Stack name.
-* `stackable-tech/demo` with the value being the Demo name.
+* `stackable.tech/stack` with the value being the Stack name.
+* `stackable.tech/demo` with the value being the Demo name.
 * `stackable.tech/managed-by=stackablectl`
 
 These labels are attached to the demo and stack manifests, which include Secret, ConfigMap or ClusterRole.
