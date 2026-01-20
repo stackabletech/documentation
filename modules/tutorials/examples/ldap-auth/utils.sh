@@ -14,6 +14,10 @@ superset_login() {
 
   json_header='Content-Type: application/json'
 
+  echo "Checking if Superset is reachable at $superset_addr"
+  return_code=$(curl --insecure -v -o /dev/null -w "%{http_code}" "$superset_addr")
+  echo "$return_code"
+
   local response
   response=$(curl -Ls "$superset_endpoint" -H "$json_header" --data "$request_data")
 
