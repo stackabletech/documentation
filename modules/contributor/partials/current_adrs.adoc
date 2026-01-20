@@ -31,3 +31,4 @@
 **** xref:adr/ADR032-oidc-support.adoc[]
 **** xref:adr/ADR034-foundation-webhooks-deployment.adoc[]
 **** xref:adr/ADR035-user-info-fetcher.adoc[]
+**** xref:adr/ADRXXX-authorization-abstraction-layer.adoc[]
