@@ -2,7 +2,7 @@
 set -euo pipefail
 
 
-trino_version="476"
+trino_version="479"
 trino_download_url="https://repo.stackable.tech/repository/packages/trino-cli/trino-cli-${trino_version}-executable.jar"
 
 trino_login() {
@@ -33,7 +33,7 @@ password="alice"
 
 echo "Testing trino login with $username:$password ..."
 if trino_login "$username" "$password"; then
-    echo "Login sucessful"
+    echo "Login successful"
 else
     echo "Login unsuccessful"
     exit 1
