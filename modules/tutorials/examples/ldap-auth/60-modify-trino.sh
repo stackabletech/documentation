@@ -31,6 +31,8 @@ echo "Applying updated configuration"
 kubectl apply -f trino.yaml
 # end::apply[]
 
+sleep 1 # it takes time before the statefulset is recreated
+
 echo "Waiting for Trino StatefulSets rollout ..."
 kubectl rollout status --watch statefulset/trino-coordinator-default
 kubectl rollout status --watch statefulset/trino-worker-default

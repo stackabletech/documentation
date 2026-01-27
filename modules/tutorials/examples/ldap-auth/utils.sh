@@ -9,7 +9,7 @@ superset_login() {
   request_data=$(printf '{"provider": "%s", "username": "%s", "password": "%s", "refresh": false}' "$provider" "$username" "$password")
 
   local superset_addr
-  superset_addr=$(stackablectl svc list -o json | jq --raw-output '.superset| .[0] | .endpoints | .["external-superset"]')
+  superset_addr=$(stackablectl stacklet list -o json | jq --raw-output '.[] | select(.name == "superset") | .endpoints | .["node-http"]')
   local superset_endpoint="$superset_addr"/api/v1/security/login
 
   json_header='Content-Type: application/json'
