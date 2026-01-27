@@ -3,14 +3,14 @@ set -euo pipefail
 
 
 trino_version="479"
-trino_download_url="https://repo.stackable.tech/repository/packages/trino-cli/trino-cli-${trino_version}-executable.jar"
+trino_download_url="https://repo.stackable.tech/repository/packages/trino-cli/trino-cli-${trino_version}"
 
 trino_login() {
     local username="$1"
     local password="$2"
 
 
-    trino_binary="./trino.jar"
+    trino_binary="./trino-cli"
 
     if [[ ! -f "$trino_binary" ]]; then
         echo "Downloading trino client ...";
@@ -18,7 +18,7 @@ trino_login() {
         chmod +x "$trino_binary"
     fi
 
-    trino_addr=$(stackablectl svc list -o json | jq --raw-output '.trino| .[0] | .endpoints | .["coordinator-https"]')
+    trino_addr=$(stackablectl stacklet list -o json | jq --raw-output '.[] | select(.name == "trino") | .endpoints | .["coordinator-https"]')
 
     output=$(echo "$password" | "$trino_binary" --insecure --output-format=CSV_UNQUOTED --server "$trino_addr" --user "$username" --execute "SHOW CATALOGS" --password)
 
