@@ -13,6 +13,8 @@ Overrides should only be used as a last resort!
 
 The Stacklet definitions support overriding configuration aspects either per xref:stacklet.adoc#roles[role] or xref:stacklet.adoc#role-groups[role group], where the more specific override (role group) has precedence over the less specific one (role).
 
+NOTE: The priority of the overrides (in ascending order) is configOVerrides -> podOVerrides -> objectOverrides, with the latter overriding the previous.
+
 [#config-overrides]
 == Config overrides
 
