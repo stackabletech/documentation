@@ -3,8 +3,8 @@
 
 Starting with SDP 25.11.0, specific operators now manage their own CRD lifecycle independently of Helm or other deployment tools.
 The primary reason for this is that the operator is able to inject a {k8s-webhook-config}[conversion webhook configuration] with an up-to-date `caBundle`.
-The operator generates a CA (and a leaf certificate) used by the conversion webhook automatically which is additionally rotated every 24 hours.
-This requires the operator to continuously update the `caBundle` field of the webhook configuration.
+The operator automatically generates a dedicated CA and leaf certificate for the conversion webhook, rotating them every 24 hours.
+To maintain secure communication, the operator must continuously inject the up-to-date caBundle into the CRD's webhook configuration.
 
 This maintenance process can be disabled via a Helm value if desired.
 
