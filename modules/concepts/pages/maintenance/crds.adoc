@@ -1,7 +1,7 @@
 = CustomResourceDefinition (CRD) maintenance
 :k8s-webhook-config: https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definition-versioning/#configure-customresourcedefinition-to-use-conversion-webhooks
 
-Since SDP 25.11.0 some operators maintain the CRD on their own without relying on Helm or other deployment tools.
+Starting with SDP 25.11.0, specific operators now manage their own CRD lifecycle independently of Helm or other deployment tools.
 The primary reason for this is that the operator is able to inject a {k8s-webhook-config}[conversion webhook configuration] with an up-to-date `caBundle`.
 The operator generates a CA (and a leaf certificate) used by the conversion webhook automatically which is additionally rotated every 24 hours.
 This requires the operator to continuously update the `caBundle` field of the webhook configuration.
