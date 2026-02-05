@@ -1,7 +1,7 @@
 = End-of-Support (EoS) check
 
-Since SDP 25.11.0 operators emit a warning message on startup and in a regular interval when it may have reached end-of-support.
-Most of our operators reach end-of-support one year after they have been released which roughly translates to three SDP releases.
+Starting with SDP 25.11.0, operators emit a warning message on startup and in a regular interval when it may have reached end-of-support.
+Most of the operators reach end-of-support one year after they have been released, which roughly translates to three SDP releases.
 This is in accordance with our xref:compliance:policies.adoc[support policy].
 
 The interval can be adjusted or the check can be disabled completely via Helm values.
