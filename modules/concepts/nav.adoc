@@ -26,4 +26,7 @@
 *** xref:observability/logging.adoc[Logging]
 *** xref:observability/containerdebug.adoc[Container environment]
 *** xref:observability/telemetry.adoc[Telemetry]
+** Maintenance
+*** xref:maintenance/crds.adoc[CRD maintenance]
+*** xref:maintenance/eos.adoc[End-of-Support check]
 ** xref:container-images.adoc[]
