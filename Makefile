@@ -1,18 +1,43 @@
 CURRENT_COMMIT := $(shell git rev-parse HEAD)
 
-# Build from local worktrees. Only one version is built: "latest".
-# Assumes all repos have the same parent directory.
+# The build targets differ along two axes:
+#
+#   Operator docs source:
+#     - "local sibling dirs" = reads from ../airflow-operator/docs/, etc. (no network)
+#     - "GitHub"             = clones from github.com/stackabletech/* into ./cache/
+#                              (pass ANTORAFLAGS=--fetch to update cached repos)
+#
+#   Documentation repo versions:
+#     - "working tree only"               = only your current checkout (incl. uncommitted changes)
+#     - "working tree + release branches" = current checkout plus release-25.11, release-25.7, etc.
+#
+#                        | operator docs from    | documentation versions
+#   ---------------------+-----------------------+-------------------------------
+#   build-truly-local    | local sibling dirs    | working tree only
+#   build-only-dev       | GitHub (main only)    | working tree only
+#   build-local          | GitHub (main only)    | working tree + release branches
+#   build-prod           | GitHub (all branches) | working tree + release branches
+#
+
+# Operator docs from local sibling dirs, working tree only. No network needed.
+# Assumes all operator repos are checked out as sibling directories (e.g. ../airflow-operator/).
+# Useful when you're working on a change in an operator and want to see your documentation changes rendered
 build-truly-local: build-ui
-	node_modules/.bin/antora generate truly-local-playbook.yml
+	node_modules/.bin/antora generate truly-local-playbook.yml $(ANTORAFLAGS)
 
+# Operator docs from GitHub (main only), working tree + release branches.
+# Use ANTORAFLAGS=--fetch on first run or to update cached operator repos.
 build-local: build-ui
-	node_modules/.bin/antora generate local-antora-playbook.yml
+	node_modules/.bin/antora generate local-antora-playbook.yml $(ANTORAFLAGS)
 
+# Operator docs from GitHub (main only), working tree only.
+# Use ANTORAFLAGS=--fetch on first run or to update cached operator repos.
 build-only-dev: build-ui
-	node_modules/.bin/antora generate only-dev-antora-playbook.yml
+	node_modules/.bin/antora generate only-dev-antora-playbook.yml $(ANTORAFLAGS)
 
+# Full production build: all branches from all repos. Always fetches from remote.
 build-prod: build-ui
-	node_modules/.bin/antora generate antora-playbook.yml --fetch
+	node_modules/.bin/antora generate antora-playbook.yml --fetch $(ANTORAFLAGS)
 
 build-ui:
 	node_modules/.bin/gulp --cwd ui bundle
