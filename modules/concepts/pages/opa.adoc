@@ -100,8 +100,13 @@ See <<Further reading>> for links to specific product authorization documentatio
 Read more about the xref:opa:index.adoc[].
 Read more about product integration with OPA for these products:
 
-* xref:trino:usage-guide/security.adoc#_authorization[Trino]
-* xref:kafka:usage.adoc[Kafka]
+* xref:airflow:usage-guide/security.adoc#_open_policy_agent[Airflow]
 * xref:druid:usage-guide/security.adoc#authorization[Druid]
+* xref:hbase:usage-guide/security.adoc#_authorization[HBase]
+* xref:hdfs:usage-guide/security.adoc#_authorization[HDFS]
+* xref:kafka:usage-guide/security.adoc#authorization[Kafka]
+* xref:nifi:usage_guide/security.adoc#authorization-opa[NiFi]
+* xref:superset:usage-guide/security.adoc#_opa_role_mapping[Superset]
+* xref:trino:usage-guide/security.adoc#_authorization[Trino]
 
 You can also have a look at the xref:contributor:opa_configuration.adoc[implementation guidelines for OPA authorizers] or learn more about the xref:service_discovery.adoc[service discovery mechanism] used across the platform.
