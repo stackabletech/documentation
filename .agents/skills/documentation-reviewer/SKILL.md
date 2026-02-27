@@ -88,7 +88,7 @@ This is critical - documentation should remain accurate with minimal updates. Fl
 - Use semantic versioning references ("From v2.0 onwards" is better than "Currently")
 - Link to canonical/stable documentation URLs
 
-## 7. Audience Appropriateness
+### 7. Audience Appropriateness
 
 - Verify the technical depth matches the target audience
 - Flag unexplained concepts that the audience may not know
@@ -96,7 +96,7 @@ This is critical - documentation should remain accurate with minimal updates. Fl
 - Note if the tone is appropriate (e.g., formal for enterprise docs, friendly for open-source)
 - Check if examples are relevant to the audience's use cases
 
-## 8. Semantic Accuracy and Category Consistency
+### 8. Semantic Accuracy and Category Consistency
 
 Verify that the language used accurately reflects what is being described. This is especially critical for release notes, changelogs, and feature announcements where readers need to understand whether something is new, improved, or fixed.
 
