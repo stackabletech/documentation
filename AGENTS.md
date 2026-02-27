@@ -62,7 +62,7 @@ make clean       # removes build/ and cache/ directories
 make serve       # python3 HTTP server on port 8000 serving build/site/
 ```
 
-Then open http://localhost:8000.
+Then open `http://localhost:8000`.
 
 ## Quick Start (copy-paste)
 
@@ -113,7 +113,6 @@ After building, the generated HTML lives in `build/site/`:
 # Find operator pages:
 ls build/site/home/nightly/kafka/
 ```
-
 
 ## Common Issues
 
