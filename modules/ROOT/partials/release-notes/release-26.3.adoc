@@ -448,6 +448,22 @@ helm install --wait <PRODUCT>-operator oci://oci.stackable.tech/sdp-charts/<PROD
 [#known-issues-26_3_0]
 ==== Known issues
 
+* This release makes `zookeeper` the default metadata manager for Kafka 3.x clusters.
+  If you are running Kafka 3 with `kraft` as metadata manager already, you need to patch your existing Kafka custom resource to make this choice explicit after upgrading the SDP version.
+  The Kafka cluster will run in an error state until you patch it.
+  Patch your Kafka resource like this:
++
+--
+[source,console]
+----
+$ kubectl -n <namespace> \
+  patch kafkaclusters.kafka.stackable.tech <kafka-resource-name> \
+  --type merge -p '{"spec":{"clusterConfig":{"metadataManager":"kraft"}}}''
+----
+
+Replace `<namespace>` and `<kafka-resource-name>` as appropriate. +
+See https://github.com/stackabletech/kafka-operator/pull/933[kafka-operator#933].
+--
 * There is a https://github.com/kubernetes/kubernetes/issues/137409[known issue] with the feature gate https://github.com/kubernetes/kubernetes/pull/133153[MaxUnavailableStatefulSet] that is enabled by default as a beta feature in Kubernetes 1.35.
   This issue affects all SDP operators, especially the Trino operator. +
   To work around the issue there are two possibilities:
