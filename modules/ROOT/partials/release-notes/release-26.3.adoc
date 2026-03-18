@@ -223,6 +223,11 @@ Fixed in https://github.com/stackabletech/nifi-operator/pull/881[nifi-operator#8
   Previously this would lead to duplicate volume. With this release that duplication is removed.
   Fixed in https://github.com/stackabletech/spark-k8s-operator/pull/655[spark-k8s-operator#655].
 
+===== Apache ZooKeeper
+
+Previously running `zkCli` commands in the ZooKeeper image could fail due to https://issues.apache.org/jira/browse/ZOOKEEPER-4985[an upstream issue ZOOKEEPER-4985], this has now been fixed by setting the environment variable `ZOOCFGDIR`.
+Fixed in https://github.com/stackabletech/zookeeper-operator/pull/988[zookeeper-operator#988].
+
 
 ==== Supported versions
 
