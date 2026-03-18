@@ -102,6 +102,78 @@ These OpenShift versions are no longer supported:
 * `4.17`
 * `4.16`
 
+==== Upgrade from 25.11
+
+[TIP]
+====
+Please consult the following upgrade notes when upgrading from 25.11 to 26.3:
+
+* xref:opensearch:usage-guide/upgrade.adoc[OpenSearch upgrade guide]
+====
+
+===== Using stackablectl
+
+====== Upgrade with a single command
+
+Starting with stackablectl Release 1.0.0 the multiple consecutive commands described below can be shortened to just one command, which executes exactly those steps on its own.
+
+[source,console]
+----
+$ stackablectl release upgrade 26.3
+----
+
+====== Upgrade with multiple consecutive commands
+
+Uninstall the `25.11` release
+
+[source,console]
+----
+$ stackablectl release uninstall 25.11
+
+Uninstalled release '25.11'
+
+Use "stackablectl release list" to list available releases.
+# ...
+----
+
+Install the `26.3` release
+
+[source,console]
+----
+$ stackablectl release install 26.3
+
+Installed release '26.3'
+
+Use "stackablectl operator installed" to list installed operators.
+----
+
+===== Using Helm
+
+Use `helm list` to list the currently installed operators.
+
+You can use the following command to uninstall all operators that are part of the `25.11` release:
+
+[source,console]
+----
+$ helm uninstall airflow-operator <PRODUCT>-operator ...
+release "airflow-operator" uninstalled
+release "<PRODUCT>-operator" uninstalled
+...
+----
+
+Install the `26.3` release
+
+[NOTE]
+====
+`helm repo` subcommands are not supported for OCI registries.
+The operators are installed directly, without adding the Helm Chart repository first.
+====
+
+[source,console]
+----
+helm install --wait <PRODUCT>-operator oci://oci.stackable.tech/sdp-charts/<PRODUCT>-operator --version 26.3.0
+----
+
 [#known-issues-26_3_0]
 ==== Known issues
 
