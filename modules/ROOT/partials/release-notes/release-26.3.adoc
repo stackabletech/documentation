@@ -256,6 +256,25 @@ Fixed in https://github.com/stackabletech/commons-operator/pull/387[commons-oper
 *Breaking:* Users of the `EXPERIMENTAL_FILE_HEADER` and `EXPERIMENTAL_FILE_FOOTER` fields who rely on `AUTH_OID` from the `flask_appbuilder.const` import must switch to `AUTH_OAUTH`.
 Removed in https://github.com/stackabletech/airflow-operator/pull/737[airflow-operator#737].
 
+===== Stackable secret-operator
+
+*Breaking:* Removed support for ephemeral CSI volumes.
+This has been deprecated since secret-operator 0.4.0 because it doesn't support Pod stickiness.
+Ephemeral PersistentVolumes that use CSI are still supported and are the recommended way forward.
+
+[source,yaml]
+----
+# Replace this
+volumes:
+  - csi: # ...
+
+# with the new recommended syntax
+volumes:
+  - ephemeral:
+      volumeClaimTemplate: # ...
+----
+
+Removed in https://github.com/stackabletech/secret-operator/issues/481[secret-operator#481].
 
 ==== Supported versions
 
