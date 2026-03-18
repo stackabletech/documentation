@@ -71,6 +71,30 @@ Implemented in https://github.com/stackabletech/spark-k8s-operator/pull/647[spar
   See the xref:opa:usage-guide/configuration-environment-overrides.adoc#_cli_overrides[OPA operator documentation] for further details and examples.
   Implemented in https://github.com/stackabletech/opa-operator/issues/781[opa-operator#781].
 
+===== OpenSearch
+
+* The operator now supports the configuration of TLS for the server (optional) and internal communication (mandatory) using SecretClasses.
+  See the xref:opensearch:usage-guide/security.adoc#_tls[OpenSearch security usage guide] for more details.
+* The operator now supports adding secrets to the OpenSearch keystore, e.g. S3 credentials for creating and restoring backups.
+  See the xref:opensearch:usage-guide/keystore.adoc[keystore usage guide] for more details.
+  Implemented in https://github.com/stackabletech/opensearch-operator/pull/76[opensearch-operator#76].
+* A new service discovery mechanism has been introduced, enabling OpenSearch clients to be easily configured.
+  Users can specify whether a role group should be exposed and choose the corresponding ListenerClass.
+  The connection parameters for accessing the OpenSearch cluster are provided in a discovery ConfigMap.
+  Detailed information can be found at the xref:opensearch:reference/discovery.adoc[OpenSearch discovery documentation page].
+  See https://github.com/stackabletech/opensearch-operator/issues/52[opensearch-operator#52].
+* The OpenSearch security plugin is now configurable within the OpenSearchCluster specification.
+  Users can choose for each configuration file whether to initialize it solely with the provided values and manage it through the API or to allow the operator to take over management.
++
+--
+[IMPORTANT]
+====
+It is essential to remove both `podOverrides` and `configOverrides` related to security settings, such as `plugins.security.allow_default_init_securityindex`.
+====
+
+See https://github.com/stackabletech/opensearch-operator/issues/43[opensearch-operator#43].
+--
+
 
 ==== Supported versions
 
