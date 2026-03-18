@@ -249,6 +249,13 @@ For that the commons-operator now needs the RBAC permission to `create` and `pat
 The webhook can be disabled using `--disable-restarter-mutating-webhook` or by setting the `DISABLE_RESTARTER_MUTATING_WEBHOOK` environment variable, which will revert the fixed behaviour.
 Fixed in https://github.com/stackabletech/commons-operator/pull/387[commons-operator#387].
 
+==== Platform removals
+
+===== Apache Airflow
+
+*Breaking:* Users of the `EXPERIMENTAL_FILE_HEADER` and `EXPERIMENTAL_FILE_FOOTER` fields who rely on `AUTH_OID` from the `flask_appbuilder.const` import must switch to `AUTH_OAUTH`.
+Removed in https://github.com/stackabletech/airflow-operator/pull/737[airflow-operator#737].
+
 
 ==== Supported versions
 
