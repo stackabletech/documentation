@@ -118,6 +118,17 @@ Using this annotation enables the following use-cases:
 See the xref:secret-operator:volume.adoc#_secrets_stackable_techprovision_parts[volume documentation page] for more details.
 Implemented in https://github.com/stackabletech/secret-operator/pull/676[secret-operator#676].
 
+==== Platform improvements
+
+===== General
+
+====== Miscellaneous
+
+* All operator images have been updated from UBI9 to UBI10 base images.
+  See https://github.com/stackabletech/docker-images/issues/1349[docker-images#1349].
+* All products now have the xref:commons-operator:restarter.adoc[restart-controller] enabled, so that the Pods are automatically restarted on config changes (in ConfigMaps and Secrets).
+  See https://github.com/stackabletech/issues/issues/816[issues#816].
+
 
 ==== Supported versions
 
