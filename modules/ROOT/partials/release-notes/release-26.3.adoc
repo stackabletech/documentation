@@ -166,6 +166,12 @@ Spark application jobs can now have pod/node affinities.
 Previously only the application driver and executors had a dedicated field for this purpose.
 See https://github.com/stackabletech/spark-k8s-operator/issues/639[spark-k8s-operator#639].
 
+===== Open Policy Agent
+
+The Entra User Info Fetcher (UIF) backend has been stabilized with the introduction of OpaCluster v1alpha2.
+Conversion between v1alpha1 and v1alpha2 is handled automatically by default.
+Implemented in https://github.com/stackabletech/opa-operator/pull/801[opa-operator#801].
+
 
 ==== Supported versions
 
