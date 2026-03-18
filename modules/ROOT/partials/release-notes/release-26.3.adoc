@@ -204,6 +204,11 @@ Fixed in https://github.com/stackabletech/issues/issues/821[issues#821].
   The documentation has been xref:airflow:troubleshooting/index.adoc#_setting_api_workers[corrected] and clarified to reflect this.
   Fixed in https://github.com/stackabletech/airflow-operator/pull/727[airflow-operator#727].
 
+===== Apache HBase
+
+Add the `hbase.rest.endpoint` field to the restserver rolegroup ConfigMap for advertising the REST servers.
+Fixed in https://github.com/stackabletech/hbase-operator/pull/716[hbase-operator#716].
+
 
 ==== Supported versions
 
