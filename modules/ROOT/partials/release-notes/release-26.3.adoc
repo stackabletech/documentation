@@ -95,6 +95,15 @@ It is essential to remove both `podOverrides` and `configOverrides` related to s
 See https://github.com/stackabletech/opensearch-operator/issues/43[opensearch-operator#43].
 --
 
+===== Stackable listener-operator
+
+* The listener-operator now supports configuring `serviceOverrides` on ListenerClasses similar to `podOverrides` on stacklets.
+  This enables users to make arbitrary modifications to the created Services.
+  Implemented in https://github.com/stackabletech/listener-operator/pull/365[listener-operator#365].
+* The listener-operator now deploys the selected ListenerClass preset on its own instead of relying on Helm.
+  This is done to ensure the ListenerClasses are created after the operator deployed its own CRD.
+  Implemented in https://github.com/stackabletech/listener-operator/pull/369[listener-operator#369].
+
 
 ==== Supported versions
 
