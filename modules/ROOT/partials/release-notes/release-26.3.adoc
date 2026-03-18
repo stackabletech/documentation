@@ -104,6 +104,20 @@ See https://github.com/stackabletech/opensearch-operator/issues/43[opensearch-op
   This is done to ensure the ListenerClasses are created after the operator deployed its own CRD.
   Implemented in https://github.com/stackabletech/listener-operator/pull/369[listener-operator#369].
 
+===== Stackable secret-operator
+
+The secret-operator now supports the new `secrets.stackable.tech/provision-parts` annotation on the secret volume.
+This annotation allows configuring which parts of the secret material should be provisioned.
+Using this annotation enables the following use-cases:
+
+* Use the `autoTls` backend, but only provision the `ca.crt`/`truststore.p12` for the consumer.
+* Use the `kerberosKeytab` backend, but only provision the `krb5.conf` for the consumer.
+* Use the `k8sSearch` backend to select Secrets which contain public data only and support parsing the partial set of files.
+  Using this annotation disables the strict parsing of files when an explicit format is requested.
+
+See the xref:secret-operator:volume.adoc#_secrets_stackable_techprovision_parts[volume documentation page] for more details.
+Implemented in https://github.com/stackabletech/secret-operator/pull/676[secret-operator#676].
+
 
 ==== Supported versions
 
