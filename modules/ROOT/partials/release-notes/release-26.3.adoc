@@ -9,6 +9,12 @@ Released on 2026-03-16.
 
 ===== Kubernetes versions
 
+[WARNING]
+====
+There currently is one known issue when running on Kubernetes 1.35.
+See the link:#known-issues-26_3_0[known issues] section below for more details.
+====
+
 This release supports the following Kubernetes versions:
 
 * `1.35`
@@ -34,3 +40,12 @@ These OpenShift versions are no longer supported:
 
 * `4.17`
 * `4.16`
+
+[#known-issues-26_3_0]
+==== Known issues
+
+* There is a https://github.com/kubernetes/kubernetes/issues/137409[known issue] with the feature gate https://github.com/kubernetes/kubernetes/pull/133153[MaxUnavailableStatefulSet] that is enabled by default as a beta feature in Kubernetes 1.35.
+  This issue affects all SDP operators, especially the Trino operator. +
+  To work around the issue there are two possibilities:
+  . Disable this feature gate in your Kubenetes 1.35 clusters.
+  . Ensure that your dev-ops pipelines create product custom resources (e.g. TrinoCluster, SparkApplication, etc.) last, after any referenced custom resources such as TrinoCatalog, S3Connection and so on.
