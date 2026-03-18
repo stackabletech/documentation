@@ -193,6 +193,17 @@ Previously, log entries could be sent multiple times to the Vector aggregator if
 This issue has now been resolved by persisting the Vector state across container restarts.
 Fixed in https://github.com/stackabletech/issues/issues/821[issues#821].
 
+===== Apache Airflow
+
+* Previously, Celery workers in Airflow 3 could run into the problem of not executing tasks anymore after a Redis re-connect.
+  Now, this issue is fixed by bumping the celery Python package.
+  Fixed in https://github.com/stackabletech/docker-images/pull/1343[docker-images#1343].
+* Previously, the operator adopted the default of 4 API workers per webserver.
+  This results in higher resource usage although it is not required for every situation.
+  Now, the default has been set to 1 (it can easily be changed by adding either more webserver replicas or an override).
+  The documentation has been xref:airflow:troubleshooting/index.adoc#_setting_api_workers[corrected] and clarified to reflect this.
+  Fixed in https://github.com/stackabletech/airflow-operator/pull/727[airflow-operator#727].
+
 
 ==== Supported versions
 
