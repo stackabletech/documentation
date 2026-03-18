@@ -214,6 +214,15 @@ Fixed in https://github.com/stackabletech/hbase-operator/pull/716[hbase-operator
 The operator now utilizes the `.spec.clusterConfig.authorization.opa.package` field instead of hard-coding the OPA package name to `nifi`.
 Fixed in https://github.com/stackabletech/nifi-operator/pull/881[nifi-operator#881].
 
+===== Apache Spark
+
+* Driver pods are now garbage collected when the spark application is finished.
+  Previously, driver pods created by the submit job would be left hanging even after the job has been deleted.
+  Fixed in https://github.com/stackabletech/spark-k8s-operator/pull/649[spark-k8s-operator#649].
+* Fix application pod specifications when both the history server and the S3 connection reference the same SecretClass object.
+  Previously this would lead to duplicate volume. With this release that duplication is removed.
+  Fixed in https://github.com/stackabletech/spark-k8s-operator/pull/655[spark-k8s-operator#655].
+
 
 ==== Supported versions
 
