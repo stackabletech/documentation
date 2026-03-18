@@ -36,6 +36,12 @@ The Stackable operator for Apache Hive now supports delegating authorization req
 See the xref:hive:usage-guide/security.adoc#_open_policy_agent_opa[usage guide] for more information.
 Implemented in https://github.com/stackabletech/hive-operator/issues/388[hive-operator#388].
 
+===== Apache Kafka
+
+Users of the Stackable operator for Apache Kafka can now migrate existing 3.9.1 clusters from Apache ZooKeeper to the built in Kraft metadata manager.
+xref:kafka:usage-guide/kraft-controller.adoc#_kraft_migration_guide[This guide] describes the necessary steps to perform the migration.
+Implemented in https://github.com/stackabletech/kafka-operator/pull/923[kafka-operator#923].
+
 
 ==== Supported versions
 
