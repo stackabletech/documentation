@@ -160,6 +160,12 @@ Statically provided user/group information and rough-granular permissions are ho
 The Nifi images have been patched for versions 2.4.0 and 2.6.0 to implement this.
 See https://github.com/stackabletech/nifi-operator/issues/862[nifi-operator#862].
 
+===== Apache Spark
+
+Spark application jobs can now have pod/node affinities.
+Previously only the application driver and executors had a dedicated field for this purpose.
+See https://github.com/stackabletech/spark-k8s-operator/issues/639[spark-k8s-operator#639].
+
 
 ==== Supported versions
 
