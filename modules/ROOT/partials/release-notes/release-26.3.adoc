@@ -228,6 +228,13 @@ Fixed in https://github.com/stackabletech/nifi-operator/pull/881[nifi-operator#8
 Previously running `zkCli` commands in the ZooKeeper image could fail due to https://issues.apache.org/jira/browse/ZOOKEEPER-4985[an upstream issue ZOOKEEPER-4985], this has now been fixed by setting the environment variable `ZOOCFGDIR`.
 Fixed in https://github.com/stackabletech/zookeeper-operator/pull/988[zookeeper-operator#988].
 
+===== OpenSearch
+
+Previously, the log file rollover was non-functional.
+When the log file reached a size of 5 MB, an error message repeatedly appeared in the console, indicating that the log file could not be renamed.
+With this release, we have resolved the permissions issue, ensuring that the log file rollover works correctly.
+Fixed in https://github.com/stackabletech/opensearch-operator/issues/106[opensearch-operator#106].
+
 
 ==== Supported versions
 
