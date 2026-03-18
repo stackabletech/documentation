@@ -7,6 +7,67 @@ Released on 2026-03-16.
 
 ==== Supported versions
 
+===== Product versions
+
+As with previous SDP releases, many product images have been updated to their latest versions.
+Refer to the xref:operators:supported_versions.adoc[supported versions] documentation for a complete overview including LTS versions or deprecations.
+
+====== New versions
+
+The following new product versions are now supported:
+
+* Apache Airflow: https://github.com/stackabletech/docker-images/issues/1416[3.1.6]
+* Apache Druid: https://github.com/stackabletech/docker-images/issues/1371[35.0.1]
+* Apache HBase: https://github.com/stackabletech/docker-images/issues/1372[2.6.4 (LTS)]
+* Apache Hive: https://github.com/stackabletech/docker-images/issues/1375[4.2.0]
+* Apache Kafka: https://github.com/stackabletech/docker-images/issues/1376[4.1.1 (experimental)]
+** Note that Kafka 3.9.1 is the last version that supports Apache ZooKeeper as the metadata manager.
+* Apache NiFi: https://github.com/stackabletech/docker-images/issues/1377[2.7.2]
+** Note that this version supports Iceberg, but only with S3 and the Iceberg REST catalog.
+   Hive metastore or HDFS are not supported.
+   Read the https://docs.stackable.tech/home/nightly/nifi/usage_guide/writing-to-iceberg-tables/[official NiFi Iceberg documentation] for details.
+* Apache Spark: https://github.com/stackabletech/docker-images/issues/1381[3.5.8 (LTS)], https://github.com/stackabletech/docker-images/issues/1381[4.1.1]
+** Note that there are no Apache Iceberg and Delta runtime libraries available for 4.1.1 yet.
+* Apache Superset: https://github.com/stackabletech/docker-images/issues/1382[6.0.0]
+** OpenStreetView has been promoted as the new default for the Deck.gl visualization which doesn't require an API key.
+** `AUTH_OID` will not longer be automatically imported in the superset_config.py, and is no longer available from Superset 6.0.0.
+   If you are using Superset < 6.0.0 and still require `AUTH_OID`, you can manually import it by following the xref:superset:usage-guide/configuration-environment-overrides.adoc#_configuration_properties[documented instructions].
+** Also consult the https://github.com/apache/superset/blob/6.0.0/UPDATING.md[official update notes].
+* Open Policy Agent: https://github.com/stackabletech/docker-images/issues/1378[1.12.3]
+* OpenSearch: https://github.com/stackabletech/docker-images/issues/1379[3.4.0]
+* Trino: https://github.com/stackabletech/docker-images/issues/1383[479]
+** The storage-connector is based on Trino 477 because there was no later release.
+* Vector: https://github.com/stackabletech/docker-images/issues/1369[0.52.0]
+
+====== Deprecated versions
+
+The following product versions are deprecated and will be removed in a later release:
+
+* Apache Druid: https://github.com/stackabletech/docker-images/issues/1371[34.0.0]
+* Apache HBase: https://github.com/stackabletech/docker-images/issues/1372[2.6.3]
+* Apache Hive: https://github.com/stackabletech/docker-images/issues/1375[4.1.0]
+* Apache Spark: https://github.com/stackabletech/docker-images/issues/1381[3.5.7], https://github.com/stackabletech/docker-images/issues/1381[4.0.1]
+* Open Policy Agent: https://github.com/stackabletech/docker-images/issues/1378[1.8.0]
+
+====== Removed versions
+
+The following product versions are no longer supported.
+These images for released product versions remain available https://oci.stackable.tech/[here,window=_blank].
+Information on how to browse the registry can be found xref:contributor:project-overview.adoc#docker-images[here,window=_blank].
+
+* Apache Airflow: https://github.com/stackabletech/docker-images/issues/1370[2.10.5], https://github.com/stackabletech/docker-images/issues/1370[3.0.1]
+* Apache Druid: https://github.com/stackabletech/docker-images/issues/1371[33.0.0]
+* Apache HBase: https://github.com/stackabletech/docker-images/issues/1372[2.6.2]
+* Apache Hadoop: https://github.com/stackabletech/docker-images/issues/1374[3.4.1]
+* Apache Kafka: https://github.com/stackabletech/docker-images/issues/1376[3.7.2], https://github.com/stackabletech/docker-images/issues/1376[4.1.0]
+* Apache NiFi: https://github.com/stackabletech/docker-images/issues/1377[1.27.0], https://github.com/stackabletech/docker-images/issues/1377[2.4.0]
+* Apache Spark: https://github.com/stackabletech/docker-images/issues/1381[3.5.6]
+* Apache Superset: https://github.com/stackabletech/docker-images/issues/1382[4.0.2], https://github.com/stackabletech/docker-images/issues/1382[4.1.2]
+* Apache ZooKeeper: https://github.com/stackabletech/docker-images/issues/1384[3.9.3]
+* Open Policy Agent: https://github.com/stackabletech/docker-images/issues/1378[1.4.2]
+* Trino: https://github.com/stackabletech/docker-images/issues/1383[451], https://github.com/stackabletech/docker-images/issues/1383[476]
+* Vector: https://github.com/stackabletech/docker-images/issues/1369[0.49.0]
+
 ===== Kubernetes versions
 
 [WARNING]
