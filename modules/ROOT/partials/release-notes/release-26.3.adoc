@@ -30,6 +30,13 @@ It should be noted that conversions in the opposite direction - from v1alpha2 to
 See the xref:airflow:usage-guide/mounting-dags.adoc#_via_git_sync[DAG mounting usage guide] for more details.
 Implemented in https://github.com/stackabletech/airflow-operator/issues/382[airflow-operator#382].
 
+===== Apache Hive
+
+The Stackable operator for Apache Hive now supports delegating authorization requests to the Open Policy Agent (OPA) using a custom https://github.com/boschglobal/hive-metastore-opa-authorizer[hive-metastore-opa-authorizer] plugin.
+See the xref:hive:usage-guide/security.adoc#_open_policy_agent_opa[usage guide] for more information.
+Implemented in https://github.com/stackabletech/hive-operator/issues/388[hive-operator#388].
+
+
 ==== Supported versions
 
 ===== Product versions
