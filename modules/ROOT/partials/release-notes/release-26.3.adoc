@@ -42,6 +42,25 @@ Users of the Stackable operator for Apache Kafka can now migrate existing 3.9.1 
 xref:kafka:usage-guide/kraft-controller.adoc#_kraft_migration_guide[This guide] describes the necessary steps to perform the migration.
 Implemented in https://github.com/stackabletech/kafka-operator/pull/923[kafka-operator#923].
 
+===== Apache Spark
+
+* Starting with this release, Spark applications will not be resubmitted automatically in case of failure.
+  Users can restore the previous behavior by setting the new `spec.job.retryOnFailureCount` property to a non negative value. +
+  In addition, small improvements have been made to clean up resources created by Spark applications.
+** application driver pods are now deleted as soon as they reach a terminal state.
+** application executor pods are now deleted as soon as possible in case of driver or submit failure.
+
++
+Implemented in https://github.com/stackabletech/spark-k8s-operator/pull/647[spark-k8s-operator#647].
+* This release adds first class support for S3 buckets and connections to Spark Connect servers.
+  Users can give clients access to all S3 buckets or a selected list.
+  For more details, see the xref:spark-k8s:usage-guide/spark-connect.adoc[Spark Connect usage guide].
+  Implemented in https://github.com/stackabletech/spark-k8s-operator/pull/652[spark-k8s-operator#652].
+* This release introduces Spark Application Templates.
+  These allow application authors to group frequently used application configuration in a central place that is referenced from application objects.
+  For more details on this new operator feature see the xref:spark-k8s:usage-guide/app_templates.adoc[template usage guide].
+  Implemented in https://github.com/stackabletech/spark-k8s-operator/pull/660[spark-k8s-operator#660].
+
 
 ==== Supported versions
 
