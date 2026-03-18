@@ -61,6 +61,16 @@ Implemented in https://github.com/stackabletech/spark-k8s-operator/pull/647[spar
   For more details on this new operator feature see the xref:spark-k8s:usage-guide/app_templates.adoc[template usage guide].
   Implemented in https://github.com/stackabletech/spark-k8s-operator/pull/660[spark-k8s-operator#660].
 
+===== Open Policy Agent
+
+* The User Info Fetcher (UIF) now has experimental support for OpenLDAP as a backend.
+  See the xref:opa:usage-guide/user-info-fetcher.adoc#backend-openldap[documentation] of the UIF for details on how to configure it.
+  Implemented in https://github.com/stackabletech/opa-operator/issues/523[opa-operator#523].
+* The OPA operator now supports overriding command-line arguments passed to the OPA binary via the cliOverrides property in the CRD.
+  This allows you to customize OPA's behavior by passing additional or overriding existing command-line flags.
+  See the xref:opa:usage-guide/configuration-environment-overrides.adoc#_cli_overrides[OPA operator documentation] for further details and examples.
+  Implemented in https://github.com/stackabletech/opa-operator/issues/781[opa-operator#781].
+
 
 ==== Supported versions
 
