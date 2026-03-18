@@ -240,6 +240,15 @@ Fixed in https://github.com/stackabletech/opensearch-operator/issues/106[opensea
 The `spec.connector.iceberg.metastore` field in TrinoCatalog is now optional, as Iceberg also supports other catalogs, such as a REST catalog, which (currently) can only be added using configOverrides.
 Fixed in https://github.com/stackabletech/trino-operator/pull/841[trino-operator#841].
 
+===== Stackable commons-operator
+
+*BREAKING:* Prevent an unnecessary restart of Pod 0 of the StatefulSet when the StatefulSet is initially created.
+This was caused by commons-operator needing to update the StatefulSet immediately after creation, at which point Pod 0 was already created.
+The problem is fixed by utilizing an admission webhook, which is able to mutate the StatefulSet during its creation, so before Pod 0 is created.
+For that the commons-operator now needs the RBAC permission to `create` and `patch` `mutatingwebhookconfigurations`, which the Helm Chart automatically adds.
+The webhook can be disabled using `--disable-restarter-mutating-webhook` or by setting the `DISABLE_RESTARTER_MUTATING_WEBHOOK` environment variable, which will revert the fixed behaviour.
+Fixed in https://github.com/stackabletech/commons-operator/pull/387[commons-operator#387].
+
 
 ==== Supported versions
 
