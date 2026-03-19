@@ -45,7 +45,12 @@ The following components of the SDP contain breaking changes for this release:
 
 Airflow can now use gitsync to authenticate against a repository using SSH keys as well as basic auth, which was previously the only option.
 The Airflow operator also now has the ability to convert certain changes between CRD versions: in the case of this change, the operator can automatically convert the field `credentialsSecret` to `credentials: basicAuthSecretName` so that this change is non-breaking.
+
+[IMPORTANT]
+====
 It should be noted that conversions in the opposite direction - from v1alpha2 to v1alpha1 - are not possible if the v1alpha2 resource definition refers to the new field.
+====
+
 See the xref:airflow:usage-guide/mounting-dags.adoc#_via_git_sync[DAG mounting usage guide] for more details.
 Implemented in https://github.com/stackabletech/airflow-operator/issues/382[airflow-operator#382].
 
@@ -70,9 +75,9 @@ Implemented in https://github.com/stackabletech/kafka-operator/pull/923[kafka-op
 
 * Starting with this release, Spark applications will not be resubmitted automatically in case of failure.
   Users can restore the previous behavior by setting the new `spec.job.retryOnFailureCount` property to a non negative value. +
-  In addition, small improvements have been made to clean up resources created by Spark applications.
-** application driver pods are now deleted as soon as they reach a terminal state.
-** application executor pods are now deleted as soon as possible in case of driver or submit failure.
+  In addition, small improvements have been made to clean up resources created by Spark applications:
+** Application driver pods are now deleted as soon as they reach a terminal state.
+** Application executor pods are now deleted as soon as possible in case of driver or submit failure.
 
 +
 Implemented in https://github.com/stackabletech/spark-k8s-operator/pull/647[spark-k8s-operator#647].
@@ -222,12 +227,16 @@ The cluster definition must be extended by an authorization part like shown abov
 This means that the bind user now can differ from the `initialAdminUser`.
 ====
 
-See the xref:nifi:usage_guide/security.adoc#authorization[security usage guide] for more information.
+See the xref:nifi:usage_guide/security.adoc#authorization[security usage guide] for more information. Implemented in https://github.com/stackabletech/nifi-operator/pull/884[nifi-operator#884].
 --
 * There are cases where customers may wish to provide static authorization files (users.xml, authorizer.xml, authorizations.xml) instead of fetching the data dynamically (for instance, when collecting user and group data from AD/Entra).
-  Statically provided user/group information and rough-granular permissions are honoured automatically (as long as the UUIDs match those available in the backend), but for the initial process group this has to be done by a callback mechanism so that the authorizations can be updated after the flow has been registered.
-  The Nifi images have been patched for versions 2.4.0 and 2.6.0 to support this.
-  Implemented in https://github.com/stackabletech/nifi-operator/issues/862[nifi-operator#862].
++
+--
+Statically provided user/group information and rough-granular permissions are honoured automatically (as long as the UUIDs match those available in the backend), but for the initial process group this has to be done by a callback mechanism so that the authorizations can be updated after the flow has been registered.
+
+The Nifi images have been patched for versions 2.4.0 and 2.6.0 to support this.
+Implemented in https://github.com/stackabletech/nifi-operator/issues/862[nifi-operator#862].
+--
 
 ===== Apache Spark
 
@@ -338,12 +347,18 @@ Fixed in https://github.com/stackabletech/opensearch-operator/issues/106[opensea
 [#commons-fixes-26_3_0]
 ===== Stackable commons-operator
 
-*BREAKING:* Prevent an unnecessary restart of Pod 0 of the StatefulSet when the StatefulSet is initially created.
-This was caused by commons-operator needing to update the StatefulSet immediately after creation, at which point Pod 0 was already created.
-The problem is fixed by utilizing an admission webhook, which is able to mutate the StatefulSet during its creation, so before Pod 0 is created.
-For that the commons-operator now needs the RBAC permission to `create` and `patch` `mutatingwebhookconfigurations`, which the Helm Chart automatically adds.
-The webhook can be disabled using `--disable-restarter-mutating-webhook` or by setting the `DISABLE_RESTARTER_MUTATING_WEBHOOK` environment variable, which will revert the fixed behaviour.
+*BREAKING:* Prevent an unnecessary restart of Pod 0 of the StatefulSet when the STS is initially created.
+This was caused by commons-operator needing to update the STS immediately after creation, at which point Pod 0 was already created.
+The problem is now fixed by utilizing an admission webhook, which is able to mutate the StatefulSet during its creation - before Pod 0 is created.
 Fixed in https://github.com/stackabletech/commons-operator/pull/387[commons-operator#387].
+
+[WARNING]
+====
+It should be noted that the commons-operator now needs the RBAC permission to `create` and `patch` `mutatingwebhookconfigurations`.
+Operator installations via the Helm Chart automatically add these new permissions.
+====
+
+The webhook can be disabled using `--disable-restarter-mutating-webhook` or by setting the `DISABLE_RESTARTER_MUTATING_WEBHOOK` environment variable, which will however revert the fixed behaviour.
 
 ==== Platform removals
 
