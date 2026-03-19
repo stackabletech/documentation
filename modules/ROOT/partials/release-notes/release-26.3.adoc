@@ -30,7 +30,7 @@ The following components of the SDP contain breaking changes for this release:
 
 ====== Miscellaneous
 
-* In 26.3.0 we added new demo that shows Retrieval Augmented Generation (RAG) with OpenSearch as the vector store.
+* In 26.3.0 we added a new demo that shows Retrieval Augmented Generation (RAG) with OpenSearch as the vector store.
   Consult the xref:demos:opensearch-rag.adoc[demo documentation page] for more details.
   See https://github.com/stackabletech/demos/pull/354[demos#354].
 * All remaining operators now maintain their own CRD(s) instead of relying on Helm as a deployment mechanism.
