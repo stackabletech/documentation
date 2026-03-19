@@ -122,6 +122,11 @@ Implemented in https://github.com/stackabletech/secret-operator/pull/676[secret-
 
 ===== General
 
+====== Vulnerabilities
+
+114 CVEs were fixed in the Stackable product images.
+This includes 9 critical and 40 high-severity CVEs.
+
 ====== Miscellaneous
 
 * All operator images have been updated from UBI9 to UBI10 base images.
