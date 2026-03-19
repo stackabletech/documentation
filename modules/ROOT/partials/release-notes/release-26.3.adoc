@@ -30,6 +30,11 @@ It should be noted that conversions in the opposite direction - from v1alpha2 to
 See the xref:airflow:usage-guide/mounting-dags.adoc#_via_git_sync[DAG mounting usage guide] for more details.
 Implemented in https://github.com/stackabletech/airflow-operator/issues/382[airflow-operator#382].
 
+===== Apache HBase
+
+Add the `hbase.rest.endpoint` field to the restserver rolegroup ConfigMap for advertising the REST servers.
+Implemented in https://github.com/stackabletech/hbase-operator/pull/708[hbase-operator#708] and https://github.com/stackabletech/hbase-operator/pull/716[hbase-operator#716].
+
 ===== Apache Hive
 
 The Stackable operator for Apache Hive now supports delegating authorization requests to the Open Policy Agent (OPA) using a custom https://github.com/boschglobal/hive-metastore-opa-authorizer[hive-metastore-opa-authorizer] plugin.
@@ -209,10 +214,12 @@ Fixed in https://github.com/stackabletech/issues/issues/821[issues#821].
   The documentation has been xref:airflow:troubleshooting/index.adoc#_setting_api_workers[corrected] and clarified to reflect this.
   Fixed in https://github.com/stackabletech/airflow-operator/pull/727[airflow-operator#727].
 
-===== Apache HBase
+[#druid-fixes-26_3_0]
+===== Apache Druid
 
-Add the `hbase.rest.endpoint` field to the restserver rolegroup ConfigMap for advertising the REST servers.
-Fixed in https://github.com/stackabletech/hbase-operator/pull/716[hbase-operator#716].
+*Breaking:* Starting with Druid 35, the router requires higher CPU resources.
+CPU request and limit have been bumped from `100m` and `400m` to `300m` and `1200m` respectively.
+Fixed in https://github.com/stackabletech/druid-operator/pull/786[druid-operator#786].
 
 ===== Apache NiFi
 
