@@ -277,6 +277,12 @@ Previously, log entries could be sent multiple times to the Vector aggregator if
 This issue has now been resolved by persisting the Vector state across container restarts.
 Fixed in https://github.com/stackabletech/issues/issues/821[issues#821].
 
+====== Miscellaneous
+
+All operators now correctly and gracefully shutdown all concurrent tasks by forwarding the SIGTERM signal.
+Most operators already correctly handled this before, but this is now done consistently across the board.
+Tracked in https://github.com/stackabletech/issues/issues/803[issues#803].
+
 ===== Apache Airflow
 
 * Previously, Celery workers in Airflow 3 could run into the problem of not executing tasks anymore after a Redis re-connect.
