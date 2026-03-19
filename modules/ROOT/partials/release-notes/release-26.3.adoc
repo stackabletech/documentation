@@ -153,6 +153,11 @@ This includes 9 critical and 40 high-severity CVEs.
 The hbase-operator-tools have been bumped to 1.3.0 and https://issues.apache.org/jira/browse/HBASE-29797[HBASE-29797] has been backported for all supported HBase images.
 See https://github.com/stackabletech/docker-images/issues/1417[docker-images#1417].
 
+===== Apache Hadoop
+
+The operator now adds a warning and exit condition to the `format-namenodes` container script to check for corrupted data after formatting.
+Implemented in https://github.com/stackabletech/hdfs-operator/pull/751[hdfs-operator#751].
+
 ===== Apache Kafka
 
 Previously, Kafka supported OPA in non-TLS mode.
@@ -165,7 +170,39 @@ It should be noted that this is not yet supported by the Kafka Controller (avail
 
 ===== Apache NiFi
 
-There are cases where customers may wish to provide static authorization files (users.xml, authorizer.xml, authorizations.xml) instead of fetching the data dynamically (for instance, when collecting user and group data from AD/Entra).
+* *Breaking:* The authorization configuration for the operator has been adjusted to more closely match and represent the Apache NiFi interfaces and implementations.
+  The `OpaAuthorizer`, `SingleUserAuthorizer` and `StandardManagedAuthorizer` can now be explicitly set.
+  This allows to set an `initialAdminUser` for file-based authorization.
++
+--
+[source,yaml]
+----
+spec:
+  clusterConfig:
+    authorization:
+      opa: { .. } # existing
+      # OR
+      singleUser: {} # new
+      # OR
+      standard: # new
+        accessPolicyProvider:
+          fileBased:
+            initialAdminUser: CN=admin,OU=admin-group,DC=example,DC=org
+----
+
+If not provided this defaults to the `SingleUserAuthorizer`.
+
+[WARNING]
+====
+Users authenticating via LDAP that do not use the `OpaAuthorizer` (but relied on the operator-generated file-based authorization), now have to explicitly set the `StandardManagedAuthorizer` and the `initialAdminUser`.
+The cluster definition must be extended by an authorization part like shown above.
+
+This means that the bind user now can differ from the `initialAdminUser`.
+====
+
+See the xref:nifi:usage_guide/security.adoc#authorization[security usage guide] for more information.
+--
+* There are cases where customers may wish to provide static authorization files (users.xml, authorizer.xml, authorizations.xml) instead of fetching the data dynamically (for instance, when collecting user and group data from AD/Entra).
 Statically provided user/group information and rough-granular permissions are honoured automatically (as long as the UUIDs match those available in the backend), but for the initial process group this has to be done by a callback mechanism so that the authorizations can be updated after the flow has been registered.
 The Nifi images have been patched for versions 2.4.0 and 2.6.0 to implement this.
 See https://github.com/stackabletech/nifi-operator/issues/862[nifi-operator#862].
@@ -178,7 +215,10 @@ See https://github.com/stackabletech/spark-k8s-operator/issues/639[spark-k8s-ope
 
 ===== Open Policy Agent
 
-The Entra User Info Fetcher (UIF) backend has been stabilized with the introduction of OpaCluster v1alpha2.
+* Previously, when POST-ing the status following the successful loading of a bundle, a warning was written to the logs because of a superfluous service name.
+  This has now been removed.
+  Implemented in https://github.com/stackabletech/opa-operator/issues/798[opa-operator#798].
+* The Entra User Info Fetcher (UIF) backend has been stabilized with the introduction of OpaCluster v1alpha2.
 Conversion between v1alpha1 and v1alpha2 is handled automatically by default.
 Implemented in https://github.com/stackabletech/opa-operator/pull/801[opa-operator#801].
 
@@ -221,9 +261,17 @@ Fixed in https://github.com/stackabletech/issues/issues/821[issues#821].
 CPU request and limit have been bumped from `100m` and `400m` to `300m` and `1200m` respectively.
 Fixed in https://github.com/stackabletech/druid-operator/pull/786[druid-operator#786].
 
+===== Apache Hadoop
+
+Previously, some parts of the shell output of the init containers were not logged properly and therefore not aggregated.
+Now, these log messages are captured correctly.
+Fixed in https://github.com/stackabletech/hdfs-operator/pull/746[hdfs-operator#746].
+
 ===== Apache NiFi
 
-The operator now utilizes the `.spec.clusterConfig.authorization.opa.package` field instead of hard-coding the OPA package name to `nifi`.
+* The operator now instructs NiFi pods to also listen on the loopback interface so that Kubernetes port-forwards work.
+  Fixed in https://github.com/stackabletech/nifi-operator/pull/870[nifi-operator#870].
+* The operator now utilizes the `.spec.clusterConfig.authorization.opa.package` field instead of hard-coding the OPA package name to `nifi`.
 Fixed in https://github.com/stackabletech/nifi-operator/pull/881[nifi-operator#881].
 
 ===== Apache Spark
