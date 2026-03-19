@@ -204,14 +204,14 @@ See the xref:nifi:usage_guide/security.adoc#authorization[security usage guide] 
 --
 * There are cases where customers may wish to provide static authorization files (users.xml, authorizer.xml, authorizations.xml) instead of fetching the data dynamically (for instance, when collecting user and group data from AD/Entra).
 Statically provided user/group information and rough-granular permissions are honoured automatically (as long as the UUIDs match those available in the backend), but for the initial process group this has to be done by a callback mechanism so that the authorizations can be updated after the flow has been registered.
-The Nifi images have been patched for versions 2.4.0 and 2.6.0 to implement this.
-See https://github.com/stackabletech/nifi-operator/issues/862[nifi-operator#862].
+  The Nifi images have been patched for versions 2.4.0 and 2.6.0 to support this.
+  Implemented in https://github.com/stackabletech/nifi-operator/issues/862[nifi-operator#862].
 
 ===== Apache Spark
 
 Spark application jobs can now have pod/node affinities.
 Previously only the application driver and executors had a dedicated field for this purpose.
-See https://github.com/stackabletech/spark-k8s-operator/issues/639[spark-k8s-operator#639].
+Implemented in https://github.com/stackabletech/spark-k8s-operator/issues/639[spark-k8s-operator#639].
 
 ===== Open Policy Agent
 
@@ -222,16 +222,28 @@ See https://github.com/stackabletech/spark-k8s-operator/issues/639[spark-k8s-ope
 Conversion between v1alpha1 and v1alpha2 is handled automatically by default.
 Implemented in https://github.com/stackabletech/opa-operator/pull/801[opa-operator#801].
 
+[#trino-improvements-26_3_0]
 ===== Trino
 
-*Breaking:* The operator no longer sets `opa.policy.column-masking-uri` in `access-control.properties` but `opa.policy.batch-column-masking-uri` instead, allowing Trino to fetch multiple column masks in a single request.
-This therefore now requires a `batchColumnMasks` rule to be present in the OPA Trino rules, when using the default URI set by the trino-operator.
+* *Breaking:* The operator no longer sets `opa.policy.column-masking-uri` in `access-control.properties` but `opa.policy.batch-column-masking-uri` instead, allowing Trino to fetch multiple column masks in a single request.
+  This therefore now requires a `batchColumnMasks` rule to be present in the OPA Trino rules, when using the default URI set by the trino-operator. +
+  The above default can be disabled with the new enableColumnMasking field in the opa configuration in authorization
++
+--
+[WARNING]
+====
+The `opa` field under `authorization` is now a mandatory enum variant instead of being optional.
+====
 
-* The above default can be disabled with the new enableColumnMasking field in the opa configuration in authorization
-* *Breaking:* The field opa in authorization is now a mandatory enum variant instead of being optional
-* Quick note: Use `spec.clusterConfig.authorization.opa.enableColumnMasking: false` instead of `batchColumnMasks = []`
+[TIP]
+====
+It is recommended to use `spec.clusterConfig.authorization.opa.enableColumnMasking: false` instead of `batchColumnMasks = []`.
+====
 
-See https://github.com/stackabletech/trino-operator/issues/814[trino-operator#814].
+Implemented in https://github.com/stackabletech/trino-operator/issues/814[trino-operator#814].
+--
+* The `spec.connector.iceberg.metastore` field in TrinoCatalog is now optional, as Iceberg also supports other catalogs, such as a REST catalog, which (currently) can only be added using configOverrides.
+  Implemented in https://github.com/stackabletech/trino-operator/pull/841[trino-operator#841].
 
 ==== Platform fixes
 
