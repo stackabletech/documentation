@@ -3,7 +3,14 @@
 === 26.3.0
 
 Released on 2026-03-16.
-(Optional description / introduction)
+
+[TIP,caption=Release highlights]
+====
+* Generic object overrides are now supported across the SDP.
+* The Stackable operator for OpenSearch adds many new features, like TLS configuration and service discovery.
+* The User Info Fetcher (UIF) gained experimental support for OpenLDAP and the Entra backend has been stabilized.
+* The restart-controller is now enabled for nearly all products.
+====
 
 [WARNING,caption=Overview of breaking changes]
 ====
