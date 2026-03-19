@@ -136,7 +136,7 @@ This includes 9 critical and 40 high-severity CVEs.
 
 * All operator images have been updated from UBI9 to UBI10 base images.
   See https://github.com/stackabletech/docker-images/issues/1349[docker-images#1349].
-* All products now have the xref:commons-operator:restarter.adoc[restart-controller] enabled, so that the Pods are automatically restarted on config changes (in ConfigMaps and Secrets).
+* All products (except https://github.com/stackabletech/hdfs-operator/issues/750[Apache Hadoop]) now have the xref:commons-operator:restarter.adoc[restart-controller] enabled, so that the Pods are automatically restarted on config changes (in ConfigMaps and Secrets).
   See https://github.com/stackabletech/issues/issues/816[issues#816].
 
 ===== Apache Airflow
