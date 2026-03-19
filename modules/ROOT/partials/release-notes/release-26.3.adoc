@@ -5,6 +5,18 @@
 Released on 2026-03-16.
 (Optional description / introduction)
 
+[WARNING,caption=Overview of breaking changes]
+====
+The following components of the SDP contain breaking changes for this release:
+
+* link:#airflow-removals-26_3_0[Apache Airflow]
+* link:#druid-fixes-26_3_0[Apache Druid]
+* link:#nifi-improvements-26_3_0[Apache NiFi]
+* link:#trino-improvements-26_3_0[Trino]
+* link:#commons-fixes-26_3_0[Stackable commons-operator]
+* link:#secret-removals-26_3_0[Stackable secret-operator]
+====
+
 ==== New platform features
 
 ===== General
@@ -168,6 +180,7 @@ Now both TLS and non-TLS modes are supported.
 It should be noted that this is not yet supported by the Kafka Controller (available in Kafka 4.x).
 ====
 
+[#nifi-improvements-26_3_0]
 ===== Apache NiFi
 
 * *Breaking:* The authorization configuration for the operator has been adjusted to more closely match and represent the Apache NiFi interfaces and implementations.
@@ -307,11 +320,7 @@ When the log file reached a size of 5 MB, an error message repeatedly appeared i
 With this release, we have resolved the permissions issue, ensuring that the log file rollover works correctly.
 Fixed in https://github.com/stackabletech/opensearch-operator/issues/106[opensearch-operator#106].
 
-===== Trino
-
-The `spec.connector.iceberg.metastore` field in TrinoCatalog is now optional, as Iceberg also supports other catalogs, such as a REST catalog, which (currently) can only be added using configOverrides.
-Fixed in https://github.com/stackabletech/trino-operator/pull/841[trino-operator#841].
-
+[#commons-fixes-26_3_0]
 ===== Stackable commons-operator
 
 *BREAKING:* Prevent an unnecessary restart of Pod 0 of the StatefulSet when the StatefulSet is initially created.
@@ -323,11 +332,13 @@ Fixed in https://github.com/stackabletech/commons-operator/pull/387[commons-oper
 
 ==== Platform removals
 
+[#airflow-removals-26_3_0]
 ===== Apache Airflow
 
 *Breaking:* Users of the `EXPERIMENTAL_FILE_HEADER` and `EXPERIMENTAL_FILE_FOOTER` fields who rely on `AUTH_OID` from the `flask_appbuilder.const` import must switch to `AUTH_OAUTH`.
 Removed in https://github.com/stackabletech/airflow-operator/pull/737[airflow-operator#737].
 
+[#secret-removals-26_3_0]
 ===== Stackable secret-operator
 
 *Breaking:* Removed support for ephemeral CSI volumes.
