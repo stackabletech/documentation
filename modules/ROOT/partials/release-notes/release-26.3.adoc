@@ -216,7 +216,7 @@ This means that the bind user now can differ from the `initialAdminUser`.
 See the xref:nifi:usage_guide/security.adoc#authorization[security usage guide] for more information.
 --
 * There are cases where customers may wish to provide static authorization files (users.xml, authorizer.xml, authorizations.xml) instead of fetching the data dynamically (for instance, when collecting user and group data from AD/Entra).
-Statically provided user/group information and rough-granular permissions are honoured automatically (as long as the UUIDs match those available in the backend), but for the initial process group this has to be done by a callback mechanism so that the authorizations can be updated after the flow has been registered.
+  Statically provided user/group information and rough-granular permissions are honoured automatically (as long as the UUIDs match those available in the backend), but for the initial process group this has to be done by a callback mechanism so that the authorizations can be updated after the flow has been registered.
   The Nifi images have been patched for versions 2.4.0 and 2.6.0 to support this.
   Implemented in https://github.com/stackabletech/nifi-operator/issues/862[nifi-operator#862].
 
@@ -232,8 +232,8 @@ Implemented in https://github.com/stackabletech/spark-k8s-operator/issues/639[sp
   This has now been removed.
   Implemented in https://github.com/stackabletech/opa-operator/issues/798[opa-operator#798].
 * The Entra User Info Fetcher (UIF) backend has been stabilized with the introduction of OpaCluster v1alpha2.
-Conversion between v1alpha1 and v1alpha2 is handled automatically by default.
-Implemented in https://github.com/stackabletech/opa-operator/pull/801[opa-operator#801].
+  Conversion between v1alpha1 and v1alpha2 is handled automatically by default.
+  Implemented in https://github.com/stackabletech/opa-operator/pull/801[opa-operator#801].
 
 [#trino-improvements-26_3_0]
 ===== Trino
@@ -297,7 +297,7 @@ Fixed in https://github.com/stackabletech/hdfs-operator/pull/746[hdfs-operator#7
 * The operator now instructs NiFi pods to also listen on the loopback interface so that Kubernetes port-forwards work.
   Fixed in https://github.com/stackabletech/nifi-operator/pull/870[nifi-operator#870].
 * The operator now utilizes the `.spec.clusterConfig.authorization.opa.package` field instead of hard-coding the OPA package name to `nifi`.
-Fixed in https://github.com/stackabletech/nifi-operator/pull/881[nifi-operator#881].
+  Fixed in https://github.com/stackabletech/nifi-operator/pull/881[nifi-operator#881].
 
 ===== Apache Spark
 
