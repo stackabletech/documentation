@@ -114,6 +114,8 @@ Implemented in https://github.com/stackabletech/spark-k8s-operator/pull/647[spar
 [IMPORTANT]
 ====
 It is essential to remove both `podOverrides` and `configOverrides` related to security settings, such as `plugins.security.allow_default_init_securityindex`.
+
+Also consult the xref:opensearch:usage-guide/upgrade.adoc[upgrade guide] for more detailed instructions.
 ====
 
 See https://github.com/stackabletech/opensearch-operator/issues/43[opensearch-operator#43].
