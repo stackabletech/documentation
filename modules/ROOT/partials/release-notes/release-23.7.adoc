@@ -5,7 +5,7 @@ supported by SDP.
 
 === 23.7.0
 
-Released on 2024-07-25.
+Released on 2023-07-25.
 
 ==== New / extended platform features
 
