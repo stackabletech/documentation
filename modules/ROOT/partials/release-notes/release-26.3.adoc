@@ -31,16 +31,16 @@ The following components of the SDP contain breaking changes for this release:
 
 ====== Miscellaneous
 
+* This release supports `objectOverrides`, a list of generic Kubernetes objects, which are merged into the objects created by the operator (e.g. StatefulSets, Listeners or ConfigMaps).
+  The priority of the overrides (in ascending order) is `configOverrides` -> `podOverrides` -> `objectOverrides`, with the latter overriding the previous.
+  See the xref:concepts:overrides.adoc#object-overrides[concepts page] for more details.
+  Tracked in https://github.com/stackabletech/issues/issues/712[issues#712].
 * A new demo was added that shows Retrieval Augmented Generation (RAG) with OpenSearch as the vector store.
   Consult the xref:demos:opensearch-rag.adoc[demo documentation page] for more details.
   See https://github.com/stackabletech/demos/pull/354[demos#354].
 * All remaining operators now maintain their own CRDs instead of relying on Helm as a deployment mechanism.
   Additionally, the conversion webhook is now running alongside the controller for future CRD versioning.
   Tracked in https://github.com/stackabletech/issues/issues/808[issues#808].
-* This release supports `objectOverrides`, a list of generic Kubernetes objects, which are merged into the objects created by the operator (e.g. StatefulSets, Listeners or ConfigMaps).
-  The priority of the overrides (in ascending order) is `configOverrides` -> `podOverrides` -> `objectOverrides`, with the latter overriding the previous.
-  See the xref:concepts:overrides.adoc#object-overrides[concepts page] for more details.
-  Tracked in https://github.com/stackabletech/issues/issues/712[issues#712].
 
 ===== Apache Airflow
 
