@@ -324,6 +324,7 @@ Fixed in https://github.com/stackabletech/hdfs-operator/pull/746[hdfs-operator#7
 * The operator now instructs NiFi pods to also listen on the loopback interface so that Kubernetes port-forwards work.
   Fixed in https://github.com/stackabletech/nifi-operator/pull/870[nifi-operator#870].
 * The operator now utilizes the `.spec.clusterConfig.authorization.opa.package` field instead of hard-coding the OPA package name to `nifi`.
+  By default, the NifiCluster name is used as a package name if not explicitly set.
   Fixed in https://github.com/stackabletech/nifi-operator/pull/881[nifi-operator#881].
 
 ===== Apache Spark
