@@ -236,7 +236,7 @@ Implemented in https://github.com/stackabletech/nifi-operator/pull/884[nifi-oper
 --
 Statically provided user/group information and coarse-grained permissions are honoured automatically (as long as the UUIDs match those available in the backend), but for the initial process group this has to be done by a callback mechanism so that the authorizations can be updated after the flow has been registered.
 
-The NiFi images have been patched for versions 2.4.0 and 2.6.0 to support this.
+The NiFi images have been patched for versions 2.6.0 and 2.7.2 to support this.
 Implemented in https://github.com/stackabletech/nifi-operator/issues/862[nifi-operator#862].
 --
 
