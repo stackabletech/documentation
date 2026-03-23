@@ -198,7 +198,7 @@ Implemented in https://github.com/stackabletech/hdfs-operator/pull/751[hdfs-oper
 ===== Apache NiFi
 
 * *Breaking:* The authorization configuration for the operator has been adjusted to more closely match and represent the Apache NiFi interfaces and implementations.
-  The `OpaAuthorizer`, `SingleUserAuthorizer` and `StandardManagedAuthorizer` can now be explicitly set.
+  The `opa`, `singleUser`, and `standard` authorization options can now be explicitly set.
   This allows to set an `initialAdminUser` for file-based authorization.
 +
 --
@@ -217,11 +217,11 @@ spec:
             initialAdminUser: CN=admin,OU=admin-group,DC=example,DC=org
 ----
 
-If not provided this defaults to the `SingleUserAuthorizer`.
+If not provided this defaults to the `singleUser`.
 
 [WARNING]
 ====
-Users authenticating via LDAP that do not use the `OpaAuthorizer` (but relied on the operator-generated file-based authorization), now have to explicitly set the `StandardManagedAuthorizer` and the `initialAdminUser`.
+Users authenticating via LDAP that do not use the `opa` authorizer (but relied on the operator-generated file-based authorization), now have to explicitly set the `standard` authorizer and the `initialAdminUser`.
 The cluster definition must be extended by an authorization part like shown above.
 
 This means that the bind user now can differ from the `initialAdminUser`.
