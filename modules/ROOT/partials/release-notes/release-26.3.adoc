@@ -77,7 +77,7 @@ It should be noted that this is not yet supported by the Kafka Controller (avail
 ====
 --
 * Users of the Stackable operator for Apache Kafka can now migrate existing 3.9.1 clusters from Apache ZooKeeper to the built in KRaft metadata manager.
-  xref:kafka:usage-guide/kraft-controller.adoc#_kraft_migration_guide[This guide] describes the necessary steps to perform the migration.
+  See the xref:kafka:usage-guide/kraft-controller.adoc#_kraft_migration_guide[KRaft migration guide] which describes the necessary steps to perform the migration.
   Implemented in https://github.com/stackabletech/kafka-operator/pull/923[kafka-operator#923].
 
 ===== Apache Spark
