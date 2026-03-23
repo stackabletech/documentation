@@ -242,6 +242,7 @@ Implemented in https://github.com/stackabletech/nifi-operator/issues/862[nifi-op
 
 Spark application jobs can now have pod/node affinities.
 Previously only the application driver and executors had a dedicated field for this purpose.
+Consult the xref:spark-k8s:usage-guide/operations/pod-placement.adoc[pod placement guide] for more details.
 Implemented in https://github.com/stackabletech/spark-k8s-operator/issues/639[spark-k8s-operator#639].
 
 ===== Open Policy Agent
