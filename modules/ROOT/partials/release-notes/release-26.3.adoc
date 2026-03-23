@@ -590,3 +590,6 @@ See https://github.com/stackabletech/kafka-operator/pull/933[kafka-operator#933]
   To work around the issue there are two possibilities:
   . Disable this feature gate in your Kubernetes 1.35 clusters.
   . Ensure that your product custom resources (e.g. TrinoCluster, SparkApplication, etc.) are applied after any referenced custom resources such as TrinoCatalog, S3Connection, and so on.
+* In Druid 35 and 36, OIDC authentication may fail since due to a change in how the authentication method is selected when connecting to an OIDC provider.
+  If your OIDC provider (e.g. Keycloak) advertises `private_key_jwt` as a supported client authentication method, Druid may attempt to use it, which causes authentication to fail.
+  See https://github.com/stackabletech/druid-operator/pull/800[druid-operator#800].
