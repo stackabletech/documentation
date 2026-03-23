@@ -30,10 +30,10 @@ The following components of the SDP contain breaking changes for this release:
 
 ====== Miscellaneous
 
-* In 26.3.0 we added a new demo that shows Retrieval Augmented Generation (RAG) with OpenSearch as the vector store.
+* A new demo was added that shows Retrieval Augmented Generation (RAG) with OpenSearch as the vector store.
   Consult the xref:demos:opensearch-rag.adoc[demo documentation page] for more details.
   See https://github.com/stackabletech/demos/pull/354[demos#354].
-* All remaining operators now maintain their own CRD(s) instead of relying on Helm as a deployment mechanism.
+* All remaining operators now maintain their own CRDs instead of relying on Helm as a deployment mechanism.
   Additionally, the conversion webhook is now running alongside the controller for future CRD versioning.
   Tracked in https://github.com/stackabletech/issues/issues/808[issues#808].
 * This release supports `objectOverrides`, a list of generic Kubernetes objects, which are merged into the objects created by the operator (e.g. StatefulSets, Listeners or ConfigMaps).
@@ -56,7 +56,7 @@ Implemented in https://github.com/stackabletech/airflow-operator/issues/382[airf
 
 ===== Apache HBase
 
-Add the `hbase.rest.endpoint` field to the restserver rolegroup ConfigMap for advertising the REST servers.
+The `hbase.rest.endpoint` field is now added to the restserver rolegroup ConfigMap for advertising the REST servers.
 Implemented in https://github.com/stackabletech/hbase-operator/pull/708[hbase-operator#708] and https://github.com/stackabletech/hbase-operator/pull/716[hbase-operator#716].
 
 ===== Apache Hive
@@ -67,14 +67,14 @@ Implemented in https://github.com/stackabletech/hive-operator/issues/388[hive-op
 
 ===== Apache Kafka
 
-Users of the Stackable operator for Apache Kafka can now migrate existing 3.9.1 clusters from Apache ZooKeeper to the built in Kraft metadata manager.
+Users of the Stackable operator for Apache Kafka can now migrate existing 3.9.1 clusters from Apache ZooKeeper to the built in KRaft metadata manager.
 xref:kafka:usage-guide/kraft-controller.adoc#_kraft_migration_guide[This guide] describes the necessary steps to perform the migration.
 Implemented in https://github.com/stackabletech/kafka-operator/pull/923[kafka-operator#923].
 
 ===== Apache Spark
 
 * Starting with this release, Spark applications will not be resubmitted automatically in case of failure.
-  Users can restore the previous behavior by setting the new `spec.job.retryOnFailureCount` property to a non negative value. +
+  Users can restore the previous behavior by setting the new `spec.job.retryOnFailureCount` property to a non-negative value. +
   In addition, small improvements have been made to clean up resources created by Spark applications:
 ** Application driver pods are now deleted as soon as they reach a terminal state.
 ** Application executor pods are now deleted as soon as possible in case of driver or submit failure.
@@ -234,7 +234,7 @@ See the xref:nifi:usage_guide/security.adoc#authorization[security usage guide] 
 --
 Statically provided user/group information and rough-granular permissions are honoured automatically (as long as the UUIDs match those available in the backend), but for the initial process group this has to be done by a callback mechanism so that the authorizations can be updated after the flow has been registered.
 
-The Nifi images have been patched for versions 2.4.0 and 2.6.0 to support this.
+The NiFi images have been patched for versions 2.4.0 and 2.6.0 to support this.
 Implemented in https://github.com/stackabletech/nifi-operator/issues/862[nifi-operator#862].
 --
 
@@ -257,7 +257,7 @@ Implemented in https://github.com/stackabletech/spark-k8s-operator/issues/639[sp
 ===== Trino
 
 * *Breaking:* The operator no longer sets `opa.policy.column-masking-uri` in `access-control.properties` but `opa.policy.batch-column-masking-uri` instead, allowing Trino to fetch multiple column masks in a single request.
-  This therefore now requires a `batchColumnMasks` rule to be present in the OPA Trino rules, when using the default URI set by the trino-operator. +
+  This now requires a `batchColumnMasks` rule to be present in the OPA Trino rules, when using the default URI set by the trino-operator. +
   The above default can be disabled with the new enableColumnMasking field in the opa configuration in authorization
 +
 --
@@ -288,7 +288,7 @@ Fixed in https://github.com/stackabletech/issues/issues/821[issues#821].
 
 ====== Miscellaneous
 
-All operators now correctly and gracefully shutdown all concurrent tasks by forwarding the SIGTERM signal.
+All operators now correctly and gracefully shut down all concurrent tasks by forwarding the SIGTERM signal.
 Most operators already correctly handled this before, but this is now done consistently across the board.
 Tracked in https://github.com/stackabletech/issues/issues/803[issues#803].
 
@@ -325,16 +325,17 @@ Fixed in https://github.com/stackabletech/hdfs-operator/pull/746[hdfs-operator#7
 
 ===== Apache Spark
 
-* Driver pods are now garbage collected when the spark application is finished.
+* Driver pods are now garbage collected when the Spark application is finished.
   Previously, driver pods created by the submit job would be left hanging even after the job has been deleted.
   Fixed in https://github.com/stackabletech/spark-k8s-operator/pull/649[spark-k8s-operator#649].
 * Fix application pod specifications when both the history server and the S3 connection reference the same SecretClass object.
-  Previously this would lead to duplicate volume. With this release that duplication is removed.
+  Previously this would lead to a duplicate volume. With this release that duplication is removed.
   Fixed in https://github.com/stackabletech/spark-k8s-operator/pull/655[spark-k8s-operator#655].
 
 ===== Apache ZooKeeper
 
-Previously running `zkCli` commands in the ZooKeeper image could fail due to https://issues.apache.org/jira/browse/ZOOKEEPER-4985[an upstream issue ZOOKEEPER-4985], this has now been fixed by setting the environment variable `ZOOCFGDIR`.
+Previously running `zkCli` commands in the ZooKeeper image could fail due to https://issues.apache.org/jira/browse/ZOOKEEPER-4985[an upstream issue ZOOKEEPER-4985].
+This has now been fixed by setting the environment variable `ZOOCFGDIR`.
 Fixed in https://github.com/stackabletech/zookeeper-operator/pull/988[zookeeper-operator#988].
 
 ===== OpenSearch
@@ -393,7 +394,7 @@ Removed in https://github.com/stackabletech/secret-operator/issues/481[secret-op
 
 ===== Product versions
 
-As with previous SDP releases, many product images have been updated to their latest versions.
+As with previous SDP releases, many product images have been updated to newer versions.
 Refer to the xref:operators:supported_versions.adoc[supported versions] documentation for a complete overview including LTS versions or deprecations.
 
 ====== New versions
@@ -414,7 +415,7 @@ The following new product versions are now supported:
 ** Note that there are no Apache Iceberg and Delta runtime libraries available for 4.1.1 yet.
 * Apache Superset: https://github.com/stackabletech/docker-images/issues/1382[6.0.0]
 ** OpenStreetView has been promoted as the new default for the Deck.gl visualization which doesn't require an API key.
-** `AUTH_OID` will not longer be automatically imported in the superset_config.py, and is no longer available from Superset 6.0.0.
+** `AUTH_OID` will no longer be automatically imported in the superset_config.py, and is no longer available from Superset 6.0.0.
    If you are using Superset < 6.0.0 and still require `AUTH_OID`, you can manually import it by following the xref:superset:usage-guide/configuration-environment-overrides.adoc#_configuration_properties[documented instructions].
 ** Also consult the https://github.com/apache/superset/blob/6.0.0/UPDATING.md[official update notes].
 * Open Policy Agent: https://github.com/stackabletech/docker-images/issues/1378[1.12.3]
@@ -436,8 +437,8 @@ The following product versions are deprecated and will be removed in a later rel
 ====== Removed versions
 
 The following product versions are no longer supported.
-These images for released product versions remain available https://oci.stackable.tech/[here,window=_blank].
-Information on how to browse the registry can be found xref:contributor:project-overview.adoc#docker-images[here,window=_blank].
+These images for released product versions remain available in the https://oci.stackable.tech/[Stackable OCI Registry,window=_blank].
+Information on how to browse the registry can be found xref:contributor:project-overview.adoc#docker-images[in the project overview documentation,window=_blank].
 
 * Apache Airflow: https://github.com/stackabletech/docker-images/issues/1370[2.10.5], https://github.com/stackabletech/docker-images/issues/1370[3.0.1]
 * Apache Druid: https://github.com/stackabletech/docker-images/issues/1371[33.0.0]
@@ -571,7 +572,7 @@ helm install --wait <PRODUCT>-operator oci://oci.stackable.tech/sdp-charts/<PROD
 ----
 $ kubectl -n <namespace> \
   patch kafkaclusters.kafka.stackable.tech <kafka-resource-name> \
-  --type merge -p '{"spec":{"clusterConfig":{"metadataManager":"kraft"}}}''
+  --type merge -p '{"spec":{"clusterConfig":{"metadataManager":"kraft"}}}'
 ----
 
 Replace `<namespace>` and `<kafka-resource-name>` as appropriate. +
@@ -580,5 +581,5 @@ See https://github.com/stackabletech/kafka-operator/pull/933[kafka-operator#933]
 * There is a https://github.com/kubernetes/kubernetes/issues/137409[known issue] with the feature gate https://github.com/kubernetes/kubernetes/pull/133153[MaxUnavailableStatefulSet] that is enabled by default as a beta feature in Kubernetes 1.35.
   This issue affects all SDP operators, especially the Trino operator. +
   To work around the issue there are two possibilities:
-  . Disable this feature gate in your Kubenetes 1.35 clusters.
+  . Disable this feature gate in your Kubernetes 1.35 clusters.
   . Ensure that your dev-ops pipelines create product custom resources (e.g. TrinoCluster, SparkApplication, etc.) last, after any referenced custom resources such as TrinoCatalog, S3Connection and so on.
