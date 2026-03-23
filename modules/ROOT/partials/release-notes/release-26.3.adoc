@@ -7,8 +7,8 @@ Released on 2026-03-16.
 [TIP,caption=Release highlights]
 ====
 * Generic object overrides are now supported across the SDP.
-* The Stackable operator for OpenSearch adds many new features, like TLS configuration and service discovery.
-* The User Info Fetcher (UIF) gained experimental support for OpenLDAP and the Entra backend has been stabilized.
+* The Stackable operator for OpenSearch adds many new features, such as TLS configuration and service discovery.
+* The User Info Fetcher (UIF) now has experimental support for OpenLDAP, and the Entra backend has been stabilized.
 * The restart-controller is now enabled for nearly all products.
 ====
 
@@ -43,7 +43,7 @@ The following components of the SDP contain breaking changes for this release:
 
 ===== Apache Airflow
 
-Airflow can now use gitsync to authenticate against a repository using SSH keys as well as basic auth, which was previously the only option.
+Airflow can now use git-sync to authenticate against a repository using SSH keys as well as basic auth, which was previously the only option.
 The Airflow operator also now has the ability to convert certain changes between CRD versions: in the case of this change, the operator can automatically convert the field `credentialsSecret` to `credentials: basicAuthSecretName` so that this change is non-breaking.
 
 [IMPORTANT]
@@ -56,7 +56,7 @@ Implemented in https://github.com/stackabletech/airflow-operator/issues/382[airf
 
 ===== Apache HBase
 
-The `hbase.rest.endpoint` field is now added to the restserver rolegroup ConfigMap for advertising the REST servers.
+The `hbase.rest.endpoint` field is now added to the restserver rolegroup discovery ConfigMap for advertising the REST servers.
 Implemented in https://github.com/stackabletech/hbase-operator/pull/708[hbase-operator#708] and https://github.com/stackabletech/hbase-operator/pull/716[hbase-operator#716].
 
 ===== Apache Hive
@@ -130,7 +130,7 @@ Implemented in https://github.com/stackabletech/spark-k8s-operator/pull/647[spar
 ====
 It is essential to remove both `podOverrides` and `configOverrides` related to security settings, such as `plugins.security.allow_default_init_securityindex`.
 
-Also consult the xref:opensearch:usage-guide/upgrade.adoc[upgrade guide] for more detailed instructions.
+Consult the xref:opensearch:usage-guide/upgrade.adoc[upgrade guide] for more detailed instructions.
 ====
 
 See https://github.com/stackabletech/opensearch-operator/issues/43[opensearch-operator#43].
@@ -232,7 +232,7 @@ See the xref:nifi:usage_guide/security.adoc#authorization[security usage guide] 
 * There are cases where customers may wish to provide static authorization files (users.xml, authorizer.xml, authorizations.xml) instead of fetching the data dynamically (for instance, when collecting user and group data from AD/Entra).
 +
 --
-Statically provided user/group information and rough-granular permissions are honoured automatically (as long as the UUIDs match those available in the backend), but for the initial process group this has to be done by a callback mechanism so that the authorizations can be updated after the flow has been registered.
+Statically provided user/group information and coarse-grained permissions are honoured automatically (as long as the UUIDs match those available in the backend), but for the initial process group this has to be done by a callback mechanism so that the authorizations can be updated after the flow has been registered.
 
 The NiFi images have been patched for versions 2.4.0 and 2.6.0 to support this.
 Implemented in https://github.com/stackabletech/nifi-operator/issues/862[nifi-operator#862].
@@ -258,7 +258,7 @@ Implemented in https://github.com/stackabletech/spark-k8s-operator/issues/639[sp
 
 * *Breaking:* The operator no longer sets `opa.policy.column-masking-uri` in `access-control.properties` but `opa.policy.batch-column-masking-uri` instead, allowing Trino to fetch multiple column masks in a single request.
   This now requires a `batchColumnMasks` rule to be present in the OPA Trino rules, when using the default URI set by the trino-operator. +
-  The above default can be disabled with the new enableColumnMasking field in the opa configuration in authorization
+  The above default can be disabled with the new `enableColumnMasking` field in the OPA authorization configuration.
 +
 --
 [WARNING]
@@ -282,7 +282,7 @@ Implemented in https://github.com/stackabletech/trino-operator/issues/814[trino-
 
 ====== Logging
 
-Previously, log entries could be sent multiple times to the Vector aggregator if the Vector container was restarted.
+Previously, log entries could be sent multiple times to the Vector aggregator if the Vector sidecar container was restarted.
 This issue has now been resolved by persisting the Vector state across container restarts.
 Fixed in https://github.com/stackabletech/issues/issues/821[issues#821].
 
@@ -348,7 +348,7 @@ Fixed in https://github.com/stackabletech/opensearch-operator/issues/106[opensea
 [#commons-fixes-26_3_0]
 ===== Stackable commons-operator
 
-*Breaking:* Prevent an unnecessary restart of Pod 0 of the StatefulSet when the STS is initially created.
+*Breaking:* Prevent an unnecessary restart of Pod 0 of a product StatefulSet when the STS is initially created.
 This was caused by commons-operator needing to update the STS immediately after creation, at which point Pod 0 was already created.
 The problem is now fixed by utilizing an admission webhook, which is able to mutate the StatefulSet during its creation - before Pod 0 is created.
 Fixed in https://github.com/stackabletech/commons-operator/pull/387[commons-operator#387].
@@ -417,7 +417,7 @@ The following new product versions are now supported:
 ** OpenStreetView has been promoted as the new default for the Deck.gl visualization which doesn't require an API key.
 ** `AUTH_OID` will no longer be automatically imported in the superset_config.py, and is no longer available from Superset 6.0.0.
    If you are using Superset < 6.0.0 and still require `AUTH_OID`, you can manually import it by following the xref:superset:usage-guide/configuration-environment-overrides.adoc#_configuration_properties[documented instructions].
-** Also consult the https://github.com/apache/superset/blob/6.0.0/UPDATING.md[official update notes].
+** Consult the https://github.com/apache/superset/blob/6.0.0/UPDATING.md[official update notes].
 * Open Policy Agent: https://github.com/stackabletech/docker-images/issues/1378[1.12.3]
 * OpenSearch: https://github.com/stackabletech/docker-images/issues/1379[3.4.0]
 * Trino: https://github.com/stackabletech/docker-images/issues/1383[479]
@@ -582,4 +582,4 @@ See https://github.com/stackabletech/kafka-operator/pull/933[kafka-operator#933]
   This issue affects all SDP operators, especially the Trino operator. +
   To work around the issue there are two possibilities:
   . Disable this feature gate in your Kubernetes 1.35 clusters.
-  . Ensure that your dev-ops pipelines create product custom resources (e.g. TrinoCluster, SparkApplication, etc.) last, after any referenced custom resources such as TrinoCatalog, S3Connection and so on.
+  . Ensure that your product custom resources (e.g. TrinoCluster, SparkApplication, etc.) are applied after any referenced custom resources such as TrinoCatalog, S3Connection, and so on.
