@@ -181,7 +181,7 @@ This includes 9 critical and 40 high-severity CVEs.
   Now we attempt to include all extra packages that are available for Airflow versions 3+, with an overview and explicit exclusions listed in the product image notes.
   See https://github.com/stackabletech/docker-images/pull/1336[docker-images#1336].
 * At times, a race condition can arise between DAG parsing and GitSync fetches.
-  We have added a note to the troubleshooting section of the documentation to suggest a workaround for this problem.
+  We have added a note to the xref:airflow:troubleshooting/index.adoc#_gitsync_race_condition[troubleshooting section] of the documentation to suggest a workaround for this problem.
   See https://github.com/stackabletech/airflow-operator/issues/732[airflow-operator#732].
 
 ===== Apache HBase
