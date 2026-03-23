@@ -411,7 +411,7 @@ The following new product versions are now supported:
 * Apache NiFi: https://github.com/stackabletech/docker-images/issues/1377[2.7.2]
 ** Note that this version supports Iceberg, but only with S3 and the Iceberg REST catalog.
    Hive metastore or HDFS are not supported.
-   Read the https://docs.stackable.tech/home/nightly/nifi/usage_guide/writing-to-iceberg-tables/[official NiFi Iceberg documentation] for details.
+   Read the xref:nifi:usage_guide/writing-to-iceberg-tables.adoc[official NiFi Iceberg documentation] for details.
 * Apache Spark: https://github.com/stackabletech/docker-images/issues/1381[3.5.8 (LTS)], https://github.com/stackabletech/docker-images/issues/1381[4.1.1]
 ** Note that there are no Apache Iceberg and Delta runtime libraries available for 4.1.1 yet.
 * Apache Superset: https://github.com/stackabletech/docker-images/issues/1382[6.0.0]
