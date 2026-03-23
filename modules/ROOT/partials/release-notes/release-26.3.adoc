@@ -104,6 +104,7 @@ Implemented in https://github.com/stackabletech/spark-k8s-operator/pull/647[spar
 
 * The operator now supports the configuration of TLS for the server (optional) and internal communication (mandatory) using SecretClasses.
   See the xref:opensearch:usage-guide/security.adoc#_tls[OpenSearch security usage guide] for more details.
+  Implemented in https://github.com/stackabletech/opensearch-operator/pull/55[opensearch-operator#55].
 * The operator now supports adding secrets to the OpenSearch keystore, e.g. S3 credentials for creating and restoring backups.
   See the xref:opensearch:usage-guide/keystore.adoc[keystore usage guide] for more details.
   Implemented in https://github.com/stackabletech/opensearch-operator/pull/76[opensearch-operator#76].
