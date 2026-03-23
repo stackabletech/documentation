@@ -348,7 +348,7 @@ Fixed in https://github.com/stackabletech/opensearch-operator/issues/106[opensea
 [#commons-fixes-26_3_0]
 ===== Stackable commons-operator
 
-*BREAKING:* Prevent an unnecessary restart of Pod 0 of the StatefulSet when the STS is initially created.
+*Breaking:* Prevent an unnecessary restart of Pod 0 of the StatefulSet when the STS is initially created.
 This was caused by commons-operator needing to update the STS immediately after creation, at which point Pod 0 was already created.
 The problem is now fixed by utilizing an admission webhook, which is able to mutate the StatefulSet during its creation - before Pod 0 is created.
 Fixed in https://github.com/stackabletech/commons-operator/pull/387[commons-operator#387].
