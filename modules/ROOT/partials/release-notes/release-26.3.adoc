@@ -67,9 +67,18 @@ Implemented in https://github.com/stackabletech/hive-operator/issues/388[hive-op
 
 ===== Apache Kafka
 
-Users of the Stackable operator for Apache Kafka can now migrate existing 3.9.1 clusters from Apache ZooKeeper to the built in KRaft metadata manager.
-xref:kafka:usage-guide/kraft-controller.adoc#_kraft_migration_guide[This guide] describes the necessary steps to perform the migration.
-Implemented in https://github.com/stackabletech/kafka-operator/pull/923[kafka-operator#923].
+* Previously, Kafka supported OPA in non-TLS mode.
+  Now both TLS and non-TLS modes are supported.
++
+--
+[IMPORTANT]
+====
+It should be noted that this is not yet supported by the Kafka Controller (available in Kafka 4.x).
+====
+--
+* Users of the Stackable operator for Apache Kafka can now migrate existing 3.9.1 clusters from Apache ZooKeeper to the built in KRaft metadata manager.
+  xref:kafka:usage-guide/kraft-controller.adoc#_kraft_migration_guide[This guide] describes the necessary steps to perform the migration.
+  Implemented in https://github.com/stackabletech/kafka-operator/pull/923[kafka-operator#923].
 
 ===== Apache Spark
 
@@ -184,16 +193,6 @@ See https://github.com/stackabletech/docker-images/issues/1417[docker-images#141
 
 The operator now adds a warning and exit condition to the `format-namenodes` container script to check for corrupted data after formatting.
 Implemented in https://github.com/stackabletech/hdfs-operator/pull/751[hdfs-operator#751].
-
-===== Apache Kafka
-
-Previously, Kafka supported OPA in non-TLS mode.
-Now both TLS and non-TLS modes are supported.
-
-[IMPORTANT]
-====
-It should be noted that this is not yet supported by the Kafka Controller (available in Kafka 4.x).
-====
 
 [#nifi-improvements-26_3_0]
 ===== Apache NiFi
