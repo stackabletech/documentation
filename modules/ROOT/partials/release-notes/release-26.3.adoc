@@ -49,7 +49,7 @@ The Airflow operator also now has the ability to convert certain changes between
 
 [IMPORTANT]
 ====
-It should be noted that conversions in the opposite direction - from v1alpha2 to v1alpha1 - are not possible if the v1alpha2 resource definition refers to the new field.
+Conversions in the opposite direction - from v1alpha2 to v1alpha1 - are not possible if the v1alpha2 resource definition refers to the new field.
 ====
 
 See the xref:airflow:usage-guide/mounting-dags.adoc#_via_git_sync[DAG mounting usage guide] for more details.
@@ -77,7 +77,7 @@ Implemented in https://github.com/stackabletech/hive-operator/issues/388[hive-op
 It should be noted that this is not yet supported by the Kafka Controller (available in Kafka 4.x).
 ====
 --
-* Users of the Stackable operator for Apache Kafka can now migrate existing 3.9.1 clusters from Apache ZooKeeper to the built in KRaft metadata manager.
+* Users of the Stackable operator for Apache Kafka can now migrate existing 3.9.1 clusters from Apache ZooKeeper to the built-in KRaft metadata manager.
   See the xref:kafka:usage-guide/kraft-controller.adoc#_kraft_migration_guide[KRaft migration guide] which describes the necessary steps to perform the migration.
   Implemented in https://github.com/stackabletech/kafka-operator/pull/923[kafka-operator#923].
 
@@ -91,7 +91,7 @@ It should be noted that this is not yet supported by the Kafka Controller (avail
 
 +
 Implemented in https://github.com/stackabletech/spark-k8s-operator/pull/647[spark-k8s-operator#647].
-* This release adds first class support for S3 buckets and connections to Spark Connect servers.
+* This release adds first-class support for S3 buckets and connections to Spark Connect servers.
   Users can give clients access to all S3 buckets or a selected list.
   For more details, see the xref:spark-k8s:usage-guide/spark-connect.adoc[Spark Connect usage guide].
   Implemented in https://github.com/stackabletech/spark-k8s-operator/pull/652[spark-k8s-operator#652].
@@ -103,9 +103,9 @@ Implemented in https://github.com/stackabletech/spark-k8s-operator/pull/647[spar
 ===== Open Policy Agent
 
 * The User Info Fetcher (UIF) now has experimental support for OpenLDAP as a backend.
-  See the xref:opa:usage-guide/user-info-fetcher.adoc#backend-openldap[documentation] of the UIF for details on how to configure it.
+  See the xref:opa:usage-guide/user-info-fetcher.adoc#backend-openldap[OpenLDAP backend documentation] of the UIF for details on how to configure it.
   Implemented in https://github.com/stackabletech/opa-operator/issues/523[opa-operator#523].
-* The OPA operator now supports overriding command-line arguments passed to the OPA binary via the cliOverrides property in the CRD.
+* The OPA operator now supports overriding command-line arguments passed to the OPA binary via the `cliOverrides` property in the CRD.
   This allows you to customize OPA's behavior by passing additional or overriding existing command-line flags.
   See the xref:opa:usage-guide/configuration-environment-overrides.adoc#_cli_overrides[OPA operator documentation] for further details and examples.
   Implemented in https://github.com/stackabletech/opa-operator/issues/781[opa-operator#781].
@@ -200,7 +200,7 @@ Implemented in https://github.com/stackabletech/hdfs-operator/pull/751[hdfs-oper
 
 * *Breaking:* The authorization configuration for the operator has been adjusted to more closely match and represent the Apache NiFi interfaces and implementations.
   The `opa`, `singleUser`, and `standard` authorization options can now be explicitly set.
-  This allows to set an `initialAdminUser` for file-based authorization.
+  This allows setting an `initialAdminUser` for file-based authorization.
 +
 --
 [source,yaml]
@@ -228,7 +228,8 @@ The cluster definition must be extended by an authorization part like shown abov
 This means that the bind user now can differ from the `initialAdminUser`.
 ====
 
-See the xref:nifi:usage_guide/security.adoc#authorization[security usage guide] for more information. Implemented in https://github.com/stackabletech/nifi-operator/pull/884[nifi-operator#884].
+See the xref:nifi:usage_guide/security.adoc#authorization[security usage guide] for more information.
+Implemented in https://github.com/stackabletech/nifi-operator/pull/884[nifi-operator#884].
 --
 * There are cases where customers may wish to provide static authorization files (users.xml, authorizer.xml, authorizations.xml) instead of fetching the data dynamically (for instance, when collecting user and group data from AD/Entra).
 +
@@ -336,7 +337,7 @@ Fixed in https://github.com/stackabletech/hdfs-operator/pull/746[hdfs-operator#7
 
 ===== Apache ZooKeeper
 
-Previously running `zkCli` commands in the ZooKeeper image could fail due to https://issues.apache.org/jira/browse/ZOOKEEPER-4985[an upstream issue ZOOKEEPER-4985].
+Previously, running `zkCli` commands in the ZooKeeper image could fail due to https://issues.apache.org/jira/browse/ZOOKEEPER-4985[an upstream issue ZOOKEEPER-4985].
 This has now been fixed by setting the environment variable `ZOOCFGDIR`.
 Fixed in https://github.com/stackabletech/zookeeper-operator/pull/988[zookeeper-operator#988].
 
@@ -357,7 +358,7 @@ Fixed in https://github.com/stackabletech/commons-operator/pull/387[commons-oper
 
 [WARNING]
 ====
-It should be noted that the commons-operator now needs the RBAC permission to `create` and `patch` `mutatingwebhookconfigurations`.
+The commons-operator now needs the RBAC permission to `create` and `patch` `mutatingwebhookconfigurations`.
 Operator installations via the Helm Chart automatically add these new permissions.
 ====
 
@@ -464,7 +465,7 @@ Information on how to browse the registry can be found xref:contributor:project-
 
 [WARNING]
 ====
-There currently is one known issue when running on Kubernetes 1.35.
+There is one known issue when running on Kubernetes 1.35.2 and earlier. Later versions might have fixed it.
 See the link:#known-issues-26_3_0[known issues] section below for more details.
 ====
 
