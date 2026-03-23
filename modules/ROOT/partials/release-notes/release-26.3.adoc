@@ -381,9 +381,9 @@ Removed in https://github.com/stackabletech/docker-images/issues/1382[docker-ima
 [#secret-removals-26_3_0]
 ===== Stackable secret-operator
 
-*Breaking:* Removed support for ephemeral CSI volumes.
+*Breaking:* Removed support for non-persistent ephemeral CSI volumes.
 This has been deprecated since secret-operator 0.4.0 because it doesn't support Pod stickiness.
-Ephemeral PersistentVolumes that use CSI are still supported and are the recommended way forward.
+Persistent ephemeral volumes that use CSI are still supported and are the recommended way forward.
 
 [source,yaml]
 ----
