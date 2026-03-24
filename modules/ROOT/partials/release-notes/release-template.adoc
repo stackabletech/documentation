@@ -15,6 +15,14 @@ Released on YYYY-MM-DD.
 * Highlight 3
 ====
 
+[WARNING,caption=Overview of breaking changes]
+====
+The following components of the SDP contain breaking changes for this release:
+
+* Breaking change 1
+* Breaking change 2
+====
+
 ==== New platform features
 
 All subsections must follow this order:
