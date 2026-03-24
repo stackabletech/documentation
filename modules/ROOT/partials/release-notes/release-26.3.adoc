@@ -37,7 +37,7 @@ The following components of the SDP contain breaking changes for this release:
   Tracked in https://github.com/stackabletech/issues/issues/712[issues#712].
 * A new demo was added that shows Retrieval Augmented Generation (RAG) with OpenSearch as the vector store.
   Consult the xref:demos:opensearch-rag.adoc[demo documentation page] for more details.
-  See https://github.com/stackabletech/demos/pull/354[demos#354].
+  Added in https://github.com/stackabletech/demos/pull/354[demos#354].
 * All remaining operators now maintain their own CRDs instead of relying on Helm as a deployment mechanism.
   Additionally, the conversion webhook is now running alongside the controller for future CRD versioning.
   Tracked in https://github.com/stackabletech/issues/issues/808[issues#808].
@@ -122,9 +122,10 @@ Implemented in https://github.com/stackabletech/spark-k8s-operator/pull/647[spar
   Users can specify whether a role group should be exposed and choose the corresponding ListenerClass.
   The connection parameters for accessing the OpenSearch cluster are provided in a discovery ConfigMap.
   Detailed information can be found at the xref:opensearch:reference/discovery.adoc[OpenSearch discovery documentation page].
-  See https://github.com/stackabletech/opensearch-operator/issues/52[opensearch-operator#52].
+  Implemented in https://github.com/stackabletech/opensearch-operator/issues/52[opensearch-operator#52].
 * The OpenSearch security plugin is now configurable within the OpenSearchCluster specification.
-  There are two modes of management for the configuration files of the security plugin: one uses the provided configuration only to initialize the security index, after which the API manages it; the other allows the operator to manage the configuration directly. See the xref:opensearch:usage-guide/security.adoc#_settings[security documentation page] for more details on this.
+  There are two modes of management for the configuration files of the security plugin: one uses the provided configuration only to initialize the security index, after which the API manages it; the other allows the operator to manage the configuration directly.
+  See the xref:opensearch:usage-guide/security.adoc#_settings[security documentation page] for more details on this.
 +
 --
 [IMPORTANT]
@@ -134,7 +135,7 @@ It is essential to remove both `podOverrides` and `configOverrides` related to s
 Consult the xref:opensearch:usage-guide/upgrade.adoc[upgrade guide] for more detailed instructions.
 ====
 
-See https://github.com/stackabletech/opensearch-operator/issues/43[opensearch-operator#43].
+Implemented in https://github.com/stackabletech/opensearch-operator/issues/43[opensearch-operator#43].
 --
 
 ===== Stackable listener-operator
@@ -173,22 +174,22 @@ This includes 9 critical and 40 high-severity CVEs.
 
 * All operator images have been updated from UBI9 to UBI10 base images.
   See https://github.com/stackabletech/docker-images/issues/1349[docker-images#1349].
-* All products (except https://github.com/stackabletech/hdfs-operator/issues/750[Apache Hadoop]) now have the xref:commons-operator:restarter.adoc[restart-controller] enabled, so that the Pods are automatically restarted on config changes (in ConfigMaps and Secrets).
+* All products (except https://github.com/stackabletech/hdfs-operator/issues/750[Apache Hadoop]) now have the xref:commons-operator:restarter.adoc[restart-controller] enabled, so that Pods are automatically restarted on config changes (in ConfigMaps and Secrets).
   See https://github.com/stackabletech/issues/issues/816[issues#816].
 
 ===== Apache Airflow
 
 * Previously, only selected providers were included in the Airflow product images.
   Now we attempt to include all extra packages that are available for Airflow versions 3+, with an overview and explicit exclusions listed in the product image notes.
-  See https://github.com/stackabletech/docker-images/pull/1336[docker-images#1336].
+  Implemented in https://github.com/stackabletech/docker-images/pull/1336[docker-images#1336].
 * At times, a race condition can arise between DAG parsing and GitSync fetches.
   We have added a note to the xref:airflow:troubleshooting/index.adoc#_gitsync_race_condition[troubleshooting section] of the documentation to suggest a workaround for this problem.
-  See https://github.com/stackabletech/airflow-operator/issues/732[airflow-operator#732].
+  Added in https://github.com/stackabletech/airflow-operator/issues/732[airflow-operator#732].
 
 ===== Apache HBase
 
 The hbase-operator-tools have been bumped to 1.3.0 and https://issues.apache.org/jira/browse/HBASE-29797[HBASE-29797] has been backported for all supported HBase images.
-See https://github.com/stackabletech/docker-images/issues/1417[docker-images#1417].
+Implemented in https://github.com/stackabletech/docker-images/issues/1417[docker-images#1417].
 
 ===== Apache Hadoop
 
@@ -590,11 +591,11 @@ $ kubectl -n <namespace> \
 Replace `<namespace>` and `<kafka-resource-name>` as appropriate. +
 See https://github.com/stackabletech/kafka-operator/pull/933[kafka-operator#933].
 --
-* There is a https://github.com/kubernetes/kubernetes/issues/137409[known issue] with the feature gate https://github.com/kubernetes/kubernetes/pull/133153[MaxUnavailableStatefulSet] that is enabled by default as a beta feature in Kubernetes 1.35.
+* We discovered an https://github.com/kubernetes/kubernetes/issues/137409[issue] with the feature gate https://github.com/kubernetes/kubernetes/pull/133153[MaxUnavailableStatefulSet] that is enabled by default as a beta feature in Kubernetes 1.35.
   This issue affects all SDP operators, especially the Trino operator. +
   To work around the issue there are two possibilities:
   . Disable this feature gate in your Kubernetes 1.35 clusters.
   . Ensure that your product custom resources (e.g. TrinoCluster, SparkApplication, etc.) are applied after any referenced custom resources such as TrinoCatalog, S3Connection, and so on.
-* In Druid 35 and 36, OIDC authentication may fail since due to a change in how the authentication method is selected when connecting to an OIDC provider.
+* In Druid 35 and 36, OIDC authentication may fail due to a change in how the authentication method is selected when connecting to an OIDC provider.
   If your OIDC provider (e.g. Keycloak) advertises `private_key_jwt` as a supported client authentication method, Druid may attempt to use it, which causes authentication to fail.
   See https://github.com/stackabletech/druid-operator/pull/800[druid-operator#800].
