@@ -124,7 +124,7 @@ Implemented in https://github.com/stackabletech/spark-k8s-operator/pull/647[spar
   Detailed information can be found at the xref:opensearch:reference/discovery.adoc[OpenSearch discovery documentation page].
   See https://github.com/stackabletech/opensearch-operator/issues/52[opensearch-operator#52].
 * The OpenSearch security plugin is now configurable within the OpenSearchCluster specification.
-  Users can choose for each configuration file whether to initialize it solely with the provided values and manage it through the API or to allow the operator to take over management.
+  There are two modes of management for the configuration files of the security plugin: one uses the provided configuration only to initialize the security index, after which the API manages it; the other allows the operator to manage the configuration directly. See the xref:opensearch:usage-guide/security.adoc#_settings[security documentation page] for more details on this.
 +
 --
 [IMPORTANT]
