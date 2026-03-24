@@ -371,14 +371,17 @@ The webhook can be disabled using `--disable-restarter-mutating-webhook` or by s
 ===== Apache Airflow
 
 *Breaking:* Users of the `EXPERIMENTAL_FILE_HEADER` and `EXPERIMENTAL_FILE_FOOTER` fields who rely on `AUTH_OID` from the `flask_appbuilder.const` import must switch to `AUTH_OAUTH`.
+
+If you are using Airflow < 3.1 and still require `AUTH_OID`, you can manually import it by following the xref:airflow:usage-guide/overrides.adoc#_configuration_properties[documented instructions].
 Removed in https://github.com/stackabletech/airflow-operator/pull/737[airflow-operator#737].
 
 [#superset-removals-26_3_0]
 ===== Apache Superset
 
-*Breaking:* `AUTH_OID` will no longer be automatically imported in the superset_config.py, and is no longer available from Superset 6.0.0 onwards.
+*Breaking:* Users of the `EXPERIMENTAL_FILE_HEADER` and `EXPERIMENTAL_FILE_FOOTER` fields who rely on `AUTH_OID` from the `flask_appbuilder.security.manager` import must switch to `AUTH_OAUTH`.
+
 If you are using Superset < 6.0.0 and still require `AUTH_OID`, you can manually import it by following the xref:superset:usage-guide/configuration-environment-overrides.adoc#_configuration_properties[documented instructions].
-Removed in https://github.com/stackabletech/docker-images/issues/1382[docker-images#1382].
+Removed in https://github.com/stackabletech/superset-operator/pull/680[superset-operator#680] and https://github.com/stackabletech/docker-images/issues/1382[docker-images#1382].
 
 [#secret-removals-26_3_0]
 ===== Stackable secret-operator
