@@ -1,3 +1,4 @@
 [submodule "ui"]
 	path = ui
 	url = https://github.com/stackabletech/documentation-ui.git
+	branch = feat/add-user-feedback-form
