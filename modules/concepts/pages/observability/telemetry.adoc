@@ -187,4 +187,7 @@ customConfig:
     to keep the top-level schema flat.
 <5> Reference transformer output as sinks input.
 
-[NOTE] Namespace information is currently not emitted by the operator
+[NOTE]
+====
+Namespace information is currently not emitted by the operator
+====
