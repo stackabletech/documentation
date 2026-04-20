@@ -1,8 +1,8 @@
 = Artifact registries
 :description: Overview of Stackable's artifact registries where container images and Helm Charts are published to.
 
-Currently, the SDP operator and product container images, as well as the Helm Charts are published on two registries: `oci.stackable.tech` and `quay.io`.
-This page details in which structure these artifacts are stored and can be retrieved.
+The SDP operator and product container images, as well as the Helm Charts are published on two registries: `oci.stackable.tech` and `quay.io`.
+This page details in which structure these artifacts are stored and how they can be retrieved.
 
 == oci.stackable.tech
 
@@ -47,6 +47,7 @@ $ helm install <PRODUCT>-operator oci://oci.stackable.tech/sdp-charts/<PRODUCT>-
 == quay.io
 
 Currently, only the operator and product container images are published to quay.io by mirroring them from our Harbor instance on `oci.stackable.tech`.
+See link:#pulling-quay-io[below].
 
 [source,plain]
 ----
@@ -59,6 +60,7 @@ quay.io
    |- ...
 ----
 
+[#pulling-quay-io]
 === Pulling from quay.io
 
 * Product container images can be pulled using:
