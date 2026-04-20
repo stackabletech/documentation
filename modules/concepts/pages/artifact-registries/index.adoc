@@ -1,0 +1,118 @@
+= Artifact registries
+:description: Overview of Stackable's artifact registries where container images and Helm Charts are published to.
+
+Currently, the SDP operator and product container images, as well as the Helm Charts are published on two registries: `oci.stackable.tech` and `quay.io`.
+This page details in which structure these artifacts are stored and can be retrieved.
+
+== oci.stackable.tech
+
+[source,plain]
+----
+oci.stackable.tech
+|- sdp
+|  |- airflow
+|  |- airflow-operator
+|  |- hbase
+|  |- hbase-operator
+|  |- ...
+|- sdp-charts
+   |- airflow-operator
+   |- hbase-operator
+   |- ...
+----
+
+=== Pulling from oci.stackable.tech
+
+* Product container images can be pulled using:
++
+[source,shell]
+----
+$ docker pull oci.stackable.tech/sdp/<PRODUCT>:<VERSION>-stackable<SDP_VERSION>
+----
+* Product operator container images can be pulled using:
++
+[source,shell]
+----
+$ docker pull oci.stackable.tech/sdp/<PRODUCT>-operator:<SDP_VERSION>
+----
+* Product operator Helm Charts can be installed using:
++
+[source,shell]
+----
+$ helm install <PRODUCT>-operator oci://oci.stackable.tech/sdp-charts/<PRODUCT>-operator \
+    --version <SDP_VERSION> \
+    --wait
+----
+
+== quay.io
+
+Currently, only the operator and product container images are published to quay.io by mirroring them from our Harbor instance on `oci.stackable.tech`.
+
+[source,plain]
+----
+quay.io
+|- stackable
+   |- airflow
+   |- airflow-operator
+   |- hbase
+   |- hbase-operator
+   |- ...
+----
+
+=== Pulling from quay.io
+
+* Product container images can be pulled using:
++
+[source,shell]
+----
+$ docker pull quay.io/stackable/<PRODUCT>:<VERSION>-stackable<SDP_VERSION>
+----
+* Product operator container images can be pulled using:
++
+[source,shell]
+----
+$ docker pull quay.io/stackable/<PRODUCT>-operator:<SDP_VERSION>
+----
+
+// NOTE: This is how it will be going forward.
+// On quay.io, everything is stored under the central `stackable` organization.
+// The rest of the structure is identical compared to `oci.stackable.tech`.
+
+// [source,plain]
+// ----
+// quay.io
+// |- stackable
+//    |- sdp
+//    |  |- airflow
+//    |  |- airflow-operator
+//    |  |- hbase
+//    |  |- hbase-operator
+//    |  |- ...
+//    |- sdp-charts
+//       |- airflow-operator
+//       |- hbase-operator
+//       |- ...
+// ----
+
+// === Pulling from quay.io
+
+// * Product container images can be pulled using:
+// +
+// [source,shell]
+// ----
+// $ docker pull quay.io/stackable/sdp/<PRODUCT>:<VERSION>-stackable<SDP_VERSION>
+// ----
+// * Product operator container images can be pulled using:
+// +
+// [source,shell]
+// ----
+// $ docker pull quay.io/stackable/sdp/<PRODUCT>-operator:<SDP_VERSION>
+// ----
+// * Product operator Helm Charts can be installed using:
+// +
+// [source,shell]
+// ----
+// $ helm install <PRODUCT>-operator oci://quay.io/stackable/sdp-charts/<PRODUCT>-operator \
+//     --version <SDP_VERSION> \
+//     --wait
+// ----

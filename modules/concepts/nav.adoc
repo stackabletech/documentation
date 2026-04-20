@@ -1,6 +1,8 @@
 * xref:concepts:index.adoc[]
 ** xref:overview.adoc[Platform overview]
 ** xref:stacklet.adoc[]
+** xref:artifact-registries/index.adoc[]
+*** xref:artifact-registries/container-images.adoc[]
 ** Common configuration mechanisms
 *** xref:product_image_selection.adoc[]
 *** xref:overrides.adoc[Advanced: overrides]
@@ -29,4 +31,3 @@
 ** Maintenance
 *** xref:maintenance/crds.adoc[CRD maintenance]
 *** xref:maintenance/eos.adoc[End-of-Support check]
-** xref:container-images.adoc[]
