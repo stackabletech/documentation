@@ -91,7 +91,7 @@ Managed Kubernetes clusters will normally have a default storage implementation 
 == Operator usage
 
 === Spark-k8s
-Users of the xref:spark-k8s:index.adoc[Spark-k8s operator] have a variety of ways to manage SparkApplication dependencies, one of which is to xref:spark-k8s:usage-guide/examples.adoc#_pyspark_externally_located_dataset_artifact_available_via_pvcvolume_mount[mount resources on a PersistentVolumeClaim]. An example is shown https://github.com/stackabletech/spark-k8s-operator/blob/main/examples/ny-tlc-report.yaml[here{external-link-icon}^].
+Users of the xref:spark-k8s:index.adoc[Spark-k8s operator] have a variety of ways to manage SparkApplication dependencies, one of which is to xref:spark-k8s:usage-guide/examples.adoc#_pyspark_externally_located_dataset_artifact_available_via_pvcvolume_mount[mount resources on a PersistentVolumeClaim].
 
 == Further reading
 
