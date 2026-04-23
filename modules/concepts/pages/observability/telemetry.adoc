@@ -1,6 +1,7 @@
 = Telemetry signals in operators
 :page-aliases: ../telemetry.adoc
 :env-filter-syntax: https://docs.rs/tracing-subscriber/latest/tracing_subscriber/filter/struct.EnvFilter.html#example-syntax
+:vector-helm-chart: https://github.com/vectordotdev/helm-charts/tree/develop/charts/vector
 
 [NOTE]
 ====
@@ -93,3 +94,100 @@ telemetry:
 <1> Boolean: `true`, `false`
 <2> String: `error`, `warn`, `info`, `debug`, `trace`, `off` (or {env-filter-syntax}[more complex filters,window=_blank])
 <3> String: E.g. `https://my-collector:4317` (Note: it must contain the scheme)
+
+== OpenTelemetry with Vector
+
+OpenTelemetry signals can be configured to behave like xref:logging.adoc[product logging]. Using the {vector-helm-chart}[vector helmChart] requires to configure `containerPorts` and `service.ports` as well as `customConfig.sources.otel`:
+
+[source,yaml]
+----
+containerPorts:
+  - {name: vector,    containerPort: 6000, protocol: TCP}
+  - {name: otel-grpc, containerPort: 4317, protocol: TCP}
+  - {name: otel-http, containerPort: 4318, protocol: TCP}
+service:
+  ports:
+  - {name: vector,    port: 6000, targetPort: 6000, protocol: TCP}
+  - {name: otel-grpc, port: 4317, targetPort: 4317, protocol: TCP}
+  - {name: otel-http, port: 4318, targetPort: 4318, protocol: TCP}
+customConfig:
+  sources:
+    otel:
+      type: opentelemetry
+      grpc:
+        address: 0.0.0.0:4317
+      http:
+        address: 0.0.0.0:4318
+----
+
+The `endpoint` in the operator's Helm values must point to the ports defined above.
+
+[source,yaml]
+----
+telemetry:
+  otelLogExporter:
+    enabled: true
+    endpoint: http://vector-aggregator.<namespace>.svc.cluster.local:4317
+  otelTraceExporter:
+    enabled: true
+    endpoint: http://vector-aggregator.<namespace>.svc.cluster.local:4317
+----
+
+=== Normalizing operator logs to the Stackable log schema
+
+Operators do not run vector sidecars. Using OpenSearch, a VRL transform that maps the OTLP fields onto the
+xref:tutorials:logging-vector-aggregator.adoc#_watch_the_logs[Stackable log schema] is needed to avoid re-indexing:
+
+[source,yaml]
+----
+customConfig:
+  transforms:
+    normalize_otel_logs:
+      type: remap
+      inputs:
+        - otel.logs # <1>
+      source: |
+        service_name = get(.resources, ["service.name"]) ?? null
+        .pod         = service_name # <2>
+        .container   = service_name # <2>
+        .namespace   = get(.resources, ["k8s.namespace.name"]) ?? null
+        .logger      = string(.scope.name) ?? null # <3>
+        .level       = string(.severity_text) ?? null
+        .built_info  = object(.attributes) ?? {} # <4>
+        .cluster     = null
+        .role        = null
+        .roleGroup   = null
+        .file        = null
+        .source_type = "opentelemetry"
+        del(.severity_text)
+        del(.severity_number)
+        del(.resources)
+        del(.attributes)
+        del(.scope)
+        del(.trace_id)
+        del(.span_id)
+        del(.flags)
+        del(.observed_timestamp)
+        del(.dropped_attributes_count)
+  sinks:
+    opensearch:
+      inputs:
+        - vector
+        - normalize_otel_logs # <5>
+----
+
+<1> The `opentelemetry` source fans out into `otel.logs`, `otel.metrics`, and
+    `otel.traces`. Unconsumed sub-streams produce a startup warning.
+<2> Operators emit `service.name` (e.g. `stackable-airflow-operator`) as their
+    primary identity. It is mapped to both `.pod` and `.container` but can be
+    adapted to individual needs.
+<3> The OTLP `scope.name` contains the Rust module path (e.g.
+    `kube_runtime::controller`) and maps to the `.logger` field.
+<4> Log-record attributes (e.g. `built_info.*`) are collected into a single object
+    to keep the top-level schema flat.
+<5> Reference transformer output as sinks input.
+
+[NOTE]
+====
+Namespace information is currently not emitted by the operator
+====
