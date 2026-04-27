@@ -255,7 +255,7 @@ druid.metadata.storage.connector.password=druid
 
 2.) Apache Superset
 
-NOTE: Superset supports a very wide range of database systems as described https://superset.apache.org/docs/databases/installing-database-drivers[here]. Not all of them are suitable for metadata storage.
+NOTE: Superset supports a very wide range of database systems as described https://superset.apache.org/user-docs/databases/#installing-database-drivers[here]. Not all of them are suitable for metadata storage.
 
 Connections to Apache Hive, Apache Druid and Trino clusters deployed as part of the SDP platform can be automated by using discovery configuration maps. In this case, the only attribute to configure is the name of the discovery config map of the appropriate system.
 

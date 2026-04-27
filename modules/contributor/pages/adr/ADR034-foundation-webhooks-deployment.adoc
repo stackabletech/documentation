@@ -230,5 +230,5 @@ Chosen <<option5>>, because it fits on all decision drivers.
 
 == Links
 
-- ADR https://docs.stackable.tech/home/nightly/contributor/adr/adr034-foundation-webhooks-ca-bundle.adoc[CA bundle injection]
+- ADR https://docs.stackable.tech/home/nightly/contributor/adr/adr033-foundation-webhooks-ca-bundle.adoc[CA bundle injection]
 - https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definition-versioning/[Kubernetes CRD versioning]
