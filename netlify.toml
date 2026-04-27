@@ -6,3 +6,8 @@
   from = "/home/stable/reference/*"
   to = "https://crds.stackable.tech/"
   status = 301
+
+[[redirects]]
+  from = "/home/stable/release_notes.html"
+  to = "/home/stable/release-notes"
+  status = 301
