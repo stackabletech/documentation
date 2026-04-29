@@ -17,7 +17,7 @@ Technical Story: https://github.com/stackabletech/issues/issues/238
 
 NOTE: We might want to incorporate changes to address https://github.com/stackabletech/issues/issues/681, maybe as V2?
 
-NOTE: Parts of this document might be out of date. The source of truth is in [operator-rs](https://github.com/stackabletech/operator-rs/tree/main/crates/stackable-operator/src/database_connections)
+NOTE: Parts of this document might be out of date. The source of truth is in https://github.com/stackabletech/operator-rs/tree/main/crates/stackable-operator/src/database_connections[the finished implementation in operator-rs]
 
 == Context and Problem Statement
 
