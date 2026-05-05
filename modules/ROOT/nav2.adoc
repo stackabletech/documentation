@@ -1,3 +1,2 @@
 * Management
 ** xref:management:stackablectl:index.adoc[]
-** xref:management:cockpit:index.adoc[]
