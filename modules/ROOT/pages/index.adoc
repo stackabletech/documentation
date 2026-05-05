@@ -132,10 +132,9 @@ Read the CustomResourceDefinition (CRD) reference for all CRDs that are deployed
 <h3>Tooling</h3>
 ++++
 
-Learn more about the tooling that supports the Stackable Data Platform; the `stackablectl` CLI utility and the Stackable Cockpit Web UI.
+Learn more about `stackablectl`, the CLI utility for the Stackable Data Platform.
 
 * xref:management:stackablectl:index.adoc[stackablectl]
-* xref:management:cockpit:index.adoc[Cockpit UI]
 
 ++++
 </div>
