@@ -60,10 +60,10 @@ In case of a `.properties` file, this will show up as `my.property=` in the `.pr
 [#json-config-overrides]
 === JSON config overrides
 
-In some cases the product accepts a JSON file as a configuration file (e.g. the OpenPolicyAgent's `config.json`).
-The above mentioned `Map<String, String>` structure doesn't fit this, so there is a special mechanism for JSON config files.
+Some products accept JSON config files (e.g. Open Policy Agent's `config.json`).
+The above mentioned `Map<String, String>` structure doesn't fit this, so there is a special mechanism for these files.
 
-==== JSON Merge Patch (https://datatracker.ietf.org/doc/html/rfc7396[RFC 7386])
+==== JSON Merge Patch (https://datatracker.ietf.org/doc/html/rfc7396[RFC 7396])
 
 The `jsonMergePatch` is used best in case you want to make simple additions or changes to the config.
 
@@ -108,7 +108,7 @@ configOverrides:
     }
 ----
 
-Note: JSON is a valid subset of YAML, so you can inline JSON into YAML.
+NOTE: JSON is a valid subset of YAML, so you can inline JSON into YAML.
 However, you can also use YAML syntax:
 
 [source,yaml]
