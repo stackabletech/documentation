@@ -12,7 +12,7 @@ This page contains information about our products and relevant links you might n
 |https://github.com/stackabletech/airflow-operator
 |https://github.com/stackabletech/docker-images/tree/main/airflow
 |https://ci.stackable.tech/job/Airflow%20Operator%20Integration%20Tests/
-|https://docs.stackable.tech/airflow/index.html
+|xref:airflow:index.adoc
 |
 
 |Apache Druid
@@ -21,7 +21,7 @@ This page contains information about our products and relevant links you might n
 |https://github.com/stackabletech/druid-operator
 |https://github.com/stackabletech/docker-images/tree/main/druid
 |https://ci.stackable.tech/job/Druid%20Operator%20Integration%20Tests/
-|https://docs.stackable.tech/druid/index.html
+|xref:druid:index.adoc
 |
 
 |Apache HBase
@@ -30,7 +30,7 @@ This page contains information about our products and relevant links you might n
 |https://github.com/stackabletech/hbase-operator
 |https://github.com/stackabletech/docker-images/tree/main/hbase
 |https://ci.stackable.tech/job/HBase%20Operator%20Integration%20Tests/
-|https://docs.stackable.tech/hbase/index.html
+|xref:hbase:index.adoc
 |
 
 |Apache Hadoop (HDFS)
@@ -39,7 +39,7 @@ This page contains information about our products and relevant links you might n
 |https://github.com/stackabletech/hdfs-operator
 |https://github.com/stackabletech/docker-images/tree/main/hadoop
 |https://ci.stackable.tech/job/HDFS%20Operator%20Integration%20Tests/
-|https://docs.stackable.tech/hdfs/index.html
+|xref:hdfs:index.adoc
 |
 
 |Apache Hive (Metastore)
@@ -48,7 +48,7 @@ This page contains information about our products and relevant links you might n
 |https://github.com/stackabletech/hive-operator
 |https://github.com/stackabletech/docker-images/tree/main/hive
 |https://ci.stackable.tech/job/Hive%20Operator%20Integration%20Tests/
-|https://docs.stackable.tech/hive/index.html
+|xref:hive:index.adoc
 |
 
 |Apache Kafka
@@ -57,7 +57,7 @@ This page contains information about our products and relevant links you might n
 |https://github.com/stackabletech/kafka-operator
 |https://github.com/stackabletech/docker-images/tree/main/kafka
 |https://ci.stackable.tech/job/Kafka%20Operator%20Integration%20Tests/
-|https://docs.stackable.tech/kafka/index.html
+|xref:kafka:index.adoc
 |
 
 |Apache NiFi
@@ -66,7 +66,7 @@ This page contains information about our products and relevant links you might n
 |https://github.com/stackabletech/nifi-operator
 |https://github.com/stackabletech/docker-images/tree/main/nifi
 |https://ci.stackable.tech/job/NiFi%20Operator%20Integration%20Tests/
-|https://docs.stackable.tech/nifi/index.html
+|xref:nifi:index.adoc
 |
 
 |Apache Spark on Kubernetes
@@ -75,7 +75,7 @@ This page contains information about our products and relevant links you might n
 |https://github.com/stackabletech/spark-k8s-operator
 |https://github.com/stackabletech/docker-images/tree/main/spark-k8s
 |https://ci.stackable.tech/job/Spark%20On%20K8S%20Operator%20Integration%20Tests/
-|https://docs.stackable.tech/spark-k8s/index.html
+|xref:spark-k8s:index.adoc
 |
 
 |Apache Superset
@@ -84,7 +84,7 @@ This page contains information about our products and relevant links you might n
 |https://github.com/stackabletech/superset-operator
 |https://github.com/stackabletech/docker-images/tree/main/superset
 |https://ci.stackable.tech/job/Superset%20Operator%20Integration%20Tests/
-|https://docs.stackable.tech/superset/index.html
+|xref:superset:index.adoc
 |
 
 |Apache ZooKeeper
@@ -93,7 +93,7 @@ This page contains information about our products and relevant links you might n
 |https://github.com/stackabletech/zookeeper-operator
 |https://github.com/stackabletech/docker-images/tree/main/zookeeper
 |https://ci.stackable.tech/job/Zookeeper%20Operator%20Integration%20Tests/
-|https://docs.stackable.tech/zookeeper/index.html
+|xref:zookeeper:index.adoc
 |
 
 |OpenPolicyAgent
@@ -102,7 +102,7 @@ This page contains information about our products and relevant links you might n
 |https://github.com/stackabletech/opa-operator
 |https://github.com/stackabletech/docker-images/tree/main/opa
 |https://ci.stackable.tech/job/OPA%20Operator%20Integration%20Tests/
-|https://docs.stackable.tech/opa/index.html
+|xref:opa:index.adoc
 |
 
 |Trino
@@ -111,7 +111,7 @@ This page contains information about our products and relevant links you might n
 |https://github.com/stackabletech/trino-operator
 |https://github.com/stackabletech/docker-images/tree/main/trino
 |https://ci.stackable.tech/job/Trino%20Operator%20Integration%20Tests/
-|https://docs.stackable.tech/trino/index.html
+|xref:trino:index.adoc
 |
 
 |===
