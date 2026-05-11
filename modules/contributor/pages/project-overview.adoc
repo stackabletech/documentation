@@ -41,9 +41,9 @@ The actual product artifacts are pulled from the <<product-artifacts, product ar
 The images are pushed into an <<docker-images, image registry>>.
 
 [[management-tooling]]
-=== Management tooling: stackablectl, stackable-cockpit
+=== Management tooling: stackablectl
 
-The `stackablectl` commandline tool and the Stackable Cockpit UI are both found in the https://github.com/stackabletech/stackable-cockpit[stackable-cockpit{external-link-icon}^] repository, and they both share some code.
+The `stackablectl` commandline tool lives in the https://github.com/stackabletech/stackable-cockpit[stackable-cockpit{external-link-icon}^] repository.
 The structure of the repository is documented in its README.
 
 [[documentation]]
@@ -137,7 +137,6 @@ the `sdp` project, run this command:
 ----
 $ curl -X GET --header 'Accept: application/json' 'https://oci.stackable.tech/api/v2.0/projects/sdp/repositories?page=1' | jq --raw-output '.[] | .name'
 sdp/statsd_exporter
-sdp/stackable-cockpit
 sdp/product1
 sdp/git-sync/git-sync
 sdp/sig-storage/csi-provisioner
