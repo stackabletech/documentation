@@ -67,7 +67,7 @@ Have a look at the existing getting started guides on how to do this.
 == Templating
 
 There is a templating mechanism in the docs.
-This has been introduced to template in mostly version numbers, so the updating doesn't have to be done by hand. 
+This has been introduced to template in mostly version numbers, so the updating doesn't have to be done by hand.
 
 Every Operator repo has a script `scripts/docs_templating.sh` and a file with templating variables `docs/templating_vars.yaml`.
 The script applies the variables to all `.j2` files in the `docs` directory.
