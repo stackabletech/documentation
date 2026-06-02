@@ -22,7 +22,7 @@ content:
       branches:
         - HEAD
     # management tools
-    - url: https://github.com/stackabletech/stackable-cockpit.git
+    - url: https://github.com/stackabletech/stackablectl.git
       start_path: docs
       branches: main
     # demos
