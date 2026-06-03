@@ -97,7 +97,7 @@ telemetry:
 
 == OpenTelemetry with Vector
 
-OpenTelemetry signals can be configured to behave like xref:logging.adoc[product logging]. Using the {vector-helm-chart}[vector helmChart] requires to configure `containerPorts` and `service.ports` as well as `customConfig.sources.otel`:
+OpenTelemetry signals can be configured to behave like xref:logging.adoc[product logging]. Using the {vector-helm-chart}[Vector Helm Chart] requires `containerPorts`, `service.ports`, and `customConfig.sources.otel` to be configured:
 
 [source,yaml]
 ----
@@ -120,7 +120,7 @@ customConfig:
         address: 0.0.0.0:4318
 ----
 
-The `endpoint` in the operator's Helm values must point to the ports defined above.
+The `endpoint` Helm values for the telemetry exporters in the Stackable Operator Helm Chart must point to the otel-grpc ports defined above.
 
 [source,yaml]
 ----
@@ -135,7 +135,7 @@ telemetry:
 
 === Normalizing operator logs to the Stackable log schema
 
-Operators do not run vector sidecars. Using OpenSearch, a VRL transform that maps the OTLP fields onto the
+Stackable Operators do not run Vector sidecars. Using OpenSearch, a VRL transform that maps the OTLP fields onto the
 xref:tutorials:logging-vector-aggregator.adoc#_watch_the_logs[Stackable log schema] is needed to avoid re-indexing:
 
 [source,yaml]
@@ -176,8 +176,8 @@ customConfig:
         - normalize_otel_logs # <5>
 ----
 
-<1> The `opentelemetry` source fans out into `otel.logs`, `otel.metrics`, and
-    `otel.traces`. Unconsumed sub-streams produce a startup warning.
+<1> The `opentelemetry` source type diverges into `otel.logs`, `otel.metrics`, and
+    `otel.traces` signals. Unconsumed sub-streams produce a startup warning.
 <2> Operators emit `service.name` (e.g. `stackable-airflow-operator`) as their
     primary identity. It is mapped to both `.pod` and `.container` but can be
     adapted to individual needs.
@@ -189,5 +189,5 @@ customConfig:
 
 [NOTE]
 ====
-Namespace information is currently not emitted by the operator
+Namespace information is currently not emitted by the operator.
 ====
