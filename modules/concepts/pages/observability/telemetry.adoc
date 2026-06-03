@@ -2,6 +2,7 @@
 :page-aliases: ../telemetry.adoc
 :env-filter-syntax: https://docs.rs/tracing-subscriber/latest/tracing_subscriber/filter/struct.EnvFilter.html#example-syntax
 :vector-helm-chart: https://github.com/vectordotdev/helm-charts/tree/develop/charts/vector
+:vector-VRL: https://vector.dev/docs/reference/vrl/
 
 [NOTE]
 ====
@@ -97,7 +98,7 @@ telemetry:
 
 == OpenTelemetry with Vector
 
-OpenTelemetry signals can be configured to behave like xref:logging.adoc[product logging]. Using the {vector-helm-chart}[Vector Helm Chart] requires `containerPorts`, `service.ports`, and `customConfig.sources.otel` to be configured:
+OpenTelemetry log signals can be configured to look like xref:logging.adoc[product logging]. Using the {vector-helm-chart}[Vector Helm Chart] and {vector-VRL}[Vector Remap Language (VRL)] which requires `containerPorts`, `service.ports`, and `customConfig.sources.otel` to be configured:
 
 [source,yaml]
 ----
@@ -133,10 +134,9 @@ telemetry:
     endpoint: http://vector-aggregator.<namespace>.svc.cluster.local:4317
 ----
 
-=== Normalizing operator logs to the Stackable log schema
+=== Normalizing operator OTEL logs to the Stackable log schema
 
-Stackable Operators do not run Vector sidecars. Using OpenSearch, a VRL transform that maps the OTLP fields onto the
-xref:tutorials:logging-vector-aggregator.adoc#_watch_the_logs[Stackable log schema] is needed to avoid re-indexing:
+Stackable Operators do not run Vector sidecars. Using e.g. xref:opensearch:getting_started/index.adoc[OpenSearch], a {vector-VRL}[VRL] transformer that maps the OTLP fields onto the xref:tutorials:logging-vector-aggregator.adoc#_watch_the_logs[Stackable log schema] is needed to avoid re-indexing:
 
 [source,yaml]
 ----
