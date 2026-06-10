@@ -13,7 +13,7 @@ v0.1, 2023-08-25
 
 == Context and Problem Statement
 
-This ADR tries to solve a common issue within the SDP. When `stackablectl` (and in the future our Cockpit) deploys
+This ADR tries to solve a common issue within the SDP. When `stackablectl` deploys
 resources into a Kubernetes cluster, we are currently unable to properly identify them afterwards. Adding a common set
 of labels to the resources we deploy will solve this issue. Additionally we will use namespaces to track resources
 deployed together. The following use-cases are then possible:
@@ -133,17 +133,17 @@ The maximum length for both cases is 63 characters.
 
 The following options are available:
 
-* `app.kubernetes.io/managed-by=stackablectl|stackable-cockpit`: Well-known label, however not recommended because Helm
+* `app.kubernetes.io/managed-by=stackablectl|stackablectl`: Well-known label, however not recommended because Helm
   already uses this label to track which resources are managed by Helm. As we use Helm in the background to install some
   of our manifests, we would potentially break Helms (uninstall) behavior.
-* `stackable.tech/managed-by=stackablectl|stackable-cockpit`: Doesn't collide with Helm
-* `stackable.tech/deployed-by=stackablectl|stackable-cockpit`: Alternative to above
+* `stackable.tech/managed-by=stackablectl|stackablectl`: Doesn't collide with Helm
+* `stackable.tech/deployed-by=stackablectl|stackablectl`: Alternative to above
 
 Alternatives are:
 
-* `management.stackable.tech/managed-by=stackablectl|stackable-cockpit`
-* `tools.stackable.tech/managed-by=stackablectl|stackable-cockpit`
-* `mgmt.stackable.tech/managed-by=stackablectl|stackable-cockpit`
+* `management.stackable.tech/managed-by=stackablectl|stackablectl`
+* `tools.stackable.tech/managed-by=stackablectl|stackablectl`
+* `mgmt.stackable.tech/managed-by=stackablectl|stackablectl`
 
 '''
 
@@ -290,5 +290,5 @@ for demo in demos_with_label("demo-*") {
   with `suffix` being optional and the implementation not yet decided on.
 * **Namespacing Stacks and Demos:** Yes, use `stackable-<demo|stack>-<demo-name|stack-name>(-suffix)`
 * **Adding Label to indicate which Management Tool was used:** Yes, use
-  `stackable.tech/managed-by=stackablectl|stackable-cockpit`
+  `stackable.tech/managed-by=stackablectl|stackablectl`
 * **Enabling Custom Labels provided by Users:** No support for now. Add it in the future if this feature is requested.

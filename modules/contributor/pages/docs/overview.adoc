@@ -89,7 +89,7 @@ Without this templating mechanism, every release these values would need to be u
 
 The documentation consists of two _components_, the `home` and `management` component.
 All documentation for the operators is in the `home` component, and it is versioned with the platform versions (23.11, 24.3, 24.7 etc.).
-The `management` component contains docs for `stackablectl` and the Stackable cockpit; it is not versioned (there is only a single, current version).
+The `management` component contains the docs for `stackablectl`. It is not versioned (there is only a single, current version).
 
 The `home` component is actually a {antora-distributed-components}[distributed component{external-link-icon}^], which means that it is split across multiple repositories.
 Each operator repository has a `docs` directory where the docs are found, and in there the `antora.yml` file specifies that the component is `home`, which means that the `home` component is partially defined across all operator repositories.
