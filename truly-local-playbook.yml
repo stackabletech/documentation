@@ -22,7 +22,7 @@ content:
       branches:
         - HEAD
     # management tools
-    - url: ../stackable-cockpit/
+    - url: ../stackablectl/
       start_path: docs
     # demos
     - url: ../demos/
