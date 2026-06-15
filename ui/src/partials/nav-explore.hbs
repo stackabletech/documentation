@@ -7,6 +7,7 @@
   {{/if}}
   <ul class="components">
     {{#each site.components}}
+    {{#if ./latest.navigation}}
     <li class="component{{#if (eq this @root.page.component)}} is-current{{/if}}">
       <div class="title"><a href="{{{relativize ./url}}}">{{{./title}}}</a></div>
       {{#if (or ./versions.[1] ./versions.[0].version (ne ./versions.[0].displayVersion 'default'))}}
@@ -21,6 +22,7 @@
       </ul>
       {{/if}}
     </li>
+    {{/if}}
     {{/each}}
   </ul>
 </div>
