@@ -43,7 +43,7 @@ The images are pushed into an <<docker-images, image registry>>.
 [[management-tooling]]
 === Management tooling: stackablectl
 
-The `stackablectl` commandline tool lives in the https://github.com/stackabletech/stackable-cockpit[stackable-cockpit{external-link-icon}^] repository.
+The `stackablectl` commandline tool lives in the https://github.com/stackabletech/stackablectl[stackablectl{external-link-icon}^] repository.
 The structure of the repository is documented in its README.
 
 [[documentation]]

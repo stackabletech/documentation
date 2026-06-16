@@ -183,15 +183,15 @@ The following product versions are no longer supported (although images for rele
 * Demos and stacks are now versioned and the main branch is considered unstable.
   `stackablectl` by default installs the latest stable demo and/or stack.
   A specific release can be targeted by providing the `--release` argument.
-  See https://github.com/stackabletech/stackable-cockpit/pull/340[stackable-cockpit#340].
+  See https://github.com/stackabletech/stackablectl/pull/340[stackablectl#340].
 * Add new argument --chart-source so that operator charts can be pulled either from an OCI registry (the default) or from a index.yaml-based repository.
-  See https://github.com/stackabletech/stackable-cockpit/pull/344[stackable-cockpit#344].
+  See https://github.com/stackabletech/stackablectl/pull/344[stackablectl#344].
 * Use `rustls-native-certs` so that `stackablectl` can be used in environments with internal PKI.
-  See  https://github.com/stackabletech/stackable-cockpit/pull/351[stackable-cockpit#351].
+  See  https://github.com/stackabletech/stackablectl/pull/351[stackablectl#351].
 * Use `heritage` label when looking up the `minio-console` stacklet.
-  See https://github.com/stackabletech/stackable-cockpit/pull/364[stackable-cockpit#364].
+  See https://github.com/stackabletech/stackablectl/pull/364[stackablectl#364].
 * Improve tracing and log output.
-  See https://github.com/stackabletech/stackable-cockpit/pull/365[stackable-cockpit#365].
+  See https://github.com/stackabletech/stackablectl/pull/365[stackablectl#365].
 
 ==== Supported Kubernetes versions
 
