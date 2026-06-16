@@ -38,15 +38,36 @@ This can be useful when you e.g. use public AWS S3 or other public available ser
 include::example$tls-server-verification-webpki.yaml[]
 ----
 
-This example will use TLS and verify the server using the provided ca certificate.
-For this to work you need to create a xref:secret-operator:secretclass.adoc[] that - at least - contains the ca certificate.
-Note that a SecretClass does not need to have a key but can also work with just a ca cert.
-So if you were provided with a ca cert but do not have access to the key you can still use this method.
+This example will use TLS and verify the server using the provided CA certificate.
+The product CRD references a SecretClass that provides the CA certificate to verify the server against:
 
 [source,yaml]
 ----
 include::example$tls-server-verification-custom-ca.yaml[]
 ----
+
+The referenced `openldap-tls-ca` SecretClass does not exist yet, you have to create it.
+A SecretClass used only for server verification needs nothing but the CA certificate, it does not need a key.
+So if you were provided with a CA certificate but do not have access to its key, you can still use this method.
+
+First, store the CA certificate (in PEM format) that you were given in a Kubernetes Secret, under the key `ca.crt`:
+
+[source,bash]
+----
+kubectl create secret generic openldap-tls-ca --from-file=ca.crt=/path/to/ca.crt
+----
+
+Then create a SecretClass that uses the xref:secret-operator:secretclass.adoc#backend-autotls[`autoTls` backend] to reference this Secret:
+
+[source,yaml]
+----
+include::example$secretclass-server-verification-ca.yaml[]
+----
+
+<1> The name of the SecretClass, this is what `caCert.secretClass` above refers to.
+<2> The name of the Secret created above, which holds the CA certificate in its `ca.crt` entry. `ca.key` is not required for server verification.
+<3> The namespace the Secret lives in.
+<4> Disables CA generation so that the Secret Operator uses the provided CA as-is instead of generating its own. This is the default and may be omitted.
 
 === Mutual verification
 This example will use TLS and verify both - the server and the client using certificates.
