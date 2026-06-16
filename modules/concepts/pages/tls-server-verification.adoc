@@ -47,27 +47,30 @@ include::example$tls-server-verification-custom-ca.yaml[]
 ----
 
 The referenced `openldap-tls-ca` SecretClass does not exist yet, you have to create it.
+For server verification you only need to make the CA certificate available to the product as-is, so you use the xref:secret-operator:secretclass.adoc#backend-k8ssearch[`k8sSearch` backend], which mounts the contents of a Kubernetes Secret into the Pod.
 A SecretClass used only for server verification needs nothing but the CA certificate, it does not need a key.
 So if you were provided with a CA certificate but do not have access to its key, you can still use this method.
 
-First, store the CA certificate (in PEM format) that you were given in a Kubernetes Secret, under the key `ca.crt`:
+First, store the CA certificate (in PEM format) that you were given in a Secret.
+The Secret must carry the label `secrets.stackable.tech/class` matching the SecretClass name, and the CA certificate must be stored under the key `ca.crt`:
 
-[source,bash]
+[source,yaml]
 ----
-kubectl create secret generic openldap-tls-ca --from-file=ca.crt=/path/to/ca.crt
+include::example$secret-server-verification-ca.yaml[]
 ----
 
-Then create a SecretClass that uses the xref:secret-operator:secretclass.adoc#backend-autotls[`autoTls` backend] to reference this Secret:
+<1> This label must match the name of the SecretClass created below.
+<2> The CA certificate in PEM format.
+
+Then create the SecretClass that uses the `k8sSearch` backend to find that Secret:
 
 [source,yaml]
 ----
 include::example$secretclass-server-verification-ca.yaml[]
 ----
 
-<1> The name of the SecretClass, this is what `caCert.secretClass` above refers to.
-<2> The name of the Secret created above, which holds the CA certificate in its `ca.crt` entry. `ca.key` is not required for server verification.
-<3> The namespace the Secret lives in.
-<4> Disables CA generation so that the Secret Operator uses the provided CA as-is instead of generating its own. This is the default and may be omitted.
+<1> The name of the SecretClass, this is what `caCert.secretClass` above refers to. It must match the Secret's `secrets.stackable.tech/class` label.
+<2> The backend looks for the labeled Secret in the same namespace as the Pod that consumes the certificate.
 
 === Mutual verification
 This example will use TLS and verify both - the server and the client using certificates.
