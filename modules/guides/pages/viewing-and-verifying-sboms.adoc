@@ -14,7 +14,7 @@ This page is a simple wrapper on top of the Stackable OCI registry, where the SB
 The next step of this guide explains the single steps happening under the hood when a link is clicked, and how to do them manually.
 
 == Verifying and extracting an SBOM manually with cosign
-To verify and extract the SBOM, a tool called https://github.com/sigstore/cosign[cosign{external-link-icon}^] is needed. Please have a look at the https://docs.sigstore.dev/system_config/installation/[installation instructions{external-link-icon}^] in the cosign documentation and choose your preferred installation method. Additionally, https://github.com/jqlang/jq[jq{external-link-icon}^] is used to parse the JSON output of cosign.
+To verify and extract the SBOM, a tool called https://github.com/sigstore/cosign[cosign{external-link-icon}^] is needed. Please have a look at the https://docs.sigstore.dev/cosign/system_config/installation/[installation instructions{external-link-icon}^] in the cosign documentation and choose your preferred installation method. Additionally, https://github.com/jqlang/jq[jq{external-link-icon}^] is used to parse the JSON output of cosign.
 
 With the following chain of commands, the SBOM of `airflow-operator` version `24.3.0` is verified and extracted:
 

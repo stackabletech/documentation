@@ -109,8 +109,8 @@ PLAYBOOK_FILES=("$DOCS_DIRECTORY/antora-playbook.yml" "$DOCS_DIRECTORY/local-ant
 
 # Loop through each playbook file
 for yaml_file in "${PLAYBOOK_FILES[@]}"; do
-    # Update all sources except stackable-cockpit.
-    yq "with(.content.sources.[]; select(.url | test(\".*(stackable-cockpit).*\") | not) | .branches |= .[:1] + [\"$BRANCH\"] + .[1:])" -i "$yaml_file"
+    # Update all sources except stackablectl.
+    yq "with(.content.sources.[]; select(.url | test(\".*(stackablectl).*\") | not) | .branches |= .[:1] + [\"$BRANCH\"] + .[1:])" -i "$yaml_file"
 done
 
 # ------------------------------

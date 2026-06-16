@@ -28,7 +28,7 @@ Additional Stackable Operators
 
 == stackablectl
 
-https://github.com/stackabletech/stackable-cockpit/blob/main/LICENSE[License{external-link-icon}^] for stackablectl.
+https://github.com/stackabletech/stackablectl/blob/main/LICENSE[License{external-link-icon}^] for stackablectl.
 
 == Product images
 

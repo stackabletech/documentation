@@ -164,7 +164,8 @@ metadata:
 spec:
   deepStorage:
       s3:
-        reference: my-bucket-resource
+        bucket:
+          reference: my-bucket-resource
   # more spec here ...
 ----
 
