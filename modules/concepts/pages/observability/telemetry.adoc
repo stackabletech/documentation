@@ -98,7 +98,7 @@ telemetry:
 
 == OpenTelemetry with Vector
 
-OpenTelemetry log signals can be configured to look like xref:logging.adoc[product logging]. Using the {vector-helm-chart}[Vector Helm Chart] and {vector-VRL}[Vector Remap Language (VRL)] which requires `containerPorts`, `service.ports`, and `customConfig.sources.otel` to be configured:
+OpenTelemetry log signals can be configured to look like xref:logging.adoc[product logging]. Using the {vector-helm-chart}[Vector Helm Chart{external-link-icon}^] and {vector-VRL}[Vector Remap Language (VRL){external-link-icon}^] which requires `containerPorts`, `service.ports`, and `customConfig.sources.otel` to be configured:
 
 [source,yaml]
 ----
@@ -113,13 +113,15 @@ service:
   - {name: otel-http, port: 4318, targetPort: 4318, protocol: TCP}
 customConfig:
   sources:
-    otel:
+    otel: # <1>
       type: opentelemetry
       grpc:
         address: 0.0.0.0:4317
       http:
         address: 0.0.0.0:4318
 ----
+
+<1> gRPC port `4317` and HTTP port `4318` are convention, technically any port can be used.
 
 The `endpoint` Helm values for the telemetry exporters in the Stackable Operator Helm Chart must point to the otel-grpc ports defined above.
 
@@ -136,7 +138,7 @@ telemetry:
 
 === Normalizing operator OTEL logs to the Stackable log schema
 
-Stackable Operators do not run Vector sidecars. Using e.g. xref:opensearch:getting_started/index.adoc[OpenSearch], a {vector-VRL}[VRL] transformer that maps the OTLP fields onto the xref:tutorials:logging-vector-aggregator.adoc#_watch_the_logs[Stackable log schema] is needed to avoid re-indexing:
+Stackable Operators do not run Vector sidecars. Using e.g. xref:opensearch:getting_started/index.adoc[OpenSearch], a {vector-VRL}[VRL{external-link-icon}^] transformer that maps the OTLP fields onto the xref:tutorials:logging-vector-aggregator.adoc#_watch_the_logs[Stackable log schema] is needed to avoid re-indexing:
 
 [source,yaml]
 ----
