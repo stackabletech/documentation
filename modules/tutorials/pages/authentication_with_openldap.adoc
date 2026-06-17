@@ -120,9 +120,20 @@ include::example$ldap-auth/ldap-authenticationclass.yaml[]
 <1> The name of the AuthenticationClass, which needs to be referenced later
 <2> The hostname in this case is the Service at which the OpenLDAP is running, inside of Kubernetes.
 <3> Here the SecretClass name is referenced
+<4> A SecretClass used to verify the LDAP server's TLS certificate, see below.
 
 // [source,bash]
 // include::example$ldap-auth/30-install-openldap.sh[tag=apply-ldap-authenticationclass]
+
+The AuthenticationClass connects to LDAP over TLS (port `1636`) and verifies the server's certificate against the CA provided by the `openldap-tls` SecretClass.
+You did not have to create that SecretClass: the `tutorial-openldap` stack created it for you.
+It uses the `autoTls` backend with `autoGenerate: true`, so the Secret Operator generates its own certificate authority and uses it both to issue OpenLDAP's server certificate and to let the products verify that certificate.
+This works because the Secret Operator owns the CA, including its private key, from end to end.
+
+Connecting to a *real* LDAP server is different: you do not control the server's certificate and usually only have its CA certificate, not the CA's private key.
+In that case you create the SecretClass yourself using the `k8sSearch` backend, which simply makes the existing CA certificate available to the products.
+A SecretClass used only for server verification needs nothing but the CA certificate; it does not need a key.
+See xref:concepts:tls-server-verification.adoc[] for a complete, copy-pasteable example.
 
 Remember the name of the AuthenticationClass (`openldap`), you will use it in the next steps when configuring the products.
 

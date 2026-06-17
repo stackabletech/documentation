@@ -15,4 +15,4 @@ spec:
         verification:
           server:
             caCert:
-              secretClass: openldap-tls
+              secretClass: openldap-tls  # <4>
