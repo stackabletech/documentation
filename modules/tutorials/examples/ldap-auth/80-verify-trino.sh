@@ -2,7 +2,7 @@
 set -euo pipefail
 
 
-trino_version="479"
+trino_version="481"
 trino_download_url="https://repo.stackable.tech/repository/packages/trino-cli/trino-cli-${trino_version}"
 
 trino_login() {
