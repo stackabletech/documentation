@@ -47,7 +47,7 @@ $ helm install <PRODUCT>-operator oci://oci.stackable.tech/sdp-charts/<PRODUCT>-
 == quay.io
 
 On quay.io, everything is stored under the central `stackable` organization.
-Since SDP 26.7.0, the rest of the structure is identical compared to `oci.stackable.tech` and images will no longer be pushed to their previous locations (directly under `quay.io/stackable`) going forward.
+Starting with SDP 26.7.0, the rest of the structure is identical compared to `oci.stackable.tech` and images will no longer be pushed to their previous locations (directly under `quay.io/stackable`) going forward.
 
 [source,plain]
 ----
