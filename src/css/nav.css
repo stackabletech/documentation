@@ -10,7 +10,7 @@
 
 .nav-container {
   position: fixed;
-  top: var(--navbar-height);
+  top: var(--body-top);
   left: 0;
   width: 100%;
   font-size: calc(17 / var(--rem-base) * 1rem);
@@ -54,7 +54,7 @@
 
 @media screen and (min-width: 1024px) {
   .nav {
-    top: calc(var(--navbar-height));
+    top: var(--body-top);
     box-shadow: none;
     position: sticky;
     height: var(--nav-height--desktop);

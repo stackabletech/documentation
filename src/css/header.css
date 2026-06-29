@@ -8,7 +8,7 @@ html.is-clipped--navbar {
 }
 
 body {
-  padding-top: var(--navbar-height);
+  padding-top: var(--body-top);
 }
 
 .navbar {
@@ -17,7 +17,7 @@ body {
   font-size: calc(16 / var(--rem-base) * 1rem);
   height: var(--navbar-height);
   position: fixed;
-  top: 0;
+  top: var(--universal-nav-height);
   width: 100%;
   z-index: var(--z-index-navbar);
   display: flex;
@@ -233,7 +233,7 @@ body {
   position: fixed;
   display: none;
   z-index: 5;
-  top: var(--navbar-height);
+  top: var(--body-top);
   width: 100%;
   background: var(--navbar-menu-background);
   box-shadow: 0 8px 16px rgba(10, 10, 10, 0.1);

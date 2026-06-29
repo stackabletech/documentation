@@ -41,6 +41,20 @@
   --navbar-menu-font-color: var(--color-text);
   --navbar-menu-font-color-hover: var(--color-brand-primary);
   --navbar-menu_hover-background: var(--color-background2);
+  /* universal nav */
+  --universal-nav-background: var(--color-text);
+  --universal-nav-font-color: var(--color-white);
+  --universal-nav-hover-background: rgba(255, 255, 255, 0.07);
+  --universal-nav-cta-background: var(--color-brand-secondary);
+  --universal-nav-cta-hover-background: #8a004e;
+  --universal-nav-cta-font-color: var(--color-white);
+  --universal-nav-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --universal-nav-duration-fast: 160ms;
+  --universal-nav-duration-med: 220ms;
+  --universal-nav-accent-current: #d4107d;
+  --universal-nav-accent-site: var(--color-brand-secondary);
+  --universal-nav-accent-docs: var(--color-brand-primary);
+  --universal-nav-accent-hub: #3d5266;
   /* nav */
   --nav-background: var(--color-white);
   --nav-border-color: var(--panel-background);
@@ -117,7 +131,8 @@
   --navbar-height: calc(73 / var(--rem-base) * 1rem);
   --navbar-sub-height: calc(45 / var(--rem-base) * 1rem);
   --toolbar-height: calc(45 / var(--rem-base) * 1rem);
-  --body-top: calc(var(--navbar-height));
+  --universal-nav-height: 44px; /* fixed px so the strip height doesn't shift with the theme's responsive root font-size */
+  --body-top: calc(var(--universal-nav-height) + var(--navbar-height));
   --body-min-height: calc(100vh - var(--body-top));
   --nav-height: calc(var(--body-min-height) - var(--toolbar-height));
   --nav-height--desktop: var(--body-min-height);
@@ -134,4 +149,5 @@
   --z-index-page-version-menu: 3;
   --z-index-page-version-menu-button: 4;
   --z-index-navbar: 5;
+  --z-index-universal-nav: 6;
 }
