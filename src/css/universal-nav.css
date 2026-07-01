@@ -82,16 +82,6 @@
   background: rgba(255, 255, 255, 0.12);
 }
 
-.universal-nav__host {
-  color: rgba(255, 255, 255, 0.3);
-  font-family: var(--monospace-font-family);
-  font-size: 11px;
-}
-
-.universal-nav__tab.is-current .universal-nav__host {
-  color: rgba(255, 255, 255, 0.55);
-}
-
 .universal-nav__dot {
   width: 6px;
   height: 6px;
