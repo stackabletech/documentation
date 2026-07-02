@@ -18,7 +18,7 @@
 
 @media screen and (min-width: 1024px) {
   .toolbar {
-    top: calc(var(--navbar-height));
+    top: var(--body-top);
   }
 }
 
