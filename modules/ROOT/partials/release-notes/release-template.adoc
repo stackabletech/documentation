@@ -189,20 +189,20 @@ This can be done using `kubectl replace`.
 
 [source,shell]
 ----
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/airflow-operator/YY.M.X/deploy/helm/airflow-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/commons-operator/YY.M.X/deploy/helm/commons-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/druid-operator/YY.M.X/deploy/helm/druid-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/hbase-operator/YY.M.X/deploy/helm/hbase-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/hdfs-operator/YY.M.X/deploy/helm/hdfs-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/hive-operator/YY.M.X/deploy/helm/hive-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/kafka-operator/YY.M.X/deploy/helm/kafka-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/listener-operator/YY.M.X/deploy/helm/listener-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/nifi-operator/YY.M.X/deploy/helm/nifi-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/opa-operator/YY.M.X/deploy/helm/opa-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/YY.M.X/deploy/helm/spark-k8s-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/superset-operator/YY.M.X/deploy/helm/superset-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/trino-operator/YY.M.X/deploy/helm/trino-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/YY.M.X/deploy/helm/zookeeper-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/airflow-operator/YY.M.X/extra/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/commons-operator/YY.M.X/extra/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/druid-operator/YY.M.X/extra/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hbase-operator/YY.M.X/extra/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hdfs-operator/YY.M.X/extra/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hive-operator/YY.M.X/extra/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/kafka-operator/YY.M.X/extra/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/listener-operator/YY.M.X/extra/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/nifi-operator/YY.M.X/extra/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/opa-operator/YY.M.X/extra/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/YY.M.X/extra/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/superset-operator/YY.M.X/extra/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/trino-operator/YY.M.X/extra/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/YY.M.X/extra/crds.yaml
 ----
 
 [source]
@@ -244,20 +244,20 @@ This can be done using `kubectl replace`.
 
 [source,shell]
 ----
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/airflow-operator/YY.M.X/deploy/helm/airflow-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/commons-operator/YY.M.X/deploy/helm/commons-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/druid-operator/YY.M.X/deploy/helm/druid-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/hbase-operator/YY.M.X/deploy/helm/hbase-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/hdfs-operator/YY.M.X/deploy/helm/hdfs-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/hive-operator/YY.M.X/deploy/helm/hive-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/kafka-operator/YY.M.X/deploy/helm/kafka-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/listener-operator/YY.M.X/deploy/helm/listener-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/nifi-operator/YY.M.X/deploy/helm/nifi-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/opa-operator/YY.M.X/deploy/helm/opa-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/YY.M.X/deploy/helm/spark-k8s-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/superset-operator/YY.M.X/deploy/helm/superset-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/trino-operator/YY.M.X/deploy/helm/trino-operator/crds/crds.yaml
-kubectl replace -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/YY.M.X/deploy/helm/zookeeper-operator/crds/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/airflow-operator/YY.M.X/extra/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/commons-operator/YY.M.X/extra/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/druid-operator/YY.M.X/extra/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hbase-operator/YY.M.X/extra/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hdfs-operator/YY.M.X/extra/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/hive-operator/YY.M.X/extra/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/kafka-operator/YY.M.X/extra/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/listener-operator/YY.M.X/extra/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/nifi-operator/YY.M.X/extra/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/opa-operator/YY.M.X/extra/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/spark-k8s-operator/YY.M.X/extra/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/superset-operator/YY.M.X/extra/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/trino-operator/YY.M.X/extra/crds.yaml
+kubectl replace -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/YY.M.X/extra/crds.yaml
 ----
 
 [source]
