@@ -53,7 +53,7 @@ $ kubectl patch zookeepercluster/simple-zk --patch '{"spec": {"clusterOperation"
 [source,shell]
 ----
 $ stackablectl operator uninstall zookeeper
-$ # Replace CRD with new version, e.g. kubectl replace -f https://raw.githubusercontent.com/stackabletech/zookeeper-operator/24.7.0/extra/crds.yaml
+$ # The operator maintains its own CRD and updates it automatically on startup; no manual CRD step is needed.
 $ stackablectl operator install zookeeper=24.7.0 # choose your version
 ----
 
