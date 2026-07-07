@@ -4,7 +4,7 @@
 
 [[redirects]]
   from = "/home/stable/reference/*"
-  to = "https://crds.stackable.tech/"
+  to = "https://hub.stackable.tech/crds"
   status = 301
 
 [[redirects]]
