@@ -70,5 +70,5 @@ The design & layout comes from our https://github.com/stackabletech/documentatio
 == More useful links
 
 * The https://github.com/stackabletech/documentation-ui[documentation-ui] repository.
-* The https://github.com/stackabletech/crddocs[crddocs] repository from which the https://crds.stackable.tech/[CRD reference] is generated.
+* The https://hub.stackable.tech/crds[CRD reference] on the Stackable Hub.
 * The Stackable https://docs.stackable.tech/home/stable/contributor/[contributor's guide] containing more info on how to contribute to the documentation.
