@@ -5,8 +5,8 @@
   --color-smoke-70: #e8edf4;
   --color-gray-10: #c1c1c1;
   --color-gray-30: #8e8e8f;
-  --color-brand-primary: #1880bd;
-  --color-brand-secondary: #b80069;
+  --color-brand-primary: #1680bd;
+  --color-brand-secondary: #b80068;
   --color-text: #182c3d;
   --color-text-semi-muted: #6d7c8b;
   --color-text-muted: #afbbc8;
@@ -52,9 +52,6 @@
   --universal-nav-duration-fast: 160ms;
   --universal-nav-duration-med: 220ms;
   --universal-nav-accent-current: #d4107d;
-  --universal-nav-accent-site: var(--color-brand-secondary);
-  --universal-nav-accent-docs: var(--color-brand-primary);
-  --universal-nav-accent-hub: #3d5266;
   /* nav */
   --nav-background: var(--color-white);
   --nav-border-color: var(--panel-background);

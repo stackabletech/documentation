@@ -94,18 +94,6 @@
   background: var(--universal-nav-accent-current);
 }
 
-.universal-nav__dot--site {
-  background: var(--universal-nav-accent-site);
-}
-
-.universal-nav__dot--docs {
-  background: var(--universal-nav-accent-docs);
-}
-
-.universal-nav__dot--hub {
-  background: var(--universal-nav-accent-hub);
-}
-
 .universal-nav__icon {
   display: inline-flex;
   align-items: center;
@@ -221,6 +209,11 @@
   height: 9px;
   border-radius: 50%;
   flex: none;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.universal-nav__sheet-row.is-current .universal-nav__sheet-dot {
+  background: var(--universal-nav-accent-current);
 }
 
 .universal-nav__sheet-text {
