@@ -56,8 +56,8 @@ The UI for the documentation is found in the https://github.com/stackabletech/do
 The documentation pulls in operator documentation files from the operator repositories.
 The documentation is found at https://docs.stackable.tech/[https://docs.stackable.tech/{external-link-icon}^].
 
-There is also https://crds.stackable.tech/[https://crds.stackable.tech/{external-link-icon}^] where you can find generated documentation for all the CustomResourceDefinitions on the platform.
-The code to generate this page is found in the https://github.com/stackabletech/crddocs[crddocs{external-link-icon}^] repository.
+There is also the https://hub.stackable.tech/crds[CRD reference on the Stackable Hub{external-link-icon}^] where you can find generated documentation for all the CustomResourceDefinitions on the platform.
+The Hub ingests the CRDs of every operator automatically.
 
 [[tooling-repositories]]
 === Tooling repositories

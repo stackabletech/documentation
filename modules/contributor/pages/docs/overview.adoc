@@ -5,11 +5,10 @@
 :antora-zulipchat: https://antora.zulipchat.com/
 :antora-distributed-components: https://docs.antora.org/antora/latest/distributed-component-version/
 :antora-content-branches: https://docs.antora.org/antora/latest/playbook/content-branches/
-:crddocs-site: https://crds.stackable.tech/
+:crd-reference: https://hub.stackable.tech/crds
 :diataxis: https://diataxis.fr/
 :netlify: https://www.netlify.com/
 :pagefind: https://pagefind.app/
-:stackable-crddocs-repo: https://github.com/stackabletech/crddocs
 :stackable-docs-readme: https://github.com/stackabletech/documentation/blob/main/README.adoc
 :stackable-docs-repo: https://github.com/stackabletech/documentation
 :stackable-docs-ui-repo: https://github.com/stackabletech/documentation-ui
@@ -46,7 +45,7 @@ The guide has to account for different use-cases (i.e. the user is using their o
 Since this kind of information is typically product specific, it is located in the usage guide section of individual operators.
 
 **Reference** information for the Stackable platform entails all the settings and Options in our YAMLs, which we generate.
-The reference is found at {crddocs-site}[{crddocs-site}{external-link-icon}^] and generated from the {stackable-crddocs-repo}[crddocs repository{external-link-icon}^].
+The reference is found at {crd-reference}[{crd-reference}{external-link-icon}^] on the Stackable Hub, which ingests the CRDs of every operator automatically.
 
 === Style guide
 
