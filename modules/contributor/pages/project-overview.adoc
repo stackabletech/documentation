@@ -52,7 +52,7 @@ The structure of the repository is documented in its README.
 image::project-overview-documentation.drawio.svg[]
 
 The documentation is built with https://antora.org/[Antora{external-link-icon}^] and the playbook file to build it is located in the https://github.com/stackabletech/documentation[documentation{external-link-icon}^] repository, among some common platform documentation.
-The UI for the documentation is found in the https://github.com/stackabletech/documentation-ui[documentation-ui{external-link-icon}^] repository; it is included as a submodule in the documentation repository.
+The UI for the documentation lives in the `ui/` directory of the same repository.
 The documentation pulls in operator documentation files from the operator repositories.
 The documentation is found at https://docs.stackable.tech/[https://docs.stackable.tech/{external-link-icon}^].
 
