@@ -44,13 +44,13 @@
                 linkEl.href = result.url;
                 linkEl.innerText = result.meta.title;
                 titleEl.appendChild(linkEl);
-                
+
                 // Create the child element for the excerpt
                 const textEl = document.createElement("p");
                 textEl.classList.add("pagefind-modular-list-excerpt");
                 textEl.innerHTML = result.excerpt;
                 innerEl.appendChild(textEl);
-                
+
                 return el;
             }
         }));
