@@ -31,6 +31,7 @@ antora:
       mermaid_library_url: https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs
       script_stem: mermaid-scripts
     - ./supplemental-ui/lib/stackable-operator-helpers.js
+    - ./supplemental-ui/lib/llms-txt.js
 content:
   sources:
     - url: .
