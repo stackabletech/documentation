@@ -29,6 +29,9 @@ asciidoc:
     end-of-life: false
     # use the attributes below to link to the CRD docs
     crd-docs-base-url: "https://crds.stackable.tech"
+    # used by the operator index pages, see the
+    # operator-link-bar.adoc partial in the ROOT module
+    hub-base-url: "https://hub.stackable.tech"
     crd-docs: "{crd-docs-base-url}/{crd-docs-version}"
     # to make attributes accessible to the UI template, they need to
     # be prefixed with "page-"
