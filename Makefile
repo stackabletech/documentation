@@ -40,7 +40,7 @@ build-prod: build-ui
 	node_modules/.bin/antora generate antora-playbook.yml --fetch $(ANTORAFLAGS)
 
 build-ui:
-	node_modules/.bin/gulp --cwd ui bundle
+	npm run bundle --workspace ui
 
 build-search-index:
 	npm run build-search-index
