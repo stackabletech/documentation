@@ -2,6 +2,7 @@
 
 https://www.vmware.com/products/app-platform/tanzu[https://www.vmware.com/products/app-platform/tanzu{external-link-icon}^]
 
-VMware Tanzu uses a non-standard Kubelet state directory.
-For this reason the secret-operator and listener-operator on VMware Tanzu require special handling.
+Whether Tanzu uses a non-standard Kubelet state directory depends on the variant.
+BOSH-deployed clusters (Tanzu Kubernetes Grid Integrated Edition, formerly PKS) place it under `/var/vcap`, so the secret-operator and listener-operator require special handling there.
+Standard clusters (Tanzu Kubernetes Grid and vSphere with Tanzu) use the default `/var/lib/kubelet` and need no override.
 Please refer to the xref:secret-operator:installation.adoc#_vmware_tanzu[secret-operator installation guide] and the xref:listener-operator:installation.adoc#_vmware_tanzu[listener-operator installation guide] for details.
