@@ -86,10 +86,10 @@ The `jsonPatch` is more complicated than the `jsonMergePatch`, but offers more f
 ----
 configOverrides:
   config.json:
-    jsonPatches:
-      - '{"op": "test", "path": "/0/name", "value": "Andrew"}'
-      - '{"op": "add", "path": "/0/happy", "value": true}'
-      - '{"op": "remove", "path": "/0/birthDate"}'
+    jsonPatch:
+      - {"op": "test", "path": "/0/name", "value": "Andrew"}
+      - {"op": "add", "path": "/0/happy", "value": true}
+      - {"op": "remove", "path": "/0/birthDate"}
 ----
 
 ==== User provided JSON
@@ -117,7 +117,8 @@ configOverrides:
   config.json:
     userProvided:
       myString: test
-      myList: [test]
+      myList:
+        - test
       myBool: true
       my:
         nested.field.with.dots: 42
