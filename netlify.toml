@@ -2,6 +2,15 @@
   command = "make netlify-build"
   publish = "build/site"
 
+# Rate limiting across the whole page. 25 request per 60 seconds aggregated by client IP.
+[[redirects]]
+  from = "/*"
+  to = "/:splat"
+    [redirects.rate_limit]
+    window_limit = 25
+    window_size = 60
+    aggregate_by = ["ip"]
+
 [[redirects]]
   from = "/home/stable/reference/*"
   to = "https://hub.stackable.tech/crds"
