@@ -1,10 +1,12 @@
 = Viewing and verifying SBOMs of the Stackable Data Platform
 :page-aliases: tutorials:viewing-and-verifying-sboms.adoc
-:description: Learn to view and verify SBOMs for Stackable Data Platform using the CycloneDX standards and cosign. Ensure SBOM authenticity with Policy Controller.
+:description: Learn to view and verify SBOMs for Stackable Data Platform using the CycloneDX and SPDX standards and cosign. Ensure SBOM authenticity with Policy Controller.
 
 With release 24.3 of SDP, we started providing SBOMs (Software Bill of Materials) for our container images. Please note that they currently are in a draft stage and we are continually working on improving them. As a first step, we aim to provide a list of all primary (top level) components and their versions included in each container image. Our SBOMs follow the https://cyclonedx.org/[CycloneDX{external-link-icon}^] standard and are available in JSON format.
 
 NOTE: Starting with SDP 25.7, we now embed the exact source code used to build each product directly into our images. You can find the source code in files ending with `-src.tar.gz` within the `/stackable` directory of each image.
+
+Starting with SDP 26.7, every image additionally carries an SBOM in the https://spdx.dev/[SPDX{external-link-icon}^] format (SPDX JSON), attested alongside the CycloneDX SBOM. The SPDX SBOM is derived from the CycloneDX SBOM, so both formats describe the same component inventory. Container images also come with xref:guides:verifying-image-provenance.adoc[SLSA build provenance] since SDP 26.7.
 
 You can browse through our SBOMs at https://sboms.stackable.tech/[https://sboms.stackable.tech/{external-link-icon}^].
 
@@ -39,6 +41,29 @@ If the identity of the signer matches, you can be sure the contents of the attes
 `cosign` also prints information to `stderr`, which can be used to determine further information on the verification results and the exact Github Action workflow that was used to create this attestation.
 
 You can now be sure that the SBOM was attested to the container image you're interested in by a Stackable Github Action workflow, it's even possible to look at the workflow to see how exactly this happened.
+
+=== Extracting the SPDX variant
+
+For images from SDP 26.7 or newer, the SPDX SBOM can be verified and extracted with `--type spdxjson` (requires cosign 3).
+The SBOM attestations are attached to the platform-specific images rather than the multi-arch image index, so first determine the digest of the image for your platform, for example with https://github.com/google/go-containerregistry/tree/main/cmd/crane[crane{external-link-icon}^]:
+
+[source,bash]
+----
+crane manifest oci.stackable.tech/sdp/airflow-operator:26.7.0 \
+| jq -r '.manifests[] | select(.platform.architecture=="amd64") | .digest'
+----
+
+Then verify and extract the SPDX SBOM using that digest:
+
+[source,bash]
+----
+cosign verify-attestation --type spdxjson \
+--certificate-identity-regexp \
+'^https://github.com/stackabletech/.+/.github/workflows/.+@.+' \
+--certificate-oidc-issuer https://token.actions.githubusercontent.com \
+oci.stackable.tech/sdp/airflow-operator@sha256:... \
+| jq '.payload' -r | base64 -d | jq '.predicate'
+----
 
 == Enabling automatic verification of SBOMs
 Similar to our xref:enabling-verification-of-image-signatures.adoc[image signature verification] guide, it's possible to enforce that only container images with SBOMs that are signed by Stackable are allowed to run in your cluster. Sigstore's https://docs.sigstore.dev/policy-controller/overview/[Policy Controller{external-link-icon}^] can be used to achieve this.

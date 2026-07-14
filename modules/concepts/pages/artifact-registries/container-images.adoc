@@ -29,7 +29,11 @@ Products are either built from source code or official artifacts are used.
 Beyond that, Stackable also adds plugins or extensions that are not shipped by default, to support features such as xref:operators:monitoring.adoc[] or xref:opa:index.adoc[OpenPolicyAgent] support.
 
 Since Stackable release 24.3, {stackable-sboms}[SBOMs{external-link-icon}^] for all images are provided.
+Since release 26.7, SBOMs are available in both the CycloneDX and SPDX formats.
 Have a look at the xref:guides:viewing-and-verifying-sboms.adoc[] guide to learn how to use SBOMs.
+
+Additionally, since release 26.7, all images carry SLSA build provenance attestations at SLSA Level 3.
+See the xref:guides:verifying-image-provenance.adoc[] guide for details.
 
 [#multi-platform-support]
 == Multi-platform support

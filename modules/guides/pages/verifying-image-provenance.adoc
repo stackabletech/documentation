@@ -1,0 +1,59 @@
+= Verifying SLSA provenance of Stackable images
+:description: Learn how to verify the SLSA build provenance attestations of Stackable Data Platform container images using slsa-verifier.
+
+Starting with SDP 26.7, all Stackable container images, both product images and operator images, are published with https://slsa.dev/[SLSA{external-link-icon}^] build provenance attestations.
+
+Provenance is a signed statement describing how an artifact was built: which source repository and commit it was built from, which workflow built it, and on what infrastructure. With it, you can verify that an image you pulled from our registry was really built by Stackable's CI and it allows you to trace how it was built.
+
+The provenance is generated with the https://github.com/slsa-framework/slsa-github-generator[slsa-github-generator{external-link-icon}^] container workflow, which meets the requirements of *SLSA Level 3*: the provenance is created and signed by a trusted builder that is isolated from the project's own build workflow, so a compromised build job cannot forge it. Just like our xref:guides:viewing-and-verifying-sboms.adoc[SBOM attestations] and xref:guides:enabling-verification-of-image-signatures.adoc[images], the attestation is signed keylessly via https://www.sigstore.dev/[Sigstore{external-link-icon}^] (with GitHub Actions as the OIDC identity provider) and published in our OCI registry next to the image.
+
+== Verifying provenance with slsa-verifier
+
+The recommended tool for verification is https://github.com/slsa-framework/slsa-verifier[slsa-verifier{external-link-icon}^]. It verifies the signature on the provenance and checks that the image was built from the source repository you expect.
+
+`slsa-verifier` requires the image to be referenced by digest, not by tag. You can obtain the digest of an image with a tool like https://github.com/google/go-containerregistry/tree/main/cmd/crane[crane{external-link-icon}^]:
+
+[source,bash]
+----
+crane digest oci.stackable.tech/sdp/kafka:3.9.1-stackable26.7.0
+----
+
+Product images are built from the https://github.com/stackabletech/docker-images[docker-images{external-link-icon}^] repository:
+
+[source,bash]
+----
+slsa-verifier verify-image \
+  oci.stackable.tech/sdp/kafka@sha256:... \
+  --source-uri github.com/stackabletech/docker-images
+----
+
+Operator images are built from their respective operator repository:
+
+[source,bash]
+----
+slsa-verifier verify-image \
+  oci.stackable.tech/sdp/kafka-operator@sha256:... \
+  --source-uri github.com/stackabletech/kafka-operator
+----
+
+On success, `slsa-verifier` prints `PASSED: SLSA verification passed` and exits with code 0. It can also print the full verified provenance with `--print-provenance`, which is useful if you want to inspect the exact commit and workflow the image was built from.
+
+== Verifying provenance with cosign
+
+Alternatively, https://github.com/sigstore/cosign[cosign{external-link-icon}^] can verify and extract the provenance attestation. Two things to note:
+
+* The certificate identity is the trusted builder workflow of the slsa-github-generator project, not a Stackable workflow, because the provenance is deliberately signed by that isolated builder.
+* The slsa-github-generator attaches the provenance in the legacy attestation format, so cosign 3 needs the `--new-bundle-format=false` flag to find it.
+
+[source,bash]
+----
+cosign verify-attestation --type slsaprovenance \
+--new-bundle-format=false \
+--certificate-identity-regexp \
+'^https://github.com/slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@refs/tags/v.+' \
+--certificate-oidc-issuer https://token.actions.githubusercontent.com \
+oci.stackable.tech/sdp/kafka@sha256:... \
+| jq '.payload' -r | base64 -d | jq '.predicate'
+----
+
+The extracted predicate contains, among other things, the source repository and commit digest under `invocation.configSource` and the builder identity under `builder.id`. If you use cosign directly, make sure to check these fields yourself; `slsa-verifier` does this for you.
