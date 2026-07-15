@@ -13,6 +13,6 @@
     "ui"
   ],
   "scripts": {
-    "build-search-index": "npx pagefind --site build/site"
+    "build-search-index": "npx pagefind --site build/site --output-subdir _/pagefind"
   }
 }
