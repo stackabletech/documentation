@@ -1,0 +1,16 @@
+# Upstream sync marker for the vendored Antora UI.
+#
+# This UI is a fork of https://gitlab.com/antora/antora-ui-default.
+# The SHA below is the upstream commit the fork was last reviewed against.
+# To check what upstream changed since then:
+#
+#   git remote add antora-upstream https://gitlab.com/antora/antora-ui-default.git
+#   git fetch antora-upstream
+#   git diff <sha-below>..antora-upstream/HEAD -- src/
+#
+# Update the SHA (and this file) whenever upstream changes have been
+# reviewed and ported.
+#
+# Last reviewed: NOT YET RECORDED - the fork predates this marker.
+# Planned: the phase 3 upstream re-sync establishes the first SHA
+# (see ~/dev/stackable/plans/documentation-overhaul.md).

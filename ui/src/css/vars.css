@@ -1,0 +1,150 @@
+:root {
+  /* colors */
+  --color-white: #fff;
+  --color-black: #000;
+  --color-smoke-70: #e8edf4;
+  --color-gray-10: #c1c1c1;
+  --color-gray-30: #8e8e8f;
+  --color-brand-primary: #1680bd;
+  --color-brand-secondary: #b80068;
+  --color-text: #182c3d;
+  --color-text-semi-muted: #6d7c8b;
+  --color-text-muted: #afbbc8;
+  --color-background2: #f2f6fa; /* panels, borders, hover backgrounds */
+  /* fonts */
+  --rem-base: 18; /* used to compute rem value from desired pixel value (e.g., calc(18 / var(--rem-base) * 1rem) = 18px) */
+  --body-font-size: 1.0625em; /* 17px */
+  --body-font-size--desktop: 1.125em; /* 18px */
+  --body-font-size--print: 0.9375em; /* 15px */
+  --body-line-height: 1.15;
+  --body-font-color: var(--color-text);
+  --body-font-family: "Noto Sans", sans-serif;
+  --body-font-weight-bold: 700;
+  --monospace-font-family: "Noto Sans Mono", monospace;
+  --monospace-font-weight-bold: 500;
+  --header-font-family: "IBM Plex Mono", sans-serif;
+  --header-font-family-weight: 600; /* semi-bold */
+  /* base */
+  --body-background: var(--color-white);
+  --panel-background: var(--color-background2);
+  --panel-border-color: var(--color-background2);
+  --scrollbar-thumb-color: var(--color-gray-10);
+  /* navbar */
+  --navbar-background: var(--color-white);
+  --navbar-font-color: var(--color-text);
+  --navbar_hover-background: var(--color-white);
+  --navbar-button-background: var(--color-brand-secondary);
+  --navbar-button-border-color: var(--color-brand-secondary);
+  --navbar-button-font-color: var(--color-white);
+  --navbar-menu-border-color: var(--panel-border-color);
+  --navbar-menu-background: var(--color-white);
+  --navbar-menu-font-color: var(--color-text);
+  --navbar-menu-font-color-hover: var(--color-brand-primary);
+  --navbar-menu_hover-background: var(--color-background2);
+  /* universal nav */
+  --universal-nav-background: var(--color-text);
+  --universal-nav-font-color: var(--color-white);
+  --universal-nav-hover-background: rgba(255, 255, 255, 0.07);
+  --universal-nav-cta-background: var(--color-brand-secondary);
+  --universal-nav-cta-hover-background: #8a004e;
+  --universal-nav-cta-font-color: var(--color-white);
+  --universal-nav-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --universal-nav-duration-fast: 160ms;
+  --universal-nav-duration-med: 220ms;
+  --universal-nav-accent-current: #d4107d;
+  /* nav */
+  --nav-background: var(--color-white);
+  --nav-border-color: var(--panel-background);
+  --nav-line-height: 1.35;
+  --nav-heading-font-color: var(--color-text);
+  --nav-muted-color: var(--color-text-semi-muted);
+  --nav-panel-divider-color: var(--color-text);
+  --nav-secondary-background: var(--color-smoke-70);
+  /* toolbar */
+  --toolbar-background: var(--color-white);
+  --toolbar-border-color: var(--panel-border-color);
+  --toolbar-font-color: var(--color-text);
+  --toolbar-muted-color: var(--color-text-muted);
+  /* admonitions */
+  --caution-color: #a0439c;
+  --caution-on-color: var(--color-white);
+  --important-color: #9f005a;
+  --important-on-color: var(--color-white);
+  --note-color: #1880bd;
+  --note-on-color: var(--color-white);
+  --tip-color: #41af46;
+  --tip-on-color: var(--color-white);
+  --warning-color: #e18114;
+  --warning-on-color: var(--color-white);
+  /* doc */
+  --doc-font-color: var(--color-text);
+  --doc-font-size: inherit;
+  --doc-font-size--desktop: calc(17 / var(--rem-base) * 1rem);
+  --doc-line-height: 1.6;
+  --doc-margin: 0 auto;
+  --doc-margin--desktop: 0 1rem;
+  --heading-font-color: var(--color-text);
+  --heading-font-weight: 600;
+  --alt-heading-font-weight: var(--body-font-weight-bold);
+  --section-divider-color: var(--panel-border-color);
+  --link-font-color: #1880bd;
+  --link_hover-font-color: #105984;
+  --link_unresolved-font-color: var(--important-color);
+  --abstract-background: var(--color-white);
+  --abstract-font-color: var(--color-text);
+  --abstract-border-color: var(--panel-border-color);
+  --admonition-background: var(--panel-background);
+  --admonition-label-font-weight: var(--body-font-weight-bold);
+  --caption-font-color: var(--color-text);
+  --caption-font-weight: var(--body-font-weight-bold);
+  --code-background: var(--panel-background);
+  --code-font-color: var(--body-font-color);
+  --example-background: var(--color-white);
+  --example-border-color: var(--color-text);
+  --kbd-background: var(--panel-background);
+  --kbd-border-color: var(--color-gray-10);
+  --pre-background: var(--panel-background);
+  --pre-border-color: var(--panel-border-color);
+  --pre-annotation-font-color: var(--color-text-muted);
+  --quote-background: var(--panel-background);
+  --quote-border-color: var(--color-text);
+  --quote-font-color: var(--color-text);
+  --quote-attribution-font-color: var(--color-gray-30);
+  --sidebar-background: var(--panel-background);
+  --table-border-color: var(--panel-border-color);
+  --table-stripe-background: var(--panel-background);
+  --table-footer-background: linear-gradient(to bottom, var(--color-smoke-70) 0%, var(--color-white) 100%);
+  /* toc */
+  --toc-font-color: var(--color-text-semi-muted);
+  --toc-heading-font-color: var(--doc-font-color);
+  --toc-border-color: var(--panel-border-color);
+  --toc-line-height: 1.2;
+  /* footer */
+  --footer-line-height: var(--doc-line-height);
+  --footer-background: var(--color-white);
+  --footer-font-color: var(--color-text);
+  --footer-copyright-font-color: var(--color-text-muted);
+  /* dimensions and positioning */
+  --navbar-height: calc(73 / var(--rem-base) * 1rem);
+  --navbar-sub-height: calc(45 / var(--rem-base) * 1rem);
+  --toolbar-height: calc(45 / var(--rem-base) * 1rem);
+  --universal-nav-height: 44px; /* fixed px so the strip height doesn't shift with the theme's responsive root font-size */
+  --body-top: calc(var(--universal-nav-height) + var(--navbar-height));
+  --body-min-height: calc(100vh - var(--body-top));
+  --nav-height: calc(var(--body-min-height) - var(--toolbar-height));
+  --nav-height--desktop: var(--body-min-height);
+  --nav-width: calc(270 / var(--rem-base) * 1rem);
+  --toc-top: calc(var(--body-top) + var(--toolbar-height));
+  --toc-height: calc(100vh - var(--toc-top) - 2.5rem);
+  --toc-width: calc(162 / var(--rem-base) * 1rem);
+  --toc-width--widescreen: calc(216 / var(--rem-base) * 1rem);
+  --doc-max-width: 100%;
+  --doc-max-width--desktop: 100%;
+  /* stacking */
+  --z-index-nav: 1;
+  --z-index-toolbar: 2;
+  --z-index-page-version-menu: 3;
+  --z-index-page-version-menu-button: 4;
+  --z-index-navbar: 5;
+  --z-index-universal-nav: 6;
+}

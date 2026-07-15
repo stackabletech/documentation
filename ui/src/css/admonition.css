@@ -1,0 +1,47 @@
+.doc .admonitionblock.code-rule {
+  /* Apply padding-top only for admonitions which only contain a code block */
+  & td.content:has(div.listingblock) {
+    padding: 1rem 0 0 0 !important;
+  }
+
+  /* Disable box shadow for code blocks inside code rule admonitions */
+  & td.content div.listingblock pre.highlight code {
+    box-shadow: none;
+  }
+
+  /* Don't use uppercase for captions */
+  & .icon {
+    text-transform: none;
+  }
+}
+
+/* Adjust styles for the "correct" code style rule usage */
+.doc .admonitionblock.code-rule.tip {
+  /* Change the background color of the "tip" admonition to a light green */
+  & td.content {
+    background-color: #e7fbe8;
+  }
+
+  /* Change the background color of the code block to a light green */
+  & td.content div.listingblock pre.highlight code {
+    background-color: #e7fbe8;
+  }
+}
+
+/* Adjust styles for the "wrong" code style rule usage */
+.doc .admonitionblock.code-rule.warning {
+  /* Change the color of the "important" admonition back to the default red */
+  & .icon {
+    background-color: #e40046;
+  }
+
+  /* Change the background color of the "tip" admonition to a light green */
+  & td.content {
+    background-color: #f0d2db;
+  }
+
+  /* Change the background color of the code block to a light green */
+  & td.content div.listingblock pre.highlight code {
+    background-color: #f0d2db;
+  }
+}

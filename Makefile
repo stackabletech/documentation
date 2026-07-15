@@ -53,23 +53,26 @@ clean:
 	# 'cache' is the configured cache dir in the playbook
 	rm -rf cache
 
-# The netlify repo is checked out without any blobs. This script
-# iterates through the release branches and checks them out one-by-one
-# to fetch all the files.
-# Then we can build directly from here, making it possible to build
-# with antora using the HEAD (enabling branch previews!)
+# The netlify repo is checked out without any blobs. Antora needs local
+# release branches and their blobs in the object database, so this target
+# creates/updates the local branches and materializes their blobs via
+# pathspec checkouts - without ever switching HEAD (enabling branch previews!).
+# ui/ is excluded: release branches still reference it as a submodule and
+# its blobs are not needed (the UI bundle is built from the current checkout).
 netlify-fetch:
-	git submodule update --init --recursive
 	# netlify messes with some files, restore everything to how it was:
-	git reset --hard --recurse-submodule
+	git reset --hard
 	# fetch, because netlify does caching and we want to get the latest commits
 	git fetch --all
-	# checkout all release branches once, so we fetch the files
 	for remote in $(shell git branch -r | grep -E 'release[/-]'); do \
-		git checkout --recurse-submodules "$${remote#origin/}" ; git pull; \
+		branch="$${remote#origin/}"; \
+		git fetch -q origin "+refs/heads/$$branch:refs/heads/$$branch"; \
+		git checkout -q "$$branch" -- ':(exclude)ui' . ; \
 	done
-	# go back to the initial commit to start the build
-	git -c advice.detachedHead=false checkout --recurse-submodules $(CURRENT_COMMIT)
+	# restore the working tree of the current commit and drop files that
+	# only exist on other branches (ignored files like node_modules stay)
+	git reset --hard -q $(CURRENT_COMMIT)
+	git clean -fdq
 
 netlify-build: netlify-fetch build-prod build-search-index
 

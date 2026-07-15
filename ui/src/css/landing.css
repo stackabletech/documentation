@@ -1,0 +1,38 @@
+.boxes {
+  display: grid;
+  column-gap: 1rem;
+  row-gap: 2rem;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.boxes.two-column {
+  grid-template-columns: 1fr 1fr;
+}
+
+.box h3 {
+  display: inline-block;
+}
+
+.box div {
+  display: inline-block;
+}
+
+.box p {
+  display: inline-block;
+}
+
+.box .admonitionblock {
+  margin-top: 2.8rem;
+}
+
+@media screen and (max-width: 1023.5px) {
+  .boxes {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .boxes {
+    grid-template-columns: 1fr;
+  }
+}
