@@ -18,6 +18,127 @@
 # Redirects/rules are evaluated from top to bottom and the first match will always be used by Netlify.
 # -------------
 
+# Rate limit the top most pages
+[[redirects]]
+  from = "/home/stable/spark-k8s/"
+  to = "/home/stable/spark-k8s/"
+    [redirects.rate_limit]
+    window_limit = 10
+    window_size = 60
+    aggregate_by = ["ip"]
+
+[[redirects]]
+  from = "/home/stable/druid/"
+  to = "/home/stable/druid/"
+    [redirects.rate_limit]
+    window_limit = 10
+    window_size = 60
+    aggregate_by = ["ip"]
+
+[[redirects]]
+  from = "/home/stable/nifi/"
+  to = "/home/stable/nifi/"
+    [redirects.rate_limit]
+    window_limit = 10
+    window_size = 60
+    aggregate_by = ["ip"]
+
+[[redirects]]
+  from = "/home/stable/superset/"
+  to = "/home/stable/superset/"
+    [redirects.rate_limit]
+    window_limit = 10
+    window_size = 60
+    aggregate_by = ["ip"]
+
+[[redirects]]
+  from = "/home/stable/trino/"
+  to = "/home/stable/trino/"
+    [redirects.rate_limit]
+    window_limit = 10
+    window_size = 60
+    aggregate_by = ["ip"]
+
+[[redirects]]
+  from = "/home/stable/zookeeper/"
+  to = "/home/stable/zookeeper/"
+    [redirects.rate_limit]
+    window_limit = 10
+    window_size = 60
+    aggregate_by = ["ip"]
+
+[[redirects]]
+  from = "/home/stable/opa/"
+  to = "/home/stable/opa/"
+    [redirects.rate_limit]
+    window_limit = 10
+    window_size = 60
+    aggregate_by = ["ip"]
+
+[[redirects]]
+  from = "/home/stable/hbase/"
+  to = "/home/stable/hbase/"
+    [redirects.rate_limit]
+    window_limit = 10
+    window_size = 60
+    aggregate_by = ["ip"]
+
+[[redirects]]
+  from = "/home/stable/airflow/"
+  to = "/home/stable/airflow/"
+    [redirects.rate_limit]
+    window_limit = 10
+    window_size = 60
+    aggregate_by = ["ip"]
+
+[[redirects]]
+  from = "/home/stable/hive/"
+  to = "/home/stable/hive/"
+    [redirects.rate_limit]
+    window_limit = 10
+    window_size = 60
+    aggregate_by = ["ip"]
+
+[[redirects]]
+  from = "/home/stable/kafka/"
+  to = "/home/stable/kafka/"
+    [redirects.rate_limit]
+    window_limit = 10
+    window_size = 60
+    aggregate_by = ["ip"]
+
+[[redirects]]
+  from = "/home/stable/hdfs/"
+  to = "/home/stable/hdfs/"
+    [redirects.rate_limit]
+    window_limit = 10
+    window_size = 60
+    aggregate_by = ["ip"]
+
+[[redirects]]
+  from = "/home/stable/secret-operator/"
+  to = "/home/stable/secret-operator/"
+    [redirects.rate_limit]
+    window_limit = 10
+    window_size = 60
+    aggregate_by = ["ip"]
+
+[[redirects]]
+  from = "/home/stable/listener-operator/"
+  to = "/home/stable/listener-operator/"
+    [redirects.rate_limit]
+    window_limit = 10
+    window_size = 60
+    aggregate_by = ["ip"]
+
+[[redirects]]
+  from = "/home/stable/commons-operator/"
+  to = "/home/stable/commons-operator/"
+    [redirects.rate_limit]
+    window_limit = 10
+    window_size = 60
+    aggregate_by = ["ip"]
+
 #---------------------
 # ASSETS RATE LIMITING
 # These limits can be set higher, because most automated requests/attacks will most likely only
