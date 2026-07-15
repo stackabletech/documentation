@@ -6,7 +6,7 @@ This file helps AI coding agents (and humans) understand how to work with this r
 
 This is the **Stackable Documentation** site, built with [Antora](https://antora.org/).
 It aggregates AsciiDoc content from this repo plus ~18 operator repos from the `stackabletech` GitHub org.
-The UI comes from a git submodule in `ui/` (the [documentation-ui](https://github.com/stackabletech/documentation-ui) repo).
+The UI lives in the `ui/` directory and is bundled during the build.
 
 ## Prerequisites
 
@@ -18,7 +18,6 @@ The UI comes from a git submodule in `ui/` (the [documentation-ui](https://githu
 ## Setup
 
 ```sh
-git submodule update --init        # fetch the UI submodule
 npm ci                             # install dependencies
 ```
 
@@ -67,7 +66,6 @@ Then open `http://localhost:8000`.
 ## Quick Start (copy-paste)
 
 ```sh
-git submodule update --init
 npm ci
 make ANTORAFLAGS=--fetch build-only-dev
 make serve
@@ -77,7 +75,7 @@ make serve
 
 - `antora.yml` — Defines the `home` Antora component (version, nav, attributes)
 - `modules/` — Platform-level documentation content (concepts, guides, tutorials, operators, etc.)
-- `ui/` — Git submodule pointing to [documentation-ui](https://github.com/stackabletech/documentation-ui); bundled by gulp
+- `ui/` — The site UI (a fork of antora-ui-default, see `ui/UPSTREAM`); bundled by gulp
 - `supplemental-ui/` — UI overrides and the `stackable-operator-helpers.js` Antora extension
 - `*-playbook.yml` — Antora playbook files (see Build Targets above)
 - `cache/` — Antora's git cache directory (gitignored, remove with `make clean`)
@@ -131,7 +129,7 @@ Cross-repo xrefs will break if any sibling repo is on a different branch or has 
 
 ### UI bundle not found
 
-Run `git submodule update --init` to fetch the UI submodule, then `npm ci` to install dependencies (including gulp).
+Run `npm ci` to install dependencies (including gulp), then `make build-ui`.
 
 ## Agent Skills
 
