@@ -1,0 +1,66 @@
+/* How do fonts work in this build setup?
+ * Fonts are installed from fontsource packages.
+ * In the file ./gulp.d/tasks/build.js there is an action that copies the font files
+ * from the installed packages into the output directory, based on matching file names.
+ * search for 'fontsource' in the file, and you will find a post CSS action.
+ */
+
+/* Noto Sans - the base font for the body */
+
+@font-face {
+  font-family: "Noto Sans";
+  font-style: normal;
+  font-weight: 400;
+  src:
+    url(~@fontsource/noto-sans/files/noto-sans-latin-400-normal.woff2) format("woff2"),
+    url(~@fontsource/noto-sans/files/noto-sans-latin-400-normal.woff) format("woff");
+}
+
+@font-face {
+  font-family: "Noto Sans";
+  font-style: normal;
+  font-weight: 700;
+  src:
+    url(~@fontsource/noto-sans/files/noto-sans-latin-700-normal.woff2) format("woff2"),
+    url(~@fontsource/noto-sans/files/noto-sans-latin-700-normal.woff) format("woff");
+}
+
+/* IMB Plex Mono - the header font */
+
+@font-face {
+  font-family: "IBM Plex Mono";
+  font-style: normal;
+  font-weight: 400;
+  src:
+    url(~@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-400-normal.woff2) format("woff2"),
+    url(~@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-400-normal.woff) format("woff");
+}
+
+@font-face {
+  font-family: "IBM Plex Mono";
+  font-style: normal;
+  font-weight: 600;
+  src:
+    url(~@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-600-normal.woff2) format("woff2"),
+    url(~@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-600-normal.woff) format("woff");
+}
+
+/* Noto Sans Mono - The monospace font for code blocks */
+
+@font-face {
+  font-family: "Noto Sans Mono";
+  font-style: normal;
+  font-weight: 400;
+  src:
+    url(~@fontsource/noto-sans-mono/files/noto-sans-mono-latin-400-normal.woff2) format("woff2"),
+    url(~@fontsource/noto-sans-mono/files/noto-sans-mono-latin-400-normal.woff) format("woff");
+}
+
+@font-face {
+  font-family: "Noto Sans Mono";
+  font-style: normal;
+  font-weight: 500;
+  src:
+    url(~@fontsource/noto-sans-mono/files/noto-sans-mono-latin-500-normal.woff2) format("woff2"),
+    url(~@fontsource/noto-sans-mono/files/noto-sans-mono-latin-500-normal.woff) format("woff");
+}

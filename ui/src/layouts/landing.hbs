@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+{{> head defaultPageTitle='Untitled'}}
+  </head>
+  <body class="article{{#with (or page.attributes.role page.role)}} {{{this}}}{{/with}}">
+{{> universal-nav}}
+{{> header}}
+    <div class="body">
+        <div class="container">
+            <main class="article">
+            <div class="content">
+                <article class="doc landing">
+                {{#with page.title}}
+                <h1 class="page">{{{this}}}</h1>
+                {{/with}}
+                {{{page.contents}}}
+                {{> pagination}}
+                </article>
+            </div>
+            </main>
+        </div>
+    </div>
+{{> footer}}
+  </body>
+</html>

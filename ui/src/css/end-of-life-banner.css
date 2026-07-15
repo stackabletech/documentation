@@ -1,0 +1,11 @@
+.end-of-life-banner {
+  background-color: #f2ce6b;
+  border-radius: 0.25rem;
+  border: 2px solid #e09807;
+  padding: 0.75rem;
+  margin-top: calc(var(--toolbar-height) + 0.75rem);
+}
+
+.end-of-life-banner h4 {
+  margin: 0;
+}
