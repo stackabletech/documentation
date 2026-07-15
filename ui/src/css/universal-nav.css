@@ -1,0 +1,295 @@
+/**
+ * The Stackable universal navigation strip — links the three Stackable
+ * properties (stackable.tech, docs, hub), mirroring the hub's meta strip.
+ */
+
+.universal-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--universal-nav-height);
+  z-index: var(--z-index-universal-nav);
+  background: var(--universal-nav-background);
+  color: var(--universal-nav-font-color);
+  border-bottom: solid 1px transparent;
+}
+
+.universal-nav__bar {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  height: 100%;
+  padding: 0 28px;
+}
+
+.universal-nav a {
+  text-decoration: none;
+}
+
+.universal-nav__brand {
+  display: flex;
+  align-items: center;
+  border-radius: 6px;
+  flex: none;
+}
+
+.universal-nav__logo {
+  display: block;
+  height: 20px;
+  width: auto;
+}
+
+.universal-nav__sep {
+  width: 1px;
+  height: 18px;
+  background: rgba(255, 255, 255, 0.16);
+  flex: none;
+}
+
+.universal-nav__tabs {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+}
+
+.universal-nav__tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 30px;
+  padding: 0 14px;
+  border-radius: 7px;
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 13.5px;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  transition:
+    background var(--universal-nav-duration-fast) var(--universal-nav-ease),
+    color var(--universal-nav-duration-fast) var(--universal-nav-ease);
+}
+
+.universal-nav__tab:hover {
+  background: var(--universal-nav-hover-background);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.universal-nav__tab.is-current {
+  color: var(--universal-nav-font-color);
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.universal-nav__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex: none;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.universal-nav__tab.is-current .universal-nav__dot {
+  background: var(--universal-nav-accent-current);
+}
+
+.universal-nav__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  color: rgba(255, 255, 255, 0.7);
+  transition: color var(--universal-nav-duration-fast) var(--universal-nav-ease);
+}
+
+.universal-nav__icon:hover {
+  color: var(--universal-nav-font-color);
+}
+
+.universal-nav__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 30px;
+  padding: 0 16px;
+  border-radius: 99px;
+  background: var(--universal-nav-cta-background);
+  color: var(--universal-nav-cta-font-color);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  flex: none;
+  transition: background var(--universal-nav-duration-fast) var(--universal-nav-ease);
+}
+
+.universal-nav__cta:hover {
+  background: var(--universal-nav-cta-hover-background);
+}
+
+.universal-nav__disclosure {
+  display: none;
+  align-items: center;
+  gap: 7px;
+  margin-left: auto;
+  padding: 6px 8px;
+  border: 0;
+  background: none;
+  color: var(--universal-nav-font-color);
+  border-radius: 7px;
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.universal-nav__disclosure:hover {
+  background: var(--universal-nav-hover-background);
+}
+
+.universal-nav__caret {
+  display: inline-flex;
+  color: rgba(255, 255, 255, 0.7);
+  transition: transform var(--universal-nav-duration-med) var(--universal-nav-ease);
+}
+
+.universal-nav__disclosure[aria-expanded="true"] .universal-nav__caret {
+  transform: rotate(180deg);
+}
+
+.universal-nav__sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.universal-nav__sheet {
+  position: absolute;
+  top: var(--universal-nav-height);
+  left: 0;
+  width: 100%;
+  background: var(--universal-nav-background);
+  border-bottom: solid 1px rgba(255, 255, 255, 0.16);
+  padding: 8px 12px 12px;
+  line-height: 1.5;
+}
+
+.universal-nav__sheet[hidden] {
+  display: none;
+}
+
+.universal-nav__sheet-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 9px;
+  margin-bottom: 4px;
+  border: 1px solid transparent;
+}
+
+.universal-nav__sheet-row:hover {
+  background: var(--universal-nav-hover-background);
+}
+
+.universal-nav__sheet-row.is-current {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.universal-nav__sheet-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex: none;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.universal-nav__sheet-row.is-current .universal-nav__sheet-dot {
+  background: var(--universal-nav-accent-current);
+}
+
+.universal-nav__sheet-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.universal-nav__sheet-name {
+  display: block;
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--universal-nav-font-color);
+}
+
+.universal-nav__sheet-host {
+  display: block;
+  color: rgba(255, 255, 255, 0.5);
+  font-family: var(--monospace-font-family);
+  font-size: 11px;
+  margin-top: 1px;
+}
+
+.universal-nav__here {
+  color: var(--universal-nav-accent-current);
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.universal-nav__ext {
+  display: inline-flex;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.universal-nav__sheet-cta {
+  width: 100%;
+  height: 40px;
+  margin-top: 6px;
+}
+
+.universal-nav a:focus-visible,
+.universal-nav button:focus-visible {
+  outline: 2px solid var(--universal-nav-font-color);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .universal-nav__tab,
+  .universal-nav__icon,
+  .universal-nav__caret,
+  .universal-nav__disclosure,
+  .universal-nav__cta {
+    transition: none;
+  }
+}
+
+@media screen and (max-width: 720px) {
+  .universal-nav__bar {
+    padding: 0 14px;
+    gap: 10px;
+  }
+
+  .universal-nav__tabs,
+  .universal-nav__icon,
+  .universal-nav__bar > .universal-nav__cta,
+  .universal-nav__sep {
+    display: none;
+  }
+
+  .universal-nav__disclosure {
+    display: inline-flex;
+  }
+}
+
+@media screen and (min-width: 721px) {
+  .universal-nav__sheet {
+    display: none;
+  }
+}

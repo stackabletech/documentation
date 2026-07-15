@@ -1,0 +1,28 @@
+<article class="doc"
+{{! Only pages that are 'latest' or unversioned are included in the pagefind search}}
+{{#if page.latest}}
+{{#if (eq page.displayVersion page.latest.displayVersion)}}
+data-pagefind-body
+{{/if}}
+{{else}}
+data-pagefind-body
+{{/if}}
+>
+{{! In antora.yml set asciidoc.attributes.page-end-of-life to true/false}}
+{{#if page.attributes.end-of-life}}
+<aside class="end-of-life-banner">
+  <h4>This version of the Stackable Data Platform is no longer maintained.</h4>
+  <p>
+    {{#if page.canonicalUrl}}
+    Please read the <a href="{{{page.canonicalUrl}}}">latest version of this page</a> instead.
+    {{/if}}
+    The <a href="{{{ relativize (versioned "home" page "policies.html") }}}">lifecycle policies</a> define when a release stops receiving maintenance updates.
+  </p>
+</aside>
+{{/if}}
+{{#with page.title}}
+<h1 class="page" data-pagefind-weight="10.0">{{{this}}}</h1>
+{{/with}}
+{{{page.contents}}}
+{{> pagination}}
+</article>

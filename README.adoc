@@ -18,11 +18,10 @@ Other Stackable repos contain `docs` directories which are pulled in by this rep
 
 **Dependencies**: `make`, `npm`.
 
-To build the site, pull submodules, install dependencies and run `make`:
+To build the site, install dependencies and run `make`:
 
 [source,console]
 ----
-$ git submodule update --init
 $ npm ci
 $ make
 ----
@@ -61,14 +60,11 @@ content:
     branches: HEAD
 ----
 
-NOTE: Antora does not recognize git submodules as git repositories
-
-The design & layout comes from our https://github.com/stackabletech/documentation-ui[UI repository].
+The design & layout lives in the `ui/` directory of this repository.
 
 `LIVERELOAD=true gulp` may be used to recreate the built documentation after each edit.
 
 == More useful links
 
-* The https://github.com/stackabletech/documentation-ui[documentation-ui] repository.
 * The https://hub.stackable.tech/crds[CRD reference] on the Stackable Hub.
 * The Stackable https://docs.stackable.tech/home/stable/contributor/[contributor's guide] containing more info on how to contribute to the documentation.

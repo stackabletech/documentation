@@ -1,0 +1,4 @@
+/* Add a margin above the tabs; there is no margin by default */
+.tabs {
+  margin-top: 1rem;
+}

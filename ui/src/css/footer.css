@@ -1,0 +1,124 @@
+footer.footer {
+  background-color: var(--footer-background);
+  color: var(--footer-font-color);
+  font-size: calc(15 / var(--rem-base) * 1rem);
+  line-height: var(--footer-line-height);
+  padding: 1.5rem;
+  padding-top: 5rem;
+}
+
+.footer p {
+  margin: 0.5rem 0;
+}
+
+.footer-info {
+  display: flex;
+  gap: 24px;
+}
+
+@media screen and (max-width: 720px) {
+  .footer-info {
+    flex-direction: column;
+  }
+}
+
+@media screen and (min-width: 720px) {
+  .footer-info {
+    flex-direction: row;
+  }
+}
+
+.footer-info-item-large {
+  flex-grow: 3;
+}
+
+.footer-info-item {
+  flex-grow: 1;
+}
+
+.footer-info-item h2 {
+  margin-top: 0;
+  font-family: var(--header-font-family);
+  font-weight: var(--heading-font-weight);
+}
+
+.footer-motto {
+  font-family: var(--header-font-family);
+  font-weight: var(--heading-font-weight);
+}
+
+.footer-link-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-link-list li a {
+  color: var(--footer-font-color);
+}
+
+.footer-link-list li a:hover {
+  text-decoration: none;
+  color: var(--color-brand-primary);
+}
+
+.c-and-socials {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@media screen and (max-width: 720px) {
+  .c-and-socials {
+    flex-direction: column;
+  }
+}
+
+@media screen and (min-width: 720px) {
+  .c-and-socials {
+    flex-direction: row;
+  }
+}
+
+.footer-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.social-icons-container {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.social-icon {
+  color: var(--footer-font-color);
+  background-color: var(--footer-background);
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  height: 36px;
+  width: 36px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.social-icon:hover {
+  color: var(--footer-background);
+  background-color: var(--color-brand-primary);
+  text-decoration: none;
+}
+
+.footer-seperator {
+  width: 100%;
+  height: 1px;
+  background-color: var(--footer-font-color);
+}
+
+.copyright-notice {
+  color: var(--footer-copyright-font-color);
+}

@@ -1,0 +1,29 @@
+/**
+ * CSS styles for a link bar. A list of links, usually at the beginning of a document,
+ * that looks somewhat like a menu. It's useful to provide links to external pages.
+ * Asciidoc example:
+ *
+ * >[.link-bar]
+ * >  * https://github.com/[GitHub]
+ * >  * https://airflow.apache.org/[Airflow]
+ * >  * https://druid.apache.org/[Druid]
+ */
+
+.ulist.link-bar {
+  background-color: #1880bd1f;
+  padding: 0.75rem;
+  border-radius: 0.25rem;
+}
+
+.ulist.link-bar ul {
+  list-style-type: none;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: baseline;
+  margin: 0;
+  padding: 0;
+}
+
+.ulist.link-bar ul li {
+  margin: 0;
+}
