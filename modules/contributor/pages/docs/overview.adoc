@@ -11,7 +11,6 @@
 :pagefind: https://pagefind.app/
 :stackable-docs-readme: https://github.com/stackabletech/documentation/blob/main/README.adoc
 :stackable-docs-repo: https://github.com/stackabletech/documentation
-:stackable-docs-ui-repo: https://github.com/stackabletech/documentation-ui
 :trunk-based-development: https://trunkbaseddevelopment.com/
 
 We use {antora-docs}[Antora{external-link-icon}^] to write our user facing documentation,
@@ -56,7 +55,7 @@ The xref:docs/style-guide.adoc[] contains all the information about the writing 
 {antora-docs}[Antora{external-link-icon}^] uses a {antora-playbook}[playbook{external-link-icon}^] to build the documentation.
 It pulls documentation content from all the individual operator repositories, so an operators documentation is maintained in the same repository as the code.
 Antora builds a static website which we serve over {netlify}[Netlify{external-link-icon}^].
-The web template of the documentation is also custom made and is developed in the {stackable-docs-ui-repo}[documentation-ui{external-link-icon}^] repository.
+The web template of the documentation is also custom made and lives in the `ui/` directory of the {stackable-docs-repo}[documentation repository{external-link-icon}^].
 
 For search, we use {pagefind}[pagefind{external-link-icon}^] - a static search.
 The search index is generated as part of the build process and no external index is queried during search.
