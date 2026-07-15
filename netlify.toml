@@ -42,6 +42,6 @@
   from = "/*"
   to = "/:splat"
     [redirects.rate_limit]
-    window_limit = 25
+    window_limit = 250
     window_size = 60
     aggregate_by = ["ip"]
