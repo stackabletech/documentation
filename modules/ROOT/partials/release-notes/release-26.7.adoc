@@ -1,0 +1,152 @@
+// DRAFT release notes for SDP 26.7.0.
+// Sourced from stackabletech issues/PRs labelled (release/26.7.0 OR scheduled-for/26.7.0)
+// AND (release-note OR release-note/action-required). 13 issues + 29 PRs.
+// All `// TODO(verify)` markers must be resolved before this is merged/published.
+
+== Release 26.7
+
+=== 26.7.0
+
+// TODO(verify): exact release date. Tracking issue #847 target was 2026-07-17, shifted ~10 days -> ~2026-07-27.
+Released on 2026-07-27.
+
+// TODO(highlights): written last, once all sections below are agreed.
+// [TIP,caption=Release highlights]
+// ====
+// * Highlight 1
+// ====
+
+// TODO(breaking): overview of breaking changes, written last. Candidates (action-required / chore!):
+// * Generic database connection (Druid field rename) - link:#druid-features-26_7_0
+// * Apache Airflow EXPERIMENTAL_FILE_* rename - link:#airflow-removals-26_7_0
+// * Apache Superset EXPERIMENTAL_FILE_* rename - link:#superset-removals-26_7_0
+// * Apache NiFi 1.x CRD fields removed - link:#nifi-removals-26_7_0
+// * Apache Spark application templates now namespaced - link:#spark-fixes-26_7_0
+// [WARNING,caption=Overview of breaking changes]
+// ====
+// ====
+
+==== New platform features
+
+===== General
+
+====== Miscellaneous
+
+* The SDP now provides a generic database connection mechanism, giving a consistent way to configure connections to external SQL databases across operators.
+  It has been rolled out to the Apache Airflow (https://github.com/stackabletech/airflow-operator/pull/754[airflow-operator#754]), Apache Hive (https://github.com/stackabletech/hive-operator/pull/674[hive-operator#674]) and Apache Superset (https://github.com/stackabletech/superset-operator/pull/722[superset-operator#722]) operators, and underpins new database connector support in Apache Druid and Trino (see the respective sections below).
++
+--
+[WARNING]
+====
+*Breaking:* In the Stackable operator for Apache Druid the field `metadata_storage_database` has been renamed to `metadata_database`.
+====
+
+// TODO(verify): xref to the generic database connection concept/usage docs once the page exists.
+Tracked in https://github.com/stackabletech/issues/issues/238[issues#238].
+--
+* Operators that support OIDC authentication can now configure the `clientAuthenticationMethod`.
+  This resolves the Apache Druid OIDC issue where a provider advertising `private_key_jwt` could cause authentication to fail (a known issue in the 26.3 release).
+  // TODO(verify): confirm which operators expose this field and add the relevant xref.
+  Tracked in https://github.com/stackabletech/issues/issues/838[issues#838].
+* Operators can now resolve product images from registries other than `oci.stackable.tech`, making it possible to install the SDP from a mirror or private registry.
+  // TODO(verify): confirm this landed for 26.7.0 (issue #716 is a tracking epic) and add the xref to the image-registry docs.
+  Tracked in https://github.com/stackabletech/issues/issues/716[issues#716].
+
+===== Apache Airflow
+
+Apache Airflow can now authenticate git-sync against a repository using a custom CA, adding first-class support for CAs alongside the existing SSH and basic-auth options.
+// TODO(verify): xref to the DAG mounting / git-sync usage guide.
+Implemented in https://github.com/stackabletech/airflow-operator/pull/750[airflow-operator#750].
+
+===== Apache NiFi
+
+Apache NiFi can now authenticate git-sync against a repository using a custom CA, adding first-class support for CAs.
+// TODO(verify): xref to the NiFi git-sync usage guide.
+Implemented in https://github.com/stackabletech/nifi-operator/pull/903[nifi-operator#903].
+
+===== Apache Superset
+
+Two new roles, `worker` and `beat` (limited to a single replica), have been added so that Celery workers and the Celery beat scheduler can be enabled.
+// TODO(verify): the results backend currently supports Redis only (no S3); confirm whether to call this out. xref to Superset usage guide.
+Implemented in https://github.com/stackabletech/superset-operator/pull/724[superset-operator#724].
+
+===== Open Policy Agent
+
+The OPA operator now supports typed `configOverrides` for OPA's `config.json`, via JSON merge patch, JSON patches or a full file replacement.
+// TODO(verify): xref to the OPA configuration overrides docs.
+Implemented in https://github.com/stackabletech/opa-operator/pull/818[opa-operator#818].
+
+===== OpenSearch
+
+* Security configuration files are now hot-reloaded when changed, so that settings managed by the operator are applied without Pod restarts.
+  // TODO(verify): xref to the OpenSearch security docs.
+  Implemented in https://github.com/stackabletech/opensearch-operator/pull/130[opensearch-operator#130].
+* The operator now writes the actual node FQDNs into `plugins.security.nodes_dn` instead of a generic subject DN.
+  // TODO(verify): confirm feature vs fix categorisation for opensearch-operator#144.
+  Implemented in https://github.com/stackabletech/opensearch-operator/pull/144[opensearch-operator#144].
+
+===== Trino
+
+* Trino now supports the PostgreSQL connector, allowing PostgreSQL databases to be queried as a Trino catalog.
+  // TODO(verify): xref to the Trino PostgreSQL connector docs.
+  Implemented in https://github.com/stackabletech/trino-operator/pull/883[trino-operator#883].
+* A new `.spec.name.inferred.replaceHyphensWithUnderscores` field on `TrinoCatalog` allows tweaking the catalog name in Trino by replacing `-` with `_`.
+  This lets you use valid Kubernetes resource names while keeping the convenience of `_` in catalog names.
+  Implemented in https://github.com/stackabletech/trino-operator/pull/903[trino-operator#903].
+
+===== Stackable commons-operator
+
+The commons-operator restart-controller can now be told to ignore specific ConfigMaps and Secrets.
+Set the `restarter.stackable.tech/ignore` label on a ConfigMap or Secret, or the `restarter.stackable.tech/ignore-configmap.x` / `restarter.stackable.tech/ignore-secret.x` annotations on a StatefulSet, to exclude them from triggering restarts.
+// TODO(verify): xref to the restarter docs.
+Implemented in https://github.com/stackabletech/commons-operator/pull/410[commons-operator#410].
+
+===== Stackable secret-operator
+
+* The name of the CA certificate entry written by a `TrustStore` is now configurable, so it can be aligned with what consumers such as OpenShift expect (`tls.crt` vs `ca.crt`).
+  // TODO(verify): xref to the TrustStore docs.
+  Implemented in https://github.com/stackabletech/secret-operator/pull/679[secret-operator#679].
+* Domain components (DCs) can now be added to the subject DN of TLS certificates via the `secrets.stackable.tech/backend.autotls.cert.domain-components-in-subject-dn` volume annotation.
+  // TODO(verify): xref to the secret-operator volume docs.
+  Implemented in https://github.com/stackabletech/secret-operator/pull/708[secret-operator#708].
+
+// TODO(verify): stackablectl#187 (uninstall Stacks and Demos) - stackablectl is versioned separately; confirm whether it belongs in these platform release notes.
+
+// ============================================================================
+// TODO: remaining sections (next review rounds) - stubbed to keep the include valid.
+// ============================================================================
+
+==== Platform improvements
+
+// TODO: NiFi startup times (nifi#953), OPA DaemonSet maxSurge (opa#819),
+//       typed OpenSearch configOverrides (opensearch#137), General > Vulnerabilities (CVE counts TODO).
+
+==== Platform fixes
+
+// TODO: internal-secret mutability (issues#843; airflow#770, trino#876),
+//       SecretClasses requiring client cert regression (issues#547),
+//       Spark connect user args (spark#696), Spark graceful SIGTERM shutdown (docker-images#1564),
+//       Spark application templates namespaced (spark#694/#720 - BREAKING).
+
+==== Platform deprecations
+
+// TODO: product version deprecations (from docker-images version issues).
+
+==== Platform removals
+
+// TODO: NiFi 1.x CRD fields (nifi#960 - BREAKING), Airflow/Superset EXPERIMENTAL_FILE_* rename
+//       (airflow#777, superset#721 - BREAKING), removed product versions.
+
+==== Supported versions
+
+// TODO(UNVERIFIED - reconcile against portal.stackable.build screenshot before publishing):
+//   product versions (new/LTS/deprecated/removed), Kubernetes versions, OpenShift versions.
+
+==== Upgrade from 26.3
+
+// TODO: stackablectl + Helm uninstall/install for 26.3 -> 26.7, plus product-specific upgrade notes.
+
+[#known-issues-26_7_0]
+==== Known issues
+
+// TODO(verify): none known yet.
