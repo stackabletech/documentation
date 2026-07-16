@@ -9,8 +9,8 @@ header comments; this file preserves the attributions and is included
 in the published bundle.
 
 - Font Awesome Free 6.2.1 (https://fontawesome.com)
-  Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License
-  https://fontawesome.com/license/free
+  The inline svg icon path data is derived from Font Awesome Free icons
+  (CC BY 4.0). https://fontawesome.com/license/free
 - highlight.js (https://highlightjs.org)
   BSD 3-Clause License, (c) 2006 Ivan Sagalaev and contributors
 - Asciidoctor Tabs (https://github.com/asciidoctor/asciidoctor-tabs)
