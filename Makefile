@@ -74,6 +74,20 @@ netlify-fetch:
 	git reset --hard -q $(CURRENT_COMMIT)
 	git clean -fdq
 
-netlify-build: netlify-fetch build-prod build-search-index
+netlify-build: netlify-fetch build-prod build-search-index purge-cache
 
-.PHONY: build-only-dev build-local build-prod build-ui clean netlify-build netlify-fetch
+# Purge the bunny.net pull zone cache after a production build so freshly
+# deployed content is served instead of stale cached responses. Skipped when
+# the bunny.net credentials are not set (e.g. local builds).
+purge-cache:
+	@if [ -n "$$BUNNY_API_KEY" ] && [ -n "$$BUNNY_PULL_ZONE_ID" ]; then \
+		echo "Purging bunny.net pull zone $$BUNNY_PULL_ZONE_ID"; \
+		curl --fail --show-error --silent \
+			-X POST "https://api.bunny.net/pullzone/$$BUNNY_PULL_ZONE_ID/purgeCache" \
+			-H "AccessKey: $$BUNNY_API_KEY" \
+			-H "content-type: application/json"; \
+	else \
+		echo "Skipping bunny.net purge (BUNNY_API_KEY / BUNNY_PULL_ZONE_ID not set)"; \
+	fi
+
+.PHONY: build-only-dev build-local build-prod build-ui clean netlify-build netlify-fetch purge-cache
