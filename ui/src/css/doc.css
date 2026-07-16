@@ -655,7 +655,7 @@
 .doc ul.checklist p > i.fa-square-o:first-child {
   display: inline-flex;
   justify-content: center;
-  width: 1rem;
+  width: 1em;
 }
 
 .doc ul.checklist i.fa-check-square-o::before {
