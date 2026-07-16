@@ -67,7 +67,7 @@
     window.navigator.clipboard.writeText(text).then(
       function () {
         this.classList.add('clicked')
-        this.offsetHeight // eslint-disable-line no-unused-expressions
+        this.offsetHeight
         this.classList.remove('clicked')
       }.bind(this),
       function () {}

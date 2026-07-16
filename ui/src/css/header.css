@@ -254,13 +254,11 @@ body {
 
 .mobile-popup-menu .navbar-item.has-dropdown {
   flex-direction: column;
-  min-width: none;
 }
 
 .mobile-popup-menu .navbar-dropdown {
   display: inline;
   position: relative;
-  min-width: none;
 }
 
 /** indent sub items a little bit to distinguish them visually */

@@ -1,0 +1,5 @@
+build/
+node_modules/
+# inherited upstream files stay untouched until the upstream re-sync,
+# so the diff against antora-ui-default remains readable
+src/

@@ -62,7 +62,7 @@ content:
 
 The design & layout lives in the `ui/` directory of this repository.
 
-`LIVERELOAD=true gulp` may be used to recreate the built documentation after each edit.
+To see UI changes rendered with real content, rebuild with `make build-truly-local`.
 
 == More useful links
 
