@@ -27,10 +27,14 @@ asciidoc:
     # Whether this version is already end of life.
     # If true, a banner will be displayed informing the user.
     end-of-life: false
-    # use the attributes below to link to the CRD docs
+    # The CRD reference on the Stackable Hub. crd-ref links the listing;
+    # deep links follow {crd-ref}/<group>/<apiVersion>/<kind>{crd-ref-release}
+    crd-ref: "https://hub.stackable.tech/crds"
+    crd-ref-release: "?release=dev"
+    # DEPRECATED: the old CRD browser attributes below are still used by the
+    # operator docs; they migrate to crd-ref repo by repo (operator sweep).
     crd-docs-base-url: "https://crds.stackable.tech"
     crd-docs: "{crd-docs-base-url}/{crd-docs-version}"
     # to make attributes accessible to the UI template, they need to
     # be prefixed with "page-"
-    page-crd-docs: "{crd-docs}"
     page-end-of-life: "{end-of-life}"
