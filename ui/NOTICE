@@ -1,0 +1,23 @@
+This UI is a fork of the Antora Default UI
+(https://gitlab.com/antora/antora-ui-default), licensed under the
+Mozilla Public License 2.0 (see LICENSE). Modifications are
+(c) Stackable GmbH and remain under MPL-2.0.
+
+This directory ships with (and its build output bundles) the following
+third-party components. Build-time minification strips embedded license
+header comments; this file preserves the attributions and is included
+in the published bundle.
+
+- Font Awesome Free 6.2.1 (https://fontawesome.com)
+  Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License
+  https://fontawesome.com/license/free
+- highlight.js (https://highlightjs.org)
+  BSD 3-Clause License, (c) 2006 Ivan Sagalaev and contributors
+- Asciidoctor Tabs (https://github.com/asciidoctor/asciidoctor-tabs)
+  MIT License, (c) 2018-present Dan Allen
+- GitHub Octicons v11.2.0 (https://primer.style/octicons/)
+  MIT License, (c) GitHub, Inc.
+- IBM Plex Mono (https://github.com/IBM/plex)
+  SIL Open Font License 1.1, (c) IBM Corp.
+- Noto Sans and Noto Sans Mono (https://fonts.google.com/noto)
+  SIL Open Font License 1.1, (c) The Noto Project Authors

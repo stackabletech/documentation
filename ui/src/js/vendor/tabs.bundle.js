@@ -1,1 +1,1 @@
-require('@asciidoctor/tabs')
+import '@asciidoctor/tabs/dist/js/tabs.js'

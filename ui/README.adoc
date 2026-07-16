@@ -54,35 +54,22 @@ Inside the `src` directory are:
 * `layouts`: Contains the main Handlebars layout templates. `default.hbs` is the standard page layout, `landing.hbs` is for landing pages with special styling, and `404.hbs` handles error pages. These templates define the overall page structure and include partials for header, body, and footer.
 * `partials`: Contains all the Handlebars files. This is the directory containing all the templated HTML for the site.
 
-=== Gulp
+=== Build
 
-To work on the build process of this, you need to understand https://gulpjs.com/docs/en/getting-started/javascript-and-gulpfiles[gulp].
-Gulp is a builder/bundler that is used to package this antora UI.
+`npm run bundle` runs `build.mjs`: https://vite.dev[Vite] builds the css (one pass) and each js entry (one pass per file, as self-contained classic scripts), the static directories are copied in, and everything is zipped into `build/ui-bundle.zip`.
 
-In this project, `gulpfile.js` is the main entrypoint for gulp.
-This file references tasks in the `gulp.d` directory.
-
-You don't need to install the `gulp` CLI yourself, you can call package scripts (i.e. `npm run bundle` which will then call `gulp` from the `node_modules`).
+The js entries are `js/site.js` (the numbered scripts under `src/js`, concatenated in order) and one `js/vendor/<name>.js` per `src/js/vendor/<name>.bundle.js` with its imports bundled in.
 
 === Building the final documentation
 
-The documentation repository uses this repository as a submodule, bundles the UI on demand and then links to it like this in the Playbook:
+The build is wired into the Playbooks of this repository:
 
 [source,yaml]
 ui:
   bundle:
     url: ./ui/build/ui-bundle.zip
 
-=== Previewing the UI during development
-
-It is useful to be able to see changes quickly while working on the UI.
-To start the preview at http://localhost:5252, run `npm run preview`.
-Press kbd:[Ctrl+C] to stop the preview server and end the continuous build.
-
-==== How it works
-
-The `preview-src` directory contains dummy docs content, which will be used to render the UI templates.
-The `ui-model.yml` contains dummy information similar to the antora-playbook.yaml.
+To see UI changes rendered with real content, build the site: `make build-truly-local` (or push and use the deploy preview).
 
 == Notes on our Customized Version
 
