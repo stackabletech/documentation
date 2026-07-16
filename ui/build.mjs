@@ -1,5 +1,5 @@
 // Builds the Antora UI bundle (https://docs.antora.org/antora-ui-default/):
-// css/, js/, js/vendor/, font/, webfonts/, img/, helpers/, layouts/, partials/
+// css/, js/, js/vendor/, font/, img/, helpers/, layouts/, partials/
 // zipped as build/ui-bundle.zip (the path the playbooks reference).
 //
 // The scripts are consumed as classic <script src> tags, so every js entry is
@@ -68,8 +68,7 @@ for (const entry of jsEntries) {
           input: entry.input,
           output: {
             format: 'iife',
-            entryFileNames: `js/${entry.name}.js`,
-            inlineDynamicImports: true
+            entryFileNames: `js/${entry.name}.js`
           }
         }
       }
@@ -89,7 +88,6 @@ await build(
           assetFileNames: (asset) => {
             const name = asset.names[0] ?? '';
             if (name === 'site.css') return 'css/site.css';
-            if (/^fa-.+\.(woff2?|ttf)$/.test(name)) return 'webfonts/[name][extname]';
             if (/\.(woff2?|ttf)$/.test(name)) return 'font/[name][extname]';
             if (/\.(svg|png|gif|ico|jpg)$/.test(name)) return 'img/[name][extname]';
             return 'css/[name][extname]';
@@ -100,9 +98,7 @@ await build(
   })
 );
 
-// webfonts/ ships as-is: the Font Awesome css references it with
-// runtime-relative urls that vite cannot (and must not) rewrite
-for (const dir of ['helpers', 'layouts', 'partials', 'img', 'webfonts']) {
+for (const dir of ['helpers', 'layouts', 'partials', 'img']) {
   cpSync(resolve(src, dir), resolve(staged, dir), { recursive: true });
 }
 for (const file of ['NOTICE', 'LICENSE']) {
