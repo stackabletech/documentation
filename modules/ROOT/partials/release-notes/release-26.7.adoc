@@ -248,9 +248,13 @@ Removed in https://github.com/stackabletech/airflow-operator/pull/777[airflow-op
 [#nifi-removals-26_7_0]
 ===== Apache NiFi
 
-// TODO(author snippet): nifi-operator#960 has no author-written release note (only a CI link); wording drafted from the PR body - please confirm.
-*Breaking:* The NiFi 1.x configuration CRD fields and code have been removed, following the removal of NiFi 1.28.1.
-This removes the Prometheus reporting-task Job and its `spec.clusterConfig.createReportingTaskJob` field, the pre-2.x non-rolling upgrade handling, the dedicated metrics port, and the sensitive-properties algorithms that were only supported on NiFi 1.x.
+*Breaking:* Support for NiFi 1.x has been dropped, along with a few CRD fields that only applied to 1.x and had no effect on NiFi 2.x:
+
+* `spec.clusterConfig.createReportingTaskJob` (including `enabled` and `podOverrides`) is removed.
+  NiFi 2.x exposes Prometheus metrics directly at `/nifi-api/flow/metrics/prometheus`, so the reporting-task Job is obsolete.
+* The deprecated `spec.clusterConfig.sensitiveProperties.algorithm` values are removed.
+  Use a supported algorithm instead: `nifiArgon2AesGcm256` (default) or `nifiPbkdf2AesGcm256`.
+
 Removed in https://github.com/stackabletech/nifi-operator/pull/960[nifi-operator#960].
 
 [#superset-removals-26_7_0]
