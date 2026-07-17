@@ -265,25 +265,42 @@ Removed in https://github.com/stackabletech/superset-operator/pull/721[superset-
 
 ===== Product versions
 
-// TODO(UNVERIFIED - stop-gap from GitHub): the list below is derived only from the docker-images "Update major/minor versions" issues that carry a release-note label (Airflow, Druid, NiFi, OpenSearch, Superset, ZooKeeper).
-// The other products (HBase, Hadoop, Hive, Kafka, Spark, OPA, Trino, Vector) are NOT yet captured here because their version issues are not labelled.
-// RECONCILE the complete set against a portal.stackable.build screenshot (source of truth; hub.stackable.tech later) before publishing.
+// Reconciled against portal.stackable.build (source of truth) by diffing the 26.3 and 26.7 exports.
+// Added = in 26.7 not in 26.3; Removed = in 26.3 not in 26.7; statuses (LTS/experimental/deprecated) from the 26.7 export.
+// Overrides where the portal was wrong:
+//  - Spark 4.1.2 appears in the 26.3 portal export by mistake (it was not in 26.3.0; docker-images#1419 added only 3.5.8). It is treated as ADDED in 26.7. Portal maintainer to be notified.
+//  - Vector is absent from the portal export; taken from docker-images#1486 (add 0.55.0, remove 0.52.0). Portal maintainer notified.
+// Deprecated list = versions newly deprecated this release (status changed to deprecated vs 26.3), not the full standing deprecated set.
 
 As with previous SDP releases, many product images have been updated to newer versions.
 Refer to the xref:operators:supported_versions.adoc[supported versions] documentation for a complete overview including LTS versions or deprecations.
+
+====== New LTS versions
+
+The following product versions were already available before but are now marked as the xref:compliance:policies.adoc#_product_lifecycle_policy[LTS] version:
+
+* Apache Hive: https://github.com/stackabletech/docker-images/issues/1495[4.2.0 (LTS)]
 
 ====== New versions
 
 The following new product versions are now supported:
 
-* Apache Airflow: https://github.com/stackabletech/docker-images/issues/1489[3.2.1]
-** Note: the Airflow 3.2.1 webserver no longer serves metrics, and this version uses Python 3.14. // TODO(verify) whether the metrics change is intended.
+* Apache Airflow: https://github.com/stackabletech/docker-images/issues/1489[3.2.2]
+** Note: this Airflow version uses Python 3.14. // TODO(verify): the docker-images#1489 note about the webserver no longer serving metrics referred to 3.2.1; confirm it still applies to 3.2.2.
 * Apache Druid: https://github.com/stackabletech/docker-images/issues/1490[37.0.0 (LTS)]
 ** Note: Druid 37.0.0 switched to AWS SDK v2. TLS is now enforced for S3 connections, and the S3 `region` is now required (the operator passes `aws.region` from `S3Connection.region`).
+* Apache HBase: https://github.com/stackabletech/docker-images/issues/1491[2.6.6 (LTS)]
+* Apache Hadoop HDFS: https://github.com/stackabletech/docker-images/issues/1494[3.4.3 (LTS)], https://github.com/stackabletech/docker-images/issues/1494[3.5.0]
+* Apache Kafka: https://github.com/stackabletech/docker-images/issues/1497[3.9.2 (LTS)], https://github.com/stackabletech/docker-images/issues/1497[4.2.1 (experimental)]
 * Apache NiFi: https://github.com/stackabletech/docker-images/issues/1498[2.9.0]
-* OpenSearch: https://github.com/stackabletech/docker-images/issues/1500[3.6.0]
+* Apache Phoenix: https://github.com/stackabletech/docker-images/issues/1491[5.3.1 (LTS)]
+* Apache Spark: https://github.com/stackabletech/docker-images/issues/1502[4.1.2 (LTS)]
 * Apache Superset: https://github.com/stackabletech/docker-images/issues/1504[6.1.0]
 * Apache ZooKeeper: https://github.com/stackabletech/docker-images/issues/1506[3.9.5 (LTS)]
+* Open Policy Agent: https://github.com/stackabletech/docker-images/issues/1499[1.16.2]
+* OpenSearch: https://github.com/stackabletech/docker-images/issues/1500[3.6.0]
+* Trino: https://github.com/stackabletech/docker-images/issues/1505[481]
+* Vector: https://github.com/stackabletech/docker-images/issues/1486[0.55.0]
 
 ====== Deprecated versions
 
@@ -291,10 +308,17 @@ The following product versions are deprecated and will be removed in a later rel
 
 * Apache Airflow: https://github.com/stackabletech/docker-images/issues/1489[3.1.6]
 * Apache Druid: https://github.com/stackabletech/docker-images/issues/1490[35.0.1], https://github.com/stackabletech/docker-images/issues/1490[30.0.1]
+* Apache Hadoop HDFS: https://github.com/stackabletech/docker-images/issues/1494[3.4.2]
+* Apache Hive: https://github.com/stackabletech/docker-images/issues/1495[4.0.1]
+* Apache Kafka: https://github.com/stackabletech/docker-images/issues/1497[3.9.1]
 * Apache NiFi: https://github.com/stackabletech/docker-images/issues/1498[2.7.2]
-* OpenSearch: https://github.com/stackabletech/docker-images/issues/1500[3.4.0]
+* Apache Phoenix: https://github.com/stackabletech/docker-images/issues/1491[5.3.0]
+* Apache Spark: https://github.com/stackabletech/docker-images/issues/1502[3.5.8], https://github.com/stackabletech/docker-images/issues/1502[4.1.1]
 * Apache Superset: https://github.com/stackabletech/docker-images/issues/1504[6.0.0]
 * Apache ZooKeeper: https://github.com/stackabletech/docker-images/issues/1506[3.9.4]
+* Open Policy Agent: https://github.com/stackabletech/docker-images/issues/1499[1.12.3]
+* OpenSearch: https://github.com/stackabletech/docker-images/issues/1500[3.4.0]
+* Trino: https://github.com/stackabletech/docker-images/issues/1505[479]
 
 ====== Removed versions
 
@@ -303,16 +327,40 @@ These images for released product versions remain available in the https://oci.s
 Information on how to browse the registry can be found xref:contributor:project-overview.adoc#docker-images[in the project overview documentation,window=_blank].
 
 * Apache Druid: https://github.com/stackabletech/docker-images/issues/1490[34.0.0]
+* Apache HBase: https://github.com/stackabletech/docker-images/issues/1491[2.6.3]
+* Apache Hive: https://github.com/stackabletech/docker-images/issues/1495[4.1.0]
 * Apache NiFi: https://github.com/stackabletech/docker-images/issues/1498[1.28.1]
-// TODO(verify): complete this list once the full product-version set is reconciled against the portal.
+* Apache Phoenix: https://github.com/stackabletech/docker-images/issues/1491[5.2.1]
+* Apache Spark: https://github.com/stackabletech/docker-images/issues/1502[3.5.7], https://github.com/stackabletech/docker-images/issues/1502[4.0.1]
+* Open Policy Agent: https://github.com/stackabletech/docker-images/issues/1499[1.8.0]
+* Vector: https://github.com/stackabletech/docker-images/issues/1486[0.52.0]
 
 ===== Kubernetes versions
 
-// TODO(verify): supported Kubernetes versions for 26.7.0. In 26.3 these were 1.35-1.31. Confirm against the release definition.
+This release supports the following Kubernetes versions:
+
+* `1.36`
+* `1.35`
+* `1.34`
+* `1.33`
+* `1.32`
+* `1.31`
+
+// Portal diff shows no Kubernetes versions were dropped between 26.3 and 26.7 (1.36 added). Confirm before publishing.
+No Kubernetes versions were dropped in this release.
 
 ===== OpenShift versions
 
-// TODO(verify): supported OpenShift versions for 26.7.0. In 26.3 these were 4.21-4.18. Confirm against the release definition.
+This release is available in the RedHat Certified Operator Catalog for the following OpenShift versions:
+
+* `4.22`
+* `4.21`
+* `4.20`
+* `4.19`
+* `4.18`
+
+// Portal diff shows no OpenShift versions were dropped between 26.3 and 26.7 (4.22 added). Confirm before publishing.
+No OpenShift versions were dropped in this release.
 
 ==== Upgrade from 26.3
 
