@@ -168,9 +168,8 @@ Implemented in https://github.com/stackabletech/opensearch-operator/pull/144[ope
 
 ===== Stackable secret-operator
 
-The name of the CA certificate entry written by a `TrustStore` is now configurable.
-This makes it possible to align with what consumers such as OpenShift expect, which reads the CA from a Secret under the `tls.crt` key rather than `ca.crt`.
-// TODO(author snippet): secret-operator#679 has no author-written release note (only a CRD-naming discussion); wording drafted from the PR body - please confirm.
+The name of the key in the ConfigMap/Secret that holds the PEM-encoded CA certificate of a `TrustStore` is now configurable, via `.spec.tlsPemCaName`.
+This is needed, for example, to use the generated Secret within an OpenShift Ingress.
 // TODO(verify): xref to the TrustStore docs.
 Implemented in https://github.com/stackabletech/secret-operator/pull/679[secret-operator#679].
 
