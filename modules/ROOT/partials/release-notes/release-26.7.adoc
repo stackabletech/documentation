@@ -213,7 +213,6 @@ Fixed in https://github.com/stackabletech/nifi-opa-plugin/issues/30[nifi-opa-plu
 
 ===== Open Policy Agent
 
-// TODO(BLOCKER - unmerged): the fix PR opa-operator#859 is still OPEN (not merged) and the issue opa-operator#858 is still OPEN and labelled scheduled-for/26.7.0. This note must not ship until #859 is merged; otherwise remove this entry.
 The Microsoft Entra backend of the OPA user-info-fetcher now retrieves complete group memberships for policy checks.
 Previously, it read only the first page of a user's group memberships, so users belonging to many groups received an incomplete group list.
 With this release, the Entra backend follows the result pages until every page has been retrieved (bounded to 100 pages as a safeguard).
