@@ -139,9 +139,9 @@ Implemented in https://github.com/stackabletech/secret-operator/pull/708[secret-
 
 ===== Apache NiFi
 
-// TODO(author snippet): nifi-operator#953 has no author-written release note (only CI links); wording below is drafted from the PR body - please confirm.
-When the number of NiFi nodes is fixed (all role-group replicas are set, i.e. no autoscaling), the operator now sets `nifi.cluster.flow.election.max.candidates` to that node count.
-The cluster then finishes flow election as soon as all expected nodes have connected, instead of waiting out `nifi.cluster.flow.election.max.wait.time` (5 minutes), which greatly reduces cold-start times.
+For clusters with a fixed number of nodes, the operator now sets `nifi.cluster.flow.election.max.candidates` to the total node count.
+Cold-start flow election then completes as soon as all expected nodes report in, typically seconds instead of the up-to-5-minute `nifi.cluster.flow.election.max.wait.time` timeout.
+The timeout stays at NiFi's upstream default of 5 minutes as a fallback, so there is no correctness change if fewer nodes than expected show up.
 Implemented in https://github.com/stackabletech/nifi-operator/pull/953[nifi-operator#953].
 
 ===== Open Policy Agent
