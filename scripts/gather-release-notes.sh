@@ -85,14 +85,27 @@ gh api -X GET search/issues --paginate -f q="$QUERY" --jq '.items[]' \
     | jq -s 'unique_by(.html_url)' > "$ITEMS_FILE"
 
 if [ "$OUTPUT" = "json" ]; then
-    cat "$ITEMS_FILE"
+    # Enrich each item with its comments and a trimmed set of fields, so the
+    # release-note text (which authors write free-form, in the body OR a
+    # comment) is available in one place for a human/agent to read and
+    # interpret. Deliberately NO regex extraction here - see the note below.
+    jq -c '.[]' "$ITEMS_FILE" | while IFS= read -r item; do
+        full=$(echo "$item" | jq -r '.repository_url | sub(".*/repos/";"")')
+        number=$(echo "$item" | jq -r '.number')
+        comments=$(gh api "repos/$full/issues/$number/comments" --jq '[.[] | {author: .user.login, body}]' 2>/dev/null || echo '[]')
+        echo "$item" | jq -c --argjson comments "$comments" '{
+            repo: (.repository_url | sub(".*/repos/";"")),
+            number, title, html_url, state,
+            is_pr: (.pull_request != null),
+            merged: (.pull_request.merged_at != null),
+            labels: [.labels[].name],
+            action_required: (any(.labels[].name; . == "release-note/action-required")),
+            body: (.body // ""),
+            comments: $comments
+        }'
+    done | jq -s '.'
     exit 0
 fi
-
-# ------------------------------
-# Helper: is this item an action-required one?
-# ------------------------------
-is_action_required() { echo "$1" | jq -e 'any(.labels[].name; . == "release-note/action-required")' >/dev/null; }
 
 # ------------------------------
 # Counts (ground truth = number of items actually returned)
@@ -139,9 +152,19 @@ echo "$OPEN_PRS"
 echo
 
 # ------------------------------
-# Items grouped by repository, with release-note snippet
+# Item inventory grouped by repository (metadata only).
+#
+# NOTE: we deliberately do NOT try to extract the release-note text here.
+# Authors write it free-form - under headings like `### Release notes`, an
+# inline `Release-Note:` label, a bare `# Release notes` in a *linked* comment,
+# or interleaved with reviewer instructions. A regex can't reliably tell a real
+# note from a template checklist line ("- [ ] Release note snippet added") or
+# reviewer chatter. Reading and interpreting that text is the skill's job:
+# run this script with `--json` to get each item's full body + comments, then
+# read them. This inventory is just the deterministic "what's in the release".
 # ------------------------------
-echo "## Items grouped by repository"
+echo "## Item inventory grouped by repository"
+echo "# For the release-note text of each item, run this script with --json and read the body + comments."
 
 REPOS=$(jq -r '[.[] | .repository_url | sub(".*/repos/stackabletech/";"")] | unique | .[]' "$ITEMS_FILE")
 
@@ -149,38 +172,14 @@ while IFS= read -r repo; do
     [ -z "$repo" ] && continue
     echo
     echo "### $repo"
-    # Iterate items for this repo (compact JSON per line)
-    jq -c --arg R "$repo" '.[] | select((.repository_url | sub(".*/repos/stackabletech/";"")) == $R)' "$ITEMS_FILE" \
-    | while IFS= read -r item; do
-        number=$(echo "$item" | jq -r '.number')
-        title=$(echo "$item" | jq -r '.title')
-        url=$(echo "$item" | jq -r '.html_url')
-        labels=$(echo "$item" | jq -r '[.labels[].name] | join(", ")')
-        if echo "$item" | jq -e '.pull_request == null' >/dev/null; then
-            kind="issue"
-        elif echo "$item" | jq -e '.pull_request.merged_at != null' >/dev/null; then
-            kind="PR-merged"
-        else
-            kind="PR-$(echo "$item" | jq -r '.state')"
-        fi
-        marker=""
-        if is_action_required "$item"; then marker=" **ACTION-REQUIRED**"; fi
-
-        echo "- #$number [$kind]$marker $title"
-        echo "  $url"
-        echo "  labels: $labels"
-        # Extract the "Release note(s)" section from the body, if present.
-        snippet=$(echo "$item" | jq -r '.body // ""' | awk '
-            BEGIN { grab=0 }
-            /^#+[[:space:]]*[Rr]elease[[:space:]]*[Nn]ote/ { grab=1; next }
-            grab && /^#+[[:space:]]/ { exit }
-            grab { print }
-        ' | sed 's/^/    /' | sed '/^[[:space:]]*$/d')
-        if [ -n "$snippet" ]; then
-            echo "  release-note snippet:"
-            echo "$snippet"
-        else
-            echo "  release-note snippet: (none found in body)"
-        fi
-    done
+    jq -r --arg R "$repo" '
+        def kind: if .pull_request == null then "issue"
+                  elif .pull_request.merged_at != null then "PR-merged"
+                  else "PR-" + .state end;
+        def ar: if any(.labels[].name; . == "release-note/action-required")
+                then " **ACTION-REQUIRED**" else "" end;
+        [.[] | select((.repository_url | sub(".*/repos/stackabletech/";"")) == $R)]
+        | sort_by(.number)[]
+        | "- #\(.number) [\(kind)]\(ar) \(.title)\n  \(.html_url)\n  labels: \([.labels[].name] | join(", "))"
+    ' "$ITEMS_FILE"
 done <<< "$REPOS"
