@@ -195,12 +195,10 @@ Fixed in https://github.com/stackabletech/airflow-operator/pull/800[airflow-oper
 
 ===== Apache NiFi
 
-// TODO(author snippet): no release note was written on nifi-opa-plugin#30 (issue) or #31 (fix PR); wording below is a suggestion drafted from the issue/PR - please confirm.
-// TODO(hygiene): the issue nifi-opa-plugin#30 is still OPEN and labelled scheduled-for/26.7.0. The fix (nifi-opa-plugin#31) is merged and labelled release/26.7.0. Close the issue and/or move its label to release/26.7.0.
-The NiFi OPA authorizer plugin no longer exhausts system threads under load.
-Previously, the plugin created a new HTTP client for every authorization request, which could spawn thousands of native threads under NiFi load and lead to errors such as `EAGAIN` or out-of-memory conditions.
-With this release the plugin uses a single shared, pooled HTTP client for OPA authorization requests.
-No configuration changes are required, as defaults are provided; the pool can be tuned via the `OPA_HTTP_POOL_SIZE`, `OPA_HTTP_CONNECT_TIMEOUT_MS` and `OPA_HTTP_REQUEST_TIMEOUT_MS` environment variables.
+The NiFi OPA authorizer plugin no longer exhausts native threads under load.
+Previously, the plugin could create a new HTTP client for each authorization request, spawning large numbers of selector and executor threads under NiFi load and eventually exhausting native threads.
+With this release, all OPA authorization requests share a single pooled HTTP client with a fixed-size daemon-thread executor.
+Existing deployments need no configuration changes, as defaults are provided; the client is configurable via `OPA_HTTP_POOL_SIZE` (default 32), `OPA_HTTP_CONNECT_TIMEOUT_MS` (default 2000) and `OPA_HTTP_REQUEST_TIMEOUT_MS` (default 5000).
 Fixed in https://github.com/stackabletech/nifi-opa-plugin/issues/30[nifi-opa-plugin#30].
 
 [#spark-fixes-26_7_0]
