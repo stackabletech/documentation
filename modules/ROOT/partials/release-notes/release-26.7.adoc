@@ -137,6 +137,14 @@ Implemented in https://github.com/stackabletech/secret-operator/pull/708[secret-
   // TODO(verify): xref to the restarter docs.
   Implemented in https://github.com/stackabletech/commons-operator/pull/410[commons-operator#410].
 
+===== Apache Kafka
+
+The FQDNs of the Kafka Pods are now included in the subject DNs of their TLS certificates.
+OPA Rego rules can now check these FQDNs.
+Existing OPA rules may need to be adjusted.
+// TODO(verify): xref to the Kafka security usage guide (author linked .../kafka/usage-guide/security/#_authorization).
+Implemented in https://github.com/stackabletech/kafka-operator/pull/972[kafka-operator#972].
+
 ===== Apache NiFi
 
 For clusters with a fixed number of nodes, the operator now sets `nifi.cluster.flow.election.max.candidates` to the total node count.
