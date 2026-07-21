@@ -148,3 +148,13 @@ body ::-webkit-scrollbar-thumb {
 .justify-between {
   justify-content: space-between;
 }
+
+/* Inline svg icons; the path data comes from Font Awesome Free (CC BY 4.0,
+ * see ../../NOTICE). Sizes deviating from 1em are set inline at the usage. */
+.svg-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  fill: currentcolor;
+  vertical-align: -0.125em;
+}
