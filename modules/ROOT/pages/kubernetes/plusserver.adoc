@@ -1,3 +1,4 @@
 = plusserver Kubernetes as a Service
+:description: Notes on running the Stackable Data Platform on plusserver Kubernetes as a Service.
 
 https://www.plusserver.com/en/product/managed-kubernetes/[https://www.plusserver.com/en/product/managed-kubernetes/{external-link-icon}^]

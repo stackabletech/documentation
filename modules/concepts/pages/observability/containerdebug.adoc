@@ -1,4 +1,5 @@
 = Container environment
+:description: How the containerdebug tool regularly logs the container environment of Stackable-managed products, including interval and output locations.
 
 All Stackable-managed products regularly log information about their operating
 environment, such as available disk interfaces and network interfaces.

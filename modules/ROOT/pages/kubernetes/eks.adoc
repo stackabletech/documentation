@@ -1,4 +1,5 @@
 = Amazon Elastic Kubernetes Service (EKS)
+:description: Run the Stackable Data Platform on Amazon Elastic Kubernetes Service (EKS). Make sure a default StorageClass is set so PVCs are provisioned.
 
 https://aws.amazon.com/eks/[https://aws.amazon.com/eks/{external-link-icon}^]
 

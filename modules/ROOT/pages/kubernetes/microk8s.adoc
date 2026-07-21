@@ -1,4 +1,5 @@
 = Microk8s
+:description: Run the Stackable Data Platform on Microk8s. The non-standard Kubelet state directory requires special secret-operator and listener-operator setup.
 
 https://microk8s.io/[https://microk8s.io/{external-link-icon}^]
 
