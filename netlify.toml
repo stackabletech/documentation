@@ -7,6 +7,14 @@
   to = "https://hub.stackable.tech/crds"
   status = 301
 
+# The internal module is deleted on main but still exists on the release
+# branches; this blocks it for every published version without backports.
+[[redirects]]
+  from = "/home/:version/internal/*"
+  to = "/404.html"
+  status = 404
+  force = true
+
 [[redirects]]
   from = "/home/stable/release_notes.html"
   to = "/home/stable/release-notes"
