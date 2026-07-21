@@ -1,3 +1,4 @@
 = SUSE Rancher
+:description: Notes on running the Stackable Data Platform on SUSE Rancher.
 
 https://www.rancher.com/products/rancher[https://www.rancher.com/products/rancher{external-link-icon}^]

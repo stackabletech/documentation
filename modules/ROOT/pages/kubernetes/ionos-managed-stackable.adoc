@@ -1,4 +1,5 @@
 = IONOS managed Stackable
+:description: Overview of Managed Stackable, the managed Stackable Data Platform offering from IONOS Cloud.
 
 https://cloud.ionos.com/managed/managed-stackable[https://cloud.ionos.com/managed/managed-stackable{external-link-icon}^]
 

@@ -1,4 +1,5 @@
 = Google Kubernetes Engine (GKE)
+:description: Run the Stackable Data Platform on Google Kubernetes Engine (GKE). Autopilot clusters are not supported because the secret-operator needs special privileges.
 
 https://cloud.google.com/kubernetes-engine[https://cloud.google.com/kubernetes-engine{external-link-icon}^]
 

@@ -1,4 +1,5 @@
 = Huawei Cloud Container Engine (CCE)
+:description: Run the Stackable Data Platform on Huawei Cloud Container Engine (CCE). The non-standard Kubelet state directory requires special operator setup.
 
 https://www.huaweicloud.com/intl/en-us/product/cce.html[https://www.huaweicloud.com/intl/en-us/product/cce.html{external-link-icon}^]
 

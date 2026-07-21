@@ -1,4 +1,5 @@
 = IBM Cloud Kubernetes Service
+:description: Run the Stackable Data Platform on IBM Cloud Kubernetes Service. The non-standard Kubelet state directory requires special operator setup.
 
 https://www.ibm.com/products/kubernetes-service[https://www.ibm.com/products/kubernetes-service{external-link-icon}^]
 

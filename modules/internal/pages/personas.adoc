@@ -1,4 +1,5 @@
 = Customer Personas
+:description: Example customer environments the Stackable platform should accommodate, covering authentication, networking, Kubernetes setup and storage.
 :noindex:
 
 This document is an attempt to formalize different example customer environments that we want the Stackable Platform
@@ -17,7 +18,7 @@ Network control::
   TLS;;
     Does the customer want us to integrate into their existing TLS PKI? If so, is it automated? What are their issuing policies?
   Kerberos;;
-    Does the customer want us to integrate into their existing Kerberos realm, if so is it an option to run our own kdc and integrate via trusts? 
+    Does the customer want us to integrate into their existing Kerberos realm, if so is it an option to run our own kdc and integrate via trusts?
   Overlay peering/BGP;;
     Is the Kubernetes overlay network peered into their regular network environment?
   NIC bonding & multihoming;;
@@ -64,7 +65,7 @@ Network control::
   NIC bonding & multihoming;;
     Yes
   Network-level firewalls;;
-    Port-based, manually configured 
+    Port-based, manually configured
   Linux Security Modules? (SELinux/AppArmor);;
     No
 Kubernetess cluster::
@@ -82,7 +83,7 @@ Storage::
   Pickiness;;
     Wants to map storage pools to specific services
 Hybrid usage::
-  ??? 
+  ???
 
 == Hybrid Corp
 
@@ -102,9 +103,9 @@ Network control::
   NIC bonding & multihoming;;
     No
   Network-level firewalls;;
-    Port-based, manually configured 
+    Port-based, manually configured
   Linux Security Modules? (SELinux/AppArmor);;
-    No 
+    No
 Kubernetess cluster::
   Dedicated cluster;;
     Shared
@@ -120,7 +121,7 @@ Storage::
   Pickiness;;
     Storage classes managed by SAN
 Hybrid usage::
-  Yes 
+  Yes
 
 == Web 3.0 - Full Cloud Managed Everything
 
@@ -142,7 +143,7 @@ Network control::
   Network-level firewalls;;
     May be managed by cloud provider
   Linux Security Modules? (SELinux/AppArmor);;
-    No 
+    No
 Kubernetess cluster::
   Dedicated cluster;;
     Dedicated
