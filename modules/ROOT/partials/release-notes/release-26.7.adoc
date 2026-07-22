@@ -1,16 +1,9 @@
-// DRAFT release notes for SDP 26.7.0.
-// Sourced from stackabletech issues/PRs labelled (release/26.7.0 OR scheduled-for/26.7.0)
-// AND (release-note OR release-note/action-required): 13 issues + 29 PRs.
-// Wording is taken from the authors' own release-note snippets (body or comment) where they wrote one.
-// Items with NO author snippet are drafted from the PR body and marked `// TODO(author snippet)`.
-// All `// TODO(...)` markers must be resolved before this is merged/published.
-
 == Release 26.7
+:secret-volume-annotation: secret-operator:volume.adoc##_secrets_stackable_techbackend_autotls_cert_domain_components_in_subject_dn
 
 === 26.7.0
 
-// TODO(verify): exact release date. Tracking issue #847 target was 2026-07-17, shifted ~10 days.
-Released on 2026-07-27.
+Released on 2026-07-21.
 
 // TODO(highlights): write last, once all sections below are agreed. Likely candidates:
 // * Generic database connection mechanism rolled out across operators.
@@ -25,10 +18,10 @@ Released on 2026-07-27.
 The following components of the SDP contain breaking changes for this release:
 
 * link:#generic-db-26_7_0[Generic database connection] (Apache Airflow, Apache Druid, Apache Hive, Apache Superset)
-* link:#airflow-removals-26_7_0[Apache Airflow] (renamed `EXPERIMENTAL_FILE_*` settings)
+* link:#airflow-improvements-26_7_0[Apache Airflow] (renamed `EXPERIMENTAL_FILE_*` settings)
 * link:#nifi-removals-26_7_0[Apache NiFi] (removed NiFi 1.x CRD fields)
 * link:#spark-fixes-26_7_0[Apache Spark] (application templates are now namespaced)
-* link:#superset-removals-26_7_0[Apache Superset] (renamed `EXPERIMENTAL_FILE_*` settings)
+* link:#superset-improvements-26_7_0[Apache Superset] (renamed `EXPERIMENTAL_FILE_*` settings)
 // TODO(verify): confirm the image-registry change (issues#716) shipped in 26.7.0 and is breaking for non-Helm installs; if so keep the line below, otherwise remove it.
 // * link:#registry-26_7_0[Image registry / repository resolution]
 ====
@@ -36,6 +29,22 @@ The following components of the SDP contain breaking changes for this release:
 ==== New platform features
 
 ===== General
+
+====== Artifacts on quay.io
+
+SDP artifacts are now published to quay.io directly from our CI pipelines.
+Previously, only the operator and product container images were available on quay.io, manually mirrored from oci.stackable.tech, and operators defaulted to pulling product container images from oci.stackable.tech.
+Additionally, operator Helm Charts are now published to quay.io as well.
+When installing these Helm Charts, the operators are automatically instructed to use product container images from quay.io.
+
+[CAUTION]
+====
+To publish operator Helm Charts to quay.io, the repository layout was adjusted to accommodate the new artifacts.
+It closely mirrors the layout of oci.stackable.tech.
+See xref:concepts:artifact-registries/index.adoc[the artifact registries page] for a detailed explanation of the new layout.
+====
+
+Tracked in https://github.com/stackabletech/issues/issues/716[issues#716].
 
 ====== Miscellaneous
 
@@ -47,10 +56,16 @@ The following components of the SDP contain breaking changes for this release:
 ====
 *Breaking:* This replaces the previous free-form connection strings with a typed struct, and requires changes to your custom resources (and, in some cases, your Secrets):
 
-* Apache Airflow: the `.clusterConfig.credentialsSecret` field is renamed to `.clusterConfig.credentialsSecretName`, and the database connection becomes a typed struct. See https://github.com/stackabletech/airflow-operator/pull/754[airflow-operator#754].
-* Apache Druid: the `metadataStorageDatabase` field is renamed to `metadataDatabase` and restructured. See https://github.com/stackabletech/druid-operator/pull/814[druid-operator#814].
-* Apache Hive: the connection becomes a typed struct; because the `database` field is removed, you must record the `username` and add it to the Secret named in `credentialsSecretName` under the `username` key before upgrading. See https://github.com/stackabletech/hive-operator/pull/674[hive-operator#674].
-* Apache Superset: the connection becomes a typed struct, and the operator now uses an internal Secret for the Superset `SECRET_KEY` (created automatically if missing). See https://github.com/stackabletech/superset-operator/pull/722[superset-operator#722].
+* Apache Airflow: the `.clusterConfig.credentialsSecret` field is renamed to `.clusterConfig.credentialsSecretName`, and the database connection becomes a typed struct.
+  Consult the xref:airflow:usage-guide/database-connections.adoc[database connections] documentation page for more details.
+  Implemented in https://github.com/stackabletech/airflow-operator/pull/754[airflow-operator#754].
+* Apache Druid: the `metadataStorageDatabase` field is renamed to `metadataDatabase` and is now a typed struct.
+  Implemented in https://github.com/stackabletech/druid-operator/pull/814[druid-operator#814].
+* Apache Hive: the connection becomes a typed struct; because the `database` field is removed, the `username` field must be transferred to the Secret referenced in `credentialsSecretName` under the `username` key before upgrading.
+  Implemented in https://github.com/stackabletech/hive-operator/pull/674[hive-operator#674].
+* Apache Superset: the connection becomes a typed struct, and the operator now uses an internal Secret for the Superset `SECRET_KEY` (created automatically if missing).
+  Consult the xref:superset:usage-guide/database-connections.adoc[database connections] documentation page for more details.
+  Implemented in https://github.com/stackabletech/superset-operator/pull/722[superset-operator#722].
 ====
 
 // TODO(verify): xref to the per-operator database-connection usage guides (docs checking).
@@ -58,23 +73,23 @@ Tracked in https://github.com/stackabletech/issues/issues/238[issues#238].
 --
 * Setting a custom client authentication method is now supported for Apache Airflow, Apache Superset and Apache Druid.
   Since Apache Druid 35 and 36, OIDC authentication can fail if the provider (for example Keycloak) advertises `private_key_jwt`, because Druid may attempt to use it.
-  This feature lets you override the method so that OIDC authentication works again (this was a known issue in the 26.3 release).
+  This feature lets you override the method so that OIDC authentication works again (this was a known issue in the 26.3.0 release).
   Tracked in https://github.com/stackabletech/issues/issues/838[issues#838].
-+
-// TODO(hygiene): issues#838 is still labelled scheduled-for/26.7.0 - should be release/26.7.0.
-
-// TODO(verify - image registry, issues#716): the author's draft note says the SDP now also publishes Helm Charts to quay.io directly from CI, and that operators installed from there pull product images from quay.io. However the quay.io part may not have shipped for 26.7.0, lfrancke's review questions were unresolved, and it is only breaking for non-Helm installs (a new env var / CLI arg is required). Confirm scope before writing. See https://github.com/stackabletech/issues/issues/716[issues#716].
+* All our xref:demos:index.adoc[demos] can now be installed in non-default namespaces.
+  Additionally, demos and stacks can now be uninstalled.
+  Please consult the xref:management:stackablectl:commands/demo.adoc[`demo`] and xref:management:stackablectl:commands/stack.adoc[`stack`] command documentation pages for details and known limits.
+  Tracked in https://github.com/stackabletech/stackablectl/issues/187[stackablectl#187].
 
 ===== Apache Airflow
 
 The Apache Airflow operator now allows specifying CA certificates when using git-sync.
-// TODO(verify): xref to the DAG mounting / git-sync usage guide.
+See the documentation page on how to xref:airflow:usage-guide/mounting-dags.adoc#_via_git_sync[mount DAGs] for more details.
 Implemented in https://github.com/stackabletech/airflow-operator/pull/750[airflow-operator#750].
 
 ===== Apache NiFi
 
 The Apache NiFi operator now allows specifying CA certificates when using git-sync.
-// TODO(verify): xref to the NiFi git-sync usage guide.
+Consult the xref:nifi:usage_guide/custom-components.adoc[custom components] documentation page for more details.
 Implemented in https://github.com/stackabletech/nifi-operator/pull/903[nifi-operator#903].
 
 ===== Apache Superset
@@ -82,30 +97,31 @@ Implemented in https://github.com/stackabletech/nifi-operator/pull/903[nifi-oper
 Apache Superset now supports running asynchronous queries via Celery.
 Two new roles, `worker` and `beat` (limited to a single replica), have been added.
 Redis is supported as the broker queue and results backend.
-// TODO(verify): xref to the Superset usage guide.
+Consult the xref:superset:usage-guide/database-connections.adoc[database connections] documentation page for more details.
 Implemented in https://github.com/stackabletech/superset-operator/pull/724[superset-operator#724].
 
 ===== Open Policy Agent
 
-The Open Policy Agent operator now supports `configOverrides` for its `config.json`.
-JSON Patches and JSON Merge Patches let you override the nested structure of the file.
-// TODO(verify): xref to the OPA configuration/environment overrides docs.
-Implemented in https://github.com/stackabletech/opa-operator/pull/818[opa-operator#818].
+* Previously, the user-info-fetcher's outbound HTTP requests (to Microsoft Entra, Keycloak, and the XFSC AAS) had no timeout, so a slow or unresponsive backend could make a request hang indefinitely and stall user-info lookups.
+  With this release, every outbound request has a 60-second overall timeout and a 15-second connection timeout.
+  Implemented in https://github.com/stackabletech/opa-operator/pull/859[opa-operator#859].
+* The Open Policy Agent operator now supports `configOverrides` for its `config.json`.
+  JSON Patches and JSON Merge Patches let you override the nested structure of the file.
+  Consult the xref:opa:usage-guide/configuration-environment-overrides.adoc#_configuration_properties[configuration & environment overrides] documentation page for more details.
+  Implemented in https://github.com/stackabletech/opa-operator/pull/818[opa-operator#818].
 
 ===== OpenSearch
 
-* Settings managed by the operator are now hot-reloaded when changed, without Pod restarts.
-  // TODO(verify): xref to the OpenSearch security docs.
+* Security settings managed by the operator are now hot-reloaded when changed, without Pod restarts.
   Implemented in https://github.com/stackabletech/opensearch-operator/pull/130[opensearch-operator#130].
 * The OpenSearch operator now supports JSON Merge Patches, JSON Patches and user-provided JSON files in `configOverrides`, making it easier to define nested types and non-string values.
-  // TODO(verify): xref to the OpenSearch configuration/environment overrides docs. Confirm feature vs improvement placement (author wrote "OpenSearch" without a section).
+  Consult the xref:opensearch:usage-guide/configuration-environment-overrides.adoc#_configuration_properties[configuration & environment overrides] documentation page for more details.
   Implemented in https://github.com/stackabletech/opensearch-operator/pull/137[opensearch-operator#137].
 
 ===== Trino
 
-* Trino now has first-class support for the PostgreSQL connector, built on the new generic database connection mechanism.
+* Trino now has first-class support for the https://trino.io/docs/current/connector/postgresql.html[PostgreSQL connector {external-link-icon}^], built on the new generic database connection mechanism.
   Previously, users had to fall back to the `generic` connector.
-  // TODO(verify): xref to the Trino PostgreSQL connector docs.
   Implemented in https://github.com/stackabletech/trino-operator/pull/883[trino-operator#883].
 * A new `.spec.name.inferred.replaceHyphensWithUnderscores` field on `TrinoCatalog` allows tweaking the catalog name in Trino by replacing `-` with `_`.
   This lets you use valid Kubernetes resource names while keeping the convenience of `_` in catalog names.
@@ -113,14 +129,41 @@ Implemented in https://github.com/stackabletech/opa-operator/pull/818[opa-operat
 
 ===== Stackable secret-operator
 
-The Stackable secret-operator now supports adding domain components (DCs) to the subject DN of TLS certificates, via the `secrets.stackable.tech/backend.autotls.cert.domain-components-in-subject-dn` volume annotation.
-// TODO(verify): xref to the secret-operator volume docs.
-Implemented in https://github.com/stackabletech/secret-operator/pull/708[secret-operator#708].
+* The Stackable secret-operator now supports adding domain components (DCs) to the subject DN of TLS certificates, via the xref:{secret-volume-annotation}[`secrets.stackable.tech/backend.autotls.cert.domain-components-in-subject-dn`] volume annotation.
++
+--
+[source,yaml]
+----
+volumes:
+  - name: tls
+    ephemeral:
+      volumeClaimTemplate:
+        metadata:
+          annotations:
+            secrets.stackable.tech/backend.autotls.cert.domain-components-in-subject-dn: "true"
+            secrets.stackable.tech/class: tls
+            secrets.stackable.tech/scope: node,pod
+        spec:
+          storageClassName: secrets.stackable.tech
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: "1"
+----
 
-// TODO(decide): stackablectl#187 (uninstall Stacks and Demos) - stackablectl/stackable-cockpit is versioned separately from the SDP. If it belongs here, the author's note is:
-//   - All demos and stacks can now be installed in non-default namespaces.
-//   - `stackablectl demo uninstall` / `stackablectl stack uninstall` remove the demo/stack namespace, the Stackable operators and CRDs, and the operator namespace (use `--skip-operators-and-crds` to keep operators/CRDs).
-//   See https://github.com/stackabletech/stackablectl/issues/187[stackablectl#187].
+A pod of a StatefulSet could then serve a TLS certificate with the following subject DN:
+
+[source,plain]
+----
+CN=generated certificate for pod, DC=my-pod-0, DC=my-statefulset-service, DC=my-namespace, DC=svc, DC=cluster, DC=local
+----
+
+Implemented in https://github.com/stackabletech/secret-operator/pull/708[secret-operator#708].
+--
+* The name of the key in the ConfigMap/Secret that holds the PEM-encoded CA certificate of a `TrustStore` is now configurable, via xref:secret-operator:truststore.adoc[`.spec.tlsPemCaName`].
+  This is needed, for example, to use the generated Secret within an OpenShift Ingress.
+  Implemented in https://github.com/stackabletech/secret-operator/pull/679[secret-operator#679].
 
 ==== Platform improvements
 
@@ -132,17 +175,40 @@ Implemented in https://github.com/stackabletech/secret-operator/pull/708[secret-
 
 ====== Miscellaneous
 
+* *Breaking:* All operators now support dynamic image repositories during product image selection instead of hard-coding `oci.stackable.tech`.
+  This enables us to automatically pick the correct registry when operators are installed via the Helm Chart or the OLM manifest.
+  This is achieved by introducing the new `--image-repository` CLI argument and `IMAGE_REPOSITORY` environment variable.
++
+--
+[NOTE]
+====
+When installing the operators via the Helm Chart from `oci.stackable.tech` or `quay.io`, the environment variable is automatically set and installation continues to work as before.
+====
+
+Tracked in https://github.com/stackabletech/issues/issues/716[issues#716].
+--
+* *Breaking:* The `image.repository` Helm value must no longer include the operator name.
+  Previously it looked like `oci.stackable.tech/sdp/airflow-operator`; it must now be `oci.stackable.tech/sdp`.
+  Tracked in https://github.com/stackabletech/issues/issues/716[issues#716].
+* RBAC permissions for all Stackable operators deployed via Helm have been audited, and unnecessary permissions were removed.
+  Tracked in https://github.com/stackabletech/issues/issues/798[issues#798].
 * ConfigMaps and Secrets can now be excluded from the restart-controller.
   Set the `restarter.stackable.tech/ignore` label on a ConfigMap or Secret, or the `restarter.stackable.tech/ignore-configmap.x` / `restarter.stackable.tech/ignore-secret.x` annotations on a StatefulSet.
-  // TODO(verify): xref to the restarter docs.
+  Consult the xref:commons-operator:restarter.adoc#_configmapsecret[restarter] documentation page of the Stackable commons-operator for more details.
   Implemented in https://github.com/stackabletech/commons-operator/pull/410[commons-operator#410].
+
+[#airflow-improvements-26_7_0]
+===== Apache Airflow
+
+*Breaking:* `EXPERIMENTAL_FILE_HEADER` and `EXPERIMENTAL_FILE_FOOTER` in `webserver_config.py` (for arbitrary Python code) have been renamed to `FILE_HEADER` and `FILE_FOOTER`.
+Implemented in https://github.com/stackabletech/airflow-operator/pull/777[airflow-operator#777].
 
 ===== Apache Kafka
 
 The FQDNs of the Kafka Pods are now included in the subject DNs of their TLS certificates.
 OPA Rego rules can now check these FQDNs.
 Existing OPA rules may need to be adjusted.
-// TODO(verify): xref to the Kafka security usage guide (author linked .../kafka/usage-guide/security/#_authorization).
+Consult the xref:kafka:usage-guide/security.adoc#_authorization[security] documentation page for more details.
 Implemented in https://github.com/stackabletech/kafka-operator/pull/972[kafka-operator#972].
 
 ===== Apache NiFi
@@ -151,6 +217,12 @@ For clusters with a fixed number of nodes, the operator now sets `nifi.cluster.f
 Cold-start flow election then completes as soon as all expected nodes report in, typically seconds instead of the up-to-5-minute `nifi.cluster.flow.election.max.wait.time` timeout.
 The timeout stays at NiFi's upstream default of 5 minutes as a fallback, so there is no correctness change if fewer nodes than expected show up.
 Implemented in https://github.com/stackabletech/nifi-operator/pull/953[nifi-operator#953].
+
+[#superset-improvements-26_7_0]
+===== Apache Superset
+
+*Breaking:* `EXPERIMENTAL_FILE_HEADER` and `EXPERIMENTAL_FILE_FOOTER` in `superset_config.py` (for arbitrary Python code) have been renamed to `FILE_HEADER` and `FILE_FOOTER`.
+Implemented in https://github.com/stackabletech/superset-operator/pull/721[superset-operator#721].
 
 ===== Open Policy Agent
 
@@ -163,15 +235,8 @@ Implemented in https://github.com/stackabletech/opa-operator/pull/819[opa-operat
 
 The verification of the OpenSearch nodes' certificates has been extended.
 The nodes' certificates now also include the FQDNs of the nodes, which are verified by the other nodes using the `plugins.security.nodes_dn` configuration setting.
-Previously, it was only verified that the certificates were issued by the secret-operator.
+Previously, it was only verified that the certificates were issued by the Stackable secret-operator.
 Implemented in https://github.com/stackabletech/opensearch-operator/pull/144[opensearch-operator#144].
-
-===== Stackable secret-operator
-
-The name of the key in the ConfigMap/Secret that holds the PEM-encoded CA certificate of a `TrustStore` is now configurable, via `.spec.tlsPemCaName`.
-This is needed, for example, to use the generated Secret within an OpenShift Ingress.
-// TODO(verify): xref to the TrustStore docs.
-Implemented in https://github.com/stackabletech/secret-operator/pull/679[secret-operator#679].
 
 ==== Platform fixes
 
@@ -183,23 +248,26 @@ Implemented in https://github.com/stackabletech/secret-operator/pull/679[secret-
   Fixed in https://github.com/stackabletech/issues/issues/547[issues#547].
 * Internal secrets are now stored in mutable Kubernetes Secret objects.
   Previously these objects were immutable and, if deleted, were recreated with new random values; because immutable Secrets are cached, this could disrupt clusters (for example workers failing to join).
-  This release migrates existing internal Secrets to mutable versions for Trino (https://github.com/stackabletech/trino-operator/pull/876[trino-operator#876]) and Apache Airflow (https://github.com/stackabletech/airflow-operator/pull/770[airflow-operator#770]).
-  Tracked in https://github.com/stackabletech/issues/issues/843[issues#843].
+  This release migrates existing internal Secrets to mutable versions for
+** Trino in https://github.com/stackabletech/trino-operator/pull/876[trino-operator#876] and
+** Apache Airflow in https://github.com/stackabletech/airflow-operator/pull/770[airflow-operator#770]
+
++
+Tracked in https://github.com/stackabletech/issues/issues/843[issues#843].
 
 ===== Apache Airflow
 
 OPA authorization now works for Apache Airflow 3 with any user role.
 Previously, OPA rulesets were only applied for users with the `Admin` role.
-// TODO(hygiene): airflow-operator#800 is still labelled scheduled-for/26.7.0 - should be release/26.7.0. Underlying fix shipped in docker-images#1512.
-Fixed in https://github.com/stackabletech/airflow-operator/pull/800[airflow-operator#800].
+Fixed in https://github.com/stackabletech/docker-images/pull/1512[docker-images#1512] and regression tested in https://github.com/stackabletech/airflow-operator/pull/800[airflow-operator#800].
 
 ===== Apache NiFi
 
 The NiFi OPA authorizer plugin no longer exhausts native threads under load.
 Previously, the plugin could create a new HTTP client for each authorization request, spawning large numbers of selector and executor threads under NiFi load and eventually exhausting native threads.
 With this release, all OPA authorization requests share a single pooled HTTP client with a fixed-size daemon-thread executor.
-Existing deployments need no configuration changes, as defaults are provided; the client is configurable via `OPA_HTTP_POOL_SIZE` (default 32), `OPA_HTTP_CONNECT_TIMEOUT_MS` (default 2000) and `OPA_HTTP_REQUEST_TIMEOUT_MS` (default 5000).
-Fixed in https://github.com/stackabletech/nifi-opa-plugin/issues/30[nifi-opa-plugin#30].
+Existing deployments need no configuration changes, as defaults are provided.
+Tracked in https://github.com/stackabletech/nifi-opa-plugin/issues/30[nifi-opa-plugin#30] and fixed in https://github.com/stackabletech/nifi-opa-plugin/issues/30[nifi-opa-plugin#31].
 
 [#spark-fixes-26_7_0]
 ===== Apache Spark
@@ -208,9 +276,8 @@ Fixed in https://github.com/stackabletech/nifi-opa-plugin/issues/30[nifi-opa-plu
   They were unintentionally released as cluster-wide objects in SDP 26.3.
   You must recreate any templates in the namespaces where the applications run.
   Fixed in https://github.com/stackabletech/spark-k8s-operator/pull/694[spark-k8s-operator#694] (reapplied in https://github.com/stackabletech/spark-k8s-operator/pull/720[spark-k8s-operator#720]).
-  // TODO(hygiene): spark-k8s-operator#720 is still labelled scheduled-for/26.7.0 - should be release/26.7.0.
 * User arguments are now correctly propagated to the Spark Connect server.
-  Previously, the newline concatenation in the Spark Connect server entrypoint was wrong, so user arguments were dropped.
+  Previously, the newline concatenation in the Spark Connect server entrypoint was faulty which resulted in user arguments to be dropped.
   Fixed in https://github.com/stackabletech/spark-k8s-operator/pull/696[spark-k8s-operator#696].
 * Spark executors now shut down gracefully on `SIGTERM`.
   Previously the executor did not receive `SIGTERM` when the driver did, so it was `SIGKILL`ed after the grace period.
@@ -222,26 +289,14 @@ The Microsoft Entra backend of the OPA user-info-fetcher now retrieves complete 
 Previously, it read only the first page of a user's group memberships, so users belonging to many groups received an incomplete group list.
 With this release, the Entra backend follows the result pages until every page has been retrieved (bounded to 100 pages as a safeguard).
 Fixed in https://github.com/stackabletech/opa-operator/issues/858[opa-operator#858].
-+
-// TODO(orphan note - needs its own labelled source): lfrancke's release note on issue #858 also describes a SECOND change not traceable to #858/#859 - "the user-info-fetcher's outbound HTTP requests (to Microsoft Entra, Keycloak, and the XFSC AAS) now have a 60-second overall timeout and a 15-second connection timeout (previously none, so a slow backend could hang lookups indefinitely)". Find the PR that implemented this, confirm it's in 26.7.0, and label it - then add it here.
 
 ===== Trino
 
-Hot-reloading of password file Secrets works again.
-In the previous release a change to the Secret triggered a Pod restart; the password file Secrets are now excluded from the restart-controller, so hot-reloading is supported again.
+In the last release, hot-reloading of password file Secrets did not work anymore because a change to the Secret triggered a restart of the pods.
+With this release, the password file Secrets are excluded from the restart-controller and hot-reloading is supported again.
 Fixed in https://github.com/stackabletech/trino-operator/pull/868[trino-operator#868].
 
-==== Platform deprecations
-
-// TODO(verify): no feature/API deprecations found in the labelled items (only product-version deprecations, which are listed under Supported versions below). Confirm there are none.
-
 ==== Platform removals
-
-[#airflow-removals-26_7_0]
-===== Apache Airflow
-
-*Breaking:* `EXPERIMENTAL_FILE_HEADER` and `EXPERIMENTAL_FILE_FOOTER` in `webserver_config.py` (for arbitrary Python code) have been renamed to `FILE_HEADER` and `FILE_FOOTER`.
-Removed in https://github.com/stackabletech/airflow-operator/pull/777[airflow-operator#777].
 
 [#nifi-removals-26_7_0]
 ===== Apache NiFi
@@ -255,22 +310,9 @@ Removed in https://github.com/stackabletech/airflow-operator/pull/777[airflow-op
 
 Removed in https://github.com/stackabletech/nifi-operator/pull/960[nifi-operator#960].
 
-[#superset-removals-26_7_0]
-===== Apache Superset
-
-*Breaking:* `EXPERIMENTAL_FILE_HEADER` and `EXPERIMENTAL_FILE_FOOTER` in `superset_config.py` (for arbitrary Python code) have been renamed to `FILE_HEADER` and `FILE_FOOTER`.
-Removed in https://github.com/stackabletech/superset-operator/pull/721[superset-operator#721].
-
 ==== Supported versions
 
 ===== Product versions
-
-// Reconciled against portal.stackable.build (source of truth) by diffing the 26.3 and 26.7 exports.
-// Added = in 26.7 not in 26.3; Removed = in 26.3 not in 26.7; statuses (LTS/experimental/deprecated) from the 26.7 export.
-// Overrides where the portal was wrong:
-//  - Spark 4.1.2 appears in the 26.3 portal export by mistake (it was not in 26.3.0; docker-images#1419 added only 3.5.8). It is treated as ADDED in 26.7. Portal maintainer to be notified.
-//  - Vector is absent from the portal export; taken from docker-images#1486 (add 0.55.0, remove 0.52.0). Portal maintainer notified.
-// Deprecated list = versions newly deprecated this release (status changed to deprecated vs 26.3), not the full standing deprecated set.
 
 As with previous SDP releases, many product images have been updated to newer versions.
 Refer to the xref:operators:supported_versions.adoc[supported versions] documentation for a complete overview including LTS versions or deprecations.
@@ -290,10 +332,10 @@ The following new product versions are now supported:
 * Apache Druid: https://github.com/stackabletech/docker-images/issues/1490[37.0.0 (LTS)]
 ** Note: Druid 37.0.0 switched to AWS SDK v2. TLS is now enforced for S3 connections, and the S3 `region` is now required (the operator passes `aws.region` from `S3Connection.region`).
 * Apache HBase: https://github.com/stackabletech/docker-images/issues/1491[2.6.6 (LTS)]
-* Apache Hadoop HDFS: https://github.com/stackabletech/docker-images/issues/1494[3.4.3 (LTS)], https://github.com/stackabletech/docker-images/issues/1494[3.5.0]
+* Apache Hadoop: https://github.com/stackabletech/docker-images/issues/1494[3.4.3 (LTS)], https://github.com/stackabletech/docker-images/issues/1494[3.5.0]
 * Apache Kafka: https://github.com/stackabletech/docker-images/issues/1497[3.9.2 (LTS)], https://github.com/stackabletech/docker-images/issues/1497[4.2.1 (experimental)]
 * Apache NiFi: https://github.com/stackabletech/docker-images/issues/1498[2.9.0]
-* Apache Phoenix: https://github.com/stackabletech/docker-images/issues/1491[5.3.1 (LTS)]
+* Apache Phoenix: https://github.com/stackabletech/docker-images/issues/1491[5.3.1]
 * Apache Spark: https://github.com/stackabletech/docker-images/issues/1502[4.1.2 (LTS)]
 * Apache Superset: https://github.com/stackabletech/docker-images/issues/1504[6.1.0]
 * Apache ZooKeeper: https://github.com/stackabletech/docker-images/issues/1506[3.9.5 (LTS)]
@@ -308,7 +350,8 @@ The following product versions are deprecated and will be removed in a later rel
 
 * Apache Airflow: https://github.com/stackabletech/docker-images/issues/1489[3.1.6]
 * Apache Druid: https://github.com/stackabletech/docker-images/issues/1490[35.0.1], https://github.com/stackabletech/docker-images/issues/1490[30.0.1]
-* Apache Hadoop HDFS: https://github.com/stackabletech/docker-images/issues/1494[3.4.2]
+* Apache HBase: https://github.com/stackabletech/docker-images/issues/1491[2.6.4]
+* Apache Hadoop: https://github.com/stackabletech/docker-images/issues/1494[3.4.2]
 * Apache Hive: https://github.com/stackabletech/docker-images/issues/1495[4.0.1]
 * Apache Kafka: https://github.com/stackabletech/docker-images/issues/1497[3.9.1]
 * Apache NiFi: https://github.com/stackabletech/docker-images/issues/1498[2.7.2]
@@ -346,7 +389,6 @@ This release supports the following Kubernetes versions:
 * `1.32`
 * `1.31`
 
-// Portal diff shows no Kubernetes versions were dropped between 26.3 and 26.7 (1.36 added). Confirm before publishing.
 No Kubernetes versions were dropped in this release.
 
 ===== OpenShift versions
@@ -359,7 +401,6 @@ This release is available in the RedHat Certified Operator Catalog for the follo
 * `4.19`
 * `4.18`
 
-// Portal diff shows no OpenShift versions were dropped between 26.3 and 26.7 (4.22 added). Confirm before publishing.
 No OpenShift versions were dropped in this release.
 
 ==== Upgrade from 26.3
@@ -427,7 +468,5 @@ The operators are installed directly, without adding the Helm Chart repository f
 helm install --wait <PRODUCT>-operator oci://oci.stackable.tech/sdp-charts/<PRODUCT>-operator --version 26.7.0
 ----
 
-[#known-issues-26_7_0]
-==== Known issues
-
-// TODO(verify): none identified yet from the labelled items.
+// [#known-issues-26_7_0]
+// ==== Known issues
