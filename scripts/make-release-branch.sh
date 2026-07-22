@@ -120,6 +120,10 @@ sed -i "s/^prerelease:.*/prerelease: false/" "$ANTORA_YAML_FILE"
 # Set crd-docs-version key to the 'version' variable
 sed -i "s/^\(\s*\)crd-docs-version:.*/\1crd-docs-version: \"$VERSION\"/" "$ANTORA_YAML_FILE"
 
+# Set the Hub release for the CRD reference links. The Hub names releases
+# by major.minor, so this uses DOCS_VERSION, not VERSION.
+sed -i "s/^\(\s*\)crd-ref-release:.*/\1crd-ref-release: \"?release=$DOCS_VERSION\"/" "$ANTORA_YAML_FILE"
+
 # Display changes using git diff
 git diff "$ANTORA_YAML_FILE"
 

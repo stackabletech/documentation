@@ -1,0 +1,16 @@
+// Shared link bar for operator index pages.
+//
+// Usage in an operator's index.adoc:
+//
+//   :github: https://github.com/stackabletech/airflow-operator/
+//   :crd: {crd-docs-base-url}/airflow-operator/{crd-docs-version}/
+//   :hub: {hub-base-url}/components/airflow
+//
+//   include::ROOT:partial$operator-link-bar.adoc[]
+//
+// Every entry is optional: pages that don't define an attribute don't render
+// its entry (e.g. the internal operators have no Hub component page).
+[.link-bar]
+ifdef::github[* {github}[GitHub {external-link-icon}^]]
+ifdef::crd[* {crd}[CRD documentation {external-link-icon}^]]
+ifdef::hub[* {hub}[Stackable Hub {external-link-icon}^]]

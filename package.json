@@ -12,7 +12,7 @@
     "ui"
   ],
   "scripts": {
-    "build-search-index": "npx pagefind --site build/site --output-subdir _/pagefind"
+    "build-search-index": "npx pagefind --site build/site"
   },
   "engines": {
     "node": ">= 24.0.0"
