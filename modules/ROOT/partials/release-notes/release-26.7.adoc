@@ -46,6 +46,17 @@ See xref:concepts:artifact-registries/index.adoc[the artifact registries page] f
 
 Tracked in https://github.com/stackabletech/issues/issues/716[issues#716].
 
+====== Stackable Hub
+
+Stackable Hub is now available at https://hub.stackable.tech[hub.stackable.tech,window=_blank].
+It is a public, read-only portal for published SDP releases (and upcoming ones), bundled component version timelines, and operator CRDs including their schemas, API versions and roles per release.
+A CORS-enabled, unauthenticated JSON API is available under `/api/v1/` for use in CI jobs, scripts and MCP servers.
+LLMs can make use of the new llms.txt[https://hub.stackable.tech/llms.txt] file which now https://docs.stackable.tech/llms.txt[also exists] for the documentation.
+We plan on migrating the current https://crds.stackable.tech[CRD browser] to the Hub in the near future.
+We also plan on migrating the current https://sboms.stackable.tech[SBOM browser] to the Hub in the near future.
+
+This is an early version of the Hub and we're happy to receive feedback.
+
 ====== Miscellaneous
 
 * [[generic-db-26_7_0]]The SDP now provides a generic database connection mechanism, giving a consistent, typed way to configure connections to external SQL databases across operators.
@@ -182,7 +193,8 @@ Implemented in https://github.com/stackabletech/secret-operator/pull/708[secret-
 --
 [NOTE]
 ====
-When installing the operators via the Helm Chart from `oci.stackable.tech` or `quay.io`, the environment variable is automatically set and installation continues to work as before.
+This is only breaking if you deploy operators *without* our Helm Charts or OLM manifests, in which case you must now supply `--image-repository` yourself.
+When installing via Helm or OLM the argument is set automatically, and installation works as before.
 ====
 
 Tracked in https://github.com/stackabletech/issues/issues/716[issues#716].
@@ -267,7 +279,7 @@ The NiFi OPA authorizer plugin no longer exhausts native threads under load.
 Previously, the plugin could create a new HTTP client for each authorization request, spawning large numbers of selector and executor threads under NiFi load and eventually exhausting native threads.
 With this release, all OPA authorization requests share a single pooled HTTP client with a fixed-size daemon-thread executor.
 Existing deployments need no configuration changes, as defaults are provided.
-Tracked in https://github.com/stackabletech/nifi-opa-plugin/issues/30[nifi-opa-plugin#30] and fixed in https://github.com/stackabletech/nifi-opa-plugin/issues/30[nifi-opa-plugin#31].
+Tracked in https://github.com/stackabletech/nifi-opa-plugin/issues/30[nifi-opa-plugin#30] and fixed in https://github.com/stackabletech/nifi-opa-plugin/pull/31[nifi-opa-plugin#31].
 
 [#spark-fixes-26_7_0]
 ===== Apache Spark
@@ -315,7 +327,7 @@ Removed in https://github.com/stackabletech/nifi-operator/pull/960[nifi-operator
 ===== Product versions
 
 As with previous SDP releases, many product images have been updated to newer versions.
-Refer to the xref:operators:supported_versions.adoc[supported versions] documentation for a complete overview including LTS versions or deprecations.
+Refer to the https://hub.stackable.tech/releases/26.7[new Stackable Hub] for a complete overview including LTS versions or deprecations.
 
 ====== New LTS versions
 
