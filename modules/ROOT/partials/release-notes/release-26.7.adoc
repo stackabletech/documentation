@@ -124,7 +124,7 @@ Implemented in https://github.com/stackabletech/superset-operator/pull/724[super
   Previously, users had to fall back to the `generic` connector.
   Implemented in https://github.com/stackabletech/trino-operator/pull/883[trino-operator#883].
 * A new `.spec.name.inferred.replaceHyphensWithUnderscores` field on `TrinoCatalog` allows tweaking the catalog name in Trino by replacing `-` with `_`.
-  This lets you use valid Kubernetes resource names while keeping the convenience of `_` in catalog names.
+  This lets you use valid Kubernetes resource names while keeping the convenience of underscores in catalog names.
   Implemented in https://github.com/stackabletech/trino-operator/pull/903[trino-operator#903].
 
 ===== Stackable secret-operator
