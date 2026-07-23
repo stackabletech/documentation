@@ -182,7 +182,7 @@ Implemented in https://github.com/stackabletech/secret-operator/pull/708[secret-
 
 ====== Vulnerabilities
 
-// TODO(verify): CVE counts. e.g. "NNN CVEs were fixed in the Stackable product images. This includes N critical and NN high-severity CVEs."
+133 vulnerabilities were fixed in SDP 26.7, including 10 critical and 62 high vulnerabilities,
 
 ====== Miscellaneous
 
