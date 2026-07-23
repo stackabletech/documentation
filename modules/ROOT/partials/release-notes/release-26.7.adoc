@@ -186,9 +186,8 @@ Implemented in https://github.com/stackabletech/secret-operator/pull/708[secret-
 
 ====== Miscellaneous
 
-* *Breaking:* All operators now support dynamic image repositories during product image selection instead of hard-coding `oci.stackable.tech`.
-  This enables us to automatically pick the correct registry when operators are installed via the Helm Chart or the OLM manifest.
-  This is achieved by introducing the new `--image-repository` CLI argument and `IMAGE_REPOSITORY` environment variable.
+* *Breaking:* Operators now determine the registry for product images from where they were installed, instead of hard-coding `oci.stackable.tech`.
+  This is controlled by a new `--image-repository` CLI argument (and the `IMAGE_REPOSITORY` environment variable), which lets the correct registry be selected automatically when an operator is installed via its Helm Chart or Operator Lifecycle Manager (OLM) manifest.
 +
 --
 [NOTE]
