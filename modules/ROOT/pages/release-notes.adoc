@@ -6,6 +6,25 @@
 The Stackable Data Platform consists of multiple operators that work together.
 Periodically a platform release is made, including all components of the platform at a specific version.
 
+[WARNING]
+.Stackable support for Apache Druid is deprecated
+====
+Stackable's support for xref:druid:index.adoc[Apache Druid] is deprecated as of SDP link:#_release_26_7[26.7] and is planned for removal in SDP 27.11.
+This concerns only the Apache Druid integration in the Stackable Data Platform (SDP) — that is, this operator.
+Apache Druid itself is an independent, actively maintained project and is not affected; only its inclusion in the SDP is being discontinued.
+We have taken this decision because we have not seen adoption of Apache Druid among our customers.
+
+The planned timeline is:
+
+* SDP 26.7 ships Apache Druid link:#druid-37_0_0[37.0.0], the final LTS version we plan to provide, with approximately one year of support.
+* SDP 27.7 is planned to be the last release that includes Apache Druid.
+* Apache Druid is planned to be removed in SDP 27.11.
+
+There is no direct replacement for Apache Druid within the SDP.
+If you rely on Apache Druid, please contact us via our https://stackable.tech/[homepage] or the https://github.com/orgs/stackabletech/discussions[Discussions forum] to discuss your options.
+If you are willing to fund its continued development and support, we are open to reconsidering this decision.
+====
+
 // WARNING: Please keep the empty newlines, otherwise headings are broken.
 include::partial$release-notes/release-26.7.adoc[]
 
