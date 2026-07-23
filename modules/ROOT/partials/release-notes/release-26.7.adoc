@@ -51,7 +51,7 @@ Tracked in https://github.com/stackabletech/issues/issues/716[issues#716].
 Stackable Hub is now available at https://hub.stackable.tech[hub.stackable.tech,window=_blank].
 It is a public, read-only portal for published SDP releases (and upcoming ones), bundled component version timelines, and operator CRDs including their schemas, API versions and roles per release.
 A CORS-enabled, unauthenticated JSON API is available under `/api/v1/` for use in CI jobs, scripts and MCP servers.
-LLMs can make use of the new llms.txt[https://hub.stackable.tech/llms.txt] file which now https://docs.stackable.tech/llms.txt[also exists] for the documentation.
+LLMs can make use of the new https://hub.stackable.tech/llms.txt[llms.txt] file which now https://docs.stackable.tech/llms.txt[also exists] for the documentation.
 We plan on migrating the current https://crds.stackable.tech[CRD browser] to the Hub in the near future.
 We also plan on migrating the current https://sboms.stackable.tech[SBOM browser] to the Hub in the near future.
 

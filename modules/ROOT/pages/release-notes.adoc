@@ -10,7 +10,7 @@ Periodically a platform release is made, including all components of the platfor
 .Stackable support for Apache Druid is deprecated
 ====
 Stackable's support for xref:druid:index.adoc[Apache Druid] is deprecated as of SDP link:#_release_26_7[26.7] and is planned for removal in SDP 27.11.
-This concerns only the Apache Druid integration in the Stackable Data Platform (SDP) — that is, this operator.
+This concerns only the Apache Druid integration in the Stackable Data Platform (SDP).
 Apache Druid itself is an independent, actively maintained project and is not affected; only its inclusion in the SDP is being discontinued.
 We have taken this decision because we have not seen adoption of Apache Druid among our customers.
 
