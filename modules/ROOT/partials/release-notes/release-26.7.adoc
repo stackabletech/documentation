@@ -1,5 +1,5 @@
 == Release 26.7
-:secret-volume-annotation: secret-operator:volume.adoc##_secrets_stackable_techbackend_autotls_cert_domain_components_in_subject_dn
+:secret-volume-annotation: secret-operator:volume.adoc#_secrets_stackable_techbackend_autotls_cert_domain_components_in_subject_dn
 
 === 26.7.0
 
@@ -182,7 +182,7 @@ Implemented in https://github.com/stackabletech/secret-operator/pull/708[secret-
 
 ====== Vulnerabilities
 
-133 vulnerabilities were fixed in SDP 26.7, including 10 critical and 62 high vulnerabilities,
+133 vulnerabilities were fixed in SDP 26.7, including 10 critical and 62 high vulnerabilities.
 
 ====== Miscellaneous
 
