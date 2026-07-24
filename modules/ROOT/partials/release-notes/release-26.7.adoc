@@ -22,7 +22,7 @@ The following components of the SDP contain breaking changes for this release:
 * link:#nifi-removals-26_7_0[Apache NiFi] (removed NiFi 1.x CRD fields)
 * link:#spark-fixes-26_7_0[Apache Spark] (application templates are now namespaced)
 * link:#superset-improvements-26_7_0[Apache Superset] (renamed `EXPERIMENTAL_FILE_*` settings)
-// TODO(verify): confirm the image-registry change (issues#716) shipped in 26.7.0 and is breaking for non-Helm installs; if so keep the line below, otherwise remove it.
+* link:#druid-37_0_0[Apache Druid]: Druid 37.0.0 enforces TLS and requires that the S3 region is set
 // * link:#registry-26_7_0[Image registry / repository resolution]
 ====
 
@@ -341,7 +341,7 @@ The following new product versions are now supported:
 * Apache Airflow: https://github.com/stackabletech/docker-images/issues/1489[3.2.2]
 ** Note: this Airflow version uses Python 3.14. // TODO(verify): the docker-images#1489 note about the webserver no longer serving metrics referred to 3.2.1; confirm it still applies to 3.2.2.
 * [[druid-37_0_0]]Apache Druid: https://github.com/stackabletech/docker-images/issues/1490[37.0.0 (LTS)]
-** Note: Druid 37.0.0 switched to AWS SDK v2. TLS is now enforced for S3 connections, and the S3 `region` is now required (the operator passes `aws.region` from `S3Connection.region`).
+** *Breaking:* Druid 37.0.0 switched to AWS SDK v2. TLS is now enforced for S3 connections, and the S3 `region` is now required (the operator passes `aws.region` from `S3Connection.region`).
 * Apache HBase: https://github.com/stackabletech/docker-images/issues/1491[2.6.6 (LTS)]
 * Apache Hadoop: https://github.com/stackabletech/docker-images/issues/1494[3.4.3 (LTS)], https://github.com/stackabletech/docker-images/issues/1494[3.5.0]
 * Apache Kafka: https://github.com/stackabletech/docker-images/issues/1497[3.9.2 (LTS)], https://github.com/stackabletech/docker-images/issues/1497[4.2.1 (experimental)]
