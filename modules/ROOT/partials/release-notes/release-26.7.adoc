@@ -107,11 +107,13 @@ Implemented in https://github.com/stackabletech/nifi-operator/pull/903[nifi-oper
 
 ===== Apache Superset
 
-Apache Superset now supports running asynchronous queries via Celery.
-Two new roles, `worker` and `beat` (limited to a single replica), have been added.
-Redis is supported as the broker queue and results backend.
-Consult the xref:superset:usage-guide/database-connections.adoc[database connections] documentation page for more details.
-Implemented in https://github.com/stackabletech/superset-operator/pull/724[superset-operator#724].
+* Apache Superset now supports running asynchronous queries via Celery.
+  Two new roles, `worker` and `beat` (limited to a single replica), have been added.
+  Consult the xref:superset:usage-guide/celery-async-queries.adoc[async queries via Celery] documentation page for more details.
+  Implemented in https://github.com/stackabletech/superset-operator/pull/724[superset-operator#724].
+* Redis is supported as the broker queue and results backend.
+  Consult the xref:superset:usage-guide/database-connections.adoc[database connections] documentation page for more details.
+  Implemented in https://github.com/stackabletech/superset-operator/pull/724[superset-operator#724].
 
 ===== Open Policy Agent
 
