@@ -420,7 +420,12 @@ No OpenShift versions were dropped in this release.
 
 ==== Upgrade from 26.3
 
-// TODO(verify): consult/collect product-specific upgrade notes (e.g. the generic database connection migrations for Airflow/Druid/Hive/Superset, and the Druid 37 S3 TLS/region change).
+[TIP]
+====
+Please consult the following upgrade notes when upgrading from 26.3 to 26.7:
+
+* xref:opensearch:usage-guide/upgrade.adoc#_upgrade_from_sdp_26_3_to_26_7[OpenSearch upgrade guide]
+====
 
 ===== Using stackablectl
 
