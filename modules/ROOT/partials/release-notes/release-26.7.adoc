@@ -19,7 +19,7 @@ The following components of the SDP contain breaking changes for this release:
 * link:#generic-db-26_7_0[Apache Airflow, Apache Druid, Apache Hive, Apache Superset]: Generic database connections adjustments needed for the mentioned operators.
 * link:#airflow-improvements-26_7_0[Apache Airflow]: Renamed `EXPERIMENTAL_FILE_*` settings
 * link:#superset-improvements-26_7_0[Apache Superset]: Renamed `EXPERIMENTAL_FILE_*` settings
-* link:#spark-fixes-26_7_0[Apache Spark] The Spark application templates are now namespaced
+* link:#spark-fixes-26_7_0[Apache Spark]: The Spark application templates are now namespaced
 * link:#nifi-removals-26_7_0[Apache NiFi]: NiFi 1.x CRD fields were removed
 * link:#druid-37_0_0[Apache Druid]: Druid 37.0.0 enforces TLS and requires that the S3 region is set
 * link:#misc-improvements-registry-26_7_0[Product image selection]: Operators need a registry for product image selection
