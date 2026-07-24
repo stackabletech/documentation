@@ -18,6 +18,7 @@ The following components of the SDP contain breaking changes for this release:
 
 * link:#generic-db-26_7_0[Apache Airflow, Apache Druid, Apache Hive, Apache Superset]: Generic database connections adjustments needed for the mentioned operators.
 * link:#airflow-improvements-26_7_0[Apache Airflow]: Renamed `EXPERIMENTAL_FILE_*` settings
+* link:#kafka-improvements-26_7_0[Apache Kafka]: OPA rules may need to be adjusted due to FQDNs
 * link:#superset-improvements-26_7_0[Apache Superset]: Renamed `EXPERIMENTAL_FILE_*` settings
 * link:#spark-fixes-26_7_0[Apache Spark]: The Spark application templates are now namespaced
 * link:#nifi-removals-26_7_0[Apache NiFi]: NiFi 1.x CRD fields were removed
@@ -339,9 +340,10 @@ Tracked in https://github.com/stackabletech/issues/issues/716[issues#716].
 *Breaking:* `EXPERIMENTAL_FILE_HEADER` and `EXPERIMENTAL_FILE_FOOTER` in `webserver_config.py` (for arbitrary Python code) have been renamed to `FILE_HEADER` and `FILE_FOOTER`.
 Implemented in https://github.com/stackabletech/airflow-operator/pull/777[airflow-operator#777].
 
+[#kafka-improvements-26_7_0]
 ===== Apache Kafka
 
-The FQDNs of the Kafka Pods are now included in the subject DNs of their TLS certificates.
+*Breaking:* The FQDNs of the Kafka Pods are now included in the subject DNs of their TLS certificates.
 OPA Rego rules can now check these FQDNs.
 Existing OPA rules may need to be adjusted.
 Consult the xref:kafka:usage-guide/security.adoc#_authorization[security] documentation page for more details.
