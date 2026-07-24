@@ -217,6 +217,8 @@ Tracked in https://github.com/stackabletech/issues/issues/238[issues#238].
   Additionally, demos and stacks can now be uninstalled.
   Please consult the xref:management:stackablectl:commands/demo.adoc[`demo`] and xref:management:stackablectl:commands/stack.adoc[`stack`] command documentation pages for details and known limits.
   Tracked in https://github.com/stackabletech/stackablectl/issues/187[stackablectl#187].
+* In addition to the existing CycloneDX SBOMs, every image now also has an SBOM in the https://spdx.dev/[SPDX] format attested to it.
+  See the xref:guides:viewing-and-verifying-sboms.adoc[SBOM guide] in our documentation for how to verify and extract them.
 
 ===== Apache Airflow
 
