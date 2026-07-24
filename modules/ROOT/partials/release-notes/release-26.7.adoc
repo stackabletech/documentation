@@ -17,13 +17,13 @@ Released on 2026-07-21.
 ====
 The following components of the SDP contain breaking changes for this release:
 
-* link:#generic-db-26_7_0[Generic database connection] (Apache Airflow, Apache Druid, Apache Hive, Apache Superset)
-* link:#airflow-improvements-26_7_0[Apache Airflow] (renamed `EXPERIMENTAL_FILE_*` settings)
-* link:#nifi-removals-26_7_0[Apache NiFi] (removed NiFi 1.x CRD fields)
-* link:#spark-fixes-26_7_0[Apache Spark] (application templates are now namespaced)
-* link:#superset-improvements-26_7_0[Apache Superset] (renamed `EXPERIMENTAL_FILE_*` settings)
+* link:#generic-db-26_7_0[Generic database connection]: Adjustments needed for Apache Airflow, Apache Druid, Apache Hive, Apache Superset
+* link:#airflow-improvements-26_7_0[Apache Airflow]: Renamed `EXPERIMENTAL_FILE_*` settings
+* link:#superset-improvements-26_7_0[Apache Superset]: Renamed `EXPERIMENTAL_FILE_*` settings
+* link:#spark-fixes-26_7_0[Apache Spark] The Spark application templates are now namespaced
+* link:#nifi-removals-26_7_0[Apache NiFi]: NiFi 1.x CRD fields were removed
 * link:#druid-37_0_0[Apache Druid]: Druid 37.0.0 enforces TLS and requires that the S3 region is set
-// * link:#registry-26_7_0[Image registry / repository resolution]
+* link:#misc-improvements-registry-26_7_0[Product image selection]: Operators need a registry for product image selection
 ====
 
 ==== New platform features
@@ -183,7 +183,7 @@ Implemented in https://github.com/stackabletech/secret-operator/pull/708[secret-
 
 ====== Miscellaneous
 
-* *Breaking:* Operators now determine the registry for product images from where they were installed, instead of hard-coding `oci.stackable.tech`.
+* [[misc-improvements-registry-26_7_0]]*Breaking:* Operators now determine the registry for product images from where they were installed, instead of hard-coding `oci.stackable.tech`.
   This is controlled by a new `--image-repository` CLI argument (and the `IMAGE_REPOSITORY` environment variable), which lets the correct registry be selected automatically when an operator is installed via its Helm Chart or Operator Lifecycle Manager (OLM) manifest.
 +
 --
