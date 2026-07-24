@@ -261,7 +261,7 @@ Implemented in https://github.com/stackabletech/opensearch-operator/pull/144[ope
   Previously these objects were immutable and, if deleted, were recreated with new random values; because immutable Secrets are cached, this could disrupt clusters (for example workers failing to join).
   This release migrates existing internal Secrets to mutable versions for
 ** Trino in https://github.com/stackabletech/trino-operator/pull/876[trino-operator#876] and
-** Apache Airflow in https://github.com/stackabletech/airflow-operator/pull/770[airflow-operator#770]
+** Apache Airflow in https://github.com/stackabletech/airflow-operator/pull/770[airflow-operator#770].
 
 +
 Tracked in https://github.com/stackabletech/issues/issues/843[issues#843].
@@ -288,7 +288,7 @@ Tracked in https://github.com/stackabletech/nifi-opa-plugin/issues/30[nifi-opa-p
   You must recreate any templates in the namespaces where the applications run.
   Fixed in https://github.com/stackabletech/spark-k8s-operator/pull/694[spark-k8s-operator#694] (reapplied in https://github.com/stackabletech/spark-k8s-operator/pull/720[spark-k8s-operator#720]).
 * User arguments are now correctly propagated to the Spark Connect server.
-  Previously, the newline concatenation in the Spark Connect server entrypoint was faulty which resulted in user arguments to be dropped.
+  Previously, the newline concatenation in the Spark Connect server entrypoint was faulty which resulted in user arguments being dropped.
   Fixed in https://github.com/stackabletech/spark-k8s-operator/pull/696[spark-k8s-operator#696].
 * Spark executors now shut down gracefully on `SIGTERM`.
   Previously the executor did not receive `SIGTERM` when the driver did, so it was `SIGKILL`ed after the grace period.
@@ -303,7 +303,7 @@ Fixed in https://github.com/stackabletech/opa-operator/issues/858[opa-operator#8
 
 ===== Trino
 
-In the last release, hot-reloading of password file Secrets did not work anymore because a change to the Secret triggered a restart of the pods.
+As of SDP 26.3, hot-reloading of password file Secrets did not work anymore because a change to the Secret triggered a restart of the pods.
 With this release, the password file Secrets are excluded from the restart-controller and hot-reloading is supported again.
 Fixed in https://github.com/stackabletech/trino-operator/pull/868[trino-operator#868].
 
