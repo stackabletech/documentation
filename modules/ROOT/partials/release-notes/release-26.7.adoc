@@ -166,7 +166,7 @@ spec:
 
 Implemented in https://github.com/stackabletech/hive-operator/pull/674[hive-operator#674].
 --
-** Apache Superset: the connection becomes a typed struct, and the operator now uses an internal Secret for the Superset `SECRET_KEY` (created automatically if missing).
+** *Apache Superset:* the connection becomes a typed struct, and the operator now uses an internal Secret for the Superset `SECRET_KEY` (created automatically if missing).
    Consult the xref:superset:usage-guide/database-connections.adoc[database connections] documentation page for more details.
 +
 --
