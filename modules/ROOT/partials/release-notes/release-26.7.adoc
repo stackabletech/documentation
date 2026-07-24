@@ -5,13 +5,12 @@
 
 Released on 2026-07-21.
 
-// TODO(highlights): write last, once all sections below are agreed. Likely candidates:
-// * Generic database connection mechanism rolled out across operators.
-// * Trino gains a first-class PostgreSQL connector.
-// * Custom OIDC clientAuthenticationMethod (fixes the 26.3 Druid OIDC issue).
-// [TIP,caption=Release highlights]
-// ====
-// ====
+[TIP,caption=Release highlights]
+====
+* Generic database connection mechanism rolled out across operators.
+* Operators automatically select product image registry based on where they were installed from.
+* The User Info Fetcher (UIF) now fetches a more complete set of memberships of users from Entra.
+====
 
 [WARNING,caption=Overview of breaking changes]
 ====
