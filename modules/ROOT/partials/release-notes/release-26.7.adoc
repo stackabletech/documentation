@@ -113,13 +113,10 @@ Implemented in https://github.com/stackabletech/superset-operator/pull/724[super
 
 ===== Open Policy Agent
 
-* Previously, the user-info-fetcher's outbound HTTP requests (to Microsoft Entra, Keycloak, and the XFSC AAS) had no timeout, so a slow or unresponsive backend could make a request hang indefinitely and stall user-info lookups.
-  With this release, every outbound request has a 60-second overall timeout and a 15-second connection timeout.
-  Implemented in https://github.com/stackabletech/opa-operator/pull/859[opa-operator#859].
-* The Open Policy Agent operator now supports `configOverrides` for its `config.json`.
-  JSON Patches and JSON Merge Patches let you override the nested structure of the file.
-  Consult the xref:opa:usage-guide/configuration-environment-overrides.adoc#_configuration_properties[configuration & environment overrides] documentation page for more details.
-  Implemented in https://github.com/stackabletech/opa-operator/pull/818[opa-operator#818].
+The Open Policy Agent operator now supports `configOverrides` for its `config.json`.
+JSON Patches and JSON Merge Patches let you override the nested structure of the file.
+Consult the xref:opa:usage-guide/configuration-environment-overrides.adoc#_configuration_properties[configuration & environment overrides] documentation page for more details.
+Implemented in https://github.com/stackabletech/opa-operator/pull/818[opa-operator#818].
 
 ===== OpenSearch
 
@@ -296,10 +293,13 @@ Tracked in https://github.com/stackabletech/nifi-opa-plugin/issues/30[nifi-opa-p
 
 ===== Open Policy Agent
 
-The Microsoft Entra backend of the OPA user-info-fetcher now retrieves complete group memberships for policy checks.
-Previously, it read only the first page of a user's group memberships, so users belonging to many groups received an incomplete group list.
-With this release, the Entra backend follows the result pages until every page has been retrieved (bounded to 100 pages as a safeguard).
-Fixed in https://github.com/stackabletech/opa-operator/issues/858[opa-operator#858].
+* Previously, the user-info-fetcher's outbound HTTP requests (to Microsoft Entra, Keycloak, and the XFSC AAS) had no timeout, so a slow or unresponsive backend could make a request hang indefinitely and stall user-info lookups.
+  With this release, every outbound request has a 60-second overall timeout and a 15-second connection timeout.
+  Implemented in https://github.com/stackabletech/opa-operator/pull/859[opa-operator#859].
+* The Microsoft Entra backend of the OPA user-info-fetcher now retrieves complete group memberships for policy checks.
+  Previously, it read only the first page of a user's group memberships, so users belonging to many groups received an incomplete group list.
+  With this release, the Entra backend follows the result pages until every page has been retrieved (bounded to 100 pages as a safeguard).
+  Fixed in https://github.com/stackabletech/opa-operator/issues/858[opa-operator#858].
 
 ===== Trino
 
