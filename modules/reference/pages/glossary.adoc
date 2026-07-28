@@ -1,5 +1,5 @@
 = Glossary
-:li: pass:[<i class="fa-solid fa-link fa-sm" style="margin-left: 5px; vertical-align: baseline;"></i>]
+:li: pass:[<svg class="svg-icon" style="width: 0.875em; height: 0.875em; margin-left: 5px;" aria-hidden="true"><use href="/_/img/icons.svg#icon-link"/></svg>]
 :description: Glossary of Stackable terms, including Role, Role Group, and Stacklet, with definitions and links to detailed explanations.
 
 // refined styling for the glossary
