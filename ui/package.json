@@ -25,6 +25,7 @@
     "eslint": "^10.7.0",
     "globals": "^17.7.0",
     "highlight.js": "^10.7",
+    "mermaid": "^10.9.6",
     "prettier": "^3.9.5",
     "stylelint": "^17.14.0",
     "stylelint-config-standard": "^40.0.0",

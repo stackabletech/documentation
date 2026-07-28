@@ -6,10 +6,20 @@
 // built as a self-contained IIFE in its own vite pass (rollup cannot code-split
 // iife output, which is exactly what we want here).
 import { build } from 'vite';
-import { copyFileSync, cpSync, createWriteStream, mkdirSync, readdirSync, rmSync } from 'node:fs';
-import { resolve, basename } from 'node:path';
+import {
+  copyFileSync,
+  cpSync,
+  createWriteStream,
+  mkdirSync,
+  readdirSync,
+  readFileSync,
+  rmSync
+} from 'node:fs';
+import { createRequire } from 'node:module';
+import { resolve, basename, dirname } from 'node:path';
 import { ZipArchive } from 'archiver';
 
+const require = createRequire(import.meta.url);
 const root = import.meta.dirname;
 const src = resolve(root, 'src');
 const staged = resolve(root, 'build/ui');
@@ -97,6 +107,26 @@ await build(
     }
   })
 );
+
+// mermaid is imported on demand by partials/mermaid-script.hbs. It ships its
+// own prebuilt es-module dist and breaks at runtime when re-bundled, so the
+// entry and its transitive chunk imports are copied verbatim instead.
+const mermaidDist = resolve(dirname(require.resolve('mermaid/package.json')), 'dist');
+const mermaidOut = resolve(staged, 'js/vendor/mermaid');
+mkdirSync(mermaidOut, { recursive: true });
+const mermaidQueue = ['mermaid.esm.min.mjs'];
+const mermaidSeen = new Set();
+while (mermaidQueue.length > 0) {
+  const file = mermaidQueue.pop();
+  if (mermaidSeen.has(file)) continue;
+  mermaidSeen.add(file);
+  const content = readFileSync(resolve(mermaidDist, file), 'utf8');
+  copyFileSync(resolve(mermaidDist, file), resolve(mermaidOut, file));
+  for (const match of content.matchAll(/(?:from\s*|import\s*\(?\s*)"\.\/([^"]+)"/g)) {
+    mermaidQueue.push(match[1]);
+  }
+}
+console.log(`mermaid: copied ${mermaidSeen.size} dist files`);
 
 for (const dir of ['helpers', 'layouts', 'partials', 'img']) {
   cpSync(resolve(src, dir), resolve(staged, dir), { recursive: true });
