@@ -11,3 +11,11 @@
   from = "/home/stable/release_notes.html"
   to = "/home/stable/release-notes"
   status = 301
+
+# The bundle file names are not content-hashed, so a stale asset can be
+# served until max-age expires. One hour keeps that window small; with
+# content-hashed file names this could be immutable.
+[[headers]]
+  for = "/_/*"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
