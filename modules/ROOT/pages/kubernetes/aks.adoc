@@ -1,5 +1,5 @@
 = Azure Kubernetes Service (AKS)
-:description: Steps to create an Azure Kubernetes Service (AKS) cluster for the Stackable Data Platform, including node pool, network and inbound traffic settings.
+:description: Notes on running the Stackable Data Platform on Azure Kubernetes Service (AKS), covering cluster creation, networking and inbound traffic.
 
 https://azure.microsoft.com/en-us/products/kubernetes-service[https://azure.microsoft.com/en-us/products/kubernetes-service{external-link-icon}^]
 

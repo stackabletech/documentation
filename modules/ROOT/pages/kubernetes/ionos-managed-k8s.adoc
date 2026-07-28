@@ -1,5 +1,5 @@
 = IONOS managed Kubernetes
-:description: Set up IONOS managed Kubernetes for the Stackable Data Platform. Create a cluster and node pool and download the kubeconfig; no special steps are needed.
+:description: Notes on running the Stackable Data Platform on IONOS managed Kubernetes.
 
 https://cloud.ionos.com/managed/kubernetes[https://cloud.ionos.com/managed/kubernetes{external-link-icon}^]
 

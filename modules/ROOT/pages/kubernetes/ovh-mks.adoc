@@ -1,5 +1,5 @@
 = OVH Managed Kubernetes Service (MKS)
-:description: The Stackable Data Platform installs on OVH Managed Kubernetes Service out of the box; the ephemeral-nodes ListenerClass preset is recommended.
+:description: Notes on running the Stackable Data Platform on OVH Managed Kubernetes Service, covering the recommended ListenerClass preset.
 
 https://www.ovhcloud.com/en/public-cloud/kubernetes/[https://www.ovhcloud.com/en/public-cloud/kubernetes/{external-link-icon}^]
 

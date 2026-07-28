@@ -1,5 +1,5 @@
 = VMware Tanzu
-:description: Run the Stackable Data Platform on VMware Tanzu. BOSH-deployed clusters need special secret-operator and listener-operator setup due to the Kubelet path.
+:description: Notes on running the Stackable Data Platform on VMware Tanzu, covering the Kubelet path on BOSH-deployed clusters.
 
 https://www.vmware.com/products/app-platform/tanzu[https://www.vmware.com/products/app-platform/tanzu{external-link-icon}^]
 
