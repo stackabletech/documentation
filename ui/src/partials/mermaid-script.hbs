@@ -1,6 +1,6 @@
 <script type="module">
   if (document.querySelector('.mermaid')) {
-    const { default: mermaid } = await import('{{{uiRootPath}}}/js/vendor/mermaid.js')
+    const { default: mermaid } = await import('{{{uiRootPath}}}/js/vendor/mermaid/mermaid.esm.min.mjs')
     mermaid.initialize({ startOnLoad: true })
   }
 </script>
