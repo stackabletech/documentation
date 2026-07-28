@@ -2,57 +2,72 @@
 <script async src="{{{uiRootPath}}}/js/vendor/highlight.js"></script>
 <script async src="{{{uiRootPath}}}/js/vendor/tabs.js" data-sync-storage-key="preferred-tab"></script>
 <script>
-    // This script block loads the pagefind search UI.
+    // Loads the pagefind search UI on first use (see 07-search.js); the
+    // assets stay off the critical rendering path of every page.
     // Some styling is customized, these classes are found in search.css.
-    window.addEventListener('DOMContentLoaded', (event) => {
-        const instance = new PagefindModularUI.Instance({
-            // customized rank tuning - see https://pagefind.app/docs/ranking/
-            ranking: {
-                termSaturation: 0.4,
-                termSimilarity: 10.0
-            }});
-        instance.add(new PagefindModularUI.Input({
-            containerElement: "#search-input"
-        }));
-        instance.add(new PagefindModularUI.ResultList({
-            containerElement: "#search-results",
-            resultTemplate: (result) => {
-                const el = document.createElement("li");
-                el.classList.add("pagefind-modular-list-result");
+    window.loadSearch = (function () {
+        let ready
 
-                const innerEl = document.createElement("div");
-                innerEl.classList.add("pagefind-modular-list-inner");
-                el.appendChild(innerEl);
+        function initSearch () {
+            const instance = new PagefindModularUI.Instance({
+                // customized rank tuning - see https://pagefind.app/docs/ranking/
+                ranking: {
+                    termSaturation: 0.4,
+                    termSimilarity: 10.0
+                }});
+            instance.add(new PagefindModularUI.Input({
+                containerElement: "#search-input"
+            }));
+            instance.add(new PagefindModularUI.ResultList({
+                containerElement: "#search-results",
+                resultTemplate: (result) => {
+                    const el = document.createElement("li");
+                    el.classList.add("pagefind-modular-list-result");
 
-                // Create the child element for the breadcrumbs
-                const bcEl = document.createElement("p");
-                bcEl.classList.add("pagefind-modular-list-breadcrumbs");
-                parts = (result.meta.breadcrumbs ?? '').split('.').map(part => part.trim()).filter(part => part.length > 0);
-                parts.shift();
-                parts.pop();
-                bcEl.innerText = parts.join(' / ');
-                innerEl.appendChild(bcEl);
+                    // the whole result card is one link
+                    const linkEl = document.createElement("a");
+                    linkEl.classList.add("pagefind-modular-list-link", "pagefind-modular-list-inner");
+                    linkEl.href = result.url;
+                    el.appendChild(linkEl);
 
-                // Create the child element for the title
-                const titleEl = document.createElement("p");
-                titleEl.classList.add("pagefind-modular-list-title");
-                innerEl.appendChild(titleEl);
+                    const bcEl = document.createElement("p");
+                    bcEl.classList.add("pagefind-modular-list-breadcrumbs");
+                    const parts = (result.meta.breadcrumbs ?? '').split('.').map(part => part.trim()).filter(part => part.length > 0);
+                    parts.shift();
+                    parts.pop();
+                    bcEl.innerText = parts.join(' / ');
+                    linkEl.appendChild(bcEl);
 
-                // Create the anchor element
-                const linkEl = document.createElement("a");
-                linkEl.classList.add("pagefind-modular-list-link");
-                linkEl.href = result.url;
-                linkEl.innerText = result.meta.title;
-                titleEl.appendChild(linkEl);
+                    const titleEl = document.createElement("p");
+                    titleEl.classList.add("pagefind-modular-list-title");
+                    titleEl.innerText = result.meta.title;
+                    linkEl.appendChild(titleEl);
 
-                // Create the child element for the excerpt
-                const textEl = document.createElement("p");
-                textEl.classList.add("pagefind-modular-list-excerpt");
-                textEl.innerHTML = result.excerpt;
-                innerEl.appendChild(textEl);
+                    const textEl = document.createElement("p");
+                    textEl.classList.add("pagefind-modular-list-excerpt");
+                    textEl.innerHTML = result.excerpt;
+                    linkEl.appendChild(textEl);
 
-                return el;
+                    return el;
+                }
+            }));
+        }
+
+        return function () {
+            if (!ready) {
+                const css = document.createElement("link");
+                css.rel = "stylesheet";
+                css.href = "/pagefind/pagefind-modular-ui.css";
+                document.head.appendChild(css);
+                ready = new Promise((resolve, reject) => {
+                    const script = document.createElement("script");
+                    script.src = "/pagefind/pagefind-modular-ui.js";
+                    script.onload = () => { initSearch(); resolve(); };
+                    script.onerror = reject;
+                    document.head.appendChild(script);
+                });
             }
-        }));
-    });
+            return ready;
+        };
+    })();
 </script>
