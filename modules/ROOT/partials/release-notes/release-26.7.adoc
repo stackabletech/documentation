@@ -339,8 +339,11 @@ Tracked in https://github.com/stackabletech/issues/issues/716[issues#716].
 [#airflow-improvements-26_7_0]
 ===== Apache Airflow
 
-*Breaking:* `EXPERIMENTAL_FILE_HEADER` and `EXPERIMENTAL_FILE_FOOTER` in `webserver_config.py` (for arbitrary Python code) have been renamed to `FILE_HEADER` and `FILE_FOOTER`.
-Implemented in https://github.com/stackabletech/airflow-operator/pull/777[airflow-operator#777].
+* *Breaking:* `EXPERIMENTAL_FILE_HEADER` and `EXPERIMENTAL_FILE_FOOTER` in `webserver_config.py` (for arbitrary Python code) have been renamed to `FILE_HEADER` and `FILE_FOOTER`.
+  Implemented in https://github.com/stackabletech/airflow-operator/pull/777[airflow-operator#777].
+* *Breaking:* Renamed and moved the celeryExecutor broker and results backend to clusterConfig.
+  The results backend `spec.celeryExecutors.resultBackend` is now located at `spec.clusterConfig.celeryResultsBackend`. The broker `spec.celeryExecutors.broker` is now located at `spec.clusterConfig.celeryBroker`.
+  Implemented in https://github.com/stackabletech/airflow-operator/pull/786[airflow-operator#786].
 
 [#kafka-improvements-26_7_0]
 ===== Apache Kafka
