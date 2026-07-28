@@ -11,7 +11,7 @@
 # branches; this blocks it for every published version without backports.
 [[redirects]]
   from = "/home/:version/internal/*"
-  to = "/404.html"
+  to = "/404"
   status = 404
   force = true
 
