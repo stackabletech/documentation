@@ -98,6 +98,26 @@ await build(
   })
 );
 
+// mermaid is imported on demand by partials/mermaid-script.hbs and therefore
+// has to stay an es module (the classic-script entries above cannot be
+// import()ed); its internal chunks lazy-load per diagram type
+await build(
+  config({
+    build: {
+      outDir: staged,
+      emptyOutDir: false,
+      rollupOptions: {
+        input: resolve(src, 'js', 'vendor', 'mermaid.module.js'),
+        output: {
+          format: 'es',
+          entryFileNames: 'js/vendor/mermaid.js',
+          chunkFileNames: 'js/vendor/mermaid-[name]-[hash].js'
+        }
+      }
+    }
+  })
+);
+
 for (const dir of ['helpers', 'layouts', 'partials', 'img']) {
   cpSync(resolve(src, dir), resolve(staged, dir), { recursive: true });
 }
