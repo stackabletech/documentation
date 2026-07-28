@@ -1,4 +1,5 @@
 = Red Hat OpenShift
+:description: Notes on running the Stackable Data Platform on Red Hat OpenShift, covering certified operators, Subscription customization and security context constraints.
 
 https://www.redhat.com/en/technologies/cloud-computing/openshift[https://www.redhat.com/en/technologies/cloud-computing/openshift{external-link-icon}^]
 

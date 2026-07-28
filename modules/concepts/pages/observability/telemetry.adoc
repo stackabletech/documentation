@@ -1,4 +1,5 @@
 = Telemetry signals in operators
+:description: Helm values for operator telemetry: console logs, file logs and OpenTelemetry logs and traces via OTLP. Also covers collecting operator signals with Vector.
 :page-aliases: ../telemetry.adoc
 :env-filter-syntax: https://docs.rs/tracing-subscriber/latest/tracing_subscriber/filter/struct.EnvFilter.html#example-syntax
 :vector-helm-chart: https://github.com/vectordotdev/helm-charts/tree/develop/charts/vector

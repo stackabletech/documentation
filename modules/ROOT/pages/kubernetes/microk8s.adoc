@@ -1,4 +1,5 @@
 = Microk8s
+:description: Notes on running the Stackable Data Platform on Microk8s, covering the non-standard Kubelet state directory.
 
 https://microk8s.io/[https://microk8s.io/{external-link-icon}^]
 

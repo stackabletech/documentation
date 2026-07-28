@@ -1,4 +1,5 @@
 = k0s
+:description: Notes on running the Stackable Data Platform on k0s, covering the non-standard Kubelet state directory.
 
 https://k0sproject.io/[https://k0sproject.io/{external-link-icon}^]
 

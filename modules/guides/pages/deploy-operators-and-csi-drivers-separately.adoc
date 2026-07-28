@@ -1,4 +1,5 @@
 = Deploying operators and CSI drivers on separate nodes
+:description: Guide to scheduling Stackable operators on dedicated nodes while running the Secret and Listener Operator CSI node drivers alongside workloads.
 :related-issue: https://github.com/stackabletech/issues/issues/763
 :secret-operator-values: https://github.com/stackabletech/secret-operator/blob/{stackable-operator-branch}/deploy/helm/secret-operator/values.yaml
 :listener-operator-values: https://github.com/stackabletech/listener-operator/blob/{stackable-operator-branch}/deploy/helm/listener-operator/values.yaml

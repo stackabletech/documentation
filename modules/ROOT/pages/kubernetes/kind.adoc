@@ -1,3 +1,4 @@
 = kind
+:description: Notes on running the Stackable Data Platform on kind.
 
 https://kind.sigs.k8s.io/[https://kind.sigs.k8s.io/{external-link-icon}^]

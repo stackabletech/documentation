@@ -1,4 +1,5 @@
 = Cyber Resilience Act (CRA)
+:description: Central hub for Cyber Resilience Act (CRA) information on the Stackable Data Platform, covering its classification and the Annex II user information.
 
 NOTE: The https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32024R2847[Cyber Resilience Act (CRA)] is a European regulation that establishes cybersecurity requirements for products with digital elements placed on the EU market.
 It aims to ensure that hardware and software products are designed, developed, and maintained with adequate cybersecurity throughout their lifecycle.

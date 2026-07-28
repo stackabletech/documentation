@@ -1,4 +1,5 @@
 = STACKIT Kubernetes Engine (SKE)
+:description: Notes on running the Stackable Data Platform on the STACKIT Kubernetes Engine (SKE), covering public IP assignment for nodes.
 
 https://www.stackit.de/de/produkt/stackit-kubernetes-engine/[https://www.stackit.de/de/produkt/stackit-kubernetes-engine/{external-link-icon}^]
 

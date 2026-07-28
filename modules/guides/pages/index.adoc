@@ -1,3 +1,4 @@
 = Guides
+:description: Overview of the guides section, which collects instructions for completing particular tasks with the Stackable Data Platform.
 
 The guides in this section are useful to complete particular tasks.

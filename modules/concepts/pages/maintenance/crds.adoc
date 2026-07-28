@@ -1,4 +1,5 @@
 = CustomResourceDefinition (CRD) maintenance
+:description: How Stackable operators manage their own CRD lifecycle, including conversion webhook certificates and how to disable CRD maintenance.
 :k8s-webhook-config: https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definition-versioning/#configure-customresourcedefinition-to-use-conversion-webhooks
 
 Starting with SDP 25.11.0, specific operators now manage their own CRD lifecycle independently of Helm or other deployment tools.

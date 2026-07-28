@@ -1,3 +1,4 @@
 = Oracle Kubernetes Engine (OKE)
+:description: Notes on running the Stackable Data Platform on Oracle Kubernetes Engine (OKE).
 
 https://www.oracle.com/cloud/cloud-native/kubernetes-engine/[https://www.oracle.com/cloud/cloud-native/kubernetes-engine/{external-link-icon}^]

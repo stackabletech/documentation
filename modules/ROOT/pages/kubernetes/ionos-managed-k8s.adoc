@@ -1,4 +1,5 @@
 = IONOS managed Kubernetes
+:description: Notes on running the Stackable Data Platform on IONOS managed Kubernetes.
 
 https://cloud.ionos.com/managed/kubernetes[https://cloud.ionos.com/managed/kubernetes{external-link-icon}^]
 
