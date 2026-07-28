@@ -70,7 +70,10 @@ netlify-fetch:
 	# race the ref updates and silently leave a stale local branch behind,
 	# which only surfaces much later as a missing-object error from antora.
 	# Failures abort the build immediately instead.
-	set -e; for branch in $$(git ls-remote --heads origin | sed 's|.*refs/heads/||' | grep -E 'release[/-]'); do \
+	set -eu; \
+	branches="$$(git ls-remote --heads origin | sed 's|.*refs/heads/||' | grep -E 'release[/-]')"; \
+	[ -n "$$branches" ] || { echo "netlify-fetch: no release branches from ls-remote - refusing to continue"; exit 1; }; \
+	for branch in $$branches; do \
 		git -c gc.auto=0 fetch origin "+refs/heads/$$branch:refs/heads/$$branch"; \
 		git -c gc.auto=0 checkout -q "$$branch" -- . ; \
 	done
