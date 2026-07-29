@@ -48,6 +48,24 @@
   margin-top: 0;
 }
 
+/* the whole result card is one link */
+a.pagefind-modular-list-inner {
+  display: block;
+  text-decoration: none;
+}
+
+a.pagefind-modular-list-inner:hover,
+a.pagefind-modular-list-inner:focus-visible {
+  background-color: var(--color-background2);
+  outline-offset: 2px;
+}
+
+.pagefind-modular-list-title {
+  color: var(--color-brand-primary);
+  font-weight: 600;
+  margin: 0;
+}
+
 .pagefind-modular-list-breadcrumbs {
   font-size: calc(18px * var(--pagefind-ui-scale));
   font-weight: 500;

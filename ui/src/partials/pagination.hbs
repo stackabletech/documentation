@@ -1,6 +1,6 @@
 {{#unless (eq page.attributes.pagination undefined)}}
 {{#if (or page.previous page.next)}}
-<nav class="pagination">
+<nav class="pagination" data-pagefind-ignore>
   {{#with page.previous}}
   <span class="prev"><a href="{{{relativize ./url}}}">{{{./content}}}</a></span>
   {{/with}}

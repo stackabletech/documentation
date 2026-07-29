@@ -5,10 +5,13 @@
     document.getElementById('search-background').style.display = 'block'
     document.getElementById('search').style.display = 'block'
 
-    // focus the textbox after popover appears
-    focusSearchInput()
-    // add eventlisteners after popover appears
-    addNavigationToSearch()
+    // the search assets load on first use (see footer-scripts.hbs)
+    window.loadSearch().then(function () {
+      // focus the textbox after the input exists
+      focusSearchInput()
+      // add eventlisteners after popover appears
+      addNavigationToSearch()
+    })
   }
 
   function closeSearchPopover () {
@@ -37,19 +40,20 @@
   }
 
   function addNavigationInSearchResults (event) {
+    // the focused element is the result card link, a direct child of the li
     if (event.key === 'ArrowDown' && document.activeElement.classList.contains('pagefind-modular-list-link')) {
       event.preventDefault() // prevent page scrolling
-      var nextSibling = document.activeElement.parentElement.parentElement.parentElement.nextElementSibling
-      if (nextSibling) {
-        nextSibling.querySelector('a').focus()
+      var nextResult = document.activeElement.closest('li').nextElementSibling
+      if (nextResult) {
+        nextResult.querySelector('a').focus()
       }
     }
 
     if (event.key === 'ArrowUp' && document.activeElement.classList.contains('pagefind-modular-list-link')) {
       event.preventDefault() // prevent page scrolling
-      var previousSibling = document.activeElement.parentElement.parentElement.parentElement.previousElementSibling
-      if (previousSibling) {
-        previousSibling.querySelector('a').focus()
+      var previousResult = document.activeElement.closest('li').previousElementSibling
+      if (previousResult) {
+        previousResult.querySelector('a').focus()
       }
     }
   }
