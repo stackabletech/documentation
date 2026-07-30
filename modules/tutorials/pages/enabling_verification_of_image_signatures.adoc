@@ -31,5 +31,5 @@ kubectl apply -f kyverno-policy.yaml
 ----
 
 The policy will be applied to all namespaces in the cluster. It checks all newly created Pods that run any image matching the expression `docker.stackable.tech/+++*+++` (all images provided by Stackable) and ensures that these images have been signed by a Stackable Github Action (`https://github.com/stackabletech/+++*+++/.github/workflows/build.yml@refs/+++*+++`). If the signature of an image is invalid or missing, the policy will deny the pod creation.
-For a more detailed explanation of the policy options, please refer to the https://kyverno.io/docs/writing-policies/verify-images/sigstore/#keyless-signing-and-verification[Kyverno documentation].
+For a more detailed explanation of the policy options, please refer to the https://kyverno.io/docs/policy-types/cluster-policy/verify-images/sigstore/#keyless-signing-and-verification[Kyverno documentation].
 If the `subject` field in the policy is changed to something like `https://github.com/test/+++*+++`, the policy will deny the creation of pods with Stackable images because the signature is no longer valid.
