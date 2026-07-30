@@ -556,6 +556,7 @@ No OpenShift versions were dropped in this release.
 Please consult the following upgrade notes when upgrading from 26.3 to 26.7:
 
 * xref:opensearch:usage-guide/upgrade.adoc#_upgrade_from_sdp_26_3_to_26_7[OpenSearch upgrade guide]
+* xref:spark-k8s:usage-guide/upgrade.adoc#_upgrade_from_sdp_26_3_to_26_7[Apache Spark upgrade guide] -- required reading if you use Spark application templates, because the upgrade needs manual steps *before* you start
 ====
 
 ===== Using stackablectl
