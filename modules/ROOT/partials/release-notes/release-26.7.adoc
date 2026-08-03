@@ -619,5 +619,10 @@ The operators are installed directly, without adding the Helm Chart repository f
 helm install --wait <PRODUCT>-operator oci://oci.stackable.tech/sdp-charts/<PRODUCT>-operator --version 26.7.0
 ----
 
-// [#known-issues-26_7_0]
-// ==== Known issues
+[#known-issues-26_7_0]
+==== Known issues
+
+Failed Apache Spark applications are reported as successful.
+The entrypoint of the Spark images does not propagate the exit code of the Spark process, so the driver Pod always terminates with exit code `0` and the SparkApplication ends up in the `Succeeded` state even if the application failed.
+Until the fix is released, the driver logs must be checked to determine whether an application actually succeeded.
+Fixed in https://github.com/stackabletech/docker-images/pull/1595[docker-images#1595].
