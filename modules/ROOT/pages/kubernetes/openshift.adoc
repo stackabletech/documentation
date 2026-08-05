@@ -7,6 +7,10 @@ SDP operators are certified for the OpenShift platform and can be installed from
 
 IMPORTANT: OpenShift installations with FIPS mode enabled are not supported. This is because neither the SDP operators, nor the supported Apache products are FIPS-compliant.
 
+IMPORTANT: The operators deployed via olm might have higher memory requests (and limits) compared to our helm-charts, as we have seen typical production OpenShift clusters being larger than typical non-Openshift clusters.
+The reason is that memory usage of some of our operators scales with the number of objects in your Kubernetes cluster.
+However, you can fine-tune the memory of your operators using the documentation below, so this note is only about the default resources!
+
 == Customizing operator installations
 
 As described in the https://github.com/operator-framework/operator-lifecycle-manager/blob/master/doc/design/subscription-config.md[Openshift Subscription documentation{external-link-icon}^] you can configure the deployed operators.
@@ -53,7 +57,14 @@ spec:
         value: kafka-namespace
 ----
 
-IMPORTANT: The described configuration mechanism currently does not work for secret and listener-operator due to restrictions on deploying DaemonSets.
+=== secret and listener-operator
+
+Most operators are deployed using a Deployment, which olm allows to tweak the resources for.
+secret and listener-operator use a DaemonSet instead, which can not be deployed and tweaked by olm.
+Because of this limitation of olm, we deploy a Deployment called the "olm-deployer", which in turn deploys the relevant Kubernetes resources, including the DaemonSet.
+As we can't influence the deployed resources via olm, the olm-deployer takes **it's own** resource requests and applies them to all containers on the DaemonSets.
+
+This allows you to customize the resources of the DaemonSet in the same way as for the other operators - but doesn't allow individual resources for each container.
 
 == Security context constraints
 
