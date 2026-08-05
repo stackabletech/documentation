@@ -7,9 +7,9 @@ SDP operators are certified for the OpenShift platform and can be installed from
 
 IMPORTANT: OpenShift installations with FIPS mode enabled are not supported. This is because neither the SDP operators, nor the supported Apache products are FIPS-compliant.
 
-IMPORTANT: The operators deployed via olm might have higher memory requests (and limits) compared to our helm-charts, as we have seen typical production OpenShift clusters being larger than typical non-Openshift clusters.
+IMPORTANT: The operators deployed with OLM might have higher memory requests (and limits) compared to our Helm charts, as we have seen typical production OpenShift clusters being larger than typical non-Openshift clusters.
 The reason is that memory usage of some of our operators scales with the number of objects in your Kubernetes cluster.
-However, you can fine-tune the memory of your operators using the documentation below, so this note is only about the default resources!
+However, you can fine-tune the operator memory requirements using a custom Subscription object as described below, so this note is only about the default resources!
 
 == Customizing operator installations
 
@@ -59,10 +59,8 @@ spec:
 
 === secret and listener-operator
 
-Most operators are deployed using a Deployment, which olm allows to tweak the resources for.
-secret and listener-operator use a DaemonSet instead, which can not be deployed and tweaked by olm.
-Because of this limitation of olm, we deploy a Deployment called the "olm-deployer", which in turn deploys the relevant Kubernetes resources, including the DaemonSet.
-As we can't influence the deployed resources via olm, the olm-deployer takes **it's own** resource requests and applies them to all containers on the DaemonSets.
+The secret and listener operator are not deployed by OLM directly but rather by a helper tool called `olm-deployer`. This tool is needed to work around some OLM limitations that prevent it from directly installing these operators.
+In this case, `olm-deployer` takes **it's own** resource requests and applies them to all containers on the `DaemonSets` of these operators..
 
 This allows you to customize the resources of the DaemonSet in the same way as for the other operators - but doesn't allow individual resources for each container.
 
