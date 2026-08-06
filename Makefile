@@ -54,20 +54,28 @@ clean:
 	rm -rf cache
 
 # The netlify repo is checked out without any blobs. Antora needs local
-# release branches and their blobs in the object database, so this target
-# creates/updates the local branches and materializes their blobs via
-# pathspec checkouts - without ever switching HEAD (enabling branch previews!).
-# ui/ is excluded: release branches still reference it as a submodule and
-# its blobs are not needed (the UI bundle is built from the current checkout).
+# release branches and their complete tip trees in the object database (it
+# reads them with isomorphic-git, which cannot fetch missing objects on
+# demand), so this target creates/updates the local branches and
+# materializes their blobs via pathspec checkouts - without ever switching
+# HEAD (enabling branch previews!).
 netlify-fetch:
 	# netlify messes with some files, restore everything to how it was:
 	git reset --hard
 	# fetch, because netlify does caching and we want to get the latest commits
-	git fetch --all
-	for remote in $(shell git branch -r | grep -E 'release[/-]'); do \
-		branch="$${remote#origin/}"; \
-		git fetch -q origin "+refs/heads/$$branch:refs/heads/$$branch"; \
-		git checkout -q "$$branch" -- ':(exclude)ui' . ; \
+	git fetch --all --prune
+	# The branch list comes from the remote so it is current even on the first
+	# build after a new release branch appears (the cached remote-tracking refs
+	# lag behind). Auto-gc is disabled inside the loop: a background gc can
+	# race the ref updates and silently leave a stale local branch behind,
+	# which only surfaces much later as a missing-object error from antora.
+	# Failures abort the build immediately instead.
+	set -eu; \
+	branches="$$(git ls-remote --heads origin | sed 's|.*refs/heads/||' | grep -E 'release[/-]')"; \
+	[ -n "$$branches" ] || { echo "netlify-fetch: no release branches from ls-remote - refusing to continue"; exit 1; }; \
+	for branch in $$branches; do \
+		git -c gc.auto=0 fetch origin "+refs/heads/$$branch:refs/heads/$$branch"; \
+		git -c gc.auto=0 checkout -q "$$branch" -- . ; \
 	done
 	# restore the working tree of the current commit and drop files that
 	# only exist on other branches (ignored files like node_modules stay)
