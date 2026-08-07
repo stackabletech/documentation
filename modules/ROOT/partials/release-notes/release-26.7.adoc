@@ -623,7 +623,12 @@ helm install --wait <PRODUCT>-operator oci://oci.stackable.tech/sdp-charts/<PROD
 [#known-issues-26_7_0]
 ==== Known issues
 
-Failed Apache Spark applications are reported as successful.
-The entrypoint of the Spark images does not propagate the exit code of the Spark process, so the driver Pod always terminates with exit code `0` and the SparkApplication ends up in the `Succeeded` state even if the application failed.
-Until the fix is released, the driver logs must be checked to determine whether an application actually succeeded.
-Fixed in https://github.com/stackabletech/docker-images/pull/1595[docker-images#1595].
+* Failed Apache Spark applications are reported as successful.
+  The entrypoint of the Spark images does not propagate the exit code of the Spark process, so the driver Pod always terminates with exit code `0` and the SparkApplication ends up in the `Succeeded` state even if the application failed.
+  Until the fix is released, the driver logs must be checked to determine whether an application actually succeeded.
+  Fixed in https://github.com/stackabletech/docker-images/pull/1595[docker-images#1595].
+* Using Apache Airflow 3.2.2 with Kubernetes executors can lead to a crashlooping scheduler.
+  The scheduler crashloops if it was stopped while unfinished tasks were still present.
+  To recover, the offending records must be updated in Airflow's database.
+  This is described in https://github.com/apache/airflow/issues/67813[apache/airflow#67813] and fixed in https://github.com/apache/airflow/pull/67850[apache/airflow#67850].
+  Until the fix is backported to 3.2.2, we recommend using Airflow 3.1.6 or 3.0.6 instead, or switching to Celery executors.
