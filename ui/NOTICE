@@ -3,6 +3,12 @@ This UI is a fork of the Antora Default UI
 Mozilla Public License 2.0 (see LICENSE). Modifications are
 (c) Stackable GmbH and remain under MPL-2.0.
 
+Upstream commits are periodically ported into this fork with their
+original authorship preserved in the git history. The upstream authors
+are not signatories of the Stackable CLA; their code is included solely
+under the terms of the MPL-2.0. See README.adoc, section "Provenance
+and the Stackable CLA".
+
 This directory ships with (and its build output bundles) the following
 third-party components. Build-time minification strips embedded license
 header comments; this file preserves the attributions and is included

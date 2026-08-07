@@ -92,6 +92,23 @@ Copyright (C) 2017-present OpenDevise Inc. and the Antora Project.
 Use of this software is granted under the terms of the https://www.mozilla.org/en-US/MPL/2.0/[Mozilla Public License Version 2.0] (MPL-2.0).
 See link:LICENSE[] to find the full license text.
 
+=== Provenance and the Stackable CLA
+
+This directory is a fork of the MPL-2.0-licensed https://gitlab.com/antora/antora-ui-default[Antora Default UI], and upstream commits are periodically ported into it (see link:UPSTREAM[]).
+Ported commits keep their original upstream authorship in the git history.
+
+The upstream authors have not signed the Stackable CLA and are not expected to.
+Their code is included solely under the terms of the MPL-2.0 (see link:LICENSE[]), not under the CLA.
+This is intentional and applies only to the contents of this directory.
+As a practical consequence, the CLA check fails on pull requests that port upstream commits; such PRs are merged with an administrative override after review.
+
+To list the authors of ported code:
+
+[source,bash]
+----
+git log --format='%an <%ae>' -- ui/ | sort -u
+----
+
 == Authors
 
 Development of Antora is led and sponsored by {url-opendevise}[OpenDevise Inc].
