@@ -47,7 +47,7 @@ The UI bundle is basically a collection of handlebars templates and some minimal
 
 Inside the `src` directory are:
 
-* `css`: Contains all the CSS. `site.css` contains imports of all the other files. In `vendor` there is the copied-in FontAwesome CSS file.
+* `css`: Contains all the CSS. `site.css` contains imports of all the other files.
 * `helpers`: Contains Handlebars helper functions. The file names are the names of the helpers. You can use these inside the Handlebars templates.
 * `img`: Images used in the UI.
 * `js`: Contains JavaScript files for UI functionality, numbered for loading order. The `vendor` directory contains third-party libraries like highlight.js and tabs functionality.
