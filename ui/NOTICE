@@ -9,7 +9,7 @@ header comments; this file preserves the attributions and is included
 in the published bundle.
 
 - Font Awesome Free (https://fontawesome.com)
-  The icon sprite (img/icons.svg) is generated at build time from the
+  The icon sprite (partials/icons.hbs) is generated at build time from the
   @fortawesome/fontawesome-free package (see ui/package.json for the
   version); the icon path data is CC BY 4.0.
   https://fontawesome.com/license/free
