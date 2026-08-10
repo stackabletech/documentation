@@ -110,7 +110,7 @@ const cssResult = await build(
             if (name === 'site.css') return 'css/site-[hash][extname]';
             if (/\.(woff2?|ttf)$/.test(name)) return 'font/[name][extname]';
             if (/\.(svg|png|gif|ico|jpg)$/.test(name)) return 'img/[name][extname]';
-            return 'css/[name][extname]';
+            return 'css/[name]-[hash][extname]';
           }
         }
       }
