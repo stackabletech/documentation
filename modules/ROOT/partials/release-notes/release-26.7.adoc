@@ -625,8 +625,13 @@ helm install --wait <PRODUCT>-operator oci://oci.stackable.tech/sdp-charts/<PROD
 
 * Failed Apache Spark applications are reported as successful.
   The entrypoint of the Spark images does not propagate the exit code of the Spark process, so the driver Pod always terminates with exit code `0` and the SparkApplication ends up in the `Succeeded` state even if the application failed.
-  Until the fix is released, the driver logs must be checked to determine whether an application actually succeeded.
   Fixed in https://github.com/stackabletech/docker-images/pull/1595[docker-images#1595].
+  Until the fix is released, the driver logs must be checked to determine whether an application actually succeeded.
+  Alternatively, one of the following development images that already contain the fix can be pinned via xref:concepts:product-image-selection.adoc#customimages[`spec.image.custom`], together with the matching `spec.image.productVersion`.
+  These images are development builds and not part of the `26.7.0` release.
+** Apache Spark 3.5.8: `oci.stackable.tech/sdp/spark-k8s@sha256:0a93e58889e9de5857eccddc9f1c9321b21a6e038d4702573cc38145465482de`
+** Apache Spark 4.1.1: `oci.stackable.tech/sdp/spark-k8s@sha256:c5c2bb2a8a5235e5f057a2d1064300f1b9d6baddff8672e0c0af95e480261ee2`
+** Apache Spark 4.1.2: `oci.stackable.tech/sdp/spark-k8s@sha256:5922f9fe320950948a7d4912ddd83afadde747ad195c34e2adcc9cb7b9989915`
 * Using Apache Airflow 3.2.2 with Kubernetes executors can lead to a crashlooping scheduler.
   The scheduler crashloops if it was stopped while unfinished tasks were still present.
   To recover, the offending records must be updated in Airflow's database.
