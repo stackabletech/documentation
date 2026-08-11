@@ -8,9 +8,11 @@ third-party components. Build-time minification strips embedded license
 header comments; this file preserves the attributions and is included
 in the published bundle.
 
-- Font Awesome Free 6.2.1 (https://fontawesome.com)
-  The inline svg icon path data is derived from Font Awesome Free icons
-  (CC BY 4.0). https://fontawesome.com/license/free
+- Font Awesome Free (https://fontawesome.com)
+  The icon sprite (partials/icons.hbs) is generated at build time from the
+  @fortawesome/fontawesome-free package (see ui/package.json for the
+  version); the icon path data is CC BY 4.0.
+  https://fontawesome.com/license/free
 - highlight.js (https://highlightjs.org)
   BSD 3-Clause License, (c) 2006 Ivan Sagalaev and contributors
 - Asciidoctor Tabs (https://github.com/asciidoctor/asciidoctor-tabs)

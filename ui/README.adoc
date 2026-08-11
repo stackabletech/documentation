@@ -47,7 +47,7 @@ The UI bundle is basically a collection of handlebars templates and some minimal
 
 Inside the `src` directory are:
 
-* `css`: Contains all the CSS. `site.css` contains imports of all the other files. In `vendor` there is the copied-in FontAwesome CSS file.
+* `css`: Contains all the CSS. `site.css` contains imports of all the other files.
 * `helpers`: Contains Handlebars helper functions. The file names are the names of the helpers. You can use these inside the Handlebars templates.
 * `img`: Images used in the UI.
 * `js`: Contains JavaScript files for UI functionality, numbered for loading order. The `vendor` directory contains third-party libraries like highlight.js and tabs functionality.
@@ -59,6 +59,19 @@ Inside the `src` directory are:
 `npm run bundle` runs `build.mjs`: https://vite.dev[Vite] builds the css (one pass) and each js entry (one pass per file, as self-contained classic scripts), the static directories are copied in, and everything is zipped into `build/ui-bundle.zip`.
 
 The js entries are `js/site.js` (the numbered scripts under `src/js`, concatenated in order) and one `js/vendor/<name>.js` per `src/js/vendor/<name>.bundle.js` with its imports bundled in.
+
+=== Dependency special cases
+
+* `mermaid`: ships its own prebuilt es-module dist and breaks at runtime when re-bundled; the build copies the entry and its transitive chunk imports verbatim and loads it on demand (see `partials/mermaid-script.hbs`).
+* `pagefind`: lives entirely outside this UI bundle. It is a devDependency of the repository root, indexes the finished site after the Antora build (`make build-search-index`) and self-serves its assets under `/pagefind/`. The asset hashing below does not cover it.
+* `@asciidoctor/tabs`: doubles as a build-time Asciidoctor extension (playbook) and a runtime asset. The browser js and the css are imported by explicit path (`dist/js/tabs.js`, `dist/css/tabs.css`) because Vite honors neither the `browser` nor the `style` package field.
+* `highlight.js`: bundled from its modular source with a curated language list in `src/js/vendor/highlight.bundle.js`.
+* `@fortawesome/fontawesome-free`: the icon sprite partial `partials/icons.hbs` (inlined into every page by the layouts) is generated at build time from the package's svgs (CC BY 4.0, attributed in NOTICE and in the sprite itself).
+* `@fontsource/*`: the font files are pulled out of the packages via the `~@fontsource/` url alias in `src/css/fonts.css`.
+
+=== Asset caching
+
+The css and js entry files carry a content hash in their names and are served with immutable cache headers (see `netlify.toml`). The hbs templates reference them by their unhashed names; the build rewrites the references while staging the bundle. Fonts and images keep stable names with moderate cache lifetimes.
 
 === Building the final documentation
 
