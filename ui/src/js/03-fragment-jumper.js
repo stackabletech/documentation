@@ -20,7 +20,7 @@
       window.location.hash = '#' + this.id
       e.preventDefault()
     }
-    var y = computePosition(this, 0) - toolbar.getBoundingClientRect().bottom
+    var y = computePosition(this, 0) - (toolbar ? toolbar.getBoundingClientRect().bottom : 0)
     var instant = e === false && supportsScrollToOptions
     instant ? window.scrollTo({ left: 0, top: y, behavior: 'instant' }) : window.scrollTo(0, y)
   }
