@@ -10,7 +10,7 @@
   }
 
   /* Don't use uppercase for captions */
-  & .icon {
+  & td.icon i::after {
     text-transform: none;
   }
 }
@@ -31,7 +31,7 @@
 /* Adjust styles for the "wrong" code style rule usage */
 .doc .admonitionblock.code-rule.warning {
   /* Change the color of the "important" admonition back to the default red */
-  & .icon {
+  & td.icon i {
     background-color: #e40046;
   }
 

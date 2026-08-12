@@ -21,7 +21,7 @@
       pre.classList.add('highlightjs', 'highlight')
       ;(code = document.createElement('code')).className = 'language-console hljs'
       code.dataset.lang = 'console'
-      code.appendChild(pre.firstChild)
+      while (pre.hasChildNodes()) code.appendChild(pre.firstChild)
       pre.appendChild(code)
     } else {
       return
@@ -50,7 +50,7 @@
       copy.appendChild(toast)
       toolbox.appendChild(copy)
     }
-    pre.appendChild(toolbox)
+    pre.parentNode.appendChild(toolbox)
     if (copy) copy.addEventListener('click', writeToClipboard.bind(copy, code))
   })
 

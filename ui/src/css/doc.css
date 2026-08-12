@@ -194,7 +194,7 @@
 }
 
 .doc .paragraph.lead > p {
-  font-size: calc(18 / var(--rem-base) * 1rem);
+  font-size: calc(19.5 / var(--rem-base) * 1rem);
 }
 
 .doc .right {
@@ -205,8 +205,46 @@
   float: left;
 }
 
+.doc .float-gap.right {
+  margin: 0 1rem 1rem 0;
+}
+
+.doc .float-gap.left {
+  margin: 0 0 1rem 1rem;
+}
+
+.doc .float-group::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.doc .text-left {
+  text-align: left;
+}
+
+.doc .text-center {
+  text-align: center;
+}
+
+.doc .text-right {
+  text-align: right;
+}
+
+.doc .text-justify {
+  text-align: justify;
+}
+
 .doc .stretch {
   width: 100%;
+}
+
+.doc .big {
+  font-size: larger;
+}
+
+.doc .small {
+  font-size: smaller;
 }
 
 .doc .underline {
@@ -238,15 +276,23 @@
 
 .doc table.tableblock {
   font-size: calc(15 / var(--rem-base) * 1rem);
-  margin: 1.5rem 0 0;
 }
 
+.doc table.tableblock,
 .doc table.tableblock + * {
   margin-top: 1.5rem;
 }
 
+.doc table.tableblock pre {
+  font-size: inherit;
+}
+
 .doc p.tableblock + p.tableblock {
   margin-top: 0.5rem;
+}
+
+.doc td.tableblock > .content {
+  word-wrap: anywhere; /* aka overflow-wrap; used when hyphens are disabled or aren't sufficient */
 }
 
 .doc td.tableblock > .content > :first-child {
@@ -378,53 +424,57 @@
   word-wrap: anywhere;
 }
 
-.doc .admonitionblock .icon {
+.doc .admonitionblock td.icon {
+  font-size: calc(15 / var(--rem-base) * 1rem);
+  left: 0;
+  line-height: 1;
+  padding: 0;
   position: absolute;
   top: 0;
-  left: 0;
-  font-size: calc(15 / var(--rem-base) * 1rem);
-  padding: 0 0.5rem;
-  height: 1.25rem;
-  line-height: 1;
-  font-weight: var(--admonition-label-font-weight);
-  text-transform: uppercase;
-  border-radius: 0.45rem;
   transform: translate(-0.5rem, -50%);
 }
 
-.doc .admonitionblock.caution .icon {
+.doc .admonitionblock td.icon i {
+  align-items: center;
+  border-radius: 0.45rem;
+  display: inline-flex;
+  filter: initial;
+  height: 1.25rem;
+  padding: 0 0.5rem;
+  vertical-align: initial;
+  width: fit-content;
+}
+
+.doc .admonitionblock td.icon i::after {
+  content: attr(title);
+  font-weight: var(--admonition-label-font-weight);
+  font-style: normal;
+  text-transform: uppercase;
+}
+
+.doc .admonitionblock td.icon i.icon-caution {
   background-color: var(--caution-color);
   color: var(--caution-on-color);
 }
 
-.doc .admonitionblock.important .icon {
+.doc .admonitionblock td.icon i.icon-important {
   background-color: var(--important-color);
   color: var(--important-on-color);
 }
 
-.doc .admonitionblock.note .icon {
+.doc .admonitionblock td.icon i.icon-note {
   background-color: var(--note-color);
   color: var(--note-on-color);
 }
 
-.doc .admonitionblock.tip .icon {
+.doc .admonitionblock td.icon i.icon-tip {
   background-color: var(--tip-color);
   color: var(--tip-on-color);
 }
 
-.doc .admonitionblock.warning .icon {
+.doc .admonitionblock td.icon i.icon-warning {
   background-color: var(--warning-color);
   color: var(--warning-on-color);
-}
-
-.doc .admonitionblock .icon i {
-  display: inline-flex;
-  align-items: center;
-  height: 100%;
-}
-
-.doc .admonitionblock .icon i::after {
-  content: attr(title);
 }
 
 .doc .imageblock,
@@ -432,6 +482,29 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.doc .imageblock .content {
+  align-self: stretch;
+  text-align: center;
+}
+
+.doc .imageblock.text-left,
+.doc .videoblock.text-left {
+  align-items: flex-start;
+}
+
+.doc .imageblock.text-left .content {
+  text-align: left;
+}
+
+.doc .imageblock.text-right,
+.doc .videoblock.text-right {
+  align-items: flex-end;
+}
+
+.doc .imageblock.text-right .content {
+  text-align: right;
 }
 
 .doc .imageblock img,
@@ -529,15 +602,21 @@
 }
 
 .doc ul.circle {
-  list-style-type: square;
+  list-style-type: circle;
 }
 
 .doc ul.disc {
-  list-style-type: square;
+  list-style-type: disc;
 }
 
 .doc ul.square {
   list-style-type: square;
+}
+
+.doc ul.circle ul:not([class]),
+.doc ul.disc ul:not([class]),
+.doc ul.square ul:not([class]) {
+  list-style: inherit;
 }
 
 .doc ol.arabic {
@@ -569,14 +648,14 @@
 }
 
 .doc ul.checklist {
-  padding-left: 0.5rem;
+  padding-left: 1rem;
 }
 
 .doc ul.checklist p > i.fa-check-square-o:first-child,
 .doc ul.checklist p > i.fa-square-o:first-child {
   display: inline-flex;
   justify-content: center;
-  width: 1.25rem;
+  width: 1em;
 }
 
 .doc ul.checklist i.fa-check-square-o::before {
@@ -718,10 +797,11 @@
   font-size: calc(22.5 / var(--rem-base) * 1rem);
   font-weight: var(--alt-heading-font-weight);
   line-height: 1.3;
-  margin-bottom: -0.3em;
+  margin-bottom: 0.5rem;
   text-align: center;
 }
 
+.doc .sidebarblock > .content > .title + *,
 .doc .sidebarblock > .content > :not(.title):first-child {
   margin-top: 0;
 }
@@ -732,17 +812,17 @@
   white-space: pre-wrap;
 }
 
-.doc pre.highlight code,
+.doc pre.highlight > code,
 .doc .listingblock pre:not(.highlight),
 .doc .literalblock pre {
   background: var(--pre-background);
   box-shadow: inset 0 0 1.75px var(--pre-border-color);
   display: block;
   overflow-x: auto;
-  padding: 0.75rem;
+  padding: 0.875em;
 }
 
-.doc pre.highlight {
+.doc .listingblock > .content {
   position: relative;
 }
 
@@ -754,8 +834,11 @@
   right: 0.5rem;
   color: var(--pre-annotation-font-color);
   font-family: var(--body-font-family);
-  font-size: calc(13.5 / var(--rem-base) * 1rem);
+  font-size: calc(13 / var(--rem-base) * 1rem);
   line-height: 1;
+  user-select: none;
+  white-space: nowrap;
+  z-index: 1;
 }
 
 .doc .listingblock:hover .source-toolbox {
@@ -765,8 +848,6 @@
 .doc .source-toolbox .source-lang {
   text-transform: uppercase;
   letter-spacing: 0.075em;
-  font-size: 0.96em;
-  line-height: 1.0425;
 }
 
 .doc .source-toolbox > :not(:last-child)::after {
@@ -779,7 +860,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: transparent;
+  background: none;
   border: none;
   color: inherit;
   outline: none;
@@ -816,7 +897,7 @@
   color: var(--color-white);
   cursor: auto;
   opacity: 0;
-  transition: opacity 0.5s ease 0.75s;
+  transition: opacity 0.5s ease 0.5s;
 }
 
 .doc .source-toolbox .copy-toast::after {
@@ -845,11 +926,12 @@
 }
 
 .doc .dlist dd {
-  margin: 0 0 0.25rem 1.5rem;
+  margin: 0 0 0 1.5rem;
 }
 
-.doc .dlist dd:last-of-type {
-  margin-bottom: 0;
+.doc .dlist dd + dt,
+.doc .dlist dd > p:first-child {
+  margin-top: 0.5rem;
 }
 
 .doc td.hdlist1,
@@ -983,6 +1065,10 @@
 .doc .nobreak {
   hyphens: none;
   word-wrap: normal;
+}
+
+.doc :not(pre).pre-wrap {
+  white-space: pre-wrap;
 }
 
 #footnotes {
