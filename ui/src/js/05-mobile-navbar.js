@@ -8,8 +8,8 @@
   function toggleNavbarMenu (e) {
     e.stopPropagation() // trap event
     document.documentElement.classList.toggle('is-clipped--navbar')
-    this.classList.toggle('is-active')
-    var menu = document.getElementById(this.dataset.target)
+    navbarBurger.setAttribute('aria-expanded', this.classList.toggle('is-active'))
+    var menu = document.getElementById(this.getAttribute('aria-controls') || this.dataset.target)
     menu.classList.toggle('is-active')
   }
 })()
