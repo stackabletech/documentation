@@ -43,11 +43,23 @@ body {
   word-wrap: normal;
 }
 
+/* The img carries width/height attributes so its space is reserved before it
+ * loads. Two consequences to keep in mind when touching this rule:
+ *
+ * width: auto is required, not redundant. Those attributes are presentational
+ * hints that set a real width, so without it the logo renders at its full 199px
+ * against a 22px height and stretches by a third. Setting it hands sizing back
+ * to the aspect ratio the attributes imply.
+ *
+ * The gap is a margin, not padding, because aspect-ratio sizes the box named by
+ * box-sizing -- border-box here -- so padding would count inside the ratio and
+ * squash the image by exactly that much. */
 .navbar-brand .navbar-item:first-child img {
   height: 22px;
+  width: auto;
   display: inline-block;
   margin-top: -4px;
-  padding-right: 20px;
+  margin-right: 20px;
 }
 
 .navbar-brand .navbar-item.documentation-link {
