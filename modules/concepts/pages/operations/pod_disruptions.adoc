@@ -48,6 +48,12 @@ You can configure
 1. Whether PDBs are written at all
 2. The `maxUnavailable` replicas for this role PDB
 
+[WARNING]
+====
+Setting `maxUnavailable` to `0` means no voluntary disruptions are allowed.
+This can block Kubernetes nodes from being drained, talk with your Kubernetes cluster provider first!
+====
+
 The following example
 
 1. Sets `maxUnavailable` for NameNodes to `1`
