@@ -3,7 +3,7 @@
  * It also handles the mobile version of the menu.
  */
 
-@media screen and (max-width: 1023.5px) {
+@media screen and (max-width: 1200px) {
   html.is-clipped--navbar {
     overflow-y: hidden;
   }
