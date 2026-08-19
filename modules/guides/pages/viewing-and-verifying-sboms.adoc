@@ -6,7 +6,7 @@ With release 24.3 of SDP, we started providing SBOMs (Software Bill of Materials
 
 NOTE: Starting with SDP 25.7, we now embed the exact source code used to build each product directly into our images. You can find the source code in files ending with `-src.tar.gz` within the `/stackable` directory of each image.
 
-Starting with SDP 26.7, every image additionally carries an SBOM in the https://spdx.dev/[SPDX{external-link-icon}^] format (SPDX JSON), attested alongside the CycloneDX SBOM. The SPDX SBOM is derived from the CycloneDX SBOM, so both formats describe the same component inventory. Container images also come with xref:guides:verifying-image-provenance.adoc[SLSA build provenance] since SDP 26.7.
+Starting with SDP 26.7, every image additionally carries an SBOM in the https://spdx.dev/[SPDX{external-link-icon}^] format (SPDX JSON), attested alongside the CycloneDX SBOM. The SPDX SBOM is derived from the CycloneDX SBOM, so both formats describe the same component inventory.
 
 You can browse through our SBOMs at https://sboms.stackable.tech/[https://sboms.stackable.tech/{external-link-icon}^].
 
