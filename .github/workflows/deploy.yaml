@@ -1,3 +1,4 @@
+---
 name: Build and deploy production site
 
 # This job simply calls a trigger hook in netlify.
