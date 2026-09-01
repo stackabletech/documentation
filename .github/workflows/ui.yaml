@@ -1,0 +1,35 @@
+---
+name: UI lint and bundle
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/ui.yaml"
+      - "ui/**"
+      - "package-lock.json"
+
+permissions: {}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+          cache: npm
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Lint the UI project
+        run: npm run lint --workspace ui
+
+      - name: Bundle the UI project
+        run: npm run bundle --workspace ui

@@ -1,3 +1,4 @@
+---
 name: Build and deploy production site
 
 # This job simply calls a trigger hook in netlify.
@@ -7,8 +8,10 @@ name: Build and deploy production site
 on:
   schedule:
     # Monday to Friday, 2:15 in the night
-    - cron: '15 2 * * 1-5'
+    - cron: "15 2 * * 1-5"
   workflow_dispatch:
+
+permissions: {}
 
 jobs:
   build:
@@ -17,4 +20,4 @@ jobs:
       - name: Call Netlify build hook
         env:
           HOOK_URL: ${{ secrets.NETLIFY_BUILD_TRIGGER_HOOK }}
-        run: curl -X POST -d '{}' $HOOK_URL
+        run: curl -X POST -d '{}' "$HOOK_URL"
