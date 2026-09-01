@@ -4,6 +4,7 @@ name: UI lint and bundle
 on:
   pull_request:
     paths:
+      - ".github/workflows/ui.yaml"
       - "ui/**"
       - "package-lock.json"
 
