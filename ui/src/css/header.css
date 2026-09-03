@@ -193,7 +193,7 @@ body {
   color: var(--navbar-menu-font-color-hover);
 }
 
-/* font: inherit is required, not tidiness: .svg-icon sizes the magnifier in em,
+/* font: inherit is required: .svg-icon sizes the magnifier in em,
  * so the UA button font would shrink it from 16px to 13px. */
 #search-button {
   background: none;

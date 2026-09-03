@@ -137,7 +137,8 @@
   background-image: url(../img/octicons-16.svg#view-fold);
 }
 
-.nav-panel-menu.is-active:hover .nav-menu-toggle {
+.nav-panel-menu.is-active:hover .nav-menu-toggle,
+.nav-panel-menu.is-active:focus-within .nav-menu-toggle {
   visibility: visible;
 }
 

@@ -132,12 +132,20 @@
   content: "\00a7";
 }
 
+/* A focusable control that only appears on hover is invisible to anyone
+ * tabbing to it, so every reveal below pairs hover with focus. */
 .doc h1:hover .anchor,
 .doc h2:hover .anchor,
 .doc h3:hover .anchor,
 .doc h4:hover .anchor,
 .doc h5:hover .anchor,
-.doc h6:hover .anchor {
+.doc h6:hover .anchor,
+.doc h1 .anchor:focus-visible,
+.doc h2 .anchor:focus-visible,
+.doc h3 .anchor:focus-visible,
+.doc h4 .anchor:focus-visible,
+.doc h5 .anchor:focus-visible,
+.doc h6 .anchor:focus-visible {
   visibility: visible;
 }
 
@@ -853,7 +861,8 @@
   z-index: 1;
 }
 
-.doc .listingblock:hover .source-toolbox {
+.doc .listingblock:hover .source-toolbox,
+.doc .listingblock:focus-within .source-toolbox {
   visibility: visible;
 }
 
