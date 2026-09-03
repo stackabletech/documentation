@@ -121,12 +121,16 @@
   height: 1em;
   margin-right: -0.5rem;
   opacity: 0.75;
-  outline: none;
   padding: 0;
   position: sticky;
   top: calc((var(--nav-line-height) - 1 + 0.5) * 1rem);
   visibility: hidden;
   width: 1em;
+}
+
+.nav-menu-toggle:focus-visible {
+  outline: 2px solid currentcolor;
+  outline-offset: 2px;
 }
 
 .nav-menu-toggle.is-active {
@@ -177,7 +181,6 @@
 .nav-item-toggle {
   background: transparent url(../img/caret.svg) no-repeat center / 50%;
   border: none;
-  outline: none;
   line-height: inherit;
   padding: 0;
   position: absolute;
@@ -185,6 +188,11 @@
   width: calc(var(--nav-line-height) * 1em);
   margin-top: -0.05em;
   margin-left: calc(var(--nav-line-height) * -1em);
+}
+
+.nav-item-toggle:focus-visible {
+  outline: 2px solid currentcolor;
+  outline-offset: 2px;
 }
 
 .nav-item.is-active > .nav-item-toggle {

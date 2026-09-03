@@ -2,7 +2,7 @@
   <nav class="navbar">
     <div id="topbar-left" class="navbar-brand">
       <a class="navbar-item" href="{{{ relativize (versioned "home" page "index.html") }}}">
-        <img src="{{{uiRootPath}}}/img/stackable-logo.png" width="199" height="30">
+        <img src="{{{uiRootPath}}}/img/stackable-logo.png" width="199" height="30" alt="Stackable">
       </a>
       <a class="navbar-item documentation-link" href="{{{ relativize (versioned "home" page "index.html") }}}">
         Docs
@@ -32,13 +32,13 @@
         <span></span>
         <span></span>
       </button>
-      <div id="search-button" class="navbar-item">
+      <button type="button" id="search-button" class="navbar-item" aria-label="Search" aria-expanded="false" aria-controls="search">
         <svg class="svg-icon" aria-hidden="true"><use href="#icon-search"/></svg>
-        <div id="search-background"></div>
-        <div id="search">
-          <div id="search-input"></div>
-          <ul id="search-results"></ul>
-        </div>
+      </button>
+      <div id="search-background"></div>
+      <div id="search" role="dialog" aria-label="Search">
+        <div id="search-input"></div>
+        <ul id="search-results"></ul>
       </div>
       {{#if @root.page.versions}}
       {{#with @root.page.versions}}

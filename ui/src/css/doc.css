@@ -875,12 +875,16 @@
   background: none;
   border: none;
   color: inherit;
-  outline: none;
   padding: 0;
   font-size: inherit;
   line-height: inherit;
   width: 1em;
   height: 1em;
+}
+
+.doc .source-toolbox .copy-button:focus-visible {
+  outline: 2px solid currentcolor;
+  outline-offset: 2px;
 }
 
 .doc .source-toolbox .copy-icon {

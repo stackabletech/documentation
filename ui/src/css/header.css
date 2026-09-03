@@ -193,8 +193,13 @@ body {
   color: var(--navbar-menu-font-color-hover);
 }
 
+/* font: inherit is required, not tidiness: .svg-icon sizes the magnifier in em,
+ * so the UA button font would shrink it from 16px to 13px. */
 #search-button {
+  background: none;
+  border: none;
   cursor: pointer;
+  font: inherit;
   padding-right: 2rem;
 }
 
@@ -205,7 +210,6 @@ body {
 .navbar-burger {
   background: none;
   border: none;
-  outline: none;
   line-height: 1;
   position: relative;
   padding: 0;
@@ -215,6 +219,11 @@ body {
   align-items: center;
   justify-content: center;
   min-width: 0;
+}
+
+.navbar-burger:focus-visible {
+  outline: 2px solid currentcolor;
+  outline-offset: 2px;
 }
 
 .navbar-burger span {
