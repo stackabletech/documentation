@@ -11,6 +11,12 @@
 # Update the SHA (and this file) whenever upstream changes have been
 # reviewed and ported.
 #
-# Last reviewed: NOT YET RECORDED - the fork predates this marker.
-# Planned: the phase 3 upstream re-sync establishes the first SHA
-# (see ~/dev/stackable/plans/documentation-overhaul.md).
+# Reviewed against: 0e38223a (2026-07-16)
+#
+# Not every upstream commit in that range is present. Some were skipped
+# because the subsystem diverged: the search UI is a custom Pagefind
+# integration, the typefaces come from fontsource, tabs ship from
+# @asciidoctor/tabs, and the highlight.js language set is our own. Others
+# were already present from earlier cherry-picks. `git log -- ui/` carries
+# the upstream authorship and message of each ported commit, so a future
+# re-sync can tell what landed from what did not.

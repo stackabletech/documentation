@@ -96,6 +96,7 @@
   --admonition-background: var(--panel-background);
   --admonition-label-font-weight: var(--body-font-weight-bold);
   --caption-font-color: var(--color-text);
+  --caption-font-style: italic;
   --caption-font-weight: var(--body-font-weight-bold);
   --code-background: var(--panel-background);
   --code-font-color: var(--body-font-color);

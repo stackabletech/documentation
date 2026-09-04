@@ -83,6 +83,10 @@
   height: 100%;
 }
 
+.nav-panel-menu:only-child {
+  height: 100%;
+}
+
 .nav-panel-menu:not(.is-active) .nav-menu {
   opacity: 0.75;
 }

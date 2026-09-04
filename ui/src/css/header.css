@@ -36,6 +36,10 @@ body {
   display: flex;
 }
 
+.navbar-brand .navbar-item {
+  color: var(--navbar-font-color);
+}
+
 .navbar-brand .navbar-item:first-child {
   padding: 0;
 }

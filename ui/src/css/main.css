@@ -1,3 +1,7 @@
+body.-toc aside.toc.sidebar {
+  display: none;
+}
+
 main {
   min-width: 0; /* min-width: 0 required for flexbox to constrain overflowing elements */
 }
