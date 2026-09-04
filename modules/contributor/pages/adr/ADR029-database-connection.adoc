@@ -141,13 +141,13 @@ spec:
   database:
     postgresql:
       host: druid-postgresql # mandatory
-      port: 5432 # defaults to some port number - depending on wether tls is enabled
+      port: 5432 # defaults to some port number - depending on whether tls is enabled
       schema: druid # defaults to druid
       credentials: druid-postgresql-credentials # mandatory. key username and password
       parameters: {} # optional
     redis:
       host: airflow-redis-master # mandatory
-      port: 6379 # defaults to some port number - depending on wether tls is enabled
+      port: 6379 # defaults to some port number - depending on whether tls is enabled
       schema: druid # defaults to druid
       credentials: airflow-redis-credentials # optional. key password
       parameters: {} # optional

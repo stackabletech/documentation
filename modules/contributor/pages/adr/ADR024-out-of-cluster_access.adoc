@@ -26,7 +26,7 @@ Additionally, Pods currently do not know the address under which they are reacha
 Problems:
 
 * **Unstable addresses** - Clients need stable addresses to connect to, but Kubernetes can move pods around. While the discovery ConfigMap is updated, it's not feasible to ask the client to pull the new info from there every time, clients will want to use static config files with static addresses to connect to.
-* **Replicas not addressable** - In our current setup, there's no way to connect to a specific replica in a StatefulSet or Deployement - which is necessary for cases like the data nodes of HDFS.
+* **Replicas not addressable** - In our current setup, there's no way to connect to a specific replica in a StatefulSet or Deployment - which is necessary for cases like the data nodes of HDFS.
 * **Pods don't know their outside address** - The hostname and IP that the pods know about themselves is from _inside_ the cluster. The IP only works inside the overlay network. This means ProductCluster processes cannot link to other nodes of the cluster.
 
 == Decision Drivers
@@ -72,7 +72,7 @@ spec:
   serviceAnnotations:
     networking.gke.io/load-balancer-type: Internal
 
-ListenerClasses allow for various different ways of getting outside traffic into the cluster. A dedicated operator seperates the deployment of this out - the product operators need to only request the listeners.
+ListenerClasses allow for various different ways of getting outside traffic into the cluster. A dedicated operator separates the deployment of this out - the product operators need to only request the listeners.
 
 Requests for Listeners are made through annotated volume claim templates:
 

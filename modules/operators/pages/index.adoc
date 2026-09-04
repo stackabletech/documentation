@@ -289,7 +289,7 @@ xref:secret-operator:index.adoc[Read more]
 <h3 id="listener-operator"><a class="anchor" href="#listener-operator"></a>Listener</h3>
 ++++
 
-The listener operator is reponsible for making services available outside of the Kubernetes cluster.
+The listener operator is responsible for making services available outside of the Kubernetes cluster.
 
 xref:listener-operator:index.adoc[Read more]
 

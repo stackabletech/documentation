@@ -96,7 +96,7 @@ fn handler(request: ConversionReview) -> ConversionReview {
 == Mutating and validating webhooks
 
 The `stackable-webhook` library currently doesn't provide ready-to-use webhook servers for mutating or validating webhooks like `ConversionWebhookServer` above.
-Instead, you can implement a completly custom `Router` via the `axum` crate.
+Instead, you can implement a completely custom `Router` via the `axum` crate.
 
 [source,rust]
 ----

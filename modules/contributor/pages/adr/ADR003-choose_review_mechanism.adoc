@@ -50,7 +50,7 @@ Chosen option: "Review then commit", because it meets both decision drivers.
 
 === Review then commit
 
-This option requires a full review and approval of all changes before they are commited to the development branch.
+This option requires a full review and approval of all changes before they are committed to the development branch.
 Who and how many people need to approve a change will need to be defined in the contribution guidelines at a later time.
 
 * Good, because there is no need to keep track of unreviewed commits

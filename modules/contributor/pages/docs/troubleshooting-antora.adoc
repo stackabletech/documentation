@@ -13,4 +13,4 @@
    Omitting the component entirely will instead link to the target page _within the same version_ as the page resides in.
 * Other `xref` and `include` issues
 ** Familiarize yourself with the {antora-xref-docs}[`xref` documentation{external-link-icon}^] which explains the syntax in great detail.
-   Unfortunately the xref syntax is a common place to make mistakes, and it is easy to accidently link to the wrong place.
+   Unfortunately the xref syntax is a common place to make mistakes, and it is easy to accidentally link to the wrong place.

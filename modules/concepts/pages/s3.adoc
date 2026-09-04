@@ -119,7 +119,7 @@ spec:
 ==== Stand-alone resources
 
 To reuse S3Buckets across different applications, they can be defined as stand-alone resources. In a similar fashion, S3Connections can also be defined as stand-alone resources.
-In the example below, ony bucket is used by a DruidCluster and a second bucket is used by both a TrinoCluster and a SparkCluster. Both buckets reference the same S3Connection.
+In the example below, one bucket is used by a DruidCluster and a second bucket is used by both a TrinoCluster and a SparkCluster. Both buckets reference the same S3Connection.
 
 image::s3-fully-separated.drawio.svg[One S3Connection is referenced by two different S3Buckets. The first Bucket is referenced by a DruidCluster and the second bucket is referenced by a SparkCluster and TrinoCluster. No object is inlined.]
 

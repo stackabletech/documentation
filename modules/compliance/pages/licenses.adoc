@@ -35,4 +35,4 @@ https://github.com/stackabletech/stackablectl/blob/main/LICENSE[License{external
 https://github.com/stackabletech/docker-images/blob/main/LICENSE[License{external-link-icon}^] for the product Docker images.
 
 The Docker images are built on the https://catalog.redhat.com/software/containers/ubi9-minimal/61832888c0d15aff4912fe0d[Red Hat ubi9-minimal base image{external-link-icon}^].
-It is https://www.redhat.com/licenses/EULA_Red_Hat_Universal_Base_Image_English_20190422.pdf[licensed seperately{external-link-icon}^].
+It is https://www.redhat.com/licenses/EULA_Red_Hat_Universal_Base_Image_English_20190422.pdf[licensed separately{external-link-icon}^].

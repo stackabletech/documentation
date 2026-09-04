@@ -19,7 +19,7 @@ Technical Story: https://github.com/stackabletech/issues/issues/361
 == Context
 
 We must version our CustomResourceDefinitions (CRDs).
-This step allows us to move away from unstable alpha or beta versions (like `v1alhpa1`) to stable versions like `v1` or `v2`.
+This step allows us to move away from unstable alpha or beta versions (like `v1alpha1`) to stable versions like `v1` or `v2`.
 These versions provide stable interfaces which customers can rely on.
 Since we cannot avoid having breaking changes in the future (which require a bump in the respective CRD version), we have to supply conversion webhooks that take care of converting older versions to the current storage version.
 
@@ -59,7 +59,7 @@ Setting:
 Downgrade procedure:
 
 * Step 1: request the cluster definition in "v1" and apply it again
-* Step 2: donwgrade operator and webhook deployments
+* Step 2: downgrade operator and webhook deployments
 
 [NOTE]
 ====

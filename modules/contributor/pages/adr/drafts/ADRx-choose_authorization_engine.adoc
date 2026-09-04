@@ -26,7 +26,7 @@ This engine should have the ability to express universal access controls, as it 
 * ...
 
 Depending on which option is chosen, there is a second, implicit, decision that is taken as part of this record: whether or not to include an identity provider.
-Keycloak and Ranger both offer user management on top of authoriztion, whereas Open Policy Agent is purely an authorization engine.
+Keycloak and Ranger both offer user management on top of authorization, whereas Open Policy Agent is purely an authorization engine.
 
 I'm not sure if we need to split this decision out into a separate ADR, but I suspect that it may make sense.
 If Open Policy Agent is chosen as part of this ADR, at some point we need to decide whether we also need an identity provider and if so, which one we should pick.
