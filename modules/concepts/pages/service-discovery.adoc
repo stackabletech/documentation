@@ -88,7 +88,7 @@ The ConfigMap should look something like this:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: my-already-exisiting-hdfs
+  name: my-already-existing-hdfs
 data:
   core-site.xml: |
     <here should be your core-site.xml file contents>
@@ -105,7 +105,7 @@ kind: HbaseCluster
 metadata:
   name: simple-hbase
 spec:
-  hdfsConfigMapName: my-already-exisiting-hdfs
+  hdfsConfigMapName: my-already-existing-hdfs
   ...
 ----
 

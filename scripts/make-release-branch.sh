@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# This script creates a new 'release-{major}.{minor}'  branch for the documetation,
+# This script creates a new 'release-{major}.{minor}'  branch for the documentation,
 # off of the 'main' branch.
 #
 # The script reminds you about some pre-requisites before actually running. These are:
@@ -66,7 +66,7 @@ DOCS_VERSION=$(echo "$VERSION" | cut -d. -f1,2)
 # ------------------------------
 
 # Ask the user if they have written release notes and merged them into main
-echo "Release notes for the new version should already be written and commited to the main branch,"
+echo "Release notes for the new version should already be written and committed to the main branch,"
 echo "so they show up in both the nightly and future versions, as well as the new release branch"
 echo "that is about the be created."
 read -r -p "Did you already write release notes and merge them into main? (yes/no): " RELEASE_NOTES_ANSWER

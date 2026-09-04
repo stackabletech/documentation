@@ -1,7 +1,7 @@
 :description: Work-in-progress internal guide with the git and cargo steps to cut a release and bump the next development version.
 
 
-(this is work in progress that is why it's not explicitely linked in nav.doc)
+(this is work in progress that is why it's not explicitly linked in nav.doc)
 
 Prerequisites:
 

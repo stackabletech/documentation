@@ -138,7 +138,7 @@ spec:
 ...
 ----
 
-In the example above, the application will log its events to the bucket specifed in `logFileDirectory`.
+In the example above, the application will log its events to the bucket specified in `logFileDirectory`.
 In addition, the application processes data from a S3 bucket configured within the `s3connection` section of the specification.
 
 The operator will read the `s3Connection` and set up the `fs.s3a.aws.credentials.provider` and co (endpoint, accesskey, secretkey, tls, path-style access - basically all attributes of S3Connection) settings.
@@ -149,6 +149,6 @@ NOTE: the credentials used by the `HistoryServer` *do not* have to be shared wit
 
 === Advantages
 
-* Fully flexible solution, which allows the logDir to be on a different S3 ednpoint than the data.
+* Fully flexible solution, which allows the logDir to be on a different S3 endpoint than the data.
 * If they are on the same endpojnt, a single S3BucketDef can be shared between HistoryServer and SparkApplication for ease of use.
 * HDFS and/or other distributed filesystems can be added non-breaking later on

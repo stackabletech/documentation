@@ -321,7 +321,7 @@ The `spec.version` field has been removed.
 
 The `spec.mode` field is now required and must be set to `cluster`.
 
-The `spec.mainClass` field is now required and must point to a location on ths file system or S3 where the main class is located.
+The `spec.mainClass` field is now required and must point to a location on the file system or S3 where the main class is located.
 ====
 
 * https://github.com/stackabletech/spark-k8s-operator/pull/355[Remove usage of `userClassPathFirst` properties]

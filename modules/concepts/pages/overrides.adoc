@@ -163,7 +163,7 @@ All override property values must be strings.
 
 For a role or role group, at the same level of `config`, you can specify `podOverrides` for any of the attributes you can configure on a Pod.
 Every Stacklet contains one or more StatefulSets, DaemonSets, or Deployments, which in turn contain a Pod template that is used by Kubernetes to create the Pods that make up the Stacklet.
-The `podOverrides` allow you to specify a fragment of a Pod template that is then overlayed over the one created by the operator.
+The `podOverrides` allow you to specify a fragment of a Pod template that is then overlaid over the one created by the operator.
 
 An example for an HDFS cluster looks as follows:
 

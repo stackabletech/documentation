@@ -9,7 +9,7 @@ The core artifacts of the Stackable Data Platform are container images of Kubern
 
 == Images overview
 
-Every operator is packaged into its own image and every product is also packaged into its own, seperate image.
+Every operator is packaged into its own image and every product is also packaged into its own, separate image.
 Products that require multiple different processes to run, such as a coordinator and a worker, still only run off of one image;
 usually these products also only provide a single artifact that is used to run all processes.
 
