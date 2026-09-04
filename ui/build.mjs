@@ -160,6 +160,9 @@ const icons = {
   search: 'solid/magnifying-glass',
   linkedin: 'brands/linkedin',
   github: 'brands/github',
+  youtube: 'brands/youtube',
+  rss: 'solid/rss',
+  discord: 'brands/discord',
   link: 'solid/link'
 };
 const symbols = Object.entries(icons).map(([name, faIcon]) => {
