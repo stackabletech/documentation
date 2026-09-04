@@ -15,7 +15,7 @@ Technical Story: https://github.com/stackabletech/listener-operator/pull/1
 == Context and Problem Statement
 // Describe the context and problem statement, e.g., in free form using two to three sentences. You may want to articulate the problem in form of a question.
 
-Eventually, the products we host in Kubernetes will need to be accessed from outside of the cluster, as this is where the client is. Our current solution for this is NodePort services. They are a simple and common solution for on-premise clusters, where nodes are reachable hosts in the local network. To get traffic into a Kubernetes cluster that runs in a public cloud, NodePorts do not work; instead LoadBalancers are the preferred solution. 
+Eventually, the products we host in Kubernetes will need to be accessed from outside of the cluster, as this is where the client is. Our current solution for this is NodePort services. They are a simple and common solution for on-premise clusters, where nodes are reachable hosts in the local network. To get traffic into a Kubernetes cluster that runs in a public cloud, NodePorts do not work; instead LoadBalancers are the preferred solution.
 
 While a Pods name is stable across restarts and rescheduling, the IP of the NodePort can change if a Pod is rescheduled to a different node. This means that external addresses from simple NodePorts are not stable. LoadBalancers are not tied to nodes, but they are often not available in on-prem clusters.
 At the moment we deploy NodePort Services per RoleGroup; clients cannot connect to an individual Pod in a RoleGroup.
