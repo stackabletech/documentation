@@ -12,7 +12,7 @@ The following new major platform features were added:
 
 ===== OpenShift compatibility
 
-We have made continued progress towards OpenShift compability, and the following operators can now be previewed on OpenShift.
+We have made continued progress towards OpenShift compatibility, and the following operators can now be previewed on OpenShift.
 Further improvements are expected in future releases, but no stability or compatibility guarantees are currently made for OpenShift clusters.
 
 * https://github.com/stackabletech/airflow-operator/pull/127[Apache Airflow]

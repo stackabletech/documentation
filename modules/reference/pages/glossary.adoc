@@ -18,7 +18,7 @@ dt {
 
 // syntax explanation:
 // - the [[...]] creates an anchor at the list item
-// - The <<...>> creates a link to the achor
+// - The <<...>> creates a link to the anchor
 // - The {li} references the pass that you can find at the top of the document, it is a FontAwesome icon
 // - The ...:: is the syntax for a definition list item
 // - The {empty} followed by the + means that there is no "normal" list item, instead there is a block
@@ -26,7 +26,7 @@ dt {
 // - Inside the "====" is the details of the details block.
 //
 // Please create new entries the same way! This allows easy linking to glossary items.
-// Antora generates dl, dt and dd tages for the definition list, which is great because these are
+// Antora generates dl, dt and dd tags for the definition list, which is great because these are
 // semantic HTML tags.
 
 [[role]]Role <<role,{li}>>:: {empty}

@@ -17,7 +17,7 @@ Having the manifest files as Jinja2 templates avoids duplication and makes the t
 
 == Requirements
 
-To run the integration tests from your local machine, you need to have the follwing tools installed:
+To run the integration tests from your local machine, you need to have the following tools installed:
 
 * {python}[Python{external-link-icon}^] to run scripts.
 * {kuttl}[KuTTL{external-link-icon}^] to run the tests.
@@ -91,8 +91,8 @@ You can also run the tests manually there, for a particular pull request, if you
 
 == Adding a new test
 
-To add a new test, add a new directory in `tests/templates/kuttl` and also a corresponding in the `test-defintion.yaml` file.
-Have a look at other tests to familiarize yourself with the general pattern of steps in a test defintion.
+To add a new test, add a new directory in `tests/templates/kuttl` and also a corresponding in the `test-definition.yaml` file.
+Have a look at other tests to familiarize yourself with the general pattern of steps in a test definition.
 
 == Further reading
 

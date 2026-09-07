@@ -73,6 +73,6 @@ are injected into pods using a custom CSI provider or init container.
 * Good, because it can enforce policy for generated identities (for example: tying TLS certificate to Pod or Node identity)
 * Good, because it can pick pregenerated tokens based on Pod/Node identity
 * Good, because it can have a cluster-global policy for picking between backends
-* Good, because it can accomodate to whatever authn methods we end up supporting
+* Good, because it can accommodate to whatever authn methods we end up supporting
 * Bad, because it's another bespoke thing to maintain and develop
 * Bad, because none of us are experienced with writing CSI providers

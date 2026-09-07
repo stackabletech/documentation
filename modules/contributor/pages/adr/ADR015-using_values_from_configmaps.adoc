@@ -17,7 +17,7 @@ Technical Story: https://github.com/stackabletech/issues/issues/208[#208]
 == Context and Problem Statement
 
 One of the main focus areas of Stackable is making components of the stack work together well.
-This requires a high degree of composability where one component refers to another compenent in its definition.
+This requires a high degree of composability where one component refers to another component in its definition.
 While this is a simple concept in principle it requires that operators obtain information about the object that is referred to and inject this information into the configuration of the object that refers to it.
 An example for this is a NiFi cluster definition referring to a ZooKeeper cluster definition via a znode name:
 
@@ -74,7 +74,7 @@ The target config would then be written either to a ConfigMap or a Secret, depen
 * Bad, because it would allow referencing ConfigMaps and Secrets in different namespaces, which would dilute namespace separation
 * Bad, because it makes debugging startup issues of products much harder, as pods will simply not appear if required ConfigMaps are missing, effectively bypassing well established k8s patterns (like a pod missing a mount not starting and writing events about why it is not starting)
 * Bad, because the dependencies between pods and configmaps / secrets become very complex and hard to debug as they are not modelled in any way as k8s dependencies (mounts)
-* Bad, because setting up the correct watches in the operator becomes very complex, with a likelyhood of inadvertently forgetting to add a new watch that becomes necessary as CRDs evolve
+* Bad, because setting up the correct watches in the operator becomes very complex, with a likelihood of inadvertently forgetting to add a new watch that becomes necessary as CRDs evolve
 * Bad, because it potentially propagates sensitive values to multiple places by copying secret content to additional places
 * Bad, because the Operator is seeing the Secrets. This is not a problem _now_, but if we could avoid it that would be better
 

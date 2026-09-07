@@ -259,7 +259,7 @@ Use "stackablectl release list" to list available releases.
 Afterwards you will need to upgrade the CustomResourceDefinitions (CRDs) installed by the Stackable Platform.
 The reason for this is that helm will uninstall the operators but not the CRDs. This can be done using `kubectl replace`.
 
-NOTE: The cluster name for the hello-world operator has been changed in this release so the CRD cannot be patched in-place. For this reason in the snipets below the CRD for this operator will be subject to a `delete` command (plus an `apply` as part of the operator rollout in the new release) instead of a `replace`.
+NOTE: The cluster name for the hello-world operator has been changed in this release so the CRD cannot be patched in-place. For this reason in the snippets below the CRD for this operator will be subject to a `delete` command (plus an `apply` as part of the operator rollout in the new release) instead of a `replace`.
 
 [source]
 ----
@@ -406,5 +406,5 @@ spec:
 IMPORTANT: Do not override this property for the 1.27 cluster version.
 
 This is necessary because the 2.x versions do not support the XML format for flow definitions anymore.
-Support for the JSON format has been addded in version 1.16 and both formats have been maintained up to (excluding) version 2.0.
+Support for the JSON format has been added in version 1.16 and both formats have been maintained up to (excluding) version 2.0.
 The next SDP release 24.11 will automatically take care of this step for you.

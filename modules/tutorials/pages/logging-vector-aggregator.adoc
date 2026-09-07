@@ -117,4 +117,4 @@ Congratulations, this concludes the tutorial!
 
 == What's next?
 
-Look into different sink configurations which are more suited to production use in the https://vector.dev/docs/reference/configuration/sinks/[sinks overview documetation{external-link-icon}^] or learn more about how logging works on the platform in the xref:concepts:observability/logging.adoc[concepts documentation].
+Look into different sink configurations which are more suited to production use in the https://vector.dev/docs/reference/configuration/sinks/[sinks overview documentation{external-link-icon}^] or learn more about how logging works on the platform in the xref:concepts:observability/logging.adoc[concepts documentation].

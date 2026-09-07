@@ -56,7 +56,7 @@ spec:
 == Access modes and the StorageClass
 
 Not all storage classes support all {pvc-access-modes}[access modes{external-link-icon}^].
-The supported access modes also depend on the Kubernetes implementation, see for example the compatiblity table https://docs.openshift.com/container-platform/4.8/storage/understanding-persistent-storage.html#pv-access-modes_understanding-persistent-storage[Supported access modes for PVs{external-link-icon}^] in the OpenShift documentation. Other managed Kubernetes implementations will be similar, albeit with different default storage class names.
+The supported access modes also depend on the Kubernetes implementation, see for example the compatibility table https://docs.openshift.com/container-platform/4.8/storage/understanding-persistent-storage.html#pv-access-modes_understanding-persistent-storage[Supported access modes for PVs{external-link-icon}^] in the OpenShift documentation. Other managed Kubernetes implementations will be similar, albeit with different default storage class names.
 The important point is that the default StorageClass only supports `ReadWriteOnce`, which limits access to the PersistentVolumeClaim to a single node.
 A strategy governing PersistentVolumeClaim resources will thus address the following:
 

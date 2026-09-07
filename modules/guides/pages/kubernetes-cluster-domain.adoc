@@ -14,4 +14,4 @@ helm install <product>-operator stackable-stable/<product>-operator --set kubern
 
 You can also specify a custom cluster domain with a trailing dot (`my.domain.` instead of `my.domain`) to reduce the number of DNS requests under certain conditions (see https://github.com/stackabletech/issues/issues/656[https://github.com/stackabletech/issues/issues/656{external-link-icon}^] for details). Note however that support for this is still considered experimental.
 
-If the environment variable `KUBERNETES_CLUSTER_DOMAIN` (or the helm property `kubernetesClusterDomain`) are not set / overriden, the operator will default the cluster domain to `cluster.local`.
+If the environment variable `KUBERNETES_CLUSTER_DOMAIN` (or the helm property `kubernetesClusterDomain`) are not set / overridden, the operator will default the cluster domain to `cluster.local`.

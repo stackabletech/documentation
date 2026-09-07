@@ -12,7 +12,7 @@ Technical Story:
 This ADR has been superseded by ADR7, which decided to stop development on the orchestrator for now and use the kube-apiserver instead.
 As the kube-apiserver exclusively supports etcd as backend provider there is no decision to document at this time.
 
-This ADR reflects the current state of dicussion at the time of approving ADR7 and should not be considered complete!
+This ADR reflects the current state of discussion at the time of approving ADR7 and should not be considered complete!
 
 == Context and Problem Statement
 
@@ -49,7 +49,7 @@ Our usage of this storage will most probably be extremely simple, even if a SQL 
 https://etcd.io/
 
 * Good, because etcd is used by Kubernetes
-** Likelyhood that it is already deployed
+** Likelihood that it is already deployed
 ** Expertise with etcd by Kubernetes admins can be reused
 * Good, because it offers watch functionality
 * Good, because it offers consensus mechanisms
@@ -60,7 +60,7 @@ https://etcd.io/
 
 https://zookeeper.apache.org/
 
-* Good, because it is well established and unterstood
+* Good, because it is well established and understood
 * Good, because it offers watch functionality
 * Good, because it offers consensus mechanisms
 * Bad, because it offers no real benefit over etcd

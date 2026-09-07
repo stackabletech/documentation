@@ -142,7 +142,7 @@ Remember the name of the AuthenticationClass (`openldap`), you will use it in th
 
 To make Superset use your new LDAP AuthenticationClass, you have to update the SupersetCluster definition. A SupersetCluster named `superset` is already installed by the stack.
 
-Fetch the existing SupersetCluster defintion from the Kubernetes API server and save it into a `superset.yaml` file:
+Fetch the existing SupersetCluster definition from the Kubernetes API server and save it into a `superset.yaml` file:
 
 [source,bash]
 include::example$ldap-auth/40-modify-superset.sh[tag=get-superset-yaml]

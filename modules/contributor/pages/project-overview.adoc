@@ -37,7 +37,7 @@ It is a Rust library that is used by all operators and contains shared structs a
 image::project-overview-docker-images.drawio.svg[]
 
 The https://github.com/stackabletech/docker-images/[docker-images{external-link-icon}^] repository contains Dockerfiles for all the products that are supported by the SDP.
-The actual product artifacts are pulled from the <<product-artifacts, product artifacs store>> and packaged into images.
+The actual product artifacts are pulled from the <<product-artifacts, product artifacts store>> and packaged into images.
 The images are pushed into an <<docker-images, image registry>>.
 
 [[management-tooling]]
@@ -66,7 +66,7 @@ On top of the mentioned repositories, there are various smaller tools or product
 Two examples are the https://github.com/stackabletech/image-tools[image-tools{external-link-icon}^] used to build Docker images and the https://github.com/stackabletech/druid-opa-authorizer/[druid-opa-authorizer{external-link-icon}^] which is a Druid extension that enables OPA support for Druid.
 
 [[infrastructure-repositories]]
-=== Infastructure: T2
+=== Infrastructure: T2
 
 https://github.com/stackabletech/t2[T2 - Test & Troubleshoot Platform{external-link-icon}^] is used for integration testing across different versions and cloud providers, find more information in the README of the repository.
 
