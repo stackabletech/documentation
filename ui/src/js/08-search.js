@@ -4,6 +4,7 @@
   function openSearchPopover () {
     document.getElementById('search-background').style.display = 'block'
     document.getElementById('search').style.display = 'block'
+    setSearchExpanded(true)
 
     // the search assets load on first use (see footer-scripts.hbs)
     window.loadSearch().then(function () {
@@ -17,6 +18,12 @@
   function closeSearchPopover () {
     document.getElementById('search-background').style.display = 'none'
     document.getElementById('search').style.display = 'none'
+    setSearchExpanded(false)
+  }
+
+  function setSearchExpanded (expanded) {
+    var button = document.getElementById('search-button')
+    if (button) button.setAttribute('aria-expanded', String(expanded))
   }
 
   function focusSearchInput () {

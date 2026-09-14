@@ -2,3 +2,10 @@
 .tabs {
   margin-top: 1rem;
 }
+
+/* asciidoctor-tabs sets `outline: none` on its tab list items, so keyboard users
+ * cannot see which tab they are on. Imported before this file, so this wins. */
+.tablist > ul li:focus-visible {
+  outline: 2px solid currentcolor;
+  outline-offset: 2px;
+}

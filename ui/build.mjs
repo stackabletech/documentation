@@ -158,10 +158,8 @@ const faVersion = JSON.parse(readFileSync(resolve(faDir, 'package.json'), 'utf8'
 const icons = {
   'external-link': 'solid/arrow-up-right-from-square',
   search: 'solid/magnifying-glass',
-  xing: 'brands/xing',
   linkedin: 'brands/linkedin',
   github: 'brands/github',
-  twitter: 'brands/twitter',
   link: 'solid/link'
 };
 const symbols = Object.entries(icons).map(([name, faIcon]) => {
