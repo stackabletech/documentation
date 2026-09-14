@@ -88,14 +88,14 @@ NOTE: If the Kubernetes cluster does not have internet access, you can use a xre
 You only need to specify the product version, but you _can_ also specify an explicit Stackable version.
 The product version can be found on the xref:operators:supported_versions.adoc[list of supported product versions] or on the product operator documentation page.
 If you don't specify the Stackable version, the operator will use its own version, e.g. `25.7.0`.
-When using a nightly operator or a `-pr` version, it will use the nightly `0.0.0-dev` image.
+When using a nightly or a `-pr` version of the operator, it will use the nightly `0.0.0-dev` product image.
 
 As images should be updated from time to time (e.g., new base image, security updates), a Stackable version can be provided.
 An image with the Stackable version `25.7.0` is fixed and will never change.
 Security updates within a release line will result in patch version bumps in the Stackable version, for example, to `25.7.1`.
 
 By default, updating to the newest patch version is an explicit change of the `stackableVersion` field.
-Since 26.11.0 however, it is possible to opt into automatic patch level updates.
+As of 26.11.0, however, it is possible to opt into automatic patch level updates.
 
 [source,yaml]
 ----
