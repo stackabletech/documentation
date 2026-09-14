@@ -21,7 +21,7 @@ image::project-overview-operators.drawio.svg[]
 All the operators are written in https://www.rust-lang.org/[Rust{external-link-icon}^] and the source code is found in the `rust` directory.
 `tests` contains the integration tests which use https://kuttl.dev/[kuttl{external-link-icon}^] and our own test template https://github.com/stackabletech/beku.py[beku.py{external-link-icon}^].
 Documentation is written in https://antora.org/[Antora{external-link-icon}^] and found in the `docs` directory, see also <<documentation>> further down the page.
-`deploy` and `docker` contain files used to package the operator into a Docker image and Helm chart.
+`deploy` and `docker` contain files used to package the operator into a container image and Helm chart.
 Some files in these repositories are actually _templated_:
 
 The https://github.com/stackabletech/operator-templating[operator-templating{external-link-icon}^] repository contains a template for all operator repositories, where shared files are distributed from.
@@ -80,7 +80,7 @@ There is no code in this repository.
 [[artifact-storage]]
 == Artifact storage
 
-Where are binaries, Helm Charts and Docker images stored?
+Where are binaries, Helm Charts and container images stored?
 
 [[product-artifacts]]
 === Product artifacts
@@ -100,7 +100,7 @@ stackable
 stackable-charts
 ----
 
-`sdp` contains the product and operator Docker images. The Helm Charts for the operators are found under `sdp-charts`. Some artifacts like the
+`sdp` contains the product and operator container images. The Helm Charts for the operators are found under `sdp-charts`. Some artifacts like the
 product binaries are stored in the https://repo.stackable.tech/#browse/browse[Nexus repo{external-link-icon}^] under `packages`.
 
 List the Helm Charts in `sdp-charts`:
@@ -127,11 +127,13 @@ $ curl -X GET --header 'Accept: application/json' 'https://oci.stackable.tech/ap
 24.3.0
 ----
 
+// NOTE (@Techassi): The header was updated, but the anchor was kept the same to ensure links to this don't break.
 [[docker-images]]
-=== Docker images
+=== Container images
 
-Docker images are stored in https://oci.stackable.tech[https://oci.stackable.tech{external-link-icon}^] as mentioned above. To list all the available repositories in a project, for example in
-the `sdp` project, run this command:
+Container images are stored in https://oci.stackable.tech[https://oci.stackable.tech{external-link-icon}^] as mentioned above.
+They are additionally published to our https://quay.io/organization/stackable[Stackable Quay.io organization{external-link-icon}^].
+To list all the available repositories in a project, for example in the `sdp` project, run this command:
 
 [source,console]
 ----
