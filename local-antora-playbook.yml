@@ -19,7 +19,7 @@ content:
   sources:
     - url: ./
       branches:
-        - release-25.11
+        - HEAD
         - release-25.7
         - release/25.3
         - release/24.11
@@ -238,7 +238,7 @@ content:
     - url: https://github.com/stackabletech/zookeeper-operator.git
       start_path: docs
       branches:
-        - main
+        - release-25.11
         - release-25.7
         - release-25.3
         - release-24.11
