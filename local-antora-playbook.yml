@@ -14,7 +14,7 @@ content:
   sources:
     - url: ./
       branches:
-        - release/25.3
+        - HEAD
         - release/24.11
         - release/24.7
         - release/24.3
