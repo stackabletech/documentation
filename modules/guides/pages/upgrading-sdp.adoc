@@ -1,0 +1,69 @@
+= Upgrading the Stackable Data Platform
+:description: Upgrade the Stackable Data Platform (SDP) one release at a time, operators first, with reconciliation paused so that stacklets restart one by one.
+
+This guide describes the order in which to upgrade the Stackable Data Platform (SDP) from the release you run to a later one.
+The commands for each release and any steps it needs by hand are in the "Upgrade from" section of that release in the xref:ROOT:release-notes.adoc[release notes].
+
+// TODO: Link the upgrade planner on the Stackable Hub here once it is public. It lists these steps for a given set of products and versions.
+
+== One release at a time
+
+Every SDP release between the one you run and the one you want is a step of its own.
+To go from 25.7 to 26.3, upgrade to 25.11 first and then to 26.3.
+Each release describes the upgrade from the release directly before it.
+
+Repeat the rest of this guide for every step.
+
+== Before the step
+
+Read the release notes of the release you upgrade to, including the "Upgrade from" section and the product upgrade guides it links, such as the xref:opensearch:usage-guide/upgrade.adoc[OpenSearch] and xref:spark-k8s:usage-guide/upgrade.adoc[Apache Spark] guides.
+Some of these steps have to happen before the operators are replaced.
+
+Check that every stacklet runs a product version that the new release still supports.
+If one does not, change its `spec.image.productVersion` while still on the old release, to a version that both releases support.
+The release notes list the product versions each release adds, deprecates and removes.
+
+The same applies to Kubernetes and OpenShift: while the operators are replaced, the cluster has to run a version that both releases support.
+Each release lists the Kubernetes and OpenShift versions it supports.
+
+== Upgrade the operators
+
+Upgraded operators restart the stacklets they manage on the images of the new release, see xref:concepts:product-image-selection.adoc[].
+Pausing reconciliation first lets you restart the stacklets one at a time instead of all at once.
+
+. Pause reconciliation of every stacklet, see xref:concepts:operations/cluster_operations.adoc[]:
++
+[source,shell]
+----
+$ kubectl patch <kind>/<name> --type=merge --patch '{"spec": {"clusterOperation": {"reconciliationPaused": true}}}'
+----
+
+. Upgrade the operators as the "Upgrade from" section of the new release describes, for example with `stackablectl release upgrade <release>`.
++
+The release notes say when CustomResourceDefinitions (CRDs) have to be replaced by hand.
+Helm does not upgrade CRDs, so the notes for 25.11, for example, list `kubectl replace` commands for them.
+Since 26.3 the operators maintain their own CRDs.
+
+. Resume reconciliation of one stacklet:
++
+[source,shell]
+----
+$ kubectl patch <kind>/<name> --type=merge --patch '{"spec": {"clusterOperation": {"reconciliationPaused": false}}}'
+----
++
+The operator then restarts the stacklet on the new images.
+Wait until it is running again before resuming the next one, for example with:
++
+[source,shell]
+----
+$ kubectl rollout status statefulset --selector app.kubernetes.io/instance=<name>
+----
+
+== Change product versions
+
+Once every stacklet runs under the new operators, change `spec.image.productVersion` where you want a newer product version.
+Each change restarts that stacklet once more.
+Some products need a manual process for a version change, such as xref:hdfs:usage-guide/upgrading.adoc[Apache Hadoop HDFS].
+Keeping it apart from the operator upgrade means a problem after either change points at that change alone.
+
+If you use custom images, the cluster definitions have to change together with the operators, see xref:concepts:product-image-selection.adoc#customimages[custom images].
