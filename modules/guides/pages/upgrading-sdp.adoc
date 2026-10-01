@@ -63,7 +63,7 @@ $ kubectl rollout status statefulset --selector app.kubernetes.io/instance=<name
 
 Once every stacklet runs under the new operators, change `spec.image.productVersion` where you want a newer product version.
 Each change restarts that stacklet once more.
+Keeping product changes apart from the operator upgrade means a problem after either points at that change alone.
 Some products need a manual process for a version change, such as xref:hdfs:usage-guide/upgrading.adoc[Apache Hadoop HDFS].
-Keeping it apart from the operator upgrade means a problem after either change points at that change alone.
 
 If you use custom images, the cluster definitions have to change together with the operators, see xref:concepts:product-image-selection.adoc#customimages[custom images].
