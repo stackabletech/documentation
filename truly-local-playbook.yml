@@ -14,6 +14,7 @@ antora:
   extensions:
     - require: '@sntke/antora-mermaid-extension'
     - ./lib/stackable-operator-helpers.js
+    - ./lib/hub-supported-versions.js
     - ./lib/llms-txt.js
 content:
   sources:
