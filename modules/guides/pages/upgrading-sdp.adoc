@@ -6,6 +6,14 @@ The commands for each release and any steps it needs by hand are in the "Upgrade
 
 // TODO: Link the upgrade planner on the Stackable Hub here once it is public. It lists these steps for a given set of products and versions.
 
+[IMPORTANT]
+====
+Two rules from the xref:compliance:policies.adoc#_upgrade_policy[upgrade policy] shape every upgrade:
+
+* Skipping SDP releases is not supported. The only supported upgrade path is from one SDP release to the next, for example 24.11 → 25.3 → 25.7, each to its most current patch release.
+* Upgrade the operators first and the product versions afterwards. Every product version is xref:compliance:policies.adoc#_deprecation[deprecated] for at least one SDP release before it is removed, so the operators can move to the next release while the products stay on the versions they run.
+====
+
 == One release at a time
 
 Every SDP release between the one you run and the one you want is a step of its own.
@@ -19,8 +27,8 @@ Repeat the rest of this guide for every step.
 Read the release notes of the release you upgrade to, including the "Upgrade from" section and the product upgrade guides it links, such as the xref:opensearch:usage-guide/upgrade.adoc[OpenSearch] and xref:spark-k8s:usage-guide/upgrade.adoc[Apache Spark] guides.
 Some of these steps have to happen before the operators are replaced.
 
-Check that every stacklet runs a product version that the new release still supports.
-If one does not, change its `spec.image.productVersion` while still on the old release, to a version that both releases support.
+Check whether any stacklet runs a product version that is already deprecated in the release you run.
+The next release may remove it, so change its `spec.image.productVersion` while still on the old release, to a version that both releases support.
 The release notes list the product versions each release adds, deprecates and removes.
 
 The same applies to Kubernetes and OpenShift: while the operators are replaced, the cluster has to run a version that both releases support.
@@ -52,18 +60,12 @@ $ kubectl patch <kind>/<name> --type=merge --patch '{"spec": {"clusterOperation"
 ----
 +
 The operator then restarts the stacklet on the new images.
-Wait until it is running again before resuming the next one, for example with:
-+
-[source,shell]
-----
-$ kubectl rollout status statefulset --selector app.kubernetes.io/instance=<name>
-----
+Wait until all its Pods are ready again before resuming the next one.
 
 == Change product versions
 
 Once every stacklet runs under the new operators, change `spec.image.productVersion` where you want a newer product version.
 Each change restarts that stacklet once more.
-Keeping product changes apart from the operator upgrade means a problem after either points at that change alone.
 Some products need a manual process for a version change, such as xref:hdfs:usage-guide/upgrading.adoc[Apache Hadoop HDFS].
 
 If you use custom images, the cluster definitions have to change together with the operators, see xref:concepts:product-image-selection.adoc#customimages[custom images].
