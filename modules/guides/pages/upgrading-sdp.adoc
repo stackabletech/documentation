@@ -4,7 +4,7 @@
 This guide describes the order in which to upgrade the Stackable Data Platform (SDP) from the release you run to a later one.
 The commands for each release and any steps it needs by hand are in the "Upgrade from" section of that release in the xref:ROOT:release-notes.adoc[release notes].
 
-// TODO: Link the upgrade planner on the Stackable Hub here once it is public. It lists these steps for a given set of products and versions.
+The https://hub.stackable.tech/upgrade-planner[upgrade planner] on the Stackable Hub lists these steps for the products and versions you run.
 
 [IMPORTANT]
 ====
