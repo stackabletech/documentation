@@ -1,0 +1,146 @@
+= ADRXXX: Authorization decision layer
+Felix Hennig <felix.hennig@stackable.tech>
+v0.1, 2024-01-18
+:status: draft
+
+* Status: {status}
+* Deciders: TBD
+* Date: 2024-01-18
+
+Technical Story: https://github.com/stackabletech/issues/issues/439
+
+== Problem Statement
+
+How should we design the user facing part of an authorization layer for the platform?
+Do we create Custom Resources for some of this, or are ConfigMaps sufficient?
+How many, how are the rules split across resources?
+Where do users want to "hook in"?
+How are policies deployed?
+
+== Context
+
+What is the current state of authorization in the SDP, what do users want to define and which authorization models are widespread already?
+
+=== Current state of authorization and policy in the SDP
+
+Currently the Stackable Data Platform supports authorization policies through OPA.
+OPA is a general _policy_ agent and does not out of the box have any particular framework in place for _authorization_ as a special case of policy.
+OPA uses policy-as-code to define policy, and as such supports a wide variety of approaches to policy definitions.
+
+Some products do not support OPA yet, but we want to support OPA in them in the future.
+Some products like Airflow and Superset do not support OPA and we do not plan to add support at this moment.
+
+The products themselves also have access control models:
+
+* Druid: Uses an RBAC model
+* Kafka: RBAC, group based with LDAP, ACLs
+* Airflow: Uses roles to group permissions, and then assign roles to users. Roles can also be assigned to LDAP groups.
+
+=== Different authorization models: RBAC, ABAC, ReBAC and more
+
+Out-of-the-box, OPA uses RegoRules to define policies. 
+This is very powerful, but also more complex that other mechanisms such as RBAC or ACLs.
+We want to pick an authorization model to build on top of OPA and abstract away from the RegoRules for 95% of use cases that the typical Stackable user might encounter.
+
+Role-based access control (RBAC) is a common authorization model where users are assigned roles, and roles come with certain sets of permissions.
+
+Relation-based access control (ReBAC) was popularized by Google Zanzibar and goes beyond RBAC.
+The relational model allows for more flexibility when defining rules.
+
+https://www.permit.io/blog/rbac-vs-rebac[RBAC vs. ReBAC].
+
+https://www.keycloak.org/docs/latest/authorization_services/index.html#_overview[The Keycloak model]
+
+Learn more:
+
+* https://authzed.com/zanzibar
+* https://authzed.com/blog/what-is-google-zanzibar
+* https://gruchalski.com/posts/2022-05-07-zanzibar-style-acls-with-opa-rego/
+* https://www.permit.io/blog/oparebac
+* https://www.permit.io/blog/policy-engines
+
+== Requirements
+
+The overall design should make it easy for the majority of users to define rules, without needing to write RegoRules.
+This should be done with CRDs that can deployed, and it works out of the Box.
+
+For the remaining users it should be possible to hook into various places of the system to write their own more specific rules.
+
+* 80% of users can use the CRDs that allow coarse access control in a unified way across the platform, possibly hiding some product specific things.
+* 10% of users can drop down one layer into specifying custom JSON data for the Stackable provided Rego rules, 
+  allowing a little bit more detailed access to product specific access control rules such as column masking in Trino.
+* 10% of users will want to write completely custom Rego rules, which is currently already possible and will still be supported.
+
+=== Authorization settings that users might want to model
+
+Some use case examples:
+
+* rules for individuals: Alice needs one-of read access to a Trino Table
+* group based access control: Bob joins the company in the data science team and should get access to all the resources he needs to stark working
+* resource grouping and ad-hoc groups: A new data analysis task force is formed that needs access to specific resources. Resources should be grouped and then all task force members need access.
+* group hierarchies: there might be multiple data science teams that share access to some common resources, but also have specific resources that are only relevant to each team.
+* Class based permissions: Andy needs to be able to read _all_ Trino tables, and not just a pre-defined selection of tables.
+
+A common complaint seems to be that in RBAC systems, roles end up getting copy pasted. 
+A role might have many permissions attached to it, so if you want to modify a particular permission for just one user, you might end up copy-pasting the role.
+
+Also, users should be able to treat resources in general the same way across all supported products.
+I.e. there should be an abstraction over resources such as Trino tables, Superset dashboards and Kafka topics.
+
+== Decision Drivers
+
+* The design should be flexible to allow to easily represent various organizational structures.
+* It should be possible to group together access to different resources across products.
+* The design should validate as much of the input as possible, to prevent misspellings from invalidating rules. Nothing should just silently not do anything.
+* Rules should be defined as Manifests and put into Kubernetes.
+* Solution needs to be safely implemented. This means that it might be good to keep complexity low. This is a security component!
+* Solution needs to work well with existing authorization models in the applications we support.
+* Expressive enough so users do not have to copy-paste roles or lists of permissions.
+
+== Constraints
+
+* We use OPA as the underlying policy engine, so any design needs to be implementable with OPA.
+
+== Expected outcome
+
+We should decide on a general authorization model, what we want it to look like to the user and also have a rough idea of how it will be implemented.
+
+== Proposed design
+
+=== Stackable Rego rule library
+
+For every product (and every supported version of a product) we ship a ruleset that users can use (and might be used as a default).
+Since the rules are dependent on the product version, the product operator needs to ship these rules.
+What about the OPA version? Rules need to also be compatible with the OPA version?
+
+=== product specific JSON data policies
+
+The rules work with product specific JSON policies.
+These policies should expose every feature that the authorizer supports.
+
+=== Unified policy CRs
+
+The unified policy CRD is modeled as ABAC.
+Resources and users have attributes which get matched in a policy. 
+If a decision request matches to a policy, the permissions from the policy apply.
+
+Resource attributes are resource specific, i.e. for a Trino table, there is a "catalog" attribute, but that only exists on Trino tables.
+
+More advanced stuff like masking properties is maybe not supported. maybe the access levels are also only "read", "write" and "full".
+
+The OPA operator should read these CRs and convert them into JSON data policies.
+
+== Appendix
+
+=== Terminology
+
+Resource:: A resource in the authorization context is commonly something that can be accessed, read, edited etc., like a DAG in Airflow, a Table in Trino or a file in a file system. Resources can also be grouped, like a folder in a file system containing multiple files. A resource is specific, so it does not refer to Trino tables in general, but to a specific Foo table (for example).
+Action:: An action is defined in context of a resource. Examples are "Viewing", "Editing", "Deleting", "Creating".
+Permission:: A permission is the combination of an action and a resource. Like "view table Foo". A permission can also be more general, like "view all tables" (i.e. no specific resource is specified, just a class/type of resource).
+Policy:: A policy is a generic term that does not only exist in authorization. It is a rule, like "The cluster should always have 10% free memory left" or "Only the HR team can access the employee database".
+RBAC:: Role-based access control.
+Role:: A role in RBAC generally means a collection of permissions. In RBAC, permissions are assigned to roles. For example, an _admin_ role might have the permission to view and edit all data. A _marketting-employee_ role grants viewing access to a specific set of tables.
+ReBAC:: Relation-based access control.
+ABAC:: Attribute-based access control.
+Relation:: A relation is pretty generic, and refers to relations between object and and other objects (or resources), between resources and users or between users and other users or user groups. Examples: "Alice is a _reader_ of a table." "Bob is a _member_ of the data science team." "The `pictures` folder is the _parent_ of the `cat.jpg` file."
+Group:: A group is typically a collection of users. Groups can also be organized hierarchically. Groups can sometimes be used to attach roles to, so users can simply be grouped together and their permissions be managed as a whole.
