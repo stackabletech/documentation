@@ -49,7 +49,7 @@ $ kubectl patch <kind>/<name> --type=merge --patch '{"spec": {"clusterOperation"
 ----
 +
 The operator restarts the stacklet using the new images.
-Wait until all its Pods are ready again, then resume the next one.
+Wait until all its Pods are ready again and the operator logs show no errors, then resume the next one.
 
 . Change `spec.image.productVersion` where you want a newer product version.
 Each change restarts that stacklet once more.
