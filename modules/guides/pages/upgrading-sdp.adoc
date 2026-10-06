@@ -1,0 +1,56 @@
+= Upgrade to a later SDP release
+:description: Upgrade the Stackable Data Platform (SDP) one release at a time.
+
+Upgrade the Stackable Data Platform (SDP) from the release you run to a later one.
+The https://hub.stackable.tech/upgrade-planner[upgrade planner] on the Stackable Hub can be used to generate a detailed plan for your specific version combination.
+
+[IMPORTANT]
+====
+Two rules from the xref:compliance:policies.adoc#_upgrade_policy[upgrade policy] are important to keep in mind for _every_ update:
+
+* Skipping SDP releases is not supported.
+  Upgrade from one SDP release to the next, for example 24.11 → 25.3 → 25.7.
+* Upgrade the operators first and the product versions afterwards.
+  Every product version is xref:compliance:policies.adoc#_deprecation[deprecated] for at least one SDP release before it is removed, so the operators can move to the next release while the products stay on the versions they run.
+====
+
+If you use custom images, the cluster definitions have to change together with the operators, see xref:concepts:product-image-selection.adoc#customimages[custom images].
+
+== Upgrade to the next release
+
+Repeat these steps for every release between the one you run and the one you want.
+The commands for each release and any steps it needs by hand are in the relevant upgrade sections of the xref:ROOT:release-notes.adoc[release notes].
+
+. Read the release notes of the release you upgrade to, including the upgrade section and the product upgrade guides it links.
+Some of these steps have to happen before the operators are replaced.
+
+. Move every stacklet whose product version the next release no longer ships to a version both releases support, by changing its `spec.image.productVersion`.
+Do the same for the Kubernetes or OpenShift version of the cluster.
+The release notes and the https://hub.stackable.tech[Stackable Hub] list the product and platform versions each release supports.
+
+. Pause reconciliation of every stacklet, see xref:concepts:operations/cluster_operations.adoc[]:
++
+[source,shell]
+----
+$ kubectl patch <kind>/<name> --type=merge --patch '{"spec": {"clusterOperation": {"reconciliationPaused": true}}}'
+----
++
+Upgraded operators automatically and immediately restarts the stacklets they manage using the images of the new release, see xref:concepts:product-image-selection.adoc[].
+Pausing reconciliation lets you restart them one at a time at your own pace instead of all at once.
+
+. Upgrade the operators as the release notes describes, for example with `stackablectl release upgrade <release>`.
+Replace the CustomResourceDefinitions (CRDs) by hand if the release notes say so.
+
+. Resume reconciliation of one stacklet:
++
+[source,shell]
+----
+$ kubectl patch <kind>/<name> --type=merge --patch '{"spec": {"clusterOperation": {"reconciliationPaused": false}}}'
+----
++
+The operator restarts the stacklet using the new images.
+Wait until all its Pods are ready again and the operator logs show no errors, then resume the next one.
+
+. Change `spec.image.productVersion` where you want a newer product version.
+Each change restarts that stacklet once more.
+Some products need a manual process for a version change, such as xref:hdfs:usage-guide/upgrading.adoc[Apache Hadoop HDFS].

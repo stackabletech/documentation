@@ -1,4 +1,5 @@
 * xref:index.adoc[]
+** xref:upgrading-sdp.adoc[]
 ** xref:custom-images.adoc[]
 ** xref:debug-network-traffic.adoc[]
 ** xref:providing-resources-with-pvcs.adoc[]
