@@ -428,6 +428,7 @@ Tracked in https://github.com/stackabletech/nifi-opa-plugin/issues/30[nifi-opa-p
 
 ===== Open Policy Agent
 
+// typos:ignore-next-line
 * Previously, the User Info Fetcher's outbound HTTP requests (to Microsoft Entra, Keycloak, and the XFSC AAS) had no timeout, so a slow or unresponsive backend could make a request hang indefinitely and stall user-info lookups.
   With this release, every outbound request has a 60-second overall timeout and a 15-second connection timeout.
   Implemented in https://github.com/stackabletech/opa-operator/pull/859[opa-operator#859].

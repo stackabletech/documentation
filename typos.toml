@@ -9,6 +9,9 @@ ignore-hidden = false
 extend-exclude = [
     # Ignore `.git`, which the above `ignore-hidden = false` would otherwise pull in.
     ".git/",
+    # Vendored fork of antora-ui-default (see ui/UPSTREAM). Kept free of markers
+    # so upstream syncs stay clean.
+    "ui/",
 ]
 
 [default]
