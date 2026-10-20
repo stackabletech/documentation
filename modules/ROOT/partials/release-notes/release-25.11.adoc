@@ -107,7 +107,7 @@ See https://github.com/stackabletech/nifi-operator/issues/812[nifi-operator#812]
   This CLI argument has now been moved to the Pod templates of the individual roles.
   See https://github.com/stackabletech/spark-k8s-operator/pull/617[spark-k8s-operator#617].
 * This release adds experimental support for Spark 4.0.1.
-  The support is marked as experimental because Spark 4.0.1 has known compatibility issues with https://github.com/apache/hbase-connectors/pull/130[Apache HBase] and https://github.com/apache/iceberg/issues/13358[Apache Iceberg].
+  The support is marked as experimental because Spark 4.0.1 has known compatibility issues with https://issues.apache.org/jira/browse/HBASE-30178[Apache HBase] and https://github.com/apache/iceberg/issues/13358[Apache Iceberg].
   See https://github.com/stackabletech/spark-k8s-operator/issues/586[spark-k8s-operator#586].
 
 ===== Open Policy Agent
