@@ -10,7 +10,7 @@ This release marks a major change in the way operator and product images are ver
 On the technical side, a multi-dimensional matrix of versions had to be tested, documentation cross-references had to be maintained and coordinating a platform release was extremely difficult.
 
 Organizationally the biggest challenge was communication and coordination within the teams as well as to and with users.
-As a result, starting with this release, all operator and product images are versioned in lock-step. This platform release is marked `23.1` and all included components are tagged with `23.1.0`. Eventual patch versions of the components that might follow and will be tagged with `23.1.1`, `23.1.2` and so on. 
+As a result, starting with this release, all operator and product images are versioned in lock-step. This platform release is marked `23.1` and all included components are tagged with `23.1.0`. Eventual patch versions of the components that might follow and will be tagged with `23.1.1`, `23.1.2` and so on.
 
 The focus in this platform release is on the support of offline (or on-premise) product images and the partial rollout of logging support.
 
@@ -465,7 +465,7 @@ This is the third release of the Stackable Data Platform, which this time focuse
 The following new major platform features were added:
 
 CPU and memory limits configurable::
-The operators now https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/[request] resources from Kubernetes for the products and required CPU and memory can now also be configured for all products. If your product instances are less performant after the update, the new defaults might be set too low and we recommend to https://docs.stackable.tech/kafka/stable/usage.html#_resource_requests[set custom requests] for your cluster.
+The operators now https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/[request] resources from Kubernetes for the products and required CPU and memory can now also be configured for all products. If your product instances are less performant after the update, the new defaults might be set too low and we recommend to xref:kafka:usage.adoc#_resource_requests[set custom requests] for your cluster.
 
 * https://github.com/stackabletech/opa-operator/pull/347[OpenPolicyAgent]
 * https://github.com/stackabletech/zookeeper-operator/pull/563[Apache ZooKeeper]
