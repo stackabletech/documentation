@@ -43,3 +43,4 @@ asciidoc:
     # to make attributes accessible to the UI template, they need to
     # be prefixed with "page-"
     page-end-of-life: "{end-of-life}"
+    page-crd-ref: "{crd-ref}{crd-ref-release}"
