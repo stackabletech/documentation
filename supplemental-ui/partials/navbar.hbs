@@ -17,7 +17,8 @@
         {{#if (or (eq page.version "23.1") (eq page.version "23.4") (eq page.version "23.7") (eq page.version "23.11"))}}
         <a class="navbar-item" href="{{{ relativize (versioned "home" page "reference/index.html") }}}">CRD Reference</a>
         {{else}}
-        <a class="navbar-item" href="{{{ page.attributes.crd-docs }}}" target="_blank">
+        {{!-- The UI serves every docs version: 24.3 to 25.11 only define crd-docs. --}}
+        <a class="navbar-item" href="{{{ or page.attributes.crd-ref page.attributes.crd-docs }}}" target="_blank">
             CRD Reference <svg class="svg-icon" style="width: 0.875em; height: 0.875em; margin-left: 5px;" aria-hidden="true"><use href="#icon-external-link"/></svg>
         </a>
         {{/if}}
