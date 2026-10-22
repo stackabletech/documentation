@@ -3,7 +3,7 @@
 // Usage in an operator's index.adoc:
 //
 //   :github: https://github.com/stackabletech/airflow-operator/
-//   :crd: {crd-docs-base-url}/airflow-operator/{crd-docs-version}/
+//   :crd: {crd-ref}{crd-ref-release}&operator=airflow-operator
 //   :hub: {hub-base-url}/components/airflow
 //
 //   include::ROOT:partial$operator-link-bar.adoc[]
