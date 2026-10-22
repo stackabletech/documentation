@@ -3,7 +3,10 @@ site:
   title: Stackable Documentation
   url: https://docs.stackable.tech
   start_page: home::index.adoc
-  robots: allow
+  robots: |
+    User-agent: *
+    Allow: /
+    Sitemap: https://docs.stackable.tech/sitemap.xml
   keys:
     enable_tracking: true # this key is used in the documentation-ui
 # URL config settings.
@@ -30,6 +33,7 @@ antora:
     - require: '@sntke/antora-mermaid-extension'
     - ./lib/stackable-operator-helpers.js
     - ./lib/llms-txt.js
+    - ./lib/sitemap-canonical.js
 content:
   sources:
     - url: .
