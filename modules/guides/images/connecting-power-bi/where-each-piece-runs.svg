@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 593" width="760" height="593" role="img" aria-labelledby="pbi-title pbi-desc">
   <title id="pbi-title">Where each piece runs</title>
-  <desc id="pbi-desc">Three zones: Microsoft's cloud, the customer's network and SDP on Kubernetes. Power BI Desktop runs on the analyst's PC with the Stackable ODBC driver and connector and connects to Trino. The Power BI Service in Microsoft's cloud connects to the on-premises data gateway in the customer's network, which has the Stackable ODBC driver and connector and connects to Trino. Power BI Report Server runs on the customer's Windows server, optionally with the Stackable ODBC driver, and connects to the Stackable PostgreSQL-to-Trino gateway, which connects to Trino. Trino is part of SDP; the Stackable ODBC driver, its connector and the Stackable PostgreSQL-to-Trino gateway are Stackable tools that are not part of SDP and are unsupported.</desc>
+  <desc id="pbi-desc">Three zones: the Microsoft Cloud, the customer's network and SDP on Kubernetes. Power BI Desktop runs on the analyst's PC with the Stackable ODBC driver and connector and connects to Trino. The Power BI Service in the Microsoft Cloud connects to the on-premises data gateway in the customer's network, which has the Stackable ODBC driver and connector and connects to Trino. Power BI Report Server runs on the customer's Windows server, optionally with the Stackable ODBC driver, and connects to the Stackable PostgreSQL-to-Trino gateway, which connects to Trino. Trino is part of SDP; the Stackable ODBC driver, its connector and the Stackable PostgreSQL-to-Trino gateway are Stackable tools that are not part of SDP and are unsupported.</desc>
   <style>
     .t { font-family: "Noto Sans", "Helvetica Neue", Arial, sans-serif; fill: #182c3d; }
     .h { font-family: "IBM Plex Mono", "DejaVu Sans Mono", Menlo, monospace; font-weight: 700; font-size: 14px; fill: #182c3d; }
@@ -29,7 +29,7 @@
   <rect class="band" x="0" y="40" width="236" height="553"/>
   <rect class="band" x="262" y="40" width="236" height="553"/>
   <rect class="band" x="524" y="40" width="236" height="553"/>
-  <text class="h" x="10" y="64">Microsoft’s cloud</text>
+  <text class="h" x="10" y="64">Microsoft Cloud</text>
   <text class="t zs" x="10" y="82">run by Microsoft</text>
   <text class="h" x="272" y="64">Customer’s network</text>
   <text class="t zs" x="272" y="82">Windows machines you run</text>

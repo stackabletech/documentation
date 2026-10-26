@@ -26,7 +26,7 @@ If you need commercial support for either of them, https://stackable.tech/en/con
 
 Which one you need, and where you install it, depends on the Power BI product you run.
 
-image::connecting-power-bi/where-each-piece-runs.svg["Where each piece runs: Microsoft's cloud, the customer's network and SDP on Kubernetes"]
+image::connecting-power-bi/where-each-piece-runs.svg["Where each piece runs: the Microsoft Cloud, the customer's network and SDP on Kubernetes"]
 
 == Choose a route
 
@@ -75,7 +75,7 @@ xref:trino:usage-guide/connect_to_trino.adoc[] covers the Trino side: endpoints,
 == Power BI Desktop
 
 Power BI Desktop is a Windows application on the analyst's PC.
-It queries Trino directly from that PC, without Microsoft's cloud in the path.
+It queries Trino directly from that PC, without the Microsoft Cloud in the path.
 
 . Download the Windows archive from the {odbc-releases}[releases page{external-link-icon}^], unzip it and run `install.bat` as administrator.
 . Copy `StackableTrinoODBC-<version>.mez` into `%USERPROFILE%\Documents\Power BI Desktop\Custom Connectors\`.
@@ -88,7 +88,7 @@ To use the PostgreSQL-to-Trino gateway instead, deploy it as described in <<post
 
 == Power BI Service
 
-The Power BI Service runs in Microsoft's cloud and reaches Trino only through Microsoft's on-premises data gateway.
+The Power BI Service runs in the Microsoft Cloud and reaches Trino only through Microsoft's on-premises data gateway.
 The data gateway is a Windows service that you install on a machine that can reach Trino.
 It talks to both the Power BI Service and Trino, and passes queries and results between them.
 
@@ -117,7 +117,7 @@ Since September 2025, Microsoft builds new connectors itself and no longer certi
 == Power BI Report Server
 
 Power BI Report Server is server software on your own Windows server.
-It queries Trino without Microsoft's cloud in the path.
+It queries Trino without the Microsoft Cloud in the path.
 It allows DirectQuery only for a {ms-rs-sources}[short list of data sources{external-link-icon}^] that includes PostgreSQL but not ODBC, and it doesn't refresh reports that use custom connectors.
 
 That's why Stackable built the <<postgresql-to-trino-gateway>>: Report Server sees a PostgreSQL database and gets DirectQuery against Trino.
