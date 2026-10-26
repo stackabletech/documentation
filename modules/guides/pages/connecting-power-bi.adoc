@@ -103,7 +103,7 @@ Every viewer's queries run as the data source's stored credential, so Trino's ac
 Per-user restrictions have to be Power BI row-level security.
 A DirectQuery model can use only one custom-connector data source, and Kerberos with Windows authentication isn't available for custom connectors through the data gateway.
 
-If the data gateway machine must not run custom connectors or third-party drivers, use the <<postgresql-to-trino-gateway>> instead.
+If the data gateway machine should not or cannot run custom connectors or third-party drivers, use the <<postgresql-to-trino-gateway>> instead.
 The data gateway's built-in PostgreSQL connector then needs no Stackable software on that machine.
 
 [WARNING]
