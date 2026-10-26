@@ -90,7 +90,7 @@ To use the PostgreSQL-to-Trino gateway instead, deploy it as described in <<post
 
 The Power BI Service runs in Microsoft's cloud and reaches Trino only through Microsoft's on-premises data gateway.
 The data gateway is a Windows service that you install on a machine that can reach Trino.
-The data gateway talks to both the Power BI Service and Trino, and passes queries and results between them.
+It talks to both the Power BI Service and Trino, and passes queries and results between them.
 
 . {ms-gateway-install}[Install the on-premises data gateway{external-link-icon}^] on a Windows machine that can reach Trino.
 . Install the Stackable ODBC driver on that machine, as for Power BI Desktop.
