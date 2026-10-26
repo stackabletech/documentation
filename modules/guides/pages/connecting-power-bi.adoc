@@ -67,7 +67,7 @@ a|Either
 |===
 
 Where both routes work, the ODBC driver is the recommended one, because the connector sends Trino SQL straight to Trino.
-The PostgreSQL-to-Trino gateway adds a component in Kubernetes and has to rewrite the PostgreSQL that Power BI generates into SQL that Trino parses.
+The PostgreSQL-to-Trino gateway adds a component in Kubernetes and has to rewrite the PostgreSQL commands that Power BI generates into SQL that Trino parses.
 
 Every route needs Trino reachable from the Windows machine that runs the Power BI component: the analyst's PC, the data gateway machine or the Report Server.
 xref:trino:usage-guide/connect_to_trino.adoc[] covers the Trino side: endpoints, TLS and authentication.
