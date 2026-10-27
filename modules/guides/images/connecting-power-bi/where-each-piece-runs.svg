@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 593" width="760" height="593" role="img" aria-labelledby="pbi-title pbi-desc">
+  <title id="pbi-title">Where each piece runs</title>
+  <desc id="pbi-desc">Three zones: the Microsoft Cloud, the customer's network and SDP on Kubernetes. Power BI Desktop runs on the analyst's PC with the Stackable ODBC driver and connector and connects to Trino. The Power BI Service in the Microsoft Cloud connects to the on-premises data gateway in the customer's network, which has the Stackable ODBC driver and connector and connects to Trino. Power BI Report Server runs on the customer's Windows server, optionally with the Stackable ODBC driver, and connects to the Stackable PostgreSQL-to-Trino gateway, which connects to Trino. Trino is part of SDP; the Stackable ODBC driver, its connector and the Stackable PostgreSQL-to-Trino gateway are Stackable tools that are not part of SDP and are unsupported.</desc>
+  <style>
+    .t { font-family: "Noto Sans", "Helvetica Neue", Arial, sans-serif; fill: #182c3d; }
+    .h { font-family: "IBM Plex Mono", "DejaVu Sans Mono", Menlo, monospace; font-weight: 700; font-size: 14px; fill: #182c3d; }
+    .name { font-weight: 700; font-size: 14px; }
+    .sub { font-size: 13px; fill: #4a5d6e; }
+    .iname { font-weight: 700; font-size: 13px; fill: #1680bd; }
+    .isub { font-size: 12px; fill: #4a5d6e; }
+    .zs { font-size: 12px; fill: #4a5d6e; }
+    .legend { font-size: 13px; }
+    .band { fill: #f2f6fa; }
+    .ms { fill: #ffffff; stroke: #182c3d; stroke-width: 2; }
+    .stk { fill: #ffffff; stroke: #1680bd; stroke-width: 2; }
+    .tool { fill: #ffffff; stroke: #1680bd; stroke-width: 2; stroke-dasharray: 5 3; }
+    .ln { stroke: #182c3d; stroke-width: 2; }
+  </style>
+
+  <!-- legend -->
+  <rect class="stk" x="1" y="4" width="14" height="14"/>
+  <text class="t legend" x="24" y="16">Part of SDP</text>
+  <rect class="tool" x="131" y="4" width="14" height="14"/>
+  <text class="t legend" x="154" y="16">Stackable tool, not part of SDP, unsupported</text>
+  <rect class="ms" x="521" y="4" width="14" height="14"/>
+  <text class="t legend" x="544" y="16">Microsoft</text>
+
+  <!-- zones -->
+  <rect class="band" x="0" y="40" width="236" height="553"/>
+  <rect class="band" x="262" y="40" width="236" height="553"/>
+  <rect class="band" x="524" y="40" width="236" height="553"/>
+  <text class="h" x="10" y="64">Microsoft Cloud</text>
+  <text class="t zs" x="10" y="82">run by Microsoft</text>
+  <text class="h" x="272" y="64">Customer’s network</text>
+  <text class="t zs" x="272" y="82">Windows machines you run</text>
+  <text class="h" x="534" y="64">SDP on Kubernetes</text>
+  <text class="t zs" x="534" y="82">any data centre or cloud</text>
+
+  <!-- connectors, drawn under the boxes -->
+  <line class="ln" x1="488" y1="174" x2="534" y2="174"/>
+  <line class="ln" x1="226" y1="330" x2="272" y2="330"/>
+  <line class="ln" x1="488" y1="330" x2="534" y2="330"/>
+  <line class="ln" x1="488" y1="478" x2="534" y2="478"/>
+  <line class="ln" x1="642" y1="513" x2="642" y2="529"/>
+
+  <!-- lane: Power BI Desktop -->
+  <rect class="ms" x="272" y="104" width="216" height="140"/>
+  <text class="t name" x="282" y="126">Power BI Desktop</text>
+  <text class="t sub" x="282" y="144">Windows application</text>
+  <text class="t sub" x="282" y="160">on the analyst’s PC</text>
+  <rect class="tool" x="280" y="172" width="200" height="62"/>
+  <text class="t iname" x="290" y="190">Stackable ODBC driver</text>
+  <text class="t iname" x="290" y="206">and connector</text>
+  <text class="t isub" x="290" y="224">for the ODBC route</text>
+
+  <rect class="stk" x="534" y="150" width="216" height="48"/>
+  <text class="t name" x="544" y="172">Trino</text>
+  <text class="t sub" x="544" y="188">on SDP</text>
+
+  <!-- lane: Power BI Service -->
+  <rect class="ms" x="10" y="296" width="216" height="68"/>
+  <text class="t name" x="20" y="318">Power BI Service</text>
+  <text class="t sub" x="20" y="336">app.powerbi.com: reports</text>
+  <text class="t sub" x="20" y="352">are published and viewed</text>
+
+  <rect class="ms" x="272" y="260" width="216" height="140"/>
+  <text class="t name" x="282" y="282">On-premises data gateway</text>
+  <text class="t sub" x="282" y="300">Windows service on</text>
+  <text class="t sub" x="282" y="316">a customer machine</text>
+  <rect class="tool" x="280" y="328" width="200" height="62"/>
+  <text class="t iname" x="290" y="346">Stackable ODBC driver</text>
+  <text class="t iname" x="290" y="362">and connector</text>
+  <text class="t isub" x="290" y="380">for the ODBC route</text>
+
+  <rect class="stk" x="534" y="306" width="216" height="48"/>
+  <text class="t name" x="544" y="328">Trino</text>
+  <text class="t sub" x="544" y="344">on SDP</text>
+
+  <!-- lane: Power BI Report Server -->
+  <rect class="ms" x="272" y="416" width="216" height="124"/>
+  <text class="t name" x="282" y="438">Power BI Report Server</text>
+  <text class="t sub" x="282" y="456">server software on</text>
+  <text class="t sub" x="282" y="472">your own Windows server</text>
+  <rect class="tool" x="280" y="484" width="200" height="46"/>
+  <text class="t iname" x="290" y="502">Stackable ODBC driver</text>
+  <text class="t isub" x="290" y="520">for import through ODBC</text>
+
+  <rect class="tool" x="534" y="443" width="216" height="70"/>
+  <text class="t name" x="544" y="465">Stackable PostgreSQL-</text>
+  <text class="t name" x="544" y="483">to-Trino gateway</text>
+  <text class="t sub" x="544" y="501">speaks PostgreSQL</text>
+
+  <rect class="stk" x="534" y="529" width="216" height="48"/>
+  <text class="t name" x="544" y="551">Trino</text>
+  <text class="t sub" x="544" y="567">on SDP</text>
+</svg>
