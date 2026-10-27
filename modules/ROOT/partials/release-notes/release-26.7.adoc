@@ -638,3 +638,19 @@ helm install --wait <PRODUCT>-operator oci://oci.stackable.tech/sdp-charts/<PROD
   To recover, the offending records must be updated in Airflow's database.
   This is described in https://github.com/apache/airflow/issues/67813[apache/airflow#67813] and fixed in https://github.com/apache/airflow/pull/67850[apache/airflow#67850].
   Until the fix is backported to 3.2.2, we recommend using Airflow 3.1.6 or 3.0.6 instead, or switching to Celery executors.
+* Apache HBase cannot access Azure Blob Storage or Azure Data Lake Storage (`abfs://`).
+  The HBase images contain the `hadoop-azure` library, but it is not on the HBase classpath, so HBase fails with `ClassNotFoundException: Class org.apache.hadoop.fs.azurebfs.AzureBlobFileSystem not found`.
+  To work around it, add the library to the classpath of every role (`masters`, `regionServers` and `restServers`) with a configuration override:
++
+--
+[source,yaml]
+----
+spec:
+  masters:
+    configOverrides:
+      hbase-env.sh:
+        HBASE_CLASSPATH: /stackable/hadoop/share/hadoop/tools/lib/hadoop-azure-3.4.3-stackable26.7.0.jar
+----
+
+The path is the same for HBase 2.6.4 and 2.6.6.
+--
