@@ -47,6 +47,9 @@ The ConfigMap is then mounted into the containers.
 The ZooKeeper Pod has three containers: The `prepare` sidecar container, the `zookeeper` container and the `vector` {vector-sidecar}[sidecar container{external-link-icon}^].
 All logs get written into a shared mounted directory, from which the Vector agent reads them and sends them to the Vector {vector-aggregator}[aggregator{external-link-icon}^].
 
+NOTE: The Vector agent is an implementation detail of the operators.
+It is not meant to be used outside the Pods the operators create, and its version, configuration and feature set can change with any SDP release.
+
 === Aggregator and sinks
 
 The aggregator is configured to use one or multiple {vector-sinks}[sinks{external-link-icon}^] (for example OpenSearch, Elasticsearch), it sends all logs to all sinks.
@@ -124,6 +127,10 @@ Following the Stackable xref:stacklet.adoc#roles[roles] and xref::stacklet.adoc#
 
 Follow the {vector-agg-install}[installation instructions{external-link-icon}^] for the aggregator.
 Configure a {vector-source-vector}[Vector source{external-link-icon}^] at address `0.0.0.0:6000` and configure sinks and additional settings according to your needs.
+
+IMPORTANT: Run the aggregator from the upstream Vector image, not from the Vector image published by Stackable.
+The Stackable image is for internal use by the operators and is not a stable interface, so its contents can change with any SDP release.
+It does not contain most sinks, and an aggregator configured with one of them fails to start.
 
 === Configuring the aggregator location
 
