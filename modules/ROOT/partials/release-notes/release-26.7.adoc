@@ -65,14 +65,23 @@ This is an early version of the Hub and we're happy to receive feedback.
 * [[generic-db-26_7_0]]The SDP now provides a generic database connection mechanism, giving a consistent, typed way to configure connections to external SQL databases across operators.
   The same typed structure is used in every CRD, so it can be copied between stacklets.
 +
-*Breaking:* This replaces the previous free-form connection strings with a typed struct, and requires changes to your custom resources (and, in some cases, your Secrets):
+*Breaking:* This replaces the previous free-form connection strings with a typed struct, and requires changes to your custom resources (and, in some cases, your Secrets).
++
+Existing custom resources are not converted, whatever their `apiVersion`, because the old connection strings live in Secrets.
+After the operator upgrade, the operator rejects every unmigrated resource with an error such as `SupersetCluster object is invalid` and changes none of its objects, so the stacklet keeps running but is not reconciled.
+To migrate a stacklet, create the Secrets that the new connection fields reference, upgrade the operator, then apply the updated custom resource.
+For the `generic` connection variant, copy the existing connection string into a Secret under the key `connectionUrl`.
++
+The changes per operator:
 
 ** *Apache Airflow:* The `.clusterConfig.credentialsSecret` field is renamed to `.clusterConfig.credentialsSecretName`, and the database connection becomes a typed struct.
+   The Celery broker and results backend move into `clusterConfig` as well, see link:#airflow-improvements-26_7_0[Apache Airflow].
    Consult the xref:airflow:usage-guide/database-connections.adoc[database connections] documentation page for more details.
 +
 --
 [source,yaml]
 ----
+apiVersion: airflow.stackable.tech/v1alpha2
 kind: AirflowCluster
 spec:
   clusterConfig:
@@ -167,6 +176,8 @@ spec:
 Implemented in https://github.com/stackabletech/hive-operator/pull/674[hive-operator#674].
 --
 ** *Apache Superset:* the connection becomes a typed struct, and the operator now uses an internal Secret for the Superset `SECRET_KEY` (created automatically if missing).
+   Keep `connections.secretKey` in the credentials Secret until the 26.7 operator has reconciled the stacklet once, because the operator copies it into the internal Secret.
+   Without it the operator generates a new key and Superset cannot decrypt values encrypted with the old one.
    Consult the xref:superset:usage-guide/database-connections.adoc[database connections] documentation page for more details.
 +
 --
@@ -416,8 +427,10 @@ Tracked in https://github.com/stackabletech/nifi-opa-plugin/issues/30[nifi-opa-p
 ===== Apache Spark
 
 * *Breaking:* Spark application templates are now namespaced objects instead of cluster-wide objects.
-  They were unintentionally released as cluster-wide objects in SDP 26.3.
-  You must recreate any templates in the namespaces where the applications run.
+  Every cluster that ran the 26.3 Spark operator has the cluster-scoped `sparkapptemplates.spark.stackable.tech` CustomResourceDefinition, whether or not any templates were created.
+  Kubernetes cannot change the scope of an existing CustomResourceDefinition, so delete it before upgrading the operator, otherwise the operator fails to start and reconciles no Spark resources at all.
+  Deleting it also deletes all templates, which must then be recreated in the namespaces where the applications run.
+  Follow the xref:spark-k8s:usage-guide/upgrade.adoc#_upgrade_from_sdp_26_3_to_26_7[Apache Spark upgrade guide].
   Fixed in https://github.com/stackabletech/spark-k8s-operator/pull/694[spark-k8s-operator#694] (reapplied in https://github.com/stackabletech/spark-k8s-operator/pull/720[spark-k8s-operator#720]).
 * User arguments are now correctly propagated to the Spark Connect server.
   Previously, the newline concatenation in the Spark Connect server entrypoint was faulty which resulted in user arguments being dropped.
@@ -556,7 +569,8 @@ No OpenShift versions were dropped in this release.
 Please consult the following upgrade notes when upgrading from 26.3 to 26.7:
 
 * xref:opensearch:usage-guide/upgrade.adoc#_upgrade_from_sdp_26_3_to_26_7[OpenSearch upgrade guide]
-* xref:spark-k8s:usage-guide/upgrade.adoc#_upgrade_from_sdp_26_3_to_26_7[Apache Spark upgrade guide] -- required reading if you use Spark application templates, because the upgrade needs manual steps *before* you start
+* xref:spark-k8s:usage-guide/upgrade.adoc#_upgrade_from_sdp_26_3_to_26_7[Apache Spark upgrade guide] -- required reading for every cluster that ran the 26.3 Spark operator, whether or not it uses application templates, because the upgrade needs manual steps *before* you start
+* link:#generic-db-26_7_0[Generic database connections] -- Apache Airflow, Apache Druid, Apache Hive and Apache Superset stacklets are not reconciled after the operator upgrade until their custom resources are migrated
 ====
 
 ===== Using stackablectl
