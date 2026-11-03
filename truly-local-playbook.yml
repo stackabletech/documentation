@@ -15,6 +15,7 @@ antora:
     - require: '@sntke/antora-mermaid-extension'
     - ./lib/stackable-operator-helpers.js
     - ./lib/llms-txt.js
+    - ./lib/sitemap-canonical.js
 content:
   sources:
     - url: ./
