@@ -24,6 +24,9 @@ content:
     # management tools
     - url: ../stackablectl/
       start_path: docs
+    # web UI
+    - url: ../cockpit/
+      start_path: docs
     # demos
     - url: ../demos/
       start_path: docs
