@@ -28,6 +28,7 @@
 *** xref:observability/logging.adoc[Logging]
 *** xref:observability/containerdebug.adoc[Container environment]
 *** xref:observability/telemetry.adoc[Telemetry]
+*** xref:observability/openlineage.adoc[Data lineage]
 ** Maintenance
 *** xref:maintenance/crds.adoc[CRD maintenance]
 *** xref:maintenance/eos.adoc[End-of-Support check]
