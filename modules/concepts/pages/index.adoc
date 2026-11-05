@@ -39,4 +39,4 @@ Also learn about xref:observability/logging.adoc[].
 
 == Data Lineage
 
-Learn how Airflow, Spark and Trino report xref:observability/openlineage.adoc[data lineage] to an OpenLineage backend.
+Learn how Airflow, Spark and Trino report xref:lineage/openlineage.adoc[data lineage] to an OpenLineage backend.
