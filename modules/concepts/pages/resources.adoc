@@ -71,7 +71,7 @@ It can not use more CPU resources than `500m` (which is half of a physical or vi
 
 === CPU and memory
 
-include::stackable_resource_requests.adoc[]
+include::partial$stackable_resource_requests.adoc[]
 
 === Storage
 
