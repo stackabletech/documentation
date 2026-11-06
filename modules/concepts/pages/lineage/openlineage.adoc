@@ -243,4 +243,5 @@ Each operator documents its OpenLineage support in detail:
 * xref:spark-k8s:usage-guide/openlineage.adoc[Spark]
 * xref:trino:usage-guide/openlineage.adoc[Trino]
 
+As other products will add support for OpenLineage in the future, the Stackable Data Platform operators will also make this feature available for them via the corresponding CRDs in the same fashion.
 Read the {crd-ref}/lineage.stackable.tech/v1alpha1/openlineageconnection{crd-ref-release}[OpenLineageConnection CRD reference{external-link-icon}^] and the {openlineage}[OpenLineage documentation{external-link-icon}^].
