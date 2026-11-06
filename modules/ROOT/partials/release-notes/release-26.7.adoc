@@ -340,6 +340,11 @@ Tracked in https://github.com/stackabletech/issues/issues/716[issues#716].
 * *Breaking:* The `image.repository` Helm value must no longer include the operator name.
   Previously it looked like `oci.stackable.tech/sdp/airflow-operator`; it must now be `oci.stackable.tech/sdp`.
   Tracked in https://github.com/stackabletech/issues/issues/716[issues#716].
+* *Breaking:* The sidecar image `repository` Helm values of the listener-operator and secret-operator must no longer include the image name, because the chart appends `csi-provisioner` or `csi-node-driver-registrar` itself.
+  Previously they looked like `oci.stackable.tech/sdp/sig-storage/csi-node-driver-registrar`; they must now be `oci.stackable.tech/sdp/sig-storage`.
+  If unset, they default to `image.repository` with `/sig-storage` appended, so a mirror with the sidecars under that path needs no sidecar overrides at all.
+  The affected values are `csiProvisioner.externalProvisioner.image.repository` and `csiNodeDriver.nodeDriverRegistrar.image.repository` in the listener-operator, and `csiNodeDriver.externalProvisioner.image.repository` and `csiNodeDriver.nodeDriverRegistrar.image.repository` in the secret-operator.
+  Implemented in https://github.com/stackabletech/listener-operator/pull/386[listener-operator#386], https://github.com/stackabletech/listener-operator/pull/402[listener-operator#402] and https://github.com/stackabletech/secret-operator/pull/701[secret-operator#701].
 * RBAC permissions for all Stackable operators deployed via Helm have been audited, and unnecessary permissions were removed.
   Tracked in https://github.com/stackabletech/issues/issues/798[issues#798].
 * ConfigMaps and Secrets can now be excluded from the restart-controller.
