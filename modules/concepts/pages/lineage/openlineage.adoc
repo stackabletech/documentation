@@ -233,7 +233,7 @@ Every `SELECT` then produces events, which can add significant load to the backe
 See the xref:trino:usage-guide/openlineage.adoc[Trino documentation] for the exact configuration.
 
 Because the settings the operators inject are defaults, you can change any of them with the usual xref:overrides.adoc[overrides] of the product.
-For example, you can turn off event emission for a single Airflow role group by setting the environment variable `AIRFLOW____OPENLINEAGE____DISABLED` to `true` through `envOverrides`, without removing the `lineage` block.
+For example, you can turn off event emission for a single Airflow role group by setting the environment variable `+AIRFLOW__OPENLINEAGE__DISABLED+` to `true` through `envOverrides`, without removing the `lineage` block.
 
 == What's next
 
