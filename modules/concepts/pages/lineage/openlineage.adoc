@@ -22,12 +22,12 @@ xref:trino:index.adoc[Trino]:: Emits events for every query run on the cluster, 
 The event listener runs on the coordinator only.
 xref:spark-k8s:index.adoc[Spark]:: Emits events for the reads and writes of a `SparkApplication`.
 
-Because each product describes the same pipeline independently, the backend can combine their events into a single end-to-end graph, as long as they agree on how datasets are named (see <<dataset-naming>>).
+Because each product describes their pipelines independently, the backend can combine their events into a single end-to-end graph, as long as they agree on how datasets are named (see <<dataset-naming>>).
 
 == Enabling OpenLineage
 
 The Airflow, Spark and Trino resources all use the same shape.
-Adding a `lineage` block enables event emission, and omitting it leaves OpenLineage off, which is the default.
+Adding a `lineage` block enables event emission, and omitting it leaves OpenLineage un-enabled, which is the default.
 The block requires a `connection` to the backend.
 Everything else is optional.
 
