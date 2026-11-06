@@ -31,7 +31,7 @@ Adding a `lineage` block enables event emission, and omitting it leaves OpenLine
 The block requires a `connection` to the backend.
 Everything else is optional.
 
-The field lives in a different place depending on the product:
+The field lives in a default location of `spec.clusterConfig.lineage` but other CRDs have a different place depending on the product:
 
 [cols="1,2,2"]
 |===
