@@ -1,1 +1,0 @@
-include::partial$stackable_resource_requests.adoc[]
