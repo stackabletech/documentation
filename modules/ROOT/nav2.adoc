@@ -1,6 +1,6 @@
 * Management
 ** xref:management:stackablectl:index.adoc[]
-* xref:cockpit:index.adoc[Cockpit]
+** xref:cockpit:index.adoc[Cockpit]
 +
 --
 include::cockpit:partial$nav.adoc[]

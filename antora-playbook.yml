@@ -51,7 +51,6 @@ content:
     - url: https://github.com/stackabletech/stackablectl.git
       start_path: docs
       branches: main
-    # web UI
     - url: https://github.com/stackabletech/cockpit.git
       start_path: docs
       branches:
