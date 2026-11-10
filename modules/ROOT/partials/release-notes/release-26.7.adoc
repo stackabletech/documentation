@@ -328,6 +328,7 @@ Implemented in https://github.com/stackabletech/secret-operator/pull/708[secret-
 
 * [[cluster-name-length-26_7_0]]Stacklet names are now validated before any objects are created, using the same rules in every operator.
   A stacklet name must be at most 40 characters long, consist of lowercase letters, digits and `-`, start with a letter, and end with a letter or digit.
+  This is enforced regardless of cluster configuration, even where Kubernetes would accept a leading digit (e.g. with `RelaxedServiceNameValidation` enabled).
   Role group names no longer affect whether a stacklet works: object names that would be too long, such as the StatefulSet `<stacklet>-<role>-<rolegroup>`, are shortened and given a short hash suffix.
 +
 Previously, there was no explicit limit.
