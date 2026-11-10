@@ -1,0 +1,247 @@
+= Data lineage with OpenLineage
+:description: Learn how Airflow, Spark and Trino stacklets emit OpenLineage data lineage events to a backend such as Marquez, using the lineage field and a shared OpenLineageConnection.
+:openlineage: https://openlineage.io/
+:marquez: https://marquezproject.ai/
+:datahub: https://docs.datahub.com/docs/lineage/openlineage
+
+{openlineage}[OpenLineage{external-link-icon}^] is an open standard for collecting data lineage: which jobs ran, which datasets they read, and which datasets they wrote.
+Products emit OpenLineage events while they work and send them to an OpenLineage-compatible backend, such as {marquez}[Marquez{external-link-icon}^] or {datahub}[DataHub{external-link-icon}^].
+The backend stitches the events from all producers into one lineage graph, so you can answer questions such as "where does this table come from?" or "what breaks if I change this column?".
+
+The Airflow, Spark and Trino operators have built-in support for OpenLineage.
+You enable it with a `lineage` block in the stacklet definition. There is no need to install listeners, mount configuration files or set product-specific properties by hand.
+The OpenLineage backend itself is not part of SDP; you bring your own and point the stacklets at it.
+
+== Which product emits what
+
+Each product reports lineage from its own point of view:
+
+xref:airflow:index.adoc[Airflow]:: Emits events for DAG and task runs, plus the datasets read and written by tasks that support it (for example SQL operators).
+Airflow is the orchestrator, so it provides the structure around the individual steps of a pipeline.
+xref:trino:index.adoc[Trino]:: Emits events for every query run on the cluster, including the tables and columns it read and wrote.
+The event listener runs on the coordinator only.
+xref:spark-k8s:index.adoc[Spark]:: Emits events for the reads and writes of a `SparkApplication`.
+
+Because each product describes their pipelines independently, the backend can combine their events into a single end-to-end graph, as long as they agree on how datasets are named (see <<dataset-naming>>).
+
+== Enabling OpenLineage
+
+The Airflow, Spark and Trino resources all use the same shape.
+Adding a `lineage` block enables event emission, and omitting it leaves OpenLineage un-enabled, which is the default.
+The block requires a `connection` to the backend.
+Everything else is optional.
+
+The field lives in a default location of `spec.clusterConfig.lineage` but other CRDs have a different place depending on the product:
+
+[cols="1,2,2"]
+|===
+| Product | Resource | Field
+
+| Airflow
+| `AirflowCluster`
+| `spec.clusterConfig.lineage`
+
+| Spark
+| `SparkApplication`
+| `spec.lineage`
+
+| Trino
+| `TrinoCluster`
+| `spec.clusterConfig.lineage`
+|===
+
+For example, this is how an `AirflowCluster` reports to a Marquez instance reachable as `marquez` on port 5000:
+
+[source,yaml]
+----
+apiVersion: airflow.stackable.tech/v1alpha2
+kind: AirflowCluster
+metadata:
+  name: airflow
+spec:
+  clusterConfig:
+    lineage:
+      connection:
+        inline:
+          http: # <1>
+            host: marquez # <2>
+            port: 5000
+      namespace: airflow-lineage # <3>
+  # more spec here ...
+----
+<1> The transport used to publish events. `http` is currently the only supported transport. Events are sent to the `path` of the backend, which defaults to `/api/v1/lineage`.
+<2> Host name of the backend, without protocol or port.
+<3> The OpenLineage namespace that the jobs of this product are reported under. Defaults to `default`.
+
+The `TrinoCluster` and `SparkApplication` use the same `connection` structure:
+
+[source,yaml]
+----
+apiVersion: trino.stackable.tech/v1alpha1
+kind: TrinoCluster
+metadata:
+  name: trino
+spec:
+  clusterConfig:
+    lineage:
+      connection:
+        inline:
+          http:
+            host: marquez
+            port: 5000
+      namespace: trino-lineage
+  # more spec here ...
+----
+
+[source,yaml]
+----
+apiVersion: spark.stackable.tech/v1alpha1
+kind: SparkApplication
+metadata:
+  name: orders-by-nation
+spec:
+  lineage:
+    connection:
+      inline:
+        http:
+          host: marquez
+          port: 5000
+    namespace: spark-lineage
+    appName: orders-by-nation # <1>
+  # more spec here ...
+----
+<1> Spark only: a stable name for the job. Without it, the name falls back to `spark.app.name` and finally to the resource name, and a run-specific resource name would turn every run into a separate job.
+
+The operator translates this into the product-specific configuration.
+For Trino it renders the OpenLineage event listener configuration, for Spark it adds the OpenLineage listener and transport settings to the submit configuration, and for Airflow it sets the environment variables of the OpenLineage provider.
+
+== Sharing a connection
+
+Like xref:s3.adoc[S3 resources], a connection can be defined inline, as in the examples above, or as a stand-alone `OpenLineageConnection` resource that is referenced by name.
+This is the better choice when several stacklets report to the same backend, because the backend only needs to be described once:
+
+[source,yaml]
+----
+apiVersion: lineage.stackable.tech/v1alpha1
+kind: OpenLineageConnection
+metadata:
+  name: marquez
+spec:
+  http:
+    host: marquez
+    port: 5000
+----
+
+Each stacklet then references it by name.
+The `OpenLineageConnection` must be in the same namespace as the stacklet:
+
+[source,yaml]
+----
+spec:
+  clusterConfig:
+    lineage:
+      connection:
+        reference: marquez
+----
+
+For a `SparkApplication` the same applies, with the `lineage` block directly below `spec`.
+
+== TLS
+
+If the backend is served over HTTPS, add a `tls` block to the connection.
+The `caCert` references a xref:secret-operator:secretclass.adoc[SecretClass] that provides the CA certificate used to verify the backend, in the same way as described for xref:s3.adoc#_tls[S3] and in xref:tls-server-verification.adoc[]:
+
+[source,yaml]
+----
+lineage:
+  connection:
+    inline:
+      http:
+        host: marquez.default.svc.cluster.local # <1>
+        port: 5000
+        tls:
+          verification:
+            server:
+              caCert:
+                secretClass: tls # <2>
+----
+<1> With TLS verification, the host must match a subject alternative name in the backend's certificate. For an in-cluster backend that is typically the fully-qualified service name, not the short name.
+<2> The name of a SecretClass that provides the CA certificate that signed the backend's certificate. This example uses the `tls` SecretClass that is available by default.
+
+When a `tls` block is present, events are sent over `https`.
+Trino and Spark import the CA certificate into the trust store of the JVM that emits the events.
+Airflow mounts the CA certificate and points the OpenLineage client at it with the `REQUESTS_CA_BUNDLE` environment variable.
+This variable applies to the whole Airflow container and replaces the default CA bundle, so review the xref:airflow:usage-guide/openlineage.adoc#_tls[Airflow OpenLineage documentation] before using it.
+
+NOTE: Disabling verification (`verification: none`) is not supported for Spark, because the OpenLineage Java client cannot skip certificate verification.
+If the driver does not trust the backend's certificate, the application keeps running but its lineage events are dropped.
+
+== Authentication
+
+If the backend requires a bearer token, set `credentialsSecretName` on the connection to the name of a Secret in the same namespace.
+The token has to be stored under the key `apiKey`:
+
+[source,yaml]
+----
+apiVersion: v1
+kind: Secret
+metadata:
+  name: openlineage-credentials
+stringData:
+  apiKey: "<your-token>"
+----
+
+[source,yaml]
+----
+http:
+  host: marquez
+  port: 5000
+  credentialsSecretName: openlineage-credentials
+----
+
+The token is passed to the pods from the Secret and does not appear in the custom resource or in a ConfigMap.
+
+[#dataset-naming]
+== Dataset naming
+
+A backend identifies a dataset by the combination of a _namespace_ and a _name_.
+Lineage from different producers only connects if they use the same identity for the same physical table.
+The products do not necessarily do this on their own:
+Trino names a table `<catalog>.<schema>.<table>` in a namespace derived from its own address, while Spark names the same Apache Iceberg table after its storage location or Hive metastore.
+Where the names differ, the backend shows separate nodes for what is physically one table.
+
+Two settings help to line them up:
+
+* Trino's `lineage.datasetNamespaceUri` sets the URI that Trino uses to derive the dataset namespace.
+It defaults to the address of the coordinator Service, `<scheme>://<cluster name>-coordinator:<port>`.
+This is also the address under which Airflow's Trino connection sees the cluster, so by default Trino and the Airflow SQL operators report the same tables under the same namespace.
+Set it explicitly if Airflow connects to Trino through a different host or port.
+* Job namespaces are separate from dataset namespaces.
+The `lineage.namespace` of each product is only used to group its jobs, so you can keep products apart in the backend even though they share datasets.
+Avoid values that look like a URI or contain a colon.
+Some backends cannot parse job identifiers in that case.
+
+Linking a Spark job to the Airflow task that submitted it needs more than the `lineage` block, because the Spark job has to know the identity of the Airflow run.
+You can pass the OpenLineage `spark.openlineage.parent*` properties through `sparkConf`, which the operator merges after the values it injects.
+See the {openlineage}docs/integrations/spark/configuration/airflow#preserving-job-hierarchy[OpenLineage Airflow Spark integration documentation{external-link-icon}^] for details.
+
+== Controlling which events are emitted
+
+Trino does not emit lineage events for `SELECT` queries by default, so a cluster that only reads data produces no lineage.
+To include them, set the `openlineage-event-listener.trino.include-query-types` property through xref:overrides.adoc[config overrides] for `event-listener.properties` on the coordinators.
+Every `SELECT` then produces events, which can add significant load to the backend on clusters that serve many interactive queries.
+See the xref:trino:usage-guide/openlineage.adoc[Trino documentation] for the exact configuration.
+
+Because the settings the operators inject are defaults, you can change any of them with the usual xref:overrides.adoc[overrides] of the product.
+For example, you can turn off event emission for a single Airflow role group by setting the environment variable `+AIRFLOW__OPENLINEAGE__DISABLED+` to `true` through `envOverrides`, without removing the `lineage` block.
+
+== What's next
+
+Each operator documents its OpenLineage support in detail:
+
+* xref:airflow:usage-guide/openlineage.adoc[Airflow]
+* xref:spark-k8s:usage-guide/openlineage.adoc[Spark]
+* xref:trino:usage-guide/openlineage.adoc[Trino]
+
+As other products will add support for OpenLineage in the future, the Stackable Data Platform operators will also make this feature available for them via the corresponding CRDs in the same fashion.
+Read the {crd-ref}/lineage.stackable.tech/v1alpha1/openlineageconnection{crd-ref-release}[OpenLineageConnection CRD reference{external-link-icon}^] and the {openlineage}[OpenLineage documentation{external-link-icon}^].
