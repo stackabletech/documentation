@@ -17,11 +17,12 @@ main product container.
 
 == Output
 
-containerdebug writes its output to three places: the pod logs, a rotating log file for the log aggregation, and a state file with the result of the latest run.
+containerdebug writes its output to three places: the console logs, a rotating log file for the log aggregation, and a state file with the result of the latest run.
 
-=== Pod logs
+=== Console logs
 
-The collected information is logged to the Kubernetes pod logs, readable via `kubectl logs <pod>`.
+The collected information is printed to STDOUT, so it is readable via `kubectl logs <pod>`.
+Like the file logs below, these messages are independent of the log configuration of the product container.
 
 === Aggregated log files
 
@@ -37,7 +38,7 @@ The name is derived by the Vector agent from the directory which the files lie i
 [CAUTION]
 ====
 If you override `FILE_LOG_DIRECTORY`, then the directory has to stay exactly one level below `/stackable/log`, because the Vector agent takes the container name from that path segment.
-A directory next to it, such as `/stackable/log/<product>`, mixes the containerdebug events into the logs of that container.
+Each container logs into a directory of its own name, so pointing `FILE_LOG_DIRECTORY` at one of those, such as `/stackable/log/<product>`, labels the containerdebug events with that container name and mixes them into its logs.
 Any other path stops the collection of these files, and a path outside `/stackable/log` additionally leaves the volume whose size is capped.
 ====
 
