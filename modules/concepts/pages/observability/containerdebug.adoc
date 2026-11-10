@@ -4,7 +4,7 @@
 All Stackable-managed products regularly log information about their operating
 environment, such as available disk interfaces and network interfaces.
 
-This logging is performed by our https://github.com/stackabletech/containerdebug[containerdebug{external-link-icon}^] tool.
+This logging is performed by our https://github.com/stackabletech/operator-rs/tree/main/crates/containerdebug[containerdebug{external-link-icon}^] tool.
 
 NOTE: This tool is intended as a debugging aid, and the particular information or
 format should not be considered stable.
@@ -17,9 +17,35 @@ main product container.
 
 == Output
 
-The collected information is logged to the Kubernetes pod logs (readable via `kubectl logs <pod>`)
-and to the xref:observability/logging.adoc#architecture[shared Stackable log dir]
-(for pickup by the Vector log agent).
+containerdebug writes its output to three places: the console logs, a rotating log file for the log aggregation, and a state file with the result of the latest run.
 
-Additionally, it is written as JSON to `/stackable/log/containerdebug-state.json`.
+=== Console logs
+
+The collected information is printed to STDOUT, so it is readable via `kubectl logs <pod>`.
+Like the file logs below, these messages are independent of the log configuration of the product container.
+
+=== Aggregated log files
+
+The information is also written to the xref:observability/logging.adoc#architecture[shared Stackable log dir], so that the Vector log agent collects it and forwards it to the Vector aggregator.
+The operators enable these file logs by setting the environment variable `FILE_LOG_DIRECTORY` to `/stackable/log/containerdebug` in the product container.
+They configure the rotation with `FILE_LOG_ROTATION_PERIOD` set to `hourly`, because rotation is off by default, and with `FILE_LOG_MAX_FILES` set to `2`, so that the files do not fill up the log volume, whose size is capped.
+The resulting files are named `containerdebug.<date>.tracing-rs.json`.
+
+In the aggregated logs, these events carry the container name `containerdebug`.
+No Kubernetes container of that name exists, because containerdebug runs in the background of the product container.
+The name is derived by the Vector agent from the directory which the files lie in.
+
+[CAUTION]
+====
+If you override `FILE_LOG_DIRECTORY`, then the directory has to stay exactly one level below `/stackable/log`, because the Vector agent takes the container name from that path segment.
+Each container logs into a directory of its own name, so pointing `FILE_LOG_DIRECTORY` at one of those, such as `/stackable/log/<product>`, labels the containerdebug events with that container name and mixes them into its logs.
+Any other path stops the collection of these files, and a path outside `/stackable/log` additionally leaves the volume whose size is capped.
+====
+
+The log level of these files is independent of the log configuration of the product container.
+It defaults to `INFO` and can be changed with the environment variable `FILE_LOG_LEVEL`.
+
+=== State file
+
+The collected information is additionally written as JSON to `/stackable/log/containerdebug-state.json`.
 This file only contains the output from the _latest_ containerdebug run.
