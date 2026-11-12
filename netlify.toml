@@ -15,6 +15,14 @@
   status = 404
   force = true
 
+# The page was only ever the resource requests fragment, which now lives in a
+# partial included by the resources page; every published version has it there.
+[[redirects]]
+  from = "/home/:version/concepts/stackable_resource_requests/*"
+  to = "/home/:version/concepts/resources/"
+  status = 301
+  force = true
+
 [[redirects]]
   from = "/home/stable/release_notes.html"
   to = "/home/stable/release-notes"

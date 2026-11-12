@@ -21,6 +21,7 @@ The following components of the SDP contain breaking changes for this release:
 * link:#kafka-improvements-26_7_0[Apache Kafka]: OPA rules may need to be adjusted due to FQDNs
 * link:#superset-improvements-26_7_0[Apache Superset]: Renamed `EXPERIMENTAL_FILE_*` settings
 * link:#spark-fixes-26_7_0[Apache Spark]: The Spark application templates are now namespaced
+* link:#cluster-name-length-26_7_0[Apache Spark (and all other operators)]: Stacklet names are limited to 40 characters
 * link:#nifi-removals-26_7_0[Apache NiFi]: NiFi 1.x CRD fields were removed
 * link:#druid-37_0_0[Apache Druid]: Druid 37.0.0 enforces TLS and requires that the S3 region is set
 * link:#misc-improvements-registry-26_7_0[Product image selection]: Operators need a registry for product image selection
@@ -325,6 +326,27 @@ Implemented in https://github.com/stackabletech/secret-operator/pull/708[secret-
 
 ====== Miscellaneous
 
+* [[cluster-name-length-26_7_0]]Stacklet names are now validated before any objects are created, using the same rules in every operator.
+  A stacklet name must be at most 40 characters long, consist of lowercase letters, digits and `-`, start with a letter, and end with a letter or digit.
+  This is enforced regardless of cluster configuration, even where Kubernetes would accept a leading digit (e.g. with `RelaxedServiceNameValidation` enabled).
+  Role group names no longer affect whether a stacklet works: object names that would be too long, such as the StatefulSet `<stacklet>-<role>-<rolegroup>`, are shortened and given a short hash suffix.
++
+Previously, there was no explicit limit.
+The operators derive object names from the stacklet name, the role name and the role group name, and Kubernetes limits those names.
+For example, StatefulSet names can be at most 52 characters long, because Kubernetes adds a `controller-revision-hash` label of the form `<statefulset>-<hash>` to every Pod.
+A stacklet with a name that was too long was accepted, but some of its objects were then rejected or its Pods were never created, and the error only appeared on those objects, not on the stacklet.
+Now, such a stacklet is rejected with an error such as `failed to set the cluster name: maximum length exceeded`, and none of its objects are created.
++
+*Breaking:* For most operators this allows longer stacklet names than before.
+The exceptions are:
++
+** *Apache Spark:* `SparkApplication` names could previously be up to 63 characters long, and `SparkConnectServer` names up to 45.
+   Both are now limited to 40.
+** *Apache ZooKeeper, Apache Kafka (ZooKeeper mode), Open Policy Agent, Apache Superset, Apache NiFi (with the reporting task disabled) and `SparkHistoryServer`:* With role group names of up to 5 characters, stacklet names of 41 to 45 characters previously worked and are now rejected.
+   With the role group name `default`, longer names than before are allowed.
++
+Implemented in https://github.com/stackabletech/operator-rs/pull/1225[operator-rs#1225] and, for Apache Spark, https://github.com/stackabletech/spark-k8s-operator/pull/692[spark-k8s-operator#692].
+Tracked in https://github.com/stackabletech/spark-k8s-operator/issues/775[spark-k8s-operator#775].
 * [[misc-improvements-registry-26_7_0]]*Breaking:* Operators now determine the registry for product images from where they were installed, instead of hard-coding `oci.stackable.tech`.
   This is controlled by a new `--image-repository` CLI argument (and the `IMAGE_REPOSITORY` environment variable), which lets the correct registry be selected automatically when an operator is installed via its Helm Chart or Operator Lifecycle Manager (OLM) manifest.
 +
@@ -340,6 +362,11 @@ Tracked in https://github.com/stackabletech/issues/issues/716[issues#716].
 * *Breaking:* The `image.repository` Helm value must no longer include the operator name.
   Previously it looked like `oci.stackable.tech/sdp/airflow-operator`; it must now be `oci.stackable.tech/sdp`.
   Tracked in https://github.com/stackabletech/issues/issues/716[issues#716].
+* *Breaking:* The sidecar image `repository` Helm values of the listener-operator and secret-operator must no longer include the image name, because the chart appends `csi-provisioner` or `csi-node-driver-registrar` itself.
+  Previously they looked like `oci.stackable.tech/sdp/sig-storage/csi-node-driver-registrar`; they must now be `oci.stackable.tech/sdp/sig-storage`.
+  If unset, they default to `image.repository` with `/sig-storage` appended, so a mirror with the sidecars under that path needs no sidecar overrides at all.
+  The affected values are `csiProvisioner.externalProvisioner.image.repository` and `csiNodeDriver.nodeDriverRegistrar.image.repository` in the listener-operator, and `csiNodeDriver.externalProvisioner.image.repository` and `csiNodeDriver.nodeDriverRegistrar.image.repository` in the secret-operator.
+  Implemented in https://github.com/stackabletech/listener-operator/pull/386[listener-operator#386], https://github.com/stackabletech/listener-operator/pull/402[listener-operator#402] and https://github.com/stackabletech/secret-operator/pull/701[secret-operator#701].
 * RBAC permissions for all Stackable operators deployed via Helm have been audited, and unnecessary permissions were removed.
   Tracked in https://github.com/stackabletech/issues/issues/798[issues#798].
 * ConfigMaps and Secrets can now be excluded from the restart-controller.
