@@ -21,4 +21,6 @@ echo "Applying updated configuration"
 kubectl -n trino-superset-s3 apply -f trino-opa-bundle.yaml
 # end::apply[]
 
+# The OpaCluster needs to reload the OPA bundle. We need to wait for that, otherwise Alice is
+# missing the required permissions.
 sleep 20
