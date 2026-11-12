@@ -3,13 +3,13 @@ set -euo pipefail
 
 echo "Installing tutorial-openldap stack"
 # tag::install-openldap[]
-stackablectl stack install tutorial-openldap
+stackablectl stack install tutorial-openldap --namespace tutorial-openldap
 # end::install-openldap[]
 
 echo "Applying yamls"
 
 # tag::apply-bind-credentials-secret[]
-kubectl apply -f bind-credentials-secret.yaml
+kubectl -n trino-superset-s3 apply -f bind-credentials-secret.yaml
 # end::apply-bind-credentials-secret[]
 
 # tag::apply-bind-credentials-secretclass[]

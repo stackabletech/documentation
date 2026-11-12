@@ -42,7 +42,7 @@ to learn more.
 Before starting to add configuration to your Stackable cluster, inspect what the command above has set up in your
 Kubernetes cluster.
 
-Use `stackablectl stacklet list` to find the endpoints of Superset and Trino and open their web interfaces in the
+Use `stackablectl stacklet list --namespace trino-superset-s3` to find the endpoints of Superset and Trino and open their web interfaces in the
 browser.
 
 You can log into both Superset and Trino with user `admin` and password `adminadmin`.
@@ -118,7 +118,7 @@ Now you can create the AuthenticationClass `openldap` which references the Secre
 include::example$ldap-auth/ldap-authenticationclass.yaml[]
 
 <1> The name of the AuthenticationClass, which needs to be referenced later
-<2> The hostname in this case is the Service at which the OpenLDAP is running, inside of Kubernetes.
+<2> The hostname in this case is the Service at which the OpenLDAP is running, inside of Kubernetes. You might need to update the namespace accordingly.
 <3> Here the SecretClass name is referenced
 <4> A SecretClass used to verify the LDAP server's TLS certificate, see below.
 

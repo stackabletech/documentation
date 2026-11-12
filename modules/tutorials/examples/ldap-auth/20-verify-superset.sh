@@ -4,8 +4,10 @@ shopt -s lastpipe
 
 source "./utils.sh"
 
+sleep 5
+
 echo "Waiting for superset StatefulSet ..."
-kubectl rollout status --watch statefulset/superset-node-default
+kubectl -n trino-superset-s3 rollout status --watch statefulset/superset-node-default
 
 sleep 5
 

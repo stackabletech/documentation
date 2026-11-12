@@ -6,7 +6,7 @@ metadata:
 spec:
   provider:
     ldap:
-      hostname: openldap.default.svc.cluster.local  # <2>
+      hostname: openldap.tutorial-openldap.svc.cluster.local  # <2>
       searchBase: ou=users,dc=example,dc=org
       bindCredentials:
         secretClass: openldap-bind-credentials  # <3>
