@@ -2,7 +2,8 @@
 set -euo pipefail
 shopt -s lastpipe
 
-source "./utils.sh"
+# shellcheck disable=1091
+source utils.sh
 
 username="admin"
 password="admin"

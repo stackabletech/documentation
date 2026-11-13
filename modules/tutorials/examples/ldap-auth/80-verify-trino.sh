@@ -18,9 +18,9 @@ trino_login() {
         chmod +x "$trino_binary"
     fi
 
-    trino_addr=$(stackablectl stacklet list -o json | jq --raw-output '.[] | select(.name == "trino") | .endpoints | .["coordinator-https"]')
+    trino_addr=$(stackablectl stacklet list -n trino-superset-s3 -o json | jq --raw-output '.[] | select(.name == "trino") | .endpoints | .["coordinator-https"]')
 
-    output=$(echo "$password" | "$trino_binary" --insecure --output-format=CSV_UNQUOTED --server "$trino_addr" --user "$username" --execute "SHOW CATALOGS" --password)
+    output=$(TRINO_PASSWORD="$password" "$trino_binary" --insecure --output-format=CSV_UNQUOTED --server "$trino_addr" --user "$username" --execute "SHOW CATALOGS" --password)
 
     if [[ "$output" =~ .*system.* ]]; then
         return 0

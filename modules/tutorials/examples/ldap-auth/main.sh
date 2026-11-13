@@ -8,3 +8,5 @@ do
     printf "##########################################\n"
     bash "$script"
 done
+
+echo "All steps successfully ran, tutorial completed"
