@@ -66,6 +66,22 @@
     <a class="navbar-link" href="#">Tools</a>
     <div class="navbar-dropdown">
         <a class="navbar-item" href="{{{ relativize (versioned "management" page "stackablectl/index.html") }}}">stackablectl</a>
+        {{#if (not (or
+            (eq page.version "23.1")
+            (eq page.version "23.4")
+            (eq page.version "23.7")
+            (eq page.version "23.11")
+            (eq page.version "24.3")
+            (eq page.version "24.7")
+            (eq page.version "24.11")
+            (eq page.version "25.3")
+            (eq page.version "25.7")
+            (eq page.version "25.11")
+            (eq page.version "26.3")
+            (eq page.version "26.7")
+        ))}}
+        <a class="navbar-item" href="{{{ relativize (versioned "home" page "cockpit/index.html") }}}">Cockpit</a>
+        {{/if}}
     </div>
 </div>
 <div class="navbar-item has-dropdown is-hoverable">

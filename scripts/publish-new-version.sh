@@ -65,14 +65,14 @@ if ! git rev-parse --quiet --verify "$BRANCH" > /dev/null; then
 fi
 
 echo "Did you create all the release branches in the operators?"
-echo "Did you also create a release branch in the demos repository?"
+echo "Did you also create release branches in the cockpit and demos repositories?"
 read -r -p "(yes/no): " OPERATORS_BRANCHES_ANSWER
 
 # Convert the user input to lowercase for case-insensitive comparison
 OPERATORS_BRANCHES_ANSWER_LOWERCASE=$(echo "$OPERATORS_BRANCHES_ANSWER" | tr '[:upper:]' '[:lower:]')
 
 if [ "$OPERATORS_BRANCHES_ANSWER_LOWERCASE" != "yes" ]; then
-    echo "Please create all the branches in the operators before proceeding."
+    echo "Please create all the branches in the operators, cockpit and demos before proceeding."
     exit 1
 fi
 
