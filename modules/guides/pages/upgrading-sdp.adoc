@@ -35,10 +35,10 @@ The release notes and the https://hub.stackable.tech[Stackable Hub] list the pro
 $ kubectl patch <kind>/<name> --type=merge --patch '{"spec": {"clusterOperation": {"reconciliationPaused": true}}}'
 ----
 +
-Upgraded operators automatically and immediately restarts the stacklets they manage using the images of the new release, see xref:concepts:product-image-selection.adoc[].
+Upgraded operators automatically and immediately restart the stacklets they manage using the images of the new release, see xref:concepts:product-image-selection.adoc[].
 Pausing reconciliation lets you restart them one at a time at your own pace instead of all at once.
 
-. Upgrade the operators as the release notes describes, for example with `stackablectl release upgrade <release>`.
+. Upgrade the operators as the release notes describe, for example with `stackablectl release upgrade <release>`.
 Replace the CustomResourceDefinitions (CRDs) by hand if the release notes say so.
 
 . Resume reconciliation of one stacklet:
@@ -52,5 +52,6 @@ The operator restarts the stacklet using the new images.
 Wait until all its Pods are ready again and the operator logs show no errors, then resume the next one.
 
 . Change `spec.image.productVersion` where you want a newer product version.
+Read the release notes of the product itself first, for example those of Apache NiFi or Trino, for changes that affect your configuration or workloads.
 Each change restarts that stacklet once more.
 Some products need a manual process for a version change, such as xref:hdfs:usage-guide/upgrading.adoc[Apache Hadoop HDFS].
