@@ -1,0 +1,6 @@
+.breaking-keyword {
+  background-color: var(--warning-color);
+  color: var(--warning-on-color);
+  border-radius: .45rem;
+  padding: 0 .5rem;
+}
