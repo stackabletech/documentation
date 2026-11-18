@@ -1,3 +1,243 @@
 == Release 26.11
 
 === 26.11.0
+
+[WARNING,caption=Overview of breaking changes]
+====
+The following components of the SDP contain breaking changes for this release:
+
+* link:#kafka-new-features-26_11_0[Apache Kafka]: The controller StatefulSets must be recreated when upgrading
+* link:#label-improvements-26_11_0[Various operators]: StatefulSets maintained by various operators need re-creation because of label changes
+* link:#kafka-improvements-26_11_0[Apache Kafka]: KRaft internal authentication changed
+* link:#product-config-removal-26_11_0[product-config]: The product-config mechanism was removed and is now built into the operators
+====
+
+==== New platform features
+
+===== General
+
+====== Miscellaneous
+
+All operator Deployments now have a startup probe attached, which queries the new `/ready` HTTP endpoint to ensure all CRDs necessary for the operator are installed.
+
+Tracked in https://github.com/stackabletech/issues/issues/828[issues#828].
+
+[#kafka-new-features-26_11_0]
+===== Apache Kafka
+
+* *Dynamic KRaft controller scaling:*
+  KRaft deployments now support dynamic controller scaling.
+  Previously, scaling controllers required manual intervention to update the voter list.
+  The voter list is now updated dynamically using a sidecar container and a `preStop` container hook.
+  Controllers are scaled one at a time, because KRaft only processes one voter change at a time.
++
+--
+[.breaking-keyword]**Breaking:**
+The `podManagementPolicy` of the controller StatefulSet changed from `Parallel` to `OrderedReady`.
+This is an immutable field, so existing clusters need a manual step when upgrading:
+
+. Delete the StatefulSet with `--cascade=orphan`, so the Pods are not taken down immediately.
+. Let the operator recreate it on the next reconcile, which restarts the Pods.
+
+When doing this, the controller Pods (the whole KRaft quorum) may be restarted simultaneously and be unavailable for a few seconds.
+They are not started sequentially, as `OrderedReady` only orders Pods within one role group.
+
+Implemented in https://github.com/stackabletech/kafka-operator/pull/1010[kafka-operator#1010].
+--
+* **OPA authorizer for Apache Kafka 4.x:**
+  Apache Kafka 4.x now supports the OPA authorizer.
+  In particular, KRaft controllers can now also authorize requests against OPA rules.
++
+Tracked in https://github.com/stackabletech/kafka-operator/issues/941[kafka-operator#941], implemented in https://github.com/stackabletech/kafka-operator/pull/1051[kafka-operator#1051].
+
+===== Apache Phoenix
+
+The Apache Phoenix shipped in the HBase images no longer contains Apache HTrace and its known vulnerabilities, so Phoenix no longer writes traces to an HBase table and TRACE ON/TRACE OFF and the phoenix.trace.* properties have no effect.
+If you rely on Phoenix tracing, use HBase's OpenTelemetry tracing instead.
+
+Tracked in https://github.com/stackabletech/issues/issues/894[issues#894].
+
+==== Platform improvements
+
+===== General
+
+====== Vulnerabilities
+
+YYY CVEs were fixed in the Stackable product images.
+This includes X critical and XX high-severity CVEs.
+
+====== Miscellaneous
+
+* The labels on the Kubernetes objects created by the operators have been reworked to carry only the recommended labels that actually apply to each object:
+** The `app.kubernetes.io/component` and `app.kubernetes.io/role-group` labels are no longer set on objects that do not belong to a single role or role group (previously they carried `none` or a placeholder value), and the `app.kubernetes.io/version` label is no longer set on immutable objects such as StatefulSet volume claim templates.
+** [#label-improvements-26_11_0.breaking-keyword]**Breaking:**
+   For some operators this is a breaking change: StatefulSets created by older operator versions cannot be updated in place, and must be deleted once, right after the operator upgrade, so that the operator immediately recreates them with the new labels.
+   Use `--cascade=orphan` to retain the Pods:
+
++
+--
+[source,console]
+----
+$ kubectl delete statefulsets.apps --cascade=orphan <statefulset-name>
+----
+
+The recreated StatefulSet adopts the orphaned Pods and restarts them one after another to apply the new product image.
+There is one StatefulSet per role group, so repeat this for each affected role group.
+--
+** **Do not skip this.** The cluster keeps running and stays healthy, so the error is easy to overlook, but the operator cannot apply any further change to the affected StatefulSets, including the number of replicas and the product version, until they are deleted.
+The reconciliation error looks like this:
+
++
+--
+[source,plain]
+----
+... is invalid: spec: Forbidden: updates to statefulset spec
+for fields other than 'replicas', ...
+----
+--
+** A few operators change other immutable StatefulSet fields in this release for reasons unrelated to the label rework.
+   The symptom and the remedy are the same.
+
++
+--
+The following operators require action.
+For all others, no action is needed.
+
+** **Apache HBase:** Delete the REST server StatefulSet. Cause: version label on the listener PVC.
+** **Apache Kafka:** Delete the KRaft controller StatefulSet. Cause: `podManagementPolicy` changed from `Parallel` to `OrderedReady`.
+** **Apache Spark:** Delete the history server and Spark Connect server StatefulSets. Cause: version label on the listener PVC; the Connect server additionally carried a placeholder `app.kubernetes.io/role-group: default`.
+** **OpenSearch:** Delete the nodes StatefulSet of every role group. Cause: version label on the `listener` and `discovery-service-listener` PVCs.
+
+Tracked in https://github.com/stackabletech/issues/issues/877[issues#877].
+--
+
+* The operator Deployments now run with a restricted security context and a read-only root filesystem, so they can be installed into namespaces that enforce the restricted Pod Security Standard.
+  Nothing changes on OpenShift.
+  File logs (telemetry.fileLog) are now written to `/var/log/<operator>` instead of `/stackable/logs/<operator>`.
++
+Tracked in https://github.com/stackabletech/issues/issues/903[issues#903].
+* The logs of the xref:concepts:observability/containerdebug.adoc[containerdebug process] are now part of the xref:concepts:observability/logging.adoc[log aggregation].
+  The Vector agent picks up the JSON log file which containerdebug writes and forwards it to the aggregator, where the events appear with the container name `containerdebug`.
+  There is no Kubernetes container of that name, because containerdebug runs in the background of the product container.
++
+--
+These log files were not written at all before this release.
+The operators set the environment variable `CONTAINERDEBUG_LOG_DIRECTORY`, which containerdebug stopped reading in its version 0.2.0 when it moved to `stackable-telemetry`.
+The operators now set `FILE_LOG_DIRECTORY` instead, along with an hourly rotation that keeps at most two files, so that the logs stay small inside the size-capped log volume.
+
+Tracked in https://github.com/stackabletech/issues/issues/909[issues#909]
+--
+
+===== Apache PAirflow
+
+The level configured for the `airflow.task` logger now sets which task logs the Airflow UI shows, so the UI can show only `WARN` and above while log files and the Vector aggregator keep receiving `INFO`.
+If you set this logger above `INFO` to keep task output out of log files and Vector, raise the `file` and `console` levels instead.
+
+Tracked in https://github.com/stackabletech/airflow-operator/issues/650[airflow-operator#650].
+
+[#kafka-improvements-26_11_0]
+===== Apache Kafka
+
+* [.breaking-keyword]**Breaking:**
+  **Simpler internal authentication and bootstrapping for KRaft:**
+  KRaft brokers and controllers now authenticate each other only with the internal TLS certificates of the `internalSecretClass`.
+  This also applies when Kerberos is enabled.
+  The `CONTROLLER` listener always requires a client certificate.
+  Kerberos is now used only on the brokers' client-facing listeners, and controllers no longer have a keytab.
++
+--
+Scaling the brokers no longer restarts any other Pods.
+Scaling the controllers restarts only the controller Pods, one after another.
+
+Implemented in https://github.com/stackabletech/kafka-operator/pull/1069[kafka-operator#1069].
+--
+* **The KRaft bootstrap controller is recorded in the cluster status:**
+  The operator now chooses the bootstrap controller once, at the first reconcile, and stores its node ID in the new optional status field `status.kraftBootstrapControllerNodeId`.
+  Only this controller formats with `--standalone`.
+  All other controllers, including those in role groups added later, join the existing quorum.
+  Adding a controller role group no longer restarts the existing controllers.
++
+--
+If the status is lost, the operator chooses the bootstrap controller again from the current spec.
+A bootstrap controller that loses its PVC can still bootstrap a new quorum.
+
+Implemented in https://github.com/stackabletech/kafka-operator/pull/1061[kafka-operator#1061].
+--
+* **PascalCase values for `spec.clusterConfig.metadataManager`:**
+  Per Kubernetes conventions, the values of `spec.clusterConfig.metadataManager` are now `ZooKeeper` and `KRaft`.
+  The previous lowercase values `zookeeper` and `kraft` are deprecated.
+  They are still accepted for backwards compatibility and may be removed in a future release.
++
+Tracked in https://github.com/stackabletech/kafka-operator/issues/1033[kafka-operator#1033], implemented in https://github.com/stackabletech/kafka-operator/pull/1034[kafka-operator#1034].
+
+===== Apache Spark
+
+All Spark 4.x images now ship with HBase connectors libraries included.
+Past releases only shipped these connectors with the Spark 3.x images because there is no release available for Spark 4.x.
+Since support for Spark 3 has been removed in this release, we decided to offer an upgrade path for users of these connectors.
+The HBase connectors included now are built from a specific commit in the master branch.
+
+Users of Spark 3.x HBase connectors moving to Spark 4.x need to update their code because the connector API has changed.
+
+Tracked in https://github.com/stackabletech/issues/issues/904[issues#904].
+
+===== Open Policy Agent
+
+Products have a soft default affinity to OPA server pods now, favouring local routing to a available OPA pod.
+This only has an effect when OPA runs as a Deployment.
+
+Tracked in https://github.com/stackabletech/issues/issues/895[issues#895].
+
+===== OpenSearch
+
+The OpenSearch image now ships the `repository-azure` plugin.
+Azure Blob Storage can be used as a snapshot repository and as a backend for remote-backed storage.
+
+Tracked in https://github.com/stackabletech/docker-images/issues/1684[docker-images#1684].
+
+==== Platform fixes
+
+===== General
+
+====== Miscellaneous
+
+Previously, when `maintenance.customResourceDefinitions.maintain` was set to `false`, this would result in a bug where the default resources (predefined ListenerClasses and SecretClass for listener-operator and secret-operator respectively) weren't installed at all.
+Now the default resources are correctly installed once the CRDs are established, regardless of the `maintenance.customResourceDefinitions.maintain` setting.
+
+Tracked in https://github.com/stackabletech/issues/issues/885[issues#885].
+
+===== Apache Airflow
+
+Previously, the Apache Airflow 3.2.2 scheduler could end up in a crash loop when using the Kubernetes executor if the scheduler Pod was stopped while tasks were still running, for example during a rolling update.
+With this release, the scheduler starts up normally in this situation.
+
+Reported in https://github.com/stackabletech/airflow-operator/issues/855[airflow-operator#855], fixed in https://github.com/stackabletech/docker-images/pull/1709[docker-images#1709].
+
+===== Stackable secret-operator
+
+Previously, when the kubelet published a secret volume again that a running Pod already used, for example after a kubelet restart, secret-operator issued a new certificate that the Pod never received and moved the Pod's expiry annotation to it, so the Pod could keep running on an expired certificate.
+With this release, a volume that is already published keeps its secret, so the Pod is restarted before the certificate it uses expires.
+
+Fixed in https://github.com/stackabletech/secret-operator/issues/772[secret-operator#772].
+
+==== Platform deprecations
+
+===== Apache Project and Stackable <CORE>-operator
+
+==== Platform removals
+
+===== General
+
+* [#product-config-removal-26_11_0.breaking-keyword]**Breaking:**
+  With this release we are removing SLSA provenance attestations for our images and charts for now, because it caused problems for us.
+  We will try to add SLSA provenance attestations again in a future release.
++
+Removed ib https://github.com/stackabletech/actions/pull/123[actions#123].
+* [#product-config-removal-26_11_0.breaking-keyword]**Breaking:**
+  Previously, operators stored a "product-config" in a ConfigMap named `<operator-name>-configmap` in the operator's namespace to validate product configuration properties.
+  This validation logic is now built into the operators, and the ConfigMap has been removed.
+  This removal is only breaking if one relied on this ConfigMap.
++
+Tracked in https://github.com/stackabletech/issues/issues/870[issues#870].
+
+===== Apache Project and Stackable <CORE>-operator
