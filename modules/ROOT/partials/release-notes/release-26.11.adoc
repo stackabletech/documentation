@@ -30,13 +30,13 @@ Implemented in https://github.com/stackabletech/opa-operator/pull/863[opa-operat
 
 * It is possible to automatically select the latest patch version of an SDP release line using the new `spec.image.stackableVersionPolicy` field.
   It currently supports two values:
-** `Exact`: Use the exact version specified or automatically derived.
+** **Exact:** Use the exact version specified or automatically derived.
    This is the current behaviour and the default value to ensure backwards compatibility.
-** `LatestPatch`: Use the latest patch version of an SDP release line.
+** **LatestPatch:** Use the latest patch version of an SDP release line.
 
 +
 --
-Consult the documentation page on xref:xref:concepts:product-image-selection.adoc[product image selection] for more details.
+Consult the documentation page on xref:concepts:product-image-selection.adoc[product image selection] for more details.
 
 Implemented in https://github.com/stackabletech/operator-rs/pull/1226[operator-rs#1226].
 --
