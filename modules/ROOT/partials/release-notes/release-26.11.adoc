@@ -599,7 +599,7 @@ Refer to the xref:operators:supported_versions.adoc[supported versions] document
 
 The following new product versions are now supported:
 
-* Apache Airflow: https://github.com/stackabletech/docker-images/issues/1645[3.3.1]
+* Apache Airflow: https://github.com/stackabletech/docker-images/issues/1645[3.3.2]
 * Apache HBase: https://github.com/stackabletech/docker-images/issues/1647[2.6.7 (LTS)], https://github.com/stackabletech/docker-images/issues/1647[3.0.0 (experimental)]
 * Apache Hive: https://github.com/stackabletech/docker-images/issues/1649[4.2.1 (LTS)]
 * Apache Kafka: https://github.com/stackabletech/docker-images/issues/1650[4.3.1]
@@ -619,6 +619,7 @@ The following product versions are deprecated and will be removed in a later rel
 * Apache Airflow: https://github.com/stackabletech/docker-images/issues/1645[3.2.2]
 * Apache HBase: https://github.com/stackabletech/docker-images/issues/1647[2.6.6]
 * Apache Hive: https://github.com/stackabletech/docker-images/issues/1649[4.2.0]
+* Apache Kafka: https://github.com/stackabletech/docker-images/issues/1702[4.2.1]
 * Apache NiFi: https://github.com/stackabletech/docker-images/issues/1651[2.9.0]
 * Apache Phoenix: https://github.com/stackabletech/docker-images/issues/1647[5.3.1]
 * Apache Spark: https://github.com/stackabletech/docker-images/issues/1655[4.1.2]
