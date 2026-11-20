@@ -677,3 +677,78 @@ These OpenShift versions are no longer supported:
 
 * `4.19`
 * `4.18`
+
+==== Upgrade from 26.7
+
+[TIP]
+====
+Please consult the following upgrade notes when upgrading from 26.7 to 26.11:
+
+* Upgrading OpenSearch to SDP 26.11 requires the nodes StatefulSets to be recreated manually, see the xref:opensearch:usage-guide/upgrade.adoc#_upgrade_from_sdp_26_7_to_26_11[upgrade guide].
+====
+
+===== Using stackablectl
+
+====== Upgrade with a single command
+
+Starting with stackablectl Release 1.0.0 the multiple consecutive commands described below can be shortened to just one command, which executes exactly those steps on its own.
+
+[source,console]
+----
+$ stackablectl release upgrade 26.11
+----
+
+====== Upgrade with multiple consecutive commands
+
+Uninstall the `26.7` release
+
+[source,console]
+----
+$ stackablectl release uninstall 26.7
+
+Uninstalled release '26.7'
+
+Use "stackablectl release list" to list available releases.
+# ...
+----
+
+The operators maintain their own CustomResourceDefinitions (CRDs) and update them automatically on startup, so no manual CRD upgrade step is required.
+See xref:concepts:maintenance/crds.adoc[] for details.
+
+Install the `26.11` release
+
+[source,console]
+----
+$ stackablectl release install 26.11
+
+Installed release '26.11'
+
+Use "stackablectl operator installed" to list installed operators.
+----
+
+===== Using Helm
+
+Use `helm list` to list the currently installed operators.
+
+You can use the following command to uninstall all operators that are part of the `26.7` release:
+
+[source,console]
+----
+$ helm uninstall airflow-operator <PRODUCT>-operator ...
+release "airflow-operator" uninstalled
+release "<PRODUCT>-operator" uninstalled
+...
+----
+
+The operators maintain their own CustomResourceDefinitions (CRDs) and update them automatically on startup, so no manual CRD upgrade step is required.
+See xref:concepts:maintenance/crds.adoc[] for details.
+
+Install the `26.11` release
+
+NOTE: `helm repo` subcommands are not supported for OCI registries.
+The operators are installed directly, without adding the Helm Chart repository first.
+
+[source,console]
+----
+$ helm install --wait <PRODUCT>-operator oci://oci.stackable.tech/sdp-charts/<PRODUCT>-operator --version 26.7.0
+----
