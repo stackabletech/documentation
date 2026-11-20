@@ -650,4 +650,30 @@ Information on how to browse the registry can be found xref:contributor:project-
 * Trino: https://github.com/stackabletech/docker-images/issues/1657[479]
 * Vector: https://github.com/stackabletech/docker-images/issues/1644[0.55.0]
 
-===== Apache Project and Stackable <CORE>-operator
+===== Kubernetes versions
+
+This release supports the following Kubernetes versions:
+
+* `1.37`
+* `1.36`
+* `1.35`
+* `1.34`
+* `1.33`
+
+These Kubernetes versions are no longer supported:
+
+* `1.34`
+* `1.33`
+
+===== OpenShift versions
+
+This release is available in the RedHat Certified Operator Catalog for the following OpenShift versions:
+
+* `4.22`
+* `4.21`
+* `4.20`
+
+These OpenShift versions are no longer supported:
+
+* `4.19`
+* `4.18`
