@@ -1,0 +1,754 @@
+== Release 26.11
+
+=== 26.11.0
+
+[WARNING,caption=Overview of breaking changes]
+====
+The following components of the SDP contain breaking changes for this release:
+
+* link:#kafka-new-features-26_11_0[Apache Kafka]: The controller StatefulSets must be recreated when upgrading
+* link:#label-improvements-26_11_0[Various operators]: StatefulSets maintained by various operators need re-creation because of label changes
+* link:#kafka-improvements-26_11_0[Apache Kafka]: KRaft internal authentication changed
+* link:#product-config-removal-26_11_0[product-config]: The product-config mechanism was removed and is now built into the operators
+====
+
+==== New platform features
+
+===== General
+
+====== Resource info fetcher for Open Policy Agent
+
+This release adds an initial version of resource-info-fetcher, which is similar to user-info-fetcher, but allows to fetch additional metadata about resource information from a data catalog.
+Currently, only DataHub is supported as a data source.
+
+Also, a rego-rule library has been added to make it easier to call resource-info-fetcher from within OPA.
+The API (especially the response) might change in the future once support for more data catalogs is introduced.
+
+Implemented in https://github.com/stackabletech/opa-operator/pull/863[opa-operator#863].
+
+====== Miscellaneous
+
+* It is possible to automatically select the latest patch version of an SDP release line using the new `spec.image.stackableVersionPolicy` field.
+  It currently supports two values:
+** **Exact:** Use the exact version specified or automatically derived.
+   This is the current behaviour and the default value to ensure backwards compatibility.
+** **LatestPatch:** Use the latest patch version of an SDP release line.
+
++
+--
+Consult the documentation page on xref:concepts:product-image-selection.adoc[product image selection] for more details.
+
+Implemented in https://github.com/stackabletech/operator-rs/pull/1226[operator-rs#1226].
+--
+
+* A warning is now logged when a defined object override was not applied.
+  This happens most often when the override does not define the namespace of the object.
+  Previously, this was difficult to debug.
++
+Implemented in https://github.com/stackabletech/operator-rs/pull/1264[operator-rs#1264].
+
+* All our Helm charts now carry a Values Schema reference to validate your values files and a NOTES.txt file which is displayed after a successful installation.
++
+Implemented in https://github.com/stackabletech/operator-templating/pull/646[operator-templating#646].
+
+* The documentation has a guide for upgrading SDP one release at a time, covering the order of operator and product upgrades and how to pause reconciliation so stacklets restart one at a time.
++
+Implemented in https://github.com/stackabletech/documentation/pull/956[documentation#956].
+
+* The documentation has a new guide on connecting Power BI Desktop, the Power BI Service and Power BI Report Server to Trino, using the Stackable ODBC driver or the Stackable PostgreSQL-to-Trino gateway.
++
+Implemented in https://github.com/stackabletech/documentation/pull/963[documentation#963].
+
+* All operator Deployments now have a startup probe attached, which queries the new `/ready` HTTP endpoint to ensure all CRDs necessary for the operator are installed.
++
+Tracked in https://github.com/stackabletech/issues/issues/828[issues#828].
+
+===== Apache Airflow
+
+* This release adds OpenLineage support for Apache Airflow.
++
+--
+The Stackable operator for Apache Airflow can now configure Airflow to emit https://openlineage.io/[OpenLineage] lineage events to a backend such as Marquez.
+It can be enabled with the new `spec.clusterConfig.lineage` field on the AirflowCluster.
+
+** The backend connection can be defined inline or shared between stacklets by referencing an OpenLineageConnection resource in the same namespace.
+   The currently supported transport is `http`.
+** TLS is supported  but see the xref:airflow:usage-guide/openlineage.adoc#_tls[usage guide] for a caveat about `REQUESTS_CA_BUNDLE`.
+** Bearer-token authentication is also supported.
+** The OpenLineage namespace defaults to `default`.
+   It does not fall back to the cluster's Kubernetes namespace, so set `lineage.namespace` explicitly if you want something else.
+
+Implemented in https://github.com/stackabletech/airflow-operator/pull/822[airflow-operator#822].
+--
+
+* The new, optional `spec.webservers.roleConfig.trustedProxies` CRD field was added which enables proxy header handling.
+  This is required when Airflow is deployed behind xref:airflow:usage-guide/reverse-proxy.adoc[reverse proxies] like Istio or Nginx.
++
+Implemented in https://github.com/stackabletech/airflow-operator/pull/835[airflow-operator#835].
+
+[#kafka-new-features-26_11_0]
+===== Apache Kafka
+
+* *Dynamic KRaft controller scaling:*
+  KRaft deployments now support dynamic controller scaling.
+  Previously, scaling controllers required manual intervention to update the voter list.
+  The voter list is now updated dynamically using a sidecar container and a `preStop` container hook.
+  Controllers are scaled one at a time, because KRaft only processes one voter change at a time.
++
+--
+[.breaking-keyword]**Breaking:**
+The `podManagementPolicy` of the controller StatefulSet changed from `Parallel` to `OrderedReady`.
+This is an immutable field, so existing clusters need a manual step when upgrading:
+
+. Delete the StatefulSet with `--cascade=orphan`, so the Pods are not taken down immediately.
+. Let the operator recreate it on the next reconcile, which restarts the Pods.
+
+When doing this, the controller Pods (the whole KRaft quorum) may be restarted simultaneously and be unavailable for a few seconds.
+They are not started sequentially, as `OrderedReady` only orders Pods within one role group.
+
+Implemented in https://github.com/stackabletech/kafka-operator/pull/1010[kafka-operator#1010].
+--
+
+* **OPA authorizer for Apache Kafka 4.x:**
+  Apache Kafka 4.x now supports the OPA authorizer.
+  In particular, KRaft controllers can now also authorize requests against OPA rules.
++
+Tracked in https://github.com/stackabletech/kafka-operator/issues/941[kafka-operator#941], implemented in https://github.com/stackabletech/kafka-operator/pull/1051[kafka-operator#1051].
+
+===== Apache NiFi
+
+* The operator now uses the NiFi health API endpoints for startup and readiness probes.
+  This increases the stability of NiFi installations and makes them more resilient against minimal transient incidents.
++
+Implemented in https://github.com/stackabletech/nifi-operator/pull/976[nifi-operator#976].
+
+* NiFi images now include `QueryNiFiReportingTask`, so it can be used as a Reporting Task.
++
+Implemented in https://github.com/stackabletech/docker-images/pull/1676[docker-images#1676].
+
+===== Apache Phoenix
+
+The Apache Phoenix shipped in the HBase images no longer contains Apache HTrace and its known vulnerabilities, so Phoenix no longer writes traces to an HBase table and TRACE ON/TRACE OFF and the phoenix.trace.* properties have no effect.
+If you rely on Phoenix tracing, use HBase's OpenTelemetry tracing instead.
+
+Tracked in https://github.com/stackabletech/issues/issues/894[issues#894].
+
+===== Apache Spark
+
+* This release adds OpenLineage support for Apache Spark.
++
+--
+The Stackable Data Platform (SDP) Apache Spark operator can now configure Spark applications to emit https://openlineage.io/[OpenLineage] lineage events to a backend such as Marquez.
+You enable it with the new `spec.lineage` field of the SparkApplication custom resource.
+
+Implemented in https://github.com/stackabletech/spark-k8s-operator/pull/726[spark-k8s-operator#726].
+--
+
+* The Spark History server and the Spark Connect server StatefulSets now carry the `restarter.stackable.tech/enabled: "true"` label by default.
+  Thus the  restarter-controller will automatically roll their Pods when a mounted ConfigMap or Secret changes.
++
+Implemented in https://github.com/stackabletech/spark-k8s-operator/pull/754[spark-k8s-operator#754].
+
+* This release introduces the `cleanup` field for the SparkApplication and SparkApplicationTemplate resources which allows users to define when the Spark driver pod will be deleted.
+  You can set different durations for successful and failed Spark runs.
++
+--
+[source,yaml]
+----
+spec:
+  cleanup:
+    afterSucceeded: 10m
+    afterFailed: 1d
+----
+
+Implemented in https://github.com/stackabletech/spark-k8s-operator/pull/808[spark-k8s-operator#808].
+--
+
+===== Apache ZooKeeper
+
+[#zookeeper-new-features-26_11_0.breaking-keyword]**Breaking:**
+ZooKeeper now enables the auto-purge feature for the data directory cleanup per default.
+
+With the default settings, this means, that every 6 hours a cleanup runs, which checks for snapshots and their related transaction logs and only keeps the 3 most recent ones, the remaining ones are deleted.
+This mitigates the data directory filling up the PersistentVolume.
+For more on the process, check the xref:zookeeper:data_directory.adoc#_snapshot_creation_and_auto_purge[documentation page] and for the defaults xref:zookeeper:reference/zoo_cfg_properties.adoc#data-dir-props[the reference].
+
+===== Open Policy Agent
+
+OpaClusters can now be deployed via a Deployment or a DaemonSet.
+Previously, OpaClusters were always deployed as a DaemonSet.
+A Deployment allows PodDisruptionBudgets and sets default affinities to distribute pods evenly across the cluster if possible.
+
+Implemented in https://github.com/stackabletech/opa-operator/pull/873[opa-operator#873].
+
+===== Trino
+
+* This release adds OpenLineage support for Trino
++
+--
+The Stackable operator for Trino operator can now configure Trino clusters to emit https://openlineage.io/[OpenLineage] lineage events to a backend such as Marquez.
+You enable it with the new `spec.clusterConfig.lineage` field of the TrinoCluster custom resource.
+
+Implemented in https://github.com/stackabletech/trino-operator/pull/914[trino-operator#914].
+--
+
+* The Iceberg connector can now connect to an https://trino.io/docs/current/object-storage/metastores.html#rest-catalog[Apache Iceberg REST catalog] via the new `spec.connector.iceberg.catalog.rest` field of the TrinoCatalog.
+  Trino can optionally authenticate against the REST catalog using OAuth2, with either client credentials or a static Bearer token read from a Secret.
+  Connections don't use TLS by default, but webPki or custom CA certificates can be specified.
+  Previously, a REST catalog could only be configured using `configOverrides`.
++
+--
+For this, TrinoCatalog version `v1alpha2` was added and is now the stored version.
+It replaces the optional `spec.connector.iceberg.metastore` field with the required `spec.connector.iceberg.catalog` field, which is one of `rest`, `hiveMetastore` or `userProvided`.
+
+TrinoCatalogs can still be applied and retrieved in `v1alpha1`, and conversion between both versions is handled automatically by default.
+A `v1alpha1` `metastore` becomes `catalog.hiveMetastore`, and a missing `metastore` becomes `catalog.userProvided`, so TrinoCatalogs that configure a REST catalog via `configOverrides` keep working unchanged.
+A `rest` catalog can't be represented in `v1alpha1`, so use `v1alpha2` for all TrinoCatalogs that use one.
+
+See the xref:trino:usage-guide/catalogs/iceberg.adoc[Iceberg connector documentation] for details.
+
+Implemented in https://github.com/stackabletech/trino-operator/pull/950[trino-operator#950].
+--
+
+==== Platform improvements
+
+===== General
+
+====== Vulnerabilities
+
+YYY CVEs were fixed in the Stackable product images.
+This includes X critical and XX high-severity CVEs.
+
+====== Miscellaneous
+
+* The labels on the Kubernetes objects created by the operators have been reworked to carry only the recommended labels that actually apply to each object:
+** The `app.kubernetes.io/component` and `app.kubernetes.io/role-group` labels are no longer set on objects that do not belong to a single role or role group (previously they carried `none` or a placeholder value), and the `app.kubernetes.io/version` label is no longer set on immutable objects such as StatefulSet volume claim templates.
+** [#label-improvements-26_11_0.breaking-keyword]**Breaking:**
+   For some operators this is a breaking change: StatefulSets created by older operator versions cannot be updated in place, and must be deleted once, right after the operator upgrade, so that the operator immediately recreates them with the new labels.
+   Use `--cascade=orphan` to retain the Pods:
+
++
+--
+[source,console]
+----
+$ kubectl delete statefulsets.apps --cascade=orphan <statefulset-name>
+----
+
+The recreated StatefulSet adopts the orphaned Pods and restarts them one after another to apply the new product image.
+There is one StatefulSet per role group, so repeat this for each affected role group.
+--
+** **Do not skip this.** The cluster keeps running and stays healthy, so the error is easy to overlook, but the operator cannot apply any further change to the affected StatefulSets, including the number of replicas and the product version, until they are deleted.
+The reconciliation error looks like this:
+
++
+--
+[source,plain]
+----
+... is invalid: spec: Forbidden: updates to statefulset spec
+for fields other than 'replicas', ...
+----
+--
+** A few operators change other immutable StatefulSet fields in this release for reasons unrelated to the label rework.
+   The symptom and the remedy are the same.
+
++
+--
+The following operators require action.
+For all others, no action is needed.
+
+** **Apache HBase:** Delete the REST server StatefulSet. Cause: version label on the listener PVC.
+** **Apache Kafka:** Delete the KRaft controller StatefulSet. Cause: `podManagementPolicy` changed from `Parallel` to `OrderedReady`.
+** **Apache Spark:** Delete the history server and Spark Connect server StatefulSets. Cause: version label on the listener PVC; the Connect server additionally carried a placeholder `app.kubernetes.io/role-group: default`.
+** **OpenSearch:** Delete the nodes StatefulSet of every role group. Cause: version label on the `listener` and `discovery-service-listener` PVCs.
+
+Tracked in https://github.com/stackabletech/issues/issues/877[issues#877].
+--
+
+* The operator Deployments now run with a restricted security context and a read-only root filesystem, so they can be installed into namespaces that enforce the restricted Pod Security Standard.
+  Nothing changes on OpenShift.
+  File logs (telemetry.fileLog) are now written to `/var/log/<operator>` instead of `/stackable/logs/<operator>`.
++
+Tracked in https://github.com/stackabletech/issues/issues/903[issues#903].
+
+* All product Pods now run with the container runtime's default seccomp profile (`seccompProfile.type: RuntimeDefault`) which blocks a small set of dangerous system calls.
+  It can be overridden with `podOverrides`.
++
+Implemented in https://github.com/stackabletech/operator-rs/pull/1292[operator-rs#1292].
+
+* The logs of the xref:concepts:observability/containerdebug.adoc[containerdebug process] are now part of the xref:concepts:observability/logging.adoc[log aggregation].
+  The Vector agent picks up the JSON log file which containerdebug writes and forwards it to the aggregator, where the events appear with the container name `containerdebug`.
+  There is no Kubernetes container of that name, because containerdebug runs in the background of the product container.
++
+--
+These log files were not written at all before this release.
+The operators set the environment variable `CONTAINERDEBUG_LOG_DIRECTORY`, which containerdebug stopped reading in its version 0.2.0 when it moved to `stackable-telemetry`.
+The operators now set `FILE_LOG_DIRECTORY` instead, along with an hourly rotation that keeps at most two files, so that the logs stay small inside the size-capped log volume.
+
+Tracked in https://github.com/stackabletech/issues/issues/909[issues#909]
+--
+
+===== Apache Airflow
+
+The level configured for the `airflow.task` logger now sets which task logs the Airflow UI shows, so the UI can show only `WARN` and above while log files and the Vector aggregator keep receiving `INFO`.
+If you set this logger above `INFO` to keep task output out of log files and Vector, raise the `file` and `console` levels instead.
+
+Tracked in https://github.com/stackabletech/airflow-operator/issues/650[airflow-operator#650].
+
+[#kafka-improvements-26_11_0]
+===== Apache Kafka
+
+* [.breaking-keyword]**Breaking:**
+  **Simpler internal authentication and bootstrapping for KRaft:**
+  KRaft brokers and controllers now authenticate each other only with the internal TLS certificates of the `internalSecretClass`.
+  This also applies when Kerberos is enabled.
+  The `CONTROLLER` listener always requires a client certificate.
+  Kerberos is now used only on the brokers' client-facing listeners, and controllers no longer have a keytab.
++
+--
+Scaling the brokers no longer restarts any other Pods.
+Scaling the controllers restarts only the controller Pods, one after another.
+
+Implemented in https://github.com/stackabletech/kafka-operator/pull/1069[kafka-operator#1069].
+--
+* **The KRaft bootstrap controller is recorded in the cluster status:**
+  The operator now chooses the bootstrap controller once, at the first reconcile, and stores its node ID in the new optional status field `status.kraftBootstrapControllerNodeId`.
+  Only this controller formats with `--standalone`.
+  All other controllers, including those in role groups added later, join the existing quorum.
+  Adding a controller role group no longer restarts the existing controllers.
++
+--
+If the status is lost, the operator chooses the bootstrap controller again from the current spec.
+A bootstrap controller that loses its PVC can still bootstrap a new quorum.
+
+Implemented in https://github.com/stackabletech/kafka-operator/pull/1061[kafka-operator#1061].
+--
+* **PascalCase values for `spec.clusterConfig.metadataManager`:**
+  Per Kubernetes conventions, the values of `spec.clusterConfig.metadataManager` are now `ZooKeeper` and `KRaft`.
+  The previous lowercase values `zookeeper` and `kraft` are deprecated.
+  They are still accepted for backwards compatibility and may be removed in a future release.
++
+Tracked in https://github.com/stackabletech/kafka-operator/issues/1033[kafka-operator#1033], implemented in https://github.com/stackabletech/kafka-operator/pull/1034[kafka-operator#1034].
+
+===== Apache Spark
+
+All Spark 4.x images now ship with HBase connectors libraries included.
+Past releases only shipped these connectors with the Spark 3.x images because there is no release available for Spark 4.x.
+Since support for Spark 3 has been removed in this release, we decided to offer an upgrade path for users of these connectors.
+The HBase connectors included now are built from a specific commit in the master branch.
+
+Users of Spark 3.x HBase connectors moving to Spark 4.x need to update their code because the connector API has changed.
+
+Tracked in https://github.com/stackabletech/issues/issues/904[issues#904].
+
+[#opa-improvements-26_11_0]
+===== Open Policy Agent
+
+* [.breaking-keyword]**Breaking:**
+  The `userinfo` and `resourceinfo` Rego rule libraries now only return a value when the fetcher responds with `200 OK`, and pass an explicit 5 second timeout.
+  Previously the body of an error response was returned to the policy as if it were user/resource information.
+  This behaviour could result in a rule defaulting a missing field (`object.get(user, "groups", [])` and the like) to interpret a failed lookup as "this user is in no groups" and allowed what it should have denied.
+  Such a lookup is now undefined instead.
+  Rules must require a positive signal to deny on a failed lookup.
+  We also recommend setting `strict-builtin-errors=true` on the decision query wherever possible in OPA clients so that a failed lookup fails the whole decision.
++
+Implemented in https://github.com/stackabletech/opa-operator/pull/863[opa-operator#863].
+
+* [.breaking-keyword]**Breaking:**
+  The volume holding the user-info-fetcher credentials is now called `user-info-fetcher-credentials` instead of `credentials`, so that it does not collide with the resource-info-fetcher's volume.
+  A `podOverrides` patching that volume or its volume mount by name must be adjusted, otherwise it silently stops applying.
++
+Implemented in https://github.com/stackabletech/opa-operator/pull/863[opa-operator#863].
+
+* Products have a soft default affinity to OPA server pods now, favouring local routing to a available OPA pod.
+  This only has an effect when OPA runs as a Deployment.
++
+Tracked in https://github.com/stackabletech/issues/issues/895[issues#895].
+
+===== OpenSearch
+
+The OpenSearch image now ships the `repository-azure` plugin.
+Azure Blob Storage can be used as a snapshot repository and as a backend for remote-backed storage.
+
+Tracked in https://github.com/stackabletech/docker-images/issues/1684[docker-images#1684].
+
+==== Platform fixes
+
+===== General
+
+====== Vulnerability fixes
+
+* Previously, Python, pip, gRPC and Node.js in the Apache Airflow, Apache Superset, OpenSearch Dashboards and Spark Connect client images still trusted the compromised "emSign ECC Root CA - G3" root certificate through their bundled certificate stores.
+  With this release, they use the system trust store or an updated bundle and reject certificates chaining to this root.
+  See the following resources for more details:
+** https://emudhra.we-have-a-problem.com/[Disclosure and affected certificate list]
+** https://groups.google.com/a/mozilla.org/g/dev-security-policy/c/0R3XLJL6FuE[Mozilla dev-security-policy]
+
++
+Fixed in https://github.com/stackabletech/docker-images/pull/1715[docker-images#1715].
+
+* The Java based product images now disable the HotSpot Base64 intrinsics on amd64 (`-XX:-UseBASE64Intrinsics` via `JAVA_TOOL_OPTIONS`) to mitigate https://nvd.nist.gov/vuln/detail/cve-2026-114938[CVE-2026-114938] (Java4Shell), until fixed Temurin builds are available.
+  Setting `JAVA_TOOL_OPTIONS` through `envOverrides` or `podOverrides` replaces this value and thus might remove the mitigation.
++
+Fixed in https://github.com/stackabletech/docker-images/pull/1741[docker-images#1741].
+
+====== Miscellaneous
+
+* Previously the Helm value `serviceAccount.create` would result in a broken deployment, this is now fixed and the value can be used to decide whether a ServiceAccount is created or not.
++
+Fixed in https://github.com/stackabletech/operator-templating/pull/634[operator-templating#634].
+
+* Previously the Helm value `serviceAccount.create` would also control whether a ClusterRoleBinding is created.
+  This was unintentional.
+  The ClusterRoleBinding is now always created.
++
+Fixed in https://github.com/stackabletech/operator-templating/pull/637[operator-templating#637].
+
+* Previously, when `maintenance.customResourceDefinitions.maintain` was set to `false`, this would result in a bug where the default resources (predefined ListenerClasses and SecretClass for listener-operator and secret-operator respectively) weren't installed at all.
+  Now the default resources are correctly installed once the CRDs are established, regardless of the `maintenance.customResourceDefinitions.maintain` setting.
++
+Tracked in https://github.com/stackabletech/issues/issues/885[issues#885].
+
+===== Apache Airflow
+
+* Previously, task logs would not stream into the UI and would not display after the task finished.
+  With this release task logs are served from `BASE_LOG_FOLDER` instead of the `task` handler's `base_log_folder` allowing the UI to display the logs again.
++
+Fixed in https://github.com/stackabletech/airflow-operator/pull/834[airflow-operator#834].
+
+* Previously, there was a race condition importing Python modules from the same Git repository when using git-sync and Kubernetes executors.
+  With this release, we avoid the race conditions by pre-cloning the Git repository not only for Celery-based stacklets, but also for Kubernetes executor-based stacklets.
++
+Fixed in https://github.com/stackabletech/airflow-operator/pull/844[airflow-operator#844].
+
+* Previously, a scheduler container that also ran the dag-processor (Airflow 3.x without a dedicated `dagProcessors` role) supervised the dag-processor, so a dead scheduler left the Pod Running and Ready with nothing scheduling DAGs.
+  With this release, the container supervises the scheduler, so its failure terminates the container and triggers a restart.
++
+Fixed in https://github.com/stackabletech/airflow-operator/pull/847[airflow-operator#847].
+
+* Previously, the Airflow scheduler printed the Airflow admin password to its container log during database initialization.
+  With this release, the password no longer appears in the log.
+  If you collected scheduler logs from an earlier release, rotate the admin password.
++
+Fixed in https://github.com/stackabletech/airflow-operator/pull/886[airflow-operator#886].
+
+* Previously, the Apache Airflow 3.2.2 scheduler could end up in a crash loop when using the Kubernetes executor if the scheduler Pod was stopped while tasks were still running, for example during a rolling update.
+  With this release, the scheduler starts up normally in this situation.
++
+Reported in https://github.com/stackabletech/airflow-operator/issues/855[airflow-operator#855], fixed in https://github.com/stackabletech/docker-images/pull/1709[docker-images#1709].
+
+===== Apache Hadoop
+
+Previously, the HDFS operator configured the AES cipher for HDFS block data transfer under a misspelt key that Hadoop ignored, so with Kerberos enabled, block data was protected only by SASL DIGEST-MD5 encryption, not AES/CTR.
+With this release, the operator uses the correct key in the HDFS Pods and in the discovery ConfigMap, so clients that use the discovery ConfigMap encrypt block data with AES/CTR.
+Other clients have to set `dfs.encrypt.data.transfer.cipher.suites` to `AES/CTR/NoPadding` themselves.
+
+Fixed in https://github.com/stackabletech/hdfs-operator/pull/854[hdfs-operator#854].
+
+===== Apache HBase
+
+Previously, Apache HBase couldn't access Azure Blob Storage or Azure Data Lake Storage (`abfs://`).
+The HBase images contained the `hadoop-azure` library, but it was not on the HBase classpath, so HBase failed with `ClassNotFoundException: Class org.apache.hadoop.fs.azurebfs.AzureBlobFileSystem not found`.
+With this release this is now fixed by moving the library back to where HBase can read it.
+
+Fixed in https://github.com/stackabletech/docker-images/pull/1731[docker-images#1731].
+
+===== Apache Hive
+
+* Previously, users would have to explicitly tell e.g. Trino to use `s3a://` schemes when issuing CTAS against the Hive Metastore.
+  With this release, the `s3://` scheme is registered as well, allowing users to keep the default location scheme.
++
+https://github.com/stackabletech/hive-operator/pull/736[hive-operator#736].
+
+* Previously, changes to an S3Connection referenced by a HiveCluster were not applied until something else triggered a reconciliation.
+  With this release, the Hive operator watches the referenced S3Connection and reconciles the HiveCluster when it changes.
++
+Fixed in https://github.com/stackabletech/hive-operator/pull/765[hive-operator#765].
+
+===== Apache Spark
+
+* Previously, Spark applications would always report success on termination.
+  With this release, the return code is correctly propagated.
++
+Fixed in https://github.com/stackabletech/docker-images/pull/1595[docker-images#1595].
+
+* Previously the application template won and the `config` and `cliOverrides` set on the application were silently discarded.
+  With this release, the precedence rules are followed properly.
++
+Fixed in https://github.com/stackabletech/spark-k8s-operator/pull/745[spark-k8s-operator#745].
+
+* Previously spark connect executors were missing necessary `extra-jars` which lead to deserialisation issues.
+  With this release, `spark.executor.extraClassPath` is now the same for the driver and executor.
++
+Fixed in https://github.com/stackabletech/spark-k8s-operator/pull/755[spark-k8s-operator#755].
+
+* Previously, driver pods were left orphaned if a SparkApplication resource got deleted (e.g. `helm uninstall`).
+  With this release, SparkApplications have an ownerRef on the driver, which ensures correct GC when deleting a SparkApplication.
++
+Fixed in https://github.com/stackabletech/spark-k8s-operator/pull/758[spark-k8s-operator#758].
+
+* Previously `spark-env.sh` and `security.properties` were not mounted for SparkApplication.
+  With this release, both files get correctly mounted and keys in `spark-env.sh` are validated.
++
+Fixed in https://github.com/stackabletech/spark-k8s-operator/pull/761[spark-k8s-operator#761].
+
+* Previously, `sparkImage.pullPolicy` was ignored by driver and executor containers, the Spark Connect executors and init containers.
+  With this release, the `sparkImage.pullPolicy` as well as the `spec.image` is properly used.
++
+Fixed in https://github.com/stackabletech/spark-k8s-operator/pull/764[spark-k8s-operator#764].
+
+* Previously, the submit Job of a SparkApplication and the Spark history server printed S3 credentials to their container logs.
+  With this release, the credentials are no longer printed.
++
+Fixed in https://github.com/stackabletech/spark-k8s-operator/pull/796[spark-k8s-operator#796].
+
+* Previously, as of SDP 26.7, the maximum length of the spark application name was reduced from 63 to 40, to be in line with cluster names for other products.
+  This limitation has now been removed so that spark application names can be up to 63 characters.
++
+Reported in https://github.com/stackabletech/spark-k8s-operator/issues/775[spark-k8s-operator#775], fixed in https://github.com/stackabletech/spark-k8s-operator/pull/809[spark-k8s-operator#809].
+
+===== Apache ZooKeeper
+
+Deleting a ZookeeperZnode, or a whole Namespace containing one, is no longer held up for minutes when the ZooKeeper ensemble has become unreachable.
+The operator's ZooKeeper calls now time out after 10 seconds and are retried, rather than waiting for the operating system to notice that the connection is dead.
+
+Fixed in https://github.com/stackabletech/zookeeper-operator/pull/1109[zookeeper-operator#1109].
+
+===== Open Policy Agent
+
+* A crafted user id or username could alter the request that the user-info-fetcher sent to Keycloak or Entra, for example widening a user search.
+  Such values are now always sent as data and can no longer change the request.
++
+Fixed in https://github.com/stackabletech/opa-operator/pull/909[opa-operator#909].
+- A rootPath configured on the Keycloak backend was dropped from every request the user-info-fetcher sent, so a Keycloak served below a sub-path such as /auth could not be reached.
+  Sub-path deployments now work.
++
+Fixed in https://github.com/stackabletech/opa-operator/pull/909[opa-operator#909].
+
+===== Trino
+
+Previously, a TrinoCluster whose name was not a valid cluster name, for example one longer than 40 characters, crashed the trino-operator, which then restarted in a loop and reconciled no TrinoCluster at all. With this release, such a TrinoCluster fails its own reconcile with an error and all other TrinoClusters are reconciled as usual.
+
+===== Stackable commons-operator
+
+Previously, the operator crashed on ConfigMaps and Secrets with names longer than 63 characters, as the restarter-controller used the object name as part of an annotation key.
+Kubernetes limits it to 63 characters, causing it to reject the entire StatefulSet.
+This is now fixed.
+
+Fixed in https://github.com/stackabletech/commons-operator/pull/443[commons-operator#443].
+
+===== Stackable listener-operator
+
+* Previously, the listener-operator Helm Chart would not propagate `imagePullSecrets` to the CSI provisioner deployment.
+  This was fixed, they are now honored.
++
+Fixed in https://github.com/stackabletech/listener-operator/pull/417[listener-operator#417].
+
+* Previously, the listener-operator followed symlinks when it rewrote listener files in a volume, for example after a kubelet restart, so a Pod that had replaced a file or directory in its listener volume with a symlink could make the operator write listener data outside the volume.
+  With this release, the listener-operator writes listener data only into regular files inside the volume and refuses to publish the volume when it finds a symlink, FIFO or device node in their place.
++
+Fixed in https://github.com/stackabletech/listener-operator/pull/450[listener-operator#450].
+
+===== Stackable secret-operator
+
+* Previously, secret volumes which could not be provisioned made external-provisioner retry forever, which could flood the Kubernetes API server on clusters with high Pod churn.
+  With this release, CreateVolume reports these failures as terminal so the provisioner gives up instead.
++
+Fixed in https://github.com/stackabletech/secret-operator/pull/743[secret-operator#743].
+* Previously, Pods using a SecretClass with the `certManager` backend kept the certificate they were started with, so they eventually ran on an expired certificate even though cert-manager had already renewed it.
+  With this release, these Pods are restarted halfway between cert-manager's renewal time and the certificate's expiry, so they pick up the renewed certificate.
+  If cert-manager has not replaced an already expired certificate, secret-operator refuses to provision it and the Pod waits for a valid one instead of starting with an expired certificate.
++
+Fixed in https://github.com/stackabletech/secret-operator/pull/752[secret-operator#752].
+* Previously, when a secret volume was published again, for example after a kubelet restart, the secret-operator mounted a new tmpfs on top of the existing one each time, which kept Pods in Terminating for minutes.
+With this release, the existing mount is reused.
++
+Fixed in https://github.com/stackabletech/secret-operator/pull/770[secret-operator#770].
+* Previously, the secret-operator followed symlinks when it rewrote secret files in a volume, for example after a kubelet restart, so a Pod that had replaced a file or directory in its secret volume with a symlink could make the operator write secret data outside the volume.
+  With this release, the secret-operator writes secret data only into regular files inside the volume and refuses to publish the volume when it finds a symlink, FIFO or device node in their place.
++
+Fixed in https://github.com/stackabletech/secret-operator/pull/775[secret-operator#775].
+* Previously, when the kubelet published a secret volume again that a running Pod already used, for example after a kubelet restart, secret-operator issued a new certificate that the Pod never received and moved the Pod's expiry annotation to it, so the Pod could keep running on an expired certificate.
+  With this release, a volume that is already published keeps its secret, so the Pod is restarted before the certificate it uses expires.
++
+Fixed in https://github.com/stackabletech/secret-operator/issues/772[secret-operator#772].
+
+==== Platform removals
+
+===== General
+
+* [#product-config-removal-26_11_0.breaking-keyword]**Breaking:**
+  With this release we are removing SLSA provenance attestations for our images and charts for now, because it caused problems for us.
+  We will try to add SLSA provenance attestations again in a future release.
++
+Removed ib https://github.com/stackabletech/actions/pull/123[actions#123].
+* [#product-config-removal-26_11_0.breaking-keyword]**Breaking:**
+  Previously, operators stored a "product-config" in a ConfigMap named `<operator-name>-configmap` in the operator's namespace to validate product configuration properties.
+  This validation logic is now built into the operators, and the ConfigMap has been removed.
+  This removal is only breaking if one relied on this ConfigMap.
++
+Tracked in https://github.com/stackabletech/issues/issues/870[issues#870].
+
+==== Supported versions
+
+===== Product versions
+
+As with previous SDP releases, many product images have been updated to their latest versions.
+Refer to the xref:operators:supported_versions.adoc[supported versions] documentation for a complete overview including LTS versions or deprecations.
+
+====== New versions
+
+The following new product versions are now supported:
+
+* Apache Airflow: https://github.com/stackabletech/docker-images/issues/1645[3.3.2]
+* Apache HBase: https://github.com/stackabletech/docker-images/issues/1647[2.6.7 (LTS)], https://github.com/stackabletech/docker-images/issues/1647[3.0.0 (experimental)]
+* Apache Hive: https://github.com/stackabletech/docker-images/issues/1649[4.2.1 (LTS)]
+* Apache Kafka: https://github.com/stackabletech/docker-images/issues/1650[4.3.1]
+* Apache NiFi: https://github.com/stackabletech/docker-images/issues/1651[2.12.0]
+* Apache Phoenix: https://github.com/stackabletech/docker-images/issues/1647[5.3.2]
+* Apache Spark: https://github.com/stackabletech/docker-images/issues/1655[4.2.0], https://github.com/stackabletech/docker-images/issues/1655[4.1.3 (LTS)]
+* Apache ZooKeeper: https://github.com/stackabletech/docker-images/issues/1658[3.9.6]
+* Open Policy Agent: https://github.com/stackabletech/docker-images/issues/1652[1.20.2]
+* OpenSearch: https://github.com/stackabletech/docker-images/issues/1653[3.8.0]
+* Trino: https://github.com/stackabletech/docker-images/issues/1657[483]
+* Vector: https://github.com/stackabletech/docker-images/issues/1644[0.58.0]
+
+====== Deprecated versions
+
+The following product versions are deprecated and will be removed in a later release:
+
+* Apache Airflow: https://github.com/stackabletech/docker-images/issues/1645[3.2.2]
+* Apache HBase: https://github.com/stackabletech/docker-images/issues/1647[2.6.6]
+* Apache Hive: https://github.com/stackabletech/docker-images/issues/1649[4.2.0]
+* Apache Kafka: https://github.com/stackabletech/docker-images/issues/1702[4.2.1]
+* Apache NiFi: https://github.com/stackabletech/docker-images/issues/1651[2.9.0]
+* Apache Phoenix: https://github.com/stackabletech/docker-images/issues/1647[5.3.1]
+* Apache Spark: https://github.com/stackabletech/docker-images/issues/1655[4.1.2]
+* Apache ZooKeeper: https://github.com/stackabletech/docker-images/issues/1658[3.9.5]
+* Open Policy Agent: https://github.com/stackabletech/docker-images/issues/1652[1.16.2]
+* OpenSearch: https://github.com/stackabletech/docker-images/issues/1653[3.6.0]
+* Trino: https://github.com/stackabletech/docker-images/issues/1657[481]
+
+====== Removed versions
+
+The following product versions are no longer supported.
+These images for released product versions remain available https://oci.stackable.tech/[here,window=_blank].
+Information on how to browse the registry can be found xref:contributor:project-overview.adoc#docker-images[here,window=_blank].
+
+* Apache Airflow: https://github.com/stackabletech/docker-images/issues/1645[3.1.6]
+* Apache Druid: https://github.com/stackabletech/docker-images/issues/1646[30.0.1], https://github.com/stackabletech/docker-images/issues/1646[35.0.1]
+* Apache HBase: https://github.com/stackabletech/docker-images/issues/1647[2.6.4]
+* Apache Hadoop: https://github.com/stackabletech/docker-images/issues/1648[3.4.2]
+* Apache Hive: https://github.com/stackabletech/docker-images/issues/1649[4.0.1]
+* Apache Kafka: https://github.com/stackabletech/docker-images/issues/1650[3.9.1], https://github.com/stackabletech/docker-images/issues/1650[4.1.1]
+* Apache NiFi: https://github.com/stackabletech/docker-images/issues/1651[2.7.2]
+* Apache Phoenix: https://github.com/stackabletech/docker-images/issues/1647[5.3.0]
+* Apache Spark: https://github.com/stackabletech/docker-images/issues/1655[3.5.8], https://github.com/stackabletech/docker-images/issues/1655[4.1.1]
+* Apache Superset: https://github.com/stackabletech/docker-images/issues/1656[6.0.0]
+* Apache ZooKeeper: https://github.com/stackabletech/docker-images/issues/1658[3.9.4]
+* Open Policy Agent: https://github.com/stackabletech/docker-images/issues/1652[1.12.3]
+* OpenSearch: https://github.com/stackabletech/docker-images/issues/1653[3.4.0]
+* Trino: https://github.com/stackabletech/docker-images/issues/1657[479]
+* Vector: https://github.com/stackabletech/docker-images/issues/1644[0.55.0]
+
+===== Kubernetes versions
+
+This release supports the following Kubernetes versions:
+
+* `1.37`
+* `1.36`
+* `1.35`
+* `1.34`
+* `1.33`
+
+These Kubernetes versions are no longer supported:
+
+* `1.34`
+* `1.33`
+
+===== OpenShift versions
+
+This release is available in the RedHat Certified Operator Catalog for the following OpenShift versions:
+
+* `4.22`
+* `4.21`
+* `4.20`
+
+These OpenShift versions are no longer supported:
+
+* `4.19`
+* `4.18`
+
+==== Upgrade from 26.7
+
+[TIP]
+====
+Please consult the following upgrade notes when upgrading from 26.7 to 26.11:
+
+* Upgrading OpenSearch to SDP 26.11 requires the nodes StatefulSets to be recreated manually, see the xref:opensearch:usage-guide/upgrade.adoc#_upgrade_from_sdp_26_7_to_26_11[upgrade guide].
+====
+
+===== Using stackablectl
+
+====== Upgrade with a single command
+
+Starting with stackablectl Release 1.0.0 the multiple consecutive commands described below can be shortened to just one command, which executes exactly those steps on its own.
+
+[source,console]
+----
+$ stackablectl release upgrade 26.11
+----
+
+====== Upgrade with multiple consecutive commands
+
+Uninstall the `26.7` release
+
+[source,console]
+----
+$ stackablectl release uninstall 26.7
+
+Uninstalled release '26.7'
+
+Use "stackablectl release list" to list available releases.
+# ...
+----
+
+The operators maintain their own CustomResourceDefinitions (CRDs) and update them automatically on startup, so no manual CRD upgrade step is required.
+See xref:concepts:maintenance/crds.adoc[] for details.
+
+Install the `26.11` release
+
+[source,console]
+----
+$ stackablectl release install 26.11
+
+Installed release '26.11'
+
+Use "stackablectl operator installed" to list installed operators.
+----
+
+===== Using Helm
+
+Use `helm list` to list the currently installed operators.
+
+You can use the following command to uninstall all operators that are part of the `26.7` release:
+
+[source,console]
+----
+$ helm uninstall airflow-operator <PRODUCT>-operator ...
+release "airflow-operator" uninstalled
+release "<PRODUCT>-operator" uninstalled
+...
+----
+
+The operators maintain their own CustomResourceDefinitions (CRDs) and update them automatically on startup, so no manual CRD upgrade step is required.
+See xref:concepts:maintenance/crds.adoc[] for details.
+
+Install the `26.11` release
+
+NOTE: `helm repo` subcommands are not supported for OCI registries.
+The operators are installed directly, without adding the Helm Chart repository first.
+
+[source,console]
+----
+$ helm install --wait <PRODUCT>-operator oci://oci.stackable.tech/sdp-charts/<PRODUCT>-operator --version 26.7.0
+----

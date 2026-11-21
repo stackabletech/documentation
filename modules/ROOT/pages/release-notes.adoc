@@ -26,6 +26,8 @@ If you are willing to fund its continued development and support, we are open to
 ====
 
 // WARNING: Please keep the empty newlines, otherwise headings are broken.
+include::partial$release-notes/release-26.11.adoc[]
+
 include::partial$release-notes/release-26.7.adoc[]
 
 include::partial$release-notes/release-26.3.adoc[]
