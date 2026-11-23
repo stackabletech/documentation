@@ -36,7 +36,7 @@ spec:
 `interval`:: The time between two runs, for example `30m`, `1h` or `2d`. Defaults to `30m` and must not be zero.
 
 When `containerdebug` is turned off, it writes none of the <<output,output>> described below, and its interval is not validated.
-Product specific configurations, are documented in the corresponding operators.
+Product specific configurations, are documented in the corresponding operators logging documentation.
 
 == Output
 
