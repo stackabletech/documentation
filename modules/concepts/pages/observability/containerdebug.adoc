@@ -1,5 +1,5 @@
 = Container environment
-:description: How the containerdebug tool regularly logs the container environment of Stackable-managed products, including interval and output locations.
+:description: How the containerdebug tool regularly logs the container environment, how to configure or turn it off, and where it writes its output.
 
 All Stackable-managed products regularly log information about their operating
 environment, such as available disk interfaces and network interfaces.
@@ -9,11 +9,34 @@ This logging is performed by our https://github.com/stackabletech/operator-rs/tr
 NOTE: This tool is intended as a debugging aid, and the particular information or
 format should not be considered stable.
 
-== Interval
+== Configuration
 
-The tool collects and logs the state of the container every 30 minutes. It can also
-be triggered manually, by running the `containerdebug` command inside of the
-main product container.
+By default, `containerdebug` collects and logs the state of the container every 30 minutes.
+Following the Stackable xref:stacklet.adoc#roles[roles] and xref:stacklet.adoc#roles[role groups] concept, you can change the interval or turn `containerdebug` off with `config.containerdebug`, either at role or role group level:
+
+[source,yaml]
+----
+spec:
+  workers:
+    config:
+      containerdebug:
+        enabled: true # Default
+        interval: 1h # Run it every hour in all worker roleGroups
+    roleGroups:
+      normal: # Will run every hour, takes configurations above.
+        replicas: 1
+      quiet: # Disabled containerdebug
+        replicas: 1
+        config:
+          containerdebug:
+            enabled: false # Disabled for this `roleGroup`
+----
+
+`enabled`:: Whether the tool runs in the background of the product container. Defaults to `true`.
+`interval`:: The time between two runs, for example `30m`, `1h` or `2d`. Defaults to `30m` and must not be zero.
+
+When `containerdebug` is turned off, it writes none of the <<output,output>> described below, and its interval is not validated.
+Product specific configurations, are documented in the corresponding operators.
 
 == Output
 
