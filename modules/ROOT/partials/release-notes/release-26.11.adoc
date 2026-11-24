@@ -634,7 +634,7 @@ The following product versions are no longer supported.
 These images for released product versions remain available https://oci.stackable.tech/[here,window=_blank].
 Information on how to browse the registry can be found xref:contributor:project-overview.adoc#docker-images[here,window=_blank].
 
-* Apache Airflow: https://github.com/stackabletech/docker-images/issues/1645[3.1.6]
+* Apache Airflow: https://github.com/stackabletech/issues/issues/922[2.9.3], https://github.com/stackabletech/docker-images/issues/1645[3.1.6]
 * Apache Druid: https://github.com/stackabletech/docker-images/issues/1646[30.0.1], https://github.com/stackabletech/docker-images/issues/1646[35.0.1]
 * Apache HBase: https://github.com/stackabletech/docker-images/issues/1647[2.6.4]
 * Apache Hadoop: https://github.com/stackabletech/docker-images/issues/1648[3.4.2]
