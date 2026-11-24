@@ -21,7 +21,7 @@ spec:
     config:
       containerdebug:
         enabled: true # Default
-        interval: 1h # Run it every hour in all worker roleGroups
+        interval: 1h # Run it every hour in all worker role groups
     roleGroups:
       normal: # Will run every hour, takes configurations above.
         replicas: 1
@@ -29,7 +29,7 @@ spec:
         replicas: 1
         config:
           containerdebug:
-            enabled: false # Disabled for this `roleGroup`
+            enabled: false # Disabled for this role group
 ----
 
 `enabled`:: Whether the tool runs in the background of the product container. Defaults to `true`.
