@@ -771,13 +771,13 @@ Stackable::
 +
 [source,console]
 ----
-$ helm install --wait <PRODUCT>-operator oci://oci.stackable.tech/sdp-charts/<PRODUCT>-operator --version 26.7.0
+$ helm install --wait <PRODUCT>-operator oci://oci.stackable.tech/sdp-charts/<PRODUCT>-operator --version 26.11.0
 ----
 
 Quay.io::
 +
 [source,console]
 ----
-$ helm install --wait <PRODUCT>-operator oci://quay.io/stackable/sdp-charts/<PRODUCT>-operator --version 26.7.0
+$ helm install --wait <PRODUCT>-operator oci://quay.io/stackable/sdp-charts/<PRODUCT>-operator --version 26.11.0
 ----
 ====
