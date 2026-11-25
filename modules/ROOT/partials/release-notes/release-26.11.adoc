@@ -44,11 +44,11 @@ https://openlineage.io/[OpenLineage] is an open standard for collecting data lin
 Products emit OpenLineage events while they work and send them to an OpenLineage-compatible backend, such as https://marquezproject.ai/[Marquez] or https://docs.datahub.com/docs/lineage/openlineage[DataHub].
 The back-end stitches the events from all producers into one lineage graph, so you can answer questions such as "where does this table come from?" or "what breaks if I change this column?".
 This release adds a unified way to manage OpenLineage configurations across products.
-The Stackable operators for link:#airflow-openlineage-26_11_0[Apache Airflow], link:#spark-openlineage-26_11_0[Apache Spark] and link:#trino-openlineage-26_11_0[Trino] provide support HTTPS back-ends including authentication.
+The Stackable operators for link:#airflow-openlineage-26_11_0[Apache Airflow], link:#spark-openlineage-26_11_0[Apache Spark] and link:#trino-openlineage-26_11_0[Trino] provide support for HTTPS back-ends including authentication.
 
 ====== Miscellaneous
 
-* It is possible to automatically select the latest patch version of an SDP release line using the new `spec.image.stackableVersionPolicy` field.
+* With this release, it is possible to automatically select the latest patch version of an SDP release line using the new `spec.image.stackableVersionPolicy` field.
   It currently supports two values:
 ** **Exact:** Use the exact version specified or automatically derived.
    This is the current behaviour and the default value to ensure backwards compatibility.
@@ -154,7 +154,7 @@ Implemented in https://github.com/stackabletech/docker-images/pull/1676[docker-i
 
 ===== Apache Phoenix
 
-The Apache Phoenix shipped in the HBase images no longer contains Apache HTrace and its known vulnerabilities, so Phoenix no longer writes traces to an HBase table and TRACE ON/TRACE OFF and the phoenix.trace.* properties have no effect.
+The Apache Phoenix shipped in the HBase images no longer contains Apache HTrace and its known vulnerabilities, so Phoenix no longer writes traces to an HBase table and `TRACE ON`/`TRACE OFF`` and the `phoenix.trace.*` properties have no effect.
 If you rely on Phoenix tracing, use HBase's OpenTelemetry tracing instead.
 
 Tracked in https://github.com/stackabletech/issues/issues/894[issues#894].
@@ -201,7 +201,7 @@ For more on the process, check the xref:zookeeper:data_directory.adoc#_snapshot_
 
 ===== Open Policy Agent
 
-OpaClusters can now be deployed via a Deployment or a DaemonSet.
+OpaClusters can now be deployed as a Deployment or a DaemonSet.
 Previously, OpaClusters were always deployed as a DaemonSet.
 A Deployment allows PodDisruptionBudgets and sets default affinities to distribute pods evenly across the cluster if possible.
 
@@ -267,18 +267,17 @@ $ kubectl delete statefulsets.apps --cascade=orphan <statefulset-name>
 
 The recreated StatefulSet adopts the orphaned Pods and restarts them one after another to apply the new product image.
 There is one StatefulSet per role group, so repeat this for each affected role group.
---
-** **Do not skip this.** The cluster keeps running and stays healthy, so the error is easy to overlook, but the operator cannot apply any further change to the affected StatefulSets, including the number of replicas and the product version, until they are deleted.
+
+**Do not skip this.** The cluster keeps running and stays healthy, so the error is easy to overlook, but the operator cannot apply any further change to the affected StatefulSets, including the number of replicas and the product version, until they are deleted.
 The reconciliation error looks like this:
 
-+
---
 [source,plain]
 ----
 ... is invalid: spec: Forbidden: updates to statefulset spec
 for fields other than 'replicas', ...
 ----
 --
+
 ** A few operators change other immutable StatefulSet fields in this release for reasons unrelated to the label rework.
    The symptom and the remedy are the same.
 
@@ -297,7 +296,7 @@ Tracked in https://github.com/stackabletech/issues/issues/877[issues#877].
 
 * The operator Deployments now run with a restricted security context and a read-only root filesystem, so they can be installed into namespaces that enforce the restricted Pod Security Standard.
   Nothing changes on OpenShift.
-  File logs (telemetry.fileLog) are now written to `/var/log/<operator>` instead of `/stackable/logs/<operator>`.
+  File logs (`telemetry.fileLog`) are now written to `/var/log/<operator>` instead of `/stackable/logs/<operator>`.
 +
 Tracked in https://github.com/stackabletech/issues/issues/903[issues#903].
 
@@ -550,7 +549,8 @@ Fixed in https://github.com/stackabletech/zookeeper-operator/pull/1109[zookeeper
   Such values are now always sent as data and can no longer change the request.
 +
 Fixed in https://github.com/stackabletech/opa-operator/pull/909[opa-operator#909].
-- A rootPath configured on the Keycloak backend was dropped from every request the user-info-fetcher sent, so a Keycloak served below a sub-path such as /auth could not be reached.
+
+* A rootPath configured on the Keycloak backend was dropped from every request the user-info-fetcher sent, so a Keycloak served below a sub-path such as /auth could not be reached.
   Sub-path deployments now work.
 +
 Fixed in https://github.com/stackabletech/opa-operator/pull/909[opa-operator#909].
