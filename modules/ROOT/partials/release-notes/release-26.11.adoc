@@ -68,6 +68,9 @@ Implemented in https://github.com/stackabletech/operator-rs/pull/1226[operator-r
 Implemented in https://github.com/stackabletech/operator-rs/pull/1264[operator-rs#1264].
 
 * All our Helm charts now carry a Values Schema reference to validate your values files and a NOTES.txt file which is displayed after a successful installation.
+  The schema rejects unknown keys, so a values file with stale or misspelled keys makes `helm upgrade` fail.
+  Check your values files with `helm template` before upgrading.
+  `--skip-schema-validation` skips the check.
 +
 Implemented in https://github.com/stackabletech/operator-templating/pull/646[operator-templating#646].
 
@@ -351,6 +354,18 @@ For all others, no action is needed.
 Tracked in https://github.com/stackabletech/issues/issues/877[issues#877].
 --
 
+* [#managed-by-26_11_0.breaking-keyword]**Breaking**
+  The `app.kubernetes.io/managed-by` label changes for Apache HBase, from `hbase.stackable.com_hbasecluster` to `hbase.stackable.tech_hbasecluster`, and for Apache Hadoop HDFS, from `hdfs.stackable.tech_hdfs-operator-hdfs-controller` to `hdfs.stackable.tech_hdfs-controller`.
+  Update monitoring rules, NetworkPolicies and other selectors that match the old values.
+  The operator only cleans up objects that have the new value.
+  Do not remove a role group in the same step as the operator upgrade, because its objects keep the old value and are not removed.
+  To find such leftovers after the upgrade:
++
+[source,console]
+----
+$ kubectl get all,cm,secret,pdb,sa -A -l app.kubernetes.io/managed-by=hbase.stackable.com_hbasecluster
+----
+
 * The operator Deployments now run with a restricted security context and a read-only root filesystem, so they can be installed into namespaces that enforce the restricted Pod Security Standard.
   Nothing changes on OpenShift.
   File logs (`telemetry.fileLog`) are now written to `/var/log/<operator>` instead of `/stackable/logs/<operator>`.
@@ -361,6 +376,64 @@ Tracked in https://github.com/stackabletech/issues/issues/903[issues#903].
   It can be overridden with `podOverrides`.
 +
 Implemented in https://github.com/stackabletech/operator-rs/pull/1292[operator-rs#1292].
+
+* [#run-as-non-root-26_11_0.breaking-keyword]**Breaking**
+  All product Pods now run with `securityContext.runAsNonRoot: true`.
+  The operators set no `runAsUser`, so Kubernetes takes the user from the image and refuses to start a container whose image runs as root, or names its user instead of giving a numeric ID.
+  The Pod then fails with `CreateContainerConfigError`.
+  The Stackable images run as a numeric non-root user and are not affected.
++
+--
+You are affected if you use one of the following:
+
+* a custom product image (`spec.image.custom`) whose last `USER` is root, unset or a name such as `stackable`, for example because it switches to `USER root` to install packages and back to `USER stackable`
+* a Spark job image (`spec.image` of a SparkApplication) that runs as root, because it runs as the `job` init container of the driver Pod
+* `podOverrides` that set `runAsUser: 0`
+
+Before upgrading the operators, check each of these images.
+The result must be a number other than `0`:
+
+[source,console]
+----
+$ docker inspect -f '{{.Config.User}}' <image>
+----
+
+Fix the image with a numeric `USER`, such as `USER 1000`, or set `spec.securityContext.runAsUser: 1000` in the `podOverrides`.
+If an image really has to run as root, restore the behaviour of earlier releases with `podOverrides`:
+
+[source,yaml]
+----
+podOverrides:
+  spec:
+    securityContext:
+      runAsNonRoot: false
+----
+
+For a SparkApplication, set the override on the driver, because the job image runs in the driver Pod, and on the executor and the submit Job if their images are affected.
+--
+
+* [#env-overrides-26_11_0.breaking-keyword]**Breaking**
+  An `envOverrides` entry for an environment variable that the operator also sets now replaces the operator's value.
+  Before this release, the operator's value won, so such overrides had no effect.
+  Before upgrading the operators, review your `envOverrides`: overrides that did nothing so far take effect now.
+
+* Without `spec.image.pullPolicy`, the image pull policy is now `IfNotPresent` for images with a fixed tag.
+  It stays `Always` for floating tags, such as custom images tagged `latest` or without a tag, and for `stackableVersionPolicy: LatestPatch`.
+  A custom image that is pushed again under the same tag is no longer pulled again on nodes that already have it.
+  Set `spec.image.pullPolicy: Always` for such images, or use immutable tags.
+
+* [#vector-26_11_0.breaking-keyword]**Breaking**
+  The Vector agent in the product Pods is now Vector 0.58.
+  The `ADDRESS` in the aggregator discovery ConfigMap must be a URL with a scheme, such as `http://vector-aggregator.vector.svc.cluster.local:6000`, and the aggregator must run Vector 0.58.
+  Otherwise, the logs of all stacklets no longer reach the aggregator.
+  Update the ConfigMap and the aggregator together with the operator upgrade.
+  See xref:concepts:observability/logging.adoc[logging] for the format.
+  To list the discovery ConfigMaps and their addresses:
++
+[source,console]
+----
+$ kubectl get configmap -A -o jsonpath='{range .items[?(@.data.ADDRESS)]}{.metadata.namespace}/{.metadata.name} {.data.ADDRESS}{"\n"}{end}'
+----
 
 * The logs of the xref:concepts:observability/containerdebug.adoc[containerdebug process] are now part of the xref:concepts:observability/logging.adoc[log aggregation].
   The Vector agent picks up the JSON log file which containerdebug writes and forwards it to the aggregator, where the events appear with the container name `containerdebug`.
@@ -418,6 +491,33 @@ Implemented in https://github.com/stackabletech/kafka-operator/pull/1061[kafka-o
   They are still accepted for backwards compatibility and may be removed in a future release.
 +
 Tracked in https://github.com/stackabletech/kafka-operator/issues/1033[kafka-operator#1033], implemented in https://github.com/stackabletech/kafka-operator/pull/1034[kafka-operator#1034].
+
+* [#kafka-topic-crd-26_11_0.breaking-keyword]**Breaking**
+  The operator now also maintains the `kafkatopics.kafka.stackable.tech` CRD and only reports ready once both of its CRDs are installed.
+  If you set `maintenance.customResourceDefinitions.maintain: false`, install the KafkaTopic CRD together with the KafkaCluster CRD before upgrading the operator, otherwise its startup probe fails and the operator restarts in a loop.
+  `kafka-operator crd` prints both CRDs.
+  If you maintain the operator's RBAC yourself, also grant the operator access to `kafkatopics` and `kafkatopics/status`, and the agent permission to create events.
+  To check whether the CRD is installed:
++
+[source,console]
+----
+$ kubectl get crd kafkatopics.kafka.stackable.tech
+----
++
+Implemented in https://github.com/stackabletech/kafka-operator/pull/1050[kafka-operator#1050].
+
+* [#kcat-prober-26_11_0.breaking-keyword]**Breaking**
+  The separate `kcat-prober` container of the broker Pods is removed, and the readiness probe runs in the `kafka` container.
+  `kcat-prober` is no longer accepted in `brokers.config.logging.containers`.
+  Before upgrading the operator, remove it from there and remove `podOverrides` for a container named `kcat-prober`.
+  To find them:
++
+[source,console]
+----
+$ kubectl get kafkaclusters -A -o yaml | grep -n kcat-prober
+----
++
+Implemented in https://github.com/stackabletech/kafka-operator/pull/1010[kafka-operator#1010].
 
 ===== Apache Spark
 
@@ -483,16 +583,27 @@ Fixed in https://github.com/stackabletech/docker-images/pull/1741[docker-images#
 
 ====== Miscellaneous
 
-* Previously, setting the Helm value `serviceAccount.create` resulted in a broken deployment.
-  With this release, the value decides whether a ServiceAccount is created.
+* [#helm-service-account-26_11_0.breaking-keyword]**Breaking**
+  The Helm charts of all operators now honour `serviceAccount.name`, and always render the ClusterRoleBinding `<fullname>-clusterrolebinding`.
+  Previously, `serviceAccount.name` was ignored, and `serviceAccount.create: false` resulted in a broken deployment without a ClusterRoleBinding.
+  This also applies to the CSI workloads of the listener-operator and secret-operator charts.
 +
-Fixed in https://github.com/stackabletech/operator-templating/pull/634[operator-templating#634].
+--
+Before running `helm upgrade`, check your values:
 
-* Previously the Helm value `serviceAccount.create` would also control whether a ClusterRoleBinding is created.
-  This was unintentional.
-  The ClusterRoleBinding is now always created.
-+
-Fixed in https://github.com/stackabletech/operator-templating/pull/637[operator-templating#637].
+* `serviceAccount.create: false` now requires `serviceAccount.name`, otherwise the chart fails to render.
+* A ClusterRoleBinding named `<fullname>-clusterrolebinding` that you created yourself makes `helm upgrade` fail.
+  Delete it, or adopt it into the release.
+* With `serviceAccount.create: true`, a custom `serviceAccount.name` renames the ServiceAccount and the old one is deleted.
+  Update bindings outside the chart that reference the old name.
+
+[source,console]
+----
+$ helm get values <release> -n <namespace> | grep -A3 serviceAccount
+----
+
+Fixed in https://github.com/stackabletech/operator-templating/pull/634[operator-templating#634] and https://github.com/stackabletech/operator-templating/pull/637[operator-templating#637].
+--
 
 * Previously, when `maintenance.customResourceDefinitions.maintain` was set to `false`, this would result in a bug where the default resources (predefined ListenerClasses and SecretClass for listener-operator and secret-operator respectively) weren't installed at all.
   Now the default resources are correctly installed once the CRDs are established, regardless of the `maintenance.customResourceDefinitions.maintain` setting.
@@ -562,8 +673,11 @@ Fixed in https://github.com/stackabletech/hive-operator/pull/765[hive-operator#7
 +
 Fixed in https://github.com/stackabletech/docker-images/pull/1595[docker-images#1595].
 
-* Previously the application template won and the `config` and `cliOverrides` set on the application were silently discarded.
-  With this release, the precedence rules are followed properly.
+* [.breaking-keyword]**Breaking**
+  Previously, the application template won and the `config` and `cliOverrides` set on the application were silently discarded.
+  With this release, the settings of the application take precedence over the ones of the template.
+  The `jvmArgumentOverrides` of both are merged: the template's are applied first and the application's on top of them.
+  Previously, the application's `jvmArgumentOverrides` were discarded when it referenced a template.
 +
 Fixed in https://github.com/stackabletech/spark-k8s-operator/pull/745[spark-k8s-operator#745].
 
@@ -578,12 +692,19 @@ Fixed in https://github.com/stackabletech/spark-k8s-operator/pull/755[spark-k8s-
 Fixed in https://github.com/stackabletech/spark-k8s-operator/pull/758[spark-k8s-operator#758].
 
 * Previously `spark-env.sh` and `security.properties` were not mounted for SparkApplication.
-  With this release, both files get correctly mounted and keys in `spark-env.sh` are validated.
+  With this release, both files get correctly mounted.
+  Keys of the `spark-env.sh` `configOverrides` must be valid shell identifiers (`[a-zA-Z_][a-zA-Z0-9_]*`).
+  A SparkApplication with an invalid key is accepted, but never runs, and the operator logs an error.
 +
 Fixed in https://github.com/stackabletech/spark-k8s-operator/pull/761[spark-k8s-operator#761].
 
 * Previously, `sparkImage.pullPolicy` was ignored by driver and executor containers, the Spark Connect executors and init containers.
   With this release, the `sparkImage.pullPolicy` as well as the `spec.image` is properly used.
++
+[.breaking-keyword]**Breaking**
+The job image (`spec.image`) now gets the pull policy of the Spark image, which is `IfNotPresent` unless set otherwise.
+A job image pushed again under the same tag, such as `latest`, is no longer pulled again on nodes that already have it.
+Set `sparkImage.pullPolicy: Always`, or use immutable tags for job images.
 +
 Fixed in https://github.com/stackabletech/spark-k8s-operator/pull/764[spark-k8s-operator#764].
 
@@ -723,6 +844,17 @@ The following new product versions are now supported:
 * Trino: https://github.com/stackabletech/docker-images/issues/1657[483]
 * Vector: https://github.com/stackabletech/docker-images/issues/1644[0.58.0]
 
+[#product-content-26_11_0]
+Some of the new versions change what the product image contains:
+
+* Apache Airflow 3.3.2 no longer includes the `apache-beam`, `apache-cassandra` and `tabular` providers.
+* Apache HBase 3.0.0 is shipped without Apache Phoenix.
+  If you use Phoenix, stay on HBase 2.6.
+* OpenSearch 3.8.0 creates S3 snapshot repositories with server-side encryption `AES256` by default.
+  Check that your S3 store supports it before moving to 3.8.0.
+* Trino 483 no longer includes the `storage` connector.
+  Remove catalogs with `connector.name=storage` before moving to 483.
+
 ====== Deprecated versions
 
 The following product versions are deprecated and will be removed in a later release:
@@ -744,6 +876,10 @@ The following product versions are deprecated and will be removed in a later rel
 The following product versions are no longer supported.
 Images of released product versions remain available in the https://oci.stackable.tech/[Stackable registry,window=_blank].
 See xref:contributor:project-overview.adoc#docker-images[how to browse the registry,window=_blank].
+
+[#product-lines-removed-26_11_0.breaking-keyword]**Breaking**
+Apache Airflow 2 and Apache Spark 3 are no longer supported.
+Migrate DAGs to Airflow 3 and Spark jobs to Spark 4, and move the stacklets to a supported version, before upgrading the operators.
 
 * Apache Airflow: https://github.com/stackabletech/issues/issues/922[2.9.3], https://github.com/stackabletech/docker-images/issues/1645[3.1.6]
 * Apache Druid: https://github.com/stackabletech/docker-images/issues/1646[30.0.1], https://github.com/stackabletech/docker-images/issues/1646[35.0.1]
