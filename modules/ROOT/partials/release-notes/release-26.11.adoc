@@ -98,6 +98,12 @@ Implemented in https://github.com/stackabletech/airflow-operator/pull/835[airflo
 [#kafka-new-features-26_11_0]
 ===== Apache Kafka
 
+Operator support for KRaft has been almost completely rewritten in this release and we are confident that we can remove the `experimental` label attached to it.
+KRaft based installations are now much more robust and secure.
+Controller scaling is now much more reliable and has almost no impact on broker activity.
+Security wise, controllers use the same internal security mechanisms as the brokers regardless of the client facing protocols.
+Administrative operations are now subject to the same authorization policies as topic and data management operations.
+
 * *Dynamic KRaft controller scaling:*
   KRaft deployments now support dynamic controller scaling.
   Previously, scaling controllers required manual intervention to update the voter list.
