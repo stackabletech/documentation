@@ -6,7 +6,6 @@
 ====
 The following components of the SDP contain breaking changes for this release:
 
-* link:#kafka-new-features-26_11_0[Apache Kafka]: The controller StatefulSets must be recreated when upgrading
 * link:#label-improvements-26_11_0[Various operators]: StatefulSets maintained by various operators need re-creation because of label changes
 * link:#kafka-improvements-26_11_0[Apache Kafka]: KRaft internal authentication changed
 * link:#product-config-removal-26_11_0[product-config]: The product-config mechanism was removed and is now built into the operators
