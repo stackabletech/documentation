@@ -231,8 +231,13 @@ Implemented in https://github.com/stackabletech/trino-operator/pull/950[trino-op
 
 ====== Vulnerabilities
 
-YYY CVEs were fixed in the Stackable product images.
-This includes X critical and XX high-severity CVEs.
+* After two years in beta, during which we refined them alongside the evolving CSAF standard, our Vulnerability Exploitability eXchange (VEX) statements in the CSAF format are now production-ready with SDP 26.11.
+  These machine-readable documents contain the results of our security team's vulnerability analysis.
+  Customers can use them to determine whether a deployed Stackable image is affected by a vulnerability and, if so, how to remediate it.
+  The statements also cover vulnerabilities that scanners report for Stackable images even though the images are not affected, along with the justification for each assessment.
+  If you have a Stackable subscription, contact Stackable for details on how to obtain these documents.
+* 805 CVEs were fixed in the Stackable product images.
+  This includes 68 critical and 366 high-severity CVEs.
 
 ====== Miscellaneous
 
