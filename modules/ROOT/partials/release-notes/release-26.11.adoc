@@ -42,9 +42,9 @@ Implemented in https://github.com/stackabletech/opa-operator/pull/863[opa-operat
 
 https://openlineage.io/[OpenLineage] is an open standard for collecting data lineage: which jobs ran, which datasets they read, and which datasets they wrote.
 Products emit OpenLineage events while they work and send them to an OpenLineage-compatible backend, such as https://marquezproject.ai/[Marquez] or https://docs.datahub.com/docs/lineage/openlineage[DataHub].
-The back-end stitches the events from all producers into one lineage graph, so you can answer questions such as "where does this table come from?" or "what breaks if I change this column?".
+The backend stitches the events from all producers into one lineage graph, so you can answer questions such as "where does this table come from?" or "what breaks if I change this column?".
 This release adds a unified way to manage OpenLineage configurations across products.
-The Stackable operators for link:#airflow-openlineage-26_11_0[Apache Airflow], link:#spark-openlineage-26_11_0[Apache Spark] and link:#trino-openlineage-26_11_0[Trino] provide support for HTTPS back-ends including authentication.
+The Stackable operators for link:#airflow-openlineage-26_11_0[Apache Airflow], link:#spark-openlineage-26_11_0[Apache Spark] and link:#trino-openlineage-26_11_0[Trino] provide support for HTTPS backends including authentication.
 
 ====== Miscellaneous
 
