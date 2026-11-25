@@ -4,6 +4,14 @@
 
 Released on 2026-11-20.
 
+[TIP,caption=Release highlights]
+====
+* OpenLineage support for selected operators and their products
+* Resource info fetcher for Open Policy Agent
+* Much improved KRaft support in the Stackable operator for Apache Kafka
+* The Stackable operator for Trino now supports Apache Iceberg REST catalogs
+====
+
 [WARNING,caption=Overview of breaking changes]
 ====
 The following components of the SDP contain breaking changes for this release:
