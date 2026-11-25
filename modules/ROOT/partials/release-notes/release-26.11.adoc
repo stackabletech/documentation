@@ -576,7 +576,7 @@ Fixed in https://github.com/stackabletech/secret-operator/issues/772[secret-oper
 
 ===== General
 
-* [#product-config-removal-26_11_0.breaking-keyword]**Breaking:**
+* [#slsa-removal-26_11_0.breaking-keyword]**Breaking:**
   With this release we are removing SLSA provenance attestations for our images and charts for now, because it caused problems for us.
   We will try to add SLSA provenance attestations again in a future release.
 +
