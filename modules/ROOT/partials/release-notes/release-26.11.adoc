@@ -111,7 +111,7 @@ Administrative operations are now subject to the same authorization policies as 
   Controllers are scaled one at a time, because KRaft only processes one voter change at a time.
 +
 --
-[.breaking-keyword]**Breaking:**
+[.breaking-keyword]**Breaking**
 The `podManagementPolicy` of the controller StatefulSet changed from `Parallel` to `OrderedReady`.
 This is an immutable field, so existing clusters need a manual step when upgrading:
 
@@ -181,7 +181,7 @@ Implemented in https://github.com/stackabletech/spark-k8s-operator/pull/808[spar
 
 ===== Apache ZooKeeper
 
-[#zookeeper-new-features-26_11_0.breaking-keyword]**Breaking:**
+[#zookeeper-new-features-26_11_0.breaking-keyword]**Breaking**
 ZooKeeper now enables the auto-purge feature for the data directory cleanup per default.
 
 With the default settings, this means, that every 6 hours a cleanup runs, which checks for snapshots and their related transaction logs and only keeps the 3 most recent ones, the remaining ones are deleted.
@@ -238,7 +238,7 @@ This includes X critical and XX high-severity CVEs.
 
 * The labels on the Kubernetes objects created by the operators have been reworked to carry only the recommended labels that actually apply to each object:
 ** The `app.kubernetes.io/component` and `app.kubernetes.io/role-group` labels are no longer set on objects that do not belong to a single role or role group (previously they carried `none` or a placeholder value), and the `app.kubernetes.io/version` label is no longer set on immutable objects such as StatefulSet volume claim templates.
-** [#label-improvements-26_11_0.breaking-keyword]**Breaking:**
+** [#label-improvements-26_11_0.breaking-keyword]**Breaking**
    For some operators this is a breaking change: StatefulSets created by older operator versions cannot be updated in place, and must be deleted once, right after the operator upgrade, so that the operator immediately recreates them with the new labels.
    Use `--cascade=orphan` to retain the Pods:
 
@@ -312,7 +312,7 @@ Tracked in https://github.com/stackabletech/airflow-operator/issues/650[airflow-
 [#kafka-improvements-26_11_0]
 ===== Apache Kafka
 
-* [.breaking-keyword]**Breaking:**
+* [.breaking-keyword]**Breaking**
   **Simpler internal authentication and bootstrapping for KRaft:**
   KRaft brokers and controllers now authenticate each other only with the internal TLS certificates of the `internalSecretClass`.
   This also applies when Kerberos is enabled.
@@ -358,7 +358,7 @@ Tracked in https://github.com/stackabletech/issues/issues/904[issues#904].
 [#opa-improvements-26_11_0]
 ===== Open Policy Agent
 
-* [.breaking-keyword]**Breaking:**
+* [.breaking-keyword]**Breaking**
   The `userinfo` and `resourceinfo` Rego rule libraries now only return a value when the fetcher responds with `200 OK`, and pass an explicit 5 second timeout.
   Previously the body of an error response was returned to the policy as if it were user/resource information.
   This behaviour could result in a rule defaulting a missing field (`object.get(user, "groups", [])` and the like) to interpret a failed lookup as "this user is in no groups" and allowed what it should have denied.
@@ -368,7 +368,7 @@ Tracked in https://github.com/stackabletech/issues/issues/904[issues#904].
 +
 Implemented in https://github.com/stackabletech/opa-operator/pull/863[opa-operator#863].
 
-* [.breaking-keyword]**Breaking:**
+* [.breaking-keyword]**Breaking**
   The volume holding the user-info-fetcher credentials is now called `user-info-fetcher-credentials` instead of `credentials`, so that it does not collide with the resource-info-fetcher's volume.
   A `podOverrides` patching that volume or its volume mount by name must be adjusted, otherwise it silently stops applying.
 +
@@ -591,12 +591,12 @@ Fixed in https://github.com/stackabletech/secret-operator/issues/772[secret-oper
 
 ===== General
 
-* [#slsa-removal-26_11_0.breaking-keyword]**Breaking:**
+* [#slsa-removal-26_11_0.breaking-keyword]**Breaking**
   With this release we are removing SLSA provenance attestations for our images and charts for now, because it caused problems for us.
   We will try to add SLSA provenance attestations again in a future release.
 +
 Removed in https://github.com/stackabletech/actions/pull/123[actions#123].
-* [#product-config-removal-26_11_0.breaking-keyword]**Breaking:**
+* [#product-config-removal-26_11_0.breaking-keyword]**Breaking**
   Previously, operators stored a "product-config" in a ConfigMap named `<operator-name>-configmap` in the operator's namespace to validate product configuration properties.
   This validation logic is now built into the operators, and the ConfigMap has been removed.
   This removal is only breaking if one relied on this ConfigMap.
