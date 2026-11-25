@@ -16,8 +16,11 @@ Released on 2026-11-20.
 ====
 The following components of the SDP contain breaking changes for this release:
 
-* link:#label-improvements-26_11_0[Various operators]: StatefulSets maintained by various operators need re-creation because of label changes
+* The link:#kafka-new-features-26_11_0[Stackable operator for Apache Kafka] and link:#label-improvements-26_11_0[various other operators]: StatefulSets maintained by various operators need re-creation
+* link:#zookeeper-new-features-26_11_0[Apache ZooKeeper]: ZooKeeper now enables the auto-purge feature for the data directory cleanup by default
 * link:#kafka-improvements-26_11_0[Apache Kafka]: KRaft internal authentication changed
+* link:#opa-improvements-26_11_0[Open Policy Agent]: The `userinfo` and `resourceinfo` Rego rule libraries now only return a value when the fetcher responds with `200 OK` and the volume holding the user-info-fetcher credentials is now called `user-info-fetcher-credentials` instead of `credentials`
+* link:#slsa-removal-26_11_0[SLSA]: Provenance attestations for our images and charts are removed again for now
 * link:#product-config-removal-26_11_0[product-config]: The product-config mechanism was removed and is now built into the operators
 ====
 
@@ -190,7 +193,7 @@ Implemented in https://github.com/stackabletech/spark-k8s-operator/pull/808[spar
 ===== Apache ZooKeeper
 
 [#zookeeper-new-features-26_11_0.breaking-keyword]**Breaking**
-ZooKeeper now enables the auto-purge feature for the data directory cleanup per default.
+ZooKeeper now enables the auto-purge feature for the data directory cleanup by default.
 
 With the default settings, this means, that every 6 hours a cleanup runs, which checks for snapshots and their related transaction logs and only keeps the 3 most recent ones, the remaining ones are deleted.
 This mitigates the data directory filling up the PersistentVolume.
