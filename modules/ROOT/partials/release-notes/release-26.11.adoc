@@ -129,17 +129,44 @@ This is an immutable field, so existing clusters need a manual step when upgradi
 . Delete the StatefulSet with `--cascade=orphan`, so the Pods are not taken down immediately.
 . Let the operator recreate it on the next reconcile, which restarts the Pods.
 
-When doing this, the controller Pods (the whole KRaft quorum) may be restarted simultaneously and be unavailable for a few seconds.
-They are not started sequentially, as `OrderedReady` only orders Pods within one role group.
+Within a controller role group, the recreated StatefulSet restarts the Pods one after another.
+The Pods of different controller role groups restart at the same time, so with several controller role groups the KRaft quorum may be unavailable for a few seconds.
 
 Implemented in https://github.com/stackabletech/kafka-operator/pull/1010[kafka-operator#1010].
 --
 
-* **OPA authorizer for Apache Kafka 4.x:**
+* [#kafka-opa-controllers-26_11_0.breaking-keyword]**Breaking**
+  **OPA authorizer for Apache Kafka 4.x:**
   Apache Kafka 4.x now supports the OPA authorizer.
-  In particular, KRaft controllers can now also authorize requests against OPA rules.
+  In KRaft clusters, the controllers now run the OPA authorizer as well, and `super.users` is not set.
 +
-Tracked in https://github.com/stackabletech/kafka-operator/issues/941[kafka-operator#941], implemented in https://github.com/stackabletech/kafka-operator/pull/1051[kafka-operator#1051].
+--
+This affects every KRaft cluster that uses OPA authorization (`spec.clusterConfig.authorization.opa`).
+OPA now authorizes all requests on the `CONTROLLER` listener: the Raft traffic between the controllers, the registrations and heartbeats of the brokers, and the admin requests that brokers forward to the controllers, such as CreateTopics and DeleteTopics, with the principal of the client.
+Forwarded admin requests were not authorized at all before this release.
+
+A policy that treats only the `INTERNAL` listener as internal and only allows the broker certificates, like the example policy of SDP 26.7, denies this traffic.
+The controllers are then expected to lose their quorum and the brokers to be fenced, so the whole Kafka cluster stops working.
+
+Before upgrading the operator, extend the Rego policy:
+
+* Treat the `CONTROLLER` listener as internal and allow the certificate subjects of the controllers.
+* Allow the admin operations, such as creating topics, for the clients that need them.
+  Forwarded client requests arrive on the `CONTROLLER` listener, so client rules must not exclude it.
+
+The extended policy also works with SDP 26.7, where the controllers do not run the authorizer.
+See the xref:kafka:usage-guide/security.adoc[security guide] for an example policy.
+After the upgrade, watch the controller logs for authorization denials while the Pods restart.
+
+To list the affected clusters:
+
+[source,console]
+----
+$ kubectl get kafkaclusters -A -o json | jq -r '.items[] | select(.spec.clusterConfig.authorization.opa != null) | "\(.metadata.namespace)/\(.metadata.name) \(.spec.clusterConfig.metadataManager // "default")"'
+----
+
+Tracked in https://github.com/stackabletech/kafka-operator/issues/941[kafka-operator#941], implemented in https://github.com/stackabletech/kafka-operator/pull/1051[kafka-operator#1051] and https://github.com/stackabletech/kafka-operator/pull/1069[kafka-operator#1069].
+--
 
 ===== Apache NiFi
 
@@ -175,8 +202,12 @@ Implemented in https://github.com/stackabletech/spark-k8s-operator/pull/726[spar
 +
 Implemented in https://github.com/stackabletech/spark-k8s-operator/pull/754[spark-k8s-operator#754].
 
-* This release introduces the `cleanup` field for the SparkApplication and SparkApplicationTemplate resources which allows users to define when the Spark driver pod will be deleted.
+* [.breaking-keyword]**Breaking**
+  This release introduces the `cleanup` field for the SparkApplication and SparkApplicationTemplate resources, which defines when the Spark driver Pod is deleted.
   You can set different durations for successful and failed Spark runs.
+  Without the field, a finished driver Pod is now kept for 10 minutes after a successful run and for 24 hours after a failed one, instead of being deleted right away.
+  To delete driver Pods right away, set both durations to `0s` in your SparkApplications and SparkApplicationTemplates.
+  A SparkApplication that sets `spark.kubernetes.driver.pod.name` together with a non-zero `cleanup` is rejected.
 +
 --
 [source,yaml]
@@ -198,13 +229,25 @@ ZooKeeper now enables the auto-purge feature for the data directory cleanup by d
 With the default settings, a cleanup runs every 6 hours and keeps only the 3 most recent snapshots and their transaction logs.
 Older snapshots and transaction logs are deleted.
 This mitigates the data directory filling up the PersistentVolume.
+
+If you back up or read old snapshots or transaction logs from the data directory, turn auto-purge off before upgrading the operator:
+
+[source,yaml]
+----
+spec:
+  servers:
+    configOverrides:
+      zoo.cfg:
+        autopurge.purgeInterval: "0"
+----
+
 For more on the process, check the xref:zookeeper:data_directory.adoc#_snapshot_creation_and_auto_purge[documentation page] and for the defaults xref:zookeeper:reference/zoo_cfg_properties.adoc#data-dir-props[the reference].
 
 ===== Open Policy Agent
 
-OpaClusters can now be deployed as a Deployment or a DaemonSet.
-Previously, OpaClusters were always deployed as a DaemonSet.
-A Deployment allows PodDisruptionBudgets and sets default affinities to distribute pods evenly across the cluster if possible.
+OpaClusters can now be deployed as a Deployment instead of a DaemonSet, selected with `spec.servers.roleConfig.workloadKind`.
+The default stays `DaemonSet`.
+A Deployment gets a PodDisruptionBudget, configurable with `spec.servers.roleConfig.podDisruptionBudget`, and default affinities that distribute the Pods evenly across the nodes where possible.
 
 Implemented in https://github.com/stackabletech/opa-operator/pull/873[opa-operator#873].
 
@@ -232,6 +275,17 @@ TrinoCatalogs can still be applied and retrieved in `v1alpha1`, and conversion b
 A `v1alpha1` `metastore` becomes `catalog.hiveMetastore`, and a missing `metastore` becomes `catalog.userProvided`, so TrinoCatalogs that configure a REST catalog via `configOverrides` keep working unchanged.
 A `rest` catalog can't be represented in `v1alpha1`, so use `v1alpha2` for all TrinoCatalogs that use one.
 
+[.breaking-keyword]**Breaking**
+The conversion runs in a conversion webhook of the operator, which is only set up when the operator maintains its CRDs.
+If you set `maintenance.customResourceDefinitions.maintain: false`, only `v1alpha2` TrinoCatalogs can be used, and TrinoCatalogs stored as `v1alpha1` are not converted.
+Rewrite every TrinoCatalog as `v1alpha2` before upgrading the operator.
+To check whether the operator maintains its CRDs:
+
+[source,console]
+----
+$ helm get values trino-operator -n <namespace> -a | grep -A2 customResourceDefinitions
+----
+
 See the xref:trino:usage-guide/catalogs/iceberg.adoc[Iceberg connector documentation] for details.
 
 Implemented in https://github.com/stackabletech/trino-operator/pull/950[trino-operator#950].
@@ -254,7 +308,9 @@ Implemented in https://github.com/stackabletech/trino-operator/pull/950[trino-op
 ====== Miscellaneous
 
 * The labels on the Kubernetes objects created by the operators have been reworked to carry only the recommended labels that actually apply to each object:
-** The `app.kubernetes.io/component` and `app.kubernetes.io/role-group` labels are no longer set on objects that do not belong to a single role or role group (previously they carried `none` or a placeholder value), and the `app.kubernetes.io/version` label is no longer set on immutable objects such as StatefulSet volume claim templates.
+** The `app.kubernetes.io/component` and `app.kubernetes.io/role-group` labels are no longer set on objects that do not belong to a single role or role group (previously they carried `none` or a placeholder value).
+   The operators for Apache HBase, Apache Spark and OpenSearch no longer set the `app.kubernetes.io/version` label on StatefulSet volume claim templates.
+   The other operators keep it there, set to `none`.
 ** [#label-improvements-26_11_0.breaking-keyword]**Breaking**
    For some operators this is a breaking change: StatefulSets created by older operator versions cannot be updated in place, and must be deleted once, right after the operator upgrade, so that the operator immediately recreates them with the new labels.
    Use `--cascade=orphan` to retain the Pods:
@@ -287,9 +343,9 @@ for fields other than 'replicas', ...
 The following operators require action.
 For all others, no action is needed.
 
-** **Apache HBase:** Delete the REST server StatefulSet. Cause: version label on the listener PVC.
+** **Apache HBase:** Delete the REST server StatefulSet of every REST server role group. Cause: the version label and the changed `app.kubernetes.io/managed-by` value on the listener PVC.
 ** **Apache Kafka:** Delete the KRaft controller StatefulSet. Cause: `podManagementPolicy` changed from `Parallel` to `OrderedReady`.
-** **Apache Spark:** Delete the history server and Spark Connect server StatefulSets. Cause: version label on the listener PVC; the Connect server additionally carried a placeholder `app.kubernetes.io/role-group: default`.
+** **Apache Spark:** Delete the history server and Spark Connect server StatefulSets. Cause: version label on the listener PVC; the Connect server additionally carried a placeholder `app.kubernetes.io/role-group: default`, and its selector loses that label. The orphaned Pods still match the new selector and are adopted.
 ** **OpenSearch:** Delete the nodes StatefulSet of every role group. Cause: version label on the `listener` and `discovery-service-listener` PVCs.
 
 Tracked in https://github.com/stackabletech/issues/issues/877[issues#877].
@@ -328,8 +384,7 @@ Tracked in https://github.com/stackabletech/airflow-operator/issues/650[airflow-
 [#kafka-improvements-26_11_0]
 ===== Apache Kafka
 
-* [.breaking-keyword]**Breaking**
-  **Simpler internal authentication and bootstrapping for KRaft:**
+* **Simpler internal authentication and bootstrapping for KRaft:**
   KRaft brokers and controllers now authenticate each other only with the internal TLS certificates of the `internalSecretClass`.
   This also applies when Kerberos is enabled.
   The `CONTROLLER` listener always requires a client certificate.
@@ -338,6 +393,10 @@ Tracked in https://github.com/stackabletech/airflow-operator/issues/650[airflow-
 --
 Scaling the brokers no longer restarts any other Pods.
 Scaling the controllers restarts only the controller Pods, one after another.
+
+This needs no action, because KRaft with Kerberos was not supported in SDP 26.7, and the brokers and controllers of SDP 26.7 already present the internal certificate on the `CONTROLLER` listener.
+Only external tools that connect to the `CONTROLLER` listener without that certificate are affected.
+If the cluster uses OPA, see link:#kafka-opa-controllers-26_11_0[the OPA authorizer on the controllers].
 
 Implemented in https://github.com/stackabletech/kafka-operator/pull/1069[kafka-operator#1069].
 --
@@ -552,10 +611,24 @@ Fixed in https://github.com/stackabletech/zookeeper-operator/pull/1109[zookeeper
 +
 Fixed in https://github.com/stackabletech/opa-operator/pull/909[opa-operator#909].
 
-* A rootPath configured on the Keycloak backend was dropped from every request the user-info-fetcher sent, so a Keycloak served below a sub-path such as /auth could not be reached.
-  Sub-path deployments now work.
+* [#keycloak-rootpath-26_11_0.breaking-keyword]**Breaking**
+  Previously, a single-segment `rootPath` configured on the Keycloak backend, such as `/auth`, was dropped from every request the user-info-fetcher sent, so a Keycloak served below such a sub-path could not be reached.
+  With this release, the `rootPath` is honoured.
 +
+--
+A `rootPath` that does not match where Keycloak is served, typically a leftover `/auth` from Keycloak versions before 17, which serve at `/`, now makes every lookup fail.
+User information is then undefined, and policies deny.
+Before upgrading the operator, set `rootPath` to the `--http-relative-path` of your Keycloak, or remove it.
+To check, list the configured values and request the realm's OpenID configuration, which must return `200`:
+
+[source,console]
+----
+$ kubectl get opacluster -A -o jsonpath='{range .items[*]}{.metadata.name}{" "}{.spec.clusterConfig.userInfo.backend.keycloak.rootPath}{"\n"}{end}'
+$ curl -s -o /dev/null -w '%{http_code}' https://<host>:<port><rootPath>/realms/<adminRealm>/.well-known/openid-configuration
+----
+
 Fixed in https://github.com/stackabletech/opa-operator/pull/909[opa-operator#909].
+--
 
 ===== Trino
 
@@ -614,6 +687,9 @@ Fixed in https://github.com/stackabletech/secret-operator/issues/772[secret-oper
 
 * [#slsa-removal-26_11_0.breaking-keyword]**Breaking**
   This release no longer publishes SLSA provenance attestations for the images and Helm charts.
+  If an admission policy in your cluster requires these attestations for Stackable images, the images of this release are rejected and the Pods do not start.
+  Before upgrading, remove that requirement from the policy.
+  Image signatures and SBOM attestations are still published, so policies that verify signatures keep working.
 +
 Removed in https://github.com/stackabletech/actions/pull/123[actions#123].
 * [#product-config-removal-26_11_0.breaking-keyword]**Breaking**
