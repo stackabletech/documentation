@@ -765,10 +765,19 @@ See xref:concepts:maintenance/crds.adoc[] for details.
 
 Install the `26.11` release
 
-NOTE: `helm repo` subcommands are not supported for OCI registries.
-The operators are installed directly, without adding the Helm Chart repository first.
-
+[tabs]
+====
+Stackable::
++
 [source,console]
 ----
 $ helm install --wait <PRODUCT>-operator oci://oci.stackable.tech/sdp-charts/<PRODUCT>-operator --version 26.7.0
 ----
+
+Quay.io::
++
+[source,console]
+----
+$ helm install --wait <PRODUCT>-operator oci://quay.io/stackable/sdp-charts/<PRODUCT>-operator --version 26.7.0
+----
+====
