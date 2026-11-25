@@ -2,6 +2,8 @@
 
 === 26.11.0
 
+Released on 2026-11-20.
+
 [WARNING,caption=Overview of breaking changes]
 ====
 The following components of the SDP contain breaking changes for this release:
