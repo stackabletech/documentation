@@ -27,6 +27,14 @@ The API (especially the response) might change in the future once support for mo
 
 Implemented in https://github.com/stackabletech/opa-operator/pull/863[opa-operator#863].
 
+====== OpenLineage
+
+https://openlineage.io/[OpenLineage] is an open standard for collecting data lineage: which jobs ran, which datasets they read, and which datasets they wrote.
+Products emit OpenLineage events while they work and send them to an OpenLineage-compatible backend, such as https://marquezproject.ai/[Marquez] or https://docs.datahub.com/docs/lineage/openlineage[DataHub].
+The back-end stitches the events from all producers into one lineage graph, so you can answer questions such as "where does this table come from?" or "what breaks if I change this column?".
+This release adds a unified way to manage OpenLineage configurations across products.
+The Stackable operators for link:#airflow-openlineage-26_11_0[Apache Airflow], link:#spark-openlineage-26_11_0[Apache Spark] and link:#trino-openlineage-26_11_0[Trino] provide support HTTPS back-ends including authentication.
+
 ====== Miscellaneous
 
 * It is possible to automatically select the latest patch version of an SDP release line using the new `spec.image.stackableVersionPolicy` field.
@@ -66,7 +74,7 @@ Tracked in https://github.com/stackabletech/issues/issues/828[issues#828].
 
 ===== Apache Airflow
 
-* This release adds OpenLineage support for Apache Airflow.
+* [#airflow-openlineage-26_11_0]#This release adds OpenLineage support for Apache Airflow.#
 +
 --
 The Stackable operator for Apache Airflow can now configure Airflow to emit https://openlineage.io/[OpenLineage] lineage events to a backend such as Marquez.
@@ -136,7 +144,7 @@ Tracked in https://github.com/stackabletech/issues/issues/894[issues#894].
 
 ===== Apache Spark
 
-* This release adds OpenLineage support for Apache Spark.
+* [#spark-openlineage-26_11_0]#This release adds OpenLineage support for Apache Spark.#
 +
 --
 The Stackable Data Platform (SDP) Apache Spark operator can now configure Spark applications to emit https://openlineage.io/[OpenLineage] lineage events to a backend such as Marquez.
@@ -184,7 +192,7 @@ Implemented in https://github.com/stackabletech/opa-operator/pull/873[opa-operat
 
 ===== Trino
 
-* This release adds OpenLineage support for Trino
+* [#trino-openlineage-26_11_0]#This release adds OpenLineage support for Trino#
 +
 --
 The Stackable operator for Trino operator can now configure Trino clusters to emit https://openlineage.io/[OpenLineage] lineage events to a backend such as Marquez.
