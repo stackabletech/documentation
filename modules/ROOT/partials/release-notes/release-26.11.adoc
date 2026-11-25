@@ -359,7 +359,7 @@ Implemented in https://github.com/stackabletech/opa-operator/pull/863[opa-operat
 +
 Implemented in https://github.com/stackabletech/opa-operator/pull/863[opa-operator#863].
 
-* Products have a soft default affinity to OPA server pods now, favouring local routing to a available OPA pod.
+* Products have a soft default affinity to OPA server pods now, favouring local routing to an available OPA pod.
   This only has an effect when OPA runs as a Deployment.
 +
 Tracked in https://github.com/stackabletech/issues/issues/895[issues#895].
@@ -580,7 +580,7 @@ Fixed in https://github.com/stackabletech/secret-operator/issues/772[secret-oper
   With this release we are removing SLSA provenance attestations for our images and charts for now, because it caused problems for us.
   We will try to add SLSA provenance attestations again in a future release.
 +
-Removed ib https://github.com/stackabletech/actions/pull/123[actions#123].
+Removed in https://github.com/stackabletech/actions/pull/123[actions#123].
 * [#product-config-removal-26_11_0.breaking-keyword]**Breaking:**
   Previously, operators stored a "product-config" in a ConfigMap named `<operator-name>-configmap` in the operator's namespace to validate product configuration properties.
   This validation logic is now built into the operators, and the ConfigMap has been removed.
