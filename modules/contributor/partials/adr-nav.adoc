@@ -3,6 +3,5 @@
 include::partial$current_adrs.adoc[]
 *** Deprecated
 **** xref:adr/deprecated/ADR006-choose_orchestrator_storage_backend.adoc[]
-*
 *** Drafts
 **** xref:adr/drafts/ADRx-choose_authorization_engine.adoc[]
