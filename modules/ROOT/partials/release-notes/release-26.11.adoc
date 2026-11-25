@@ -12,16 +12,52 @@ Released on 2026-11-20.
 * The Stackable operator for Trino now supports Apache Iceberg REST catalogs
 ====
 
-[WARNING,caption=Overview of breaking changes]
+[#upgrade-actions-26_11_0]
+[WARNING,caption=Before you upgrade]
 ====
-The following components of the SDP contain breaking changes for this release:
+Follow the xref:guides:upgrading-sdp.adoc[upgrade guide] and work through this list.
+Each item links to its full entry, which says how to check whether you are affected.
 
-* link:#label-improvements-26_11_0[Apache HBase, Apache Kafka, Apache Spark and OpenSearch]: some StatefulSets must be deleted once after the operator upgrade
-* link:#zookeeper-new-features-26_11_0[Apache ZooKeeper]: ZooKeeper now enables the auto-purge feature for the data directory cleanup by default
-* link:#kafka-improvements-26_11_0[Apache Kafka]: KRaft internal authentication changed
-* link:#opa-improvements-26_11_0[Open Policy Agent]: The `userinfo` and `resourceinfo` Rego rule libraries now only return a value when the fetcher responds with `200 OK` and the volume holding the user-info-fetcher credentials is now called `user-info-fetcher-credentials` instead of `credentials`
-* link:#slsa-removal-26_11_0[SLSA]: Provenance attestations for our images and charts have been removed for now
-* link:#product-config-removal-26_11_0[product-config]: The product-config mechanism was removed and is now built into the operators
+*Before upgrading the operators:*
+
+* link:#product-lines-removed-26_11_0[Apache Airflow 2 and Apache Spark 3]: migrate DAGs to Airflow 3 and jobs to Spark 4, and move the stacklets to a supported version
+* link:#kafka-opa-controllers-26_11_0[Apache Kafka with KRaft and OPA]: extend the Rego policy for the controllers, otherwise the cluster is expected to stop working
+* link:#run-as-non-root-26_11_0[Custom images and Spark job images]: make sure they run as a numeric, non-root user
+* link:#helm-service-account-26_11_0[Helm charts]: check the `serviceAccount` values and ClusterRoleBindings you created yourself
+* link:#kafka-topic-crd-26_11_0[Apache Kafka with self-managed CRDs]: install the KafkaTopic CRD
+* link:#kcat-prober-26_11_0[Apache Kafka]: remove `kcat-prober` from the logging settings and `podOverrides`
+* link:#trino-catalog-conversion-26_11_0[Trino with self-managed CRDs]: rewrite all TrinoCatalogs as `v1alpha2`
+* link:#opa-improvements-26_11_0[Open Policy Agent]: review allow rules that use `userinfo` or `resourceinfo`, and rename the `credentials` volume in `podOverrides` to `user-info-fetcher-credentials`
+* link:#keycloak-rootpath-26_11_0[Open Policy Agent with Keycloak]: check that `rootPath` matches where Keycloak is served
+* link:#zookeeper-new-features-26_11_0[Apache ZooKeeper]: turn off the new auto-purge if you need old snapshots
+* link:#env-overrides-26_11_0[`envOverrides`]: review overrides of variables that the operator sets, because they take effect now
+* link:#slsa-removal-26_11_0[SLSA]: remove the provenance requirement from admission policies
+* link:#managed-by-26_11_0[Apache HBase and Apache Hadoop HDFS]: update selectors on `app.kubernetes.io/managed-by`, and do not remove role groups in the same step
+* link:#label-improvements-26_11_0[Apache HBase, OpenSearch and Apache Spark]: changing the product version of the affected StatefulSets on SDP 26.7 already requires deleting them
+* link:#product-config-removal-26_11_0[product-config]: stop relying on the `<operator-name>-configmap` ConfigMap
+
+*Together with the operator upgrade:*
+
+* link:#vector-26_11_0[Vector]: set the aggregator address as a URL with a scheme and run the aggregator on Vector 0.58
+
+*After upgrading the operators:*
+
+* link:#label-improvements-26_11_0[Apache HBase, Apache Kafka, Apache Spark and OpenSearch]: delete the listed StatefulSets once, with `--cascade=orphan`
+* link:#airflow-admin-password-26_11_0[Apache Airflow]: rotate the admin password if you collected scheduler logs
+* link:#spark-s3-credentials-26_11_0[Apache Spark]: rotate the S3 credentials if you collected logs of submit Jobs or the history server
+* link:#spark-cleanup-26_11_0[Apache Spark]: set `cleanup` to `0s` if finished driver Pods must be deleted right away
+====
+
+[NOTE,caption=What changes for your users]
+====
+These changes affect the people who use the products, not only the platform operators:
+
+* link:#product-lines-removed-26_11_0[Apache Airflow 2 and Apache Spark 3] are no longer supported.
+* link:#product-content-26_11_0[New product versions]: Airflow 3.3.2 drops three providers, Trino 483 drops the `storage` connector, HBase 3.0.0 comes without Phoenix, and OpenSearch 3.8.0 encrypts S3 snapshots by default.
+* link:#spark-hbase-connector-26_11_0[Apache Spark with Apache HBase]: the HBase connector API changed for Spark 4.
+* link:#spark-cleanup-26_11_0[Apache Spark]: finished driver Pods are kept for a while by default.
+* link:#airflow-task-log-26_11_0[Apache Airflow]: the level of the `airflow.task` logger now sets which task logs the UI shows.
+* link:#phoenix-tracing-26_11_0[Apache Phoenix]: `TRACE ON` and the `phoenix.trace.*` properties no longer have an effect.
 ====
 
 ==== New platform features
@@ -67,7 +103,7 @@ Implemented in https://github.com/stackabletech/operator-rs/pull/1226[operator-r
 +
 Implemented in https://github.com/stackabletech/operator-rs/pull/1264[operator-rs#1264].
 
-* All our Helm charts now carry a Values Schema reference to validate your values files and a NOTES.txt file which is displayed after a successful installation.
+* All our Helm charts now include a Values Schema reference to validate your values files and a NOTES.txt file which is displayed after a successful installation.
   The schema rejects unknown keys, so a values file with stale or misspelled keys makes `helm upgrade` fail.
   Check your values files with `helm template` before upgrading.
   `--skip-schema-validation` skips the check.
@@ -127,10 +163,7 @@ Administrative operations are now subject to the same authorization policies as 
 --
 [.breaking-keyword]**Breaking**
 The `podManagementPolicy` of the controller StatefulSet changed from `Parallel` to `OrderedReady`.
-This is an immutable field, so existing clusters need a manual step when upgrading:
-
-. Delete the StatefulSet with `--cascade=orphan`, so the Pods are not taken down immediately.
-. Let the operator recreate it on the next reconcile, which restarts the Pods.
+This is an immutable field, so the controller StatefulSets must be deleted once after the operator upgrade, see link:#label-improvements-26_11_0[StatefulSets that must be recreated].
 
 Within a controller role group, the recreated StatefulSet restarts the Pods one after another.
 The Pods of different controller role groups restart at the same time, so with several controller role groups the KRaft quorum may be unavailable for a few seconds.
@@ -184,6 +217,7 @@ Implemented in https://github.com/stackabletech/docker-images/pull/1676[docker-i
 
 ===== Apache Phoenix
 
+[#phoenix-tracing-26_11_0]
 The Apache Phoenix shipped in the HBase images no longer contains Apache HTrace and its known vulnerabilities, so Phoenix no longer writes traces to an HBase table and `TRACE ON`/`TRACE OFF` and the `phoenix.trace.*` properties have no effect.
 If you rely on Phoenix tracing, use HBase's OpenTelemetry tracing instead.
 
@@ -200,12 +234,12 @@ You enable it with the new `spec.lineage` field of the SparkApplication custom r
 Implemented in https://github.com/stackabletech/spark-k8s-operator/pull/726[spark-k8s-operator#726].
 --
 
-* The Spark History server and the Spark Connect server StatefulSets now carry the `restarter.stackable.tech/enabled: "true"` label by default.
+* The Spark History server and the Spark Connect server StatefulSets now have the `restarter.stackable.tech/enabled: "true"` label by default.
   Thus the restarter-controller will automatically roll their Pods when a mounted ConfigMap or Secret changes.
 +
 Implemented in https://github.com/stackabletech/spark-k8s-operator/pull/754[spark-k8s-operator#754].
 
-* [.breaking-keyword]**Breaking**
+* [#spark-cleanup-26_11_0.breaking-keyword]**Breaking**
   This release introduces the `cleanup` field for the SparkApplication and SparkApplicationTemplate resources, which defines when the Spark driver Pod is deleted.
   You can set different durations for successful and failed Spark runs.
   Without the field, a finished driver Pod is now kept for 10 minutes after a successful run and for 24 hours after a failed one, instead of being deleted right away.
@@ -278,7 +312,7 @@ TrinoCatalogs can still be applied and retrieved in `v1alpha1`, and conversion b
 A `v1alpha1` `metastore` becomes `catalog.hiveMetastore`, and a missing `metastore` becomes `catalog.userProvided`, so TrinoCatalogs that configure a REST catalog via `configOverrides` keep working unchanged.
 A `rest` catalog can't be represented in `v1alpha1`, so use `v1alpha2` for all TrinoCatalogs that use one.
 
-[.breaking-keyword]**Breaking**
+[#trino-catalog-conversion-26_11_0.breaking-keyword]**Breaking**
 The conversion runs in a conversion webhook of the operator, which is only set up when the operator maintains its CRDs.
 If you set `maintenance.customResourceDefinitions.maintain: false`, only `v1alpha2` TrinoCatalogs can be used, and TrinoCatalogs stored as `v1alpha1` are not converted.
 Rewrite every TrinoCatalog as `v1alpha2` before upgrading the operator.
@@ -310,23 +344,35 @@ Implemented in https://github.com/stackabletech/trino-operator/pull/950[trino-op
 
 ====== Miscellaneous
 
-* The labels on the Kubernetes objects created by the operators have been reworked to carry only the recommended labels that actually apply to each object:
-** The `app.kubernetes.io/component` and `app.kubernetes.io/role-group` labels are no longer set on objects that do not belong to a single role or role group (previously they carried `none` or a placeholder value).
-   The operators for Apache HBase, Apache Spark and OpenSearch no longer set the `app.kubernetes.io/version` label on StatefulSet volume claim templates.
-   The other operators keep it there, set to `none`.
-** [#label-improvements-26_11_0.breaking-keyword]**Breaking**
-   For some operators this is a breaking change: StatefulSets created by older operator versions cannot be updated in place, and must be deleted once, right after the operator upgrade, so that the operator immediately recreates them with the new labels.
-   Use `--cascade=orphan` to retain the Pods:
-
+* The labels on the Kubernetes objects created by the operators have been reworked so that each object has only the recommended labels that apply to it.
+  The `app.kubernetes.io/component` and `app.kubernetes.io/role-group` labels are no longer set on objects that do not belong to a single role or role group (previously they were set to `none` or a placeholder value).
+  For most operators, this needs no action.
 +
 --
+[#label-improvements-26_11_0.breaking-keyword]**Breaking**
+The following StatefulSets cannot be updated in place and must be deleted once, right after the operator upgrade, so that the operator immediately recreates them:
+
+* **Apache HBase:** the REST server StatefulSet of every REST server role group.
+* **Apache Spark:** the history server and Spark Connect server StatefulSets.
+* **OpenSearch:** the nodes StatefulSet of every role group.
+  See also the xref:opensearch:usage-guide/upgrade.adoc#_upgrade_from_sdp_26_7_to_26_11[OpenSearch upgrade guide].
+* **Apache Kafka:** the KRaft controller StatefulSet of every controller role group.
+
+Up to SDP 26.7, the operators set the `app.kubernetes.io/version` label on the volume claim templates of the HBase, Spark and OpenSearch StatefulSets to the product version, which changes with every upgrade.
+These operators no longer set this label there, so this is the last upgrade that requires deleting these StatefulSets.
+For HBase, the `app.kubernetes.io/managed-by` value on the claim template changes as well.
+The Spark Connect server additionally loses the placeholder `app.kubernetes.io/role-group: default` from its selector.
+The orphaned Pods still match the new selector and are adopted.
+The Kafka controller StatefulSet changes its `podManagementPolicy` from `Parallel` to `OrderedReady`.
+
+Use `--cascade=orphan` to retain the Pods:
+
 [source,console]
 ----
 $ kubectl delete statefulsets.apps --cascade=orphan <statefulset-name>
 ----
 
 The recreated StatefulSet adopts the orphaned Pods and restarts them one after another to apply the new product image.
-There is one StatefulSet per role group, so repeat this for each affected role group.
 
 **Do not skip this.** The cluster keeps running and stays healthy, so the error is easy to overlook, but the operator cannot apply any further change to the affected StatefulSets, including the number of replicas and the product version, until they are deleted.
 The reconciliation error looks like this:
@@ -336,20 +382,9 @@ The reconciliation error looks like this:
 ... is invalid: spec: Forbidden: updates to statefulset spec
 for fields other than 'replicas', ...
 ----
---
 
-** A few operators change other immutable StatefulSet fields in this release for reasons unrelated to the label rework.
-   The symptom and the remedy are the same.
-
-+
---
-The following operators require action.
-For all others, no action is needed.
-
-** **Apache HBase:** Delete the REST server StatefulSet of every REST server role group. Cause: the version label and the changed `app.kubernetes.io/managed-by` value on the listener PVC.
-** **Apache Kafka:** Delete the KRaft controller StatefulSet. Cause: `podManagementPolicy` changed from `Parallel` to `OrderedReady`.
-** **Apache Spark:** Delete the history server and Spark Connect server StatefulSets. Cause: version label on the listener PVC; the Connect server additionally carried a placeholder `app.kubernetes.io/role-group: default`, and its selector loses that label. The orphaned Pods still match the new selector and are adopted.
-** **OpenSearch:** Delete the nodes StatefulSet of every role group. Cause: version label on the `listener` and `discovery-service-listener` PVCs.
+On SDP 26.7, changing the product version of the HBase, Spark and OpenSearch StatefulSets, as the upgrade guide describes for versions that SDP 26.11 no longer supports, fails with the same error.
+Delete them the same way after changing the version.
 
 Tracked in https://github.com/stackabletech/issues/issues/877[issues#877].
 --
@@ -449,6 +484,7 @@ Tracked in https://github.com/stackabletech/issues/issues/909[issues#909].
 
 ===== Apache Airflow
 
+[#airflow-task-log-26_11_0]
 The level configured for the `airflow.task` logger now sets which task logs the Airflow UI shows, so the UI can show only `WARN` and above while log files and the Vector aggregator keep receiving `INFO`.
 If you set this logger above `INFO` to keep task output out of log files and Vector, raise the `file` and `console` levels instead.
 
@@ -521,6 +557,7 @@ Implemented in https://github.com/stackabletech/kafka-operator/pull/1010[kafka-o
 
 ===== Apache Spark
 
+[#spark-hbase-connector-26_11_0]
 All Spark 4.x images now ship with the HBase connector libraries.
 Past releases only shipped these connectors with the Spark 3.x images because there is no release available for Spark 4.x.
 Since support for Spark 3 has been removed in this release, we decided to offer an upgrade path for users of these connectors.
@@ -544,7 +581,7 @@ Tracked in https://github.com/stackabletech/issues/issues/904[issues#904].
 Implemented in https://github.com/stackabletech/opa-operator/pull/863[opa-operator#863].
 
 * [.breaking-keyword]**Breaking**
-  The volume holding the user-info-fetcher credentials is now called `user-info-fetcher-credentials` instead of `credentials`, so that it does not collide with the resource-info-fetcher's volume.
+  The volume with the user-info-fetcher credentials is now called `user-info-fetcher-credentials` instead of `credentials`, so that it does not collide with the resource-info-fetcher's volume.
   A `podOverrides` patching that volume or its volume mount by name must be adjusted, otherwise it silently stops applying.
 +
 Implemented in https://github.com/stackabletech/opa-operator/pull/863[opa-operator#863].
@@ -627,7 +664,7 @@ Fixed in https://github.com/stackabletech/airflow-operator/pull/844[airflow-oper
 +
 Fixed in https://github.com/stackabletech/airflow-operator/pull/847[airflow-operator#847].
 
-* Previously, the Airflow scheduler printed the Airflow admin password to its container log during database initialization.
+* [#airflow-admin-password-26_11_0]#Previously, the Airflow scheduler printed the Airflow admin password to its container log during database initialization.#
   With this release, the password no longer appears in the log.
   If you collected scheduler logs from an earlier release, rotate the admin password.
 +
@@ -708,8 +745,9 @@ Set `sparkImage.pullPolicy: Always`, or use immutable tags for job images.
 +
 Fixed in https://github.com/stackabletech/spark-k8s-operator/pull/764[spark-k8s-operator#764].
 
-* Previously, the submit Job of a SparkApplication and the Spark history server printed S3 credentials to their container logs.
+* [#spark-s3-credentials-26_11_0]#Previously, the submit Job of a SparkApplication and the Spark history server printed S3 credentials to their container logs.#
   With this release, the credentials are no longer printed.
+  If you collected these logs from an earlier release, rotate the S3 credentials.
 +
 Fixed in https://github.com/stackabletech/spark-k8s-operator/pull/796[spark-k8s-operator#796].
 
@@ -929,9 +967,7 @@ These OpenShift versions are no longer supported:
 
 [TIP]
 ====
-Please consult the following upgrade notes when upgrading from 26.7 to 26.11:
-
-* Upgrading OpenSearch to SDP 26.11 requires the nodes StatefulSets to be recreated manually, see the xref:opensearch:usage-guide/upgrade.adoc#_upgrade_from_sdp_26_7_to_26_11[upgrade guide].
+Work through the link:#upgrade-actions-26_11_0[list of actions] at the top of these release notes, and follow the xref:guides:upgrading-sdp.adoc[upgrade guide].
 ====
 
 ===== Using stackablectl
