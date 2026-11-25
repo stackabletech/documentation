@@ -22,7 +22,7 @@ The following components of the SDP contain breaking changes for this release:
 This release adds an initial version of resource-info-fetcher, which is similar to user-info-fetcher, but allows to fetch additional metadata about resource information from a data catalog.
 Currently, only DataHub is supported as a data source.
 
-Also, a rego-rule library has been added to make it easier to call resource-info-fetcher from within OPA.
+Also, a Rego rule library has been added to make it easier to call resource-info-fetcher from within OPA.
 The API (especially the response) might change in the future once support for more data catalogs is introduced.
 
 Implemented in https://github.com/stackabletech/opa-operator/pull/863[opa-operator#863].
