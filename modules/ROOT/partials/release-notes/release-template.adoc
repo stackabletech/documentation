@@ -25,6 +25,8 @@ The following components of the SDP contain breaking changes for this release:
 
 ==== New platform features
 
+Mark any breaking changes with [.breaking-keyword]**Breaking**.
+
 All subsections must follow this order:
 
 * Apache Airflow
@@ -57,8 +59,6 @@ Potential sub headers...
 
 ==== Platform improvements
 
-Mark any breaking changes with *Breaking:*.
-
 ===== General
 
 ====== Vulnerabilities
@@ -83,8 +83,6 @@ This includes X critical and XX high-severity CVEs.
 ===== Apache Project and Stackable <CORE>-operator
 
 ==== Platform removals
-
-Mark any breaking changes with *Breaking:*.
 
 ===== General
 
@@ -216,27 +214,22 @@ See xref:concepts:maintenance/crds.adoc[] for details.
 
 Install the `YY.M` release
 
-NOTE: `helm repo` subcommands are not supported for OCI registries.
-The operators are installed directly, without adding the Helm Chart repository first.
-
+[tabs]
+====
+Stackable::
++
 [source,console]
 ----
-helm install --wait airflow-operator oci://oci.stackable.tech/sdp-charts/airflow-operator --version YY.M.X
-helm install --wait commons-operator oci://oci.stackable.tech/sdp-charts/commons-operator --version YY.M.X
-helm install --wait druid-operator oci://oci.stackable.tech/sdp-charts/druid-operator --version YY.M.X
-helm install --wait hbase-operator oci://oci.stackable.tech/sdp-charts/hbase-operator --version YY.M.X
-helm install --wait hdfs-operator oci://oci.stackable.tech/sdp-charts/hdfs-operator --version YY.M.X
-helm install --wait hive-operator oci://oci.stackable.tech/sdp-charts/hive-operator --version YY.M.X
-helm install --wait kafka-operator oci://oci.stackable.tech/sdp-charts/kafka-operator --version YY.M.X
-helm install --wait listener-operator oci://oci.stackable.tech/sdp-charts/listener-operator --version YY.M.X
-helm install --wait nifi-operator oci://oci.stackable.tech/sdp-charts/nifi-operator --version YY.M.X
-helm install --wait opa-operator oci://oci.stackable.tech/sdp-charts/opa-operator --version YY.M.X
-helm install --wait secret-operator oci://oci.stackable.tech/sdp-charts/secret-operator --version YY.M.X
-helm install --wait spark-k8s-operator oci://oci.stackable.tech/sdp-charts/spark-k8s-operator --version YY.M.X
-helm install --wait superset-operator oci://oci.stackable.tech/sdp-charts/superset-operator --version YY.M.X
-helm install --wait trino-operator oci://oci.stackable.tech/sdp-charts/trino-operator --version YY.M.X
-helm install --wait zookeeper-operator oci://oci.stackable.tech/sdp-charts/zookeeper-operator --version YY.M.X
+$ helm install --wait <PRODUCT>-operator oci://oci.stackable.tech/sdp-charts/<PRODUCT>-operator --version 26.7.0
 ----
+
+Quay.io::
++
+[source,console]
+----
+$ helm install --wait <PRODUCT>-operator oci://quay.io/stackable/sdp-charts/<PRODUCT>-operator --version 26.7.0
+----
+====
 
 [#known-issues-YY_M_X]
 ==== Known issues
