@@ -8,7 +8,7 @@ Released on 2026-11-20.
 ====
 * OpenLineage support for selected operators and their products
 * Resource info fetcher for Open Policy Agent
-* Much improved KRaft support in the Stackable operator for Apache Kafka
+* Improved KRaft support in the Stackable operator for Apache Kafka
 * The Stackable operator for Trino now supports Apache Iceberg REST catalogs
 ====
 
@@ -20,7 +20,7 @@ The following components of the SDP contain breaking changes for this release:
 * link:#zookeeper-new-features-26_11_0[Apache ZooKeeper]: ZooKeeper now enables the auto-purge feature for the data directory cleanup by default
 * link:#kafka-improvements-26_11_0[Apache Kafka]: KRaft internal authentication changed
 * link:#opa-improvements-26_11_0[Open Policy Agent]: The `userinfo` and `resourceinfo` Rego rule libraries now only return a value when the fetcher responds with `200 OK` and the volume holding the user-info-fetcher credentials is now called `user-info-fetcher-credentials` instead of `credentials`
-* link:#slsa-removal-26_11_0[SLSA]: Provenance attestations for our images and charts are removed again for now
+* link:#slsa-removal-26_11_0[SLSA]: Provenance attestations for our images and charts have been removed for now
 * link:#product-config-removal-26_11_0[product-config]: The product-config mechanism was removed and is now built into the operators
 ====
 
@@ -88,12 +88,12 @@ Tracked in https://github.com/stackabletech/issues/issues/828[issues#828].
 * [#airflow-openlineage-26_11_0]#This release adds OpenLineage support for Apache Airflow.#
 +
 --
-The Stackable operator for Apache Airflow can now configure Airflow to emit https://openlineage.io/[OpenLineage] lineage events to a backend such as Marquez.
+The Stackable operator for Apache Airflow can now configure Airflow to emit https://openlineage.io/[OpenLineage] lineage events to a backend such as Marquez or DataHub.
 It can be enabled with the new `spec.clusterConfig.lineage` field on the AirflowCluster.
 
 ** The backend connection can be defined inline or shared between stacklets by referencing an OpenLineageConnection resource in the same namespace.
    The currently supported transport is `http`.
-** TLS is supported  but see the xref:airflow:usage-guide/openlineage.adoc#_tls[usage guide] for a caveat about `REQUESTS_CA_BUNDLE`.
+** TLS is supported, but see the xref:airflow:usage-guide/openlineage.adoc#_tls[usage guide] for the caveat about `REQUESTS_CA_BUNDLE`.
 ** Bearer-token authentication is also supported.
 ** The OpenLineage namespace defaults to `default`.
    It does not fall back to the cluster's Kubernetes namespace, so set `lineage.namespace` explicitly if you want something else.
