@@ -83,9 +83,9 @@ The tutorial has 3 steps:
 
 === Configure LDAP
 
-The AuthenticationClass is the main resource required to configure the products, but it depends on some other resources. Below you will create a Secret, SecretClass and the AuthenticationClass. Use `kubectl apply` to deploy the manifests shown below.
+The AuthenticationClass is the main resource required to configure the products, but it depends on some other resources. Below you will create a Secret, SecretClass and the AuthenticationClass. Use `kubectl apply -n trino-superset-s3` to deploy the manifests shown below.
 
-NOTE: If you're having problems here, install the `openldap` stack instead of `tutorial-openldap` which comes with an already configured AuthenticationClass ready to use. You can then skip to <<superset, configuring superset>>.
+NOTE: If you're having problems here, install the `openldap` stack instead of `tutorial-openldap` which comes with an already configured AuthenticationClass ready to use. Make sure you install it into the same namespace as the `trino-superset-s3` stack. You can then skip to <<superset, configuring superset>>.
 
 First, create a secret that contains the LDAP bind credentials which products can use to authenticate with LDAP:
 
@@ -162,9 +162,8 @@ spec:
   image:
     productVersion: ...
   clusterConfig:
-    listenerClass: ...
-    credentialsSecret: superset-credentials
-    mapboxSecret: ...
+    credentialsSecret: superset-admin-credentials
+    metadataDatabase: ...
   nodes:
     roleGroups:
       default:
@@ -205,9 +204,8 @@ spec:
     authentication:
       - authenticationClass: openldap
         userRegistrationRole: Admin
-    listenerClass: ...
-    credentialsSecret: superset-credentials
-    mapboxSecret: ...
+    credentialsSecret: superset-admin-credentials
+    metadataDatabase: ...
   nodes:
     roleGroups:
       default:
