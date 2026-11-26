@@ -128,7 +128,7 @@ Tracked in https://github.com/stackabletech/issues/issues/828[issues#828].
 * [#airflow-openlineage-26_11_0]#This release adds OpenLineage support for Apache Airflow.#
 +
 --
-The operator for can now configure Airflow to emit https://openlineage.io/[OpenLineage] lineage events to a backend such as Marquez or DataHub.
+The operator can now configure Airflow to emit https://openlineage.io/[OpenLineage] lineage events to a backend such as Marquez or DataHub.
 It can be enabled with the new `spec.clusterConfig.lineage` field on the AirflowCluster.
 
 ** The backend connection can be defined inline or shared between stacklets by referencing an OpenLineageConnection resource in the same namespace.
