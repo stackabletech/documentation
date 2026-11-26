@@ -70,7 +70,7 @@ This release adds an initial version of resource-info-fetcher, which is similar 
 DataHub is the only supported data source.
 
 Also, a Rego rule library has been added to make it easier to call resource-info-fetcher from within OPA.
-The API, especially the response, may change when support for more data catalogs is added.
+The API, especially the response, is subject to change when support for more data catalogs is added.
 
 Implemented in https://github.com/stackabletech/opa-operator/pull/863[opa-operator#863].
 
