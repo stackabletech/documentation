@@ -66,7 +66,7 @@ These changes affect the people who use the products, not only the platform oper
 
 ====== Resource info fetcher for Open Policy Agent
 
-This release adds an initial version of resource-info-fetcher, which is similar to user-info-fetcher, but allows to fetch additional metadata about resource information from a data catalog.
+This release adds an initial version of resource-info-fetcher, which is similar to user-info-fetcher, but allows additional metadata about resource information to be fetched from a data catalog.
 DataHub is the only supported data source.
 
 Also, a Rego rule library has been added to make it easier to call resource-info-fetcher from within OPA.
@@ -228,7 +228,7 @@ Tracked in https://github.com/stackabletech/issues/issues/894[issues#894].
 * [#spark-openlineage-26_11_0]#This release adds OpenLineage support for Apache Spark.#
 +
 --
-The Stackable Data Platform (SDP) Apache Spark operator can now configure Spark applications to emit https://openlineage.io/[OpenLineage] lineage events to a backend such as Marquez.
+The Stackable Data Platform (SDP) Apache Spark operator can now configure Spark applications to emit https://openlineage.io/[OpenLineage] lineage events to a backend such as Marquez or DataHub.
 You enable it with the new `spec.lineage` field of the SparkApplication custom resource.
 
 Implemented in https://github.com/stackabletech/spark-k8s-operator/pull/726[spark-k8s-operator#726].
@@ -278,7 +278,7 @@ spec:
         autopurge.purgeInterval: "0"
 ----
 
-For more on the process, check the xref:zookeeper:data_directory.adoc#_snapshot_creation_and_auto_purge[documentation page] and for the defaults xref:zookeeper:reference/zoo_cfg_properties.adoc#data-dir-props[the reference].
+For more on the process, check the xref:zookeeper:data_directory.adoc#_snapshot_creation_and_auto_purge[documentation page] and xref:zookeeper:reference/zoo_cfg_properties.adoc#data-dir-props[the reference] for the defaults.
 
 ===== Open Policy Agent
 
@@ -293,8 +293,8 @@ Implemented in https://github.com/stackabletech/opa-operator/pull/873[opa-operat
 * [#trino-openlineage-26_11_0]#This release adds OpenLineage support for Trino#
 +
 --
-The Stackable operator for Trino can now configure Trino clusters to emit https://openlineage.io/[OpenLineage] lineage events to a backend such as Marquez.
-You enable it with the new `spec.clusterConfig.lineage` field of the TrinoCluster custom resource.
+The Stackable operator for Trino can now configure Trino clusters to emit https://openlineage.io/[OpenLineage] lineage events to a backend such as Marquez or DataHub.
+You can enable it with the new `spec.clusterConfig.lineage` field of the TrinoCluster custom resource.
 
 Implemented in https://github.com/stackabletech/trino-operator/pull/914[trino-operator#914].
 --
@@ -475,7 +475,7 @@ $ kubectl get configmap -A -o jsonpath='{range .items[?(@.data.ADDRESS)]}{.metad
 
 * The logs of the xref:concepts:observability/containerdebug.adoc[containerdebug process] are now part of the xref:concepts:observability/logging.adoc[log aggregation].
   The Vector agent picks up the JSON log file which containerdebug writes and forwards it to the aggregator, where the events appear with the container name `containerdebug`.
-  There is no Kubernetes container of that name, because containerdebug runs in the background of the product container.
+  There is no actual container of that name, because containerdebug runs in the background of the product container.
 +
 --
 These log files were not written at all before this release.
@@ -489,7 +489,7 @@ Tracked in https://github.com/stackabletech/issues/issues/909[issues#909].
 
 [#airflow-task-log-26_11_0]
 The level configured for the `airflow.task` logger now sets which task logs the Airflow UI shows, so the UI can show only `WARN` and above while log files and the Vector aggregator keep receiving `INFO`.
-If you set this logger above `INFO` to keep task output out of log files and Vector, raise the `file` and `console` levels instead.
+If you have set this logger above `INFO` to keep task output out of log files and Vector, raise the `file` and `console` levels instead.
 
 Tracked in https://github.com/stackabletech/airflow-operator/issues/650[airflow-operator#650].
 
@@ -563,9 +563,9 @@ Tracked in https://github.com/stackabletech/issues/issues/904[issues#904].
 * [.breaking-keyword]**Breaking**
   The `userinfo` and `resourceinfo` Rego rule libraries now only return a value when the fetcher responds with `200 OK`, and pass an explicit 5 second timeout.
   Previously the body of an error response was returned to the policy as if it were user/resource information.
-  A rule that defaults a missing field (`object.get(user, "groups", [])` and the like) therefore read a failed lookup as "this user is in no groups" and could allow what it should have denied.
+  A rule that defaulted a missing field (eg: `object.get(user, "groups", [])` and the like) would have read a failed lookup as "this user is in no groups" and could have allowed what it should have denied.
   Such a lookup is now undefined instead.
-  Author rules so that they require a positive signal to allow, so that a failed lookup denies.
+  We recommend that you author rules so that they require a positive signal to allow, so that a failed lookup denies.
   We also recommend setting `strict-builtin-errors=true` on the decision query wherever possible in OPA clients so that a failed lookup fails the whole decision.
 +
 Implemented in https://github.com/stackabletech/opa-operator/pull/863[opa-operator#863].
@@ -714,7 +714,7 @@ Fixed in https://github.com/stackabletech/spark-k8s-operator/pull/745[spark-k8s-
 Fixed in https://github.com/stackabletech/spark-k8s-operator/pull/755[spark-k8s-operator#755].
 
 * Previously, driver pods were left orphaned if a SparkApplication resource got deleted (e.g. `helm uninstall`).
-  With this release, SparkApplications have an ownerRef on the driver, which ensures correct GC when deleting a SparkApplication.
+  With this release, SparkApplications have an ownerRef on the driver, which ensures correct Garbage Collection when deleting a SparkApplication.
 +
 Fixed in https://github.com/stackabletech/spark-k8s-operator/pull/758[spark-k8s-operator#758].
 
@@ -743,7 +743,7 @@ Fixed in https://github.com/stackabletech/spark-k8s-operator/pull/764[spark-k8s-
 +
 Fixed in https://github.com/stackabletech/spark-k8s-operator/pull/796[spark-k8s-operator#796].
 
-* Previously, as of SDP 26.7, the maximum length of the spark application name was reduced from 63 to 40, to be in line with cluster names for other products.
+* In the previous SDP release (26.7), the maximum length of the spark application name was reduced from 63 to 40, to be in line with cluster names for other products.
   This limitation has now been removed so that spark application names can be up to 63 characters.
 +
 Reported in https://github.com/stackabletech/spark-k8s-operator/issues/775[spark-k8s-operator#775], fixed in https://github.com/stackabletech/spark-k8s-operator/pull/809[spark-k8s-operator#809].
@@ -757,7 +757,7 @@ Fixed in https://github.com/stackabletech/zookeeper-operator/pull/1109[zookeeper
 
 ===== Open Policy Agent
 
-* A crafted user id or username could alter the request that the user-info-fetcher sent to Keycloak or Entra, for example widening a user search.
+* A specially crafted user id or username could alter the request that the user-info-fetcher sent to Keycloak or Entra, for example widening a user search.
   Such values are now always sent as data and can no longer change the request.
 +
 Fixed in https://github.com/stackabletech/opa-operator/pull/909[opa-operator#909].
@@ -814,19 +814,23 @@ Fixed in https://github.com/stackabletech/listener-operator/pull/450[listener-op
   With this release, CreateVolume reports these failures as terminal so the provisioner gives up instead.
 +
 Fixed in https://github.com/stackabletech/secret-operator/pull/743[secret-operator#743].
+
 * Previously, Pods using a SecretClass with the `certManager` backend kept the certificate they were started with, so they eventually ran on an expired certificate even though cert-manager had already renewed it.
   With this release, these Pods are restarted halfway between cert-manager's renewal time and the certificate's expiry, so they pick up the renewed certificate.
   If cert-manager has not replaced an already expired certificate, secret-operator refuses to provision it and the Pod waits for a valid one instead of starting with an expired certificate.
 +
 Fixed in https://github.com/stackabletech/secret-operator/pull/752[secret-operator#752].
+
 * Previously, when a secret volume was published again, for example after a kubelet restart, the secret-operator mounted a new tmpfs on top of the existing one each time, which kept Pods in Terminating for minutes.
   With this release, the existing mount is reused.
 +
 Fixed in https://github.com/stackabletech/secret-operator/pull/770[secret-operator#770].
+
 * Previously, the secret-operator followed symlinks when it rewrote secret files in a volume, for example after a kubelet restart, so a Pod that had replaced a file or directory in its secret volume with a symlink could make the operator write secret data outside the volume.
   With this release, the secret-operator writes secret data only into regular files inside the volume and refuses to publish the volume when it finds a symlink, FIFO or device node in their place.
 +
 Fixed in https://github.com/stackabletech/secret-operator/pull/775[secret-operator#775].
+
 * Previously, when the kubelet published a secret volume again that a running Pod already used, for example after a kubelet restart, secret-operator issued a new certificate that the Pod never received and moved the Pod's expiry annotation to it, so the Pod could keep running on an expired certificate.
   With this release, a volume that is already published keeps its secret, so the Pod is restarted before the certificate it uses expires.
 +
@@ -843,6 +847,7 @@ Fixed in https://github.com/stackabletech/secret-operator/issues/772[secret-oper
   Image signatures and SBOM attestations are still published, so policies that verify signatures keep working.
 +
 Removed in https://github.com/stackabletech/actions/pull/123[actions#123].
+
 * [#product-config-removal-26_11_0.breaking-keyword]**Breaking**
   Previously, operators stored a "product-config" in a ConfigMap named `<operator-name>-configmap` in the operator's namespace to validate product configuration properties.
   This validation logic is now built into the operators, and the ConfigMap has been removed.
