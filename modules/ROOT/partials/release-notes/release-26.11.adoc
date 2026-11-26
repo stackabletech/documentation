@@ -69,6 +69,8 @@ Implemented in https://github.com/stackabletech/operator-rs/pull/1264[operator-r
 
 * All our Helm charts now include a Values Schema reference to validate your values files and a NOTES.txt file which is displayed after a successful installation.
   The schema rejects unknown keys, so a values file with stale or misspelled keys makes `helm upgrade` fail.
+  Check your values files with `helm lint` before upgrading.
+  Providing `--skip-schema-validation` skips the check.
 +
 Implemented in https://github.com/stackabletech/operator-templating/pull/646[operator-templating#646].
 
@@ -125,22 +127,46 @@ Administrative operations are now subject to the same authorization policies as 
 --
 [.breaking-keyword]**Breaking**
 The `podManagementPolicy` of the controller StatefulSet changed from `Parallel` to `OrderedReady`.
-This is an immutable field, so existing clusters need a manual step when upgrading:
+This is an immutable field, so the controller StatefulSets must be deleted once after the operator upgrade, see link:#label-improvements-26_11_0[StatefulSets that must be recreated].
 
-. Delete the StatefulSet with `--cascade=orphan`, so the Pods are not taken down immediately.
-. Let the operator recreate it on the next reconcile, which restarts the Pods.
-
-When doing this, the controller Pods (the whole KRaft quorum) may be restarted simultaneously and be unavailable for a few seconds.
-They are not started sequentially, as `OrderedReady` only orders Pods within one role group.
+Within a controller role group, the recreated StatefulSet restarts the Pods one after another.
+The Pods of different controller role groups restart at the same time, so with several controller role groups the KRaft quorum may be unavailable for a few seconds.
 
 Implemented in https://github.com/stackabletech/kafka-operator/pull/1010[kafka-operator#1010].
 --
 
-* **OPA authorizer for Apache Kafka 4.x:**
+* [#kafka-opa-controllers-26_11_0.breaking-keyword]**Breaking**
+  **OPA authorizer for Apache Kafka 4.x:**
   Apache Kafka 4.x now supports the OPA authorizer.
-  In particular, KRaft controllers can now also authorize requests against OPA rules.
+  In KRaft clusters, the controllers now run the OPA authorizer as well, and `super.users` is not set.
 +
-Tracked in https://github.com/stackabletech/kafka-operator/issues/941[kafka-operator#941], implemented in https://github.com/stackabletech/kafka-operator/pull/1051[kafka-operator#1051].
+--
+This affects every KRaft cluster that uses OPA authorization (`spec.clusterConfig.authorization.opa`).
+OPA now authorizes all requests on the `CONTROLLER` listener: the Raft traffic between the controllers, the registrations and heartbeats of the brokers, and the admin requests that brokers forward to the controllers, such as CreateTopics and DeleteTopics, with the principal of the client.
+Forwarded admin requests were not authorized at all before this release.
+
+A policy that treats only the `INTERNAL` listener as internal and only allows the broker certificates, like the example policy of SDP 26.7, denies this traffic.
+The controllers are then expected to lose their quorum and the brokers to be fenced, so the whole Kafka cluster stops working.
+
+Before upgrading the operator, extend the Rego policy:
+
+* Treat the `CONTROLLER` listener as internal and allow the certificate subjects of the controllers.
+* Allow the admin operations, such as creating topics, for the clients that need them.
+  Forwarded client requests arrive on the `CONTROLLER` listener, so client rules must not exclude it.
+
+The extended policy also works with SDP 26.7, where the controllers do not run the authorizer.
+See the xref:kafka:usage-guide/security.adoc[security guide] for an example policy.
+After the upgrade, watch the controller logs for authorization denials while the Pods restart.
+
+To list the affected clusters:
+
+[source,console]
+----
+$ kubectl get kafkaclusters -A -o json | jq -r '.items[] | select(.spec.clusterConfig.authorization.opa != null) | "\(.metadata.namespace)/\(.metadata.name) \(.spec.clusterConfig.metadataManager // "default")"'
+----
+
+Tracked in https://github.com/stackabletech/kafka-operator/issues/941[kafka-operator#941], implemented in https://github.com/stackabletech/kafka-operator/pull/1051[kafka-operator#1051] and https://github.com/stackabletech/kafka-operator/pull/1069[kafka-operator#1069].
+--
 
 ===== Apache NiFi
 
@@ -155,7 +181,8 @@ Implemented in https://github.com/stackabletech/docker-images/pull/1676[docker-i
 
 ===== Apache Phoenix
 
-The Apache Phoenix shipped in the HBase images no longer contains Apache HTrace and its known vulnerabilities, so Phoenix no longer writes traces to an HBase table and `TRACE ON`/`TRACE OFF`` and the `phoenix.trace.*` properties have no effect.
+[#phoenix-tracing-26_11_0]
+The Apache Phoenix shipped in the HBase images no longer contains Apache HTrace and its known vulnerabilities, so Phoenix no longer writes traces to an HBase table and `TRACE ON`/`TRACE OFF` and the `phoenix.trace.*` properties have no effect.
 If you rely on Phoenix tracing, use HBase's OpenTelemetry tracing instead.
 
 Tracked in https://github.com/stackabletech/issues/issues/894[issues#894].
@@ -176,8 +203,12 @@ Implemented in https://github.com/stackabletech/spark-k8s-operator/pull/726[spar
 +
 Implemented in https://github.com/stackabletech/spark-k8s-operator/pull/754[spark-k8s-operator#754].
 
-* This release introduces the `cleanup` field for the SparkApplication and SparkApplicationTemplate resources which allows users to define when the Spark driver pod will be deleted.
+* [#spark-cleanup-26_11_0.breaking-keyword]**Breaking**
+  This release introduces the `cleanup` field for the SparkApplication and SparkApplicationTemplate resources, which defines when the Spark driver Pod is deleted.
   You can set different durations for successful and failed Spark runs.
+  Without the field, a finished driver Pod is now kept for 10 minutes after a successful run and for 24 hours after a failed one, instead of being deleted right away.
+  To delete driver Pods right away, set both durations to `0s` in your SparkApplications and SparkApplicationTemplates.
+  A SparkApplication that sets `spark.kubernetes.driver.pod.name` together with a non-zero `cleanup` is rejected.
 +
 --
 [source,yaml]
@@ -245,6 +276,17 @@ TrinoCatalogs can still be applied and retrieved in `v1alpha1`, and conversion b
 A `v1alpha1` `metastore` becomes `catalog.hiveMetastore`, and a missing `metastore` becomes `catalog.userProvided`, so TrinoCatalogs that configure a REST catalog via `configOverrides` keep working unchanged.
 A `rest` catalog can't be represented in `v1alpha1`, so use `v1alpha2` for all TrinoCatalogs that use one.
 
+[#trino-catalog-conversion-26_11_0.breaking-keyword]**Breaking**
+The conversion runs in a conversion webhook of the operator, which is only set up when the operator maintains its CRDs.
+If you set `maintenance.customResourceDefinitions.maintain: false` in the Helm values, only `v1alpha2` TrinoCatalogs can be used, and TrinoCatalogs stored as `v1alpha1` are not converted.
+Rewrite every TrinoCatalog as `v1alpha2` before upgrading the operator.
+To check whether the operator maintains its CRDs:
+
+[source,console]
+----
+$ helm get values trino-operator -n <namespace> -a | grep -A2 customResourceDefinitions
+----
+
 See the xref:trino:usage-guide/catalogs/iceberg.adoc[Iceberg connector documentation] for details.
 
 Implemented in https://github.com/stackabletech/trino-operator/pull/950[trino-operator#950].
@@ -266,21 +308,33 @@ Implemented in https://github.com/stackabletech/trino-operator/pull/950[trino-op
 
 ====== Miscellaneous
 
-* The labels on the Kubernetes objects created by the operators have been reworked to carry only the recommended labels that actually apply to each object:
-** The `app.kubernetes.io/component` and `app.kubernetes.io/role-group` labels are no longer set on objects that do not belong to a single role or role group (previously they carried `none` or a placeholder value), and the `app.kubernetes.io/version` label is no longer set on immutable objects such as StatefulSet volume claim templates.
-** [#label-improvements-26_11_0.breaking-keyword]**Breaking**
-   For some operators this is a breaking change: StatefulSets created by older operator versions cannot be updated in place, and must be deleted once, right after the operator upgrade, so that the operator immediately recreates them with the new labels.
-   Use `--cascade=orphan` to retain the Pods:
-
+* The labels attached to the Kubernetes objects created by the operators have been reworked so that only the recommended labels that apply are present.
+  The `app.kubernetes.io/component` and `app.kubernetes.io/role-group` labels are no longer set on objects that do not belong to a single role or role group (previously they were set to `none` or a placeholder value).
+  For most operators, this needs no action.
 +
 --
+[#label-improvements-26_11_0.breaking-keyword]**Breaking**
+The following StatefulSets cannot be updated in place and must be deleted once, right after the operator upgrade, so that the operator immediately recreates them:
+
+* **Apache HBase:** The REST server StatefulSet of every REST server role group because the `app.kubernetes.io/managed-by` value on the claim template changes.
+* **Apache Spark:** The history server and Spark Connect server StatefulSets.
+  The Spark Connect server additionally loses the placeholder `app.kubernetes.io/role-group: default` from its selector.
+  The orphaned Pods still match the new selector and are adopted.
+* **OpenSearch:** The nodes StatefulSet of every role group.
+  Also consult the xref:opensearch:usage-guide/upgrade.adoc#_upgrade_from_sdp_26_7_to_26_11[OpenSearch upgrade guide] for further details.
+* **Apache Kafka:** The KRaft controller StatefulSet of every controller role group because it changes its `podManagementPolicy` from `Parallel` to `OrderedReady`.
+
+Up to SDP 26.7, the operators set the `app.kubernetes.io/version` label on the volume claim templates of the HBase, Spark and OpenSearch StatefulSets to the product version, which changes with every upgrade.
+These operators no longer set this label there, so this is the last upgrade that requires deleting these StatefulSets.
+
+Use `--cascade=orphan` to retain the Pods:
+
 [source,console]
 ----
 $ kubectl delete statefulsets.apps --cascade=orphan <statefulset-name>
 ----
 
 The recreated StatefulSet adopts the orphaned Pods and restarts them one after another to apply the new product image.
-There is one StatefulSet per role group, so repeat this for each affected role group.
 
 **Do not skip this.** The cluster keeps running and stays healthy, so the error is easy to overlook, but the operator cannot apply any further change to the affected StatefulSets, including the number of replicas and the product version, until they are deleted.
 The reconciliation error looks like this:
@@ -290,22 +344,26 @@ The reconciliation error looks like this:
 ... is invalid: spec: Forbidden: updates to statefulset spec
 for fields other than 'replicas', ...
 ----
---
 
-** A few operators change other immutable StatefulSet fields in this release for reasons unrelated to the label rework.
-   The symptom and the remedy are the same.
-
-+
---
-The following operators require action.
-For all others, no action is needed.
-
-** **Apache HBase:** Delete the REST server StatefulSet. Cause: version label on the listener PVC.
-** **Apache Kafka:** Delete the KRaft controller StatefulSet. Cause: `podManagementPolicy` changed from `Parallel` to `OrderedReady`.
-** **Apache Spark:** Delete the history server and Spark Connect server StatefulSets. Cause: version label on the listener PVC; the Connect server additionally carried a placeholder `app.kubernetes.io/role-group: default`.
-** **OpenSearch:** Delete the nodes StatefulSet of every role group. Cause: version label on the `listener` and `discovery-service-listener` PVCs.
+On SDP 26.7, changing the product version of the HBase, Spark and OpenSearch StatefulSets, as the upgrade guide describes for versions that SDP 26.11 no longer supports, fails with the same error.
+Delete them the same way after changing the version.
 
 Tracked in https://github.com/stackabletech/issues/issues/877[issues#877].
+--
+
+* [#managed-by-26_11_0.breaking-keyword]**Breaking**
+  The `app.kubernetes.io/managed-by` label changes for Apache HBase, from `hbase.stackable.com_hbasecluster` to `hbase.stackable.tech_hbasecluster`, and for Apache Hadoop HDFS, from `hdfs.stackable.tech_hdfs-operator-hdfs-controller` to `hdfs.stackable.tech_hdfs-controller`.
++
+--
+Update monitoring rules, NetworkPolicies and other selectors that match the old values.
+The operator only cleans up objects that have the new value.
+Do not remove a role group in the same step as the operator upgrade, because its objects keep the old value and are not removed.
+To find such leftovers after the upgrade:
+
+[source,console]
+----
+$ kubectl get all,cm,secret,pdb,sa -A -l app.kubernetes.io/managed-by=hbase.stackable.com_hbasecluster
+----
 --
 
 * The operator Deployments now run with a restricted security context and a read-only root filesystem, so they can be installed into namespaces that enforce the restricted Pod Security Standard.
@@ -318,6 +376,66 @@ Tracked in https://github.com/stackabletech/issues/issues/903[issues#903].
   It can be overridden with `podOverrides`.
 +
 Implemented in https://github.com/stackabletech/operator-rs/pull/1292[operator-rs#1292].
+
+* [#run-as-non-root-26_11_0.breaking-keyword]**Breaking**
+  All product Pods now run with `securityContext.runAsNonRoot: true`.
+  The operators set no `runAsUser`, so Kubernetes takes the user from the image and refuses to start a container whose image runs as root, or names its user instead of giving a numeric ID.
+  The Pod then fails with `CreateContainerConfigError`.
+  The Stackable images run as a numeric non-root user and are not affected.
++
+--
+You are affected if you use one of the following:
+
+* a custom product image (`spec.image.custom`) whose last `USER` is root, unset or a name such as `stackable`, for example because it switches to `USER root` to install packages and back to `USER stackable`
+* a Spark job image (`spec.image` of a SparkApplication) that runs as root, because it runs as the `job` init container of the driver Pod
+* `podOverrides` that set `runAsUser: 0`
+
+Before upgrading the operators, check each of these images.
+The result must be a number other than `0`:
+
+[source,console]
+----
+$ docker inspect -f '{{.Config.User}}' <image>
+----
+
+Fix the image by using a UID, such as `USER 1000`, or set `spec.securityContext.runAsUser: 1000` in the `podOverrides`.
+If an image really has to run as root, restore the behaviour of earlier releases with `podOverrides`:
+
+[source,yaml]
+----
+podOverrides:
+  spec:
+    securityContext:
+      runAsNonRoot: false
+----
+
+For a SparkApplication, set the override on the driver, because the job image runs in the driver Pod, and on the executor and the submit Job if their images are affected.
+
+Implemented in https://github.com/stackabletech/operator-rs/pull/1205[operator-rs#1205].
+--
+
+* [#env-overrides-26_11_0.breaking-keyword]**Breaking**
+  An `envOverrides` entry for an environment variable that the operator also sets now replaces the operator's value.
+  Before this release, the operator's value won, so such overrides had no effect.
+  Before upgrading the operators, review your `envOverrides`: overrides that did nothing so far take effect now.
+
+* Without `spec.image.pullPolicy`, the image pull policy is now `IfNotPresent` for images with a fixed tag.
+  It stays `Always` for floating tags, such as custom images tagged `latest` or without a tag, and for `stackableVersionPolicy: LatestPatch`.
+  A custom image that is pushed again under the same tag is no longer pulled again on nodes that already have it.
+  Set `spec.image.pullPolicy: Always` for such images, or use immutable tags.
+
+* [#vector-26_11_0.breaking-keyword]**Breaking**
+  The Vector agent in the product Pods is now Vector 0.58.
+  The `ADDRESS` in the aggregator discovery ConfigMap must be a URL with a scheme, such as `http://vector-aggregator.vector.svc.cluster.local:6000`, and the aggregator must run Vector 0.58.
+  Otherwise, the logs of all stacklets no longer reach the aggregator.
+  Update the ConfigMap and the aggregator together with the operator upgrade.
+  See xref:concepts:observability/logging.adoc[logging] for the format.
+  To list the discovery ConfigMaps and their addresses:
++
+[source,console]
+----
+$ kubectl get configmap -A -o jsonpath='{range .items[?(@.data.ADDRESS)]}{.metadata.namespace}/{.metadata.name} {.data.ADDRESS}{"\n"}{end}'
+----
 
 * The logs of the xref:concepts:observability/containerdebug.adoc[containerdebug process] are now part of the xref:concepts:observability/logging.adoc[log aggregation].
   The Vector agent picks up the JSON log file which containerdebug writes and forwards it to the aggregator, where the events appear with the container name `containerdebug`.
@@ -333,6 +451,7 @@ Tracked in https://github.com/stackabletech/issues/issues/909[issues#909].
 
 ===== Apache Airflow
 
+[#airflow-task-log-26_11_0]
 The level configured for the `airflow.task` logger now sets which task logs the Airflow UI shows, so the UI can show only `WARN` and above while log files and the Vector aggregator keep receiving `INFO`.
 If you set this logger above `INFO` to keep task output out of log files and Vector, raise the `file` and `console` levels instead.
 
@@ -373,9 +492,41 @@ Implemented in https://github.com/stackabletech/kafka-operator/pull/1061[kafka-o
 +
 Tracked in https://github.com/stackabletech/kafka-operator/issues/1033[kafka-operator#1033], implemented in https://github.com/stackabletech/kafka-operator/pull/1034[kafka-operator#1034].
 
+* [#kafka-topic-crd-26_11_0.breaking-keyword]**Breaking**
+  The operator now also maintains the `kafkatopics.kafka.stackable.tech` CRD and only reports ready once both of its CRDs are installed.
+  If you set `maintenance.customResourceDefinitions.maintain: false` in the Helm values, install the KafkaTopic CRD together with the KafkaCluster CRD before upgrading the operator, otherwise its startup probe fails and the operator restarts in a loop.
+  `kafka-operator crd` prints both CRDs.
+  If you maintain the operator's RBAC yourself, also grant the operator access to `kafkatopics` and `kafkatopics/status`, and the agent permission to create events.
+  To check whether the CRD is installed:
++
+--
+[source,console]
+----
+$ kubectl get crd kafkatopics.kafka.stackable.tech
+----
+
+Implemented in https://github.com/stackabletech/kafka-operator/pull/1050[kafka-operator#1050].
+--
+
+* [#kcat-prober-26_11_0.breaking-keyword]**Breaking**
+  The separate `kcat-prober` container of the broker Pods is removed, and the readiness probe runs in the `kafka` container.
+  `kcat-prober` is no longer accepted in `brokers.config.logging.containers`.
+  Before upgrading the operator, remove it from there and remove `podOverrides` for a container named `kcat-prober`.
+  To find them:
++
+--
+[source,console]
+----
+$ kubectl get kafkaclusters -A -o yaml | grep -n kcat-prober
+----
+
+Implemented in https://github.com/stackabletech/kafka-operator/pull/1010[kafka-operator#1010].
+--
+
 ===== Apache Spark
 
-All Spark 4.x images now ship with HBase connectors libraries included.
+[#spark-hbase-connector-26_11_0]
+All Spark 4.x images now ship with the HBase connector libraries.
 Past releases only shipped these connectors with the Spark 3.x images because there is no release available for Spark 4.x.
 Since support for Spark 3 has been removed in this release, we decided to offer an upgrade path for users of these connectors.
 The HBase connectors included now are built from a specific commit in the master branch.
@@ -390,15 +541,15 @@ Tracked in https://github.com/stackabletech/issues/issues/904[issues#904].
 * [.breaking-keyword]**Breaking**
   The `userinfo` and `resourceinfo` Rego rule libraries now only return a value when the fetcher responds with `200 OK`, and pass an explicit 5 second timeout.
   Previously the body of an error response was returned to the policy as if it were user/resource information.
-  This behaviour could result in a rule defaulting a missing field (`object.get(user, "groups", [])` and the like) to interpret a failed lookup as "this user is in no groups" and allowed what it should have denied.
+  A rule that defaults a missing field (`object.get(user, "groups", [])` and the like) therefore read a failed lookup as "this user is in no groups" and could allow what it should have denied.
   Such a lookup is now undefined instead.
-  Rules must require a positive signal to deny on a failed lookup.
+  Author rules so that they require a positive signal to allow, so that a failed lookup denies.
   We also recommend setting `strict-builtin-errors=true` on the decision query wherever possible in OPA clients so that a failed lookup fails the whole decision.
 +
 Implemented in https://github.com/stackabletech/opa-operator/pull/863[opa-operator#863].
 
 * [.breaking-keyword]**Breaking**
-  The volume holding the user-info-fetcher credentials is now called `user-info-fetcher-credentials` instead of `credentials`, so that it does not collide with the resource-info-fetcher's volume.
+  The volume containing the user-info-fetcher credentials is now called `user-info-fetcher-credentials` instead of `credentials`, so that it does not collide with the resource-info-fetcher's volume.
   A `podOverrides` patching that volume or its volume mount by name must be adjusted, otherwise it silently stops applying.
 +
 Implemented in https://github.com/stackabletech/opa-operator/pull/863[opa-operator#863].
@@ -430,24 +581,36 @@ Tracked in https://github.com/stackabletech/docker-images/issues/1684[docker-ima
 +
 Fixed in https://github.com/stackabletech/docker-images/pull/1715[docker-images#1715].
 
-* The Java based product images now disable the HotSpot Base64 intrinsics on amd64 (`-XX:-UseBASE64Intrinsics` via `JAVA_TOOL_OPTIONS`) to mitigate https://nvd.nist.gov/vuln/detail/cve-2026-114938[CVE-2026-114938] (Java4Shell), until fixed Temurin builds are available.
+* The Java-based product images now disable the HotSpot Base64 intrinsics on amd64 (`-XX:-UseBASE64Intrinsics` via `JAVA_TOOL_OPTIONS`) to mitigate https://nvd.nist.gov/vuln/detail/cve-2026-114938[CVE-2026-114938] (Java4Shell), until fixed Temurin builds are available.
   Setting `JAVA_TOOL_OPTIONS` through `envOverrides` or `podOverrides` replaces this value and thus might remove the mitigation.
 +
 Fixed in https://github.com/stackabletech/docker-images/pull/1741[docker-images#1741].
 
 ====== Miscellaneous
 
-* Previously the Helm value `serviceAccount.create` would result in a broken deployment, this is now fixed and the value can be used to decide whether a ServiceAccount is created or not.
+* [#helm-service-account-26_11_0.breaking-keyword]**Breaking**
+  The Helm charts of all operators now honour `serviceAccount.name`, and always render the ClusterRoleBinding `<fullname>-clusterrolebinding`.
+  Previously, `serviceAccount.name` was ignored, and `serviceAccount.create: false` resulted in a broken deployment without a ClusterRoleBinding.
+  This also applies to the CSI workloads of the listener-operator and secret-operator charts.
 +
-Fixed in https://github.com/stackabletech/operator-templating/pull/634[operator-templating#634].
+--
+Before running `helm upgrade`, check your values:
 
-* Previously the Helm value `serviceAccount.create` would also control whether a ClusterRoleBinding is created.
-  This was unintentional.
-  The ClusterRoleBinding is now always created.
-+
-Fixed in https://github.com/stackabletech/operator-templating/pull/637[operator-templating#637].
+* `serviceAccount.create: false` now requires `serviceAccount.name`, otherwise the chart fails to render.
+* A ClusterRoleBinding named `<fullname>-clusterrolebinding` that you created yourself makes `helm upgrade` fail.
+  Delete it, or adopt it into the release.
+* With `serviceAccount.create: true`, a custom `serviceAccount.name` renames the ServiceAccount and the old one is deleted.
+  Update bindings outside the chart that reference the old name.
 
-* Previously, when `maintenance.customResourceDefinitions.maintain` was set to `false`, this would result in a bug where the default resources (predefined ListenerClasses and SecretClass for listener-operator and secret-operator respectively) weren't installed at all.
+[source,console]
+----
+$ helm get values <release> -n <namespace> | grep -A3 serviceAccount
+----
+
+Fixed in https://github.com/stackabletech/operator-templating/pull/634[operator-templating#634] and https://github.com/stackabletech/operator-templating/pull/637[operator-templating#637].
+--
+
+* Previously, when `maintenance.customResourceDefinitions.maintain` was set to `false` in the Helm values, this would result in a bug where the default resources (predefined ListenerClasses and SecretClass for listener-operator and secret-operator respectively) weren't installed at all.
   Now the default resources are correctly installed once the CRDs are established, regardless of the `maintenance.customResourceDefinitions.maintain` setting.
 +
 Tracked in https://github.com/stackabletech/issues/issues/885[issues#885].
@@ -469,7 +632,7 @@ Fixed in https://github.com/stackabletech/airflow-operator/pull/844[airflow-oper
 +
 Fixed in https://github.com/stackabletech/airflow-operator/pull/847[airflow-operator#847].
 
-* Previously, the Airflow scheduler printed the Airflow admin password to its container log during database initialization.
+* [#airflow-admin-password-26_11_0]#Previously, the Airflow scheduler printed the Airflow admin password to its container log during database initialization.#
   With this release, the password no longer appears in the log.
   If you collected scheduler logs from an earlier release, rotate the admin password.
 +
@@ -577,10 +740,24 @@ Fixed in https://github.com/stackabletech/zookeeper-operator/pull/1109[zookeeper
 +
 Fixed in https://github.com/stackabletech/opa-operator/pull/909[opa-operator#909].
 
-* A rootPath configured on the Keycloak backend was dropped from every request the user-info-fetcher sent, so a Keycloak served below a sub-path such as /auth could not be reached.
-  Sub-path deployments now work.
+* [#keycloak-rootpath-26_11_0.breaking-keyword]**Breaking**
+  Previously, a single-segment `rootPath` configured on the Keycloak backend, such as `/auth`, was dropped from every request the user-info-fetcher sent, so a Keycloak served below such a sub-path could not be reached.
+  With this release, the `rootPath` is honoured.
 +
+--
+A `rootPath` that does not match where Keycloak is served, typically a leftover `/auth` from Keycloak versions before 17, which serve at `/`, now makes every lookup fail.
+User information is then undefined, and policies deny.
+Before upgrading the operator, set `rootPath` to the `--http-relative-path` of your Keycloak, or remove it.
+To check, list the configured values and request the realm's OpenID configuration, which must return `200`:
+
+[source,console]
+----
+$ kubectl get opacluster -A -o jsonpath='{range .items[*]}{.metadata.name}{" "}{.spec.clusterConfig.userInfo.backend.keycloak.rootPath}{"\n"}{end}'
+$ curl -s -o /dev/null -w '%{http_code}' https://<host>:<port><rootPath>/realms/<adminRealm>/.well-known/openid-configuration
+----
+
 Fixed in https://github.com/stackabletech/opa-operator/pull/909[opa-operator#909].
+--
 
 ===== Trino
 
@@ -647,7 +824,7 @@ Removed in https://github.com/stackabletech/actions/pull/123[actions#123].
 * [#product-config-removal-26_11_0.breaking-keyword]**Breaking**
   Previously, operators stored a "product-config" in a ConfigMap named `<operator-name>-configmap` in the operator's namespace to validate product configuration properties.
   This validation logic is now built into the operators, and the ConfigMap has been removed.
-  This removal is only breaking if one relied on this ConfigMap.
+  This removal is only breaking if you relied on this ConfigMap.
 +
 Tracked in https://github.com/stackabletech/issues/issues/870[issues#870].
 
