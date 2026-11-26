@@ -235,7 +235,7 @@ Implemented in https://github.com/stackabletech/spark-k8s-operator/pull/726[spar
 --
 
 * The Spark History server and the Spark Connect server StatefulSets now carry the `restarter.stackable.tech/enabled: "true"` label by default.
-  Thus the restarter-controller will automatically roll their Pods when a mounted ConfigMap or Secret changes.
+  Thus, the restarter-controller will automatically roll their Pods when a mounted ConfigMap or Secret changes.
 +
 Implemented in https://github.com/stackabletech/spark-k8s-operator/pull/754[spark-k8s-operator#754].
 
