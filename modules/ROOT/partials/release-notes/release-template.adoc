@@ -121,8 +121,8 @@ The following product versions are deprecated and will be removed in a later rel
 ====== Removed versions
 
 The following product versions are no longer supported.
-These images for released product versions remain available https://oci.stackable.tech/[here,window=_blank].
-Information on how to browse the registry can be found xref:contributor:project-overview.adoc#docker-images[here,window=_blank].
+Images of released product versions remain available in the https://oci.stackable.tech/[Stackable registry,window=_blank].
+See xref:contributor:project-overview.adoc#docker-images[how to browse the registry,window=_blank].
 
 * Product 1: https://example.org[1.2.3]
 * Product 2: https://example.org[1.2.3]
@@ -143,7 +143,7 @@ These Kubernetes versions are no longer supported:
 
 ===== OpenShift versions
 
-This release is available in the RedHat Certified Operator Catalog for the following OpenShift versions:
+This release is available in the Red Hat Certified Operator Catalog for the following OpenShift versions:
 
 * `4.18`
 * `4.17`

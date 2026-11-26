@@ -31,10 +31,10 @@ The following components of the SDP contain breaking changes for this release:
 ====== Resource info fetcher for Open Policy Agent
 
 This release adds an initial version of resource-info-fetcher, which is similar to user-info-fetcher, but allows to fetch additional metadata about resource information from a data catalog.
-Currently, only DataHub is supported as a data source.
+DataHub is the only supported data source.
 
 Also, a Rego rule library has been added to make it easier to call resource-info-fetcher from within OPA.
-The API (especially the response) might change in the future once support for more data catalogs is introduced.
+The API, especially the response, may change when support for more data catalogs is added.
 
 Implemented in https://github.com/stackabletech/opa-operator/pull/863[opa-operator#863].
 
@@ -49,9 +49,9 @@ The Stackable operators for link:#airflow-openlineage-26_11_0[Apache Airflow], l
 ====== Miscellaneous
 
 * With this release, it is possible to automatically select the latest patch version of an SDP release line using the new `spec.image.stackableVersionPolicy` field.
-  It currently supports two values:
+  It supports two values:
 ** **Exact:** Use the exact version specified or automatically derived.
-   This is the current behaviour and the default value to ensure backwards compatibility.
+   This is the default and matches the behaviour of earlier releases.
 ** **LatestPatch:** Use the latest patch version of an SDP release line.
 
 +
@@ -67,7 +67,8 @@ Implemented in https://github.com/stackabletech/operator-rs/pull/1226[operator-r
 +
 Implemented in https://github.com/stackabletech/operator-rs/pull/1264[operator-rs#1264].
 
-* All our Helm charts now carry a Values Schema reference to validate your values files and a NOTES.txt file which is displayed after a successful installation.
+* All our Helm charts now include a Values Schema reference to validate your values files and a NOTES.txt file which is displayed after a successful installation.
+  The schema rejects unknown keys, so a values file with stale or misspelled keys makes `helm upgrade` fail.
 +
 Implemented in https://github.com/stackabletech/operator-templating/pull/646[operator-templating#646].
 
@@ -92,7 +93,7 @@ The Stackable operator for Apache Airflow can now configure Airflow to emit http
 It can be enabled with the new `spec.clusterConfig.lineage` field on the AirflowCluster.
 
 ** The backend connection can be defined inline or shared between stacklets by referencing an OpenLineageConnection resource in the same namespace.
-   The currently supported transport is `http`.
+   The only supported transport is `http`.
 ** TLS is supported, but see the xref:airflow:usage-guide/openlineage.adoc#_tls[usage guide] for the caveat about `REQUESTS_CA_BUNDLE`.
 ** Bearer-token authentication is also supported.
 ** The OpenLineage namespace defaults to `default`.
@@ -109,7 +110,7 @@ Implemented in https://github.com/stackabletech/airflow-operator/pull/835[airflo
 [#kafka-new-features-26_11_0]
 ===== Apache Kafka
 
-Operator support for KRaft has been almost completely rewritten in this release and we are confident that we can remove the `experimental` label attached to it.
+Operator support for KRaft has been almost completely rewritten in this release, and KRaft is no longer marked as experimental.
 KRaft based installations are now much more robust and secure.
 Controller scaling is now much more reliable and has almost no impact on broker activity.
 Security wise, controllers use the same internal security mechanisms as the brokers regardless of the client facing protocols.
@@ -171,7 +172,7 @@ Implemented in https://github.com/stackabletech/spark-k8s-operator/pull/726[spar
 --
 
 * The Spark History server and the Spark Connect server StatefulSets now carry the `restarter.stackable.tech/enabled: "true"` label by default.
-  Thus the  restarter-controller will automatically roll their Pods when a mounted ConfigMap or Secret changes.
+  Thus the restarter-controller will automatically roll their Pods when a mounted ConfigMap or Secret changes.
 +
 Implemented in https://github.com/stackabletech/spark-k8s-operator/pull/754[spark-k8s-operator#754].
 
@@ -195,15 +196,28 @@ Implemented in https://github.com/stackabletech/spark-k8s-operator/pull/808[spar
 [#zookeeper-new-features-26_11_0.breaking-keyword]**Breaking**
 ZooKeeper now enables the auto-purge feature for the data directory cleanup by default.
 
-With the default settings, this means, that every 6 hours a cleanup runs, which checks for snapshots and their related transaction logs and only keeps the 3 most recent ones, the remaining ones are deleted.
+With the default settings, a cleanup runs every 6 hours and keeps only the 3 most recent snapshots and their transaction logs.
+Older snapshots and transaction logs are deleted.
 This mitigates the data directory filling up the PersistentVolume.
+
+If you back up or read old snapshots or transaction logs from the data directory, turn auto-purge off before upgrading the operator:
+
+[source,yaml]
+----
+spec:
+  servers:
+    configOverrides:
+      zoo.cfg:
+        autopurge.purgeInterval: "0"
+----
+
 For more on the process, check the xref:zookeeper:data_directory.adoc#_snapshot_creation_and_auto_purge[documentation page] and for the defaults xref:zookeeper:reference/zoo_cfg_properties.adoc#data-dir-props[the reference].
 
 ===== Open Policy Agent
 
-OpaClusters can now be deployed as a Deployment or a DaemonSet.
-Previously, OpaClusters were always deployed as a DaemonSet.
-A Deployment allows PodDisruptionBudgets and sets default affinities to distribute pods evenly across the cluster if possible.
+OpaClusters can now be deployed as a Deployment instead of a DaemonSet, selected with `spec.servers.roleConfig.workloadKind`.
+The default stays `DaemonSet`.
+A Deployment gets a PodDisruptionBudget, configurable with `spec.servers.roleConfig.podDisruptionBudget`, and default affinities that distribute the Pods evenly across the nodes where possible.
 
 Implemented in https://github.com/stackabletech/opa-operator/pull/873[opa-operator#873].
 
@@ -212,7 +226,7 @@ Implemented in https://github.com/stackabletech/opa-operator/pull/873[opa-operat
 * [#trino-openlineage-26_11_0]#This release adds OpenLineage support for Trino#
 +
 --
-The Stackable operator for Trino operator can now configure Trino clusters to emit https://openlineage.io/[OpenLineage] lineage events to a backend such as Marquez.
+The Stackable operator for Trino can now configure Trino clusters to emit https://openlineage.io/[OpenLineage] lineage events to a backend such as Marquez.
 You enable it with the new `spec.clusterConfig.lineage` field of the TrinoCluster custom resource.
 
 Implemented in https://github.com/stackabletech/trino-operator/pull/914[trino-operator#914].
@@ -242,11 +256,11 @@ Implemented in https://github.com/stackabletech/trino-operator/pull/950[trino-op
 
 ====== Vulnerabilities
 
-* After two years in beta, during which we refined them alongside the evolving CSAF standard, our Vulnerability Exploitability eXchange (VEX) statements in the CSAF format are now production-ready with SDP 26.11.
+* The Vulnerability Exploitability eXchange (VEX) statements in the CSAF format are no longer in beta.
   These machine-readable documents contain the results of our security team's vulnerability analysis.
-  Customers can use them to determine whether a deployed Stackable image is affected by a vulnerability and, if so, how to remediate it.
-  The statements also cover vulnerabilities that scanners report for Stackable images even though the images are not affected, along with the justification for each assessment.
-  If you have a Stackable subscription, contact Stackable for details on how to obtain these documents.
+  You can use them to determine whether a deployed Stackable image is affected by a vulnerability and, if so, how to remediate it.
+  The statements also cover vulnerabilities that scanners report for Stackable images even though the images are not affected, with the justification for each assessment.
+  If you have a Stackable subscription, contact Stackable to obtain these documents.
 * 805 CVEs were fixed in the Stackable product images.
   This includes 68 critical and 366 high-severity CVEs.
 
@@ -314,7 +328,7 @@ These log files were not written at all before this release.
 The operators set the environment variable `CONTAINERDEBUG_LOG_DIRECTORY`, which containerdebug stopped reading in its version 0.2.0 when it moved to `stackable-telemetry`.
 The operators now set `FILE_LOG_DIRECTORY` instead, along with an hourly rotation that keeps at most two files, so that the logs stay small inside the size-capped log volume.
 
-Tracked in https://github.com/stackabletech/issues/issues/909[issues#909]
+Tracked in https://github.com/stackabletech/issues/issues/909[issues#909].
 --
 
 ===== Apache Airflow
@@ -487,7 +501,7 @@ Fixed in https://github.com/stackabletech/docker-images/pull/1731[docker-images#
 * Previously, users would have to explicitly tell e.g. Trino to use `s3a://` schemes when issuing CTAS against the Hive Metastore.
   With this release, the `s3://` scheme is registered as well, allowing users to keep the default location scheme.
 +
-https://github.com/stackabletech/hive-operator/pull/736[hive-operator#736].
+Fixed in https://github.com/stackabletech/hive-operator/pull/736[hive-operator#736].
 
 * Previously, changes to an S3Connection referenced by a HiveCluster were not applied until something else triggered a reconciliation.
   With this release, the Hive operator watches the referenced S3Connection and reconciles the HiveCluster when it changes.
@@ -501,12 +515,15 @@ Fixed in https://github.com/stackabletech/hive-operator/pull/765[hive-operator#7
 +
 Fixed in https://github.com/stackabletech/docker-images/pull/1595[docker-images#1595].
 
-* Previously the application template won and the `config` and `cliOverrides` set on the application were silently discarded.
-  With this release, the precedence rules are followed properly.
+* [.breaking-keyword]**Breaking**
+  Previously, the application template won and the `config` and `cliOverrides` set on the application were silently discarded.
+  With this release, the settings of the application take precedence over the ones of the template.
+  The `jvmArgumentOverrides` of both are merged: the template's are applied first and the application's on top of them.
+  Previously, the application's `jvmArgumentOverrides` were discarded when it referenced a template.
 +
 Fixed in https://github.com/stackabletech/spark-k8s-operator/pull/745[spark-k8s-operator#745].
 
-* Previously spark connect executors were missing necessary `extra-jars` which lead to deserialisation issues.
+* Previously, Spark Connect executors were missing necessary `extra-jars`, which led to deserialisation issues.
   With this release, `spark.executor.extraClassPath` is now the same for the driver and executor.
 +
 Fixed in https://github.com/stackabletech/spark-k8s-operator/pull/755[spark-k8s-operator#755].
@@ -517,17 +534,27 @@ Fixed in https://github.com/stackabletech/spark-k8s-operator/pull/755[spark-k8s-
 Fixed in https://github.com/stackabletech/spark-k8s-operator/pull/758[spark-k8s-operator#758].
 
 * Previously `spark-env.sh` and `security.properties` were not mounted for SparkApplication.
-  With this release, both files get correctly mounted and keys in `spark-env.sh` are validated.
+  With this release, both files get correctly mounted.
+  Keys of the `spark-env.sh` `configOverrides` must be valid shell identifiers (`[a-zA-Z_][a-zA-Z0-9_]*`).
+  A SparkApplication with an invalid key is accepted, but never runs, and the operator logs an error.
 +
 Fixed in https://github.com/stackabletech/spark-k8s-operator/pull/761[spark-k8s-operator#761].
 
 * Previously, `sparkImage.pullPolicy` was ignored by driver and executor containers, the Spark Connect executors and init containers.
   With this release, the `sparkImage.pullPolicy` as well as the `spec.image` is properly used.
 +
-Fixed in https://github.com/stackabletech/spark-k8s-operator/pull/764[spark-k8s-operator#764].
+--
+[.breaking-keyword]**Breaking**
+The job image (`spec.image`) now gets the pull policy of the Spark image, which is `IfNotPresent` unless set otherwise.
+A job image pushed again under the same tag, such as `latest`, is no longer pulled again on nodes that already have it.
+Set `sparkImage.pullPolicy: Always`, or use immutable tags for job images.
 
-* Previously, the submit Job of a SparkApplication and the Spark history server printed S3 credentials to their container logs.
+Fixed in https://github.com/stackabletech/spark-k8s-operator/pull/764[spark-k8s-operator#764].
+--
+
+* [#spark-s3-credentials-26_11_0]#Previously, the submit Job of a SparkApplication and the Spark history server printed S3 credentials to their container logs.#
   With this release, the credentials are no longer printed.
+  If you collected these logs from an earlier release, rotate the S3 credentials.
 +
 Fixed in https://github.com/stackabletech/spark-k8s-operator/pull/796[spark-k8s-operator#796].
 
@@ -557,7 +584,10 @@ Fixed in https://github.com/stackabletech/opa-operator/pull/909[opa-operator#909
 
 ===== Trino
 
-Previously, a TrinoCluster whose name was not a valid cluster name, for example one longer than 40 characters, crashed the trino-operator, which then restarted in a loop and reconciled no TrinoCluster at all. With this release, such a TrinoCluster fails its own reconcile with an error and all other TrinoClusters are reconciled as usual.
+Previously, a TrinoCluster whose name was not a valid cluster name, for example one longer than 40 characters, crashed the trino-operator, which then restarted in a loop and reconciled no TrinoCluster at all.
+With this release, such a TrinoCluster fails its own reconcile with an error and all other TrinoClusters are reconciled as usual.
+
+Fixed in https://github.com/stackabletech/trino-operator/pull/973[trino-operator#973].
 
 ===== Stackable commons-operator
 
@@ -570,7 +600,7 @@ Fixed in https://github.com/stackabletech/commons-operator/pull/443[commons-oper
 ===== Stackable listener-operator
 
 * Previously, the listener-operator Helm Chart would not propagate `imagePullSecrets` to the CSI provisioner deployment.
-  This was fixed, they are now honored.
+  With this release, they are honored.
 +
 Fixed in https://github.com/stackabletech/listener-operator/pull/417[listener-operator#417].
 
@@ -591,7 +621,7 @@ Fixed in https://github.com/stackabletech/secret-operator/pull/743[secret-operat
 +
 Fixed in https://github.com/stackabletech/secret-operator/pull/752[secret-operator#752].
 * Previously, when a secret volume was published again, for example after a kubelet restart, the secret-operator mounted a new tmpfs on top of the existing one each time, which kept Pods in Terminating for minutes.
-With this release, the existing mount is reused.
+  With this release, the existing mount is reused.
 +
 Fixed in https://github.com/stackabletech/secret-operator/pull/770[secret-operator#770].
 * Previously, the secret-operator followed symlinks when it rewrote secret files in a volume, for example after a kubelet restart, so a Pod that had replaced a file or directory in its secret volume with a symlink could make the operator write secret data outside the volume.
@@ -608,8 +638,10 @@ Fixed in https://github.com/stackabletech/secret-operator/issues/772[secret-oper
 ===== General
 
 * [#slsa-removal-26_11_0.breaking-keyword]**Breaking**
-  With this release we are removing SLSA provenance attestations for our images and charts for now, because it caused problems for us.
-  We will try to add SLSA provenance attestations again in a future release.
+  This release no longer publishes SLSA provenance attestations for the images and Helm charts.
+  If an admission policy in your cluster requires these attestations for Stackable images, the images of this release are rejected and the Pods do not start.
+  Before upgrading, remove that requirement from the policy.
+  Image signatures and SBOM attestations are still published, so policies that verify signatures keep working.
 +
 Removed in https://github.com/stackabletech/actions/pull/123[actions#123].
 * [#product-config-removal-26_11_0.breaking-keyword]**Breaking**
@@ -637,11 +669,22 @@ The following new product versions are now supported:
 * Apache NiFi: https://github.com/stackabletech/docker-images/issues/1651[2.12.0]
 * Apache Phoenix: https://github.com/stackabletech/docker-images/issues/1647[5.3.2]
 * Apache Spark: https://github.com/stackabletech/docker-images/issues/1655[4.2.0], https://github.com/stackabletech/docker-images/issues/1655[4.1.3 (LTS)]
-* Apache ZooKeeper: https://github.com/stackabletech/docker-images/issues/1658[3.9.6]
+* Apache ZooKeeper: https://github.com/stackabletech/docker-images/issues/1658[3.9.6 (LTS)]
 * Open Policy Agent: https://github.com/stackabletech/docker-images/issues/1652[1.20.2]
 * OpenSearch: https://github.com/stackabletech/docker-images/issues/1653[3.8.0]
 * Trino: https://github.com/stackabletech/docker-images/issues/1657[483]
 * Vector: https://github.com/stackabletech/docker-images/issues/1644[0.58.0]
+
+[#product-content-26_11_0]
+Some of the new versions change what the product image contains:
+
+* Apache Airflow 3.3.2 no longer includes the `apache-beam`, `apache-cassandra` and `tabular` providers.
+* Apache HBase 3.0.0 is shipped without Apache Phoenix.
+  If you use Phoenix, stay on HBase 2.6.
+* OpenSearch 3.8.0 creates S3 snapshot repositories with server-side encryption `AES256` by default.
+  Check that your S3 store supports it before moving to 3.8.0.
+* Trino 483 no longer includes the `storage` connector.
+  Remove catalogs with `connector.name=storage` before moving to 483.
 
 ====== Deprecated versions
 
@@ -662,8 +705,12 @@ The following product versions are deprecated and will be removed in a later rel
 ====== Removed versions
 
 The following product versions are no longer supported.
-These images for released product versions remain available https://oci.stackable.tech/[here,window=_blank].
-Information on how to browse the registry can be found xref:contributor:project-overview.adoc#docker-images[here,window=_blank].
+Images of released product versions remain available in the https://oci.stackable.tech/[Stackable registry,window=_blank].
+See xref:contributor:project-overview.adoc#docker-images[how to browse the registry,window=_blank].
+
+[#product-lines-removed-26_11_0.breaking-keyword]**Breaking**
+Apache Airflow 2 and Apache Spark 3 are no longer supported.
+Migrate DAGs to Airflow 3 and Spark jobs to Spark 4, and move the stacklets to a supported version, before upgrading the operators.
 
 * Apache Airflow: https://github.com/stackabletech/issues/issues/922[2.9.3], https://github.com/stackabletech/docker-images/issues/1645[3.1.6]
 * Apache Druid: https://github.com/stackabletech/docker-images/issues/1646[30.0.1], https://github.com/stackabletech/docker-images/issues/1646[35.0.1]
@@ -698,7 +745,7 @@ These Kubernetes versions are no longer supported:
 
 ===== OpenShift versions
 
-This release is available in the RedHat Certified Operator Catalog for the following OpenShift versions:
+This release is available in the Red Hat Certified Operator Catalog for the following OpenShift versions:
 
 * `4.22`
 * `4.21`
@@ -713,9 +760,7 @@ These OpenShift versions are no longer supported:
 
 [TIP]
 ====
-Please consult the following upgrade notes when upgrading from 26.7 to 26.11:
-
-* Upgrading OpenSearch to SDP 26.11 requires the nodes StatefulSets to be recreated manually, see the xref:opensearch:usage-guide/upgrade.adoc#_upgrade_from_sdp_26_7_to_26_11[upgrade guide].
+Work through the link:#upgrade-actions-26_11_0[list of actions] at the top of these release notes, and follow the xref:guides:upgrading-sdp.adoc[upgrade guide].
 ====
 
 ===== Using stackablectl
