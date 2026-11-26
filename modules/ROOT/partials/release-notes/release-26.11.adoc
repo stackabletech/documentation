@@ -9,6 +9,7 @@ Released on 2026-11-20.
 * OpenLineage support for selected operators and their products
 * Resource info fetcher for Open Policy Agent
 * Improved KRaft support in the Stackable operator for Apache Kafka
+* Declarative management of Apache Kafka topics with the new KafkaTopic custom resource
 * The Stackable operator for Trino now supports Apache Iceberg REST catalogs
 ====
 
@@ -203,6 +204,22 @@ $ kubectl get kafkaclusters -A -o json | jq -r '.items[] | select(.spec.clusterC
 
 Tracked in https://github.com/stackabletech/kafka-operator/issues/941[kafka-operator#941], implemented in https://github.com/stackabletech/kafka-operator/pull/1051[kafka-operator#1051] and https://github.com/stackabletech/kafka-operator/pull/1069[kafka-operator#1069].
 --
+
+* **Management access:**
+  SDP can now manage resources inside an Apache Kafka cluster.
+  When `spec.clusterConfig.managementAccess` is enabled on a KafkaCluster, the operator deploys an agent next to the cluster, which authenticates to Kafka with a TLS client certificate that the user provides through a SecretClass or a Secret.
+  This is supported for clusters in KRaft mode without Kerberos authentication.
+  See the xref:kafka:usage-guide/management-access.adoc[management access] documentation page for more details.
++
+Implemented in https://github.com/stackabletech/kafka-operator/pull/1028[kafka-operator#1028].
+
+* **Declarative topic management:**
+  Topics can now be managed declaratively with the new KafkaTopic custom resource.
+  The agent creates, adopts, changes and optionally deletes the topic in Kafka, and reports changes Kafka cannot apply in the status.
+  This requires management access to be enabled on the KafkaCluster.
+  See the xref:kafka:usage-guide/topics.adoc[topics] documentation page for more details.
++
+Implemented in https://github.com/stackabletech/kafka-operator/pull/1045[kafka-operator#1045] and https://github.com/stackabletech/kafka-operator/pull/1050[kafka-operator#1050].
 
 ===== Apache NiFi
 
@@ -887,7 +904,7 @@ Some of the new versions change what the product image contains:
   If you use Phoenix, stay on HBase 2.6.
 * OpenSearch 3.8.0 creates S3 snapshot repositories with server-side encryption `AES256` by default.
   Check that your S3 store supports it before moving to 3.8.0.
-* Trino 483 no longer includes the `storage` connector.
+* Trino, since 483, no longer includes the `storage` connector.
   Remove catalogs with `connector.name=storage` before moving to 483.
 
 ====== Deprecated versions
