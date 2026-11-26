@@ -1022,7 +1022,7 @@ Install the `26.11` release
 
 [tabs]
 ====
-Stackable::
+Stackable registry::
 +
 [source,console]
 ----
