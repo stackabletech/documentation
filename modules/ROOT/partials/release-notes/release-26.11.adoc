@@ -127,7 +127,7 @@ Tracked in https://github.com/stackabletech/issues/issues/828[issues#828].
 * [#airflow-openlineage-26_11_0]#This release adds OpenLineage support for Apache Airflow.#
 +
 --
-The Stackable operator for Apache Airflow can now configure Airflow to emit https://openlineage.io/[OpenLineage] lineage events to a backend such as Marquez or DataHub.
+The operator for can now configure Airflow to emit https://openlineage.io/[OpenLineage] lineage events to a backend such as Marquez or DataHub.
 It can be enabled with the new `spec.clusterConfig.lineage` field on the AirflowCluster.
 
 ** The backend connection can be defined inline or shared between stacklets by referencing an OpenLineageConnection resource in the same namespace.
@@ -228,7 +228,7 @@ Tracked in https://github.com/stackabletech/issues/issues/894[issues#894].
 * [#spark-openlineage-26_11_0]#This release adds OpenLineage support for Apache Spark.#
 +
 --
-The Stackable Data Platform (SDP) Apache Spark operator can now configure Spark applications to emit https://openlineage.io/[OpenLineage] lineage events to a backend such as Marquez or DataHub.
+The operator can now configure Spark applications to emit https://openlineage.io/[OpenLineage] lineage events to a backend such as Marquez or DataHub.
 You enable it with the new `spec.lineage` field of the SparkApplication custom resource.
 
 Implemented in https://github.com/stackabletech/spark-k8s-operator/pull/726[spark-k8s-operator#726].
@@ -293,7 +293,7 @@ Implemented in https://github.com/stackabletech/opa-operator/pull/873[opa-operat
 * [#trino-openlineage-26_11_0]#This release adds OpenLineage support for Trino#
 +
 --
-The Stackable operator for Trino can now configure Trino clusters to emit https://openlineage.io/[OpenLineage] lineage events to a backend such as Marquez or DataHub.
+The operator can now configure Trino clusters to emit https://openlineage.io/[OpenLineage] lineage events to a backend such as Marquez or DataHub.
 You can enable it with the new `spec.clusterConfig.lineage` field of the TrinoCluster custom resource.
 
 Implemented in https://github.com/stackabletech/trino-operator/pull/914[trino-operator#914].
