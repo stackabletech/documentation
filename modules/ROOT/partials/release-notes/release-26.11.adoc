@@ -673,9 +673,15 @@ Fixed in https://github.com/stackabletech/airflow-operator/pull/847[airflow-oper
 
 * [#airflow-admin-password-26_11_0]#Previously, the Airflow scheduler printed the Airflow admin password to its container log during database initialization.#
   With this release, the password no longer appears in the log.
-  If you collected scheduler logs from an earlier release, rotate the admin password.
 +
+--
+[CAUTION]
+====
+If you collected scheduler logs from an earlier release, **rotate** the admin password.
+====
+
 Fixed in https://github.com/stackabletech/airflow-operator/pull/886[airflow-operator#886].
+--
 
 * Previously, the Apache Airflow 3.2.2 scheduler could end up in a crash loop when using the Kubernetes executor if the scheduler Pod was stopped while tasks were still running, for example during a rolling update.
   With this release, the scheduler starts up normally in this situation.
@@ -756,9 +762,15 @@ Fixed in https://github.com/stackabletech/spark-k8s-operator/pull/764[spark-k8s-
 
 * [#spark-s3-credentials-26_11_0]#Previously, the submit Job of a SparkApplication and the Spark history server printed S3 credentials to their container logs.#
   With this release, the credentials are no longer printed.
-  If you collected these logs from an earlier release, rotate the S3 credentials.
 +
+--
+[CAUTION]
+====
+If you collected these logs from an earlier release, **rotate** the S3 credentials.
+====
+
 Fixed in https://github.com/stackabletech/spark-k8s-operator/pull/796[spark-k8s-operator#796].
+--
 
 * In the previous SDP release (26.7), the maximum length of the spark application name was reduced from 63 to 40, to be in line with cluster names for other products.
   This limitation has now been removed so that spark application names can be up to 63 characters.
