@@ -841,7 +841,7 @@ Fixed in https://github.com/stackabletech/secret-operator/issues/772[secret-oper
 ===== General
 
 * [#slsa-removal-26_11_0.breaking-keyword]**Breaking**
-  This release no longer publishes SLSA provenance attestations for the images and Helm charts.
+  This release no longer publishes SLSA provenance attestations for the images and Helm charts because the official, remote workflows used for attestations were difficult to use, could not be pinned by SHA hash, and are now deprecated.
   If an admission policy in your cluster requires these attestations for Stackable images, the images of this release are rejected and the Pods do not start.
   Before upgrading, remove that requirement from the policy.
   Image signatures and SBOM attestations are still published, so policies that verify signatures keep working.
