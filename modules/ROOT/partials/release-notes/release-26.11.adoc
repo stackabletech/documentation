@@ -1070,3 +1070,9 @@ Quay.io::
 $ helm install --wait <PRODUCT>-operator oci://quay.io/stackable/sdp-charts/<PRODUCT>-operator --version 26.11.0
 ----
 ====
+
+[#known-issues-26_11_0]
+==== Known issues
+
+* The restarter-controller of the Stackable commons-operator ignores Deployments labeled with `restarter.stackable.tech/enabled`.
+  See https://github.com/stackabletech/commons-operator/issues/482[commons-operator#482].
