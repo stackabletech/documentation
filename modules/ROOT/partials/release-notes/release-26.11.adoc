@@ -57,7 +57,7 @@ These changes affect the people who use the products, not only the platform oper
 * link:#product-lines-removed-26_11_0[Apache Airflow 2 and Apache Spark 3] are no longer supported.
 * link:#product-content-26_11_0[New product versions]: Airflow 3.3.2 drops three providers, Trino 483 drops the `storage` connector, HBase 3.0.0 comes without Phoenix, and OpenSearch 3.8.0 encrypts S3 snapshots by default.
 * link:#spark-hbase-connector-26_11_0[Apache Spark with Apache HBase]: The HBase connector API changed for Spark 4.
-* link:#spark-cleanup-26_11_0[Apache Spark]: Finished driver Pods are now deleted after a certain duration by default.
+* link:#spark-cleanup-26_11_0[Apache Spark]: Finished driver Pods are now kept for a while before they are deleted (10 minutes on success and 24 hours on failure by default).
 * link:#airflow-task-log-26_11_0[Apache Airflow]: The level of the `airflow.task` logger now sets which task logs the UI shows.
 * link:#phoenix-tracing-26_11_0[Apache Phoenix]: `TRACE ON` and the `phoenix.trace.*` properties no longer have an effect.
 ====
@@ -637,8 +637,8 @@ Before running `helm upgrade`, check your values:
 * `serviceAccount.create: false` now requires `serviceAccount.name`, otherwise the chart fails to render.
 * A ClusterRoleBinding named `<fullname>-clusterrolebinding` that you created yourself makes `helm upgrade` fail.
   Delete it, or adopt it into the release.
-* With `serviceAccount.create: true`, a custom `serviceAccount.name` renames the ServiceAccount and the old one is deleted.
-  Update bindings outside the chart that reference the old name.
+* With `serviceAccount.create: true` and a custom `serviceAccount.name`, the chart creates the ServiceAccount under that name instead of `<fullname>-serviceaccount`, and deletes the old one.
+  Before upgrading, change RoleBindings, OpenShift SecurityContextConstraints grants and workload identity bindings that you created outside the chart for `<fullname>-serviceaccount` to the new name.
 
 [source,console]
 ----
