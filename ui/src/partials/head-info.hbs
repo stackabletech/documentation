@@ -1,6 +1,9 @@
     {{#with page.canonicalUrl}}
     <link rel="canonical" href="{{{this}}}">
     {{/with}}
+    {{#with page.attributes.[markdown-url]}}
+    <link rel="alternate" type="text/markdown" href="{{{this}}}">
+    {{/with}}
     {{#unless (eq page.attributes.pagination undefined)}}
     {{#with page.previous}}
     <link rel="prev" href="{{{relativize ./url}}}">
