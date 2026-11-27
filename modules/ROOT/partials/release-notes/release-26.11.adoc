@@ -27,6 +27,7 @@ Each item links to its full entry, which says how to check whether you are affec
 * link:#helm-service-account-26_11_0[Helm charts]: Check the `serviceAccount` values and ClusterRoleBindings you created yourself
 * link:#kafka-topic-crd-26_11_0[Apache Kafka with self-managed CRDs]: Install the KafkaTopic CRD if CRD maintenance is disabled
 * link:#kcat-prober-26_11_0[Apache Kafka]: Remove `kcat-prober` from the logging settings and `podOverrides`
+* link:#spark-keys-26_11_0[Apache Spark]: Review the `spark-env.sh` and `security.properties` `configOverrides` of your SparkApplications: they now take effect, and an invalid key stops the job from starting
 * link:#trino-catalog-conversion-26_11_0[Trino with self-managed CRDs]: Rewrite all TrinoCatalogs as `v1alpha2` if CRD maintenance is disabled
 * link:#opa-improvements-26_11_0[Open Policy Agent]: Review allow rules that use `userinfo` or `resourceinfo`, and rename the `credentials` volume in `podOverrides` to `user-info-fetcher-credentials`
 * link:#keycloak-rootpath-26_11_0[Open Policy Agent with Keycloak]: Check that `rootPath` matches where Keycloak is served
@@ -739,7 +740,8 @@ Fixed in https://github.com/stackabletech/spark-k8s-operator/pull/755[spark-k8s-
 +
 Fixed in https://github.com/stackabletech/spark-k8s-operator/pull/758[spark-k8s-operator#758].
 
-* Previously `spark-env.sh` and `security.properties` were not mounted for SparkApplication.
+* [#spark-keys-26_11_0.breaking-keyword]**Breaking**
+  Previously `spark-env.sh` and `security.properties` were not mounted for SparkApplication.
   With this release, both files get correctly mounted.
   Keys of the `spark-env.sh` `configOverrides` must be valid shell identifiers (`[a-zA-Z_][a-zA-Z0-9_]*`).
   A SparkApplication with an invalid key is accepted, but never runs, and the operator logs an error.
