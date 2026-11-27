@@ -1,5 +1,5 @@
 name: home
-version: "nightly"
+version: "26.11"
 title: Stackable Documentation
 nav:
   - modules/ROOT/nav1.adoc
@@ -15,7 +15,7 @@ nav:
   - modules/ROOT/nav3.adoc # this is for the extra bits at the end of the menu
 # The prerelease setting affects version sorting.
 # Set to 'true' for nightly and false otherwise.
-prerelease: true
+prerelease: false
 # The attributes below are specific to this component and version
 # https://docs.antora.org/antora/latest/component-attributes/#hard-set
 asciidoc:
@@ -28,7 +28,7 @@ asciidoc:
     crd-ref: "https://hub.stackable.tech/crds"
     # Keep this in line with the 'version' key above: '?release=dev' on main,
     # '?release=<major.minor>' on release branches (the release script sets it).
-    crd-ref-release: "?release=dev"
+    crd-ref-release: "?release=26.11"
     # used by the operator index pages, see the
     # operator-link-bar.adoc partial in the ROOT module
     hub-base-url: "https://hub.stackable.tech"
