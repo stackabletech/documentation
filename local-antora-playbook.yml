@@ -20,7 +20,7 @@ content:
   sources:
     - url: ./
       branches:
-        - HEAD
+        - release-26.11
         - release-26.7
         - release-26.3
         - release-25.11
@@ -40,12 +40,12 @@ content:
     - url: https://github.com/stackabletech/cockpit.git
       start_path: docs
       branches:
-        - main
+        - release-26.11
     # demos
     - url: https://github.com/stackabletech/demos.git
       start_path: docs
       branches:
-        - main
+        - release-26.11
         - release-26.7
         - release-26.3
         - release-25.11
@@ -62,7 +62,7 @@ content:
     - url: https://github.com/stackabletech/commons-operator.git
       start_path: docs
       branches:
-        - main
+        - release-26.11
         - release-26.7
         - release-26.3
         - release-25.11
@@ -78,7 +78,7 @@ content:
     - url: https://github.com/stackabletech/secret-operator.git
       start_path: docs
       branches:
-        - main
+        - release-26.11
         - release-26.7
         - release-26.3
         - release-25.11
@@ -94,7 +94,7 @@ content:
     - url: https://github.com/stackabletech/listener-operator.git
       start_path: docs
       branches:
-        - main
+        - release-26.11
         - release-26.7
         - release-26.3
         - release-25.11
@@ -111,7 +111,7 @@ content:
     - url: https://github.com/stackabletech/airflow-operator.git
       start_path: docs
       branches:
-        - main
+        - release-26.11
         - release-26.7
         - release-26.3
         - release-25.11
@@ -127,7 +127,7 @@ content:
     - url: https://github.com/stackabletech/druid-operator.git
       start_path: docs
       branches:
-        - main
+        - release-26.11
         - release-26.7
         - release-26.3
         - release-25.11
@@ -143,7 +143,7 @@ content:
     - url: https://github.com/stackabletech/hbase-operator.git
       start_path: docs
       branches:
-        - main
+        - release-26.11
         - release-26.7
         - release-26.3
         - release-25.11
@@ -159,7 +159,7 @@ content:
     - url: https://github.com/stackabletech/hdfs-operator.git
       start_path: docs
       branches:
-        - main
+        - release-26.11
         - release-26.7
         - release-26.3
         - release-25.11
@@ -175,7 +175,7 @@ content:
     - url: https://github.com/stackabletech/hive-operator.git
       start_path: docs
       branches:
-        - main
+        - release-26.11
         - release-26.7
         - release-26.3
         - release-25.11
@@ -191,7 +191,7 @@ content:
     - url: https://github.com/stackabletech/kafka-operator.git
       start_path: docs
       branches:
-        - main
+        - release-26.11
         - release-26.7
         - release-26.3
         - release-25.11
@@ -207,7 +207,7 @@ content:
     - url: https://github.com/stackabletech/nifi-operator.git
       start_path: docs
       branches:
-        - main
+        - release-26.11
         - release-26.7
         - release-26.3
         - release-25.11
@@ -223,7 +223,7 @@ content:
     - url: https://github.com/stackabletech/opa-operator.git
       start_path: docs
       branches:
-        - main
+        - release-26.11
         - release-26.7
         - release-26.3
         - release-25.11
@@ -239,14 +239,14 @@ content:
     - url: https://github.com/stackabletech/opensearch-operator.git
       start_path: docs
       branches:
-        - main
+        - release-26.11
         - release-26.7
         - release-26.3
         - release-25.11
     - url: https://github.com/stackabletech/spark-k8s-operator.git
       start_path: docs
       branches:
-        - main
+        - release-26.11
         - release-26.7
         - release-26.3
         - release-25.11
@@ -262,7 +262,7 @@ content:
     - url: https://github.com/stackabletech/superset-operator.git
       start_path: docs
       branches:
-        - main
+        - release-26.11
         - release-26.7
         - release-26.3
         - release-25.11
@@ -278,7 +278,7 @@ content:
     - url: https://github.com/stackabletech/trino-operator.git
       start_path: docs
       branches:
-        - main
+        - release-26.11
         - release-26.7
         - release-26.3
         - release-25.11
@@ -294,7 +294,7 @@ content:
     - url: https://github.com/stackabletech/zookeeper-operator.git
       start_path: docs
       branches:
-        - main
+        - release-26.11
         - release-26.7
         - release-26.3
         - release-25.11
