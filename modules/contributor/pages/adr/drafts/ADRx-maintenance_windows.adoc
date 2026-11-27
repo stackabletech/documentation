@@ -2,6 +2,7 @@
 Sönke Liebau <soenke.liebau@stackable.tech>
 v0.1, 2023-01-30
 :status: draft
+:page-llms-ignore:
 
 * Status: {status}
 * Deciders: [list everyone involved in the decision] <!-- optional -->
