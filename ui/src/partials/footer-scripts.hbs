@@ -13,7 +13,10 @@
                 // customized rank tuning - see https://pagefind.app/docs/ranking/
                 ranking: {
                     termSaturation: 0.4,
-                    termSimilarity: 10.0
+                    termSimilarity: 10.0,
+                    // Operator pages often repeat a concept page's title on a much shorter page;
+                    // the default 0.75 lets those short copies outrank the concept page.
+                    pageLength: 0.25
                 }});
             instance.add(new PagefindModularUI.Input({
                 containerElement: "#search-input"
