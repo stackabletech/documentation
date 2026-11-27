@@ -135,8 +135,6 @@ It can be enabled with the new `spec.clusterConfig.lineage` field on the Airflow
    The only supported transport is `http`.
 ** TLS is supported, but see the xref:airflow:usage-guide/openlineage.adoc#_tls[usage guide] for the caveat about `REQUESTS_CA_BUNDLE`.
 ** Bearer-token authentication is also supported.
-** The OpenLineage namespace defaults to `default`.
-   It does not fall back to the cluster's Kubernetes namespace, so set `lineage.namespace` explicitly if you want something else.
 
 Implemented in https://github.com/stackabletech/airflow-operator/pull/822[airflow-operator#822].
 --
