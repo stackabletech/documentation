@@ -1,4 +1,8 @@
 <article class="doc"
+{{! Concept pages explain what many operator pages repeat, so they should rank above those copies}}
+{{#if (eq page.module "concepts")}}
+data-pagefind-weight="3"
+{{/if}}
 {{! Only pages that are 'latest' or unversioned are included in the pagefind search}}
 {{#if page.latest}}
 {{#if (eq page.displayVersion page.latest.displayVersion)}}
