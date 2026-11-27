@@ -2,6 +2,7 @@
 Doc Writer <doc.writer@asciidoctor.org>
 v0.1, dd.mm.yyyy
 :status: draft
+:page-llms-ignore:
 
 * Status: {status}
 * Deciders:
