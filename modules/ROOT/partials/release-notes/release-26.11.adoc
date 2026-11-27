@@ -349,17 +349,18 @@ Implemented in https://github.com/stackabletech/trino-operator/pull/950[trino-op
 ===== Stackable Cockpit
 
 This release adds xref:cockpit:index.adoc[Stackable Cockpit], our experimental web UI for SDP.
-Users can log in through OpenID Connect (OIDC) and work with the platform's services from a single place.
+Users can log in via OpenID Connect (OIDC) and work with the platform's services from a single place.
 
-So far we have implemented:
+So far the Cockpit supports the following features:
 
 * A Trino SQL editor with code completion and a schema browser.
   Queries can run as the logged-in user through Trino user impersonation, or as a fixed technical user.
 * A file browser for S3-compatible object storage.
 * A dashboard with bookmarks you can set for other services.
 
-Cockpit is installed with a Helm chart and needs a PostgreSQL database.
-Features, configuration and the Helm chart may change in incompatible ways between releases.
+The Cockpit can be installed with our Helm chart.
+It requires a PostgreSQL database to store data and configurations.
+Features, configuration, and the Helm chart may change in incompatible ways between releases.
 See the xref:cockpit:getting-started.adoc[getting started guide] to try it out.
 
 ==== Platform improvements
