@@ -39,6 +39,7 @@ content:
     - url: .
       branches:
         - HEAD
+        - release-26.11
         - release-26.7
         - release-26.3
         - release-25.11
@@ -59,11 +60,13 @@ content:
       start_path: docs
       branches:
         - main
+        - release-26.11
     # demos
     - url: https://github.com/stackabletech/demos.git
       start_path: docs
       branches:
         - main
+        - release-26.11
         - release-26.7
         - release-26.3
         - release-25.11
@@ -81,6 +84,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-26.11
         - release-26.7
         - release-26.3
         - release-25.11
@@ -97,6 +101,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-26.11
         - release-26.7
         - release-26.3
         - release-25.11
@@ -113,6 +118,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-26.11
         - release-26.7
         - release-26.3
         - release-25.11
@@ -130,6 +136,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-26.11
         - release-26.7
         - release-26.3
         - release-25.11
@@ -146,6 +153,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-26.11
         - release-26.7
         - release-26.3
         - release-25.11
@@ -162,6 +170,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-26.11
         - release-26.7
         - release-26.3
         - release-25.11
@@ -178,6 +187,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-26.11
         - release-26.7
         - release-26.3
         - release-25.11
@@ -194,6 +204,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-26.11
         - release-26.7
         - release-26.3
         - release-25.11
@@ -210,6 +221,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-26.11
         - release-26.7
         - release-26.3
         - release-25.11
@@ -226,6 +238,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-26.11
         - release-26.7
         - release-26.3
         - release-25.11
@@ -242,6 +255,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-26.11
         - release-26.7
         - release-26.3
         - release-25.11
@@ -258,6 +272,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-26.11
         - release-26.7
         - release-26.3
         - release-25.11
@@ -265,6 +280,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-26.11
         - release-26.7
         - release-26.3
         - release-25.11
@@ -281,6 +297,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-26.11
         - release-26.7
         - release-26.3
         - release-25.11
@@ -297,6 +314,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-26.11
         - release-26.7
         - release-26.3
         - release-25.11
@@ -313,6 +331,7 @@ content:
       start_path: docs
       branches:
         - main
+        - release-26.11
         - release-26.7
         - release-26.3
         - release-25.11
