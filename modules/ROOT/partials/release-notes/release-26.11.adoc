@@ -11,6 +11,7 @@ Released on 2026-11-20.
 * Improved KRaft support in the Stackable operator for Apache Kafka
 * Declarative management of Apache Kafka topics with the new KafkaTopic custom resource
 * The Stackable operator for Trino now supports Apache Iceberg REST catalogs
+* Stackable Cockpit, a new web UI for SDP
 ====
 
 [#upgrade-actions-26_11_0]
@@ -343,6 +344,23 @@ See the xref:trino:usage-guide/catalogs/iceberg.adoc[Iceberg connector documenta
 
 Implemented in https://github.com/stackabletech/trino-operator/pull/950[trino-operator#950].
 --
+
+[#cockpit-26_11_0]
+===== Stackable Cockpit
+
+This release adds xref:cockpit:index.adoc[Stackable Cockpit], our experimental web UI for SDP.
+Users can log in through OpenID Connect (OIDC) and work with the platform's services from a single place.
+
+So far we have implemented:
+
+* A Trino SQL editor with code completion and a schema browser.
+  Queries can run as the logged-in user through Trino user impersonation, or as a fixed technical user.
+* A file browser for S3-compatible object storage.
+* A dashboard with bookmarks you can set for other services.
+
+Cockpit is installed with a Helm chart and needs a PostgreSQL database.
+Features, configuration and the Helm chart may change in incompatible ways between releases.
+See the xref:cockpit:getting-started.adoc[getting started guide] to try it out.
 
 ==== Platform improvements
 
